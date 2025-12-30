@@ -1,93 +1,258 @@
-# PR-1608-WorkerSolutions-Frontend-ReactJs
+# React + TypeScript + Vite + Tailwind CSS v4 + shadcn/ui
 
+A modern, production-ready React application with TypeScript, Vite, Tailwind CSS v4, and shadcn/ui components organized using Atomic Design principles.
 
+## ✨ Features
 
-## Getting started
+- ⚡️ **Vite** - Lightning-fast build tool and dev server
+- ⚛️ **React 19** - Latest React with concurrent features
+- 🔷 **TypeScript** - Type-safe development with full IntelliSense
+- 🎨 **Tailwind CSS v4** - Utility-first CSS with modern @theme syntax
+- 🧩 **shadcn/ui** - Beautiful, accessible components
+- 🏗️ **Atomic Design** - Scalable component architecture
+- 🌓 **Dark Mode** - Built-in theme switching
+- 🎯 **ESLint** - Code quality with comprehensive rules
+- 💅 **Prettier** - Consistent code formatting
+- 🐕 **Husky** - Git hooks for quality checks
+- 📦 **Path Aliases** - Clean imports with @/ prefix
 
-To make it easy for you to get started with GitLab, here's a list of recommended next steps.
-
-Already a pro? Just edit this README.md and make it your own. Want to make it easy? [Use the template at the bottom](#editing-this-readme)!
-
-## Add your files
-
-* [Create](https://docs.gitlab.com/ee/user/project/repository/web_editor.html#create-a-file) or [upload](https://docs.gitlab.com/ee/user/project/repository/web_editor.html#upload-a-file) files
-* [Add files using the command line](https://docs.gitlab.com/topics/git/add_files/#add-files-to-a-git-repository) or push an existing Git repository with the following command:
+## 📁 Project Structure
 
 ```
-cd existing_repo
-git remote add origin https://gitlab.com/lafayette-square-institute/pr-1608-workersolutions-frontend-reactjs.git
-git branch -M main
-git push -uf origin main
+src/
+├── components/
+│   ├── atoms/              # Basic building blocks (Button, Input, Card, etc.)
+│   │   ├── index.ts        # Single barrel export
+│   │   ├── Button/
+│   │   ├── Card/
+│   │   └── ...
+│   ├── molecules/          # Simple groups of atoms
+│   │   ├── index.ts
+│   │   └── ...
+│   ├── organisms/          # Complex UI components
+│   │   ├── index.ts
+│   │   └── ...
+│   ├── templates/          # Page-level layouts
+│   │   ├── index.ts
+│   │   └── ...
+│   └── theme-provider.tsx  # Theme context
+├── pages/                  # Page components
+│   ├── index.ts
+│   └── HomePage/
+├── hooks/                  # Custom React hooks
+│   ├── index.ts
+│   └── useTheme.ts
+├── lib/                    # Utilities
+│   └── utils.ts
+└── types/                  # TypeScript definitions
 ```
 
-## Integrate with your tools
+## 🚀 Quick Start
 
-* [Set up project integrations](https://gitlab.com/lafayette-square-institute/pr-1608-workersolutions-frontend-reactjs/-/settings/integrations)
+```bash
+# Install dependencies
+pnpm install
 
-## Collaborate with your team
+# Start development server
+pnpm run dev
 
-* [Invite team members and collaborators](https://docs.gitlab.com/ee/user/project/members/)
-* [Create a new merge request](https://docs.gitlab.com/ee/user/project/merge_requests/creating_merge_requests.html)
-* [Automatically close issues from merge requests](https://docs.gitlab.com/ee/user/project/issues/managing_issues.html#closing-issues-automatically)
-* [Enable merge request approvals](https://docs.gitlab.com/ee/user/project/merge_requests/approvals/)
-* [Set auto-merge](https://docs.gitlab.com/user/project/merge_requests/auto_merge/)
+# Build for production
+pnpm run build
 
-## Test and Deploy
+# Preview production build
+pnpm run preview
+```
 
-Use the built-in continuous integration in GitLab.
+## 🛠️ Available Scripts
 
-* [Get started with GitLab CI/CD](https://docs.gitlab.com/ee/ci/quick_start/)
-* [Analyze your code for known vulnerabilities with Static Application Security Testing (SAST)](https://docs.gitlab.com/ee/user/application_security/sast/)
-* [Deploy to Kubernetes, Amazon EC2, or Amazon ECS using Auto Deploy](https://docs.gitlab.com/ee/topics/autodevops/requirements.html)
-* [Use pull-based deployments for improved Kubernetes management](https://docs.gitlab.com/ee/user/clusters/agent/)
-* [Set up protected environments](https://docs.gitlab.com/ee/ci/environments/protected_environments.html)
+```bash
+# Development
+pnpm run dev                    # Start dev server
+pnpm run build                  # Build for production
+pnpm run preview                # Preview production build
 
-***
+# Code Quality
+pnpm run lint                   # Check for linting errors
+pnpm run lint:fix               # Auto-fix linting errors
+pnpm run format                 # Format all files with Prettier
+pnpm run format:check           # Check if files are formatted
+pnpm run type-check             # TypeScript type checking
+pnpm run type-check:watch       # Type checking in watch mode
 
-# Editing this README
+# shadcn/ui Components
+pnpm dlx shadcn@latest add <component>  # Add a component
+```
 
-When you're ready to make this README your own, just edit this file and use the handy template below (or feel free to structure it however you want - this is just a starting point!). Thanks to [makeareadme.com](https://www.makeareadme.com/) for this template.
+## 🧩 Adding Components
 
-## Suggestions for a good README
+### Adding shadcn/ui Components
 
-Every project is different, so consider which of these sections apply to yours. The sections used in the template are suggestions for most open source projects. Also keep in mind that while a README can be too long and detailed, too long is better than too short. If you think your README is too long, consider utilizing another form of documentation rather than cutting out information.
+```bash
+# Add a component
+pnpm dlx shadcn@latest add button
 
-## Name
-Choose a self-explaining name for your project.
+# The components will be added to src/components/ui/
+# You can manually organize them into atomic structure as needed
+```
 
-## Description
-Let people know what your project can do specifically. Provide context and add a link to any reference visitors might be unfamiliar with. A list of Features or a Background subsection can also be added here. If there are alternatives to your project, this is a good place to list differentiating factors.
+## 📦 Import Examples
 
-## Badges
-On some READMEs, you may see small images that convey metadata, such as whether or not all the tests are passing for the project. You can use Shields to add some to your README. Many services also have instructions for adding a badge.
+```tsx
+// Clean imports with barrel exports
+import { Button, Card, Input } from "@/components/atoms";
+import { Dialog, Popover } from "@/components/molecules";
+import { Form, Table } from "@/components/organisms";
+import { HomePage } from "@/pages";
+import { useTheme } from "@/hooks";
+```
 
-## Visuals
-Depending on what you are making, it can be a good idea to include screenshots or even a video (you'll frequently see GIFs rather than actual videos). Tools like ttygif can help, but check out Asciinema for a more sophisticated method.
+## 🎨 Theming
 
-## Installation
-Within a particular ecosystem, there may be a common way of installing things, such as using Yarn, NuGet, or Homebrew. However, consider the possibility that whoever is reading your README is a novice and would like more guidance. Listing specific steps helps remove ambiguity and gets people to using your project as quickly as possible. If it only runs in a specific context like a particular programming language version or operating system or has dependencies that have to be installed manually, also add a Requirements subsection.
+The project uses Tailwind CSS v4 with CSS variables for theming:
 
-## Usage
-Use examples liberally, and show the expected output if you can. It's helpful to have inline the smallest example of usage that you can demonstrate, while providing links to more sophisticated examples if they are too long to reasonably include in the README.
+```css
+/* src/index.css */
+@import "tailwindcss";
 
-## Support
-Tell people where they can go to for help. It can be any combination of an issue tracker, a chat room, an email address, etc.
+:root {
+  --background: oklch(1 0 0);
+  --foreground: oklch(0.145 0 0);
+  /* ... more variables */
+}
 
-## Roadmap
-If you have ideas for releases in the future, it is a good idea to list them in the README.
+.dark {
+  --background: oklch(0.145 0 0);
+  --foreground: oklch(0.985 0 0);
+  /* ... more variables */
+}
+```
 
-## Contributing
-State if you are open to contributions and what your requirements are for accepting them.
+Toggle theme in your components:
 
-For people who want to make changes to your project, it's helpful to have some documentation on how to get started. Perhaps there is a script that they should run or some environment variables that they need to set. Make these steps explicit. These instructions could also be useful to your future self.
+```tsx
+import { useTheme } from "@/hooks";
 
-You can also document commands to lint the code or run tests. These steps help to ensure high code quality and reduce the likelihood that the changes inadvertently break something. Having instructions for running tests is especially helpful if it requires external setup, such as starting a Selenium server for testing in a browser.
+function ThemeToggle() {
+  const { theme, setTheme } = useTheme();
 
-## Authors and acknowledgment
-Show your appreciation to those who have contributed to the project.
+  return (
+    <button onClick={() => setTheme(theme === "dark" ? "light" : "dark")}>Toggle Theme</button>
+  );
+}
+```
 
-## License
-For open source projects, say how it is licensed.
+## 🏗️ Atomic Design Principles
 
-## Project status
-If you have run out of energy or time for your project, put a note at the top of the README saying that development has slowed down or stopped completely. Someone may choose to fork your project or volunteer to step in as a maintainer or owner, allowing your project to keep going. You can also make an explicit request for maintainers.
+### Atoms
+
+Basic building blocks (Button, Input, Label, Card)
+
+```tsx
+import { Button } from "@/components/atoms";
+<Button variant="primary">Click me</Button>;
+```
+
+### Molecules
+
+Simple groups of atoms (InputField, SearchBox)
+
+```tsx
+// Combines Label + Input
+<InputField label="Email" id="email" />
+```
+
+### Organisms
+
+Complex UI components (Header, ProductGrid)
+
+```tsx
+<Header /> // Contains Logo, Navigation, UserProfile
+```
+
+### Templates
+
+Page-level layouts (DashboardLayout, AuthLayout)
+
+```tsx
+<DashboardLayout>
+  <YourPageContent />
+</DashboardLayout>
+```
+
+## 📝 Code Quality Tools
+
+### ESLint
+
+Configured with React, TypeScript, accessibility, and import plugins.
+
+### Prettier
+
+Automatic code formatting on save (VS Code) and pre-commit.
+
+### Husky
+
+Pre-commit hooks run:
+
+- ESLint auto-fix
+- Prettier formatting
+- Type checking
+
+## 🔧 Configuration Files
+
+- `vite.config.ts` - Vite configuration with path aliases
+- `tsconfig.json` - TypeScript configuration
+- `components.json` - shadcn/ui configuration
+- `eslint.config.js` - ESLint rules
+- `.prettierrc` - Prettier formatting rules
+- `tailwind.config.js` - Not needed for v4 (uses CSS @theme)
+
+## 📚 Documentation
+
+- [Vite Documentation](https://vitejs.dev/)
+- [React Documentation](https://react.dev/)
+- [Tailwind CSS v4](https://tailwindcss.com/)
+- [shadcn/ui](https://ui.shadcn.com/)
+- [TypeScript](https://www.typescriptlang.org/)
+- [Atomic Design](https://atomicdesign.bradfrost.com/)
+
+## 🤝 Contributing
+
+1. Follow the established file structure
+2. Use path aliases (@/) for imports
+3. Run `pnpm run lint:fix` before committing
+4. Organize new shadcn/ui components into atomic structure
+5. Update barrel exports (index.ts) when adding components
+
+## 📄 License
+
+MIT
+
+---
+
+Built with ❤️ using React, TypeScript, Vite, Tailwind CSS v4, and shadcn/ui
+import reactDom from "eslint-plugin-react-dom";
+
+export default defineConfig([
+globalIgnores(["dist"]),
+{
+files: ["**/*.{ts,tsx}"],
+extends: [
+// Other configs...
+// Enable lint rules for React
+reactX.configs["recommended-typescript"],
+// Enable lint rules for React DOM
+reactDom.configs.recommended,
+],
+languageOptions: {
+parserOptions: {
+project: ["./tsconfig.node.json", "./tsconfig.app.json"],
+tsconfigRootDir: import.meta.dirname,
+},
+// other options...
+},
+},
+]);
+
+```
+
+```
