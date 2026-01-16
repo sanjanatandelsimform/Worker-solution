@@ -1,9 +1,9 @@
-import type { ReactNode, Ref } from 'react';
-import { HelpCircle } from '@untitledui/icons';
-import type { LabelProps as AriaLabelProps } from 'react-aria-components';
-import { Label as AriaLabel } from 'react-aria-components';
-import { Tooltip, TooltipTrigger } from '@/components/base/tooltip/tooltip';
-import { cx } from '@/utils/cx';
+import type { ReactNode, Ref } from "react";
+import { HelpCircle } from "@untitledui/icons";
+import type { LabelProps as AriaLabelProps } from "react-aria-components";
+import { Label as AriaLabel } from "react-aria-components";
+import { Tooltip, TooltipTrigger } from "@/components/base/tooltip/tooltip";
+import { cx } from "@/utils/cx";
 
 interface LabelProps extends AriaLabelProps {
   children: ReactNode;
@@ -29,17 +29,17 @@ export const Label = ({
       data-label="true"
       {...props}
       className={cx(
-        'flex cursor-default items-center gap-0.5 text-sm font-medium text-secondary',
-        className
+        "flex cursor-default items-center gap-0.5 text-sm font-medium text-secondary",
+        className,
       )}
     >
       {props.children}
 
       <span
         className={cx(
-          'hidden text-brand-tertiary',
-          isRequired && 'block',
-          typeof isRequired === 'undefined' && 'group-required:block'
+          "hidden text-brand-tertiary",
+          isRequired && "block",
+          typeof isRequired === "undefined" && "group-required:block",
         )}
       >
         *
@@ -66,4 +66,4 @@ export const Label = ({
   );
 };
 
-Label.displayName = 'Label';
+Label.displayName = "Label";

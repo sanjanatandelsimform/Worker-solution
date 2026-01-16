@@ -1,4 +1,4 @@
-import type { SVGProps } from 'react';
+import type { SVGProps } from "react";
 
 const AmexIcon = (props: SVGProps<SVGSVGElement>) => {
   return (

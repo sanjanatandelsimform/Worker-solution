@@ -8,7 +8,7 @@ import prettier from 'eslint-plugin-prettier'
 import prettierConfig from 'eslint-config-prettier'
 
 export default defineConfig([
-  globalIgnores(['dist', 'node_modules', 'build', '.vite']),
+  globalIgnores(['dist', 'node_modules', 'build', '.vite', '__MACOSX']),
   {
     files: ['**/*.{ts,tsx}'],
     extends: [

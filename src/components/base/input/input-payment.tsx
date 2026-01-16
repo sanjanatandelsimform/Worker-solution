@@ -1,51 +1,51 @@
-import { useControlledState } from '@react-stately/utils';
-import { HintText } from '@/components/base/input/hint-text';
-import type { InputBaseProps } from '@/components/base/input/input';
-import { InputBase, TextField } from '@/components/base/input/input';
-import { Label } from '@/components/base/input/label';
+import { useControlledState } from "@react-stately/utils";
+import { HintText } from "@/components/base/input/hint-text";
+import type { InputBaseProps } from "@/components/base/input/input";
+import { InputBase, TextField } from "@/components/base/input/input";
+import { Label } from "@/components/base/input/label";
 import {
   AmexIcon,
   DiscoverIcon,
   MastercardIcon,
   UnionPayIcon,
   VisaIcon,
-} from '@/components/foundations/payment-icons';
+} from "@/components/foundations/payment-icons";
 
 const cardTypes = [
   {
-    name: 'Visa',
+    name: "Visa",
     pattern: /^4[0-9]{3,}$/, // Visa card numbers start with 4 and are 13 or 16 digits long
-    card: 'visa',
+    card: "visa",
     icon: VisaIcon,
   },
   {
-    name: 'MasterCard',
+    name: "MasterCard",
     pattern: /^5[1-5][0-9]{2,}$/, // MasterCard numbers start with 51-55 and are 16 digits long
-    card: 'mastercard',
+    card: "mastercard",
     icon: MastercardIcon,
   },
   {
-    name: 'American Express',
+    name: "American Express",
     pattern: /^3[47][0-9]{2,}$/, // American Express numbers start with 34 or 37 and are 15 digits long
-    card: 'amex',
+    card: "amex",
     icon: AmexIcon,
   },
   {
-    name: 'Discover',
+    name: "Discover",
     pattern: /^6(?:011|5[0-9]{2}|4[4-9][0-9])[0-9]{12}$/, // Discover card numbers start with 6011 or 65 and are 16 digits long
-    card: 'discover',
+    card: "discover",
     icon: DiscoverIcon,
   },
   {
-    name: 'UnionPay',
+    name: "UnionPay",
     pattern: /^(62|88)[0-9]{14,17}$/, // UnionPay card numbers start with 62 or 88 and are between 15-19 digits long
-    card: 'unionpay',
+    card: "unionpay",
     icon: UnionPayIcon,
   },
   {
-    name: 'Unknown',
+    name: "Unknown",
     pattern: /.*/, // Fallback pattern for unknown cards
-    card: 'unknown',
+    card: "unknown",
     icon: MastercardIcon,
   },
 ];
@@ -57,11 +57,11 @@ const cardTypes = [
  */
 const detectCardType = (number: string) => {
   // Remove all spaces
-  const sanitizedNumber = number.replace(/\D/g, '');
+  const sanitizedNumber = number.replace(/\D/g, "");
 
   // Find the matching card type
   const card = cardTypes.find((cardType) =>
-    cardType.pattern.test(sanitizedNumber)
+    cardType.pattern.test(sanitizedNumber),
   );
 
   return card || cardTypes[cardTypes.length - 1];
@@ -73,19 +73,19 @@ const detectCardType = (number: string) => {
 // eslint-disable-next-line react-refresh/only-export-components
 export const formatCardNumber = (number: string) => {
   // Remove non-numeric characters
-  const cleaned = number.replaceAll(/\D/g, '');
+  const cleaned = number.replaceAll(/\D/g, "");
 
   // Format the card number in groups of 4 digits
   const match = cleaned.match(/\d{1,4}/g);
 
   if (match) {
-    return match.join(' ');
+    return match.join(" ");
   }
 
   return cleaned;
 };
 
-type PaymentInputProps = Omit<InputBaseProps, 'icon'>;
+type PaymentInputProps = Omit<InputBaseProps, "icon">;
 
 export const PaymentInput = ({
   onChange,
@@ -99,13 +99,13 @@ export const PaymentInput = ({
 }: PaymentInputProps) => {
   const [cardNumber, setCardNumber] = useControlledState(
     value,
-    defaultValue || '',
+    defaultValue || "",
     (value) => {
       // Remove all non-numeric characters
-      value = value.replaceAll(/\D/g, '');
+      value = value.replaceAll(/\D/g, "");
 
-      onChange?.(value || '');
-    }
+      onChange?.(value || "");
+    },
   );
 
   const card = detectCardType(cardNumber);
@@ -140,4 +140,4 @@ export const PaymentInput = ({
   );
 };
 
-PaymentInput.displayName = 'PaymentInput';
+PaymentInput.displayName = "PaymentInput";

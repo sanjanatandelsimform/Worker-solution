@@ -4,135 +4,135 @@ import type {
   DetailedHTMLProps,
   FC,
   ReactNode,
-} from 'react';
-import { isValidElement } from 'react';
-import type { ButtonProps as AriaButtonProps } from 'react-aria-components';
-import { Button as AriaButton, Link as AriaLink } from 'react-aria-components';
-import { cx, sortCx } from '@/utils/cx';
-import { isReactComponent } from '@/utils/is-react-component';
+} from "react";
+import { isValidElement } from "react";
+import type { ButtonProps as AriaButtonProps } from "react-aria-components";
+import { Button as AriaButton, Link as AriaLink } from "react-aria-components";
+import { cx, sortCx } from "@/utils/cx";
+import { isReactComponent } from "@/utils/is-react-component";
 
 // eslint-disable-next-line react-refresh/only-export-components
 export const styles = sortCx({
   common: {
     root: [
-      'group relative inline-flex h-max cursor-pointer items-center justify-center whitespace-nowrap outline-brand transition duration-100 ease-linear before:absolute focus-visible:outline-2 focus-visible:outline-offset-2',
+      "group relative inline-flex h-max cursor-pointer items-center justify-center whitespace-nowrap outline-brand transition duration-100 ease-linear before:absolute focus-visible:outline-2 focus-visible:outline-offset-2",
       // When button is used within `InputGroup`
-      'in-data-input-wrapper:shadow-xs in-data-input-wrapper:focus:!z-50 in-data-input-wrapper:in-data-leading:-mr-px in-data-input-wrapper:in-data-leading:rounded-r-none in-data-input-wrapper:in-data-leading:before:rounded-r-none in-data-input-wrapper:in-data-trailing:-ml-px in-data-input-wrapper:in-data-trailing:rounded-l-none in-data-input-wrapper:in-data-trailing:before:rounded-l-none',
+      "in-data-input-wrapper:shadow-xs in-data-input-wrapper:focus:!z-50 in-data-input-wrapper:in-data-leading:-mr-px in-data-input-wrapper:in-data-leading:rounded-r-none in-data-input-wrapper:in-data-leading:before:rounded-r-none in-data-input-wrapper:in-data-trailing:-ml-px in-data-input-wrapper:in-data-trailing:rounded-l-none in-data-input-wrapper:in-data-trailing:before:rounded-l-none",
       // Disabled styles
-      'disabled:cursor-not-allowed disabled:text-fg-disabled',
+      "disabled:cursor-not-allowed disabled:text-fg-disabled",
       // Icon styles
-      'disabled:*:data-icon:text-fg-disabled_subtle',
+      "disabled:*:data-icon:text-fg-disabled_subtle",
       // Same as `icon` but for SSR icons that cannot be passed to the client as functions.
-      '*:data-icon:pointer-events-none *:data-icon:size-5 *:data-icon:shrink-0 *:data-icon:transition-inherit-all',
-    ].join(' '),
-    icon: 'pointer-events-none size-5 shrink-0 transition-inherit-all',
+      "*:data-icon:pointer-events-none *:data-icon:size-5 *:data-icon:shrink-0 *:data-icon:transition-inherit-all",
+    ].join(" "),
+    icon: "pointer-events-none size-5 shrink-0 transition-inherit-all",
   },
   sizes: {
     sm: {
       root: [
-        'gap-1 rounded-lg px-3 py-2 text-sm font-semibold before:rounded-[7px] data-icon-only:p-2',
-        'in-data-input-wrapper:px-3.5 in-data-input-wrapper:py-2.5 in-data-input-wrapper:data-icon-only:p-2.5',
-      ].join(' '),
-      linkRoot: 'gap-1',
+        "gap-1 rounded-lg px-3 py-2 text-sm font-semibold before:rounded-[7px] data-icon-only:p-2",
+        "in-data-input-wrapper:px-3.5 in-data-input-wrapper:py-2.5 in-data-input-wrapper:data-icon-only:p-2.5",
+      ].join(" "),
+      linkRoot: "gap-1",
     },
     md: {
       root: [
-        'gap-1 rounded-lg px-3.5 py-2.5 text-sm font-semibold before:rounded-[7px] data-icon-only:p-2.5',
-        'in-data-input-wrapper:gap-1.5 in-data-input-wrapper:px-4 in-data-input-wrapper:text-md in-data-input-wrapper:data-icon-only:p-3',
-      ].join(' '),
-      linkRoot: 'gap-1',
+        "gap-1 rounded-lg px-3.5 py-2.5 text-sm font-semibold before:rounded-[7px] data-icon-only:p-2.5",
+        "in-data-input-wrapper:gap-1.5 in-data-input-wrapper:px-4 in-data-input-wrapper:text-md in-data-input-wrapper:data-icon-only:p-3",
+      ].join(" "),
+      linkRoot: "gap-1",
     },
     lg: {
-      root: 'gap-1.5 rounded-lg px-4 py-2.5 text-md font-semibold before:rounded-[7px] data-icon-only:p-3',
-      linkRoot: 'gap-1.5',
+      root: "gap-1.5 rounded-lg px-4 py-2.5 text-md font-semibold before:rounded-[7px] data-icon-only:p-3",
+      linkRoot: "gap-1.5",
     },
     xl: {
-      root: 'gap-1.5 rounded-lg px-4.5 py-3 text-md font-semibold before:rounded-[7px] data-icon-only:p-3.5',
-      linkRoot: 'gap-1.5',
+      root: "gap-1.5 rounded-lg px-4.5 py-3 text-md font-semibold before:rounded-[7px] data-icon-only:p-3.5",
+      linkRoot: "gap-1.5",
     },
   },
 
   colors: {
     primary: {
       root: [
-        'bg-brand-solid text-white shadow-xs-skeumorphic ring-1 ring-transparent ring-inset hover:bg-brand-solid_hover data-loading:bg-brand-solid_hover',
+        "bg-brand-solid text-white shadow-xs-skeumorphic ring-1 ring-transparent ring-inset hover:bg-brand-solid_hover data-loading:bg-brand-solid_hover",
         // Inner border gradient
-        'before:absolute before:inset-px before:border before:border-white/12 before:mask-b-from-0%',
+        "before:absolute before:inset-px before:border before:border-white/12 before:mask-b-from-0%",
         // Disabled styles
-        'disabled:bg-disabled disabled:shadow-xs disabled:ring-disabled_subtle',
+        "disabled:bg-disabled disabled:shadow-xs disabled:ring-disabled_subtle",
         // Icon styles
-        '*:data-icon:text-button-primary-icon hover:*:data-icon:text-button-primary-icon_hover',
-      ].join(' '),
+        "*:data-icon:text-button-primary-icon hover:*:data-icon:text-button-primary-icon_hover",
+      ].join(" "),
     },
     secondary: {
       root: [
-        'bg-primary text-secondary shadow-xs-skeumorphic ring-1 ring-primary ring-inset hover:bg-primary_hover hover:text-secondary_hover data-loading:bg-primary_hover',
+        "bg-primary text-secondary shadow-xs-skeumorphic ring-1 ring-primary ring-inset hover:bg-primary_hover hover:text-secondary_hover data-loading:bg-primary_hover",
         // Disabled styles
-        'disabled:shadow-xs disabled:ring-disabled_subtle',
+        "disabled:shadow-xs disabled:ring-disabled_subtle",
         // Icon styles
-        '*:data-icon:text-fg-quaternary hover:*:data-icon:text-fg-quaternary_hover',
-      ].join(' '),
+        "*:data-icon:text-fg-quaternary hover:*:data-icon:text-fg-quaternary_hover",
+      ].join(" "),
     },
     tertiary: {
       root: [
-        'text-tertiary hover:bg-primary_hover hover:text-tertiary_hover data-loading:bg-primary_hover',
+        "text-tertiary hover:bg-primary_hover hover:text-tertiary_hover data-loading:bg-primary_hover",
         // Icon styles
-        '*:data-icon:text-fg-quaternary hover:*:data-icon:text-fg-quaternary_hover',
-      ].join(' '),
+        "*:data-icon:text-fg-quaternary hover:*:data-icon:text-fg-quaternary_hover",
+      ].join(" "),
     },
-    'link-gray': {
+    "link-gray": {
       root: [
-        'justify-normal rounded p-0! text-tertiary hover:text-tertiary_hover',
+        "justify-normal rounded p-0! text-tertiary hover:text-tertiary_hover",
         // Inner text underline
-        '*:data-text:underline *:data-text:decoration-transparent *:data-text:underline-offset-2 hover:*:data-text:decoration-current',
+        "*:data-text:underline *:data-text:decoration-transparent *:data-text:underline-offset-2 hover:*:data-text:decoration-current",
         // Icon styles
-        '*:data-icon:text-fg-quaternary hover:*:data-icon:text-fg-quaternary_hover',
-      ].join(' '),
+        "*:data-icon:text-fg-quaternary hover:*:data-icon:text-fg-quaternary_hover",
+      ].join(" "),
     },
-    'link-color': {
+    "link-color": {
       root: [
-        'justify-normal rounded p-0! text-brand-secondary hover:text-brand-secondary_hover',
+        "justify-normal rounded p-0! text-brand-secondary hover:text-brand-secondary_hover",
         // Inner text underline
-        '*:data-text:underline *:data-text:decoration-transparent *:data-text:underline-offset-2 hover:*:data-text:decoration-current',
+        "*:data-text:underline *:data-text:decoration-transparent *:data-text:underline-offset-2 hover:*:data-text:decoration-current",
         // Icon styles
-        '*:data-icon:text-fg-brand-secondary_alt hover:*:data-icon:text-fg-brand-secondary_hover',
-      ].join(' '),
+        "*:data-icon:text-fg-brand-secondary_alt hover:*:data-icon:text-fg-brand-secondary_hover",
+      ].join(" "),
     },
-    'primary-destructive': {
+    "primary-destructive": {
       root: [
-        'bg-error-solid text-white shadow-xs-skeumorphic ring-1 ring-transparent outline-error ring-inset hover:bg-error-solid_hover data-loading:bg-error-solid_hover',
+        "bg-error-solid text-white shadow-xs-skeumorphic ring-1 ring-transparent outline-error ring-inset hover:bg-error-solid_hover data-loading:bg-error-solid_hover",
         // Inner border gradient
-        'before:absolute before:inset-px before:border before:border-white/12 before:mask-b-from-0%',
+        "before:absolute before:inset-px before:border before:border-white/12 before:mask-b-from-0%",
         // Disabled styles
-        'disabled:bg-disabled disabled:shadow-xs disabled:ring-disabled_subtle',
+        "disabled:bg-disabled disabled:shadow-xs disabled:ring-disabled_subtle",
         // Icon styles
-        '*:data-icon:text-button-destructive-primary-icon hover:*:data-icon:text-button-destructive-primary-icon_hover',
-      ].join(' '),
+        "*:data-icon:text-button-destructive-primary-icon hover:*:data-icon:text-button-destructive-primary-icon_hover",
+      ].join(" "),
     },
-    'secondary-destructive': {
+    "secondary-destructive": {
       root: [
-        'bg-primary text-error-primary shadow-xs-skeumorphic ring-1 ring-error_subtle outline-error ring-inset hover:bg-error-primary hover:text-error-primary_hover data-loading:bg-error-primary',
+        "bg-primary text-error-primary shadow-xs-skeumorphic ring-1 ring-error_subtle outline-error ring-inset hover:bg-error-primary hover:text-error-primary_hover data-loading:bg-error-primary",
         // Disabled styles
-        'disabled:bg-primary disabled:shadow-xs disabled:ring-disabled_subtle',
+        "disabled:bg-primary disabled:shadow-xs disabled:ring-disabled_subtle",
         // Icon styles
-        '*:data-icon:text-fg-error-secondary hover:*:data-icon:text-fg-error-primary',
-      ].join(' '),
+        "*:data-icon:text-fg-error-secondary hover:*:data-icon:text-fg-error-primary",
+      ].join(" "),
     },
-    'tertiary-destructive': {
+    "tertiary-destructive": {
       root: [
-        'text-error-primary outline-error hover:bg-error-primary hover:text-error-primary_hover data-loading:bg-error-primary',
+        "text-error-primary outline-error hover:bg-error-primary hover:text-error-primary_hover data-loading:bg-error-primary",
         // Icon styles
-        '*:data-icon:text-fg-error-secondary hover:*:data-icon:text-fg-error-primary',
-      ].join(' '),
+        "*:data-icon:text-fg-error-secondary hover:*:data-icon:text-fg-error-primary",
+      ].join(" "),
     },
-    'link-destructive': {
+    "link-destructive": {
       root: [
-        'justify-normal rounded p-0! text-error-primary outline-error hover:text-error-primary_hover',
+        "justify-normal rounded p-0! text-error-primary outline-error hover:text-error-primary_hover",
         // Inner text underline
-        '*:data-text:underline *:data-text:decoration-transparent *:data-text:underline-offset-2 hover:*:data-text:decoration-current',
+        "*:data-text:underline *:data-text:decoration-transparent *:data-text:underline-offset-2 hover:*:data-text:decoration-current",
         // Icon styles
-        '*:data-icon:text-fg-error-secondary hover:*:data-icon:text-fg-error-primary',
-      ].join(' '),
+        "*:data-icon:text-fg-error-secondary hover:*:data-icon:text-fg-error-primary",
+      ].join(" "),
     },
   },
 });
@@ -166,11 +166,11 @@ export interface ButtonProps
   extends
     CommonProps,
     DetailedHTMLProps<
-      Omit<ButtonHTMLAttributes<HTMLButtonElement>, 'color' | 'slot'>,
+      Omit<ButtonHTMLAttributes<HTMLButtonElement>, "color" | "slot">,
       HTMLButtonElement
     > {
   /** Slot name for react-aria component */
-  slot?: AriaButtonProps['slot'];
+  slot?: AriaButtonProps["slot"];
 }
 
 /**
@@ -180,7 +180,7 @@ interface LinkProps
   extends
     CommonProps,
     DetailedHTMLProps<
-      Omit<AnchorHTMLAttributes<HTMLAnchorElement>, 'color'>,
+      Omit<AnchorHTMLAttributes<HTMLAnchorElement>, "color">,
       HTMLAnchorElement
     > {}
 
@@ -188,8 +188,8 @@ interface LinkProps
 export type Props = ButtonProps | LinkProps;
 
 export const Button = ({
-  size = 'sm',
-  color = 'primary',
+  size = "sm",
+  color = "primary",
   children,
   className,
   noTextPadding,
@@ -200,12 +200,12 @@ export const Button = ({
   showTextWhileLoading,
   ...otherProps
 }: Props) => {
-  const href = 'href' in otherProps ? otherProps.href : undefined;
+  const href = "href" in otherProps ? otherProps.href : undefined;
   const Component = href ? AriaLink : AriaButton;
 
   const isIcon = (IconLeading || IconTrailing) && !children;
-  const isLinkType = ['link-gray', 'link-color', 'link-destructive'].includes(
-    color
+  const isLinkType = ["link-gray", "link-color", "link-destructive"].includes(
+    color,
   );
 
   noTextPadding = isLinkType || noTextPadding;
@@ -222,7 +222,7 @@ export const Button = ({
     props = {
       ...otherProps,
 
-      type: otherProps.type || 'button',
+      type: otherProps.type || "button",
       isPending: loading,
     };
   }
@@ -238,13 +238,13 @@ export const Button = ({
         styles.sizes[size].root,
         styles.colors[color].root,
         isLinkType && styles.sizes[size].linkRoot,
-        (loading || (href && (disabled || loading))) && 'pointer-events-none',
+        (loading || (href && (disabled || loading))) && "pointer-events-none",
         // If in `loading` state, hide everything except the loading icon (and text if `showTextWhileLoading` is true).
         loading &&
           (showTextWhileLoading
-            ? '[&>*:not([data-icon=loading]):not([data-text])]:hidden'
-            : '[&>*:not([data-icon=loading])]:invisible'),
-        className
+            ? "[&>*:not([data-icon=loading]):not([data-text])]:hidden"
+            : "[&>*:not([data-icon=loading])]:invisible"),
+        className,
       )}
     >
       {/* Leading icon */}
@@ -265,7 +265,7 @@ export const Button = ({
           className={cx(
             styles.common.icon,
             !showTextWhileLoading &&
-              'absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2'
+              "absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2",
           )}
         >
           {/* Background circle */}
@@ -294,7 +294,7 @@ export const Button = ({
       {children && (
         <span
           data-text
-          className={cx('transition-inherit-all', !noTextPadding && 'px-0.5')}
+          className={cx("transition-inherit-all", !noTextPadding && "px-0.5")}
         >
           {children}
         </span>
