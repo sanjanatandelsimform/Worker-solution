@@ -130,7 +130,10 @@ export const Checkbox = ({
           />
           {(label || hint) && (
             <div
-              className={cx("inline-flex flex-col", sizes[size].textWrapper)}
+              className={cx(
+                "inline-flex flex-col items-start",
+                sizes[size].textWrapper,
+              )}
             >
               {label && (
                 <p

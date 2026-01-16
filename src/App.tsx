@@ -1,10 +1,12 @@
 import { Routes, Route } from "react-router-dom";
 import { AuthErrorBoundary } from "./components/auth/AuthErrorBoundary";
-import { RegisterPage } from "./pages/auth/RegisterPage";
 import { SignInPage } from "./pages/auth/SignInPage";
 import { EmailVerificationPage } from "./pages/auth/EmailVerificationPage";
 import { PasswordResetPage } from "./pages/auth/PasswordResetPage";
 import { BusinessInfoPage } from "./pages/auth/BusinessInfoPage";
+import DemoComponents from "./pages/DemoComponents";
+import SignInForm from "./components/auth/SignInForm";
+import RegistrationForm from "./components/auth/RegistrationForm";
 
 // Placeholder pages - will be implemented in subsequent phases
 const HomePage = () => <div className="p-8">Home Page</div>;
@@ -16,8 +18,9 @@ function App() {
       <div className="min-h-screen bg-gray-50">
         <Routes>
           <Route path="/" element={<HomePage />} />
-          <Route path="/register" element={<RegisterPage />} />
-          <Route path="/sign-in" element={<SignInPage />} />
+          <Route path="/register" element={<RegistrationForm />} />
+          <Route path="/sign-in" element={<SignInForm />} />
+          <Route path="/demo-components" element={<DemoComponents />} />
           <Route
             path="/onboarding/business-info"
             element={<BusinessInfoPage />}

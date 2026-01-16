@@ -1,3 +1,5 @@
+"use client";
+
 import {
   type ComponentType,
   type HTMLAttributes,
@@ -77,7 +79,7 @@ export const InputBase = ({
   const sizes = sortCx({
     sm: {
       root: cx(
-        "px-3 py-2 h-9",
+        "px-3 py-2",
         hasTrailingIcon && "pr-9",
         hasLeadingIcon && "pl-10",
       ),
@@ -87,7 +89,7 @@ export const InputBase = ({
     },
     md: {
       root: cx(
-        "px-3.5 py-2.5 bg-red-500",
+        "px-3.5 py-2.5",
         hasTrailingIcon && "pr-9.5",
         hasLeadingIcon && "pl-10.5",
       ),
@@ -103,7 +105,7 @@ export const InputBase = ({
       ref={groupRef}
       className={({ isFocusWithin, isDisabled, isInvalid }) =>
         cx(
-          "relative flex w-full flex-row place-content-center place-items-center rounded-lg bg-primary shadow-xs ring-1 ring-primary transition-shadow duration-100 ease-linear ring-inset",
+          "relative flex w-full flex-row place-content-center place-items-center rounded-lg bg-primary shadow-xs ring-1 ring-gray-300 transition-shadow duration-100 ease-linear ring-inset border-0",
 
           isFocusWithin && !isDisabled && "ring-2 ring-brand",
 
@@ -128,8 +130,8 @@ export const InputBase = ({
       {Icon && (
         <Icon
           className={cx(
-            "pointer-events-none absolute size-5 text-fg-quaternary",
-            isDisabled && "text-fg-disabled",
+            "pointer-events-none absolute size-5 text-gray-400",
+            isDisabled && "text-gray-300",
             sizes[inputSize].iconLeading,
             context?.iconClassName,
             iconClassName,
@@ -143,7 +145,7 @@ export const InputBase = ({
         ref={ref}
         placeholder={placeholder}
         className={cx(
-          "m-0 w-full bg-transparent text-md text-primary ring-0 outline-hidden placeholder:text-placeholder autofill:rounded-lg autofill:text-primary",
+          "m-0 w-full bg-transparent text-md text-primary ring-0 outline-hidden placeholder:text-gray-500 autofill:rounded-lg autofill:text-primary",
           isDisabled && "cursor-not-allowed text-disabled",
           sizes[inputSize].root,
           context?.inputClassName,
@@ -156,7 +158,7 @@ export const InputBase = ({
         <Tooltip title={tooltip} placement="top">
           <TooltipTrigger
             className={cx(
-              "absolute cursor-pointer text-fg-quaternary transition duration-200 hover:text-fg-quaternary_hover focus:text-fg-quaternary_hover",
+              "absolute cursor-pointer text-gray-400 transition duration-200 hover:text-gray-400 focus:text-gray-400",
               sizes[inputSize].iconTrailing,
               context?.tooltipClassName,
               tooltipClassName,
@@ -272,7 +274,7 @@ export const Input = ({
 }: InputProps) => {
   return (
     <TextField
-      aria-label={label ? undefined : placeholder}
+      aria-label={!label ? placeholder : undefined}
       {...props}
       className={className}
     >

@@ -25,33 +25,13 @@ export const SignInPage: React.FC = () => {
     }
   };
 
-  return (
-    <div className="flex min-h-screen items-center justify-center bg-gray-50 px-4 py-12">
-      <div className="w-full max-w-md">
-        {/* Header */}
-        <div className="mb-8 text-center">
-          <h1 className="text-3xl font-bold text-gray-900">Welcome Back</h1>
-          <p className="mt-2 text-sm text-gray-600">
-            Sign in to access your account
-          </p>
-        </div>
-
+  return ( 
+      <>
         {/* Sign In Form */}
-        <div className="rounded-lg bg-white p-8 shadow-md">
-          {/* Google SSO Button */}
-          <GoogleSSOButton text="Sign in with Google" />
-
-          {/* Divider */}
-          <div className="my-6 flex items-center">
-            <div className="flex-1 border-t border-gray-300"></div>
-            <span className="px-4 text-sm text-gray-500">or</span>
-            <div className="flex-1 border-t border-gray-300"></div>
-          </div>
-
-          {/* Email/Password Sign In Form */}
-          <SignInForm onSuccess={handleSuccess} />
+        <div className="w-full">
+          <SignInForm />
         </div>
-      </div>
-    </div>
+      </>
+      
   );
 };

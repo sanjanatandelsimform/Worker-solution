@@ -1,32 +1,44 @@
-import React, { useState } from "react";
-import { useForm, Controller } from "react-hook-form";
+import { useState } from "react";
+import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { Link } from "react-router-dom";
-import {
-  signInSchema,
-  type SignInFormData,
-} from "../../services/validation/authSchemas";
-import { signin } from "../../services/api/authApi";
-import { Input } from "../base/input/input";
-import { Button } from "../base/buttons/button";
-import { Checkbox } from "../base/checkbox/checkbox";
+import { z } from "zod";
+import { Button } from "@/components/base/buttons/button";
+import { Input } from "@/components/base/input/input";
+import { InputGroup } from "@/components/base/input/input-group";
+import { Checkbox } from "@/components/base/checkbox/checkbox";
+import { GoogleSSOButton } from "./GoogleSSOButton";
+import { Eye, EyeOff } from "@untitledui/icons";
 
-interface SignInFormProps {
-  onSuccess?: () => void;
-  onError?: (error: string) => void;
-}
+// Validation schema using Zod
+const signInSchema = z.object({
+  email: z
+    .string()
+    .min(1, "Email is required")
+    .refine(
+      (value) => /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value),
+      "Please enter correct email format."
+    ),
+  password: z
+    .string()
+    .min(6, "Password must be at least 6 characters")
+    .regex(
+      /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]/,
+      "Password must be min 6 characters, include number, upper case, lower case and symbol."
+    ),
+  rememberMe: z.boolean().optional(),
+});
 
-export const SignInForm: React.FC<SignInFormProps> = ({
-  onSuccess,
-  onError,
-}) => {
-  const [isSubmitting, setIsSubmitting] = useState(false);
-  const [apiError, setApiError] = useState<string | null>(null);
+type SignInFormData = z.infer<typeof signInSchema>;
+
+export const SignInForm = () => {
+  const [showPassword, setShowPassword] = useState(false);
 
   const {
-    control,
     handleSubmit,
-    formState: { errors },
+    formState: { errors, isSubmitting },
+    watch,
+    setValue,
+    trigger,
   } = useForm<SignInFormData>({
     resolver: zodResolver(signInSchema),
     mode: "onBlur",
@@ -37,117 +49,196 @@ export const SignInForm: React.FC<SignInFormProps> = ({
     },
   });
 
+  const rememberMe = watch("rememberMe");
+  const email = watch("email");
+  const password = watch("password");
+
   const onSubmit = async (data: SignInFormData) => {
-    setIsSubmitting(true);
-    setApiError(null);
-
     try {
-      await signin(data);
-
-      if (onSuccess) {
-        onSuccess();
-      }
+      // Handle sign in logic
+      console.log("Form submitted:", data);
+      // Add your authentication logic here
     } catch (error) {
-      const errorMessage =
-        error instanceof Error ? error.message : "Sign in failed";
-      setApiError(errorMessage);
-      if (onError) {
-        onError(errorMessage);
-      }
-    } finally {
-      setIsSubmitting(false);
+      console.error("Sign in error:", error);
     }
   };
 
+  const handleForgotPassword = () => {
+    // Handle forgot password logic
+    console.log("Forgot password clicked");
+  };
+
+  const handleSignUp = () => {
+    // Handle sign up navigation
+    console.log("Sign up clicked");
+  };
+
   return (
-    <form onSubmit={handleSubmit(onSubmit)} className="space-y-6" noValidate>
-      {/* API Error Message */}
-      {apiError && (
-        <div
-          className="rounded-lg border border-red-300 bg-red-50 p-4 text-sm text-red-800"
-          role="alert"
-          aria-live="assertive"
-        >
-          {apiError}
+    <div className="flex min-h-screen items-center justify-center bg-secondary">
+      {/* Container */}
+      <div className="flex w-181.5 items-center justify-center rounded-xl border border-solid border-(--color-border-primary) bg-primary px-6 py-16 shadow-[0px_1px_2px_0px_rgba(10,13,18,0.05)] ">
+        {/* Content */}
+        <div className="flex w-full max-w-90 flex-col items-center gap-8">
+          {/* Header */}
+          <div className="flex w-full flex-col items-center gap-6">
+            {/* Logo */}
+            <div className="flex items-center justify-center rounded-xl bg-tertiary px-2 py-1">
+              <h1
+                className="text-[48px] font-bold leading-15 tracking-[-0.96px]"
+                style={{
+                  fontFamily: "var(--font-family-display)",
+                  color: "var(--color-text-black)",
+                }}
+              >
+                BeneStat
+              </h1>
+            </div>
+
+            {/* Text and supporting text */}
+            <div className="flex w-full flex-col items-start gap-3 text-center">
+              <h2
+                className="w-full text-[30px] font-semibold leading-9.5"
+                style={{
+                  fontFamily: "var(--font-family-display)",
+                  color: "var(--color-text-primary)",
+                }}
+              >
+                Log in to your account
+              </h2>
+              <p
+                className="w-full text-(--font-size-md) font-normal leading-(--line-height-md)"
+                style={{
+                  fontFamily: "var(--font-family-body)",
+                  color: "var(--color-text-tertiary)",
+                }}
+              >
+                Welcome back! Please enter your details.
+              </p>
+            </div>
+          </div>
+
+          {/* Form Content */}
+          <div className="flex w-full flex-col items-center gap-6 rounded-xl">
+            {/* Form */}
+            <form
+              onSubmit={handleSubmit(onSubmit)}
+              className="flex w-full cursor-pointer flex-col gap-5"
+            >
+              {/* Email Input Field */}
+              <InputGroup>
+                <Input
+                  name="email"
+                  size="md"
+                  isRequired
+                  label="Email"
+                  hint={errors.email?.message}
+                  placeholder="Enter your email"
+                  isInvalid={!!errors.email}
+                  value={email}
+                  onChange={(value) => {
+                    setValue("email", value);
+                    trigger("email");
+                  }}
+                />
+              </InputGroup>
+
+              {/* Password Input Field */}
+              <InputGroup className="relative">
+                <Input
+                  name="password"
+                  isRequired
+                  label="Password"
+                  hint={errors.password?.message}
+                  placeholder="Password"
+                  size="md"
+                  type={showPassword ? "text" : "password"}
+                  isInvalid={!!errors.password}
+                  value={password}
+                  className="relative"
+                  onChange={(value) => {
+                    setValue("password", value);
+                    trigger("password");
+                  }}
+                />
+                <Button
+                  color="tertiary"
+                  size="sm"
+                  type="button"
+                  onClick={() => setShowPassword(!showPassword)}
+                  aria-label={showPassword ? "Hide password" : "Show password"}
+                  className="absolute right-0 top-7"
+                >
+                  {showPassword ? (
+                    <EyeOff className="size-5 text-gray-400" />
+                  ) : (
+                    <Eye className="size-5 text-gray-400" />
+                  )}
+                </Button>
+              </InputGroup>
+
+              {/* Row - Checkbox and Forgot Password */}
+              <div className="flex w-full items-center">
+                {/* Checkbox */}
+                <div className="flex flex-1 items-start gap-2">
+                  <Checkbox
+                    size="sm"
+                    isSelected={rememberMe}
+                    onChange={(selected) => setValue("rememberMe", selected)}
+                    label="Remember for 30 days"
+                  />
+                </div>
+
+                {/* Forgot Password Button */}
+                <Button
+                  type="button"
+                  color="link-color"
+                  size="md"
+                  href="/password-reset"
+                >
+                  Forgot password
+                </Button>
+              </div>
+
+              {/* Actions */}
+              <div className="flex w-full flex-col items-start gap-4">
+                {/* Sign in Button */}
+                <Button
+                  type="submit"
+                  color="primary"
+                  size="lg"
+                  isDisabled={isSubmitting}
+                  className="w-full"
+                >
+                  {isSubmitting ? "Signing in..." : "Sign in"}
+                </Button>
+
+                {/* Social button groups */}
+                <div className="flex w-full flex-col items-center justify-center gap-3">
+                  <GoogleSSOButton />
+                </div>
+              </div>
+            </form>
+          </div>
+
+          {/* Row - Sign up link */}
+          <div className="flex w-full items-baseline justify-center gap-1">
+            <p
+              className="text-sm font-normal leading-5"
+              style={{
+                fontFamily: "var(--font-family-body)",
+                color: "var(--color-text-tertiary)",
+              }}
+            >
+              Don't have an account?
+            </p>
+            <Button href="/register" color="link-color" size="md">
+              Sign up
+            </Button>
+          </div>
         </div>
-      )}
-
-      {/* Email */}
-      <Controller
-        name="email"
-        control={control}
-        render={({ field }) => (
-          <Input
-            label="Email"
-            type="email"
-            placeholder="john@acmecorp.com"
-            value={field.value}
-            onChange={field.onChange}
-            onBlur={field.onBlur}
-            isInvalid={!!errors.email}
-            hint={errors.email?.message}
-          />
-        )}
-      />
-
-      {/* Password */}
-      <Controller
-        name="password"
-        control={control}
-        render={({ field }) => (
-          <Input
-            label="Password"
-            type="password"
-            placeholder="••••••••"
-            value={field.value}
-            onChange={field.onChange}
-            onBlur={field.onBlur}
-            isInvalid={!!errors.password}
-            hint={errors.password?.message}
-          />
-        )}
-      />
-
-      {/* Remember Me & Forgot Password */}
-      <div className="flex items-center justify-between">
-        <Controller
-          name="rememberMe"
-          control={control}
-          render={({ field }) => (
-            <Checkbox
-              isSelected={field.value}
-              onChange={field.onChange}
-              label="Remember for 30 days"
-            />
-          )}
-        />
-
-        <Link
-          to="/auth/password-reset"
-          className="text-sm text-blue-600 hover:underline"
-        >
-          Forgot password?
-        </Link>
       </div>
-
-      {/* Submit Button */}
-      <Button
-        type="submit"
-        color="primary"
-        size="lg"
-        className="w-full"
-        isDisabled={isSubmitting}
-      >
-        {isSubmitting ? "Signing In..." : "Sign In"}
-      </Button>
-
-      {/* Sign Up Link */}
-      <p className="text-center text-sm text-gray-600">
-        Don't have an account?{" "}
-        <Link to="/auth/register" className="text-blue-600 hover:underline">
-          Sign Up
-        </Link>
-      </p>
-    </form>
+    </div>
   );
 };
+
+export default SignInForm;

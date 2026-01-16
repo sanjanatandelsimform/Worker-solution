@@ -22,7 +22,7 @@ export const InputPrefix = ({
   <span
     {...props}
     className={cx(
-      "flex text-md text-tertiary shadow-xs ring-1 ring-border-primary ring-inset",
+      "flex text-md text-tertiary shadow-xs ring-1 ring-gray-300 ring-inset",
       // Styles when the prefix is within an `InputGroup`
       "in-data-input-wrapper:in-data-leading:-mr-px in-data-input-wrapper:in-data-leading:rounded-l-lg",
       "in-data-input-wrapper:in-data-trailing:-ml-px in-data-input-wrapper:in-data-trailing:rounded-r-lg",
@@ -113,7 +113,7 @@ export const InputGroup = ({
         hasLeading && "rounded-l-none",
         hasTrailing && "rounded-r-none",
         // When select element is passed as a child
-        "group-has-[&>select]:bg-transparent group-has-[&>select]:shadow-none group-has-[&>select]:ring-0 group-has-[&>select]:focus-within:ring-0",
+        "group-has-[&>select]:bg-transparent group-has-[&>select]:shadow-none group-has-[&>select]:ring-1 group-has-[&>select]:focus-within:ring-1",
         // In `Input` component, there is "group-disabled" class so here we need to use "group-disabled:group-has-[&>select]" to avoid conflict
         "group-disabled:group-has-[&>select]:bg-transparent",
       )}
@@ -129,7 +129,7 @@ export const InputGroup = ({
               "group relative flex h-max w-full flex-row justify-center rounded-lg bg-primary transition-all duration-100 ease-linear",
 
               // Only apply focus ring when child is select and input is focused
-              "has-[&>select]:shadow-xs has-[&>select]:ring-1 has-[&>select]:ring-border-primary has-[&>select]:ring-inset has-[&>select]:has-[input:focus]:ring-2 has-[&>select]:has-[input:focus]:ring-border-brand",
+              "has-[&>select]:shadow-xs has-[&>select]:ring-1 has-[&>select]:ring-border-gray-300 has-[&>select]:ring-inset has-[&>select]:has-[input:focus]:ring-2 has-[&>select]:has-[input:focus]:ring-border-gray-300",
 
               isDisabled &&
                 "cursor-not-allowed has-[&>select]:bg-disabled_subtle has-[&>select]:ring-border-disabled",
