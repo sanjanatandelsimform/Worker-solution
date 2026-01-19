@@ -43,7 +43,12 @@ export const GoogleSSOButton: React.FC<GoogleSSOButtonProps> = () => {
     //   </svg>
     //   {text}
     // </Button>
-    <SocialButton social="google" size="md" onClick={handleClick} className="w-full">
+    <SocialButton
+      social="google"
+      size="md"
+      onClick={handleClick}
+      className="w-full"
+    >
       Continue with Google
     </SocialButton>
   );

@@ -32,11 +32,14 @@ const emailSchema = z
   .min(1, "Email is required")
   .email("Invalid email format");
 
-// Phone number validation schema (10 digits)
+// Phone number validation schema (10 digits, optional)
 const phoneNumberSchema = z
   .string()
-  .min(1, "Phone number is required")
-  .regex(/^\d{10}$/, "Phone number must be exactly 10 digits");
+  .optional()
+  .refine(
+    (value) => !value || /^\d{10}$/.test(value.replace(/\D/g, "")),
+    "Phone number must be exactly 10 digits",
+  );
 
 // Zip code validation schema (5 digits)
 const zipCodeSchema = z
@@ -50,15 +53,17 @@ export const registrationSchema = z
     firstName: z
       .string()
       .min(1, "First name is required")
-      .min(2, "First name must be at least 2 characters"),
+      .min(2, "First name must be at least 2 characters")
+      .max(20, "First name must not exceed 20 characters"),
     lastName: z
       .string()
-      .min(1, "Last name is required")
-      .min(2, "Last name must be at least 2 characters"),
+      .max(20, "Last name must not exceed 20 characters")
+      .optional(),
     businessName: z
       .string()
       .min(1, "Business name is required")
-      .min(2, "Business name must be at least 2 characters"),
+      .min(2, "Business name must be at least 2 characters")
+      .max(50, "Business name must not exceed 50 characters"),
     email: emailSchema,
     phoneNumber: phoneNumberSchema,
     industry: industrySchema,

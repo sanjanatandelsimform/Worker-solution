@@ -58,7 +58,7 @@ export const BusinessInfoForm: React.FC<BusinessInfoFormProps> = ({
     try {
       await submitBusinessInfo({
         ...data,
-        phoneNumber: formatPhoneNumber(data.phoneNumber),
+        phoneNumber: formatPhoneNumber(data.phoneNumber || ""),
       });
 
       if (onSuccess) {

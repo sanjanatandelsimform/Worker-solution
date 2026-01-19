@@ -1,4 +1,4 @@
-@import 'tailwindcss';
+@import "tailwindcss";
 
 :root {
   font-family: Inter, system-ui, Avenir, Helvetica, Arial, sans-serif;
@@ -147,8 +147,8 @@
   --line-height-display-xs: 32px;
 
   /* ========== Typography - Font Family ========== */
-  --font-family-body: 'Inter', sans-serif;
-  --font-family-display: 'Inter', sans-serif;
+  --font-family-body: "Inter", sans-serif;
+  --font-family-display: "Inter", sans-serif;
 
   /* ========== Typography - Font Weight ========== */
   --font-weight-regular: 400;
@@ -241,4 +241,3 @@
 .text-error-secondary {
   color: var(--color-error-500);
 }
-

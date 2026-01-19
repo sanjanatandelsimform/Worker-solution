@@ -59,8 +59,8 @@ export const signup = async (data: RegistrationData): Promise<AuthResponse> => {
       firstName: data.firstName,
       lastName: data.lastName,
       businessName: data.businessName,
-      email: data.email,
-      phoneNumber: data.phoneNumber,
+      businessEmail: data.businessEmail,
+      businessPhone: data.businessPhone,
       industry: data.industry,
       zipCode: data.zipCode,
       password: data.password,
@@ -77,7 +77,7 @@ export const signup = async (data: RegistrationData): Promise<AuthResponse> => {
 export const signin = async (data: SignInData): Promise<AuthResponse> => {
   try {
     const response = await apiClient.post<AuthResponse>("/auth/signin", {
-      email: data.email,
+      businessEmail: data.businessEmail,
       password: data.password,
       rememberMe: data.rememberMe,
     });

@@ -2,42 +2,59 @@ import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
+import { useNavigate } from "react-router-dom";
 import { Button } from "@/components/base/buttons/button";
 import { Input, InputBase } from "@/components/base/input/input";
 import { InputGroup } from "@/components/base/input/input-group";
 import { Checkbox } from "@/components/base/checkbox/checkbox";
-import { Select } from "@/components/base/select/select";
 import { Eye, EyeOff, Mail01 } from "@untitledui/icons";
 import { NativeSelect } from "../base/select/select-native";
+import { signup } from "@/services/api/authApi";
+import { cx } from "@/utils/cx";
+import type { RegistrationData } from "@/types/auth";
 
 // Validation schema using Zod
 const registrationSchema = z
   .object({
-    firstName: z.string().min(1, "First name is required"),
-    lastName: z.string().min(1, "Last name is required"),
-    legalBusinessName: z.string().min(1, "Legal business name is required"),
-    industry: z.string().min(1, "Select an industry"),
+    firstName: z
+      .string()
+      .min(1, "First Name is required")
+      .min(2, "First Name must be at least 2 characters")
+      .max(20, "First Name must not exceed 20 characters"),
+    lastName: z
+      .string()
+      .min(1, "Last Name is required")
+      .max(20, "Last Name must not exceed 20 characters"),
+    legalBusinessName: z
+      .string()
+      .min(1, "Legal Business Name is required")
+      .min(2, "Legal Business Name must be at least 2 characters")
+      .max(50, "Legal Business Name must not exceed 50 characters"),
+    industry: z.string().min(1, "Industry is required"),
     zipCode: z
       .string()
-      .min(1, "Zip code is required")
-      .regex(/^\d{5}(-\d{4})?$/, "Enter a valid zipcode"),
+      .min(1, "Zip Code is required")
+      .regex(/^\d{5}$/, "Zip Code must be exactly 5 digits"),
     businessEmail: z
       .string()
-      .min(1, "Email is required")
-      .refine(
-        (value) => /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value),
-        "Enter a valid email address"
-      ),
+      .min(1, "Business Email Address is required")
+      .email("Enter a valid email address"),
     businessPhone: z
       .string()
-      .min(1, "Phone number is required")
-      .regex(/^\+?1?\s?\(?\d{3}\)?[\s.-]?\d{3}[\s.-]?\d{4}$/, "10 digits required"),
+      .min(1, "Business Phone is required")
+      .refine(
+        (value) => /^\d{10}$/.test(value.replace(/\D/g, "")),
+        "Phone number must be exactly 10 digits",
+      ),
     password: z
       .string()
-      .min(6, "Password must be at least 6 characters")
+      .min(8, "Password must be at least 8 characters")
+      .regex(/[A-Z]/, "Password must contain at least one uppercase letter")
+      .regex(/[a-z]/, "Password must contain at least one lowercase letter")
+      .regex(/[0-9]/, "Password must contain at least one number")
       .regex(
-        /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]/,
-        "Must be min 6 characters, include number, upper case, lower case and symbol."
+        /[!@#$%^&*(),.?":{}|<>]/,
+        "Password must contain at least one special character",
       ),
     confirmPassword: z.string().min(1, "Confirm password is required"),
     agreeToTerms: z.boolean().refine((val) => val === true, {
@@ -52,14 +69,24 @@ const registrationSchema = z
 type RegistrationFormData = z.infer<typeof registrationSchema>;
 
 const industries = [
-  { id: "technology", label: "Technology", supportingText: "Technology" },
-  { id: "healthcare", label: "Healthcare", supportingText: "Healthcare" },
-  { id: "finance", label: "Finance", supportingText: "Finance" },
-  { id: "retail", label: "Retail", supportingText: "Retail" },
-  { id: "manufacturing", label: "Manufacturing", supportingText: "Manufacturing" },
-  { id: "education", label: "Education", supportingText: "Education" },
-  { id: "hospitality", label: "Hospitality", supportingText: "Hospitality" },
-  { id: "other", label: "Other", supportingText: "Other" },
+  {
+    id: "Manufacturing",
+    label: "Manufacturing",
+    supportingText: "Manufacturing",
+  },
+  { id: "Retail", label: "Retail", supportingText: "Retail" },
+  { id: "Healthcare", label: "Healthcare", supportingText: "Healthcare" },
+  { id: "Technology", label: "Technology", supportingText: "Technology" },
+  { id: "Finance", label: "Finance", supportingText: "Finance" },
+  { id: "Construction", label: "Construction", supportingText: "Construction" },
+  { id: "Education", label: "Education", supportingText: "Education" },
+  { id: "Hospitality", label: "Hospitality", supportingText: "Hospitality" },
+  {
+    id: "Transportation",
+    label: "Transportation",
+    supportingText: "Transportation",
+  },
+  { id: "Other", label: "Other", supportingText: "Other" },
 ];
 
 export const RegistrationForm = () => {
@@ -67,6 +94,8 @@ export const RegistrationForm = () => {
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
   const [phoneNumber, setPhoneNumber] = useState("");
   const [countryCode, setCountryCode] = useState("US");
+  const [submitError, setSubmitError] = useState<string | null>(null);
+  const navigate = useNavigate();
 
   const {
     handleSubmit,
@@ -76,7 +105,8 @@ export const RegistrationForm = () => {
     trigger,
   } = useForm<RegistrationFormData>({
     resolver: zodResolver(registrationSchema),
-    mode: "onBlur",
+    mode: "onSubmit",
+    reValidateMode: "onChange",
     defaultValues: {
       firstName: "",
       lastName: "",
@@ -96,43 +126,46 @@ export const RegistrationForm = () => {
   const legalBusinessName = watch("legalBusinessName");
   const zipCode = watch("zipCode");
   const businessEmail = watch("businessEmail");
-  const businessPhone = watch("businessPhone");
   const password = watch("password");
   const confirmPassword = watch("confirmPassword");
   const agreeToTerms = watch("agreeToTerms");
 
   const onSubmit = async (data: RegistrationFormData) => {
     try {
-      // Handle registration logic
-      console.log("Form submitted:", data);
-      // Add your registration logic here
+      setSubmitError(null);
+
+      // Map form data to API format
+      const registrationData: RegistrationData = {
+        firstName: data.firstName,
+        lastName: data.lastName,
+        businessName: data.legalBusinessName,
+        businessEmail: data.businessEmail,
+        businessPhone: data.businessPhone,
+        industry: data.industry as any,
+        zipCode: data.zipCode,
+        password: data.password,
+        confirmPassword: data.confirmPassword,
+        acceptTerms: data.agreeToTerms,
+      };
+
+      // Call signup API
+      await signup(registrationData);
+
+      // Clear password fields from form state after successful submission
+      setValue("password", "");
+      setValue("confirmPassword", "");
+
+      // Redirect to email verification page on success
+      navigate("/email-verification");
     } catch (error) {
       console.error("Registration error:", error);
+      setSubmitError(
+        error instanceof Error
+          ? error.message
+          : "An unexpected error occurred. Please try again.",
+      );
     }
   };
-
-  const handleSignIn = () => {
-    // Handle sign in navigation
-    console.log("Sign in clicked");
-  };
-
-  const items = [
-    { label: "Phoenix Baker", id: "@phoenix", supportingText: "@phoenix" },
-    { label: "Olivia Rhye", id: "@olivia", supportingText: "@olivia" },
-    {
-      label: "Lana Steiner",
-      id: "@lana",
-      supportingText: "@lana",
-      disabled: true,
-    },
-    { label: "Demi Wilkinson", id: "@demi", supportingText: "@demi" },
-    { label: "Candice Wu", id: "@candice", supportingText: "@candice" },
-    { label: "Natali Craig", id: "@natali", supportingText: "@natali" },
-    { label: "Abraham Baker", id: "@abraham", supportingText: "@abraham" },
-    { label: "Adem Lane", id: "@adem", supportingText: "@adem" },
-    { label: "Jackson Reed", id: "@jackson", supportingText: "@jackson" },
-    { label: "Jessie Meyton", id: "@jessie", supportingText: "@jessie" },
-  ];
 
   return (
     <div className="flex min-h-screen items-center justify-center bg-secondary">
@@ -171,13 +204,18 @@ export const RegistrationForm = () => {
                 color: "var(--color-text-tertiary)",
               }}
             >
-              We're excited that you've decided to try our Worker Solutions® platform. Before we
-              begin we'll need to collect some information about your business.
+              We're excited that you've decided to try our Worker Solutions®
+              platform. Before we begin we'll need to collect some information
+              about your business.
             </p>
           </div>
 
           {/* Form */}
-          <form onSubmit={handleSubmit(onSubmit)} className="w-full cursor-pointer">
+          <form
+            onSubmit={handleSubmit(onSubmit)}
+            className="w-full cursor-pointer"
+            noValidate={false}
+          >
             {/* Fields - Grid Layout */}
             <div className="grid w-full grid-cols-2 gap-x-4 gap-y-4">
               {/* Row 1 - First Name & Last Name */}
@@ -191,6 +229,7 @@ export const RegistrationForm = () => {
                   placeholder="First Name"
                   isInvalid={!!errors.firstName}
                   value={firstName}
+                  maxLength={20}
                   onChange={(value) => {
                     setValue("firstName", value);
                     trigger("firstName");
@@ -208,6 +247,7 @@ export const RegistrationForm = () => {
                   placeholder="Last Name"
                   isInvalid={!!errors.lastName}
                   value={lastName}
+                  maxLength={20}
                   onChange={(value) => {
                     setValue("lastName", value);
                     trigger("lastName");
@@ -226,6 +266,7 @@ export const RegistrationForm = () => {
                   placeholder="Legal Business Name"
                   isInvalid={!!errors.legalBusinessName}
                   value={legalBusinessName}
+                  maxLength={50}
                   onChange={(value) => {
                     setValue("legalBusinessName", value);
                     trigger("legalBusinessName");
@@ -233,28 +274,39 @@ export const RegistrationForm = () => {
                 />
               </InputGroup>
 
-              <Select
-                  className="w-full flex items-start"
+              <div className="flex flex-col gap-1.5">
+                <NativeSelect
+                  label="Industry"
+                  value={watch("industry") || ""}
+                  onChange={(e) => {
+                    setValue("industry", e.target.value);
+                    trigger("industry");
+                  }}
+                  options={[
+                    { label: "Select an industry", value: "", disabled: true },
+                    ...industries.map((ind) => ({
+                      label: ind.label,
+                      value: ind.id,
+                    })),
+                  ]}
                   isRequired
-                  size="md"
-                  label="Select Your Industry"
-                  //tooltip="This is a tooltip"
-                  //hint="This is a hint text to help user."
-                  placeholder="Select Option"
-                  items={items}
-                >
-                  {(item) => (
-                    <Select.Item
-                      id={item.id}
-                      supportingText={item.supportingText}
-                      isDisabled={item.isDisabled}
-                      icon={item.icon}
-                      avatarUrl={item.avatarUrl}
-                    >
-                      {item.label}
-                    </Select.Item>
+                  style={{ color: "var(--color-text-primary)" }}
+                  selectClassName={cx(
+                    "!text-primary",
+                    errors.industry &&
+                      "ring-error_subtle focus-visible:ring-error",
                   )}
-                </Select>
+                />
+                {errors.industry && (
+                  <p
+                    className="text-sm"
+                    style={{ color: "red" }}
+                    // style={{ color: "var(--color-text-error-primary)" }}
+                  >
+                    {errors.industry.message}
+                  </p>
+                )}
+              </div>
 
               {/* Row 3 - Zip Code & (empty space for layout) */}
               <InputGroup>
@@ -267,8 +319,14 @@ export const RegistrationForm = () => {
                   placeholder=""
                   isInvalid={!!errors.zipCode}
                   value={zipCode}
+                  maxLength={5}
+                  type="text"
+                  inputMode="numeric"
+                  pattern="[0-9]*"
                   onChange={(value) => {
-                    setValue("zipCode", value);
+                    // Only allow numeric input
+                    const numericValue = value.replace(/\D/g, "");
+                    setValue("zipCode", numericValue);
                     trigger("zipCode");
                   }}
                 />
@@ -292,33 +350,49 @@ export const RegistrationForm = () => {
                   }}
                 />
               </InputGroup>
-               <InputGroup className="col-start-2"
-                  label="Phone number"
-                  hint="Enter your phone number with country code"
-                  leadingAddon={
-                    <NativeSelect
-                      value={countryCode}
-                      onChange={(e) => setCountryCode(e.target.value)}
-                      options={[
-                        { label: "US +1", value: "US" },
-                        { label: "UK +44", value: "UK" },
-                        { label: "IN +91", value: "IN" },
-                        { label: "CA +1", value: "CA" },
-                        { label: "AU +61", value: "AU" },
-                        { label: "DE +49", value: "DE" },
-                        { label: "FR +33", value: "FR" },
-                        { label: "JP +81", value: "JP" },
-                        { label: "CN +86", value: "CN" },
-                      ]}
-                    />
-                  }
-                >
+              <InputGroup
+                className="col-start-2"
+                isRequired
+                label="Business Phone"
+                hint={errors.businessPhone?.message}
+                isInvalid={!!errors.businessPhone}
+                leadingAddon={
+                  <NativeSelect
+                    value={countryCode}
+                    onChange={(e) => setCountryCode(e.target.value)}
+                    options={[
+                      { label: "US +1", value: "US" },
+                      { label: "UK +44", value: "UK" },
+                      { label: "IN +91", value: "IN" },
+                      { label: "CA +1", value: "CA" },
+                      { label: "AU +61", value: "AU" },
+                      { label: "DE +49", value: "DE" },
+                      { label: "FR +33", value: "FR" },
+                      { label: "JP +81", value: "JP" },
+                      { label: "CN +86", value: "CN" },
+                    ]}
+                  />
+                }
+              >
                 <InputBase
                   placeholder="(555) 000-0000"
                   type="tel"
                   size="sm"
                   value={phoneNumber}
-                  onChange={setPhoneNumber}
+                  maxLength={10}
+                  onChange={(e: any) => {
+                    const inputValue =
+                      typeof e === "string"
+                        ? e
+                        : e?.target?.value || e?.value || "";
+                    // Only allow numeric input and limit to 10 digits
+                    const numericValue = inputValue
+                      .replace(/\D/g, "")
+                      .slice(0, 10);
+                    setPhoneNumber(numericValue);
+                    setValue("businessPhone", numericValue);
+                    trigger("businessPhone");
+                  }}
                 />
               </InputGroup>
 
@@ -334,6 +408,7 @@ export const RegistrationForm = () => {
                   type={showPassword ? "text" : "password"}
                   isInvalid={!!errors.password}
                   value={password}
+                  maxLength={8}
                   className="relative"
                   onChange={(value) => {
                     setValue("password", value);
@@ -367,6 +442,7 @@ export const RegistrationForm = () => {
                   type={showConfirmPassword ? "text" : "password"}
                   isInvalid={!!errors.confirmPassword}
                   value={confirmPassword}
+                  maxLength={8}
                   className="relative"
                   onChange={(value) => {
                     setValue("confirmPassword", value);
@@ -378,7 +454,9 @@ export const RegistrationForm = () => {
                   size="sm"
                   type="button"
                   onClick={() => setShowConfirmPassword(!showConfirmPassword)}
-                  aria-label={showConfirmPassword ? "Hide password" : "Show password"}
+                  aria-label={
+                    showConfirmPassword ? "Hide password" : "Show password"
+                  }
                   className="absolute right-0 top-7"
                 >
                   {showConfirmPassword ? (
@@ -427,6 +505,17 @@ export const RegistrationForm = () => {
               <p className="mt-1 text-sm text-error-primary">
                 {errors.agreeToTerms.message}
               </p>
+            )}
+
+            {/* Submit Error Display */}
+            {submitError && (
+              <div
+                className="mt-4 rounded-lg border border-error-primary bg-error-secondary px-4 py-3 text-sm"
+                role="alert"
+                style={{ color: "var(--color-text-error-primary)" }}
+              >
+                {submitError}
+              </div>
             )}
 
             {/* Footer */}

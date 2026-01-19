@@ -39,7 +39,7 @@ export const Label = ({
 
       <span
         className={cx(
-          "hidden text-brand-tertiary",
+          "hidden text-error-primary",
           isRequired && "block",
           typeof isRequired === "undefined" && "group-required:block",
         )}

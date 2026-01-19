@@ -9,6 +9,7 @@ interface NativeSelectProps extends SelectHTMLAttributes<HTMLSelectElement> {
   hint?: string;
   selectClassName?: string;
   options: { label: string; value: string; disabled?: boolean }[];
+  isRequired?: boolean; // Added isRequired prop
 }
 
 export const NativeSelect = ({
@@ -17,6 +18,7 @@ export const NativeSelect = ({
   options,
   className,
   selectClassName,
+  isRequired,
   ...props
 }: NativeSelectProps) => {
   const id = useId();
@@ -27,7 +29,8 @@ export const NativeSelect = ({
     <div className={cx("w-full in-data-input-wrapper:w-max", className)}>
       {label && (
         <Label htmlFor={selectId} id={selectId} className="mb-1.5">
-          {label}
+          {label} {isRequired && <span style={{ color: "red" }}>*</span>}{" "}
+          {/* Add asterisk if required */}
         </Label>
       )}
 
@@ -37,8 +40,11 @@ export const NativeSelect = ({
           id={selectId}
           aria-describedby={hintId}
           aria-labelledby={selectId}
+          style={{ color: "var(--color-text-primary)", ...props.style }}
           className={cx(
-            "appearance-none rounded-lg bg-primary px-3.5 py-2.5 text-md font-medium text-primary shadow-xs outline-hidden transition duration-100 ease-linear ring-inset placeholder:text-fg-quaternary focus-visible:ring-2 focus-visible:ring-brand disabled:cursor-not-allowed disabled:bg-disabled_subtle disabled:text-disabled ring-1  border border-gray-300 border-r-0",
+            "appearance-none rounded-lg bg-primary px-3.5 py-2.5 text-md font-medium shadow-xs outline-hidden transition duration-100 ease-linear ring-inset placeholder:text-fg-quaternary focus-visible:ring-2 focus-visible:ring-brand disabled:cursor-not-allowed disabled:bg-disabled_subtle disabled:text-disabled ring-1 border border-gray-300 border-r-0",
+            // Force text color for both select and options
+            "text-[var(--color-text-primary)] [&>option]:text-[var(--color-text-primary)]",
             // Styles when the select is within an `InputGroup`
             "in-data-input-wrapper:flex in-data-input-wrapper:h-full in-data-input-wrapper:gap-1 in-data-input-wrapper:bg-inherit in-data-input-wrapper:px-3 in-data-input-wrapper:py-2 in-data-input-wrapper:font-normal in-data-input-wrapper:text-tertiary in-data-input-wrapper:shadow-none in-data-input-wrapper:ring-transparent",
             // Styles for the select when `TextField` is disabled
@@ -53,7 +59,7 @@ export const NativeSelect = ({
           )}
         >
           {options.map((opt) => (
-            <option key={opt.value} value={opt.value}>
+            <option key={opt.value} value={opt.value} disabled={opt.disabled}>
               {opt.label}
             </option>
           ))}

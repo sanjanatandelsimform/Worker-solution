@@ -34,8 +34,8 @@ export interface RegistrationData {
   firstName: string;
   lastName: string;
   businessName: string;
-  email: string;
-  phoneNumber: string;
+  businessEmail: string;
+  businessPhone: string;
   industry: Industry;
   zipCode: string;
   password: string;
@@ -44,7 +44,7 @@ export interface RegistrationData {
 }
 
 export interface SignInData {
-  email: string;
+  businessEmail: string;
   password: string;
   rememberMe: boolean;
 }

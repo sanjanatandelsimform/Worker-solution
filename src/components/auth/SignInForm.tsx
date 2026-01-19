@@ -8,6 +8,8 @@ import { InputGroup } from "@/components/base/input/input-group";
 import { Checkbox } from "@/components/base/checkbox/checkbox";
 import { GoogleSSOButton } from "./GoogleSSOButton";
 import { Eye, EyeOff } from "@untitledui/icons";
+import type { SignInData } from "@/types/auth";
+import { signin } from "@/services/api/authApi";
 
 // Validation schema using Zod
 const signInSchema = z.object({
@@ -16,14 +18,14 @@ const signInSchema = z.object({
     .min(1, "Email is required")
     .refine(
       (value) => /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value),
-      "Please enter correct email format."
+      "Please enter correct email format.",
     ),
   password: z
     .string()
-    .min(6, "Password must be at least 6 characters")
+    .min(8, "Password must be at least 8 characters")
     .regex(
       /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]/,
-      "Password must be min 6 characters, include number, upper case, lower case and symbol."
+      "Password must be min 8 characters, include number, upper case, lower case and symbol.",
     ),
   rememberMe: z.boolean().optional(),
 });
@@ -32,6 +34,7 @@ type SignInFormData = z.infer<typeof signInSchema>;
 
 export const SignInForm = () => {
   const [showPassword, setShowPassword] = useState(false);
+  const [errorMessage, setErrorMessage] = useState<string | null>(null);
 
   const {
     handleSubmit,
@@ -55,22 +58,24 @@ export const SignInForm = () => {
 
   const onSubmit = async (data: SignInFormData) => {
     try {
-      // Handle sign in logic
+      const signInData: SignInData = {
+        businessEmail: data.email,
+        password: data.password,
+        rememberMe: data.rememberMe || false,
+      };
+
+      // Call signin API
+      await signin(signInData);
       console.log("Form submitted:", data);
+      setErrorMessage(null); // Clear any previous error messages
+
       // Add your authentication logic here
     } catch (error) {
       console.error("Sign in error:", error);
+      setErrorMessage(
+        (error instanceof Error ? error.message : "An unexpected error occurred. Please try again."),
+      );
     }
-  };
-
-  const handleForgotPassword = () => {
-    // Handle forgot password logic
-    console.log("Forgot password clicked");
-  };
-
-  const handleSignUp = () => {
-    // Handle sign up navigation
-    console.log("Sign up clicked");
   };
 
   return (
@@ -154,6 +159,7 @@ export const SignInForm = () => {
                   type={showPassword ? "text" : "password"}
                   isInvalid={!!errors.password}
                   value={password}
+                  maxLength={8}
                   className="relative"
                   onChange={(value) => {
                     setValue("password", value);
@@ -175,6 +181,11 @@ export const SignInForm = () => {
                   )}
                 </Button>
               </InputGroup>
+
+              {/* Error Message Display */}
+              {errorMessage && (
+                <div className="text-red-500 text-sm">{errorMessage}</div>
+              )}
 
               {/* Row - Checkbox and Forgot Password */}
               <div className="flex w-full items-center">
