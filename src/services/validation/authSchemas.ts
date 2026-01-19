@@ -100,4 +100,3 @@ export const businessInfoSchema = z.object({
 // Export types inferred from schemas
 export type RegistrationFormData = z.infer<typeof registrationSchema>;
 export type SignInFormData = z.infer<typeof signInSchema>;
-export type BusinessInfoFormData = z.infer<typeof businessInfoSchema>;

@@ -9,5 +9,5 @@ export const RegisterPage: React.FC = () => {
         <RegistrationForm />
       </div>
     </>
-);
+  );
 };

@@ -2,7 +2,6 @@ import { Routes, Route } from "react-router-dom";
 import { AuthErrorBoundary } from "./components/auth/AuthErrorBoundary";
 import { EmailVerificationPage } from "./pages/auth/EmailVerificationPage";
 import { PasswordResetPage } from "./pages/auth/PasswordResetPage";
-import { BusinessInfoPage } from "./pages/auth/BusinessInfoPage";
 import DemoComponents from "./pages/DemoComponents";
 import { RegisterPage } from "./pages/auth/RegisterPage";
 import { SignInPage } from "./pages/auth/SignInPage";
@@ -20,10 +19,6 @@ function App() {
           <Route path="/register" element={<RegisterPage />} />
           <Route path="/sign-in" element={<SignInPage />} />
           <Route path="/demo-components" element={<DemoComponents />} />
-          <Route
-            path="/onboarding/business-info"
-            element={<BusinessInfoPage />}
-          />
           <Route
             path="/email-verification"
             element={<EmailVerificationPage />}

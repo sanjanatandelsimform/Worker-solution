@@ -120,7 +120,6 @@ export const RegistrationForm = () => {
       agreeToTerms: false,
     },
   });
-
   const firstName = watch("firstName");
   const lastName = watch("lastName");
   const legalBusinessName = watch("legalBusinessName");
@@ -214,7 +213,7 @@ export const RegistrationForm = () => {
           <form
             onSubmit={handleSubmit(onSubmit)}
             className="w-full cursor-pointer"
-            noValidate={false}
+            // noValidate={false}
           >
             {/* Fields - Grid Layout */}
             <div className="grid w-full grid-cols-2 gap-x-4 gap-y-4">
@@ -230,6 +229,7 @@ export const RegistrationForm = () => {
                   isInvalid={!!errors.firstName}
                   value={firstName}
                   maxLength={20}
+                  className={errors.firstName ? "error-ring" : ""}
                   onChange={(value) => {
                     setValue("firstName", value);
                     trigger("firstName");
@@ -245,9 +245,10 @@ export const RegistrationForm = () => {
                   label="Last Name"
                   hint={errors.lastName?.message}
                   placeholder="Last Name"
-                  isInvalid={!!errors.lastName}
                   value={lastName}
+                  isInvalid={!!errors.lastName}
                   maxLength={20}
+                  className={errors.lastName ? "error-ring" : ""}
                   onChange={(value) => {
                     setValue("lastName", value);
                     trigger("lastName");
@@ -267,6 +268,7 @@ export const RegistrationForm = () => {
                   isInvalid={!!errors.legalBusinessName}
                   value={legalBusinessName}
                   maxLength={50}
+                  className={errors.legalBusinessName ? "error-ring" : ""}
                   onChange={(value) => {
                     setValue("legalBusinessName", value);
                     trigger("legalBusinessName");
@@ -290,6 +292,8 @@ export const RegistrationForm = () => {
                     })),
                   ]}
                   isRequired
+                  className={errors.industry ? "error-ring" : ""}
+                  hint={errors.industry?.message}
                   style={{ color: "var(--color-text-primary)" }}
                   selectClassName={cx(
                     "!text-primary",
@@ -297,7 +301,7 @@ export const RegistrationForm = () => {
                       "ring-error_subtle focus-visible:ring-error",
                   )}
                 />
-                {errors.industry && (
+                {/* {errors.industry && (
                   <p
                     className="text-sm"
                     style={{ color: "red" }}
@@ -305,7 +309,7 @@ export const RegistrationForm = () => {
                   >
                     {errors.industry.message}
                   </p>
-                )}
+                )} */}
               </div>
 
               {/* Row 3 - Zip Code & (empty space for layout) */}
@@ -323,6 +327,7 @@ export const RegistrationForm = () => {
                   type="text"
                   inputMode="numeric"
                   pattern="[0-9]*"
+                  className={errors.zipCode ? "error-ring" : ""}
                   onChange={(value) => {
                     // Only allow numeric input
                     const numericValue = value.replace(/\D/g, "");
@@ -344,6 +349,7 @@ export const RegistrationForm = () => {
                   icon={Mail01}
                   isInvalid={!!errors.businessEmail}
                   value={businessEmail}
+                  className={errors.businessEmail ? "error-ring" : ""}
                   onChange={(value) => {
                     setValue("businessEmail", value);
                     trigger("businessEmail");

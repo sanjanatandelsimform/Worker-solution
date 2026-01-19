@@ -66,14 +66,14 @@ export const SignInForm = () => {
 
       // Call signin API
       await signin(signInData);
-      console.log("Form submitted:", data);
       setErrorMessage(null); // Clear any previous error messages
-
       // Add your authentication logic here
     } catch (error) {
       console.error("Sign in error:", error);
       setErrorMessage(
-        (error instanceof Error ? error.message : "An unexpected error occurred. Please try again."),
+        error instanceof Error
+          ? error.message
+          : "An unexpected error occurred. Please try again.",
       );
     }
   };
@@ -139,6 +139,7 @@ export const SignInForm = () => {
                   hint={errors.email?.message}
                   placeholder="Enter your email"
                   isInvalid={!!errors.email}
+                  className={errors.email ? "error-ring" : ""}
                   value={email}
                   onChange={(value) => {
                     setValue("email", value);
@@ -158,9 +159,9 @@ export const SignInForm = () => {
                   size="md"
                   type={showPassword ? "text" : "password"}
                   isInvalid={!!errors.password}
+                  className={errors.password ? "error-ring" : ""}
                   value={password}
                   maxLength={8}
-                  className="relative"
                   onChange={(value) => {
                     setValue("password", value);
                     trigger("password");

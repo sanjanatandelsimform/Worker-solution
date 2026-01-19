@@ -20,9 +20,6 @@ function App() {
   const [phoneNumber, setPhoneNumber] = useState("");
   const [countryCode, setCountryCode] = useState("US");
   const [showPassword, setShowPassword] = useState(false);
-  const [mobileNumber, setMobileNumber] = useState("");
-  const [workNumber, setWorkNumber] = useState("");
-  const [homeNumber, setHomeNumber] = useState("");
 
   const items = [
     { label: "Phoenix Baker", id: "@phoenix", supportingText: "@phoenix" },
