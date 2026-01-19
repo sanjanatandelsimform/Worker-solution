@@ -25,13 +25,12 @@ export const SignInPage: React.FC = () => {
     }
   };
 
-  return ( 
-      <>
-        {/* Sign In Form */}
-        <div className="w-full">
-          <SignInForm />
-        </div>
-      </>
-      
+  return (
+    <>
+      {/* Sign In Form */}
+      <div className="w-full">
+        <SignInForm />
+      </div>
+    </>
   );
 };

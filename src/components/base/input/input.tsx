@@ -114,12 +114,13 @@ export const InputBase = ({
           "group-disabled:cursor-not-allowed group-disabled:bg-disabled_subtle group-disabled:ring-disabled",
 
           // Invalid state styles
-          isInvalid && "ring-error_subtle",
+          isInvalid && "ring-error_subtle ring-red-400",
           "group-invalid:ring-error_subtle",
 
           // Invalid state with focus-within styles
-          isInvalid && isFocusWithin && "ring-2 ring-error",
-          isFocusWithin && "group-invalid:ring-2 group-invalid:ring-error",
+          isInvalid && isFocusWithin && "ring-2 ring-red-500",
+          isFocusWithin &&
+            "group-invalid:ring-2 group-invalid:ring-ring-red-500",
 
           context?.wrapperClassName,
           wrapperClassName,

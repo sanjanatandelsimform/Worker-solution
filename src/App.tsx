@@ -7,6 +7,8 @@ import { BusinessInfoPage } from "./pages/auth/BusinessInfoPage";
 import DemoComponents from "./pages/DemoComponents";
 import SignInForm from "./components/auth/SignInForm";
 import RegistrationForm from "./components/auth/RegistrationForm";
+import { LogoutVerificationPage } from "./pages/auth/LogoutVerificationPage";
+import DashboardDemo from "./pages/DashboardDemo";
 
 // Placeholder pages - will be implemented in subsequent phases
 const HomePage = () => <div className="p-8">Home Page</div>;
@@ -30,7 +32,12 @@ function App() {
             element={<EmailVerificationPage />}
           />
           <Route path="/password-reset" element={<PasswordResetPage />} />
-          <Route path="/dashboard" element={<DashboardPage />} />
+          <Route
+            path="/logout-verification"
+            element={<LogoutVerificationPage />}
+          />
+          <Route path="/dashboard" element={<DashboardDemo />} />
+          <Route path="/dashboard-demo" element={<DashboardDemo />} />
           {/* <Route path="*" element={<Navigate to="/" replace />} /> */}
         </Routes>
       </div>

@@ -1,5 +1,3 @@
-"use client";
-
 import { type ReactNode, type Ref, createContext, useContext } from "react";
 import {
   Radio as AriaRadio,
@@ -35,7 +33,7 @@ export const RadioButtonBase = ({
       className={cx(
         "flex size-4 min-h-4 min-w-4 cursor-pointer appearance-none items-center justify-center rounded-full bg-primary ring-1 ring-primary ring-inset",
         size === "md" && "size-5 min-h-5 min-w-5",
-        isSelected && !isDisabled && "bg-blue-600 ring-blue-600",
+        isSelected && !isDisabled && "bg-brand-solid ring-bg-brand-solid",
         isDisabled && "cursor-not-allowed border-disabled bg-disabled_subtle",
         isFocusVisible && "outline-2 outline-offset-2 outline-focus-ring",
         className,
@@ -43,7 +41,7 @@ export const RadioButtonBase = ({
     >
       <div
         className={cx(
-          "size-1.5 rounded-full bg-white opacity-0 transition-inherit-all",
+          "size-1.5 rounded-full bg-fg-white opacity-0 transition-inherit-all",
           size === "md" && "size-2",
           isDisabled && "bg-fg-disabled_subtle",
           isSelected && "opacity-100",
@@ -110,10 +108,7 @@ export const RadioButton = ({
           />
           {(label || hint) && (
             <div
-              className={cx(
-                "inline-flex flex-col items-start",
-                sizes[size].textWrapper,
-              )}
+              className={cx("inline-flex flex-col", sizes[size].textWrapper)}
             >
               {label && (
                 <p
