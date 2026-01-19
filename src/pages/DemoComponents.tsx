@@ -12,6 +12,11 @@ import {
   RadioButton,
 } from "@/components/base/radio-buttons/radio-buttons";
 import { Select } from "@/components/base/select/select";
+import { ChangePasswordModal } from "@/components/modals/ChangePasswordModal";
+import { ChangePasswordSuccessModal } from "@/components/modals/ChangePasswordSuccessModal";
+import { ChangePasswordFailedModal } from "@/components/modals/ChangePasswordFailedModal";
+import { InProgressModal } from "@/components/modals/InProgressModal";
+import DashboardSidebar from "@/components/demo/DashboardSidebar";
 
 function App() {
   const [password, setPassword] = useState("");
@@ -20,6 +25,18 @@ function App() {
   const [phoneNumber, setPhoneNumber] = useState("");
   const [countryCode, setCountryCode] = useState("US");
   const [showPassword, setShowPassword] = useState(false);
+  // const [mobileNumber, setMobileNumber] = useState("");
+  // const [workNumber, setWorkNumber] = useState("");
+  // const [homeNumber, setHomeNumber] = useState("");
+  const [isChangePasswordModalOpen, setIsChangePasswordModalOpen] =
+    useState(false);
+  const [
+    isChangePasswordSuccessModalOpen,
+    setIsChangePasswordSuccessModalOpen,
+  ] = useState(false);
+  const [isChangePasswordFailedModalOpen, setIsChangePasswordFailedModalOpen] =
+    useState(false);
+  const [isInProgressModalOpen, setIsInProgressModalOpen] = useState(false);
 
   const items = [
     { label: "Phoenix Baker", id: "@phoenix", supportingText: "@phoenix" },
@@ -425,6 +442,121 @@ function App() {
             </Tabs>
           </div>
         </div>
+
+        {/* Demo Section for Change Password Modal */}
+        <div className="mt-8 space-y-6">
+          <h2 className="text-2xl font-bold">
+            Change Password Modal Component
+          </h2>
+          <div className="space-y-4">
+            <div className="space-y-3">
+              <p className="text-sm text-tertiary">
+                Click the button below to open the Change Password modal with
+                form validation.
+              </p>
+              <Button
+                color="primary"
+                size="md"
+                onClick={() => setIsChangePasswordModalOpen(true)}
+              >
+                Open Change Password Modal
+              </Button>
+            </div>
+          </div>
+        </div>
+
+        {/* Change Password Modal */}
+        <ChangePasswordModal
+          isOpen={isChangePasswordModalOpen}
+          onClose={() => setIsChangePasswordModalOpen(false)}
+        />
+
+        {/* Demo Section for Change Password Success Modal */}
+        <div className="mt-8 space-y-6">
+          <h2 className="text-2xl font-bold">
+            Change Password Success Modal Component
+          </h2>
+          <div className="space-y-4">
+            <p className="text-secondary">
+              Click the button below to open the Change Password Success modal
+              displaying a success message.
+            </p>
+            <div>
+              <Button
+                color="primary"
+                size="md"
+                onClick={() => setIsChangePasswordSuccessModalOpen(true)}
+              >
+                Open Change Password Success Modal
+              </Button>
+            </div>
+          </div>
+        </div>
+
+        {/* Change Password Success Modal */}
+        <ChangePasswordSuccessModal
+          isOpen={isChangePasswordSuccessModalOpen}
+          onClose={() => setIsChangePasswordSuccessModalOpen(false)}
+          onBackToSettings={() => console.log("Back to Settings clicked")}
+        />
+
+        {/* Demo Section for Change Password Failed Modal */}
+        <div className="mt-8 space-y-6">
+          <h2 className="text-2xl font-bold">
+            Change Password Failed Modal Component
+          </h2>
+          <div className="space-y-4">
+            <p className="text-secondary">
+              Click the button below to open the Change Password Failed modal
+              displaying an error/warning message.
+            </p>
+            <div>
+              <Button
+                color="primary"
+                size="md"
+                onClick={() => setIsChangePasswordFailedModalOpen(true)}
+              >
+                Open Change Password Failed Modal
+              </Button>
+            </div>
+          </div>
+        </div>
+
+        {/* Change Password Failed Modal */}
+        <ChangePasswordFailedModal
+          isOpen={isChangePasswordFailedModalOpen}
+          onClose={() => setIsChangePasswordFailedModalOpen(false)}
+          onContinue={() => console.log("Continue clicked")}
+        />
+
+        {/* Demo Section for In Progress Modal */}
+        <div className="mt-8 space-y-6">
+          <h2 className="text-2xl font-bold">In Progress Modal Component</h2>
+          <div className="space-y-4">
+            <p className="text-secondary">
+              Click the button below to open the In Progress modal showing a
+              loading state with disabled button.
+            </p>
+            <div>
+              <Button
+                color="primary"
+                size="md"
+                onClick={() => setIsInProgressModalOpen(true)}
+              >
+                Open In Progress Modal
+              </Button>
+            </div>
+          </div>
+        </div>
+
+        {/* In Progress Modal */}
+        <InProgressModal
+          isOpen={isInProgressModalOpen}
+          onClose={() => setIsInProgressModalOpen(false)}
+          onGoToDashboard={() => console.log("Go to Dashboard clicked")}
+        />
+
+        <DashboardSidebar />
       </div>
     </div>
   );

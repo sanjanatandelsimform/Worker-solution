@@ -70,24 +70,17 @@ const registrationSchema = z
 type RegistrationFormData = z.infer<typeof registrationSchema>;
 
 const industries = [
+  { id: "technology", label: "Technology" },
+  { id: "healthcare", label: "Healthcare"},
+  { id: "finance", label: "Finance" },
+  { id: "retail", label: "Retail" },
   {
-    id: "Manufacturing",
-    label: "Manufacturing",
-    supportingText: "Manufacturing",
+    id: "manufacturing",
+    label: "Manufacturing"
   },
-  { id: "Retail", label: "Retail"},
-  { id: "Healthcare", label: "Healthcare"},
-  { id: "Technology", label: "Technology" },
-  { id: "Finance", label: "Finance", supportingText: "Finance" },
-  { id: "Construction", label: "Construction", supportingText: "Construction" },
-  { id: "Education", label: "Education", supportingText: "Education" },
-  { id: "Hospitality", label: "Hospitality", supportingText: "Hospitality" },
-  {
-    id: "Transportation",
-    label: "Transportation",
-    supportingText: "Transportation",
-  },
-  { id: "Other", label: "Other", supportingText: "Other" },
+  { id: "education", label: "Education" },
+  { id: "hospitality", label: "Hospitality" },
+  { id: "other", label: "Other" },
 ];
 
 export const RegistrationForm = () => {
@@ -170,40 +163,22 @@ export const RegistrationForm = () => {
   return (
     <div className="flex min-h-screen items-center justify-center bg-secondary">
       {/* Container */}
-      <div className="flex w-181.5 items-center justify-center rounded-xl border border-solid border-(--color-border-primary) bg-primary px-6 py-8 shadow-[0px_1px_2px_0px_rgba(10,13,18,0.05)]">
+      <div className="flex w-3xl items-center justify-center rounded-xl border border-solid border-primary bg-primary p-10">
         {/* Content */}
         <div className="flex w-full flex-col items-center gap-6">
           {/* Logo */}
           <div className="flex items-center justify-center rounded-xl bg-tertiary px-2 py-1">
-            <h1
-              className="text-[48px] font-bold leading-15 tracking-[-0.96px]"
-              style={{
-                fontFamily: "var(--font-family-display)",
-                color: "var(--color-text-black)",
-              }}
-            >
+            <h1 className="text-5xl font-bold leading-15 text-primary">
               BeneStat
             </h1>
           </div>
 
           {/* Header */}
           <div className="flex w-full flex-col items-start gap-2">
-            <h2
-              className="w-full text-[36px] font-semibold leading-11 tracking-[-0.72px]"
-              style={{
-                fontFamily: "var(--font-family-display)",
-                color: "var(--color-text-primary)",
-              }}
-            >
+            <h2 className="w-full text-4xl font-semibold leading-9.5 text-primary">
               Sign up
             </h2>
-            <p
-              className="w-full text-[18px] font-normal leading-7"
-              style={{
-                fontFamily: "var(--font-family-body)",
-                color: "var(--color-text-tertiary)",
-              }}
-            >
+            <p className="w-full text-medium font-normal leading-6 text-tertiary">
               We're excited that you've decided to try our Worker Solutions®
               platform. Before we begin we'll need to collect some information
               about your business.
@@ -277,55 +252,28 @@ export const RegistrationForm = () => {
                 />
               </InputGroup>
 
-              <div className="flex flex-col gap-1.5">
-                {/* <NativeSelect
-                  label="Industry"
-                  value={watch("industry") || ""}
-                  onChange={(e) => {
-                    setValue("industry", e.target.value);
-                    trigger("industry");
-                  }}
-                  options={[
-                    { label: "Select an industry", value: "", disabled: true },
-                    ...industries.map((ind) => ({
-                      label: ind.label,
-                      value: ind.id,
-                    })),
-                  ]}
-                  isRequired
-                  className={errors.industry ? "error-ring" : ""}
-                  hint={errors.industry?.message}
-                  style={{ color: "var(--color-text-primary)" }}
-                  selectClassName={cx(
-                    "!text-primary",
-                    errors.industry &&
-                      "ring-error_subtle focus-visible:ring-error",
-                  )}
-                /> */}
-                {/* {errors.industry && (
-                  <p
-                    className="text-sm"
-                    style={{ color: "red" }}
-                    // style={{ color: "var(--color-text-error-primary)" }}
+              <Select
+                className="w-full flex items-start"
+                isRequired
+                size="md"
+                label="Select Your Industry"
+                //tooltip="This is a tooltip"
+                //hint="This is a hint text to help user."
+                placeholder="Select Option"
+                items={industries}
+              >
+                {(item) => (
+                  <Select.Item
+                    id={item.id}
+                    supportingText={item.supportingText}
+                    isDisabled={item.isDisabled}
+                    icon={item.icon}
+                    avatarUrl={item.avatarUrl}
                   >
-                    {errors.industry.message}
-                  </p>
-                )} */}
-                <Select
-                    isRequired
-                    label="Team member"
-                    tooltip="This is a tooltip"
-                    //hint="This is a hint text to help user."
-                    placeholder="Select team member"
-                    items={industries}
-                >
-                    {(item) => (
-                        <Select.Item id={item.id} supportingText={item.supportingText} isDisabled={item.isDisabled} icon={item.icon} avatarUrl={item.avatarUrl}>
-                            {item.label}
-                        </Select.Item>
-                    )}
-                </Select>
-              </div>
+                    {item.label}
+                  </Select.Item>
+                )}
+              </Select>
 
               {/* Row 3 - Zip Code & (empty space for layout) */}
               <InputGroup>
@@ -500,25 +448,10 @@ export const RegistrationForm = () => {
                   trigger("agreeToTerms");
                 }}
               />
-              <p
-                className="text-sm font-normal leading-5"
-                style={{
-                  fontFamily: "var(--font-family-body)",
-                  color: "var(--color-text-primary)",
-                }}
-              >
+              <p className="text-sm font-normal leading-5 text-primary">
                 I've read and agree to the Worker Solutions®{" "}
-                <span
-                  className="cursor-pointer"
-                  style={{ color: "var(--color-cyan-500)" }}
-                >
-                  Terms
-                </span>{" "}
-                and{" "}
-                <span
-                  className="cursor-pointer"
-                  style={{ color: "var(--color-cyan-500)" }}
-                >
+                <span className="cursor-pointer text-cyan-500">Terms</span> and{" "}
+                <span className="cursor-pointer text-cyan-500">
                   Privacy Policies
                 </span>
               </p>
@@ -556,13 +489,7 @@ export const RegistrationForm = () => {
               </Button>
 
               {/* Sign in link */}
-              <p
-                className="text-sm font-normal leading-5"
-                style={{
-                  fontFamily: "var(--font-family-body)",
-                  color: "var(--color-text-tertiary)",
-                }}
-              >
+              <p className="text-sm font-normal leading-5 text-tertiary">
                 Already have an account?{" "}
                 <Button
                   type="button"

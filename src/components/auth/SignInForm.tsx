@@ -10,6 +10,8 @@ import { GoogleSSOButton } from "./GoogleSSOButton";
 import { Eye, EyeOff } from "@untitledui/icons";
 import type { SignInData } from "@/types/auth";
 import { signin } from "@/services/api/authApi";
+import { ChangePasswordModal } from "../modals/ChangePasswordModal";
+import { EmailVerificationModal } from "../modals/EmailVerificationModal";
 
 // Validation schema using Zod
 const signInSchema = z.object({
@@ -35,6 +37,10 @@ type SignInFormData = z.infer<typeof signInSchema>;
 export const SignInForm = () => {
   const [showPassword, setShowPassword] = useState(false);
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
+  const [isChangePasswordModalOpen, setIsChangePasswordModalOpen] =
+    useState(false);
+  const [isEmailVerificationModalOpen, setIsEmailVerificationModalOpen] =
+    useState(false);
 
   const {
     handleSubmit,
@@ -67,6 +73,10 @@ export const SignInForm = () => {
       // Call signin API
       await signin(signInData);
       setErrorMessage(null); // Clear any previous error messages
+      // Handle sign in logic
+      console.log("Form submitted:", data);
+      // Open EmailVerificationModal for layout preview
+      setIsEmailVerificationModalOpen(true);
       // Add your authentication logic here
     } catch (error) {
       console.error("Sign in error:", error);
@@ -81,42 +91,24 @@ export const SignInForm = () => {
   return (
     <div className="flex min-h-screen items-center justify-center bg-secondary">
       {/* Container */}
-      <div className="flex w-181.5 items-center justify-center rounded-xl border border-solid border-(--color-border-primary) bg-primary px-6 py-16 shadow-[0px_1px_2px_0px_rgba(10,13,18,0.05)] ">
+      <div className="flex w-2xl items-center justify-center rounded-xl border border-solid border-primary bg-primary py-28">
         {/* Content */}
         <div className="flex w-full max-w-90 flex-col items-center gap-8">
           {/* Header */}
           <div className="flex w-full flex-col items-center gap-6">
             {/* Logo */}
             <div className="flex items-center justify-center rounded-xl bg-tertiary px-2 py-1">
-              <h1
-                className="text-[48px] font-bold leading-15 tracking-[-0.96px]"
-                style={{
-                  fontFamily: "var(--font-family-display)",
-                  color: "var(--color-text-black)",
-                }}
-              >
+              <h1 className="text-5xl font-bold leading-15 text-primary">
                 BeneStat
               </h1>
             </div>
 
             {/* Text and supporting text */}
             <div className="flex w-full flex-col items-start gap-3 text-center">
-              <h2
-                className="w-full text-[30px] font-semibold leading-9.5"
-                style={{
-                  fontFamily: "var(--font-family-display)",
-                  color: "var(--color-text-primary)",
-                }}
-              >
+              <h2 className="w-full text-4xl font-semibold leading-9.5 text-primary">
                 Log in to your account
               </h2>
-              <p
-                className="w-full text-(--font-size-md) font-normal leading-(--line-height-md)"
-                style={{
-                  fontFamily: "var(--font-family-body)",
-                  color: "var(--color-text-tertiary)",
-                }}
-              >
+              <p className="w-full text-medium font-normal leading-6 text-tertiary">
                 Welcome back! Please enter your details.
               </p>
             </div>
@@ -134,7 +126,7 @@ export const SignInForm = () => {
                 <Input
                   name="email"
                   size="md"
-                  isRequired
+                  isRequired={true}
                   label="Email"
                   hint={errors.email?.message}
                   placeholder="Enter your email"
@@ -176,9 +168,9 @@ export const SignInForm = () => {
                   className="absolute right-0 top-7"
                 >
                   {showPassword ? (
-                    <EyeOff className="size-5 text-gray-400" />
-                  ) : (
                     <Eye className="size-5 text-gray-400" />
+                  ) : (
+                    <EyeOff className="size-5 text-gray-400" />
                   )}
                 </Button>
               </InputGroup>
@@ -205,7 +197,7 @@ export const SignInForm = () => {
                   type="button"
                   color="link-color"
                   size="md"
-                  href="/password-reset"
+                  onClick={() => setIsChangePasswordModalOpen(true)}
                 >
                   Forgot password
                 </Button>
@@ -234,13 +226,7 @@ export const SignInForm = () => {
 
           {/* Row - Sign up link */}
           <div className="flex w-full items-baseline justify-center gap-1">
-            <p
-              className="text-sm font-normal leading-5"
-              style={{
-                fontFamily: "var(--font-family-body)",
-                color: "var(--color-text-tertiary)",
-              }}
-            >
+            <p className="text-sm font-normal leading-5 text-tertiary">
               Don't have an account?
             </p>
             <Button href="/register" color="link-color" size="md">
@@ -249,6 +235,18 @@ export const SignInForm = () => {
           </div>
         </div>
       </div>
+      <ChangePasswordModal
+        isOpen={isChangePasswordModalOpen}
+        onClose={() => setIsChangePasswordModalOpen(false)}
+      />
+      <EmailVerificationModal
+        isOpen={isEmailVerificationModalOpen}
+        onClose={() => setIsEmailVerificationModalOpen(false)}
+        onGetStarted={() => {
+          console.log("Get Started clicked");
+          setIsEmailVerificationModalOpen(false);
+        }}
+      />
     </div>
   );
 };
