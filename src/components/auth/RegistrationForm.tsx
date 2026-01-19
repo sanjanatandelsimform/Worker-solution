@@ -12,6 +12,7 @@ import { NativeSelect } from "../base/select/select-native";
 import { signup } from "@/services/api/authApi";
 import { cx } from "@/utils/cx";
 import type { RegistrationData } from "@/types/auth";
+import { Select } from "../base/select/select";
 
 // Validation schema using Zod
 const registrationSchema = z
@@ -74,9 +75,9 @@ const industries = [
     label: "Manufacturing",
     supportingText: "Manufacturing",
   },
-  { id: "Retail", label: "Retail", supportingText: "Retail" },
-  { id: "Healthcare", label: "Healthcare", supportingText: "Healthcare" },
-  { id: "Technology", label: "Technology", supportingText: "Technology" },
+  { id: "Retail", label: "Retail"},
+  { id: "Healthcare", label: "Healthcare"},
+  { id: "Technology", label: "Technology" },
   { id: "Finance", label: "Finance", supportingText: "Finance" },
   { id: "Construction", label: "Construction", supportingText: "Construction" },
   { id: "Education", label: "Education", supportingText: "Education" },
@@ -277,7 +278,7 @@ export const RegistrationForm = () => {
               </InputGroup>
 
               <div className="flex flex-col gap-1.5">
-                <NativeSelect
+                {/* <NativeSelect
                   label="Industry"
                   value={watch("industry") || ""}
                   onChange={(e) => {
@@ -300,7 +301,7 @@ export const RegistrationForm = () => {
                     errors.industry &&
                       "ring-error_subtle focus-visible:ring-error",
                   )}
-                />
+                /> */}
                 {/* {errors.industry && (
                   <p
                     className="text-sm"
@@ -310,6 +311,20 @@ export const RegistrationForm = () => {
                     {errors.industry.message}
                   </p>
                 )} */}
+                <Select
+                    isRequired
+                    label="Team member"
+                    tooltip="This is a tooltip"
+                    //hint="This is a hint text to help user."
+                    placeholder="Select team member"
+                    items={industries}
+                >
+                    {(item) => (
+                        <Select.Item id={item.id} supportingText={item.supportingText} isDisabled={item.isDisabled} icon={item.icon} avatarUrl={item.avatarUrl}>
+                            {item.label}
+                        </Select.Item>
+                    )}
+                </Select>
               </div>
 
               {/* Row 3 - Zip Code & (empty space for layout) */}
@@ -475,7 +490,8 @@ export const RegistrationForm = () => {
             </div>
 
             {/* Agreement Section */}
-            <div className="mt-6 flex items-center justify-center gap-2">
+            <div className="mt-6 flex items-center flex-col justify-center gap-2">
+              <div className="flex gap-2">
               <Checkbox
                 size="sm"
                 isSelected={agreeToTerms}
@@ -506,12 +522,14 @@ export const RegistrationForm = () => {
                   Privacy Policies
                 </span>
               </p>
-            </div>
-            {errors.agreeToTerms && (
+              </div>
+              {errors.agreeToTerms && (
               <p className="mt-1 text-sm text-error-primary">
                 {errors.agreeToTerms.message}
               </p>
             )}
+            </div>
+            
 
             {/* Submit Error Display */}
             {submitError && (
