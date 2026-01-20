@@ -6,7 +6,8 @@ import {
   File02,
   Mail01,
   LifeBuoy01,
-  LogOut01,
+  LogOut04,
+  Speedometer03,
 } from "@untitledui/icons";
 import { NavList } from "@/components/application/app-navigation/base-components/nav-list";
 import type { NavItemType } from "@/components/application/app-navigation/config";
@@ -23,36 +24,19 @@ export const DashboardSidebar = ({
     {
       label: "Dashboard",
       href: "/dashboard",
-      icon: Home03,
+      icon: Speedometer03,
+      //badge: <Badge color="brand">New</Badge>,
     },
-    {
-      label: "Analytics",
-      href: "/analytics",
-      icon: BarChart01,
-      badge: <Badge color="brand">New</Badge>,
-    },
-    {
-      label: "Team",
-      href: "/team",
-      icon: Users01,
-      items: [
-        { label: "All Members", href: "/team/members" },
-        { label: "Add Member", href: "/team/add" },
-        { label: "Permissions", href: "/team/permissions" },
-      ],
-    },
-    {
-      label: "Reports",
-      href: "/reports",
-      icon: File02,
-      badge: <Badge color="success">12</Badge>,
-    },
-    {
-      label: "Messages",
-      href: "/messages",
-      icon: Mail01,
-      badge: <Badge color="error">5</Badge>,
-    },
+    // Keep this commented for future use if we want to add nested items{
+    //   label: "Team",
+    //   href: "/team",
+    //   icon: Users01,
+    //   items: [
+    //     { label: "All Members", href: "/team/members" },
+    //     { label: "Add Member", href: "/team/add" },
+    //     { label: "Permissions", href: "/team/permissions" },
+    //   ],
+    // },
   ];
 
   const settingsItems: NavItemType[] = [
@@ -62,22 +46,17 @@ export const DashboardSidebar = ({
       icon: Settings01,
     },
     {
-      label: "Help & Support",
-      href: "/support",
-      icon: LifeBuoy01,
-    },
-    {
       label: "Logout",
       href: "/logout",
-      icon: LogOut01,
+      icon: LogOut04,
     },
   ];
 
   return (
-    <div className="flex h-screen w-64 flex-col border-r border-border-primary bg-primary">
+    <div className="flex h-[calc(100vh-32px)] w-66 flex-col border-0 border-primary bg-primary py-10 px-6 m-4 rounded-xl shadow-xs">
       {/* Logo */}
-      <div className="flex items-center justify-start p-6">
-        <div className="flex items-center justify-center rounded-xl bg-tertiary px-2 py-1">
+      <div className="flex items-center justify-start">
+        <div className="flex items-center justify-center rounded-xl bg-tertiary px-3 py-1">
           <h1 className="font-display text-2xl font-bold leading-8 text-black">
             BeneStat
           </h1>
@@ -87,18 +66,19 @@ export const DashboardSidebar = ({
       {/* Navigation */}
       <nav className="flex-1 overflow-y-auto">
         <NavList items={navigationItems} activeUrl={activeUrl} />
-        <NavList items={settingsItems} activeUrl={activeUrl} className="mt-8" />
+        <NavList
+          items={settingsItems}
+          activeUrl={activeUrl}
+          className="mt-4 border-t border-primary"
+        />
       </nav>
 
       {/* User Account Card at Bottom */}
-      <div className="border-t border-border-secondary p-4">
-        <div className="flex items-center gap-3">
-          <div className="flex size-10 items-center justify-center rounded-full bg-brand-600 text-white">
-            <span className="text-sm font-semibold">JD</span>
-          </div>
+      <div className="border border-gray-300 rounded-xl p-3 mt-6">
+        <div className="flex items-start gap-3">
           <div className="flex-1">
             <p className="text-sm font-semibold text-primary">John Doe</p>
-            <p className="text-xs text-tertiary">john@example.com</p>
+            <p className="text-sm text-tertiary mt-1">john@example.com</p>
           </div>
         </div>
       </div>

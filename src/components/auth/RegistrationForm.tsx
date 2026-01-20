@@ -16,12 +16,18 @@ import {
   type RegistrationFormData,
 } from "@/services/validation/authSchemas";
 import { INDUSTRIES, COUNTRY_CODES } from "@/constants/formOptions";
+import { SuccessModalWithLogo } from "../modals";
+import checkmarkIcon from "@/assets/checkmark-icon.svg";
+import { useAppDispatch } from "@/store/hooks";
+import { setUser } from "@/store/slices/authSlice";
 
 export const RegistrationForm = () => {
+  const dispatch = useAppDispatch();
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
   const [phoneNumber, setPhoneNumber] = useState("");
   const [countryCode, setCountryCode] = useState("US");
+  const [isOpen, setIsOpen] = useState(false);
   const [submitError, setSubmitError] = useState<string | null>(null);
   const navigate = useNavigate();
 
@@ -51,6 +57,7 @@ export const RegistrationForm = () => {
   const firstName = watch("firstName");
   const lastName = watch("lastName");
   const legalBusinessName = watch("legalBusinessName");
+  const industry = watch("industry");
   const zipCode = watch("zipCode");
   const businessEmail = watch("businessEmail");
   const password = watch("password");
@@ -58,7 +65,10 @@ export const RegistrationForm = () => {
   const agreeToTerms = watch("agreeToTerms");
 
   const onSubmit = async (data: RegistrationFormData) => {
+          console.log("call-->>111");
     try {
+      console.log("call-->>");
+      
       setSubmitError(null);
       const registrationData: RegistrationData = {
         firstName: data.firstName,
@@ -74,11 +84,53 @@ export const RegistrationForm = () => {
       };
 
       // Call signup API
-      await signup(registrationData);
+      let response = {
+          "status": true,
+          "message": "Account created successfully!",
+          "data": {
+              "user": {
+                  "id": "a369e2cd-808e-4ce0-884a-d16fac18e7bf",
+                  "firstName": "test",
+                  "lastName": "test",
+                  "businessEmail": "raj@gmail.com",
+                  "businessName": "Simform",
+                  "industry": "fgggfgfg",
+                  "zipCode": 395107,
+                  "businessPhone": "1234567890",
+                  "createdAt": "2026-01-19T10:37:48.047Z",
+                  "updatedAt": "2026-01-19T10:37:48.047Z"
+              }
+          }
+      }
+      // const response1 = await signup(registrationData);
+      if(response.status !== true){
+        throw new Error(response.message || "Registration failed");
+      }else{
+        // Store user data in Redux
+        dispatch(setUser({
+          user: {
+            id: response.data.user.id,
+            email: response.data.user.businessEmail,
+            firstName: response.data.user.firstName,
+            lastName: response.data.user.lastName,
+            businessName: response.data.user.businessName,
+            phoneNumber: response.data.user.businessPhone,
+            industry: response.data.user.industry,
+            zipCode: response.data.user.zipCode.toString(),
+            authMethod: "email",
+            emailVerified: false,
+            profileComplete: true,
+            createdAt: response.data.user.createdAt,
+            updatedAt: response.data.user.updatedAt,
+          }
+        }));
+
+        setIsOpen(true);
+      }
       setValue("password", "");
       setValue("confirmPassword", "");
 
-      navigate("/email-verification");
+      // navigate("/email-verification");
     } catch (error) {
       console.error("Registration error:", error);
       setSubmitError(
@@ -88,7 +140,9 @@ export const RegistrationForm = () => {
       );
     }
   };
-
+  const handleGetStarted = () => {
+    navigate("/sign-in");
+  };
   return (
     <div className="flex min-h-screen items-center justify-center bg-secondary">
       {/* Container */}
@@ -187,6 +241,13 @@ export const RegistrationForm = () => {
                 label="Select Your Industry"
                 placeholder="Select Option"
                 items={INDUSTRIES}
+                selectedKey={industry}
+                onSelectionChange={(key) => {
+                  setValue("industry", key as string);
+                  trigger("industry");
+                }}
+                isInvalid={!!errors.industry}
+                hint={errors.industry?.message}
               >
                 {(item) => (
                   <Select.Item
@@ -422,6 +483,19 @@ export const RegistrationForm = () => {
           </form>
         </div>
       </div>
+      <SuccessModalWithLogo
+        isOpen={isOpen}
+        onClose={() => setIsOpen(false)}
+        size="xl"
+        messageImg={checkmarkIcon}
+        title="Account created successfully!"
+        subtitle="Welcome aboard! Start your success journey with Worker Solutions®"
+        button={{
+          text: "Let's Get Started",
+          onClick: handleGetStarted,
+          color: "primary",
+        }}
+      />
     </div>
   );
 };

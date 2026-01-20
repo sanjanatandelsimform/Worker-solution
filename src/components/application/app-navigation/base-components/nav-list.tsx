@@ -22,7 +22,7 @@ export const NavList = ({ activeUrl, items, className }: NavListProps) => {
   const [currentItem, setCurrentItem] = useState(activeItem);
 
   return (
-    <ul className={cx("mt-4 flex flex-col px-2 lg:px-4", className)}>
+    <ul className={cx("mt-0 flex flex-col px-0 lg:px-0", className)}>
       {items.map((item, index) => {
         if (item.divider) {
           return (
@@ -73,7 +73,7 @@ export const NavList = ({ activeUrl, items, className }: NavListProps) => {
         }
 
         return (
-          <li key={item.label} className="py-0.5">
+          <li key={item.label} className="py-0.5 first:mt-4">
             <NavItemBase
               type="link"
               badge={item.badge}

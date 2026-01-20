@@ -51,7 +51,7 @@ const getTabStyles = ({
     "outline-focus-ring",
     isHovered && "bg-primary_hover text-secondary",
     isFocusVisible && "outline-2 -outline-offset-2",
-    isSelected && "bg-active text-secondary",
+    isSelected && "bg-cyan-500 text-secondary",
   ),
   "button-border": cx(
     "outline-focus-ring",

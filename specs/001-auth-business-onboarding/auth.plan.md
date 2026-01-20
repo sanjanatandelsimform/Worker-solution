@@ -114,9 +114,7 @@ src/
 │   └── useGoogleSSO.ts          # Google OAuth flow hook
 ├── types/
 │   └── auth.ts                  # TypeScript interfaces
-└── utils/
-    ├── phoneFormatter.ts
-    └── passwordValidator.ts
+
 
 tests/
 ├── components/

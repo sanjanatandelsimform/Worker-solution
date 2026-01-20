@@ -18,7 +18,7 @@ export const styles = sortCx({
       // When button is used within `InputGroup`
       "in-data-input-wrapper:shadow-xs in-data-input-wrapper:focus:!z-50 in-data-input-wrapper:in-data-leading:-mr-px in-data-input-wrapper:in-data-leading:rounded-r-none in-data-input-wrapper:in-data-leading:before:rounded-r-none in-data-input-wrapper:in-data-trailing:-ml-px in-data-input-wrapper:in-data-trailing:rounded-l-none in-data-input-wrapper:in-data-trailing:before:rounded-l-none",
       // Disabled styles
-      "disabled:cursor-not-allowed disabled:text-fg-disabled",
+      "disabled:cursor-not-allowed disabled:text-fg-disabled disabled:bg-disabled",
       // Icon styles
       "disabled:*:data-icon:text-fg-disabled_subtle",
       // Same as `icon` but for SSR icons that cannot be passed to the client as functions.
