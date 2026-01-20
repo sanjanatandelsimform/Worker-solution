@@ -5,7 +5,7 @@ import checkIcon from "@/assets/file-check.svg";
 import DashboardCard from "./DashboardCard";
 
 export const DashboardDemo = () => {
-  const [activeUrl, setActiveUrl] = useState("/dashboard");
+  const [activeUrl] = useState("/dashboard");
 
   return (
     <div className="flex h-screen overflow-hidden bg-dashboard">

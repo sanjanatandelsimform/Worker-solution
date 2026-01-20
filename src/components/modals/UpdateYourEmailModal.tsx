@@ -1,4 +1,3 @@
-import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
@@ -14,7 +13,7 @@ import {
 import { Button } from "@/components/base/buttons/button";
 import { Input } from "@/components/base/input/input";
 import { InputGroup } from "@/components/base/input/input-group";
-import { Eye, EyeOff, Mail01, X } from "@untitledui/icons";
+import { Mail01, X } from "@untitledui/icons";
 
 // Validation schema using Zod
 const changePasswordSchema = z
@@ -45,16 +44,9 @@ export const UpdateYourEmailModal = ({
   isOpen,
   onClose,
 }: UpdateYourEmailModalProps) => {
-  const [showCurrentPassword, setShowCurrentPassword] = useState(false);
-  const [showNewPassword, setShowNewPassword] = useState(false);
-  const [showConfirmPassword, setShowConfirmPassword] = useState(false);
-
   const {
     handleSubmit,
-    formState: { errors, isSubmitting },
-    watch,
-    setValue,
-    trigger,
+    formState: { isSubmitting },
     reset,
   } = useForm<ChangePasswordFormData>({
     resolver: zodResolver(changePasswordSchema),
@@ -65,10 +57,6 @@ export const UpdateYourEmailModal = ({
       confirmPassword: "",
     },
   });
-
-  const currentPassword = watch("currentPassword");
-  const newPassword = watch("newPassword");
-  const confirmPassword = watch("confirmPassword");
 
   const onSubmit = async (data: ChangePasswordFormData) => {
     try {

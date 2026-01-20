@@ -7,10 +7,10 @@ import { RegisterPage } from "./pages/auth/RegisterPage";
 import { SignInPage } from "./pages/auth/SignInPage";
 import { LogoutVerificationPage } from "./pages/auth/LogoutVerificationPage";
 import DashboardDemo from "./pages/DashboardDemo";
+import Settings from "./pages/Settings";
 
 // Placeholder pages - will be implemented in subsequent phases
 const HomePage = () => <div className="p-8">Home Page</div>;
-const DashboardPage = () => <div className="p-8">Dashboard Page</div>;
 
 function App() {
   return (
@@ -31,6 +31,7 @@ function App() {
             element={<LogoutVerificationPage />}
           />
           <Route path="/dashboard" element={<DashboardDemo />} />
+          <Route path="/settings" element={<Settings />} />
           <Route path="/dashboard-demo" element={<DashboardDemo />} />
           {/* <Route path="*" element={<Navigate to="/" replace />} /> */}
         </Routes>

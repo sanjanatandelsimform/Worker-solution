@@ -10,7 +10,6 @@ import { Checkbox } from "@/components/base/checkbox/checkbox";
 import { Eye, EyeOff, Mail01 } from "@untitledui/icons";
 import { NativeSelect } from "../base/select/select-native";
 import { signup } from "@/services/api/authApi";
-import { cx } from "@/utils/cx";
 import type { RegistrationData } from "@/types/auth";
 import { Select } from "../base/select/select";
 

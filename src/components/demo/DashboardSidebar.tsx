@@ -1,17 +1,10 @@
 import {
-  Home03,
-  BarChart01,
-  Users01,
   Settings01,
-  File02,
-  Mail01,
-  LifeBuoy01,
   LogOut04,
   Speedometer03,
 } from "@untitledui/icons";
 import { NavList } from "@/components/application/app-navigation/base-components/nav-list";
 import type { NavItemType } from "@/components/application/app-navigation/config";
-import { Badge } from "@/components/base/badges/badges";
 
 interface DashboardSidebarProps {
   activeUrl?: string;

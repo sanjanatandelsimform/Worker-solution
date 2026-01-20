@@ -99,7 +99,8 @@
   --color-bg-dashboard-card: rgba(4, 35, 60, 1);
   --color-bg-dashboard-card-image: rgba(53, 85, 111, 1);
   --color-bg-card-avatar: rgba(209, 224, 255, 1);
-  --color-bg-disabled: rgba(240, 241, 243, 1);
+  --color-bg-disabled: rgba(238, 238, 238, 1);
+  --color-bg-gray-card: rgba(248, 248, 248, 1);
 
   /* ========== Light Mode - Foreground/Text Colors for Components ========== */
   --color-fg-disabled: rgba(172, 175, 181, 1);
@@ -316,6 +317,9 @@
 
 .bg-disabled {
   background-color: var(--color-bg-disabled);
+}
+.bg-gray-card {
+  background-color: var(--color-bg-gray-card);
 }
 
 .background-pattern{
