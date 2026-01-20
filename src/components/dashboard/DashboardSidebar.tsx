@@ -1,8 +1,4 @@
-import {
-  Settings01,
-  LogOut04,
-  Speedometer03,
-} from "@untitledui/icons";
+import { Settings01, LogOut04, Speedometer03 } from "@untitledui/icons";
 import { NavList } from "@/components/application/app-navigation/base-components/nav-list";
 import type { NavItemType } from "@/components/application/app-navigation/config";
 
