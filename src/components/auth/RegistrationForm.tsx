@@ -71,12 +71,12 @@ type RegistrationFormData = z.infer<typeof registrationSchema>;
 
 const industries = [
   { id: "technology", label: "Technology" },
-  { id: "healthcare", label: "Healthcare"},
+  { id: "healthcare", label: "Healthcare" },
   { id: "finance", label: "Finance" },
   { id: "retail", label: "Retail" },
   {
     id: "manufacturing",
-    label: "Manufacturing"
+    label: "Manufacturing",
   },
   { id: "education", label: "Education" },
   { id: "hospitality", label: "Hospitality" },
@@ -440,29 +440,29 @@ export const RegistrationForm = () => {
             {/* Agreement Section */}
             <div className="mt-6 flex items-center flex-col justify-center gap-2">
               <div className="flex gap-2">
-              <Checkbox
-                size="sm"
-                isSelected={agreeToTerms}
-                onChange={(selected) => {
-                  setValue("agreeToTerms", selected);
-                  trigger("agreeToTerms");
-                }}
-              />
-              <p className="text-sm font-normal leading-5 text-primary">
-                I've read and agree to the Worker Solutions®{" "}
-                <span className="cursor-pointer text-cyan-500">Terms</span> and{" "}
-                <span className="cursor-pointer text-cyan-500">
-                  Privacy Policies
-                </span>
-              </p>
+                <Checkbox
+                  size="sm"
+                  isSelected={agreeToTerms}
+                  onChange={(selected) => {
+                    setValue("agreeToTerms", selected);
+                    trigger("agreeToTerms");
+                  }}
+                />
+                <p className="text-sm font-normal leading-5 text-primary">
+                  I've read and agree to the Worker Solutions®{" "}
+                  <span className="cursor-pointer text-cyan-500">Terms</span>{" "}
+                  and{" "}
+                  <span className="cursor-pointer text-cyan-500">
+                    Privacy Policies
+                  </span>
+                </p>
               </div>
               {errors.agreeToTerms && (
-              <p className="mt-1 text-sm text-error-primary">
-                {errors.agreeToTerms.message}
-              </p>
-            )}
+                <p className="mt-1 text-sm text-error-primary">
+                  {errors.agreeToTerms.message}
+                </p>
+              )}
             </div>
-            
 
             {/* Submit Error Display */}
             {submitError && (

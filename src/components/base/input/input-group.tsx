@@ -108,7 +108,7 @@ export const InputGroup = ({
         hasTrailing && !hasLeading && "group-has-[&>select]:right-0",
       )}
       wrapperClassName={cx(
-        "z-10",
+        "z-10 myClass",
         // Apply styles based on the presence of leading or trailing elements
         hasLeading && "rounded-l-none",
         hasTrailing && "rounded-r-none",

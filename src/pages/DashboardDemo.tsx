@@ -1,40 +1,24 @@
 import { useState } from "react";
 import { DashboardSidebar } from "@/components/demo/DashboardSidebar";
-import { Button } from "@/components/base/buttons/button";
+import emailIcon from "@/assets/mail-icon.svg";
+import checkIcon from "@/assets/file-check.svg";
+import DashboardCard from "./DashboardCard";
 
 export const DashboardDemo = () => {
   const [activeUrl, setActiveUrl] = useState("/dashboard");
 
   return (
-    <div className="flex h-screen overflow-hidden bg-secondary">
+    <div className="flex h-screen overflow-hidden bg-dashboard">
       {/* Sidebar */}
       <DashboardSidebar activeUrl={activeUrl} />
 
       {/* Main Content Area */}
       <div className="flex flex-1 flex-col overflow-hidden">
-        {/* Header */}
-        <header className="border-b border-border-primary bg-primary px-8 py-4">
-          <div className="flex items-center justify-between">
-            <div>
-              <h1 className="text-2xl font-bold text-primary">Dashboard</h1>
-              <p className="text-sm text-tertiary">Welcome back, John!</p>
-            </div>
-            <div className="flex items-center gap-3">
-              <Button color="secondary" size="md">
-                Export
-              </Button>
-              <Button color="primary" size="md">
-                Create New
-              </Button>
-            </div>
-          </div>
-        </header>
-
         {/* Main Content */}
-        <main className="flex-1 overflow-y-auto p-8">
+        <main className="flex-1 overflow-y-auto px-6 py-10">
           <div className="space-y-6">
             {/* Stats Cards */}
-            <div className="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-4">
+            {/* <div className="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-4">
               {[
                 { label: "Total Users", value: "2,420", change: "+12.5%" },
                 { label: "Revenue", value: "$45,231", change: "+8.2%" },
@@ -64,92 +48,39 @@ export const DashboardDemo = () => {
                   </div>
                 </div>
               ))}
-            </div>
-
-            {/* Recent Activity */}
-            <div className="rounded-xl border border-border-primary bg-primary p-6">
-              <h2 className="mb-4 text-lg font-semibold text-primary">
-                Recent Activity
-              </h2>
-              <div className="space-y-4">
-                {[
-                  {
-                    user: "Sarah Johnson",
-                    action: "completed task",
-                    project: "Website Redesign",
-                    time: "2 hours ago",
-                  },
-                  {
-                    user: "Mike Chen",
-                    action: "uploaded file to",
-                    project: "Marketing Campaign",
-                    time: "4 hours ago",
-                  },
-                  {
-                    user: "Emily Davis",
-                    action: "commented on",
-                    project: "Mobile App",
-                    time: "6 hours ago",
-                  },
-                ].map((activity) => (
-                  <div
-                    key={activity.user}
-                    className="flex items-center justify-between border-b border-border-secondary py-3 last:border-0"
-                  >
-                    <div className="flex items-center gap-3">
-                      <div className="flex size-10 items-center justify-center rounded-full bg-brand-100 text-brand-600">
-                        <span className="text-sm font-semibold">
-                          {activity.user
-                            .split(" ")
-                            .map((n) => n[0])
-                            .join("")}
-                        </span>
-                      </div>
-                      <div>
-                        <p className="text-sm text-primary">
-                          <span className="font-semibold">{activity.user}</span>{" "}
-                          {activity.action}{" "}
-                          <span className="font-semibold">
-                            {activity.project}
-                          </span>
-                        </p>
-                        <p className="text-xs text-tertiary">{activity.time}</p>
-                      </div>
-                    </div>
-                  </div>
-                ))}
+            </div> */}
+          </div>
+          <div>
+            <h2 className="text-4xl font-medium text-primary">Welcome!</h2>
+            <div className="mt-6 border border-gray-300 rounded-xl p-4 bg-dashboard-card shadow-sm flex gap-4 justify-between">
+              <div className="flex-1">
+                <h2 className="text-dashboard-card-title text-3xl font-medium mb-2">
+                  Thanks for signing up.
+                </h2>
+                <p className="text-white">
+                  👋 Welcome aboard! Please check your inbox and verify your
+                  email to get started.
+                </p>
+              </div>
+              <div className="flex-1 bg-dashboard-card-image rounded-lg p-4 flex items-center justify-center text-2xl font-medium text-white">
+                FPO Img
               </div>
             </div>
-
-            {/* Quick Actions */}
-            <div className="rounded-xl border border-border-primary bg-primary p-6">
-              <h2 className="mb-4 text-lg font-semibold text-primary">
-                Quick Actions
-              </h2>
-              <div className="flex flex-wrap gap-3">
-                <Button
-                  color="primary"
-                  size="md"
-                  onClick={() => setActiveUrl("/team/add")}
-                >
-                  Add Team Member
-                </Button>
-                <Button
-                  color="secondary"
-                  size="md"
-                  onClick={() => setActiveUrl("/reports")}
-                >
-                  View Reports
-                </Button>
-                <Button
-                  color="secondary"
-                  size="md"
-                  onClick={() => setActiveUrl("/messages")}
-                >
-                  Check Messages
-                </Button>
-              </div>
-            </div>
+            <DashboardCard
+              title="Verify your email"
+              description="One quick step to secure your account. Didn’t get the email? Resend verification"
+              avatarIconSrc={emailIcon}
+              buttonLabel="Verify email"
+              buttonType="primary"
+            />
+            <DashboardCard
+              title="Take the Assessment"
+              description="Take our 15 minute assessment for specific recommendations to improve your business"
+              avatarIconSrc={checkIcon}
+              buttonLabel="Take Assessment"
+              buttonType="secondary"
+              buttonIsDisabled={true}
+            />
           </div>
         </main>
       </div>
