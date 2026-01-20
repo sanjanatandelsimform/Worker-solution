@@ -10,7 +10,7 @@ import { Eye, EyeOff, Mail01 } from "@untitledui/icons";
 import { NativeSelect } from "../base/select/select-native";
 import { Select } from "../base/select/select";
 import { signup } from "@/services/api/authApi";
-import type { RegistrationData } from "@/types/auth";
+import type { RegistrationData, Industry } from "@/types/auth";
 import {
   registrationSchema,
   type RegistrationFormData,
@@ -66,7 +66,7 @@ export const RegistrationForm = () => {
         businessName: data.legalBusinessName,
         businessEmail: data.businessEmail,
         businessPhone: data.businessPhone,
-        industry: data.industry as any,
+        industry: data.industry as Industry,
         zipCode: data.zipCode,
         password: data.password,
         confirmPassword: data.confirmPassword,
@@ -265,11 +265,11 @@ export const RegistrationForm = () => {
                   size="sm"
                   value={phoneNumber}
                   maxLength={10}
-                  onChange={(e: any) => {
+                  onChange={(
+                    e: React.ChangeEvent<HTMLInputElement> | string,
+                  ) => {
                     const inputValue =
-                      typeof e === "string"
-                        ? e
-                        : e?.target?.value || e?.value || "";
+                      typeof e === "string" ? e : e?.target?.value || "";
                     // Only allow numeric input and limit to 10 digits
                     const numericValue = inputValue
                       .replace(/\D/g, "")
@@ -356,30 +356,30 @@ export const RegistrationForm = () => {
             {/* Agreement Section */}
             <div className="mt-6 flex items-center flex-col justify-center gap-2">
               <div className="flex gap-2 items-start">
-              <Checkbox
-                size="sm"
-                isSelected={agreeToTerms}
-                onChange={(selected) => {
-                  setValue("agreeToTerms", selected);
-                  trigger("agreeToTerms");
-                }}
-                aria-label="I agree to the Terms and Privacy Policies"
-              />
-              <p className="text-sm font-normal leading-5 text-primary">
-                I've read and agree to the Worker Solutions®{" "}
-                <span className="cursor-pointer text-cyan-500">Terms</span> and{" "}
-                <span className="cursor-pointer text-cyan-500">
-                  Privacy Policies
-                </span>
-              </p>
+                <Checkbox
+                  size="sm"
+                  isSelected={agreeToTerms}
+                  onChange={(selected) => {
+                    setValue("agreeToTerms", selected);
+                    trigger("agreeToTerms");
+                  }}
+                  aria-label="I agree to the Terms and Privacy Policies"
+                />
+                <p className="text-sm font-normal leading-5 text-primary">
+                  I've read and agree to the Worker Solutions®{" "}
+                  <span className="cursor-pointer text-cyan-500">Terms</span>{" "}
+                  and{" "}
+                  <span className="cursor-pointer text-cyan-500">
+                    Privacy Policies
+                  </span>
+                </p>
               </div>
               {errors.agreeToTerms && (
-              <p className="mt-1 text-sm text-error-primary">
-                {errors.agreeToTerms.message}
-              </p>
-            )}
+                <p className="mt-1 text-sm text-error-primary">
+                  {errors.agreeToTerms.message}
+                </p>
+              )}
             </div>
-            
 
             {/* Submit Error Display */}
             {submitError && (

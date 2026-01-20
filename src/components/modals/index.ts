@@ -11,4 +11,3 @@ export { InProgressModal } from "./InProgressModal";
 // Modal Type 2: Form modals (without top icon)
 export { ChangePasswordModal } from "./ChangePasswordModal";
 export { UpdateYourEmailModal } from "./UpdateYourEmailModal";
-

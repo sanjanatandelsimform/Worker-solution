@@ -4,7 +4,6 @@ import { RegisterPage } from "./pages/auth/RegisterPage";
 import { SignInPage } from "./pages/auth/SignInPage";
 import { DashboardPage } from "./pages/dashboard/DashboardPage";
 
-
 function App() {
   return (
     <AuthErrorBoundary>

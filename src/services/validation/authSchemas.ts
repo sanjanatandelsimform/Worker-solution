@@ -80,4 +80,3 @@ export const signInSchema = z.object({
 // Type exports
 export type RegistrationFormData = z.infer<typeof registrationSchema>;
 export type SignInFormData = z.infer<typeof signInSchema>;
-

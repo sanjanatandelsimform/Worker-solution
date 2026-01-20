@@ -8,8 +8,8 @@ import { InputGroup } from "@/components/base/input/input-group";
 import { Checkbox } from "@/components/base/checkbox/checkbox";
 import { GoogleSSOButton } from "./GoogleSSOButton";
 import { Eye, EyeOff } from "@untitledui/icons";
-import type { SignInData } from "@/types/auth";
-import { signin } from "@/services/api/authApi";
+// import type { SignInData } from "@/types/auth";
+// import { signin } from "@/services/api/authApi";
 import { ChangePasswordModal } from "../modals/ChangePasswordModal";
 // import { EmailVerificationModal } from "../modals/EmailVerificationModal";
 import { SuccessModalWithLogo } from "../modals/SuccessModalWithLogo";
@@ -50,13 +50,14 @@ export const SignInForm = () => {
 
   const onSubmit = async (data: SignInFormData) => {
     try {
-      const signInData: SignInData = {
-        businessEmail: data.email,
-        password: data.password,
-        rememberMe: data.rememberMe || false,
-      };
+      // const signInData: SignInData = {
+      //   businessEmail: data.email,
+      //   password: data.password,
+      //   rememberMe: data.rememberMe || false,
+      // };
       // await signin(signInData);
       // Since the API is not deployed yet, this is used directly for testing purposes.
+      console.log("Sign in data:", data);
       setErrorMessage(null); // Clear any previous error messages
       setIsOpen(true);
     } catch (error) {
@@ -68,9 +69,9 @@ export const SignInForm = () => {
       );
     }
   };
-  const handleGetStarted=()=>{
-    navigate("/dashboard")
-  }
+  const handleGetStarted = () => {
+    navigate("/dashboard");
+  };
   return (
     <div className="flex min-h-screen items-center justify-center bg-secondary">
       <div className="flex w-2xl items-center justify-center rounded-xl border border-solid border-primary bg-primary py-28">
@@ -219,18 +220,18 @@ export const SignInForm = () => {
         onClose={() => setIsChangePasswordModalOpen(false)}
       />
       <SuccessModalWithLogo
-      isOpen={isOpen}
-      onClose={()=>setIsOpen(false)}
-      size="xl"
-      messageImg={checkmarkIcon}
-      title="Your email has been verified!"
-      subtitle="Welcome aboard! Start your success journey with Worker Solutions®"
-      button={{
-        text: "Let's Get Started",
-        onClick: handleGetStarted,
-        color: "primary",
-      }}
-    />
+        isOpen={isOpen}
+        onClose={() => setIsOpen(false)}
+        size="xl"
+        messageImg={checkmarkIcon}
+        title="Your email has been verified!"
+        subtitle="Welcome aboard! Start your success journey with Worker Solutions®"
+        button={{
+          text: "Let's Get Started",
+          onClick: handleGetStarted,
+          color: "primary",
+        }}
+      />
     </div>
   );
 };

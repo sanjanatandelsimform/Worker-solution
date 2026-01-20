@@ -1,9 +1,11 @@
+import React from "react";
+
 export interface IndustryOption {
   id: string;
   label: string;
   supportingText?: string;
   isDisabled?: boolean;
-  icon?: any;
+  icon?: React.FC | React.ReactNode;
   avatarUrl?: string;
 }
 
