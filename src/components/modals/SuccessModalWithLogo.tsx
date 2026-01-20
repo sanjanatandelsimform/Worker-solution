@@ -7,26 +7,26 @@ import {
 import { Button } from "@/components/base/buttons/button";
 import { X } from "@untitledui/icons";
 
-export interface BaseModalWithLogoButton {
+export interface SuccessModalWithLogoButton {
   text: string;
   onClick: () => void;
   color?: "primary" | "secondary" | "tertiary" | "primary-destructive";
   isDisabled?: boolean;
 }
 
-export interface BaseModalWithLogoProps {
+export interface SuccessModalWithLogoProps {
   isOpen: boolean;
   onClose: () => void;
   size?: "sm" | "md" | "lg" | "xl" | "full";
   messageImg: string;
   title?: string;
   subtitle?: string;
-  button: BaseModalWithLogoButton;
+  button: SuccessModalWithLogoButton;
   showCloseButton?: boolean;
   showLogo?: boolean;
 }
 
-export const BaseModalWithLogo = ({
+export const SuccessModalWithLogo = ({
   isOpen,
   onClose,
   size = "md",
@@ -36,7 +36,7 @@ export const BaseModalWithLogo = ({
   button,
   showCloseButton = true,
   showLogo = true,
-}: BaseModalWithLogoProps) => {
+}: SuccessModalWithLogoProps) => {
   return (
     <Modal isOpen={isOpen} onOpenChange={onClose} size={size}>
       <ModalContent className="bg-primary rounded-lg">
@@ -110,4 +110,4 @@ export const BaseModalWithLogo = ({
   );
 };
 
-export default BaseModalWithLogo;
+export default SuccessModalWithLogo;

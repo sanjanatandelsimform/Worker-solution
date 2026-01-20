@@ -54,8 +54,7 @@
 
 ### Implementation for User Story 1
 
-- [X] T014 [P] [US1] Create PasswordStrengthIndicator component in `src/components/auth/PasswordStrengthIndicator.tsx` (visual strength bar, weak/fair/good/strong labels)
-- [X] T015 [P] [US1] Create utility functions in `src/utils/phoneFormatter.ts` (format phone number to 10 digits) and `src/utils/passwordValidator.ts` (calculate password strength)
+- [X] T014 [P] [US1] Create utility functions in `src/utils/phoneFormatter.ts` (format phone number to 10 digits) and `src/utils/passwordValidator.ts` (calculate password strength)
 - [X] T016 [US1] Create RegistrationForm component in `src/components/auth/RegistrationForm.tsx` (10 fields: firstName, lastName, businessName, email, phoneNumber, industry dropdown, zipCode, password with strength indicator, confirmPassword, acceptTerms checkbox)
 - [X] T017 [US1] Integrate React Hook Form with Zod resolver in RegistrationForm (mode: 'onBlur', real-time validation)
 - [X] T018 [US1] Add ARIA attributes to RegistrationForm fields (aria-invalid, aria-describedby for error messages, role="alert" for errors)
@@ -164,6 +163,16 @@
 - [ ] T064 Manual QA: Test complete registration → sign-out → sign-in flow
 - [ ] T065 Manual QA: Test Google SSO flow end-to-end with real Google account
 - [X] T066 Update README.md with authentication module documentation and setup instructions
+
+---
+
+## Update: Removed Files
+
+The following files have been removed from the project:
+- `BusinessInfoForm.tsx`
+- `PasswordStrengthIndicator.tsx`
+
+These components are no longer part of the authentication module. Any references to these files in the documentation have been updated accordingly.
 
 ---
 

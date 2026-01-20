@@ -1,8 +1,8 @@
 import { useState } from "react";
-import { DashboardSidebar } from "@/components/demo/DashboardSidebar";
+import { DashboardSidebar } from "@/components/dashboard/DashboardSidebar";
 import { Button } from "@/components/base/buttons/button";
 
-export const DashboardDemo = () => {
+export const DashboardPage = () => {
   const [activeUrl, setActiveUrl] = useState("/dashboard");
 
   return (
@@ -157,4 +157,4 @@ export const DashboardDemo = () => {
   );
 };
 
-export default DashboardDemo;
+export default DashboardPage;

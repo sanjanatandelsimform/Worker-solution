@@ -1,6 +1,6 @@
 // Base Modal Components
 export { BaseModalWithIcon } from "./BaseModalWithIcon";
-export { BaseModalWithLogo } from "./BaseModalWithLogo";
+export { SuccessModalWithLogo } from "./SuccessModalWithLogo";
 export { BaseFormModal } from "./BaseFormModal";
 
 // Modal Type 1: Small modals with icon (success/error/info)
@@ -12,7 +12,3 @@ export { InProgressModal } from "./InProgressModal";
 export { ChangePasswordModal } from "./ChangePasswordModal";
 export { UpdateYourEmailModal } from "./UpdateYourEmailModal";
 
-// Modal Type 3: Full-screen-style modals with logo
-export { PasswordResetModal } from "./PasswordResetModal";
-export { EmailVerificationModal } from "./EmailVerificationModal";
-export { LogoutVerificationModal } from "./LogoutVerificationModal";

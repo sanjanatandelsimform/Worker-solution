@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { z } from "zod";
+import { useNavigate } from "react-router-dom";
 import { Button } from "@/components/base/buttons/button";
 import { Input } from "@/components/base/input/input";
 import { InputGroup } from "@/components/base/input/input-group";
@@ -11,36 +11,22 @@ import { Eye, EyeOff } from "@untitledui/icons";
 import type { SignInData } from "@/types/auth";
 import { signin } from "@/services/api/authApi";
 import { ChangePasswordModal } from "../modals/ChangePasswordModal";
-import { EmailVerificationModal } from "../modals/EmailVerificationModal";
+// import { EmailVerificationModal } from "../modals/EmailVerificationModal";
+import { SuccessModalWithLogo } from "../modals/SuccessModalWithLogo";
+import checkmarkIcon from "@/assets/checkmark-icon.svg";
 
-// Validation schema using Zod
-const signInSchema = z.object({
-  email: z
-    .string()
-    .min(1, "Email is required")
-    .refine(
-      (value) => /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value),
-      "Please enter correct email format.",
-    ),
-  password: z
-    .string()
-    .min(8, "Password must be at least 8 characters")
-    .regex(
-      /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]/,
-      "Password must be min 8 characters, include number, upper case, lower case and symbol.",
-    ),
-  rememberMe: z.boolean().optional(),
-});
-
-type SignInFormData = z.infer<typeof signInSchema>;
+import {
+  signInSchema,
+  type SignInFormData,
+} from "@/services/validation/authSchemas";
 
 export const SignInForm = () => {
   const [showPassword, setShowPassword] = useState(false);
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
   const [isChangePasswordModalOpen, setIsChangePasswordModalOpen] =
     useState(false);
-  const [isEmailVerificationModalOpen, setIsEmailVerificationModalOpen] =
-    useState(false);
+  const [isOpen, setIsOpen] = useState(false);
+  const navigate = useNavigate();
 
   const {
     handleSubmit,
@@ -69,15 +55,10 @@ export const SignInForm = () => {
         password: data.password,
         rememberMe: data.rememberMe || false,
       };
-
-      // Call signin API
-      await signin(signInData);
+      // await signin(signInData);
+      // Since the API is not deployed yet, this is used directly for testing purposes.
       setErrorMessage(null); // Clear any previous error messages
-      // Handle sign in logic
-      console.log("Form submitted:", data);
-      // Open EmailVerificationModal for layout preview
-      setIsEmailVerificationModalOpen(true);
-      // Add your authentication logic here
+      setIsOpen(true);
     } catch (error) {
       console.error("Sign in error:", error);
       setErrorMessage(
@@ -87,12 +68,12 @@ export const SignInForm = () => {
       );
     }
   };
-
+  const handleGetStarted=()=>{
+    navigate("/dashboard")
+  }
   return (
     <div className="flex min-h-screen items-center justify-center bg-secondary">
-      {/* Container */}
       <div className="flex w-2xl items-center justify-center rounded-xl border border-solid border-primary bg-primary py-28">
-        {/* Content */}
         <div className="flex w-full max-w-90 flex-col items-center gap-8">
           {/* Header */}
           <div className="flex w-full flex-col items-center gap-6">
@@ -103,7 +84,7 @@ export const SignInForm = () => {
               </h1>
             </div>
 
-            {/* Text and supporting text */}
+            {/* Title and Description */}
             <div className="flex w-full flex-col items-start gap-3 text-center">
               <h2 className="w-full text-4xl font-semibold leading-9.5 text-primary">
                 Log in to your account
@@ -116,7 +97,6 @@ export const SignInForm = () => {
 
           {/* Form Content */}
           <div className="flex w-full flex-col items-center gap-6 rounded-xl">
-            {/* Form */}
             <form
               onSubmit={handleSubmit(onSubmit)}
               className="flex w-full cursor-pointer flex-col gap-5"
@@ -126,7 +106,7 @@ export const SignInForm = () => {
                 <Input
                   name="email"
                   size="md"
-                  isRequired={true}
+                  isRequired
                   label="Email"
                   hint={errors.email?.message}
                   placeholder="Enter your email"
@@ -153,7 +133,6 @@ export const SignInForm = () => {
                   isInvalid={!!errors.password}
                   className={errors.password ? "error-ring" : ""}
                   value={password}
-                  maxLength={8}
                   onChange={(value) => {
                     setValue("password", value);
                     trigger("password");
@@ -180,9 +159,8 @@ export const SignInForm = () => {
                 <div className="text-red-500 text-sm">{errorMessage}</div>
               )}
 
-              {/* Row - Checkbox and Forgot Password */}
+              {/* Remember Me & Forgot Password */}
               <div className="flex w-full items-center">
-                {/* Checkbox */}
                 <div className="flex flex-1 items-start gap-2">
                   <Checkbox
                     size="sm"
@@ -192,7 +170,6 @@ export const SignInForm = () => {
                   />
                 </div>
 
-                {/* Forgot Password Button */}
                 <Button
                   type="button"
                   color="link-color"
@@ -224,7 +201,7 @@ export const SignInForm = () => {
             </form>
           </div>
 
-          {/* Row - Sign up link */}
+          {/* Sign up link */}
           <div className="flex w-full items-baseline justify-center gap-1">
             <p className="text-sm font-normal leading-5 text-tertiary">
               Don't have an account?
@@ -235,18 +212,25 @@ export const SignInForm = () => {
           </div>
         </div>
       </div>
+
+      {/* Modals:-this is used directly for testing purposes */}
       <ChangePasswordModal
         isOpen={isChangePasswordModalOpen}
         onClose={() => setIsChangePasswordModalOpen(false)}
       />
-      <EmailVerificationModal
-        isOpen={isEmailVerificationModalOpen}
-        onClose={() => setIsEmailVerificationModalOpen(false)}
-        onGetStarted={() => {
-          console.log("Get Started clicked");
-          setIsEmailVerificationModalOpen(false);
-        }}
-      />
+      <SuccessModalWithLogo
+      isOpen={isOpen}
+      onClose={()=>setIsOpen(false)}
+      size="xl"
+      messageImg={checkmarkIcon}
+      title="Your email has been verified!"
+      subtitle="Welcome aboard! Start your success journey with Worker Solutions®"
+      button={{
+        text: "Let's Get Started",
+        onClick: handleGetStarted,
+        color: "primary",
+      }}
+    />
     </div>
   );
 };

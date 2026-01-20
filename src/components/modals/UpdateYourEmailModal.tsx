@@ -14,7 +14,7 @@ import {
 import { Button } from "@/components/base/buttons/button";
 import { Input } from "@/components/base/input/input";
 import { InputGroup } from "@/components/base/input/input-group";
-import { Eye, EyeOff, Mail01, X } from "@untitledui/icons";
+import { Mail01, X } from "@untitledui/icons";
 
 // Validation schema using Zod
 const changePasswordSchema = z

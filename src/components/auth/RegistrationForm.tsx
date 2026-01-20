@@ -1,7 +1,6 @@
 import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { z } from "zod";
 import { useNavigate } from "react-router-dom";
 import { Button } from "@/components/base/buttons/button";
 import { Input, InputBase } from "@/components/base/input/input";
@@ -9,79 +8,14 @@ import { InputGroup } from "@/components/base/input/input-group";
 import { Checkbox } from "@/components/base/checkbox/checkbox";
 import { Eye, EyeOff, Mail01 } from "@untitledui/icons";
 import { NativeSelect } from "../base/select/select-native";
-import { signup } from "@/services/api/authApi";
-import { cx } from "@/utils/cx";
-import type { RegistrationData } from "@/types/auth";
 import { Select } from "../base/select/select";
-
-// Validation schema using Zod
-const registrationSchema = z
-  .object({
-    firstName: z
-      .string()
-      .min(1, "First Name is required")
-      .min(2, "First Name must be at least 2 characters")
-      .max(20, "First Name must not exceed 20 characters"),
-    lastName: z
-      .string()
-      .min(1, "Last Name is required")
-      .max(20, "Last Name must not exceed 20 characters"),
-    legalBusinessName: z
-      .string()
-      .min(1, "Legal Business Name is required")
-      .min(2, "Legal Business Name must be at least 2 characters")
-      .max(50, "Legal Business Name must not exceed 50 characters"),
-    industry: z.string().min(1, "Industry is required"),
-    zipCode: z
-      .string()
-      .min(1, "Zip Code is required")
-      .regex(/^\d{5}$/, "Zip Code must be exactly 5 digits"),
-    businessEmail: z
-      .string()
-      .min(1, "Business Email Address is required")
-      .email("Enter a valid email address"),
-    businessPhone: z
-      .string()
-      .min(1, "Business Phone is required")
-      .refine(
-        (value) => /^\d{10}$/.test(value.replace(/\D/g, "")),
-        "Phone number must be exactly 10 digits",
-      ),
-    password: z
-      .string()
-      .min(8, "Password must be at least 8 characters")
-      .regex(/[A-Z]/, "Password must contain at least one uppercase letter")
-      .regex(/[a-z]/, "Password must contain at least one lowercase letter")
-      .regex(/[0-9]/, "Password must contain at least one number")
-      .regex(
-        /[!@#$%^&*(),.?":{}|<>]/,
-        "Password must contain at least one special character",
-      ),
-    confirmPassword: z.string().min(1, "Confirm password is required"),
-    agreeToTerms: z.boolean().refine((val) => val === true, {
-      message: "You must agree to the terms and privacy policies",
-    }),
-  })
-  .refine((data) => data.password === data.confirmPassword, {
-    message: "Passwords do not match",
-    path: ["confirmPassword"],
-  });
-
-type RegistrationFormData = z.infer<typeof registrationSchema>;
-
-const industries = [
-  { id: "technology", label: "Technology" },
-  { id: "healthcare", label: "Healthcare"},
-  { id: "finance", label: "Finance" },
-  { id: "retail", label: "Retail" },
-  {
-    id: "manufacturing",
-    label: "Manufacturing"
-  },
-  { id: "education", label: "Education" },
-  { id: "hospitality", label: "Hospitality" },
-  { id: "other", label: "Other" },
-];
+import { signup } from "@/services/api/authApi";
+import type { RegistrationData } from "@/types/auth";
+import {
+  registrationSchema,
+  type RegistrationFormData,
+} from "@/services/validation/authSchemas";
+import { INDUSTRIES, COUNTRY_CODES } from "@/constants/formOptions";
 
 export const RegistrationForm = () => {
   const [showPassword, setShowPassword] = useState(false);
@@ -126,8 +60,6 @@ export const RegistrationForm = () => {
   const onSubmit = async (data: RegistrationFormData) => {
     try {
       setSubmitError(null);
-
-      // Map form data to API format
       const registrationData: RegistrationData = {
         firstName: data.firstName,
         lastName: data.lastName,
@@ -143,12 +75,9 @@ export const RegistrationForm = () => {
 
       // Call signup API
       await signup(registrationData);
-
-      // Clear password fields from form state after successful submission
       setValue("password", "");
       setValue("confirmPassword", "");
 
-      // Redirect to email verification page on success
       navigate("/email-verification");
     } catch (error) {
       console.error("Registration error:", error);
@@ -189,7 +118,6 @@ export const RegistrationForm = () => {
           <form
             onSubmit={handleSubmit(onSubmit)}
             className="w-full cursor-pointer"
-            // noValidate={false}
           >
             {/* Fields - Grid Layout */}
             <div className="grid w-full grid-cols-2 gap-x-4 gap-y-4">
@@ -257,10 +185,8 @@ export const RegistrationForm = () => {
                 isRequired
                 size="md"
                 label="Select Your Industry"
-                //tooltip="This is a tooltip"
-                //hint="This is a hint text to help user."
                 placeholder="Select Option"
-                items={industries}
+                items={INDUSTRIES}
               >
                 {(item) => (
                   <Select.Item
@@ -329,17 +255,7 @@ export const RegistrationForm = () => {
                   <NativeSelect
                     value={countryCode}
                     onChange={(e) => setCountryCode(e.target.value)}
-                    options={[
-                      { label: "US +1", value: "US" },
-                      { label: "UK +44", value: "UK" },
-                      { label: "IN +91", value: "IN" },
-                      { label: "CA +1", value: "CA" },
-                      { label: "AU +61", value: "AU" },
-                      { label: "DE +49", value: "DE" },
-                      { label: "FR +33", value: "FR" },
-                      { label: "JP +81", value: "JP" },
-                      { label: "CN +86", value: "CN" },
-                    ]}
+                    options={COUNTRY_CODES}
                   />
                 }
               >
@@ -439,7 +355,7 @@ export const RegistrationForm = () => {
 
             {/* Agreement Section */}
             <div className="mt-6 flex items-center flex-col justify-center gap-2">
-              <div className="flex gap-2">
+              <div className="flex gap-2 items-start">
               <Checkbox
                 size="sm"
                 isSelected={agreeToTerms}
@@ -447,6 +363,7 @@ export const RegistrationForm = () => {
                   setValue("agreeToTerms", selected);
                   trigger("agreeToTerms");
                 }}
+                aria-label="I agree to the Terms and Privacy Policies"
               />
               <p className="text-sm font-normal leading-5 text-primary">
                 I've read and agree to the Worker Solutions®{" "}

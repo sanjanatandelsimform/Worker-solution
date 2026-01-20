@@ -14,64 +14,52 @@ export const industrySchema = z.enum([
   "Other",
 ]);
 
-// Password validation schema
-const passwordSchema = z
-  .string()
-  .min(8, "Password must be at least 8 characters")
-  .regex(/[A-Z]/, "Password must contain at least one uppercase letter")
-  .regex(/[a-z]/, "Password must contain at least one lowercase letter")
-  .regex(/[0-9]/, "Password must contain at least one number")
-  .regex(
-    /[!@#$%^&*(),.?":{}|<>]/,
-    "Password must contain at least one special character",
-  );
-
-// Email validation schema
-const emailSchema = z
-  .string()
-  .min(1, "Email is required")
-  .email("Invalid email format");
-
-// Phone number validation schema (10 digits, optional)
-const phoneNumberSchema = z
-  .string()
-  .optional()
-  .refine(
-    (value) => !value || /^\d{10}$/.test(value.replace(/\D/g, "")),
-    "Phone number must be exactly 10 digits",
-  );
-
-// Zip code validation schema (5 digits)
-const zipCodeSchema = z
-  .string()
-  .min(1, "Zip code is required")
-  .regex(/^\d{5}$/, "Zip code must be exactly 5 digits");
-
-// Registration form validation schema
+// Registration schema
 export const registrationSchema = z
   .object({
     firstName: z
       .string()
-      .min(1, "First name is required")
-      .min(2, "First name must be at least 2 characters")
-      .max(20, "First name must not exceed 20 characters"),
+      .min(1, "First Name is required")
+      .min(2, "First Name must be at least 2 characters")
+      .max(20, "First Name must not exceed 20 characters"),
     lastName: z
       .string()
-      .max(20, "Last name must not exceed 20 characters")
-      .optional(),
-    businessName: z
+      .min(1, "Last Name is required")
+      .max(20, "Last Name must not exceed 20 characters"),
+    legalBusinessName: z
       .string()
-      .min(1, "Business name is required")
-      .min(2, "Business name must be at least 2 characters")
-      .max(50, "Business name must not exceed 50 characters"),
-    email: emailSchema,
-    phoneNumber: phoneNumberSchema,
-    industry: industrySchema,
-    zipCode: zipCodeSchema,
-    password: passwordSchema,
-    confirmPassword: z.string().min(1, "Please confirm your password"),
-    acceptTerms: z.boolean().refine((val) => val === true, {
-      message: "You must accept the terms and conditions",
+      .min(1, "Legal Business Name is required")
+      .min(2, "Legal Business Name must be at least 2 characters")
+      .max(50, "Legal Business Name must not exceed 50 characters"),
+    industry: z.string().min(1, "Industry is required"),
+    zipCode: z
+      .string()
+      .min(1, "Zip Code is required")
+      .regex(/^\d{5}$/, "Zip Code must be exactly 5 digits"),
+    businessEmail: z
+      .string()
+      .min(1, "Business Email Address is required")
+      .email("Enter a valid email address"),
+    businessPhone: z
+      .string()
+      .min(1, "Business Phone is required")
+      .refine(
+        (value) => /^\d{10}$/.test(value.replace(/\D/g, "")),
+        "Phone number must be exactly 10 digits",
+      ),
+    password: z
+      .string()
+      .min(8, "Password must be at least 8 characters")
+      .regex(/[A-Z]/, "Password must contain at least one uppercase letter")
+      .regex(/[a-z]/, "Password must contain at least one lowercase letter")
+      .regex(/[0-9]/, "Password must contain at least one number")
+      .regex(
+        /[!@#$%^&*(),.?":{}|<>]/,
+        "Password must contain at least one special character",
+      ),
+    confirmPassword: z.string().min(1, "Confirm password is required"),
+    agreeToTerms: z.boolean().refine((val) => val === true, {
+      message: "You must agree to the terms and privacy policies",
     }),
   })
   .refine((data) => data.password === data.confirmPassword, {
@@ -81,22 +69,15 @@ export const registrationSchema = z
 
 // Sign-in form validation schema
 export const signInSchema = z.object({
-  email: emailSchema,
-  password: z.string().min(1, "Password is required"),
-  rememberMe: z.boolean(),
-});
-
-// Business info form validation schema (for Google SSO users)
-export const businessInfoSchema = z.object({
-  businessName: z
+  email: z
     .string()
-    .min(1, "Business name is required")
-    .min(2, "Business name must be at least 2 characters"),
-  phoneNumber: phoneNumberSchema,
-  industry: industrySchema,
-  zipCode: zipCodeSchema,
+    .min(1, "Email is required")
+    .email("Enter a valid email address"),
+  password: z.string().min(1, "Password is required"),
+  rememberMe: z.boolean().optional(),
 });
 
-// Export types inferred from schemas
+// Type exports
 export type RegistrationFormData = z.infer<typeof registrationSchema>;
 export type SignInFormData = z.infer<typeof signInSchema>;
+
