@@ -16,17 +16,13 @@ import checkmarkIcon from "@/assets/checkmark-icon.svg";
 import { useAppDispatch } from "@/store/hooks";
 import { setUser } from "@/store/slices/authSlice";
 
-import {
-  signInSchema,
-  type SignInFormData,
-} from "@/services/validation/authSchemas";
+import { signInSchema, type SignInFormData } from "@/services/validation/authSchemas";
 
 export const SignInForm = () => {
   const dispatch = useAppDispatch();
   const [showPassword, setShowPassword] = useState(false);
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
-  const [isChangePasswordModalOpen, setIsChangePasswordModalOpen] =
-    useState(false);
+  const [isChangePasswordModalOpen, setIsChangePasswordModalOpen] = useState(false);
   const [isOpen, setIsOpen] = useState(false);
   const navigate = useNavigate();
 
@@ -83,7 +79,7 @@ export const SignInForm = () => {
             updatedAt: user.updatedAt,
           },
           tokens,
-        }),
+        })
       );
 
       setValue("email", "");
@@ -93,9 +89,7 @@ export const SignInForm = () => {
     } catch (error) {
       console.error("Sign in error:", error);
       setErrorMessage(
-        error instanceof Error
-          ? error.message
-          : "An unexpected error occurred. Please try again.",
+        error instanceof Error ? error.message : "An unexpected error occurred. Please try again."
       );
     }
   };
@@ -110,9 +104,7 @@ export const SignInForm = () => {
           <div className="flex w-full flex-col items-center gap-6">
             {/* Logo */}
             <div className="flex items-center justify-center rounded-xl bg-tertiary px-2 py-1">
-              <h1 className="text-5xl font-bold leading-15 text-primary">
-                BeneStat
-              </h1>
+              <h1 className="text-5xl font-bold leading-15 text-primary">BeneStat</h1>
             </div>
 
             {/* Title and Description */}
@@ -144,7 +136,7 @@ export const SignInForm = () => {
                   isInvalid={!!errors.email}
                   className={errors.email ? "error-ring" : ""}
                   value={email}
-                  onChange={(value) => {
+                  onChange={value => {
                     setValue("email", value);
                     trigger("email");
                   }}
@@ -164,7 +156,7 @@ export const SignInForm = () => {
                   isInvalid={!!errors.password}
                   className={errors.password ? "error-ring" : ""}
                   value={password}
-                  onChange={(value) => {
+                  onChange={value => {
                     setValue("password", value);
                     trigger("password");
                   }}
@@ -186,9 +178,7 @@ export const SignInForm = () => {
               </InputGroup>
 
               {/* Error Message Display */}
-              {errorMessage && (
-                <div className="text-red-500 text-sm">{errorMessage}</div>
-              )}
+              {errorMessage && <div className="text-red-500 text-sm">{errorMessage}</div>}
 
               {/* Remember Me & Forgot Password */}
               <div className="flex w-full items-center">
@@ -196,7 +186,7 @@ export const SignInForm = () => {
                   <Checkbox
                     size="sm"
                     isSelected={rememberMe}
-                    onChange={(selected) => setValue("rememberMe", selected)}
+                    onChange={selected => setValue("rememberMe", selected)}
                     label="Remember for 30 days"
                   />
                 </div>
@@ -234,9 +224,7 @@ export const SignInForm = () => {
 
           {/* Sign up link */}
           <div className="flex w-full items-baseline justify-center gap-1">
-            <p className="text-sm font-normal leading-5 text-tertiary">
-              Don't have an account?
-            </p>
+            <p className="text-sm font-normal leading-5 text-tertiary">Don't have an account?</p>
             <Button href="/register" color="link-color" size="md">
               Sign up
             </Button>

@@ -1,9 +1,4 @@
-import {
-  Modal,
-  ModalContent,
-  ModalHeader,
-  ModalFooter,
-} from "@/components/base/modal/modal";
+import { Modal, ModalContent, ModalHeader, ModalFooter } from "@/components/base/modal/modal";
 import { Button } from "@/components/base/buttons/button";
 import { X } from "@untitledui/icons";
 
@@ -67,11 +62,7 @@ export const SuccessModalWithLogo = ({
             )}
             {/* Large Icon/Image */}
             <div className="relative size-44 shrink-0">
-              <img
-                alt={title || "Modal icon"}
-                className="block w-full"
-                src={messageImg}
-              />
+              <img alt={title || "Modal icon"} className="block w-full" src={messageImg} />
             </div>
 
             {/* Text Container */}

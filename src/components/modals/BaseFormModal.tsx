@@ -50,16 +50,12 @@ export const BaseFormModal = ({
           <div className="flex items-center justify-between w-full relative">
             <div className="flex flex-col gap-1">
               <ModalTitle>{title}</ModalTitle>
-              {description && (
-                <ModalDescription>{description}</ModalDescription>
-              )}
+              {description && <ModalDescription>{description}</ModalDescription>}
             </div>
             {showCloseButton && (
               <div className="absolute -right-2 -top-2">
                 <Button
-                  iconTrailing={
-                    <X data-icon className="text-quaternary size-6" />
-                  }
+                  iconTrailing={<X data-icon className="text-quaternary size-6" />}
                   onClick={onClose}
                   color="tertiary"
                 />
@@ -74,16 +70,14 @@ export const BaseFormModal = ({
           </ModalBody>
 
           <ModalFooter>
-            {buttons.map((button) => (
+            {buttons.map(button => (
               <Button
                 key={button.text}
                 type={button.type || "button"}
                 color={button.color || "primary"}
                 size="md"
                 onClick={button.onClick}
-                className={
-                  button.className || (buttons.length === 1 ? "w-full" : "")
-                }
+                className={button.className || (buttons.length === 1 ? "w-full" : "")}
                 isDisabled={button.isDisabled}
               >
                 {button.text}

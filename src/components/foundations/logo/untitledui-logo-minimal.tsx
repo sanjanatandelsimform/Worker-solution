@@ -32,14 +32,7 @@ export const UntitledLogoMinimal = (props: SVGProps<SVGSVGElement>) => {
             />
           </g>
           <g filter={`url(#filter1_dd-${id}`}>
-            <rect
-              x="11"
-              y="10"
-              width="16"
-              height="16"
-              rx="8"
-              fill={`url(#paint1_linear-${id}`}
-            />
+            <rect x="11" y="10" width="16" height="16" rx="8" fill={`url(#paint1_linear-${id}`} />
             <rect
               x="11"
               y="10"
@@ -119,11 +112,7 @@ export const UntitledLogoMinimal = (props: SVGProps<SVGSVGElement>) => {
             type="matrix"
             values="0 0 0 0 0.0392157 0 0 0 0 0.0509804 0 0 0 0 0.0705882 0 0 0 0.06 0"
           />
-          <feBlend
-            mode="normal"
-            in2="BackgroundImageFix"
-            result="effect1_dropShadow"
-          />
+          <feBlend mode="normal" in2="BackgroundImageFix" result="effect1_dropShadow" />
           <feColorMatrix
             in="SourceAlpha"
             type="matrix"
@@ -136,11 +125,7 @@ export const UntitledLogoMinimal = (props: SVGProps<SVGSVGElement>) => {
             type="matrix"
             values="0 0 0 0 0.0392157 0 0 0 0 0.0509804 0 0 0 0 0.0705882 0 0 0 0.1 0"
           />
-          <feBlend
-            mode="normal"
-            in2="effect1_dropShadow"
-            result="effect2_dropShadow"
-          />
+          <feBlend mode="normal" in2="effect1_dropShadow" result="effect2_dropShadow" />
           <feColorMatrix
             in="SourceAlpha"
             type="matrix"
@@ -160,17 +145,8 @@ export const UntitledLogoMinimal = (props: SVGProps<SVGSVGElement>) => {
             type="matrix"
             values="0 0 0 0 0.0392157 0 0 0 0 0.0509804 0 0 0 0 0.0705882 0 0 0 0.13 0"
           />
-          <feBlend
-            mode="normal"
-            in2="effect2_dropShadow"
-            result="effect3_dropShadow"
-          />
-          <feBlend
-            mode="normal"
-            in="SourceGraphic"
-            in2="effect3_dropShadow"
-            result="shape"
-          />
+          <feBlend mode="normal" in2="effect2_dropShadow" result="effect3_dropShadow" />
+          <feBlend mode="normal" in="SourceGraphic" in2="effect3_dropShadow" result="shape" />
           <feColorMatrix
             in="SourceAlpha"
             type="matrix"
@@ -208,11 +184,7 @@ export const UntitledLogoMinimal = (props: SVGProps<SVGSVGElement>) => {
             type="matrix"
             values="0 0 0 0 0.0392157 0 0 0 0 0.0509804 0 0 0 0 0.0705882 0 0 0 0.06 0"
           />
-          <feBlend
-            mode="normal"
-            in2="BackgroundImageFix"
-            result="effect1_dropShadow"
-          />
+          <feBlend mode="normal" in2="BackgroundImageFix" result="effect1_dropShadow" />
           <feColorMatrix
             in="SourceAlpha"
             type="matrix"
@@ -225,17 +197,8 @@ export const UntitledLogoMinimal = (props: SVGProps<SVGSVGElement>) => {
             type="matrix"
             values="0 0 0 0 0.0392157 0 0 0 0 0.0509804 0 0 0 0 0.0705882 0 0 0 0.1 0"
           />
-          <feBlend
-            mode="normal"
-            in2="effect1_dropShadow"
-            result="effect2_dropShadow"
-          />
-          <feBlend
-            mode="normal"
-            in="SourceGraphic"
-            in2="effect2_dropShadow"
-            result="shape"
-          />
+          <feBlend mode="normal" in2="effect1_dropShadow" result="effect2_dropShadow" />
+          <feBlend mode="normal" in="SourceGraphic" in2="effect2_dropShadow" result="shape" />
         </filter>
         <filter
           id={`filter2_b-${id}`}
@@ -248,17 +211,8 @@ export const UntitledLogoMinimal = (props: SVGProps<SVGSVGElement>) => {
         >
           <feFlood floodOpacity="0" result="BackgroundImageFix" />
           <feGaussianBlur in="BackgroundImageFix" stdDeviation="2.5" />
-          <feComposite
-            in2="SourceAlpha"
-            operator="in"
-            result="effect1_backgroundBlur"
-          />
-          <feBlend
-            mode="normal"
-            in="SourceGraphic"
-            in2="effect1_backgroundBlur"
-            result="shape"
-          />
+          <feComposite in2="SourceAlpha" operator="in" result="effect1_backgroundBlur" />
+          <feBlend mode="normal" in="SourceGraphic" in2="effect1_backgroundBlur" result="shape" />
         </filter>
         <linearGradient
           id={`paint0_linear-${id}`}
@@ -335,12 +289,7 @@ export const UntitledLogoMinimal = (props: SVGProps<SVGSVGElement>) => {
           />
         </clipPath>
         <clipPath id={`clip1-${id}`}>
-          <rect
-            width="32"
-            height="32"
-            fill="white"
-            transform="translate(3 2)"
-          />
+          <rect width="32" height="32" fill="white" transform="translate(3 2)" />
         </clipPath>
       </defs>
     </svg>

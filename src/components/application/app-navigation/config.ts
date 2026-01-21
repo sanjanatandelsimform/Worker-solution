@@ -20,10 +20,7 @@ export type NavItemType = {
   divider?: boolean;
 };
 
-export type NavItemDividerType = Omit<
-  NavItemType,
-  "icon" | "label" | "divider"
-> & {
+export type NavItemDividerType = Omit<NavItemType, "icon" | "label" | "divider"> & {
   /** Label text for the divider. */
   label?: string;
   /** Whether this nav item is a divider. */

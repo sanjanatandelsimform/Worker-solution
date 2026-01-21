@@ -178,10 +178,7 @@ export interface ButtonProps
 interface LinkProps
   extends
     CommonProps,
-    DetailedHTMLProps<
-      Omit<AnchorHTMLAttributes<HTMLAnchorElement>, "color">,
-      HTMLAnchorElement
-    > {}
+    DetailedHTMLProps<Omit<AnchorHTMLAttributes<HTMLAnchorElement>, "color">, HTMLAnchorElement> {}
 
 /** Union type of button and link props */
 export type Props = ButtonProps | LinkProps;
@@ -203,9 +200,7 @@ export const Button = ({
   const Component = href ? AriaLink : AriaButton;
 
   const isIcon = (IconLeading || IconTrailing) && !children;
-  const isLinkType = ["link-gray", "link-color", "link-destructive"].includes(
-    color,
-  );
+  const isLinkType = ["link-gray", "link-color", "link-destructive"].includes(color);
 
   noTextPadding = isLinkType || noTextPadding;
 
@@ -243,7 +238,7 @@ export const Button = ({
           (showTextWhileLoading
             ? "[&>*:not([data-icon=loading]):not([data-text])]:hidden"
             : "[&>*:not([data-icon=loading])]:invisible"),
-        className,
+        className
       )}
     >
       {/* Leading icon */}
@@ -259,8 +254,7 @@ export const Button = ({
           viewBox="0 0 20 20"
           className={cx(
             styles.common.icon,
-            !showTextWhileLoading &&
-              "absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2",
+            !showTextWhileLoading && "absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2"
           )}
         >
           {/* Background circle */}
@@ -287,10 +281,7 @@ export const Button = ({
       )}
 
       {children && (
-        <span
-          data-text
-          className={cx("transition-inherit-all", !noTextPadding && "px-0.5")}
-        >
+        <span data-text className={cx("transition-inherit-all", !noTextPadding && "px-0.5")}>
           {children}
         </span>
       )}

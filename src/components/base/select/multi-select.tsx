@@ -5,13 +5,7 @@ import type {
   RefAttributes,
   RefObject,
 } from "react";
-import {
-  createContext,
-  useCallback,
-  useContext,
-  useRef,
-  useState,
-} from "react";
+import { createContext, useCallback, useContext, useRef, useState } from "react";
 import { SearchLg } from "@untitledui/icons";
 import { FocusScope, useFilter, useFocusManager } from "react-aria";
 import type {
@@ -101,7 +95,7 @@ export const MultiSelectBase = ({
   ...props
 }: MultiSelectProps) => {
   const { contains } = useFilter({ sensitivity: "base" });
-  const selectedKeys = selectedItems.items.map((item) => item.id);
+  const selectedKeys = selectedItems.items.map(item => item.id);
 
   const filter = useCallback(
     (item: SelectItemType, filterText: string) => {
@@ -110,7 +104,7 @@ export const MultiSelectBase = ({
         contains(item.label || item.supportingText || "", filterText)
       );
     },
-    [contains, selectedKeys],
+    [contains, selectedKeys]
   );
 
   const accessibleList = useListData({
@@ -127,7 +121,7 @@ export const MultiSelectBase = ({
       selectedItems.remove(key);
       onItemCleared?.(key);
     },
-    [selectedItems, onItemCleared],
+    [selectedItems, onItemCleared]
   );
 
   const onSelectionChange = (id: Key | null) => {
@@ -190,7 +184,7 @@ export const MultiSelectBase = ({
         onSelectionChange={onSelectionChange}
         {...props}
       >
-        {(state) => (
+        {state => (
           <div className="flex flex-col gap-1.5">
             {props.label && (
               <Label isRequired={state.isRequired} tooltip={props.tooltip}>
@@ -215,17 +209,12 @@ export const MultiSelectBase = ({
               style={{ width: popoverWidth }}
               className={props?.popoverClassName}
             >
-              <AriaListBox
-                selectionMode="multiple"
-                className="size-full outline-hidden"
-              >
+              <AriaListBox selectionMode="multiple" className="size-full outline-hidden">
                 {children}
               </AriaListBox>
             </Popover>
 
-            {props.hint && (
-              <HintText isInvalid={state.isInvalid}>{props.hint}</HintText>
-            )}
+            {props.hint && <HintText isInvalid={state.isInvalid}>{props.hint}</HintText>}
           </div>
         )}
       </AriaComboBox>
@@ -245,8 +234,7 @@ const InnerMultiSelect = ({
 
   const handleInputKeyDown = (event: KeyboardEvent<HTMLInputElement>) => {
     const isCaretAtStart =
-      event.currentTarget.selectionStart === 0 &&
-      event.currentTarget.selectionEnd === 0;
+      event.currentTarget.selectionStart === 0 && event.currentTarget.selectionEnd === 0;
 
     if (!isCaretAtStart && event.currentTarget.value !== "") {
       return;
@@ -270,10 +258,7 @@ const InnerMultiSelect = ({
     }
   };
 
-  const handleTagKeyDown = (
-    event: KeyboardEvent<HTMLButtonElement>,
-    value: Key,
-  ) => {
+  const handleTagKeyDown = (event: KeyboardEvent<HTMLButtonElement>, value: Key) => {
     // Do nothing when tab is clicked to move focus from the tag to the input element.
     if (event.key === "Tab") {
       return;
@@ -313,7 +298,7 @@ const InnerMultiSelect = ({
   return (
     <div className="relative flex w-full flex-1 flex-row flex-wrap items-center justify-start gap-1.5">
       {!isSelectionEmpty &&
-        comboBoxContext?.selectedItems?.items?.map((value) => (
+        comboBoxContext?.selectedItems?.items?.map(value => (
           <span
             key={value.id}
             className="flex items-center rounded-md bg-primary py-0.5 pr-1 pl-1.25 ring-1 ring-primary ring-inset"
@@ -329,7 +314,7 @@ const InnerMultiSelect = ({
               isDisabled={isDisabled}
               className="ml-0.75"
               // For workaround, onKeyDown is added to the button
-              onKeyDown={(event) => handleTagKeyDown(event, value.id)}
+              onKeyDown={event => handleTagKeyDown(event, value.id)}
               onPress={() => comboBoxContext.onRemove(new Set([value.id]))}
             />
           </span>
@@ -339,7 +324,7 @@ const InnerMultiSelect = ({
         className={cx(
           "relative flex min-w-[20%] flex-1 flex-row items-center",
           !isSelectionEmpty && "ml-0.5",
-          shortcut && "min-w-[30%]",
+          shortcut && "min-w-[30%]"
         )}
       >
         <AriaInput
@@ -354,13 +339,13 @@ const InnerMultiSelect = ({
             aria-hidden="true"
             className={cx(
               "absolute inset-y-0.5 right-0.5 z-10 flex items-center rounded-r-[inherit] bg-linear-to-r from-transparent to-bg-primary to-40% pl-8",
-              shortcutClassName,
+              shortcutClassName
             )}
           >
             <span
               className={cx(
                 "pointer-events-none rounded px-1 py-px text-xs font-medium text-quaternary ring-1 ring-secondary select-none ring-inset",
-                isDisabled && "bg-transparent text-disabled",
+                isDisabled && "bg-transparent text-disabled"
               )}
             >
               ⌘K
@@ -390,15 +375,13 @@ export const MultiSelectTagsValue = ({
           "relative flex w-full items-center gap-2 rounded-lg bg-primary shadow-xs ring-1 ring-primary outline-hidden transition duration-100 ease-linear ring-inset",
           isDisabled && "cursor-not-allowed bg-disabled_subtle",
           isFocusWithin && "ring-2 ring-brand",
-          sizes[size].root,
+          sizes[size].root
         )
       }
     >
       {({ isDisabled }) => (
         <>
-          {Icon && (
-            <Icon className="pointer-events-none size-5 text-fg-quaternary" />
-          )}
+          {Icon && <Icon className="pointer-events-none size-5 text-fg-quaternary" />}
           <FocusScope contain={false} autoFocus={false} restoreFocus={false}>
             <InnerMultiSelect
               isDisabled={isDisabled}

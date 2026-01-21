@@ -60,9 +60,7 @@ const detectCardType = (number: string) => {
   const sanitizedNumber = number.replace(/\D/g, "");
 
   // Find the matching card type
-  const card = cardTypes.find((cardType) =>
-    cardType.pattern.test(sanitizedNumber),
-  );
+  const card = cardTypes.find(cardType => cardType.pattern.test(sanitizedNumber));
 
   return card || cardTypes[cardTypes.length - 1];
 };
@@ -97,16 +95,12 @@ export const PaymentInput = ({
   hint,
   ...props
 }: PaymentInputProps) => {
-  const [cardNumber, setCardNumber] = useControlledState(
-    value,
-    defaultValue || "",
-    (value) => {
-      // Remove all non-numeric characters
-      value = value.replaceAll(/\D/g, "");
+  const [cardNumber, setCardNumber] = useControlledState(value, defaultValue || "", value => {
+    // Remove all non-numeric characters
+    value = value.replaceAll(/\D/g, "");
 
-      onChange?.(value || "");
-    },
-  );
+    onChange?.(value || "");
+  });
 
   const card = detectCardType(cardNumber);
 

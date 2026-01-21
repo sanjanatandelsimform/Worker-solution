@@ -22,8 +22,7 @@ export const DashboardPage = () => {
                   Thanks for signing up.
                 </h2>
                 <p className="text-white">
-                  👋 Welcome aboard! Please check your inbox and verify your
-                  email to get started.
+                  👋 Welcome aboard! Please check your inbox and verify your email to get started.
                 </p>
               </div>
               <div className="flex-1 bg-dashboard-card-image rounded-lg p-4 flex items-center justify-center text-2xl font-medium text-white">

@@ -53,24 +53,14 @@ export const Tooltip = ({
   onOpenChange,
   ...tooltipProps
 }: TooltipProps) => {
-  const isTopOrBottomLeft = [
-    "top left",
-    "top end",
-    "bottom left",
-    "bottom end",
-  ].includes(placement);
-  const isTopOrBottomRight = [
-    "top right",
-    "top start",
-    "bottom right",
-    "bottom start",
-  ].includes(placement);
+  const isTopOrBottomLeft = ["top left", "top end", "bottom left", "bottom end"].includes(
+    placement
+  );
+  const isTopOrBottomRight = ["top right", "top start", "bottom right", "bottom start"].includes(
+    placement
+  );
   // Set negative cross offset for left and right placement to visually balance the tooltip.
-  const calculatedCrossOffset = isTopOrBottomLeft
-    ? -12
-    : isTopOrBottomRight
-      ? 12
-      : 0;
+  const calculatedCrossOffset = isTopOrBottomLeft ? -12 : isTopOrBottomRight ? 12 : 0;
 
   return (
     <AriaTooltipTrigger
@@ -92,10 +82,7 @@ export const Tooltip = ({
         placement={placement}
         crossOffset={crossOffset ?? calculatedCrossOffset}
         className={({ isEntering, isExiting }) =>
-          cx(
-            isEntering && "ease-out animate-in",
-            isExiting && "ease-in animate-out",
-          )
+          cx(isEntering && "ease-out animate-in", isExiting && "ease-in animate-out")
         }
       >
         {({ isEntering, isExiting }) => (
@@ -107,7 +94,7 @@ export const Tooltip = ({
               isEntering &&
                 "ease-out animate-in fade-in zoom-in-95 in-placement-left:slide-in-from-right-0.5 in-placement-right:slide-in-from-left-0.5 in-placement-top:slide-in-from-bottom-0.5 in-placement-bottom:slide-in-from-top-0.5",
               isExiting &&
-                "ease-in animate-out fade-out zoom-out-95 in-placement-left:slide-out-to-right-0.5 in-placement-right:slide-out-to-left-0.5 in-placement-top:slide-out-to-bottom-0.5 in-placement-bottom:slide-out-to-top-0.5",
+                "ease-in animate-out fade-out zoom-out-95 in-placement-left:slide-out-to-right-0.5 in-placement-right:slide-out-to-left-0.5 in-placement-top:slide-out-to-bottom-0.5 in-placement-bottom:slide-out-to-top-0.5"
             )}
           >
             <span className="text-xs font-semibold text-white">{title}</span>
@@ -135,18 +122,14 @@ export const Tooltip = ({
   );
 };
 
-export const TooltipTrigger = ({
-  children,
-  className,
-  ...buttonProps
-}: AriaButtonProps) => {
+export const TooltipTrigger = ({ children, className, ...buttonProps }: AriaButtonProps) => {
   return (
     <AriaButton
       {...buttonProps}
-      className={(values) =>
+      className={values =>
         cx(
           "h-max w-max outline-hidden",
-          typeof className === "function" ? className(values) : className,
+          typeof className === "function" ? className(values) : className
         )
       }
     >

@@ -1,10 +1,7 @@
 import { isValidElement, useContext } from "react";
 import { Check } from "@untitledui/icons";
 import type { ListBoxItemProps as AriaListBoxItemProps } from "react-aria-components";
-import {
-  ListBoxItem as AriaListBoxItem,
-  Text as AriaText,
-} from "react-aria-components";
+import { ListBoxItem as AriaListBoxItem, Text as AriaText } from "react-aria-components";
 import { Avatar } from "@/components/base/avatar/avatar";
 import { cx } from "@/utils/cx";
 import { isReactComponent } from "@/utils/is-react-component";
@@ -33,11 +30,8 @@ export const SelectItem = ({
 }: SelectItemProps) => {
   const { size } = useContext(SelectContext);
 
-  const labelOrChildren =
-    label || (typeof children === "string" ? children : "");
-  const textValue = supportingText
-    ? labelOrChildren + " " + supportingText
-    : labelOrChildren;
+  const labelOrChildren = label || (typeof children === "string" ? children : "");
+  const textValue = supportingText ? labelOrChildren + " " + supportingText : labelOrChildren;
 
   return (
     <AriaListBoxItem
@@ -55,14 +49,14 @@ export const SelectItem = ({
       textValue={textValue}
       isDisabled={isDisabled}
       {...props}
-      className={(state) =>
+      className={state =>
         cx(
           "w-full px-1.5 py-px outline-hidden",
-          typeof className === "function" ? className(state) : className,
+          typeof className === "function" ? className(state) : className
         )
       }
     >
-      {(state) => (
+      {state => (
         <div
           className={cx(
             "flex cursor-pointer items-center gap-2 rounded-md outline-hidden select-none",
@@ -75,7 +69,7 @@ export const SelectItem = ({
             "*:data-icon:size-5 *:data-icon:shrink-0 *:data-icon:text-fg-quaternary",
             state.isDisabled && "*:data-icon:text-fg-disabled",
 
-            sizes[size],
+            sizes[size]
           )}
         >
           {avatarUrl ? (
@@ -91,11 +85,10 @@ export const SelectItem = ({
               slot="label"
               className={cx(
                 "truncate text-md font-medium whitespace-nowrap text-primary",
-                state.isDisabled && "text-disabled",
+                state.isDisabled && "text-disabled"
               )}
             >
-              {label ||
-                (typeof children === "function" ? children(state) : children)}
+              {label || (typeof children === "function" ? children(state) : children)}
             </AriaText>
 
             {supportingText && (
@@ -103,7 +96,7 @@ export const SelectItem = ({
                 slot="description"
                 className={cx(
                   "text-md whitespace-nowrap text-tertiary",
-                  state.isDisabled && "text-disabled",
+                  state.isDisabled && "text-disabled"
                 )}
               >
                 {supportingText}
@@ -117,7 +110,7 @@ export const SelectItem = ({
               className={cx(
                 "ml-auto text-fg-brand-primary",
                 size === "sm" ? "size-4 stroke-[2.5px]" : "size-5",
-                state.isDisabled && "text-fg-disabled",
+                state.isDisabled && "text-fg-disabled"
               )}
             />
           )}

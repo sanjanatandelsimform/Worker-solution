@@ -31,12 +31,10 @@ export const AvatarAddButton = ({
       className={cx(
         "flex cursor-pointer items-center justify-center rounded-full border border-dashed border-primary bg-primary text-fg-quaternary outline-focus-ring transition duration-100 ease-linear hover:bg-primary_hover hover:text-fg-quaternary_hover focus-visible:outline-2 focus-visible:outline-offset-2 disabled:border-gray-200 disabled:bg-secondary disabled:text-gray-200",
         sizes[size].root,
-        className,
+        className
       )}
     >
-      <Plus
-        className={cx("text-current transition-inherit-all", sizes[size].icon)}
-      />
+      <Plus className={cx("text-current transition-inherit-all", sizes[size].icon)} />
     </AriaTooltipTrigger>
   </AriaTooltip>
 );

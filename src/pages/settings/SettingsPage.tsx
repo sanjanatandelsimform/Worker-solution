@@ -18,18 +18,15 @@ export const SettingsPage = () => {
           <div>
             <h2 className="text-4xl font-medium text-primary">Settings</h2>
             <p className="text-base text-black mt-4">
-              Here's an overview of your workforce, industry, and some
-              recommendations with partners that can add more value to your
-              benefits packages and employee support.
+              Here's an overview of your workforce, industry, and some recommendations with partners
+              that can add more value to your benefits packages and employee support.
             </p>
           </div>
           <div className="space-y-6 mt-6">
             <div className="bg-gray-card border border-gray-300 rounded-xl p-6">
               <div className="flex items-center justify-between gap-2">
                 <div className="flex flex-col">
-                  <h2 className="text-lg font-semibold text-black">
-                    Personal info
-                  </h2>
+                  <h2 className="text-lg font-semibold text-black">Personal info</h2>
                   <p className="text-sm text-gray-600">
                     Update your photo and personal details here.
                   </p>

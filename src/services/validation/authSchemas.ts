@@ -44,8 +44,8 @@ export const registrationSchema = z
       .string()
       .min(1, "Business Phone is required")
       .refine(
-        (value) => /^\d{10}$/.test(value.replace(/\D/g, "")),
-        "Phone number must be exactly 10 digits",
+        value => /^\d{10}$/.test(value.replace(/\D/g, "")),
+        "Phone number must be exactly 10 digits"
       ),
     password: z
       .string()
@@ -53,26 +53,20 @@ export const registrationSchema = z
       .regex(/[A-Z]/, "Password must contain at least one uppercase letter")
       .regex(/[a-z]/, "Password must contain at least one lowercase letter")
       .regex(/[0-9]/, "Password must contain at least one number")
-      .regex(
-        /[!@#$%^&*(),.?":{}|<>]/,
-        "Password must contain at least one special character",
-      ),
+      .regex(/[!@#$%^&*(),.?":{}|<>]/, "Password must contain at least one special character"),
     confirmPassword: z.string().min(1, "Confirm password is required"),
-    agreeToTerms: z.boolean().refine((val) => val === true, {
+    agreeToTerms: z.boolean().refine(val => val === true, {
       message: "You must agree to the terms and privacy policies",
     }),
   })
-  .refine((data) => data.password === data.confirmPassword, {
+  .refine(data => data.password === data.confirmPassword, {
     message: "Passwords do not match",
     path: ["confirmPassword"],
   });
 
 // Sign-in form validation schema
 export const signInSchema = z.object({
-  email: z
-    .string()
-    .min(1, "Email is required")
-    .email("Enter a valid email address"),
+  email: z.string().min(1, "Email is required").email("Enter a valid email address"),
   password: z.string().min(1, "Password is required"),
   rememberMe: z.boolean().optional(),
 });

@@ -14,11 +14,7 @@ interface InputPrefixProps extends HTMLAttributes<HTMLDivElement> {
   isDisabled?: boolean;
 }
 
-export const InputPrefix = ({
-  isDisabled,
-  children,
-  ...props
-}: InputPrefixProps) => (
+export const InputPrefix = ({ isDisabled, children, ...props }: InputPrefixProps) => (
   <span
     {...props}
     className={cx(
@@ -32,7 +28,7 @@ export const InputPrefix = ({
       isDisabled && "border-disabled bg-disabled_subtle text-tertiary",
       "in-data-input-wrapper:group-disabled:bg-disabled_subtle in-data-input-wrapper:group-disabled:text-disabled in-data-input-wrapper:group-disabled:ring-border-disabled",
 
-      props.className,
+      props.className
     )}
   >
     {children}
@@ -42,12 +38,7 @@ export const InputPrefix = ({
 // `${string}ClassName` is used to omit any className prop that ends with a `ClassName` suffix
 interface InputGroupProps extends Omit<
   InputBaseProps,
-  | "type"
-  | "icon"
-  | "placeholder"
-  | "tooltip"
-  | "shortcut"
-  | `${string}ClassName`
+  "type" | "icon" | "placeholder" | "tooltip" | "shortcut" | `${string}ClassName`
 > {
   /** A prefix text that is displayed in the same box as the input.*/
   prefix?: string;
@@ -82,7 +73,7 @@ export const InputGroup = ({
         hasTrailing &&
           (prefix
             ? "group-has-[&>select]:pr-6 group-has-[&>select]:pl-0"
-            : "group-has-[&>select]:pr-6 group-has-[&>select]:pl-3"),
+            : "group-has-[&>select]:pr-6 group-has-[&>select]:pl-3")
       ),
       leadingText: "pl-3",
     },
@@ -93,7 +84,7 @@ export const InputGroup = ({
         hasTrailing &&
           (prefix
             ? "group-has-[&>select]:pr-6 group-has-[&>select]:pl-0"
-            : "group-has-[&>select]:pr-6 group-has-[&>select]:pl-3"),
+            : "group-has-[&>select]:pr-6 group-has-[&>select]:pl-3")
       ),
       leadingText: "pl-3.5",
     },
@@ -104,9 +95,7 @@ export const InputGroup = ({
       size={size}
       aria-label={label || undefined}
       inputClassName={cx(paddings[size].input)}
-      tooltipClassName={cx(
-        hasTrailing && !hasLeading && "group-has-[&>select]:right-0",
-      )}
+      tooltipClassName={cx(hasTrailing && !hasLeading && "group-has-[&>select]:right-0")}
       wrapperClassName={cx(
         "z-10 myClass",
         // Apply styles based on the presence of leading or trailing elements
@@ -115,7 +104,7 @@ export const InputGroup = ({
         // When select element is passed as a child
         "group-has-[&>select]:bg-transparent group-has-[&>select]:shadow-none group-has-[&>select]:ring-1 group-has-[&>select]:focus-within:ring-1",
         // In `Input` component, there is "group-disabled" class so here we need to use "group-disabled:group-has-[&>select]" to avoid conflict
-        "group-disabled:group-has-[&>select]:bg-transparent",
+        "group-disabled:group-has-[&>select]:bg-transparent"
       )}
       {...props}
     >
@@ -134,25 +123,16 @@ export const InputGroup = ({
               isDisabled &&
                 "cursor-not-allowed has-[&>select]:bg-disabled_subtle has-[&>select]:ring-border-disabled",
               isInvalid &&
-                "has-[&>select]:ring-border-error_subtle has-[&>select]:has-[input:focus]:ring-border-error",
+                "has-[&>select]:ring-border-error_subtle has-[&>select]:has-[input:focus]:ring-border-error"
             )}
           >
             {leadingAddon && (
-              <section data-leading={hasLeading || undefined}>
-                {leadingAddon}
-              </section>
+              <section data-leading={hasLeading || undefined}>{leadingAddon}</section>
             )}
 
             {prefix && (
-              <span
-                className={cx("my-auto grow pr-2", paddings[size].leadingText)}
-              >
-                <p
-                  className={cx(
-                    "text-md text-tertiary",
-                    isDisabled && "text-disabled",
-                  )}
-                >
+              <span className={cx("my-auto grow pr-2", paddings[size].leadingText)}>
+                <p className={cx("text-md text-tertiary", isDisabled && "text-disabled")}>
                   {prefix}
                 </p>
               </span>
@@ -161,9 +141,7 @@ export const InputGroup = ({
             {children}
 
             {trailingAddon && (
-              <section data-trailing={hasTrailing || undefined}>
-                {trailingAddon}
-              </section>
+              <section data-trailing={hasTrailing || undefined}>{trailingAddon}</section>
             )}
           </div>
 

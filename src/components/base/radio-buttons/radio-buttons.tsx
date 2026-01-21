@@ -36,7 +36,7 @@ export const RadioButtonBase = ({
         isSelected && !isDisabled && "bg-brand-solid ring-bg-brand-solid",
         isDisabled && "cursor-not-allowed border-disabled bg-disabled_subtle",
         isFocusVisible && "outline-2 outline-offset-2 outline-focus-ring",
-        className,
+        className
       )}
     >
       <div
@@ -44,7 +44,7 @@ export const RadioButtonBase = ({
           "size-1.5 rounded-full bg-fg-white opacity-0 transition-inherit-all",
           size === "md" && "size-2",
           isDisabled && "bg-fg-disabled_subtle",
-          isSelected && "opacity-100",
+          isSelected && "opacity-100"
         )}
       />
     </div>
@@ -88,12 +88,12 @@ export const RadioButton = ({
   return (
     <AriaRadio
       {...ariaRadioProps}
-      className={(renderProps) =>
+      className={renderProps =>
         cx(
           "flex items-start",
           renderProps.isDisabled && "cursor-not-allowed",
           sizes[size].root,
-          typeof className === "function" ? className(renderProps) : className,
+          typeof className === "function" ? className(renderProps) : className
         )
       }
     >
@@ -107,23 +107,14 @@ export const RadioButton = ({
             className={label || hint ? "mt-0.5" : ""}
           />
           {(label || hint) && (
-            <div
-              className={cx("inline-flex flex-col", sizes[size].textWrapper)}
-            >
+            <div className={cx("inline-flex flex-col", sizes[size].textWrapper)}>
               {label && (
-                <p
-                  className={cx(
-                    "text-secondary select-none",
-                    sizes[size].label,
-                  )}
-                >
-                  {label}
-                </p>
+                <p className={cx("text-secondary select-none", sizes[size].label)}>{label}</p>
               )}
               {hint && (
                 <span
                   className={cx("text-tertiary", sizes[size].hint)}
-                  onClick={(event) => event.stopPropagation()}
+                  onClick={event => event.stopPropagation()}
                 >
                   {hint}
                 </span>
@@ -142,18 +133,10 @@ interface RadioGroupProps extends RadioGroupContextType, AriaRadioGroupProps {
   className?: string;
 }
 
-export const RadioGroup = ({
-  children,
-  className,
-  size = "sm",
-  ...props
-}: RadioGroupProps) => {
+export const RadioGroup = ({ children, className, size = "sm", ...props }: RadioGroupProps) => {
   return (
     <RadioGroupContext.Provider value={{ size }}>
-      <AriaRadioGroup
-        {...props}
-        className={cx("flex flex-col gap-4", className)}
-      >
+      <AriaRadioGroup {...props} className={cx("flex flex-col gap-4", className)}>
         {children}
       </AriaRadioGroup>
     </RadioGroupContext.Provider>

@@ -6,9 +6,7 @@ interface DashboardSidebarProps {
   activeUrl?: string;
 }
 
-export const DashboardSidebar = ({
-  activeUrl = "/",
-}: DashboardSidebarProps) => {
+export const DashboardSidebar = ({ activeUrl = "/" }: DashboardSidebarProps) => {
   const navigationItems: NavItemType[] = [
     {
       label: "Dashboard",
@@ -46,9 +44,7 @@ export const DashboardSidebar = ({
       {/* Logo */}
       <div className="flex items-center justify-start">
         <div className="flex items-center justify-center rounded-xl bg-tertiary px-3 py-1">
-          <h1 className="font-display text-2xl font-bold leading-8 text-black">
-            BeneStat
-          </h1>
+          <h1 className="font-display text-2xl font-bold leading-8 text-black">BeneStat</h1>
         </div>
       </div>
 

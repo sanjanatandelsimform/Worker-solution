@@ -1,8 +1,5 @@
 import { X as CloseIcon } from "@untitledui/icons";
-import {
-  Button as AriaButton,
-  type ButtonProps as AriaButtonProps,
-} from "react-aria-components";
+import { Button as AriaButton, type ButtonProps as AriaButtonProps } from "react-aria-components";
 import { cx } from "@/utils/cx";
 
 const sizes = {
@@ -35,12 +32,12 @@ export const CloseButton = ({
     <AriaButton
       {...otherProps}
       aria-label={label || "Close"}
-      className={(state) =>
+      className={state =>
         cx(
           "flex cursor-pointer items-center justify-center rounded-lg p-2 transition duration-100 ease-linear focus:outline-hidden",
           sizes[size].root,
           themes[theme],
-          typeof className === "function" ? className(state) : className,
+          typeof className === "function" ? className(state) : className
         )
       }
     >

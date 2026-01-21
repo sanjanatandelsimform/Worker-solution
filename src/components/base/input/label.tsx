@@ -32,7 +32,7 @@ export const Label = ({
       {...props}
       className={cx(
         "flex cursor-default items-center gap-0.5 text-sm font-medium text-secondary",
-        className,
+        className
       )}
     >
       {props.children}
@@ -41,18 +41,14 @@ export const Label = ({
         className={cx(
           "hidden text-brand-tertiary text-error-primary",
           isRequired && "block",
-          typeof isRequired === "undefined" && "group-required:block",
+          typeof isRequired === "undefined" && "group-required:block"
         )}
       >
         *
       </span>
 
       {tooltip && (
-        <Tooltip
-          title={tooltip}
-          description={tooltipDescription}
-          placement="top"
-        >
+        <Tooltip title={tooltip} description={tooltipDescription} placement="top">
           <TooltipTrigger
             // `TooltipTrigger` inherits the disabled state from the parent form field
             // but we don't that. We want the tooltip be enabled even if the parent

@@ -11,10 +11,7 @@ interface ErrorBoundaryState {
   error: Error | null;
 }
 
-export class AuthErrorBoundary extends Component<
-  ErrorBoundaryProps,
-  ErrorBoundaryState
-> {
+export class AuthErrorBoundary extends Component<ErrorBoundaryProps, ErrorBoundaryState> {
   constructor(props: ErrorBoundaryProps) {
     super(props);
     this.state = {
@@ -60,24 +57,19 @@ export class AuthErrorBoundary extends Component<
               </div>
 
               {/* Heading */}
-              <h1 className="mb-4 text-2xl font-bold text-gray-900">
-                Something went wrong
-              </h1>
+              <h1 className="mb-4 text-2xl font-bold text-gray-900">Something went wrong</h1>
 
               {/* Description */}
               <p className="mb-6 text-sm text-gray-600">
-                We encountered an error while processing your authentication
-                request. Please try again or contact support if the problem
-                persists.
+                We encountered an error while processing your authentication request. Please try
+                again or contact support if the problem persists.
               </p>
 
               {/* Error Details (Development Only) */}
               {import.meta.env.DEV && this.state.error && (
                 <div className="mb-6 rounded-lg bg-red-50 p-4 text-left text-sm text-red-800">
                   <p className="font-medium">Error Details:</p>
-                  <p className="mt-1 font-mono text-xs">
-                    {this.state.error.message}
-                  </p>
+                  <p className="mt-1 font-mono text-xs">{this.state.error.message}</p>
                 </div>
               )}
 

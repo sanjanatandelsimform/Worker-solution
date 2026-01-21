@@ -24,11 +24,11 @@ const changePasswordSchema = z
       .min(6, "Password must be at least 6 characters")
       .regex(
         /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]/,
-        "Must be min 6 characters, include number, upper case, lower case and symbol.",
+        "Must be min 6 characters, include number, upper case, lower case and symbol."
       ),
     confirmPassword: z.string().min(1, "Confirm password is required"),
   })
-  .refine((data) => data.newPassword === data.confirmPassword, {
+  .refine(data => data.newPassword === data.confirmPassword, {
     message: "Passwords do not match",
     path: ["confirmPassword"],
   });
@@ -40,10 +40,7 @@ interface UpdateYourEmailModalProps {
   onClose: () => void;
 }
 
-export const UpdateYourEmailModal = ({
-  isOpen,
-  onClose,
-}: UpdateYourEmailModalProps) => {
+export const UpdateYourEmailModal = ({ isOpen, onClose }: UpdateYourEmailModalProps) => {
   const {
     handleSubmit,
     formState: { isSubmitting },
@@ -85,9 +82,8 @@ export const UpdateYourEmailModal = ({
             <div className="flex flex-col  gap-1">
               <ModalTitle>Update your email</ModalTitle>
               <ModalDescription>
-                Update your email by entering a new address. After submitting,
-                check your inbox for a verification link and follow the steps to
-                confirm the update.
+                Update your email by entering a new address. After submitting, check your inbox for
+                a verification link and follow the steps to confirm the update.
               </ModalDescription>
             </div>
             <div className="absolute -right-2 -top-2">

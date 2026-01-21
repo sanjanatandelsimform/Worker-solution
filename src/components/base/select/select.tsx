@@ -75,7 +75,7 @@ const SelectValue = ({
       className={cx(
         "relative flex w-full cursor-pointer items-center rounded-lg bg-primary shadow-xs ring-1 ring-gray-300 outline-hidden transition duration-100 ease-linear ring-inset",
         (isFocused || isOpen) && "ring-2 ring-brand",
-        isDisabled && "cursor-not-allowed bg-disabled_subtle text-disabled",
+        isDisabled && "cursor-not-allowed bg-disabled_subtle text-disabled"
       )}
     >
       <AriaSelectValue<SelectItemType>
@@ -85,10 +85,10 @@ const SelectValue = ({
           // Icon styles
           "*:data-icon:size-5 *:data-icon:shrink-0 *:data-icon:text-gray-400 in-disabled:*:data-icon:text-gray-400",
 
-          sizes[size].root,
+          sizes[size].root
         )}
       >
-        {(state) => {
+        {state => {
           const Icon = state.selectedItem?.icon || placeholderIcon;
           return (
             <>
@@ -110,18 +110,11 @@ const SelectValue = ({
                     {state.selectedItem?.label}
                   </p>
                   {state.selectedItem?.supportingText && (
-                    <p className="text-md text-tertiary">
-                      {state.selectedItem?.supportingText}
-                    </p>
+                    <p className="text-md text-tertiary">{state.selectedItem?.supportingText}</p>
                   )}
                 </section>
               ) : (
-                <p
-                  className={cx(
-                    "text-md text-placeholder",
-                    isDisabled && "text-disabled",
-                  )}
-                >
+                <p className={cx("text-md text-placeholder", isDisabled && "text-disabled")}>
                   {placeholder}
                 </p>
               )}
@@ -130,7 +123,7 @@ const SelectValue = ({
                 aria-hidden="true"
                 className={cx(
                   "ml-auto shrink-0 text-gray-400",
-                  size === "sm" ? "size-4 stroke-[2.5px]" : "size-5",
+                  size === "sm" ? "size-4 stroke-[2.5px]" : "size-5"
                 )}
               />
             </>
@@ -161,14 +154,14 @@ const Select = ({
     <SelectContext.Provider value={{ size }}>
       <AriaSelect
         {...rest}
-        className={(state) =>
+        className={state =>
           cx(
             "flex flex-col gap-1.5",
-            typeof className === "function" ? className(state) : className,
+            typeof className === "function" ? className(state) : className
           )
         }
       >
-        {(state) => (
+        {state => (
           <>
             {label && (
               <Label isRequired={state.isRequired} tooltip={tooltip}>
@@ -176,11 +169,7 @@ const Select = ({
               </Label>
             )}
 
-            <SelectValue
-              {...state}
-              {...{ size, placeholder }}
-              placeholderIcon={placeholderIcon}
-            />
+            <SelectValue {...state} {...{ size, placeholder }} placeholderIcon={placeholderIcon} />
 
             <Popover size={size} className={rest.popoverClassName}>
               <AriaListBox items={items} className="size-full outline-hidden">

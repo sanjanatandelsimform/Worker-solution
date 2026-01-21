@@ -21,14 +21,14 @@ const apiClient = axios.create({
 
 // Response interceptor for 401 handling
 apiClient.interceptors.response.use(
-  (response) => response,
+  response => response,
   (error: AxiosError) => {
     if (error.response?.status === 401) {
       // Redirect to sign-in page on unauthorized
       window.location.href = "/sign-in";
     }
     return Promise.reject(error);
-  },
+  }
 );
 
 // Helper function to extract error message
@@ -76,7 +76,7 @@ export const signup = async (data: RegistrationData): Promise<UserAccount> => {
  * Sign in an existing user
  */
 export const signin = async (
-  data: SignInData,
+  data: SignInData
 ): Promise<{
   status: boolean;
   message: string;
@@ -120,9 +120,7 @@ export const signout = async (): Promise<void> => {
  */
 export const getCurrentUser = async (): Promise<UserAccount | null> => {
   try {
-    const response = await apiClient.get<{ user: UserAccount | null }>(
-      "/auth/me",
-    );
+    const response = await apiClient.get<{ user: UserAccount | null }>("/auth/me");
     return response.data.user;
   } catch (error) {
     // Don't throw on 401 - just return null (user not authenticated)
@@ -136,14 +134,9 @@ export const getCurrentUser = async (): Promise<UserAccount | null> => {
 /**
  * Check if an email is available for registration
  */
-export const checkEmailAvailability = async (
-  email: string,
-): Promise<boolean> => {
+export const checkEmailAvailability = async (email: string): Promise<boolean> => {
   try {
-    const response = await apiClient.post<EmailCheckResponse>(
-      "/auth/check-email",
-      { email },
-    );
+    const response = await apiClient.post<EmailCheckResponse>("/auth/check-email", { email });
     return response.data.available;
   } catch (error) {
     throw new Error(getErrorMessage(error));
@@ -153,14 +146,9 @@ export const checkEmailAvailability = async (
 /**
  * Submit business information for Google SSO users
  */
-export const submitBusinessInfo = async (
-  data: BusinessInfoData,
-): Promise<AuthResponse> => {
+export const submitBusinessInfo = async (data: BusinessInfoData): Promise<AuthResponse> => {
   try {
-    const response = await apiClient.post<AuthResponse>(
-      "/auth/complete-profile",
-      data,
-    );
+    const response = await apiClient.post<AuthResponse>("/auth/complete-profile", data);
     return response.data;
   } catch (error) {
     throw new Error(getErrorMessage(error));

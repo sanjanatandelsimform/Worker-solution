@@ -26,56 +26,42 @@ type HorizontalTypes =
   | "button-border"
   | "button-minimal"
   | "underline";
-type VerticalTypes =
-  | "button-brand"
-  | "button-gray"
-  | "button-border"
-  | "button-minimal"
-  | "line";
-type TabTypeColors<T> = T extends "horizontal"
-  ? HorizontalTypes
-  : VerticalTypes;
+type VerticalTypes = "button-brand" | "button-gray" | "button-border" | "button-minimal" | "line";
+type TabTypeColors<T> = T extends "horizontal" ? HorizontalTypes : VerticalTypes;
 
 // Styles for different types of tab
-const getTabStyles = ({
-  isFocusVisible,
-  isSelected,
-  isHovered,
-}: AriaTabRenderProps) => ({
+const getTabStyles = ({ isFocusVisible, isSelected, isHovered }: AriaTabRenderProps) => ({
   "button-brand": cx(
     "outline-focus-ring",
     isFocusVisible && "outline-2 -outline-offset-2",
-    (isSelected || isHovered) && "bg-brand-primary_alt text-brand-secondary",
+    (isSelected || isHovered) && "bg-brand-primary_alt text-brand-secondary"
   ),
   "button-gray": cx(
     "outline-focus-ring",
     isHovered && "bg-primary_hover text-secondary",
     isFocusVisible && "outline-2 -outline-offset-2",
-    isSelected && "bg-cyan-500 text-secondary",
+    isSelected && "bg-cyan-500 text-secondary"
   ),
   "button-border": cx(
     "outline-focus-ring",
     (isSelected || isHovered) && "bg-cyan-50 text-cyan-500 shadow-sm",
-    isFocusVisible && "outline-2 -outline-offset-2",
+    isFocusVisible && "outline-2 -outline-offset-2"
   ),
   "button-minimal": cx(
     "rounded-lg outline-focus-ring",
     isHovered && "text-secondary",
     isFocusVisible && "outline-2 -outline-offset-2",
-    isSelected &&
-      "bg-primary_alt text-secondary shadow-xs ring-1 ring-gray-300 ring-inset",
+    isSelected && "bg-primary_alt text-secondary shadow-xs ring-1 ring-gray-300 ring-inset"
   ),
   underline: cx(
     "rounded-none border-b-2 border-transparent outline-focus-ring",
-    (isSelected || isHovered) &&
-      "border-fg-brand-primary_alt text-brand-secondary",
-    isFocusVisible && "outline-2 -outline-offset-2",
+    (isSelected || isHovered) && "border-fg-brand-primary_alt text-brand-secondary",
+    isFocusVisible && "outline-2 -outline-offset-2"
   ),
   line: cx(
     "rounded-none border-l-2 border-transparent outline-focus-ring",
-    (isSelected || isHovered) &&
-      "border-fg-brand-primary_alt text-brand-secondary",
-    isFocusVisible && "outline-2 -outline-offset-2",
+    (isSelected || isHovered) && "border-fg-brand-primary_alt text-brand-secondary",
+    isFocusVisible && "outline-2 -outline-offset-2"
   ),
 });
 
@@ -99,29 +85,19 @@ const sizes = {
 };
 
 // Styles for different types of horizontal tabs
-const getHorizontalStyles = ({
-  size,
-  fullWidth,
-}: {
-  size?: "sm" | "md";
-  fullWidth?: boolean;
-}) => ({
+const getHorizontalStyles = ({ size, fullWidth }: { size?: "sm" | "md"; fullWidth?: boolean }) => ({
   "button-brand": "gap-1",
   "button-gray": "gap-1",
   "button-border": cx(
     "gap-1 rounded-[10px] bg-secondary_alt p-1 ring-1 ring-gray-300 ring-inset",
-    size === "md" && "rounded-xl p-1.5",
+    size === "md" && "rounded-xl p-1.5"
   ),
-  "button-minimal":
-    "gap-0.5 rounded-lg bg-secondary_alt ring-1 ring-inset ring-gray-300",
+  "button-minimal": "gap-0.5 rounded-lg bg-secondary_alt ring-1 ring-inset ring-gray-300",
   underline: cx("gap-3", fullWidth && "w-full gap-4"),
   line: "gap-2",
 });
 
-const getColorStyles = ({
-  isSelected,
-  isHovered,
-}: Partial<AriaTabRenderProps>) => ({
+const getColorStyles = ({ isSelected, isHovered }: Partial<AriaTabRenderProps>) => ({
   "button-brand": isSelected || isHovered ? "brand" : "gray",
   "button-gray": "gray",
   "button-border": "gray",
@@ -170,7 +146,7 @@ export const TabList = <T extends Orientation>({
     <TabListContext.Provider value={{ size, type, orientation, fullWidth }}>
       <AriaTabList
         {...otherProps}
-        className={(state) =>
+        className={state =>
           cx(
             "group flex",
 
@@ -186,11 +162,11 @@ export const TabList = <T extends Orientation>({
               type === "underline" &&
               "relative before:absolute before:inset-x-0 before:bottom-0 before:h-px before:bg-border-secondary",
 
-            typeof className === "function" ? className(state) : className,
+            typeof className === "function" ? className(state) : className
           )
         }
       >
-        {children ?? ((item) => <Tab {...item}>{item.children}</Tab>)}
+        {children ?? (item => <Tab {...item}>{item.children}</Tab>)}
       </AriaTabList>
     </TabListContext.Provider>
   );
@@ -200,12 +176,10 @@ export const TabPanel = (props: ComponentPropsWithRef<typeof AriaTabPanel>) => {
   return (
     <AriaTabPanel
       {...props}
-      className={(state) =>
+      className={state =>
         cx(
           "outline-focus-ring focus-visible:outline-2 focus-visible:outline-offset-2 ",
-          typeof props.className === "function"
-            ? props.className(state)
-            : props.className,
+          typeof props.className === "function" ? props.className(state) : props.className
         )
       }
     />
@@ -223,29 +197,23 @@ interface TabComponentProps extends AriaTabProps {
 
 export const Tab = (props: TabComponentProps) => {
   const { label, children, badge, ...otherProps } = props;
-  const {
-    size = "sm",
-    type = "button-brand",
-    fullWidth,
-  } = useContext(TabListContext);
+  const { size = "sm", type = "button-brand", fullWidth } = useContext(TabListContext);
 
   return (
     <AriaTab
       {...otherProps}
-      className={(prop) =>
+      className={prop =>
         cx(
           "z-10 flex h-max cursor-pointer items-center justify-center gap-2 rounded-md whitespace-nowrap text-gray-400 transition duration-100 ease-linear",
           "group-orientation-vertical:justify-start bg-tertiary ring-1 ring-border-secondary ring-inset",
           fullWidth && "w-full flex-1",
           sizes[size][type],
           getTabStyles(prop)[type],
-          typeof props.className === "function"
-            ? props.className(prop)
-            : props.className,
+          typeof props.className === "function" ? props.className(prop) : props.className
         )
       }
     >
-      {(state) => (
+      {state => (
         <Fragment>
           {typeof children === "function" ? children(state) : children || label}
           {badge && (
@@ -253,10 +221,7 @@ export const Tab = (props: TabComponentProps) => {
               size={size}
               type="pill-color"
               color={getColorStyles(state)[type] as BadgeColors}
-              className={cx(
-                "hidden transition-inherit-all md:flex",
-                size === "sm" && "-my-px",
-              )}
+              className={cx("hidden transition-inherit-all md:flex", size === "sm" && "-my-px")}
             >
               {badge}
             </Badge>
@@ -267,19 +232,13 @@ export const Tab = (props: TabComponentProps) => {
   );
 };
 
-export const Tabs = ({
-  className,
-  ...props
-}: ComponentPropsWithRef<typeof AriaTabs>) => {
+export const Tabs = ({ className, ...props }: ComponentPropsWithRef<typeof AriaTabs>) => {
   return (
     <AriaTabs
       keyboardActivation="manual"
       {...props}
-      className={(state) =>
-        cx(
-          "flex w-full flex-col",
-          typeof className === "function" ? className(state) : className,
-        )
+      className={state =>
+        cx("flex w-full flex-col", typeof className === "function" ? className(state) : className)
       }
     />
   );

@@ -1,8 +1,4 @@
-import type {
-  AnchorHTMLAttributes,
-  ButtonHTMLAttributes,
-  DetailedHTMLProps,
-} from "react";
+import type { AnchorHTMLAttributes, ButtonHTMLAttributes, DetailedHTMLProps } from "react";
 import type { ButtonProps as AriaButtonProps } from "react-aria-components";
 import { Button as AriaButton, Link as AriaLink } from "react-aria-components";
 import { cx, sortCx } from "@/utils/cx";
@@ -82,10 +78,7 @@ interface ButtonProps
 interface LinkProps
   extends
     CommonProps,
-    DetailedHTMLProps<
-      Omit<AnchorHTMLAttributes<HTMLAnchorElement>, "color">,
-      HTMLAnchorElement
-    > {}
+    DetailedHTMLProps<Omit<AnchorHTMLAttributes<HTMLAnchorElement>, "color">, HTMLAnchorElement> {}
 
 export type SocialButtonProps = ButtonProps | LinkProps;
 
@@ -112,10 +105,7 @@ export const SocialButton = ({
     dribble: "dribble",
   } as const;
 
-  const colorStyles =
-    theme === "brand"
-      ? styles.colors[socialToColor[social]]
-      : styles.colors.gray;
+  const colorStyles = theme === "brand" ? styles.colors[socialToColor[social]] : styles.colors.gray;
 
   const logos = {
     google: GoogleLogo,
@@ -155,12 +145,7 @@ export const SocialButton = ({
       isDisabled={disabled}
       {...props}
       data-icon-only={isIconOnly ? true : undefined}
-      className={cx(
-        styles.common.root,
-        styles.sizes[size].root,
-        colorStyles.root,
-        className,
-      )}
+      className={cx(styles.common.root, styles.sizes[size].root, colorStyles.root, className)}
     >
       <Logo
         className={cx(
@@ -168,14 +153,11 @@ export const SocialButton = ({
           theme === "gray"
             ? colorStyles.icon
             : theme === "brand" &&
-                (social === "facebook" ||
-                  social === "apple" ||
-                  social === "twitter")
+                (social === "facebook" || social === "apple" || social === "twitter")
               ? "text-white"
-              : theme === "color" &&
-                  (social === "apple" || social === "twitter")
+              : theme === "color" && (social === "apple" || social === "twitter")
                 ? "text-alpha-black"
-                : "",
+                : ""
         )}
         colorful={
           (theme === "brand" && (social === "google" || social === "figma")) ||

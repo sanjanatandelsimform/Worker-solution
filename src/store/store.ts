@@ -23,7 +23,7 @@ export const store = configureStore({
     auth: authReducer,
   },
   preloadedState: persistedState,
-  middleware: (getDefaultMiddleware) =>
+  middleware: getDefaultMiddleware =>
     getDefaultMiddleware({
       serializableCheck: {
         ignoredActions: ["auth/setUser"],

@@ -26,12 +26,7 @@ export const FeaturedCardProgressBar = ({
   progress: number;
 }) => {
   return (
-    <div
-      className={cx(
-        "relative flex flex-col rounded-xl bg-secondary p-4",
-        className,
-      )}
-    >
+    <div className={cx("relative flex flex-col rounded-xl bg-secondary p-4", className)}>
       <p className="text-sm font-semibold text-primary">{title}</p>
       <p className="mt-1 text-sm text-tertiary">{description}</p>
       <div className="absolute top-2 right-2">
@@ -64,12 +59,7 @@ export const FeaturedCardProgressCircle = ({
   progress: number;
 }) => {
   return (
-    <div
-      className={cx(
-        "relative flex flex-col rounded-xl bg-secondary p-4",
-        className,
-      )}
-    >
+    <div className={cx("relative flex flex-col rounded-xl bg-secondary p-4", className)}>
       <div className="w-16">
         <ProgressBarCircle value={progress} size="xxs" />
       </div>
