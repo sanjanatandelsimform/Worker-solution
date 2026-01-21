@@ -16,3 +16,8 @@ coverage/
 
 # Logs
 *.log
+
+.next
+.turbo
+.DS_Store
+
