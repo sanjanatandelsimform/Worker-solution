@@ -4,7 +4,6 @@ import checkIcon from "@/assets/file-check.svg";
 import DashboardCard from "./DashboardCard";
 
 export const DashboardPage = () => {
-
   return (
     <div className="flex h-screen overflow-hidden bg-dashboard">
       {/* Sidebar */}
@@ -14,8 +13,7 @@ export const DashboardPage = () => {
       <div className="flex flex-1 flex-col overflow-hidden">
         {/* Main Content */}
         <main className="flex-1 overflow-y-auto px-6 py-10">
-          <div className="space-y-6">
-          </div>
+          <div className="space-y-6"></div>
           <div>
             <h2 className="text-4xl font-medium text-primary">Welcome!</h2>
             <div className="mt-6 border border-gray-300 rounded-xl p-4 bg-dashboard-card shadow-sm flex gap-4 justify-between">

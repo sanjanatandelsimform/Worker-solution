@@ -53,9 +53,9 @@ const getErrorMessage = (error: unknown): string => {
 /**
  * Register a new user account with business information
  */
-export const signup = async (data: RegistrationData): Promise<AuthResponse> => {
+export const signup = async (data: RegistrationData): Promise<UserAccount> => {
   try {
-    const response = await apiClient.post<AuthResponse>("/auth/signup", {
+    const response = await apiClient.post<UserAccount>("/users/create", {
       firstName: data.firstName,
       lastName: data.lastName,
       businessName: data.businessName,
@@ -64,6 +64,7 @@ export const signup = async (data: RegistrationData): Promise<AuthResponse> => {
       industry: data.industry,
       zipCode: data.zipCode,
       password: data.password,
+      confirmPassword: data.confirmPassword,
     });
     return response.data;
   } catch (error) {
@@ -74,9 +75,25 @@ export const signup = async (data: RegistrationData): Promise<AuthResponse> => {
 /**
  * Sign in an existing user
  */
-export const signin = async (data: SignInData): Promise<AuthResponse> => {
+export const signin = async (
+  data: SignInData,
+): Promise<{
+  status: boolean;
+  message: string;
+  data: {
+    user: UserAccount;
+    tokens: { accessToken: string; refreshToken: string };
+  };
+}> => {
   try {
-    const response = await apiClient.post<AuthResponse>("/auth/signin", {
+    const response = await apiClient.post<{
+      status: boolean;
+      message: string;
+      data: {
+        user: UserAccount;
+        tokens: { accessToken: string; refreshToken: string };
+      };
+    }>("/auth/login", {
       businessEmail: data.businessEmail,
       password: data.password,
       rememberMe: data.rememberMe,

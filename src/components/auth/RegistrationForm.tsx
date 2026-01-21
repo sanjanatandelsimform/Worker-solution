@@ -18,11 +18,8 @@ import {
 import { INDUSTRIES, COUNTRY_CODES } from "@/constants/formOptions";
 import { SuccessModalWithLogo } from "../modals";
 import checkmarkIcon from "@/assets/checkmark-icon.svg";
-import { useAppDispatch } from "@/store/hooks";
-import { setUser } from "@/store/slices/authSlice";
 
 export const RegistrationForm = () => {
-  const dispatch = useAppDispatch();
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
   const [phoneNumber, setPhoneNumber] = useState("");
@@ -71,66 +68,19 @@ export const RegistrationForm = () => {
         firstName: data.firstName,
         lastName: data.lastName,
         businessName: data.legalBusinessName,
+        industry: data.industry as Industry,
+        zipCode: parseInt(data.zipCode, 10),
         businessEmail: data.businessEmail,
         businessPhone: data.businessPhone,
-        industry: data.industry as Industry,
-        zipCode: data.zipCode,
         password: data.password,
         confirmPassword: data.confirmPassword,
         acceptTerms: data.agreeToTerms,
       };
 
-      // Call signup API
-      const response = {
-        status: true,
-        message: "Account created successfully!",
-        data: {
-          user: {
-            id: "a369e2cd-808e-4ce0-884a-d16fac18e7bf",
-            firstName: "test",
-            lastName: "test",
-            businessEmail: "raj@gmail.com",
-            businessName: "Simform",
-            industry: "fgggfgfg",
-            zipCode: 395107,
-            businessPhone: "1234567890",
-            createdAt: "2026-01-19T10:37:48.047Z",
-            updatedAt: "2026-01-19T10:37:48.047Z",
-          },
-        },
-      };
-      const response1 = await signup(registrationData);
-      console.log("response", response1);
-      if (response.status !== true) {
-        throw new Error(response.message || "Registration failed");
-      } else {
-        // Store user data in Redux
-        dispatch(
-          setUser({
-            user: {
-              id: response.data.user.id,
-              email: response.data.user.businessEmail,
-              firstName: response.data.user.firstName,
-              lastName: response.data.user.lastName,
-              businessName: response.data.user.businessName,
-              phoneNumber: response.data.user.businessPhone,
-              industry: response.data.user.industry as Industry,
-              zipCode: response.data.user.zipCode.toString(),
-              authMethod: "email",
-              emailVerified: false,
-              profileComplete: true,
-              createdAt: response.data.user.createdAt,
-              updatedAt: response.data.user.updatedAt,
-            },
-          }),
-        );
-
-        setIsOpen(true);
-      }
+      await signup(registrationData);
+      setIsOpen(true);
       setValue("password", "");
       setValue("confirmPassword", "");
-
-      // navigate("/email-verification");
     } catch (error) {
       console.error("Registration error:", error);
       setSubmitError(
@@ -140,6 +90,7 @@ export const RegistrationForm = () => {
       );
     }
   };
+
   const handleGetStarted = () => {
     navigate("/sign-in");
   };
