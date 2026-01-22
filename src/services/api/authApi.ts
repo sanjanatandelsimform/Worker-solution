@@ -12,8 +12,8 @@ import type {
 // Create Axios instance with base configuration
 const apiClient = axios.create({
   baseURL: import.meta.env.VITE_API_BASE_URL || "http://localhost:3000/api",
-  timeout: 10000, // 10-second timeout
-  withCredentials: true, // Include HttpOnly cookies
+  timeout: 10000,
+  withCredentials: true,
   headers: {
     "Content-Type": "application/json",
   },
@@ -23,8 +23,15 @@ const apiClient = axios.create({
 apiClient.interceptors.response.use(
   response => response,
   (error: AxiosError) => {
-    if (error.response?.status === 401) {
-      // Redirect to sign-in page on unauthorized
+    // Only redirect on 401 if NOT on auth pages (login/register)
+    const isAuthPage =
+      window.location.pathname.includes("/sign-in") ||
+      window.location.pathname.includes("/register");
+
+    if (error.response?.status === 401 && !isAuthPage) {
+      // Clear any stored auth state
+      localStorage.removeItem("userDetail");
+      // Redirect to sign-in page
       window.location.href = "/sign-in";
     }
     return Promise.reject(error);
@@ -78,29 +85,31 @@ export const signup = async (data: RegistrationData): Promise<UserAccount> => {
 export const signin = async (
   data: SignInData
 ): Promise<{
-  status: boolean;
+  status: boolean | string;
   message: string;
-  data: {
+  data?: {
     user: UserAccount;
     tokens: { accessToken: string; refreshToken: string };
   };
 }> => {
   try {
-    const response = await apiClient.post<{
-      status: boolean;
-      message: string;
-      data: {
-        user: UserAccount;
-        tokens: { accessToken: string; refreshToken: string };
-      };
-    }>("/auth/login", {
+    const response = await apiClient.post("/auth/login", {
       businessEmail: data.businessEmail,
       password: data.password,
       rememberMe: data.rememberMe,
     });
+
     return response.data;
-  } catch (error) {
-    throw new Error(getErrorMessage(error));
+  } catch (error: unknown) {
+    // Return backend error instead of throwing; safely extract a message
+    const message = axios.isAxiosError(error)
+      ? ((error.response?.data as ApiError | undefined)?.message ?? "Incorrect email or password")
+      : getErrorMessage(error);
+
+    return {
+      status: "error",
+      message,
+    };
   }
 };
 

@@ -53,14 +53,18 @@ export const SignInForm = () => {
 
   const onSubmit = async (data: SignInFormData) => {
     try {
+      setErrorMessage(null); // Clear previous errors
+
       const signInData: SignInData = {
         businessEmail: data.email,
         password: data.password,
         rememberMe: data.rememberMe || false,
       };
+
       const response = await signin(signInData);
-      if (!response.status) {
-        throw new Error(response.message || "Sign in failed");
+
+      if (response.status === "error" || !response.data) {
+        throw new Error(response.message || "Incorrect email or password");
       }
 
       const { user, tokens } = response.data;
@@ -188,7 +192,11 @@ export const SignInForm = () => {
               </InputGroup>
 
               {/* Error Message Display */}
-              {errorMessage && <div className="text-red-500 text-sm">{errorMessage}</div>}
+              {errorMessage && (
+                <div className="rounded-lg bg-error-50 border border-error-300 px-4 py-3">
+                  <p className="text-error-600 text-sm font-medium">{errorMessage}</p>
+                </div>
+              )}
 
               {/* Remember Me & Forgot Password */}
               <div className="flex w-full items-center">
