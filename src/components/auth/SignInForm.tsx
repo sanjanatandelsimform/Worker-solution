@@ -26,6 +26,11 @@ export const SignInForm = () => {
   const [isOpen, setIsOpen] = useState(false);
   const navigate = useNavigate();
 
+  const [pendingAuth, setPendingAuth] = useState<{
+    user: any;
+    tokens: { accessToken: string; refreshToken: string };
+  } | null>(null);
+
   const {
     handleSubmit,
     formState: { errors, isSubmitting },
@@ -59,28 +64,7 @@ export const SignInForm = () => {
       }
 
       const { user, tokens } = response.data;
-
-      // Store user data in Redux (automatically persisted to localStorage)
-      dispatch(
-        setUser({
-          user: {
-            id: user.id,
-            email: user.businessEmail || user.email,
-            firstName: user.firstName,
-            lastName: user.lastName,
-            businessName: user.businessName,
-            phoneNumber: user.businessPhone || user.phoneNumber,
-            industry: user.industry,
-            zipCode: user.zipCode.toString(),
-            authMethod: user.googleId ? "google" : "email",
-            emailVerified: user.emailVerified,
-            profileComplete: true,
-            createdAt: user.createdAt,
-            updatedAt: user.updatedAt,
-          },
-          tokens,
-        })
-      );
+      setPendingAuth({ user, tokens });
 
       setValue("email", "");
       setValue("password", "");
@@ -93,9 +77,35 @@ export const SignInForm = () => {
       );
     }
   };
+
   const handleGetStarted = () => {
+    if (!pendingAuth) return;
+    dispatch(
+      setUser({
+        user: {
+          id: pendingAuth.user.id,
+          email: pendingAuth.user.businessEmail || pendingAuth.user.email,
+          firstName: pendingAuth.user.firstName,
+          lastName: pendingAuth.user.lastName,
+          businessName: pendingAuth.user.businessName,
+          phoneNumber: pendingAuth.user.businessPhone || pendingAuth.user.phoneNumber,
+          industry: pendingAuth.user.industry,
+          zipCode: pendingAuth.user.zipCode.toString(),
+          authMethod: pendingAuth.user.googleId ? "google" : "email",
+          emailVerified: pendingAuth.user.emailVerified,
+          profileComplete: true,
+          createdAt: pendingAuth.user.createdAt,
+          updatedAt: pendingAuth.user.updatedAt,
+        },
+        tokens: pendingAuth.tokens,
+      })
+    );
+
+    setPendingAuth(null);
+    setIsOpen(false);
     navigate("/dashboard");
   };
+
   return (
     <div className="flex min-h-screen items-center justify-center bg-secondary">
       <div className="flex w-2xl items-center justify-center rounded-xl border border-solid border-primary bg-primary py-28">
@@ -232,7 +242,7 @@ export const SignInForm = () => {
         </div>
       </div>
 
-      {/* Modals:-this is used directly for testing purposes */}
+      {/* Modals */}
       <ChangePasswordModal
         isOpen={isChangePasswordModalOpen}
         onClose={() => setIsChangePasswordModalOpen(false)}
