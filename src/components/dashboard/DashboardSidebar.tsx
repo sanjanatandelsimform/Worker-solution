@@ -1,12 +1,44 @@
+import { useState } from "react";
+import { useNavigate } from "react-router-dom";
+import { useAppDispatch } from "@/store/hooks";
 import { Settings01, LogOut04, Speedometer03 } from "@untitledui/icons";
 import { NavList } from "@/components/application/app-navigation/base-components/nav-list";
 import type { NavItemType } from "@/components/application/app-navigation/config";
+import { SuccessModalWithLogo } from "../modals/SuccessModalWithLogo";
+import { signout } from "@/services/api/authApi";
+import logoutIcon from "@/assets/checkmark-icon.svg";
+import { clearUser } from "@/store/slices/authSlice";
 
 interface DashboardSidebarProps {
   activeUrl?: string;
 }
 
 export const DashboardSidebar = ({ activeUrl = "/" }: DashboardSidebarProps) => {
+  const navigate = useNavigate();
+  const dispatch = useAppDispatch();
+  const [isLogoutModalOpen, setIsLogoutModalOpen] = useState(false);
+
+  const handleLogout = async () => {
+    try {
+      await signout();
+      dispatch(clearUser());
+      localStorage.removeItem("userDetail");
+      setIsLogoutModalOpen(false);
+      navigate("/sign-in");
+    } catch (error) {
+      console.error("Logout error:", error);
+      dispatch(clearUser());
+      localStorage.removeItem("userDetail");
+      setIsLogoutModalOpen(false);
+      navigate("/sign-in");
+    }
+  };
+
+  const handleLogoutClick = (event?: React.MouseEvent) => {
+    event?.preventDefault(); // Prevent default navigation behavior
+    setIsLogoutModalOpen(true);
+  };
+
   const navigationItems: NavItemType[] = [
     {
       label: "Dashboard",
@@ -14,16 +46,6 @@ export const DashboardSidebar = ({ activeUrl = "/" }: DashboardSidebarProps) => 
       icon: Speedometer03,
       //badge: <Badge color="brand">New</Badge>,
     },
-    // Keep this commented for future use if we want to add nested items{
-    //   label: "Team",
-    //   href: "/team",
-    //   icon: Users01,
-    //   items: [
-    //     { label: "All Members", href: "/team/members" },
-    //     { label: "Add Member", href: "/team/add" },
-    //     { label: "Permissions", href: "/team/permissions" },
-    //   ],
-    // },
   ];
 
   const settingsItems: NavItemType[] = [
@@ -34,8 +56,9 @@ export const DashboardSidebar = ({ activeUrl = "/" }: DashboardSidebarProps) => 
     },
     {
       label: "Logout",
-      href: "/logout",
+      href: "#",
       icon: LogOut04,
+      onClick: handleLogoutClick,
     },
   ];
 
@@ -67,6 +90,20 @@ export const DashboardSidebar = ({ activeUrl = "/" }: DashboardSidebarProps) => 
           </div>
         </div>
       </div>
+
+      <SuccessModalWithLogo
+        isOpen={isLogoutModalOpen}
+        onClose={() => setIsLogoutModalOpen(false)}
+        size="xl"
+        messageImg={logoutIcon}
+        title="You’ve been logged out!"
+        subtitle="You’ve been logged out of your account. Log back in anytime to continue"
+        button={{
+          text: "Log back in",
+          onClick: handleLogout,
+          color: "primary",
+        }}
+      />
     </div>
   );
 };
