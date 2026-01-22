@@ -193,4 +193,5 @@ export { _Select as Select };
 
 // Re-export context and constants for backwards compatibility
 export { SelectContext } from "./select-context";
+// eslint-disable-next-line react-refresh/only-export-components
 export { sizes } from "./select-styles";
