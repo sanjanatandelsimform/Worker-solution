@@ -1,5 +1,5 @@
 import type { FC, ReactNode, Ref, RefAttributes } from "react";
-import { createContext, isValidElement } from "react";
+import { isValidElement } from "react";
 import { ChevronDown } from "@untitledui/icons";
 import type { SelectProps as AriaSelectProps } from "react-aria-components";
 import {
@@ -55,10 +55,7 @@ interface SelectValueProps {
   placeholderIcon?: FC | ReactNode;
 }
 
-export const sizes = {
-  sm: { root: "py-2 px-3", shortcut: "pr-2.5" },
-  md: { root: "py-2.5 px-3.5", shortcut: "pr-3" },
-};
+import { sizes } from "./select-styles";
 
 const SelectValue = ({
   isOpen,
@@ -134,9 +131,7 @@ const SelectValue = ({
   );
 };
 
-export const SelectContext = createContext<{ size: "sm" | "md" }>({
-  size: "sm",
-});
+import { SelectContext } from "./select-context";
 
 const Select = ({
   placeholder = "Select",
@@ -185,6 +180,8 @@ const Select = ({
   );
 };
 
+// Move constants or functions to a separate file to comply with the react-refresh/only-export-components rule.
+
 const _Select = Select as typeof Select & {
   ComboBox: typeof ComboBox;
   Item: typeof SelectItem;
@@ -193,3 +190,7 @@ _Select.ComboBox = ComboBox;
 _Select.Item = SelectItem;
 
 export { _Select as Select };
+
+// Re-export context and constants for backwards compatibility
+export { SelectContext } from "./select-context";
+export { sizes } from "./select-styles";

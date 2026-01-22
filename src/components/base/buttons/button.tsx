@@ -8,133 +8,9 @@ import type {
 import { isValidElement } from "react";
 import type { ButtonProps as AriaButtonProps } from "react-aria-components";
 import { Button as AriaButton, Link as AriaLink } from "react-aria-components";
-import { cx, sortCx } from "@/utils/cx";
+import { cx } from "@/utils/cx";
+import { styles } from "./button-styles";
 import { isReactComponent } from "@/utils/is-react-component";
-
-export const styles = sortCx({
-  common: {
-    root: [
-      "group relative inline-flex h-max cursor-pointer items-center justify-center whitespace-nowrap outline-brand transition duration-100 ease-linear before:absolute focus-visible:outline-2 focus-visible:outline-offset-2",
-      // When button is used within `InputGroup`
-      "in-data-input-wrapper:shadow-xs in-data-input-wrapper:focus:!z-50 in-data-input-wrapper:in-data-leading:-mr-px in-data-input-wrapper:in-data-leading:rounded-r-none in-data-input-wrapper:in-data-leading:before:rounded-r-none in-data-input-wrapper:in-data-trailing:-ml-px in-data-input-wrapper:in-data-trailing:rounded-l-none in-data-input-wrapper:in-data-trailing:before:rounded-l-none",
-      // Disabled styles
-      "disabled:cursor-not-allowed disabled:text-fg-disabled disabled:bg-disabled",
-      // Icon styles
-      "disabled:*:data-icon:text-fg-disabled_subtle",
-      // Same as `icon` but for SSR icons that cannot be passed to the client as functions.
-      "*:data-icon:pointer-events-none *:data-icon:size-5 *:data-icon:shrink-0 *:data-icon:transition-inherit-all",
-    ].join(" "),
-    icon: "pointer-events-none size-5 shrink-0 transition-inherit-all",
-  },
-  sizes: {
-    sm: {
-      root: [
-        "gap-1 rounded-lg px-3 py-2 text-sm font-semibold before:rounded-[7px] data-icon-only:p-2",
-        "in-data-input-wrapper:px-3.5 in-data-input-wrapper:py-2.5 in-data-input-wrapper:data-icon-only:p-2.5",
-      ].join(" "),
-      linkRoot: "gap-1",
-    },
-    md: {
-      root: [
-        "gap-1 rounded-lg px-3.5 py-2.5 text-sm font-semibold before:rounded-[7px] data-icon-only:p-2.5",
-        "in-data-input-wrapper:gap-1.5 in-data-input-wrapper:px-4 in-data-input-wrapper:text-md in-data-input-wrapper:data-icon-only:p-3",
-      ].join(" "),
-      linkRoot: "gap-1",
-    },
-    lg: {
-      root: "gap-1.5 rounded-lg px-4 py-2.5 text-md font-semibold before:rounded-[7px] data-icon-only:p-3",
-      linkRoot: "gap-1.5",
-    },
-    xl: {
-      root: "gap-1.5 rounded-lg px-4.5 py-3 text-md font-semibold before:rounded-[7px] data-icon-only:p-3.5",
-      linkRoot: "gap-1.5",
-    },
-  },
-
-  colors: {
-    primary: {
-      root: [
-        "bg-cyan-500 text-white shadow-xs-skeumorphic ring-1 ring-transparent ring-inset hover:bg-cyan-600 data-loading:bg-cyan-600",
-        // Inner border gradient
-        "before:absolute before:inset-px before:border before:border-white/12 before:mask-b-from-0%",
-        // Disabled styles
-        "disabled:bg-disabled disabled:shadow-xs disabled:ring-disabled_subtle",
-        // Icon styles
-        "*:data-icon:text-button-primary-icon hover:*:data-icon:text-button-primary-icon_hover",
-      ].join(" "),
-    },
-    secondary: {
-      root: [
-        "bg-primary text-secondary shadow-xs-skeumorphic ring-1 ring-primary ring-inset hover:bg-primary_hover hover:text-secondary_hover data-loading:bg-primary_hover",
-        // Disabled styles
-        "disabled:shadow-xs disabled:ring-disabled_subtle",
-        // Icon styles
-        "*:data-icon:text-fg-quaternary hover:*:data-icon:text-fg-quaternary_hover",
-      ].join(" "),
-    },
-    tertiary: {
-      root: [
-        "text-tertiary hover:bg-primary_hover hover:text-tertiary_hover data-loading:bg-primary_hover",
-        // Icon styles
-        "*:data-icon:text-fg-quaternary hover:*:data-icon:text-fg-quaternary_hover",
-      ].join(" "),
-    },
-    "link-gray": {
-      root: [
-        "justify-normal rounded p-0! text-tertiary hover:text-tertiary_hover",
-        // Inner text underline
-        "*:data-text:underline *:data-text:decoration-transparent *:data-text:underline-offset-2 hover:*:data-text:decoration-current",
-        // Icon styles
-        "*:data-icon:text-fg-quaternary hover:*:data-icon:text-fg-quaternary_hover",
-      ].join(" "),
-    },
-    "link-color": {
-      root: [
-        "justify-normal rounded p-0! text-cyan-500 hover:text-cyan-600",
-        // Inner text underline
-        "*:data-text:underline *:data-text:decoration-transparent *:data-text:underline-offset-2 hover:*:data-text:decoration-current",
-        // Icon styles
-        "*:data-icon:text-fg-brand-secondary_alt hover:*:data-icon:text-fg-brand-secondary_hover",
-      ].join(" "),
-    },
-    "primary-destructive": {
-      root: [
-        "bg-error-solid text-white shadow-xs-skeumorphic ring-1 ring-transparent outline-error ring-inset hover:bg-error-solid_hover data-loading:bg-error-solid_hover",
-        // Inner border gradient
-        "before:absolute before:inset-px before:border before:border-white/12 before:mask-b-from-0%",
-        // Disabled styles
-        "disabled:bg-disabled disabled:shadow-xs disabled:ring-disabled_subtle",
-        // Icon styles
-        "*:data-icon:text-button-destructive-primary-icon hover:*:data-icon:text-button-destructive-primary-icon_hover",
-      ].join(" "),
-    },
-    "secondary-destructive": {
-      root: [
-        "bg-primary text-error-primary shadow-xs-skeumorphic ring-1 ring-error_subtle outline-error ring-inset hover:bg-error-primary hover:text-error-primary_hover data-loading:bg-error-primary",
-        // Disabled styles
-        "disabled:bg-primary disabled:shadow-xs disabled:ring-disabled_subtle",
-        // Icon styles
-        "*:data-icon:text-fg-error-secondary hover:*:data-icon:text-fg-error-primary",
-      ].join(" "),
-    },
-    "tertiary-destructive": {
-      root: [
-        "text-error-primary outline-error hover:bg-error-primary hover:text-error-primary_hover data-loading:bg-error-primary",
-        // Icon styles
-        "*:data-icon:text-fg-error-secondary hover:*:data-icon:text-fg-error-primary",
-      ].join(" "),
-    },
-    "link-destructive": {
-      root: [
-        "justify-normal rounded p-0! text-error-primary outline-error hover:text-error-primary_hover",
-        // Inner text underline
-        "*:data-text:underline *:data-text:decoration-transparent *:data-text:underline-offset-2 hover:*:data-text:decoration-current",
-        // Icon styles
-        "*:data-icon:text-fg-error-secondary hover:*:data-icon:text-fg-error-primary",
-      ].join(" "),
-    },
-  },
-});
 
 /**
  * Common props shared between button and anchor variants
@@ -294,3 +170,5 @@ export const Button = ({
     </Component>
   );
 };
+
+// Move constants or functions to a separate file to comply with the react-refresh/only-export-components rule.

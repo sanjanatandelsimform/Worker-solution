@@ -1,5 +1,6 @@
+// Ensure that this file only exports components to comply with the react-refresh/only-export-components rule.
 import { useState } from "react";
-import { useForm } from "react-hook-form";
+import { useForm, useWatch } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useNavigate } from "react-router-dom";
 import { Button } from "@/components/base/buttons/button";
@@ -28,7 +29,7 @@ export const RegistrationForm = () => {
   const {
     handleSubmit,
     formState: { errors, isSubmitting },
-    watch,
+    control,
     setValue,
     trigger,
   } = useForm<RegistrationFormData>({
@@ -48,15 +49,33 @@ export const RegistrationForm = () => {
       agreeToTerms: false,
     },
   });
-  const firstName = watch("firstName");
-  const lastName = watch("lastName");
-  const legalBusinessName = watch("legalBusinessName");
-  const industry = watch("industry");
-  const zipCode = watch("zipCode");
-  const businessEmail = watch("businessEmail");
-  const password = watch("password");
-  const confirmPassword = watch("confirmPassword");
-  const agreeToTerms = watch("agreeToTerms");
+
+  const watchedFields = useWatch({
+    control,
+    name: [
+      "firstName",
+      "lastName",
+      "legalBusinessName",
+      "industry",
+      "zipCode",
+      "businessEmail",
+      "password",
+      "confirmPassword",
+      "agreeToTerms",
+    ],
+  });
+
+  const [
+    firstName,
+    lastName,
+    legalBusinessName,
+    industry,
+    zipCode,
+    businessEmail,
+    password,
+    confirmPassword,
+    agreeToTerms,
+  ] = watchedFields;
 
   const onSubmit = async (data: RegistrationFormData) => {
     try {
