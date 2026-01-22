@@ -322,14 +322,14 @@
   background-color: var(--color-bg-gray-card);
 }
 
-.background-pattern {
-  background-image: url("./assets/background-pattern-success.svg");
+.background-pattern{
+  background-image: url('./assets/background-pattern-success.svg');
   background-repeat: no-repeat;
   background-size: 60%;
   background-position: top left;
 }
-.background-pattern-unsuccess {
-  background-image: url("./assets/background-pattern-unsuccess.svg");
+.background-pattern-unsuccess{
+  background-image: url('./assets/background-pattern-unsuccess.svg');
   background-repeat: no-repeat;
   background-size: 60%;
   background-position: top left;

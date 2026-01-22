@@ -8,7 +8,7 @@ import { InputGroup } from "@/components/base/input/input-group";
 import { Checkbox } from "@/components/base/checkbox/checkbox";
 import { GoogleSSOButton } from "./GoogleSSOButton";
 import { Eye, EyeOff } from "@untitledui/icons";
-import type { SignInData } from "@/types/auth";
+import type { SignInData, UserAccount } from "@/types/auth";
 import { signin } from "@/services/api/authApi";
 import { ChangePasswordModal } from "../modals/ChangePasswordModal";
 import { SuccessModalWithLogo } from "../modals/SuccessModalWithLogo";
@@ -27,7 +27,7 @@ export const SignInForm = () => {
   const navigate = useNavigate();
 
   const [pendingAuth, setPendingAuth] = useState<{
-    user: any;
+    user: UserAccount;
     tokens: { accessToken: string; refreshToken: string };
   } | null>(null);
 
@@ -242,7 +242,7 @@ export const SignInForm = () => {
         </div>
       </div>
 
-      {/* Modals */}
+      {/* Modals:-this is used directly for testing purposes */}
       <ChangePasswordModal
         isOpen={isChangePasswordModalOpen}
         onClose={() => setIsChangePasswordModalOpen(false)}

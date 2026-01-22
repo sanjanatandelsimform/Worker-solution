@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { useForm } from "react-hook-form";
+import { useForm, useWatch } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
 import {
@@ -55,7 +55,7 @@ export const ChangePasswordModal = ({ isOpen, onClose }: ChangePasswordModalProp
   const {
     handleSubmit,
     formState: { errors, isSubmitting },
-    watch,
+    control,
     setValue,
     trigger,
     reset,
@@ -69,9 +69,9 @@ export const ChangePasswordModal = ({ isOpen, onClose }: ChangePasswordModalProp
     },
   });
 
-  const currentPassword = watch("currentPassword");
-  const newPassword = watch("newPassword");
-  const confirmPassword = watch("confirmPassword");
+  const currentPassword = useWatch({ control, name: "currentPassword" });
+  const newPassword = useWatch({ control, name: "newPassword" });
+  const confirmPassword = useWatch({ control, name: "confirmPassword" });
 
   const onSubmit = async (data: ChangePasswordFormData) => {
     try {
@@ -294,3 +294,5 @@ export const ChangePasswordModal = ({ isOpen, onClose }: ChangePasswordModalProp
     </>
   );
 };
+
+// React Hook Form's `useForm()` API returns a `watch()` function which cannot be memoized safely. Ensure proper usage to avoid stale UI.
