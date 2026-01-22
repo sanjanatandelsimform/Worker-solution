@@ -3,6 +3,7 @@ import {
   ModalContent,
   ModalHeader,
   ModalFooter,
+  ModalTitle,
 } from "@/components/base/modal/modal";
 import { Button } from "@/components/base/buttons/button";
 import { X } from "@untitledui/icons";
@@ -73,22 +74,10 @@ export const InProgressModal = ({
 
           {/* Text and Supporting Text */}
           <div className="flex w-full flex-col gap-1">
-            <h2
-              className="text-[36px] font-medium leading-11 tracking-[-0.72px]"
-              style={{
-                fontFamily: "var(--font-family-display)",
-                color: "var(--color-text-primary)",
-              }}
-            >
+            <ModalTitle className="text-[36px] font-medium leading-11 tracking-[-0.72px] font-display text-primary">
               Preparing...
-            </h2>
-            <p
-              className="text-sm font-normal leading-5"
-              style={{
-                fontFamily: "var(--font-family-body)",
-                color: "var(--color-text-tertiary)",
-              }}
-            >
+            </ModalTitle>
+            <p className="text-sm font-normal leading-5 font-body text-tertiary">
               One moment while we prepare your results and recommendations.
             </p>
           </div>

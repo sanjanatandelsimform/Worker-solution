@@ -2,9 +2,11 @@ import { DashboardSidebar } from "@/components/dashboard/DashboardSidebar";
 import emailIcon from "@/assets/mail-icon.svg";
 import checkIcon from "@/assets/file-check.svg";
 import DashboardCard from "./DashboardCard";
+import { Tabs } from "@/components/base/tabs/tabs";
+import RecommendationsPage from "../recommendations/RecommendationsPage";
+import BenchmarkPage from "../benchmark/BenchmarkPage";
 
 export const DashboardPage = () => {
-
   return (
     <div className="flex h-screen overflow-hidden bg-dashboard">
       {/* Sidebar */}
@@ -14,8 +16,7 @@ export const DashboardPage = () => {
       <div className="flex flex-1 flex-col overflow-hidden">
         {/* Main Content */}
         <main className="flex-1 overflow-y-auto px-6 py-10">
-          <div className="space-y-6">
-          </div>
+          <div className="space-y-6"></div>
           <div>
             <h2 className="text-4xl font-medium text-primary">Welcome!</h2>
             <div className="mt-6 border border-gray-300 rounded-xl p-4 bg-dashboard-card shadow-sm flex gap-4 justify-between">
@@ -47,6 +48,24 @@ export const DashboardPage = () => {
               buttonType="secondary"
               buttonIsDisabled={true}
             />
+          </div>
+          <div className="mt-10">
+            <Tabs>
+              <Tabs.List
+                size="md"
+                type="button-brand"
+                items={[
+                  { id: "recommendations", label: "Recommendations" },
+                  { id: "benchmark", label: "Benchmark" },
+                ]}
+              />
+              <Tabs.Panel id="recommendations" className="pt-12">
+                <RecommendationsPage />
+              </Tabs.Panel>
+              <Tabs.Panel id="benchmark" className="pt-12">
+                <BenchmarkPage />
+              </Tabs.Panel>
+            </Tabs>
           </div>
         </main>
       </div>

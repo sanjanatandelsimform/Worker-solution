@@ -17,7 +17,7 @@ export const filledColors: Record<
   { root: string; addon: string; addonButton: string }
 > = {
   gray: {
-    root: "bg-utility-gray-50 text-utility-gray-700 ring-utility-gray-200",
+    root: "bg-tertiary text-400 ring-0 border border-primary",
     addon: "text-utility-gray-500",
     addonButton:
       "hover:bg-utility-gray-100 text-utility-gray-400 hover:text-utility-gray-500",
@@ -41,10 +41,9 @@ export const filledColors: Record<
       "hover:bg-utility-warning-100 text-utility-warning-400 hover:text-utility-warning-500",
   },
   success: {
-    root: "bg-utility-success-50 text-utility-success-700 ring-utility-success-200",
-    addon: "text-utility-success-500",
-    addonButton:
-      "hover:bg-utility-success-100 text-utility-success-400 hover:text-utility-success-500",
+    root: "bg-cyan-100 text-secondary ring-cyan-100",
+    addon: "text-secondary",
+    addonButton: "hover:bg-cyan-100 text-secondary hover:text-cyan-100",
   },
   "gray-blue": {
     root: "bg-utility-gray-blue-50 text-utility-gray-blue-700 ring-utility-gray-blue-200",
@@ -87,6 +86,12 @@ export const filledColors: Record<
     addon: "text-utility-orange-500",
     addonButton:
       "hover:bg-utility-orange-100 text-utility-orange-400 hover:text-utility-orange-500",
+  },
+  cyan: {
+    root: "bg-utility-cyan-100 text-secondary ring-utility-cyan-100",
+    addon: "text-secondary",
+    addonButton:
+      "hover:bg-utility-cyan-100 text-secondary hover:text-utility-cyan-100",
   },
 };
 

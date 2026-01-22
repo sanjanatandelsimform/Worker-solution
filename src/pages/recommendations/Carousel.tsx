@@ -1,0 +1,110 @@
+import { ArrowLeft } from "@/assets/icons/ArrowLeft";
+import { ArrowRight } from "@/assets/icons/ArrowRight";
+import { ChartIcon } from "@/assets/icons/ChartIcon";
+import { KeyIcon } from "@/assets/icons/KeyIcon";
+import { SmileFace } from "@/assets/icons/SmileFace";
+import { Carousel } from "@/components/application/carousel/carousel-base";
+import { Button } from "@/components/base/buttons/button";
+import { cx } from "@/utils/cx";
+
+// Did You Know carousel data
+const didYouKnowSlides = [
+  {
+    id: 1,
+    icon: <SmileFace />,
+    title: "Did you know?",
+    content:
+      "Workers in low-wage jobs report spending an average of 1.3 hours per week dealing with personal finance-related issues when they are at work, adding up to 66 hours of lost productivity each year due to financial stress.",
+  },
+  {
+    id: 2,
+    icon: <KeyIcon />,
+    title: "Did you know?",
+    content:
+      "Emergency savings benefits are ranked as the top emerging benefit for improving employee financial health",
+  },
+  {
+    id: 3,
+    icon: <ChartIcon />,
+    title: "Did you know?",
+    content:
+      "73% of employees agreed that a comprehensive and personalized benefits program would increase the likelihood they would stay with their  current organization. ",
+  },
+];
+
+export default function CarouselSection() {
+  return (
+    <>
+      {/* Did You Know Carousel */}
+      <div className="max-full">
+        <Carousel.Root
+          opts={{
+            loop: true,
+            align: "start",
+          }}
+        >
+          <div className="space-y-6 bg-purple-50 border border-gray-300 rounded-xl p-4">
+            {/* Carousel Content - Only this slides */}
+            <Carousel.Content>
+              {didYouKnowSlides.map((slide) => (
+                <Carousel.Item key={slide.id}>
+                  <div className="flex flex-col gap-2">
+                    {/* Header with Icon and Title */}
+                    <div className="flex items-center gap-2 text-lg color-text-600 font-medium">
+                      {slide.icon}
+                      <h3 className="text-lg font-medium leading-7 color-base-black">
+                        {slide.title}
+                      </h3>
+                    </div>
+                    <p className="text-base font-normal color-base-black leading-6">
+                      {slide.content}
+                    </p>
+                  </div>
+                </Carousel.Item>
+              ))}
+            </Carousel.Content>
+
+            {/* Navigation Controls - Fixed position, doesn't slide */}
+            <div className="bg-gray-25 flex items-center justify-center gap-2 border border-color-200 rounded-2xl px-2 py-1 w-fit">
+              {/* Previous Button */}
+              <Carousel.PrevTrigger asChild>
+                <Button
+                  color="tertiary"
+                  className="p-0!"
+                  size="sm"
+                  iconLeading={<ArrowLeft aria-label="Previous slide" />}
+                />
+              </Carousel.PrevTrigger>
+
+              {/* Pagination Dots */}
+              <Carousel.IndicatorGroup className="flex items-center gap-3">
+                {didYouKnowSlides.map((slide, index) => (
+                  <Carousel.Indicator key={slide.id} index={index}>
+                    {({ isSelected }) => (
+                      <div
+                        className={cx(
+                          "size-2 rounded transition-colors cursor-pointer",
+                          isSelected ? "bg-purple-500" : "bg-gray-100",
+                        )}
+                      />
+                    )}
+                  </Carousel.Indicator>
+                ))}
+              </Carousel.IndicatorGroup>
+
+              {/* Next Button */}
+              <Carousel.NextTrigger asChild>
+                <Button
+                  color="tertiary"
+                  className="p-0!"
+                  size="sm"
+                  iconLeading={<ArrowRight aria-label="Next slide" />}
+                />
+              </Carousel.NextTrigger>
+            </div>
+          </div>
+        </Carousel.Root>
+      </div>
+    </>
+  );
+}

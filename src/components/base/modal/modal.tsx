@@ -9,6 +9,7 @@ import {
   Dialog as AriaDialog,
   Modal as AriaModal,
   ModalOverlay as AriaModalOverlay,
+  Heading,
 } from "react-aria-components";
 import { cx } from "@/utils/cx";
 
@@ -104,9 +105,12 @@ export const ModalTitle = ({
   className?: string;
 }) => {
   return (
-    <h2 className={cx("text-4xl font-medium text-primary mb-3", className)}>
+    <Heading
+      slot="title"
+      className={cx("text-4xl font-medium text-primary mb-3", className)}
+    >
       {children}
-    </h2>
+    </Heading>
   );
 };
 

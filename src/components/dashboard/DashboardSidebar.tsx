@@ -1,6 +1,7 @@
 import { Settings01, LogOut04, Speedometer03 } from "@untitledui/icons";
 import { NavList } from "@/components/application/app-navigation/base-components/nav-list";
 import type { NavItemType } from "@/components/application/app-navigation/config";
+import { useNavigate } from "react-router-dom";
 
 interface DashboardSidebarProps {
   activeUrl?: string;
@@ -9,6 +10,7 @@ interface DashboardSidebarProps {
 export const DashboardSidebar = ({
   activeUrl = "/",
 }: DashboardSidebarProps) => {
+  const navigate = useNavigate();
   const navigationItems: NavItemType[] = [
     {
       label: "Dashboard",
@@ -34,12 +36,11 @@ export const DashboardSidebar = ({
       href: "/settings",
       icon: Settings01,
     },
-    {
-      label: "Logout",
-      href: "/logout",
-      icon: LogOut04,
-    },
   ];
+
+  const handleLogout = () => {
+    navigate("/login");
+  };
 
   return (
     <div className="flex h-[calc(100vh-32px)] w-66 flex-col border-0 border-primary bg-primary py-10 px-6 m-4 rounded-xl shadow-xs">
@@ -60,6 +61,15 @@ export const DashboardSidebar = ({
           activeUrl={activeUrl}
           className="mt-4 border-t border-primary"
         />
+
+        {/* Logout Button */}
+        <button
+          onClick={handleLogout}
+          className="mt-2 flex w-full items-center gap-3 rounded-lg px-3 py-3 text-sm font-medium text-tertiary transition-colors hover:bg-secondary hover:text-primary hover:bg-cyan-500 hover:text-white hover:cursor-pointer"
+        >
+          <LogOut04 className="h-5 w-5" />
+          <span>Logout</span>
+        </button>
       </nav>
 
       {/* User Account Card at Bottom */}
