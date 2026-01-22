@@ -1,5 +1,7 @@
-import { Routes, Route } from "react-router-dom";
+import { Routes, Route, Navigate } from "react-router-dom";
 import { AuthErrorBoundary } from "./components/auth/AuthErrorBoundary";
+import { ProtectedRoute } from "./components/auth/ProtectedRoute";
+import { PublicRoute } from "./components/auth/PublicRoute";
 import { RegisterPage } from "./pages/auth/RegisterPage";
 import { SignInPage } from "./pages/auth/SignInPage";
 import { DashboardPage } from "./pages/dashboard/DashboardPage";
@@ -10,11 +12,49 @@ function App() {
     <AuthErrorBoundary>
       <div className="min-h-screen bg-gray-50">
         <Routes>
-          <Route path="/" element={<SignInPage />} />
-          <Route path="/register" element={<RegisterPage />} />
-          <Route path="/sign-in" element={<SignInPage />} />
-          <Route path="/dashboard" element={<DashboardPage />} />
-          <Route path="/settings" element={<SettingsPage />} />
+          {/* Public routes - accessible without authentication */}
+          <Route
+            path="/register"
+            element={
+              <PublicRoute>
+                <RegisterPage />
+              </PublicRoute>
+            }
+          />
+          <Route
+            path="/sign-in"
+            element={
+              <PublicRoute>
+                <SignInPage />
+              </PublicRoute>
+            }
+          />
+
+          {/* Protected routes - require authentication */}
+          <Route
+            path="/"
+            element={
+              <ProtectedRoute>
+                <Navigate to="/dashboard" replace />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/dashboard"
+            element={
+              <ProtectedRoute>
+                <DashboardPage />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/settings"
+            element={
+              <ProtectedRoute>
+                <SettingsPage />
+              </ProtectedRoute>
+            }
+          />
         </Routes>
       </div>
     </AuthErrorBoundary>

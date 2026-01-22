@@ -18,6 +18,8 @@ export type NavItemType = {
   }[];
   /** Whether this nav item is a divider. */
   divider?: boolean;
+  /** Optional click handler for the nav item. */
+  onClick?: (event?: React.MouseEvent) => void;
 };
 
 export type NavItemDividerType = Omit<NavItemType, "icon" | "label" | "divider"> & {
