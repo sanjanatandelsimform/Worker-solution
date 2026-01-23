@@ -1,5 +1,5 @@
 {
-  "name": "benestat",
+  "name": "BeneStat",
   "private": true,
   "version": "0.0.0",
   "type": "module",
@@ -26,9 +26,11 @@
   "dependencies": {
     "@hookform/resolvers": "^5.2.2",
     "@reduxjs/toolkit": "^2.11.2",
+    "@tailwindcss/typography": "^0.5.19",
     "@tailwindcss/vite": "^4.1.18",
     "@untitledui/icons": "^0.0.20",
     "axios": "^1.13.2",
+    "embla-carousel-react": "^8.6.0",
     "react": "^19.2.0",
     "react-aria-components": "^1.14.0",
     "react-dom": "^19.2.0",

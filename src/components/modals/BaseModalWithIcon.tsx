@@ -1,5 +1,11 @@
 import type { ReactNode } from "react";
-import { Modal, ModalContent, ModalHeader, ModalFooter } from "@/components/base/modal/modal";
+import {
+  Modal,
+  ModalContent,
+  ModalHeader,
+  ModalFooter,
+  ModalTitle,
+} from "@/components/base/modal/modal";
 import { Button } from "@/components/base/buttons/button";
 import { X } from "@untitledui/icons";
 import featuredIcon from "@/assets/featured-icon.svg";
@@ -18,6 +24,7 @@ export interface BaseModalWithIconProps {
   size?: "sm" | "md" | "lg" | "xl" | "full";
   title: string;
   subtitle?: string;
+  subtitleOne?: string;
   icon?: ReactNode;
   buttons: BaseModalWithIconButton[];
   showCloseButton?: boolean;
@@ -32,6 +39,7 @@ export const BaseModalWithIcon = ({
   size = "sm",
   title,
   subtitle,
+  subtitleOne,
   icon,
   buttons,
   showCloseButton = true,
@@ -70,11 +78,16 @@ export const BaseModalWithIcon = ({
 
           {/* Text and Supporting Text */}
           <div className="flex w-full flex-col gap-2">
-            <h2 className="font-display text-[36px] font-medium leading-11 tracking-[-0.72px] text-primary">
+            <ModalTitle className="font-display text-[36px] font-medium leading-11 tracking-[-0.72px] text-primary">
               {title}
-            </h2>
+            </ModalTitle>
             {subtitle && (
-              <p className="font-body text-sm font-normal leading-5 text-tertiary">{subtitle}</p>
+              <>
+                <p className="font-body text-sm font-normal leading-5 text-tertiary">{subtitle}</p>
+                <p className="font-body text-sm font-normal leading-5 text-tertiary">
+                  {subtitleOne}
+                </p>
+              </>
             )}
           </div>
 

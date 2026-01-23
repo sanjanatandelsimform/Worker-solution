@@ -88,7 +88,7 @@ export const Tooltip = ({
         {({ isEntering, isExiting }) => (
           <div
             className={cx(
-              "z-50 flex max-w-xs origin-(--trigger-anchor-point) flex-col items-start gap-1 rounded-lg bg-primary-solid px-3 shadow-lg will-change-transform",
+              "z-50 flex max-w-xs origin-(--trigger-anchor-point) flex-col items-start gap-1 rounded-lg bg-black px-3 shadow-lg will-change-transform font-semibold",
               description ? "py-3" : "py-2",
 
               isEntering &&
@@ -100,9 +100,7 @@ export const Tooltip = ({
             <span className="text-xs font-semibold text-white">{title}</span>
 
             {description && (
-              <span className="text-xs font-medium text-tooltip-supporting-text">
-                {description}
-              </span>
+              <span className="text-xs font-medium text-gray-300">{description}</span>
             )}
 
             {arrow && (

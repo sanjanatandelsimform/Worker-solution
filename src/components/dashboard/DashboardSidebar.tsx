@@ -24,7 +24,7 @@ export const DashboardSidebar = ({ activeUrl = "/" }: DashboardSidebarProps) => 
   const handleLogout = async () => {
     setLogoutError(null);
     try {
-      await signout(tokens.accessToken || undefined);      
+      await signout(tokens.accessToken || undefined);
       // Only clear storage and redirect if API call succeeds
       dispatch(clearUser());
       localStorage.removeItem("userDetail");
@@ -32,7 +32,8 @@ export const DashboardSidebar = ({ activeUrl = "/" }: DashboardSidebarProps) => 
       navigate("/sign-in");
     } catch (error) {
       console.error("Logout error:", error);
-      const errorMessage = error instanceof Error ? error.message : "Failed to logout. Please try again.";
+      const errorMessage =
+        error instanceof Error ? error.message : "Failed to logout. Please try again.";
       setLogoutError(errorMessage);
       setIsLogoutModalOpen(false);
     }
@@ -90,6 +91,15 @@ export const DashboardSidebar = ({ activeUrl = "/" }: DashboardSidebarProps) => 
           activeUrl={activeUrl}
           className="mt-4 border-t border-primary"
         />
+
+        {/* Logout Button */}
+        <button
+          onClick={handleLogout}
+          className="mt-2 flex w-full items-center gap-3 rounded-lg px-3 py-3 text-sm font-medium text-tertiary transition-colors hover:bg-secondary hover:text-primary hover:bg-cyan-500 hover:text-white hover:cursor-pointer"
+        >
+          <LogOut04 className="h-5 w-5" />
+          <span>Logout</span>
+        </button>
       </nav>
 
       {/* User Account Card at Bottom - Dynamic User Info */}
@@ -106,7 +116,11 @@ export const DashboardSidebar = ({ activeUrl = "/" }: DashboardSidebarProps) => 
           <div className="flex items-start gap-3">
             <div className="flex-shrink-0">
               <svg className="h-5 w-5 text-red-600" viewBox="0 0 20 20" fill="currentColor">
-                <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z" clipRule="evenodd" />
+                <path
+                  fillRule="evenodd"
+                  d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z"
+                  clipRule="evenodd"
+                />
               </svg>
             </div>
             <div className="flex-1">
@@ -118,7 +132,11 @@ export const DashboardSidebar = ({ activeUrl = "/" }: DashboardSidebarProps) => 
               className="flex-shrink-0 text-red-400 hover:text-red-600"
             >
               <svg className="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
-                <path fillRule="evenodd" d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z" clipRule="evenodd" />
+                <path
+                  fillRule="evenodd"
+                  d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z"
+                  clipRule="evenodd"
+                />
               </svg>
             </button>
           </div>

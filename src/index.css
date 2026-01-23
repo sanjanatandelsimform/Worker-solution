@@ -1,4 +1,6 @@
 @import "tailwindcss";
+@plugin "@tailwindcss/typography";
+@import "./typography.css";
 
 :root {
   font-family: Inter, system-ui, Avenir, Helvetica, Arial, sans-serif;
@@ -90,6 +92,9 @@
   --color-text-dashboard-card-title: rgba(205, 242, 255, 1);
   --color-text-card-subtitle: rgba(150, 150, 150, 1);
   --color-nav-menu-text: rgba(125, 137, 176, 1);
+  --color-text-400: rgba(4, 35, 60, 1);
+  --color-text-600: rgba(30, 24, 78, 1);
+  --color-text-purple-500: rgba(127, 86, 217, 1);
 
   /* ========== Light Mode - Background Colors ========== */
   --color-bg-primary: rgba(255, 255, 255, 1);
@@ -101,6 +106,10 @@
   --color-bg-card-avatar: rgba(209, 224, 255, 1);
   --color-bg-disabled: rgba(238, 238, 238, 1);
   --color-bg-gray-card: rgba(248, 248, 248, 1);
+  --color-bg-gray-25: rgba(253, 253, 253, 1);
+  --color-bg-gray-100: rgba(233, 234, 235, 1);
+  --color-bg-purple-50: rgba(252, 250, 255, 1);
+  --color-bg-purple-500: rgb(127, 86, 217, 1);
 
   /* ========== Light Mode - Foreground/Text Colors for Components ========== */
   --color-fg-disabled: rgba(172, 175, 181, 1);
@@ -119,6 +128,7 @@
   --color-border-brand-alt: rgba(127, 86, 217, 1);
   --color-border-error: rgba(240, 68, 56, 1);
   --color-border-error-subtle: rgba(253, 162, 155, 1);
+  --color-border-200:rgba(233, 234, 235, 1);
 
   /* ========== Component State Colors ========== */
   --color-disabled: rgba(240, 241, 243, 1);
@@ -131,6 +141,7 @@
   --color-xs-shadow: rgba(10, 13, 18, 0.18);
 
   /* ========== Spacing ========== */
+  --spacing: 4px; /* Base spacing unit for calculations */
   --spacing-xxs: 2px;
   --spacing-xs: 4px;
   --spacing-sm: 6px;
@@ -165,6 +176,39 @@
   --line-height-md: 24px;
   --line-height-lg: 28px;
   --line-height-display-xs: 32px;
+
+  /* ========== Typography - Text Styles (for prose/typography.css) ========== */
+  /* Text SM */
+  --text-sm: 0.875rem; /* 14px */
+  --text-sm--line-height: 1.25rem; /* 20px */
+  
+  /* Text MD */
+  --text-md: 1rem; /* 16px */
+  --text-md--line-height: 1.5rem; /* 24px */
+  
+  /* Text LG */
+  --text-lg: 1.125rem; /* 18px */
+  --text-lg--line-height: 1.75rem; /* 28px */
+  
+  /* Text XL */
+  --text-xl: 1.25rem; /* 20px */
+  --text-xl--line-height: 1.875rem; /* 30px */
+  
+  /* Text Display XS */
+  --text-display-xs: 1.5rem; /* 24px */
+  --text-display-xs--line-height: 2rem; /* 32px */
+  
+  /* Text Display SM */
+  --text-display-sm: 1.875rem; /* 30px */
+  --text-display-sm--line-height: 2.375rem; /* 38px */
+  
+  /* Text Display MD */
+  --text-display-md: 2.25rem; /* 36px */
+  --text-display-md--line-height: 2.75rem; /* 44px */
+
+    /* Text Display Lg */
+  --text-display-lg: 2.5rem; /* 40px */
+  --text-display-lg--line-height: 3rem; /* 48px */
 
   /* ========== Typography - Font Family ========== */
   --font-family-body: "Inter", sans-serif;
@@ -307,6 +351,19 @@
   color: var(--color-nav-menu-text);
 }
 
+.text-purple-500 {
+  color: var(--color-text-purple-500);
+}
+.text-400 {
+  color: var(--color-text-400);
+}
+.color-text-600 {
+  color: var(--color-text-600);
+}
+.color-base-black {
+  color: var(--color-base-black);
+}
+
 .font-display {
   font-family: var(--font-family-display);
 }
@@ -320,6 +377,25 @@
 }
 .bg-gray-card {
   background-color: var(--color-bg-gray-card);
+}
+.bg-gray-25 {
+  background-color: var(--color-bg-gray-25);
+}
+.bg-gray-100 {
+  background-color: var(--color-bg-gray-100);
+}
+.bg-purple-50 {
+  background-color: var(--color-bg-purple-50);
+}
+.bg-purple-500 {
+  background-color: var(--color-bg-purple-500);
+}
+
+.border-color-200 {
+  border-color: var(--color-border-200);
+}
+.h-110 {
+  height: 450px;
 }
 
 .background-pattern{

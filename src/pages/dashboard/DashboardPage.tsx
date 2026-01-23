@@ -2,6 +2,9 @@ import { DashboardSidebar } from "@/components/dashboard/DashboardSidebar";
 import emailIcon from "@/assets/mail-icon.svg";
 import checkIcon from "@/assets/file-check.svg";
 import DashboardCard from "./DashboardCard";
+import { Tabs } from "@/components/base/tabs/tabs";
+import RecommendationsPage from "../recommendations/RecommendationsPage";
+import BenchmarkPage from "../benchmark/BenchmarkPage";
 
 export const DashboardPage = () => {
   return (
@@ -44,6 +47,24 @@ export const DashboardPage = () => {
               buttonType="secondary"
               buttonIsDisabled={true}
             />
+          </div>
+          <div className="mt-10">
+            <Tabs>
+              <Tabs.List
+                size="md"
+                type="button-brand"
+                items={[
+                  { id: "recommendations", label: "Recommendations" },
+                  { id: "benchmark", label: "Benchmark" },
+                ]}
+              />
+              <Tabs.Panel id="recommendations" className="pt-12">
+                <RecommendationsPage />
+              </Tabs.Panel>
+              <Tabs.Panel id="benchmark" className="pt-12">
+                <BenchmarkPage />
+              </Tabs.Panel>
+            </Tabs>
           </div>
         </main>
       </div>

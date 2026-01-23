@@ -113,7 +113,7 @@ export const SignInForm = () => {
   return (
     <div className="flex min-h-screen items-center justify-center bg-secondary">
       <div className="flex w-2xl items-center justify-center rounded-xl border border-solid border-primary bg-primary py-28">
-        <div className="flex w-full max-w-90 flex-col items-center gap-8">
+        <div className="flex w-full max-w-md flex-col items-center gap-8">
           {/* Header */}
           <div className="flex w-full flex-col items-center gap-6">
             {/* Logo */}
@@ -209,12 +209,7 @@ export const SignInForm = () => {
                   />
                 </div>
 
-                <Button
-                  type="button"
-                  color="link-color"
-                  size="md"
-                  onClick={() => setIsChangePasswordModalOpen(true)}
-                >
+                <Button type="button" color="link-color" href="/forgot-password" size="md">
                   Forgot password
                 </Button>
               </div>

@@ -72,6 +72,11 @@ export const filledColors: Record<
     addonButton:
       "hover:bg-utility-orange-100 text-utility-orange-400 hover:text-utility-orange-500",
   },
+  cyan: {
+    root: "bg-utility-cyan-50 text-utility-cyan-700 ring-utility-cyan-200",
+    addon: "text-utility-cyan-500",
+    addonButton: "hover:bg-utility-cyan-100 text-utility-cyan-400 hover:text-utility-cyan-500",
+  },
 };
 
 export const addonOnlyColors = Object.fromEntries(

@@ -17,7 +17,8 @@ export type BadgeColors =
   | "indigo"
   | "purple"
   | "pink"
-  | "orange";
+  | "orange"
+  | "cyan";
 
 export type FlagTypes =
   | "AD"

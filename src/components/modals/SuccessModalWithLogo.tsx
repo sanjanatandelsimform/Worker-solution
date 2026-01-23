@@ -1,4 +1,10 @@
-import { Modal, ModalContent, ModalHeader, ModalFooter } from "@/components/base/modal/modal";
+import {
+  Modal,
+  ModalContent,
+  ModalHeader,
+  ModalFooter,
+  ModalTitle,
+} from "@/components/base/modal/modal";
 import { Button } from "@/components/base/buttons/button";
 import { X } from "@untitledui/icons";
 
@@ -34,7 +40,7 @@ export const SuccessModalWithLogo = ({
 }: SuccessModalWithLogoProps) => {
   return (
     <Modal isOpen={isOpen} onOpenChange={onClose} size={size}>
-      <ModalContent className="bg-primary rounded-lg">
+      <ModalContent className="bg-primary rounded-lg" aria-label={title || "Success notification"}>
         {/* Modal Header with Logo, Icon, and Close Button */}
         <ModalHeader className="relative flex flex-col items-center gap-6 border-0">
           {/* Logo */}
@@ -69,9 +75,9 @@ export const SuccessModalWithLogo = ({
             {(title || subtitle) && (
               <div className="flex w-full flex-col items-center gap-1 px-8 pt-0">
                 {title && (
-                  <p className="font-display text-center text-primary text-4xl font-medium leading-11">
+                  <ModalTitle className="font-display text-center text-primary text-4xl font-medium leading-11">
                     {title}
-                  </p>
+                  </ModalTitle>
                 )}
                 {subtitle && (
                   <p className="font-display text-center text-subtitle text-2xl font-normal leading-8 px-8">

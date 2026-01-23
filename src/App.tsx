@@ -6,6 +6,12 @@ import { RegisterPage } from "./pages/auth/RegisterPage";
 import { SignInPage } from "./pages/auth/SignInPage";
 import { DashboardPage } from "./pages/dashboard/DashboardPage";
 import { SettingsPage } from "./pages/settings/SettingsPage";
+// import { SuccessPage } from "./pages/auth/successPages/SuccessPage";
+import PrivacyPage from "./pages/termsPolicy/PrivacyPage";
+import TermsPage from "./pages/termsPolicy/TermsPage";
+import ForgotPasswordForm from "./components/auth/ForgotPasswordForm";
+import ResetPasswordForm from "./components/auth/ResetPasswordForm";
+// import DesignReference from "./pages/designReference/DesignReference";
 
 function App() {
   return (
@@ -26,6 +32,46 @@ function App() {
             element={
               <PublicRoute>
                 <SignInPage />
+              </PublicRoute>
+            }
+          />
+          {/* <Route
+            path="/success"
+            element={
+              <PublicRoute>
+                <SuccessPage />
+              </PublicRoute>
+            }
+          /> */}
+          <Route
+            path="/privacy-page"
+            element={
+              <PublicRoute>
+                <PrivacyPage />
+              </PublicRoute>
+            }
+          />
+          <Route
+            path="/terms-page"
+            element={
+              <PublicRoute>
+                <TermsPage />
+              </PublicRoute>
+            }
+          />
+          <Route
+            path="/forgot-password"
+            element={
+              <PublicRoute>
+                <ForgotPasswordForm />
+              </PublicRoute>
+            }
+          />
+          <Route
+            path="/reset-password"
+            element={
+              <PublicRoute>
+                <ResetPasswordForm />
               </PublicRoute>
             }
           />

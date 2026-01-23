@@ -102,7 +102,7 @@ export const InputBase = ({
           isFocusWithin && !isDisabled && "ring-2 ring-brand",
 
           // Disabled state styles
-          isDisabled && "cursor-not-allowed bg-disabled_subtle ring-disabled",
+          isDisabled && "cursor-not-allowed bg-disabled_subtle ring-gray-300",
           "group-disabled:cursor-not-allowed group-disabled:bg-disabled_subtle group-disabled:ring-disabled",
 
           // Invalid state styles
