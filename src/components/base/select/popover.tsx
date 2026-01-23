@@ -14,7 +14,7 @@ export const Popover = (props: PopoverProps) => {
       containerPadding={0}
       offset={4}
       {...props}
-      className={(state) =>
+      className={state =>
         cx(
           "max-h-64! w-(--trigger-width) origin-(--trigger-anchor-point) overflow-x-hidden overflow-y-auto rounded-lg bg-primary py-1 shadow-lg ring-1 ring-secondary_alt outline-hidden will-change-transform",
 
@@ -24,9 +24,7 @@ export const Popover = (props: PopoverProps) => {
             "duration-100 ease-in animate-out fade-out placement-right:slide-out-to-left-0.5 placement-top:slide-out-to-bottom-0.5 placement-bottom:slide-out-to-top-0.5",
           props.size === "md" && "max-h-80!",
 
-          typeof props.className === "function"
-            ? props.className(state)
-            : props.className,
+          typeof props.className === "function" ? props.className(state) : props.className
         )
       }
     />

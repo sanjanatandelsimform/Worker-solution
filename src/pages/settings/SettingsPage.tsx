@@ -11,15 +11,11 @@ import UpdateCompletedModal from "@/components/modals/UpdateCompletedModal";
 
 export const SettingsPage = () => {
   const [activeUrl] = useState("/settings");
-  const [isChangePasswordModalOpen, setIsChangePasswordModalOpen] =
-    useState(false);
+  const [isChangePasswordModalOpen, setIsChangePasswordModalOpen] = useState(false);
   const [isUpdateEmailModalOpen, setIsUpdateEmailModalOpen] = useState(false);
-  const [isRetakeAssessmentModalOpen, setIsRetakeAssessmentModalOpen] =
-    useState(false);
-  const [isAccountDeleteModalOpen, setIsAccountDeleteModalOpen] =
-    useState(false);
-  const [isUpdateCompletedModalOpen, setIsUpdateCompletedModalOpen] =
-    useState(false);
+  const [isRetakeAssessmentModalOpen, setIsRetakeAssessmentModalOpen] = useState(false);
+  const [isAccountDeleteModalOpen, setIsAccountDeleteModalOpen] = useState(false);
+  const [isUpdateCompletedModalOpen, setIsUpdateCompletedModalOpen] = useState(false);
 
   return (
     <div className="flex h-screen overflow-hidden bg-dashboard">
@@ -33,18 +29,15 @@ export const SettingsPage = () => {
           <div>
             <h2 className="text-4xl font-medium text-primary">Settings</h2>
             <p className="text-base text-black mt-4">
-              Here's an overview of your workforce, industry, and some
-              recommendations with partners that can add more value to your
-              benefits packages and employee support.
+              Here's an overview of your workforce, industry, and some recommendations with partners
+              that can add more value to your benefits packages and employee support.
             </p>
           </div>
           <div className="space-y-6 mt-6">
             <div className="bg-gray-card border border-gray-300 rounded-xl p-6">
               <div className="flex items-center justify-between gap-2">
                 <div className="flex flex-col">
-                  <h2 className="text-lg font-semibold text-black">
-                    Personal info
-                  </h2>
+                  <h2 className="text-lg font-semibold text-black">Personal info</h2>
                   <p className="text-sm text-gray-600">
                     Update your photo and personal details here.
                   </p>
@@ -54,10 +47,7 @@ export const SettingsPage = () => {
               <div className="bg-primary border border-primary rounded-xl py-8 px-6 mb-6">
                 <div className="flex mb-6">
                   <div className="w-1/3">
-                    <label
-                      htmlFor="firstName"
-                      className="text-black font-medium text-sm"
-                    >
+                    <label htmlFor="firstName" className="text-black font-medium text-sm">
                       Name <span>*</span>
                     </label>
                   </div>
@@ -82,10 +72,7 @@ export const SettingsPage = () => {
                 </div>
                 <div className="flex mb-6">
                   <div className="w-1/3">
-                    <label
-                      htmlFor="email"
-                      className="text-black font-medium text-sm"
-                    >
+                    <label htmlFor="email" className="text-black font-medium text-sm">
                       Email address <span>*</span>
                     </label>
                   </div>
@@ -100,20 +87,14 @@ export const SettingsPage = () => {
                       //value={"email"}
                       isDisabled={true}
                     />
-                    <Button
-                      color="link-color"
-                      onClick={() => setIsUpdateEmailModalOpen(true)}
-                    >
+                    <Button color="link-color" onClick={() => setIsUpdateEmailModalOpen(true)}>
                       Update email
                     </Button>
                   </div>
                 </div>
                 <div className="flex mb-6">
                   <div className="w-1/3">
-                    <label
-                      htmlFor="password"
-                      className="text-black font-medium text-sm"
-                    >
+                    <label htmlFor="password" className="text-black font-medium text-sm">
                       Password <span>*</span>
                     </label>
                   </div>
@@ -128,10 +109,7 @@ export const SettingsPage = () => {
                       value={"password"}
                       isDisabled={true}
                     />
-                    <Button
-                      color="link-color"
-                      onClick={() => setIsChangePasswordModalOpen(true)}
-                    >
+                    <Button color="link-color" onClick={() => setIsChangePasswordModalOpen(true)}>
                       Change password
                     </Button>
                   </div>
@@ -139,9 +117,7 @@ export const SettingsPage = () => {
               </div>
               <div className="flex items-center justify-between gap-2">
                 <div className="flex flex-col">
-                  <h2 className="text-lg font-semibold text-black">
-                    Account Management
-                  </h2>
+                  <h2 className="text-lg font-semibold text-black">Account Management</h2>
                   <p className="text-sm text-gray-600">
                     Update your photo and personal details here.
                   </p>
@@ -151,10 +127,7 @@ export const SettingsPage = () => {
               <div className="bg-primary border border-primary rounded-xl py-8 px-6 mb-6">
                 <div className="flex mb-6">
                   <div className="w-1/2 flex flex-col">
-                    <label
-                      htmlFor="firstName"
-                      className="text-black font-medium text-sm"
-                    >
+                    <label htmlFor="firstName" className="text-black font-medium text-sm">
                       Retake the assessment
                     </label>
                     <span className="text-gray-600 text-sm">
@@ -174,15 +147,10 @@ export const SettingsPage = () => {
                 </div>
                 <div className="flex mb-6">
                   <div className="w-1/2 flex flex-col">
-                    <label
-                      htmlFor="firstName"
-                      className="text-black font-medium text-sm"
-                    >
+                    <label htmlFor="firstName" className="text-black font-medium text-sm">
                       Delete account
                     </label>
-                    <span className="text-gray-600 text-sm">
-                      This cannot be undone
-                    </span>
+                    <span className="text-gray-600 text-sm">This cannot be undone</span>
                   </div>
                   <div className="w-1/2 flex  gap-4">
                     <Button

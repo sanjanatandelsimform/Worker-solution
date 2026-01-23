@@ -12,10 +12,7 @@ const DiscoverIcon = (props: SVGProps<SVGSVGElement>) => {
         className="stroke-border-secondary"
         strokeWidth="0.75"
       />
-      <path
-        d="M14 23L33 17.25V20C33 21.6569 31.6569 23 30 23H14Z"
-        fill="#FD6020"
-      />
+      <path d="M14 23L33 17.25V20C33 21.6569 31.6569 23 30 23H14Z" fill="#FD6020" />
       <path
         fillRule="evenodd"
         clipRule="evenodd"

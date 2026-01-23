@@ -31,9 +31,7 @@ type useResizeObserverOptionsType<T> = {
  * A hook that observes the size of an element and calls a callback function when the size changes.
  * @param options - The options for the hook.
  */
-export function useResizeObserver<T extends Element>(
-  options: useResizeObserverOptionsType<T>,
-) {
+export function useResizeObserver<T extends Element>(options: useResizeObserverOptionsType<T>) {
   const { ref, box, onResize } = options;
 
   useEffect(() => {
@@ -49,7 +47,7 @@ export function useResizeObserver<T extends Element>(
         window.removeEventListener("resize", onResize, false);
       };
     } else {
-      const resizeObserverInstance = new window.ResizeObserver((entries) => {
+      const resizeObserverInstance = new window.ResizeObserver(entries => {
         if (!entries.length) {
           return;
         }

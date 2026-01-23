@@ -78,21 +78,13 @@ export const InputBase = ({
 
   const sizes = sortCx({
     sm: {
-      root: cx(
-        "px-3 py-2",
-        hasTrailingIcon && "pr-9",
-        hasLeadingIcon && "pl-10",
-      ),
+      root: cx("px-3 py-2", hasTrailingIcon && "pr-9", hasLeadingIcon && "pl-10"),
       iconLeading: "left-3",
       iconTrailing: "right-3",
       shortcut: "pr-2.5",
     },
     md: {
-      root: cx(
-        "px-3.5 py-2.5",
-        hasTrailingIcon && "pr-9.5",
-        hasLeadingIcon && "pl-10.5",
-      ),
+      root: cx("px-3.5 py-2.5", hasTrailingIcon && "pr-9.5", hasLeadingIcon && "pl-10.5"),
       iconLeading: "left-3.5",
       iconTrailing: "right-3.5",
       shortcut: "pr-3",
@@ -119,11 +111,10 @@ export const InputBase = ({
 
           // Invalid state with focus-within styles
           isInvalid && isFocusWithin && "ring-2 ring-red-500",
-          isFocusWithin &&
-            "group-invalid:ring-2 group-invalid:ring-ring-red-500",
+          isFocusWithin && "group-invalid:ring-2 group-invalid:ring-ring-red-500",
 
           context?.wrapperClassName,
-          wrapperClassName,
+          wrapperClassName
         )
       }
     >
@@ -135,7 +126,7 @@ export const InputBase = ({
             isDisabled && "text-gray-300",
             sizes[inputSize].iconLeading,
             context?.iconClassName,
-            iconClassName,
+            iconClassName
           )}
         />
       )}
@@ -150,7 +141,7 @@ export const InputBase = ({
           isDisabled && "cursor-not-allowed text-disabled",
           sizes[inputSize].root,
           context?.inputClassName,
-          inputClassName,
+          inputClassName
         )}
       />
 
@@ -162,7 +153,7 @@ export const InputBase = ({
               "absolute cursor-pointer text-gray-400 transition duration-200 hover:text-gray-400 focus:text-gray-400",
               sizes[inputSize].iconTrailing,
               context?.tooltipClassName,
-              tooltipClassName,
+              tooltipClassName
             )}
           >
             <HelpCircle className="size-4" />
@@ -177,7 +168,7 @@ export const InputBase = ({
             "pointer-events-none absolute size-4 text-fg-error-secondary",
             sizes[inputSize].iconTrailing,
             context?.tooltipClassName,
-            tooltipClassName,
+            tooltipClassName
           )}
         />
       )}
@@ -187,13 +178,13 @@ export const InputBase = ({
         <div
           className={cx(
             "pointer-events-none absolute inset-y-0.5 right-0.5 z-10 flex items-center rounded-r-[inherit] bg-linear-to-r from-transparent to-bg-primary to-40% pl-8",
-            sizes[inputSize].shortcut,
+            sizes[inputSize].shortcut
           )}
         >
           <span
             className={cx(
               "pointer-events-none rounded px-1 py-px text-xs font-medium text-quaternary ring-1 ring-secondary select-none ring-inset",
-              isDisabled && "bg-transparent text-disabled",
+              isDisabled && "bg-transparent text-disabled"
             )}
             aria-hidden="true"
           >
@@ -220,11 +211,7 @@ interface TextFieldProps
     AriaTextFieldProps,
     Pick<
       InputBaseProps,
-      | "size"
-      | "wrapperClassName"
-      | "inputClassName"
-      | "iconClassName"
-      | "tooltipClassName"
+      "size" | "wrapperClassName" | "inputClassName" | "iconClassName" | "tooltipClassName"
     > {
   ref?: Ref<HTMLDivElement>;
 }
@@ -237,10 +224,10 @@ export const TextField = ({ className, ...props }: TextFieldProps) => {
       <AriaTextField
         {...props}
         data-input-wrapper
-        className={(state) =>
+        className={state =>
           cx(
             "group flex h-max w-full flex-col items-start justify-start gap-1.5",
-            typeof className === "function" ? className(state) : className,
+            typeof className === "function" ? className(state) : className
           )
         }
       />
@@ -274,19 +261,11 @@ export const Input = ({
   ...props
 }: InputProps) => {
   return (
-    <TextField
-      aria-label={!label ? placeholder : undefined}
-      {...props}
-      className={className}
-    >
+    <TextField aria-label={!label ? placeholder : undefined} {...props} className={className}>
       {({ isRequired, isInvalid }) => (
         <>
           {label && (
-            <Label
-              isRequired={
-                hideRequiredIndicator ? !hideRequiredIndicator : isRequired
-              }
-            >
+            <Label isRequired={hideRequiredIndicator ? !hideRequiredIndicator : isRequired}>
               {label}
             </Label>
           )}

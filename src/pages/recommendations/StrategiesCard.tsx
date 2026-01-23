@@ -11,9 +11,7 @@ export default function StrategiesCard({
   classess,
 }: Readonly<StrategiesCardProps>) {
   return (
-    <div
-      className={`bg-gray-card ring ring-gray-300 rounded-xl p-4 min-h-38 ${classess}`}
-    >
+    <div className={`bg-gray-card ring ring-gray-300 rounded-xl p-4 min-h-38 ${classess}`}>
       <h2 className="flex items-center text-xl text-cyan-500 font-bold gap-2">
         {titleIcon} {title}
       </h2>

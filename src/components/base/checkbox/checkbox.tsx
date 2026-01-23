@@ -30,7 +30,7 @@ export const CheckboxBase = ({
         (isSelected || isIndeterminate) && "bg-brand-solid ring-bg-brand-solid",
         isDisabled && "cursor-not-allowed bg-disabled_subtle ring-disabled",
         isFocusVisible && "outline-2 outline-offset-2 outline-focus-ring",
-        className,
+        className
       )}
     >
       <svg
@@ -41,7 +41,7 @@ export const CheckboxBase = ({
           "pointer-events-none absolute h-3 w-2.5 text-fg-white opacity-0 transition-inherit-all",
           size === "md" && "size-3.5",
           isIndeterminate && "opacity-100",
-          isDisabled && "text-fg-disabled_subtle",
+          isDisabled && "text-fg-disabled_subtle"
         )}
       >
         <path
@@ -61,7 +61,7 @@ export const CheckboxBase = ({
           "pointer-events-none absolute size-3 text-fg-white opacity-0 transition-inherit-all",
           size === "md" && "size-3.5",
           isSelected && !isIndeterminate && "opacity-100",
-          isDisabled && "text-fg-disabled_subtle",
+          isDisabled && "text-fg-disabled_subtle"
         )}
       >
         <path
@@ -109,12 +109,12 @@ export const Checkbox = ({
   return (
     <AriaCheckbox
       {...ariaCheckboxProps}
-      className={(state) =>
+      className={state =>
         cx(
           "flex items-start",
           state.isDisabled && "cursor-not-allowed",
           sizes[size].root,
-          typeof className === "function" ? className(state) : className,
+          typeof className === "function" ? className(state) : className
         )
       }
     >
@@ -129,26 +129,14 @@ export const Checkbox = ({
             className={label || hint ? "mt-0.5" : ""}
           />
           {(label || hint) && (
-            <div
-              className={cx(
-                "inline-flex flex-col items-start",
-                sizes[size].textWrapper,
-              )}
-            >
+            <div className={cx("inline-flex flex-col items-start", sizes[size].textWrapper)}>
               {label && (
-                <p
-                  className={cx(
-                    "text-secondary select-none",
-                    sizes[size].label,
-                  )}
-                >
-                  {label}
-                </p>
+                <p className={cx("text-secondary select-none", sizes[size].label)}>{label}</p>
               )}
               {hint && (
                 <span
                   className={cx("text-tertiary", sizes[size].hint)}
-                  onClick={(event) => event.stopPropagation()}
+                  onClick={event => event.stopPropagation()}
                 >
                   {hint}
                 </span>

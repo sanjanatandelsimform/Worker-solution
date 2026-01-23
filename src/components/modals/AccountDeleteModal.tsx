@@ -8,11 +8,7 @@ interface AccountDeleteModalProps {
   onContinue?: () => void;
 }
 
-export const AccountDeleteModal = ({
-  isOpen,
-  onClose,
-  onContinue,
-}: AccountDeleteModalProps) => {
+export const AccountDeleteModal = ({ isOpen, onClose, onContinue }: AccountDeleteModalProps) => {
   const handleContinue = () => {
     if (onContinue) {
       onContinue();

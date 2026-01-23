@@ -5,16 +5,20 @@ export interface AuthState {
   user: UserAccount | null;
   isAuthenticated: boolean;
   isLoading: boolean;
-  accessToken: string | null;
-  refreshToken: string | null;
+  tokens: {
+    accessToken: string | null;
+    refreshToken: string | null;
+  };
 }
 
 const initialState: AuthState = {
   user: null,
   isAuthenticated: false,
   isLoading: false,
-  accessToken: null,
-  refreshToken: null,
+  tokens: {
+    accessToken: null,
+    refreshToken: null,
+  },
 };
 
 const authSlice = createSlice({
@@ -25,23 +29,22 @@ const authSlice = createSlice({
       state,
       action: PayloadAction<{
         user: UserAccount;
-        tokens?: { accessToken: string; refreshToken: string };
-      }>,
+        tokens: { accessToken: string; refreshToken: string };
+      }>
     ) => {
       state.user = action.payload.user;
       state.isAuthenticated = true;
       state.isLoading = false;
-      if (action.payload.tokens) {
-        state.accessToken = action.payload.tokens.accessToken;
-        state.refreshToken = action.payload.tokens.refreshToken;
-      }
+      state.tokens = action.payload.tokens;
     },
-    clearUser: (state) => {
+    clearUser: state => {
       state.user = null;
       state.isAuthenticated = false;
       state.isLoading = false;
-      state.accessToken = null;
-      state.refreshToken = null;
+      state.tokens = {
+        accessToken: null,
+        refreshToken: null,
+      };
     },
     setLoading: (state, action: PayloadAction<boolean>) => {
       state.isLoading = action.payload;
@@ -51,16 +54,11 @@ const authSlice = createSlice({
         state.user = { ...state.user, ...action.payload };
       }
     },
-    setTokens: (
-      state,
-      action: PayloadAction<{ accessToken: string; refreshToken: string }>,
-    ) => {
-      state.accessToken = action.payload.accessToken;
-      state.refreshToken = action.payload.refreshToken;
+    setTokens: (state, action: PayloadAction<{ accessToken: string; refreshToken: string }>) => {
+      state.tokens = action.payload;
     },
   },
 });
 
-export const { setUser, clearUser, setLoading, updateUserProfile, setTokens } =
-  authSlice.actions;
+export const { setUser, clearUser, setLoading, updateUserProfile, setTokens } = authSlice.actions;
 export default authSlice.reducer;

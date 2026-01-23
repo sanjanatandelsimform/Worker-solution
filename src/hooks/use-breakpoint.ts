@@ -20,14 +20,13 @@ export const useBreakpoint = (size: "sm" | "md" | "lg" | "xl" | "2xl") => {
   const [matches, setMatches] = useState(() =>
     typeof window !== "undefined"
       ? window.matchMedia(`(min-width: ${screens[size]})`).matches
-      : true,
+      : true
   );
 
   useEffect(() => {
     const breakpoint = window.matchMedia(`(min-width: ${screens[size]})`);
 
-    const handleChange = (value: MediaQueryListEvent) =>
-      setMatches(value.matches);
+    const handleChange = (value: MediaQueryListEvent) => setMatches(value.matches);
 
     // Set initial value and listen for changes
     handleChange({ matches: breakpoint.matches } as MediaQueryListEvent);

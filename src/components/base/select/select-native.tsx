@@ -55,10 +55,10 @@ export const NativeSelect = ({
             "in-data-input-wrapper:in-data-leading:in-data-[input-size=md]:pr-4.5 in-data-input-wrapper:in-data-leading:in-data-[input-size=sm]:pr-4.5",
             // For "trailing" dropdown within `InputGroup`
             "in-data-input-wrapper:in-data-trailing:in-data-[input-size=md]:pr-8 in-data-input-wrapper:in-data-trailing:in-data-[input-size=sm]:pr-7.5",
-            selectClassName,
+            selectClassName
           )}
         >
-          {options.map((opt) => (
+          {options.map(opt => (
             <option key={opt.value} value={opt.value} disabled={opt.disabled}>
               {opt.label}
             </option>

@@ -119,36 +119,19 @@ export const Avatar = ({
     }
 
     if (initials) {
-      return (
-        <span className={cx("text-quaternary", styles[size].initials)}>
-          {initials}
-        </span>
-      );
+      return <span className={cx("text-quaternary", styles[size].initials)}>{initials}</span>;
     }
 
     if (PlaceholderIcon) {
-      return (
-        <PlaceholderIcon
-          className={cx("text-fg-quaternary", styles[size].icon)}
-        />
-      );
+      return <PlaceholderIcon className={cx("text-fg-quaternary", styles[size].icon)} />;
     }
 
-    return (
-      placeholder || (
-        <User01 className={cx("text-fg-quaternary", styles[size].icon)} />
-      )
-    );
+    return placeholder || <User01 className={cx("text-fg-quaternary", styles[size].icon)} />;
   };
 
   const renderBadgeContent = () => {
     if (status) {
-      return (
-        <AvatarOnlineIndicator
-          status={status}
-          size={size === "xxs" ? "xs" : size}
-        />
-      );
+      return <AvatarOnlineIndicator status={status} size={size === "xxs" ? "xs" : size} />;
     }
 
     if (verified) {
@@ -157,7 +140,7 @@ export const Avatar = ({
           size={size === "xxs" ? "xs" : size}
           className={cx(
             "absolute right-0 bottom-0",
-            (size === "xxs" || size === "xs") && "-right-px -bottom-px",
+            (size === "xxs" || size === "xs") && "-right-px -bottom-px"
           )}
         />
       );
@@ -176,7 +159,7 @@ export const Avatar = ({
           "group-outline-focus-ring group-focus-visible:outline-2 group-focus-visible:outline-offset-2",
         contrastBorder && "outline outline-avatar-contrast-border",
         styles[size].root,
-        className,
+        className
       )}
     >
       {renderMainContent()}

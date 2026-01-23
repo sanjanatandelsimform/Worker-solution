@@ -6,10 +6,7 @@ interface ProgressBarProps {
   max?: number;
   size: "xxs" | "xs" | "sm" | "md" | "lg";
   label?: string;
-  valueFormatter?: (
-    value: number,
-    valueInPercentage: number,
-  ) => string | number;
+  valueFormatter?: (value: number, valueInPercentage: number) => string | number;
 }
 
 const sizes = sortCx({
@@ -83,12 +80,7 @@ export const ProgressBarCircle = ({
         aria-valuemax={max}
         className="relative flex w-max items-center justify-center"
       >
-        <svg
-          className="-rotate-90"
-          width={width}
-          height={height}
-          viewBox={viewBox}
-        >
+        <svg className="-rotate-90" width={width} height={height} viewBox={viewBox}>
           {/* Background circle */}
           <circle
             className="stroke-bg-quaternary"
@@ -120,16 +112,12 @@ export const ProgressBarCircle = ({
           <div className="absolute text-center">
             <div className={labelClass}>{label}</div>
             <div className={valueClass}>
-              {valueFormatter
-                ? valueFormatter(value, percentage)
-                : `${percentage}%`}
+              {valueFormatter ? valueFormatter(value, percentage) : `${percentage}%`}
             </div>
           </div>
         ) : (
           <span className={clx(textPosition, valueClass)}>
-            {valueFormatter
-              ? valueFormatter(value, percentage)
-              : `${percentage}%`}
+            {valueFormatter ? valueFormatter(value, percentage) : `${percentage}%`}
           </span>
         )}
       </div>
@@ -151,13 +139,7 @@ export const ProgressBarHalfCircle = ({
 
   const sizeConfig = sizes[size];
 
-  const {
-    strokeWidth,
-    radius,
-    valueClass,
-    labelClass,
-    halfCircleTextPosition,
-  } = sizeConfig;
+  const { strokeWidth, radius, valueClass, labelClass, halfCircleTextPosition } = sizeConfig;
 
   const width = 2 * (radius + strokeWidth / 2);
   const height = radius + strokeWidth;
@@ -210,16 +192,12 @@ export const ProgressBarHalfCircle = ({
           <div className={halfCircleTextPosition}>
             <div className={labelClass}>{label}</div>
             <div className={valueClass}>
-              {valueFormatter
-                ? valueFormatter(value, percentage)
-                : `${percentage}%`}
+              {valueFormatter ? valueFormatter(value, percentage) : `${percentage}%`}
             </div>
           </div>
         ) : (
           <span className={clx(halfCircleTextPosition, valueClass)}>
-            {valueFormatter
-              ? valueFormatter(value, percentage)
-              : `${percentage}%`}
+            {valueFormatter ? valueFormatter(value, percentage) : `${percentage}%`}
           </span>
         )}
       </div>

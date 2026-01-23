@@ -14,11 +14,7 @@ interface InProgressModalProps {
   onGoToDashboard?: () => void;
 }
 
-export const InProgressModal = ({
-  isOpen,
-  onClose,
-  onGoToDashboard,
-}: InProgressModalProps) => {
+export const InProgressModal = ({ isOpen, onClose, onGoToDashboard }: InProgressModalProps) => {
   const handleGoToDashboard = () => {
     if (onGoToDashboard) {
       onGoToDashboard();
@@ -27,8 +23,7 @@ export const InProgressModal = ({
   };
 
   // Loading icon SVG from Figma
-  const loadingIcon =
-    "http://localhost:3845/assets/0e6fb58232a90ae859fbd35b8641df1dea24e1f2.svg";
+  const loadingIcon = "http://localhost:3845/assets/0e6fb58232a90ae859fbd35b8641df1dea24e1f2.svg";
 
   return (
     <Modal isOpen={isOpen} onOpenChange={onClose} size="sm">

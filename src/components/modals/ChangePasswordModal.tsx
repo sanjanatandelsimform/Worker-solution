@@ -1,6 +1,6 @@
 "use no memo";
 import { useState } from "react";
-import { useForm } from "react-hook-form";
+import { useForm, useWatch } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
 import {
@@ -29,11 +29,11 @@ const changePasswordSchema = z
       .min(6, "Password must be at least 6 characters")
       .regex(
         /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]/,
-        "Must be min 6 characters, include number, upper case, lower case and symbol.",
+        "Must be min 6 characters, include number, upper case, lower case and symbol."
       ),
     confirmPassword: z.string().min(1, "Confirm password is required"),
   })
-  .refine((data) => data.newPassword === data.confirmPassword, {
+  .refine(data => data.newPassword === data.confirmPassword, {
     message: "Passwords do not match",
     path: ["confirmPassword"],
   });
@@ -45,10 +45,7 @@ interface ChangePasswordModalProps {
   onClose: () => void;
 }
 
-export const ChangePasswordModal = ({
-  isOpen,
-  onClose,
-}: ChangePasswordModalProps) => {
+export const ChangePasswordModal = ({ isOpen, onClose }: ChangePasswordModalProps) => {
   const [showCurrentPassword, setShowCurrentPassword] = useState(false);
   const [showNewPassword, setShowNewPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
@@ -59,7 +56,7 @@ export const ChangePasswordModal = ({
   const {
     handleSubmit,
     formState: { errors, isSubmitting },
-    watch,
+    control,
     setValue,
     trigger,
     reset,
@@ -73,9 +70,9 @@ export const ChangePasswordModal = ({
     },
   });
 
-  const currentPassword = watch("currentPassword");
-  const newPassword = watch("newPassword");
-  const confirmPassword = watch("confirmPassword");
+  const currentPassword = useWatch({ control, name: "currentPassword" });
+  const newPassword = useWatch({ control, name: "newPassword" });
+  const confirmPassword = useWatch({ control, name: "confirmPassword" });
 
   const onSubmit = async (data: ChangePasswordFormData) => {
     try {
@@ -123,8 +120,8 @@ export const ChangePasswordModal = ({
               <div className="flex flex-col  gap-1">
                 <ModalTitle>Change your Password</ModalTitle>
                 <ModalDescription>
-                  To update your password, enter your current password and
-                  choose a new one that meets the security requirements.
+                  To update your password, enter your current password and choose a new one that
+                  meets the security requirements.
                 </ModalDescription>
               </div>
               <div className="absolute -right-2 -top-2">
@@ -154,7 +151,7 @@ export const ChangePasswordModal = ({
                     value={currentPassword}
                     className="relative"
                     //onFocus={() => setIsInProgressModalOpen(true)}
-                    onChange={(value) => {
+                    onChange={value => {
                       setValue("currentPassword", value);
                       trigger("currentPassword");
                     }}
@@ -164,9 +161,7 @@ export const ChangePasswordModal = ({
                     size="sm"
                     type="button"
                     onClick={() => setShowCurrentPassword(!showCurrentPassword)}
-                    aria-label={
-                      showCurrentPassword ? "Hide password" : "Show password"
-                    }
+                    aria-label={showCurrentPassword ? "Hide password" : "Show password"}
                     className="absolute right-0 top-7"
                   >
                     {showCurrentPassword ? (
@@ -191,7 +186,7 @@ export const ChangePasswordModal = ({
                     value={newPassword}
                     className="relative"
                     //onFocus={() => setIsInProgressModalOpen(true)}
-                    onChange={(value) => {
+                    onChange={value => {
                       setValue("newPassword", value);
                       trigger("newPassword");
                     }}
@@ -201,9 +196,7 @@ export const ChangePasswordModal = ({
                     size="sm"
                     type="button"
                     onClick={() => setShowNewPassword(!showNewPassword)}
-                    aria-label={
-                      showNewPassword ? "Hide password" : "Show password"
-                    }
+                    aria-label={showNewPassword ? "Hide password" : "Show password"}
                     className="absolute right-0 top-7"
                   >
                     {showNewPassword ? (
@@ -228,7 +221,7 @@ export const ChangePasswordModal = ({
                     value={confirmPassword}
                     className="relative"
                     //onFocus={() => setIsInProgressModalOpen(true)}
-                    onChange={(value) => {
+                    onChange={value => {
                       setValue("confirmPassword", value);
                       trigger("confirmPassword");
                     }}
@@ -238,9 +231,7 @@ export const ChangePasswordModal = ({
                     size="sm"
                     type="button"
                     onClick={() => setShowConfirmPassword(!showConfirmPassword)}
-                    aria-label={
-                      showConfirmPassword ? "Hide password" : "Show password"
-                    }
+                    aria-label={showConfirmPassword ? "Hide password" : "Show password"}
                     className="absolute right-0 top-7"
                   >
                     {showConfirmPassword ? (
@@ -304,3 +295,5 @@ export const ChangePasswordModal = ({
     </>
   );
 };
+
+// React Hook Form's `useForm()` API returns a `watch()` function which cannot be memoized safely. Ensure proper usage to avoid stale UI.

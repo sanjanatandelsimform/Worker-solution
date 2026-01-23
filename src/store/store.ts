@@ -2,10 +2,13 @@ import { configureStore } from "@reduxjs/toolkit";
 import authReducer from "./slices/authSlice";
 import type { AuthState } from "./slices/authSlice";
 
+// Use consistent localStorage key
+const STORAGE_KEY = "userDetail";
+
 // Load persisted state
 const loadState = (): { auth: AuthState } | undefined => {
   try {
-    const serializedState = localStorage.getItem("reduxState");
+    const serializedState = localStorage.getItem(STORAGE_KEY);
     if (serializedState === null) {
       return undefined;
     }
@@ -23,7 +26,7 @@ export const store = configureStore({
     auth: authReducer,
   },
   preloadedState: persistedState,
-  middleware: (getDefaultMiddleware) =>
+  middleware: getDefaultMiddleware =>
     getDefaultMiddleware({
       serializableCheck: {
         ignoredActions: ["auth/setUser"],
@@ -38,7 +41,7 @@ export type AppDispatch = typeof store.dispatch;
 const saveState = (state: RootState) => {
   try {
     const serializedState = JSON.stringify(state);
-    localStorage.setItem("reduxState", serializedState);
+    localStorage.setItem(STORAGE_KEY, serializedState);
   } catch (err) {
     console.error("Error saving state to localStorage:", err);
   }

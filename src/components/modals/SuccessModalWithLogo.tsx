@@ -40,10 +40,7 @@ export const SuccessModalWithLogo = ({
 }: SuccessModalWithLogoProps) => {
   return (
     <Modal isOpen={isOpen} onOpenChange={onClose} size={size}>
-      <ModalContent
-        className="bg-primary rounded-lg"
-        aria-label={title || "Success notification"}
-      >
+      <ModalContent className="bg-primary rounded-lg" aria-label={title || "Success notification"}>
         {/* Modal Header with Logo, Icon, and Close Button */}
         <ModalHeader className="relative flex flex-col items-center gap-6 border-0">
           {/* Logo */}
@@ -71,11 +68,7 @@ export const SuccessModalWithLogo = ({
             )}
             {/* Large Icon/Image */}
             <div className="relative size-44 shrink-0">
-              <img
-                alt={title || "Modal icon"}
-                className="block w-full"
-                src={messageImg}
-              />
+              <img alt={title || "Modal icon"} className="block w-full" src={messageImg} />
             </div>
 
             {/* Text Container */}

@@ -1,5 +1,6 @@
+// Ensure that this file only exports components to comply with the react-refresh/only-export-components rule.
 import { useState } from "react";
-import { useForm } from "react-hook-form";
+import { useForm, useWatch } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useNavigate } from "react-router-dom";
 import { Button } from "@/components/base/buttons/button";
@@ -11,18 +12,12 @@ import { NativeSelect } from "../base/select/select-native";
 import { Select } from "../base/select/select";
 import { signup } from "@/services/api/authApi";
 import type { RegistrationData, Industry } from "@/types/auth";
-import {
-  registrationSchema,
-  type RegistrationFormData,
-} from "@/services/validation/authSchemas";
+import { registrationSchema, type RegistrationFormData } from "@/services/validation/authSchemas";
 import { INDUSTRIES, COUNTRY_CODES } from "@/constants/formOptions";
 import { SuccessModalWithLogo } from "../modals";
 import checkmarkIcon from "@/assets/checkmark-icon.svg";
-import { useAppDispatch } from "@/store/hooks";
-import { setUser } from "@/store/slices/authSlice";
 
 export const RegistrationForm = () => {
-  const dispatch = useAppDispatch();
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
   const [phoneNumber, setPhoneNumber] = useState("");
@@ -34,7 +29,7 @@ export const RegistrationForm = () => {
   const {
     handleSubmit,
     formState: { errors, isSubmitting },
-    watch,
+    control,
     setValue,
     trigger,
   } = useForm<RegistrationFormData>({
@@ -54,15 +49,33 @@ export const RegistrationForm = () => {
       agreeToTerms: false,
     },
   });
-  const firstName = watch("firstName");
-  const lastName = watch("lastName");
-  const legalBusinessName = watch("legalBusinessName");
-  const industry = watch("industry");
-  const zipCode = watch("zipCode");
-  const businessEmail = watch("businessEmail");
-  const password = watch("password");
-  const confirmPassword = watch("confirmPassword");
-  const agreeToTerms = watch("agreeToTerms");
+
+  const watchedFields = useWatch({
+    control,
+    name: [
+      "firstName",
+      "lastName",
+      "legalBusinessName",
+      "industry",
+      "zipCode",
+      "businessEmail",
+      "password",
+      "confirmPassword",
+      "agreeToTerms",
+    ],
+  });
+
+  const [
+    firstName,
+    lastName,
+    legalBusinessName,
+    industry,
+    zipCode,
+    businessEmail,
+    password,
+    confirmPassword,
+    agreeToTerms,
+  ] = watchedFields;
 
   const onSubmit = async (data: RegistrationFormData) => {
     try {
@@ -71,75 +84,27 @@ export const RegistrationForm = () => {
         firstName: data.firstName,
         lastName: data.lastName,
         businessName: data.legalBusinessName,
+        industry: data.industry as Industry,
+        zipCode: parseInt(data.zipCode, 10),
         businessEmail: data.businessEmail,
         businessPhone: data.businessPhone,
-        industry: data.industry as Industry,
-        zipCode: data.zipCode,
         password: data.password,
         confirmPassword: data.confirmPassword,
         acceptTerms: data.agreeToTerms,
       };
 
-      // Call signup API
-      const response = {
-        status: true,
-        message: "Account created successfully!",
-        data: {
-          user: {
-            id: "a369e2cd-808e-4ce0-884a-d16fac18e7bf",
-            firstName: "test",
-            lastName: "test",
-            businessEmail: "raj@gmail.com",
-            businessName: "Simform",
-            industry: "fgggfgfg",
-            zipCode: 395107,
-            businessPhone: "1234567890",
-            createdAt: "2026-01-19T10:37:48.047Z",
-            updatedAt: "2026-01-19T10:37:48.047Z",
-          },
-        },
-      };
-      const response1 = await signup(registrationData);
-      console.log("response", response1);
-      if (response.status !== true) {
-        throw new Error(response.message || "Registration failed");
-      } else {
-        // Store user data in Redux
-        dispatch(
-          setUser({
-            user: {
-              id: response.data.user.id,
-              email: response.data.user.businessEmail,
-              firstName: response.data.user.firstName,
-              lastName: response.data.user.lastName,
-              businessName: response.data.user.businessName,
-              phoneNumber: response.data.user.businessPhone,
-              industry: response.data.user.industry as Industry,
-              zipCode: response.data.user.zipCode.toString(),
-              authMethod: "email",
-              emailVerified: false,
-              profileComplete: true,
-              createdAt: response.data.user.createdAt,
-              updatedAt: response.data.user.updatedAt,
-            },
-          }),
-        );
-
-        setIsOpen(true);
-      }
+      await signup(registrationData);
+      setIsOpen(true);
       setValue("password", "");
       setValue("confirmPassword", "");
-
-      // navigate("/email-verification");
     } catch (error) {
       console.error("Registration error:", error);
       setSubmitError(
-        error instanceof Error
-          ? error.message
-          : "An unexpected error occurred. Please try again.",
+        error instanceof Error ? error.message : "An unexpected error occurred. Please try again."
       );
     }
   };
+
   const handleGetStarted = () => {
     navigate("/sign-in");
   };
@@ -151,28 +116,20 @@ export const RegistrationForm = () => {
         <div className="flex w-full flex-col items-center gap-6">
           {/* Logo */}
           <div className="flex items-center justify-center rounded-xl bg-tertiary px-2 py-1">
-            <h1 className="text-5xl font-bold leading-15 text-primary">
-              BeneStat
-            </h1>
+            <h1 className="text-5xl font-bold leading-15 text-primary">BeneStat</h1>
           </div>
 
           {/* Header */}
           <div className="flex w-full flex-col items-start gap-2">
-            <h2 className="w-full text-4xl font-semibold leading-9.5 text-primary">
-              Sign up
-            </h2>
+            <h2 className="w-full text-4xl font-semibold leading-9.5 text-primary">Sign up</h2>
             <p className="w-full text-medium font-normal leading-6 text-tertiary">
-              We're excited that you've decided to try our Worker Solutions®
-              platform. Before we begin we'll need to collect some information
-              about your business.
+              We're excited that you've decided to try our Worker Solutions® platform. Before we
+              begin we'll need to collect some information about your business.
             </p>
           </div>
 
           {/* Form */}
-          <form
-            onSubmit={handleSubmit(onSubmit)}
-            className="w-full cursor-pointer"
-          >
+          <form onSubmit={handleSubmit(onSubmit)} className="w-full cursor-pointer">
             {/* Fields - Grid Layout */}
             <div className="grid w-full grid-cols-2 gap-x-4 gap-y-4">
               {/* Row 1 - First Name & Last Name */}
@@ -188,7 +145,7 @@ export const RegistrationForm = () => {
                   value={firstName}
                   maxLength={20}
                   className={errors.firstName ? "error-ring" : ""}
-                  onChange={(value) => {
+                  onChange={value => {
                     setValue("firstName", value);
                     trigger("firstName");
                   }}
@@ -207,7 +164,7 @@ export const RegistrationForm = () => {
                   isInvalid={!!errors.lastName}
                   maxLength={20}
                   className={errors.lastName ? "error-ring" : ""}
-                  onChange={(value) => {
+                  onChange={value => {
                     setValue("lastName", value);
                     trigger("lastName");
                   }}
@@ -227,7 +184,7 @@ export const RegistrationForm = () => {
                   value={legalBusinessName}
                   maxLength={50}
                   className={errors.legalBusinessName ? "error-ring" : ""}
-                  onChange={(value) => {
+                  onChange={value => {
                     setValue("legalBusinessName", value);
                     trigger("legalBusinessName");
                   }}
@@ -242,14 +199,14 @@ export const RegistrationForm = () => {
                 placeholder="Select Option"
                 items={INDUSTRIES}
                 selectedKey={industry}
-                onSelectionChange={(key) => {
+                onSelectionChange={key => {
                   setValue("industry", key as string);
                   trigger("industry");
                 }}
                 isInvalid={!!errors.industry}
                 hint={errors.industry?.message}
               >
-                {(item) => (
+                {item => (
                   <Select.Item
                     id={item.id}
                     supportingText={item.supportingText}
@@ -278,7 +235,7 @@ export const RegistrationForm = () => {
                   inputMode="numeric"
                   pattern="[0-9]*"
                   className={errors.zipCode ? "error-ring" : ""}
-                  onChange={(value) => {
+                  onChange={value => {
                     // Only allow numeric input
                     const numericValue = value.replace(/\D/g, "");
                     setValue("zipCode", numericValue);
@@ -300,7 +257,7 @@ export const RegistrationForm = () => {
                   isInvalid={!!errors.businessEmail}
                   value={businessEmail}
                   className={errors.businessEmail ? "error-ring" : ""}
-                  onChange={(value) => {
+                  onChange={value => {
                     setValue("businessEmail", value);
                     trigger("businessEmail");
                   }}
@@ -315,7 +272,7 @@ export const RegistrationForm = () => {
                 leadingAddon={
                   <NativeSelect
                     value={countryCode}
-                    onChange={(e) => setCountryCode(e.target.value)}
+                    onChange={e => setCountryCode(e.target.value)}
                     options={COUNTRY_CODES}
                   />
                 }
@@ -326,15 +283,10 @@ export const RegistrationForm = () => {
                   size="sm"
                   value={phoneNumber}
                   maxLength={10}
-                  onChange={(
-                    e: React.ChangeEvent<HTMLInputElement> | string,
-                  ) => {
-                    const inputValue =
-                      typeof e === "string" ? e : e?.target?.value || "";
+                  onChange={(e: React.ChangeEvent<HTMLInputElement> | string) => {
+                    const inputValue = typeof e === "string" ? e : e?.target?.value || "";
                     // Only allow numeric input and limit to 10 digits
-                    const numericValue = inputValue
-                      .replace(/\D/g, "")
-                      .slice(0, 10);
+                    const numericValue = inputValue.replace(/\D/g, "").slice(0, 10);
                     setPhoneNumber(numericValue);
                     setValue("businessPhone", numericValue);
                     trigger("businessPhone");
@@ -356,7 +308,7 @@ export const RegistrationForm = () => {
                   value={password}
                   maxLength={8}
                   className="relative"
-                  onChange={(value) => {
+                  onChange={value => {
                     setValue("password", value);
                     trigger("password");
                   }}
@@ -390,7 +342,7 @@ export const RegistrationForm = () => {
                   value={confirmPassword}
                   maxLength={8}
                   className="relative"
-                  onChange={(value) => {
+                  onChange={value => {
                     setValue("confirmPassword", value);
                     trigger("confirmPassword");
                   }}
@@ -400,9 +352,7 @@ export const RegistrationForm = () => {
                   size="sm"
                   type="button"
                   onClick={() => setShowConfirmPassword(!showConfirmPassword)}
-                  aria-label={
-                    showConfirmPassword ? "Hide password" : "Show password"
-                  }
+                  aria-label={showConfirmPassword ? "Hide password" : "Show password"}
                   className="absolute right-0 top-7"
                 >
                   {showConfirmPassword ? (
@@ -420,7 +370,7 @@ export const RegistrationForm = () => {
                 <Checkbox
                   size="sm"
                   isSelected={agreeToTerms}
-                  onChange={(selected) => {
+                  onChange={selected => {
                     setValue("agreeToTerms", selected);
                     trigger("agreeToTerms");
                   }}
@@ -428,17 +378,12 @@ export const RegistrationForm = () => {
                 />
                 <p className="text-sm font-normal leading-5 text-primary">
                   I've read and agree to the Worker Solutions®{" "}
-                  <span className="cursor-pointer text-cyan-500">Terms</span>{" "}
-                  and{" "}
-                  <span className="cursor-pointer text-cyan-500">
-                    Privacy Policies
-                  </span>
+                  <span className="cursor-pointer text-cyan-500">Terms</span> and{" "}
+                  <span className="cursor-pointer text-cyan-500">Privacy Policies</span>
                 </p>
               </div>
               {errors.agreeToTerms && (
-                <p className="mt-1 text-sm text-error-primary">
-                  {errors.agreeToTerms.message}
-                </p>
+                <p className="mt-1 text-sm text-error-primary">{errors.agreeToTerms.message}</p>
               )}
             </div>
 

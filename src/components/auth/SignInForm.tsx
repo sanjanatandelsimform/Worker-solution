@@ -8,7 +8,7 @@ import { InputGroup } from "@/components/base/input/input-group";
 import { Checkbox } from "@/components/base/checkbox/checkbox";
 import { GoogleSSOButton } from "./GoogleSSOButton";
 import { Eye, EyeOff } from "@untitledui/icons";
-import type { Industry, SignInData } from "@/types/auth";
+import type { SignInData, UserAccount } from "@/types/auth";
 import { signin } from "@/services/api/authApi";
 import { ChangePasswordModal } from "../modals/ChangePasswordModal";
 import { SuccessModalWithLogo } from "../modals/SuccessModalWithLogo";
@@ -16,19 +16,20 @@ import checkmarkIcon from "@/assets/checkmark-icon.svg";
 import { useAppDispatch } from "@/store/hooks";
 import { setUser } from "@/store/slices/authSlice";
 
-import {
-  signInSchema,
-  type SignInFormData,
-} from "@/services/validation/authSchemas";
+import { signInSchema, type SignInFormData } from "@/services/validation/authSchemas";
 
 export const SignInForm = () => {
   const dispatch = useAppDispatch();
   const [showPassword, setShowPassword] = useState(false);
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
-  const [isChangePasswordModalOpen, setIsChangePasswordModalOpen] =
-    useState(false);
+  const [isChangePasswordModalOpen, setIsChangePasswordModalOpen] = useState(false);
   const [isOpen, setIsOpen] = useState(false);
   const navigate = useNavigate();
+
+  const [pendingAuth, setPendingAuth] = useState<{
+    user: UserAccount;
+    tokens: { accessToken: string; refreshToken: string };
+  } | null>(null);
 
   const {
     handleSubmit,
@@ -52,88 +53,63 @@ export const SignInForm = () => {
 
   const onSubmit = async (data: SignInFormData) => {
     try {
+      setErrorMessage(null); // Clear previous errors
+
       const signInData: SignInData = {
         businessEmail: data.email,
         password: data.password,
         rememberMe: data.rememberMe || false,
       };
-      const response = {
-        status: true,
-        message: "loginSuccess",
-        data: {
-          user: {
-            id: "cc010f29-60d8-4df1-8015-981112195de9",
-            firstName: "test",
-            lastName: "test",
-            businessName: "Simform",
-            industry: "fgggfgfg",
-            zipCode: 395107,
-            businessEmail: "yash@gmail.com",
-            businessPhone: "1234567890",
-            googleId: null,
-            emailVerify: false,
-            resetToken: null,
-            resetTokenExpiry: null,
-            refreshToken:
-              "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiJjYzAxMGYyOS02MGQ4LTRkZjEtODAxNS05ODExMTIxOTVkZTkiLCJlbWFpbCI6Inlhc2hAZ21haWwuY29tIiwicmVtZW1iZXIiOnRydWUsImlhdCI6MTc2ODU2MDg2OSwiZXhwIjoxNzcxMTUyODY5fQ.B2p7GipW76hRO4hgb1RYF9NDicSHiYmJ2JMu1CVzNdY",
-            count: 1,
-            createdAt: "2026-01-16T10:25:02.051Z",
-            updatedAt: "2026-01-16T10:54:47.859Z",
-          },
-          tokens: {
-            accessToken:
-              "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiJjYzAxMGYyOS02MGQ4LTRkZjEtODAxNS05ODExMTIxOTVkZTkiLCJlbWFpbCI6Inlhc2hAZ21haWwuY29tIiwiY291bnQiOjEsImlhdCI6MTc2ODgxOTEzNCwiZXhwIjoxNzY4ODI2MzM0fQ.lha52AgLNaaQFPVRhli5niNav5picuuM-Iu8IPIFmyc",
-            refreshToken:
-              "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiJjYzAxMGYyOS02MGQ4LTRkZjEtODAxNS05ODExMTIxOTVkZTkiLCJlbWFpbCI6Inlhc2hAZ21haWwuY29tIiwicmVtZW1iZXIiOnRydWUsImlhdCI6MTc2ODgxOTEzNCwiZXhwIjoxNzcxNDExMTM0fQ.Roe_QtpdfYPks9Gs8afjib3UdNZSpaDujdNYSMEYqZs",
-          },
-        },
-      };
-      const response1 = await signin(signInData);
-      console.log("response", response1);
-      // Since the API is not deployed yet, this is used directly for testing purposes.
-      if (response.status !== true) {
-        throw new Error(response.message || "Sign in failed");
-      } else {
-        console.log("Sign in successful:", response, response.data.user.id);
-        // Store user data in Redux
-        dispatch(
-          setUser({
-            user: {
-              id: response.data.user.id,
-              email: response.data.user.businessEmail,
-              firstName: response.data.user.firstName,
-              lastName: response.data.user.lastName,
-              businessName: response.data.user.businessName,
-              phoneNumber: response.data.user.businessPhone,
-              industry: response.data.user.industry as Industry,
-              zipCode: response.data.user.zipCode.toString(),
-              authMethod: response.data.user.googleId ? "google" : "email",
-              emailVerified: response.data.user.emailVerify,
-              profileComplete: true,
-              createdAt: response.data.user.createdAt,
-              updatedAt: response.data.user.updatedAt,
-            },
-            tokens: response.data.tokens,
-          }),
-        );
 
-        setValue("email", "");
-        setValue("password", "");
-        setErrorMessage(null); // Clear any previous error messages
-        setIsOpen(true);
+      const response = await signin(signInData);
+
+      if (response.status === "error" || !response.data) {
+        throw new Error(response.message || "Incorrect email or password");
       }
+
+      const { user, tokens } = response.data;
+      setPendingAuth({ user, tokens });
+
+      setValue("email", "");
+      setValue("password", "");
+      setErrorMessage(null);
+      setIsOpen(true);
     } catch (error) {
       console.error("Sign in error:", error);
       setErrorMessage(
-        error instanceof Error
-          ? error.message
-          : "An unexpected error occurred. Please try again.",
+        error instanceof Error ? error.message : "An unexpected error occurred. Please try again."
       );
     }
   };
+
   const handleGetStarted = () => {
+    if (!pendingAuth) return;
+    dispatch(
+      setUser({
+        user: {
+          id: pendingAuth.user.id,
+          email: pendingAuth.user.businessEmail || pendingAuth.user.email,
+          firstName: pendingAuth.user.firstName,
+          lastName: pendingAuth.user.lastName,
+          businessName: pendingAuth.user.businessName,
+          phoneNumber: pendingAuth.user.businessPhone || pendingAuth.user.phoneNumber,
+          industry: pendingAuth.user.industry,
+          zipCode: pendingAuth.user.zipCode.toString(),
+          authMethod: pendingAuth.user.googleId ? "google" : "email",
+          emailVerified: pendingAuth.user.emailVerified,
+          profileComplete: true,
+          createdAt: pendingAuth.user.createdAt,
+          updatedAt: pendingAuth.user.updatedAt,
+        },
+        tokens: pendingAuth.tokens,
+      })
+    );
+
+    setPendingAuth(null);
+    setIsOpen(false);
     navigate("/dashboard");
   };
+
   return (
     <div className="flex min-h-screen items-center justify-center bg-secondary">
       <div className="flex w-2xl items-center justify-center rounded-xl border border-solid border-primary bg-primary py-28">
@@ -142,9 +118,7 @@ export const SignInForm = () => {
           <div className="flex w-full flex-col items-center gap-6">
             {/* Logo */}
             <div className="flex items-center justify-center rounded-xl bg-tertiary px-2 py-1">
-              <h1 className="text-5xl font-bold leading-15 text-primary">
-                BeneStat
-              </h1>
+              <h1 className="text-5xl font-bold leading-15 text-primary">BeneStat</h1>
             </div>
 
             {/* Title and Description */}
@@ -176,7 +150,7 @@ export const SignInForm = () => {
                   isInvalid={!!errors.email}
                   className={errors.email ? "error-ring" : ""}
                   value={email}
-                  onChange={(value) => {
+                  onChange={value => {
                     setValue("email", value);
                     trigger("email");
                   }}
@@ -196,7 +170,7 @@ export const SignInForm = () => {
                   isInvalid={!!errors.password}
                   className={errors.password ? "error-ring" : ""}
                   value={password}
-                  onChange={(value) => {
+                  onChange={value => {
                     setValue("password", value);
                     trigger("password");
                   }}
@@ -219,7 +193,9 @@ export const SignInForm = () => {
 
               {/* Error Message Display */}
               {errorMessage && (
-                <div className="text-red-500 text-sm">{errorMessage}</div>
+                <div className="rounded-lg bg-error-50 border border-error-300 px-4 py-3">
+                  <p className="text-error-600 text-sm font-medium">{errorMessage}</p>
+                </div>
               )}
 
               {/* Remember Me & Forgot Password */}
@@ -228,17 +204,12 @@ export const SignInForm = () => {
                   <Checkbox
                     size="sm"
                     isSelected={rememberMe}
-                    onChange={(selected) => setValue("rememberMe", selected)}
+                    onChange={selected => setValue("rememberMe", selected)}
                     label="Remember for 30 days"
                   />
                 </div>
 
-                <Button
-                  type="button"
-                  color="link-color"
-                  href="/forgot-password"
-                  size="md"
-                >
+                <Button type="button" color="link-color" href="/forgot-password" size="md">
                   Forgot password
                 </Button>
               </div>
@@ -266,9 +237,7 @@ export const SignInForm = () => {
 
           {/* Sign up link */}
           <div className="flex w-full items-baseline justify-center gap-1">
-            <p className="text-sm font-normal leading-5 text-tertiary">
-              Don't have an account?
-            </p>
+            <p className="text-sm font-normal leading-5 text-tertiary">Don't have an account?</p>
             <Button href="/register" color="link-color" size="md">
               Sign up
             </Button>
@@ -286,7 +255,7 @@ export const SignInForm = () => {
         onClose={() => setIsOpen(false)}
         size="xl"
         messageImg={checkmarkIcon}
-        title="Your email has been verified!"
+        title="Sign In Successful!"
         subtitle="Welcome aboard! Start your success journey with Worker Solutions®"
         button={{
           text: "Let's Get Started",

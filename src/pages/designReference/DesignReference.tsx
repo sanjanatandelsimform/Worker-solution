@@ -5,19 +5,9 @@ import { Input, InputBase } from "@/components/base/input/input";
 import { InputGroup } from "@/components/base/input/input-group";
 import { Checkbox } from "@/components/base/checkbox/checkbox";
 import { NativeSelect } from "@/components/base/select/select-native";
-import {
-  Mail01,
-  Eye,
-  EyeOff,
-  Lightbulb02,
-  ChevronLeft,
-  ChevronRight,
-} from "@untitledui/icons";
+import { Mail01, Eye, EyeOff, Lightbulb02, ChevronLeft, ChevronRight } from "@untitledui/icons";
 import { Tabs } from "@/components/base/tabs/tabs";
-import {
-  RadioGroup,
-  RadioButton,
-} from "@/components/base/radio-buttons/radio-buttons";
+import { RadioGroup, RadioButton } from "@/components/base/radio-buttons/radio-buttons";
 import { Select } from "@/components/base/select/select";
 import { ChangePasswordModal } from "@/components/modals/ChangePasswordModal";
 import { ChangePasswordSuccessModal } from "@/components/modals/ChangePasswordSuccessModal";
@@ -55,14 +45,9 @@ function DesignReference() {
   // const [mobileNumber, setMobileNumber] = useState("");
   // const [workNumber, setWorkNumber] = useState("");
   // const [homeNumber, setHomeNumber] = useState("");
-  const [isChangePasswordModalOpen, setIsChangePasswordModalOpen] =
-    useState(false);
-  const [
-    isChangePasswordSuccessModalOpen,
-    setIsChangePasswordSuccessModalOpen,
-  ] = useState(false);
-  const [isChangePasswordFailedModalOpen, setIsChangePasswordFailedModalOpen] =
-    useState(false);
+  const [isChangePasswordModalOpen, setIsChangePasswordModalOpen] = useState(false);
+  const [isChangePasswordSuccessModalOpen, setIsChangePasswordSuccessModalOpen] = useState(false);
+  const [isChangePasswordFailedModalOpen, setIsChangePasswordFailedModalOpen] = useState(false);
   const [isInProgressModalOpen, setIsInProgressModalOpen] = useState(false);
 
   const items = [
@@ -109,16 +94,14 @@ function DesignReference() {
                     size="sm"
                     type={showPassword ? "text" : "password"}
                     value={password}
-                    onChange={(value) => setPassword(value)}
+                    onChange={value => setPassword(value)}
                     className="relative"
                   />
                   <Button
                     color="tertiary"
                     size="sm"
                     onClick={() => setShowPassword(!showPassword)}
-                    aria-label={
-                      showPassword ? "Hide password" : "Show password"
-                    }
+                    aria-label={showPassword ? "Hide password" : "Show password"}
                     className="absolute right-0 top-0"
                   >
                     {showPassword ? (
@@ -137,16 +120,14 @@ function DesignReference() {
                     size="md"
                     type={showPassword ? "text" : "password"}
                     value={password}
-                    onChange={(value) => setPassword(value)}
+                    onChange={value => setPassword(value)}
                     className="relative"
                   />
                   <Button
                     color="tertiary"
                     size="sm"
                     onClick={() => setShowPassword(!showPassword)}
-                    aria-label={
-                      showPassword ? "Hide password" : "Show password"
-                    }
+                    aria-label={showPassword ? "Hide password" : "Show password"}
                     className="absolute right-0 top-0.5"
                   >
                     {showPassword ? (
@@ -186,7 +167,7 @@ function DesignReference() {
                   leadingAddon={
                     <NativeSelect
                       value={countryCode}
-                      onChange={(e) => setCountryCode(e.target.value)}
+                      onChange={e => setCountryCode(e.target.value)}
                       options={[
                         { label: "US +1", value: "US" },
                         { label: "UK +44", value: "UK" },
@@ -217,7 +198,7 @@ function DesignReference() {
                   leadingAddon={
                     <NativeSelect
                       value={countryCode}
-                      onChange={(e) => setCountryCode(e.target.value)}
+                      onChange={e => setCountryCode(e.target.value)}
                       options={[
                         { label: "US +1", value: "US" },
                         { label: "UK +44", value: "UK" },
@@ -252,7 +233,7 @@ function DesignReference() {
                   placeholder="Select team member"
                   items={items}
                 >
-                  {(item) => (
+                  {item => (
                     <Select.Item
                       id={item.id}
                       supportingText={item.supportingText}
@@ -276,7 +257,7 @@ function DesignReference() {
                   placeholder="Select team member"
                   items={items}
                 >
-                  {(item) => (
+                  {item => (
                     <Select.Item
                       id={item.id}
                       supportingText={item.supportingText}
@@ -400,9 +381,7 @@ function DesignReference() {
 
         {/* Demo Section for Untitled UI Social Buttons */}
         <div className="mt-8 space-y-6">
-          <h2 className="text-2xl font-bold">
-            Untitled UI Social Button Component
-          </h2>
+          <h2 className="text-2xl font-bold">Untitled UI Social Button Component</h2>
 
           <div className="space-y-4">
             <div className="space-y-3">
@@ -446,25 +425,13 @@ function DesignReference() {
                 ]}
               />
               <Tabs.Panel id="personal" className="pt-4">
-                <Input
-                  label="Personal Phone"
-                  placeholder="(555) 000-0000"
-                  type="tel"
-                />
+                <Input label="Personal Phone" placeholder="(555) 000-0000" type="tel" />
               </Tabs.Panel>
               <Tabs.Panel id="business" className="pt-4">
-                <Input
-                  label="Business Phone"
-                  placeholder="(555) 000-0000"
-                  type="tel"
-                />
+                <Input label="Business Phone" placeholder="(555) 000-0000" type="tel" />
               </Tabs.Panel>
               <Tabs.Panel id="other" className="pt-4">
-                <Input
-                  label="Other Phone"
-                  placeholder="(555) 000-0000"
-                  type="tel"
-                />
+                <Input label="Other Phone" placeholder="(555) 000-0000" type="tel" />
               </Tabs.Panel>
             </Tabs>
           </div>
@@ -472,20 +439,13 @@ function DesignReference() {
 
         {/* Demo Section for Change Password Modal */}
         <div className="mt-8 space-y-6">
-          <h2 className="text-2xl font-bold">
-            Change Password Modal Component
-          </h2>
+          <h2 className="text-2xl font-bold">Change Password Modal Component</h2>
           <div className="space-y-4">
             <div className="space-y-3">
               <p className="text-sm text-tertiary">
-                Click the button below to open the Change Password modal with
-                form validation.
+                Click the button below to open the Change Password modal with form validation.
               </p>
-              <Button
-                color="primary"
-                size="md"
-                onClick={() => setIsChangePasswordModalOpen(true)}
-              >
+              <Button color="primary" size="md" onClick={() => setIsChangePasswordModalOpen(true)}>
                 Open Change Password Modal
               </Button>
             </div>
@@ -500,13 +460,11 @@ function DesignReference() {
 
         {/* Demo Section for Change Password Success Modal */}
         <div className="mt-8 space-y-6">
-          <h2 className="text-2xl font-bold">
-            Change Password Success Modal Component
-          </h2>
+          <h2 className="text-2xl font-bold">Change Password Success Modal Component</h2>
           <div className="space-y-4">
             <p className="text-secondary">
-              Click the button below to open the Change Password Success modal
-              displaying a success message.
+              Click the button below to open the Change Password Success modal displaying a success
+              message.
             </p>
             <div>
               <Button
@@ -529,13 +487,11 @@ function DesignReference() {
 
         {/* Demo Section for Change Password Failed Modal */}
         <div className="mt-8 space-y-6">
-          <h2 className="text-2xl font-bold">
-            Change Password Failed Modal Component
-          </h2>
+          <h2 className="text-2xl font-bold">Change Password Failed Modal Component</h2>
           <div className="space-y-4">
             <p className="text-secondary">
-              Click the button below to open the Change Password Failed modal
-              displaying an error/warning message.
+              Click the button below to open the Change Password Failed modal displaying an
+              error/warning message.
             </p>
             <div>
               <Button
@@ -561,15 +517,11 @@ function DesignReference() {
           <h2 className="text-2xl font-bold">In Progress Modal Component</h2>
           <div className="space-y-4">
             <p className="text-secondary">
-              Click the button below to open the In Progress modal showing a
-              loading state with disabled button.
+              Click the button below to open the In Progress modal showing a loading state with
+              disabled button.
             </p>
             <div>
-              <Button
-                color="primary"
-                size="md"
-                onClick={() => setIsInProgressModalOpen(true)}
-              >
+              <Button color="primary" size="md" onClick={() => setIsInProgressModalOpen(true)}>
                 Open In Progress Modal
               </Button>
             </div>
@@ -587,8 +539,7 @@ function DesignReference() {
         <div className="mt-8 space-y-6">
           <h2 className="text-2xl font-bold">Did You Know Carousel</h2>
           <p className="text-secondary">
-            Educational tip carousel with navigation controls and pagination
-            dots.
+            Educational tip carousel with navigation controls and pagination dots.
           </p>
 
           {/* Did You Know Carousel */}
@@ -602,7 +553,7 @@ function DesignReference() {
               <div className="space-y-6">
                 {/* Carousel Content - Only this slides */}
                 <Carousel.Content>
-                  {didYouKnowSlides.map((slide) => (
+                  {didYouKnowSlides.map(slide => (
                     <Carousel.Item key={slide.id}>
                       <div
                         className="border border-gray-200 rounded-xl p-4"
@@ -611,10 +562,7 @@ function DesignReference() {
                         <div className="flex flex-col gap-2">
                           {/* Header with Icon and Title */}
                           <div className="flex items-center gap-2">
-                            <Lightbulb02
-                              className="size-6"
-                              style={{ color: "#1E184E" }}
-                            />
+                            <Lightbulb02 className="size-6" style={{ color: "#1E184E" }} />
                             <h3
                               className="text-lg font-medium leading-7"
                               style={{ color: "#1E184E" }}
@@ -658,9 +606,7 @@ function DesignReference() {
                           <div
                             className="size-2 rounded transition-colors cursor-pointer"
                             style={{
-                              backgroundColor: isSelected
-                                ? "#6941C6"
-                                : "#E9EAEB",
+                              backgroundColor: isSelected ? "#6941C6" : "#E9EAEB",
                             }}
                           />
                         )}
@@ -686,46 +632,41 @@ function DesignReference() {
 
         {/* Demo Section for Typography */}
         <div className="mt-8 space-y-6">
-          <h2 className="text-2xl font-bold">
-            Untitled UI Typography Component
-          </h2>
+          <h2 className="text-2xl font-bold">Untitled UI Typography Component</h2>
           <p className="text-secondary">
-            Typography styles with proper formatting for long-form content like
-            articles or documentation.
+            Typography styles with proper formatting for long-form content like articles or
+            documentation.
           </p>
 
           {/* Typography Demo */}
           <div className="prose max-w-none">
             <h1>Heading level 1</h1>
             <p>
-              Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec
-              ullamcorper mattis lorem non. Ultrices praesent amet ipsum justo
-              massa. Eu dolor aliquet risus gravida nunc at feugiat consequat
-              purus. Non massa enim vitae duis mattis. Vel in ultricies vel
-              fringilla.
+              Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec ullamcorper mattis
+              lorem non. Ultrices praesent amet ipsum justo massa. Eu dolor aliquet risus gravida
+              nunc at feugiat consequat purus. Non massa enim vitae duis mattis. Vel in ultricies
+              vel fringilla.
             </p>
 
             <h2>Heading level 2</h2>
             <p>
-              Mi tincidunt elit, id quisque ligula ac diam, amet. Vel etiam
-              suspendisse morbi eleifend faucibus eget vestibulum felis. Dictum
-              quis montes, sit sit. Tellus aliquam enim urna, etiam. Mauris
-              posuere vulputate arcu amet, vitae nisi, tellus tincidunt. At
+              Mi tincidunt elit, id quisque ligula ac diam, amet. Vel etiam suspendisse morbi
+              eleifend faucibus eget vestibulum felis. Dictum quis montes, sit sit. Tellus aliquam
+              enim urna, etiam. Mauris posuere vulputate arcu amet, vitae nisi, tellus tincidunt. At
               feugiat sapien varius id.
             </p>
 
             <h3>Heading level 3</h3>
             <p>
-              Elit nisi in eleifend sed nisi. Pulvinar at orci, proin imperdiet
-              commodo consectetur convallis risus. Sed condimentum enim
-              dignissim adipiscing faucibus consequat, urna.
+              Elit nisi in eleifend sed nisi. Pulvinar at orci, proin imperdiet commodo consectetur
+              convallis risus. Sed condimentum enim dignissim adipiscing faucibus consequat, urna.
             </p>
 
             <h4>Heading level 4</h4>
             <p>
-              Mi tincidunt elit, id quisque ligula ac diam, amet. Vel etiam
-              suspendisse morbi eleifend faucibus eget vestibulum felis. Dictum
-              quis montes, sit sit. Tellus aliquam enim urna, etiam.
+              Mi tincidunt elit, id quisque ligula ac diam, amet. Vel etiam suspendisse morbi
+              eleifend faucibus eget vestibulum felis. Dictum quis montes, sit sit. Tellus aliquam
+              enim urna, etiam.
             </p>
 
             <h3>Lists</h3>
@@ -750,47 +691,41 @@ function DesignReference() {
             <h3>Blockquote</h3>
             <blockquote>
               <p>
-                "In a world older and more complete than ours they move finished
-                and complete, gifted with extensions of the senses we have lost
-                or never attained, living by voices we shall never hear."
+                "In a world older and more complete than ours they move finished and complete,
+                gifted with extensions of the senses we have lost or never attained, living by
+                voices we shall never hear."
               </p>
             </blockquote>
 
             <h3>Inline Code</h3>
             <p>
               You can use inline code like <code>const example = true</code> or{" "}
-              <code>function hello()</code> within your paragraphs. This is
-              useful for technical documentation where you need to reference{" "}
-              <code>variables</code> or <code>methods</code> in your text.
+              <code>function hello()</code> within your paragraphs. This is useful for technical
+              documentation where you need to reference <code>variables</code> or{" "}
+              <code>methods</code> in your text.
             </p>
 
             <h3>Links</h3>
             <p>
               This is a paragraph with a{" "}
-              <a
-                href="https://untitledui.com"
-                target="_blank"
-                rel="noopener noreferrer"
-              >
+              <a href="https://untitledui.com" target="_blank" rel="noopener noreferrer">
                 clickable link
               </a>{" "}
-              inside. Links are styled with proper underline and spacing for
-              better readability.
+              inside. Links are styled with proper underline and spacing for better readability.
             </p>
 
             <hr />
 
             <h3>Lead Text</h3>
             <p className="lead">
-              This is a lead paragraph with larger text. Tristique odio senectus
-              nam posuere ornare leo metus, ultricies. Blandit duis ultricies
-              vulputate morbi feugiat cras placerat elit.
+              This is a lead paragraph with larger text. Tristique odio senectus nam posuere ornare
+              leo metus, ultricies. Blandit duis ultricies vulputate morbi feugiat cras placerat
+              elit.
             </p>
 
             <p>
-              Regular paragraph text follows the lead text. Ipsum sit mattis
-              nulla quam nulla. Gravida id gravida ac enim mauris id. Non
-              pellentesque congue eget consectetur turpis.
+              Regular paragraph text follows the lead text. Ipsum sit mattis nulla quam nulla.
+              Gravida id gravida ac enim mauris id. Non pellentesque congue eget consectetur turpis.
             </p>
           </div>
 
@@ -806,39 +741,33 @@ function DesignReference() {
                 <div className="prose prose-centered-quote max-w-none">
                   <blockquote>
                     <p>
-                      "In a world older and more complete than ours they move
-                      finished and complete, gifted with extensions of the
-                      senses we have lost or never attained."
+                      "In a world older and more complete than ours they move finished and complete,
+                      gifted with extensions of the senses we have lost or never attained."
                     </p>
                   </blockquote>
                 </div>
               </div>
 
               <div>
-                <h4 className="text-lg font-semibold mb-2">
-                  Minimal Quote (prose-minimal-quote)
-                </h4>
+                <h4 className="text-lg font-semibold mb-2">Minimal Quote (prose-minimal-quote)</h4>
                 <div className="prose prose-minimal-quote max-w-none">
                   <blockquote>
                     <p>
-                      "In a world older and more complete than ours they move
-                      finished and complete, gifted with extensions of the
-                      senses we have lost or never attained."
+                      "In a world older and more complete than ours they move finished and complete,
+                      gifted with extensions of the senses we have lost or never attained."
                     </p>
                   </blockquote>
                 </div>
               </div>
 
               <div>
-                <h4 className="text-lg font-semibold mb-2">
-                  Large Typography (md:prose-lg)
-                </h4>
+                <h4 className="text-lg font-semibold mb-2">Large Typography (md:prose-lg)</h4>
                 <div className="prose md:prose-lg max-w-none">
                   <h2>Larger Typography on Medium Screens</h2>
                   <p>
-                    This typography scales up on medium screens and above (768px
-                    and wider). The text becomes larger and more spacious,
-                    making it perfect for hero sections or featured content.
+                    This typography scales up on medium screens and above (768px and wider). The
+                    text becomes larger and more spacious, making it perfect for hero sections or
+                    featured content.
                   </p>
                 </div>
               </div>

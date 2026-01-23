@@ -31,26 +31,19 @@ export default function RecommendationsPage() {
         <Badge type="pill-color" color="gray" size="lg">
           Recommendation
         </Badge>
-        <h2 className="mt-6 text-4xl text-600 font-medium">
-          Core Benefits Enhancement
-        </h2>
+        <h2 className="mt-6 text-4xl text-600 font-medium">Core Benefits Enhancement</h2>
         <div className="flex mt-2 gap-6">
           <div className="prose w-1/2">
+            <p>Your comprehensive plan to enhance worker financial health and retirement.</p>
             <p>
-              Your comprehensive plan to enhance worker financial health and
-              retirement.
-            </p>
-            <p>
-              Here are some impactful ways to start uplifting your workforce
-              with proven strategies, consider strengthening core benefits by
-              implementing new policies that increase access and participation.
+              Here are some impactful ways to start uplifting your workforce with proven strategies,
+              consider strengthening core benefits by implementing new policies that increase access
+              and participation.
             </p>
             <img src={workforceImg} alt="Workforce hero" />
           </div>
           <div className="w-1/2">
-            <h3 className="text-2xl text-600 font-medium mb-5">
-              Proven strategies
-            </h3>
+            <h3 className="text-2xl text-600 font-medium mb-5">Proven strategies</h3>
             <div className="mt-4 space-y-4">
               <StrategiesCard
                 title="1. Auto enrollment"
@@ -80,8 +73,8 @@ export default function RecommendationsPage() {
           <div className="prose w-1/2">
             <h1 className="text-600 font-medium">Core Benefits Enhancement</h1>
             <p>
-              Here are some top benefit solutions that address your company
-              goals and employee needs based on the information provided.
+              Here are some top benefit solutions that address your company goals and employee needs
+              based on the information provided.
             </p>
           </div>
           <div className="w-1/2">
@@ -94,12 +87,10 @@ export default function RecommendationsPage() {
                 />
               </div>
               <div className="w-2/3 p-4">
-                <h4 className="text-base font-medium mb-2 color-text-600">
-                  Did you know?
-                </h4>
+                <h4 className="text-base font-medium mb-2 color-text-600">Did you know?</h4>
                 <p className="text-base color-text-600">
-                  The cost of replacing an individual employee can range from
-                  one-half to two times the employee's annual salary.
+                  The cost of replacing an individual employee can range from one-half to two times
+                  the employee's annual salary.
                 </p>
               </div>
             </div>
@@ -152,12 +143,11 @@ export default function RecommendationsPage() {
 
       <div className="w-full">
         <p className="text-xs color-base-black">
-          This product provides informational insights and recommendations based
-          on the data you share and industry benchmarks. It does not provide
-          legal, financial, tax, or benefits advice, and recommendations are not
-          guarantees of outcomes or results. Actual results may vary, and you
-          are responsible for evaluating and implementing any recommendations
-          based on your organization’s specific circumstances.{" "}
+          This product provides informational insights and recommendations based on the data you
+          share and industry benchmarks. It does not provide legal, financial, tax, or benefits
+          advice, and recommendations are not guarantees of outcomes or results. Actual results may
+          vary, and you are responsible for evaluating and implementing any recommendations based on
+          your organization’s specific circumstances.{" "}
           <Link to="#" className="text-cyan-500 underline">
             Terms & Conditions
           </Link>

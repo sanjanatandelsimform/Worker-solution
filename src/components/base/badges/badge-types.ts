@@ -264,9 +264,7 @@ export type FlagTypes =
   | "ZM"
   | "ZW";
 
-export type ExtractColorKeys<T> = T extends { styles: infer C }
-  ? keyof C
-  : never;
+export type ExtractColorKeys<T> = T extends { styles: infer C } ? keyof C : never;
 export type ExtractBadgeKeys<T> = keyof T;
 export type BadgeTypeToColorMap<T> = {
   [K in ExtractBadgeKeys<T>]: ExtractColorKeys<T[K]>;

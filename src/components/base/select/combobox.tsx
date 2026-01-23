@@ -1,9 +1,4 @@
-import type {
-  FocusEventHandler,
-  PointerEventHandler,
-  RefAttributes,
-  RefObject,
-} from "react";
+import type { FocusEventHandler, PointerEventHandler, RefAttributes, RefObject } from "react";
 import { useCallback, useContext, useRef, useState } from "react";
 import { SearchLg as SearchIcon } from "@untitledui/icons";
 import type {
@@ -75,7 +70,7 @@ const ComboBoxValue = ({
           "relative flex w-full items-center gap-2 rounded-lg bg-primary shadow-xs ring-1 ring-primary outline-hidden transition-shadow duration-100 ease-linear ring-inset",
           isDisabled && "cursor-not-allowed bg-disabled_subtle",
           isFocusWithin && "ring-2 ring-brand",
-          sizes[size].root,
+          sizes[size].root
         )
       }
     >
@@ -90,19 +85,13 @@ const ComboBoxValue = ({
                 aria-hidden="true"
               >
                 <p
-                  className={cx(
-                    "text-md font-medium text-primary",
-                    isDisabled && "text-disabled",
-                  )}
+                  className={cx("text-md font-medium text-primary", isDisabled && "text-disabled")}
                 >
                   {first}
                 </p>
                 {last && (
                   <p
-                    className={cx(
-                      "-ml-0.75 text-md text-tertiary",
-                      isDisabled && "text-disabled",
-                    )}
+                    className={cx("-ml-0.75 text-md text-tertiary", isDisabled && "text-disabled")}
                   >
                     {last}
                   </p>
@@ -122,13 +111,13 @@ const ComboBoxValue = ({
                 "absolute inset-y-0.5 right-0.5 z-10 flex items-center rounded-r-[inherit] bg-linear-to-r from-transparent to-bg-primary to-40% pl-8",
                 isDisabled && "to-bg-disabled_subtle",
                 sizes[size].shortcut,
-                shortcutClassName,
+                shortcutClassName
               )}
             >
               <span
                 className={cx(
                   "pointer-events-none rounded px-1 py-px text-xs font-medium text-quaternary ring-1 ring-secondary select-none ring-inset",
-                  isDisabled && "bg-transparent text-disabled",
+                  isDisabled && "bg-transparent text-disabled"
                 )}
                 aria-hidden="true"
               >
@@ -172,7 +161,7 @@ export const ComboBox = ({
   return (
     <SelectContext.Provider value={{ size }}>
       <AriaComboBox menuTrigger="focus" {...otherProps}>
-        {(state) => (
+        {state => (
           <div className="flex flex-col gap-1.5">
             {otherProps.label && (
               <Label isRequired={state.isRequired} tooltip={otherProps.tooltip}>
@@ -203,9 +192,7 @@ export const ComboBox = ({
               </AriaListBox>
             </Popover>
 
-            {otherProps.hint && (
-              <HintText isInvalid={state.isInvalid}>{otherProps.hint}</HintText>
-            )}
+            {otherProps.hint && <HintText isInvalid={state.isInvalid}>{otherProps.hint}</HintText>}
           </div>
         )}
       </AriaComboBox>

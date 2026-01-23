@@ -6,74 +6,62 @@ export default function PrivacyPage() {
         <div className="flex w-full flex-col items-center p-6 ">
           {/* Logo */}
           <div className="flex items-center justify-center rounded-xl bg-tertiary px-2 py-1 mb-6">
-            <h1 className="text-5xl font-bold leading-15 text-primary">
-              BeneStat
-            </h1>
+            <h1 className="text-5xl font-bold leading-15 text-primary">BeneStat</h1>
           </div>
           <div className="flex w-full flex-col items-start gap-6">
             <div className="prose w-full">
               <h2 className="text-black">Privacy Policy</h2>
-              <p className="text-card-subtitle text-lg">
-                Last updated: [Month Day, Year]
-              </p>
+              <p className="text-card-subtitle text-lg">Last updated: [Month Day, Year]</p>
             </div>
             <div className="w-full h-110 overflow-y-scroll">
               <div className="prose max-w-none">
                 <p className="text-sm text-black">1. Acceptance of Terms</p>
                 <p className="text-sm text-black">
-                  Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed
-                  do eiusmod tempor incididunt ut labore et dolore magna aliqua.
-                  By accessing or using this service, you agree to be bound by
-                  these Terms and Conditions.
+                  Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor
+                  incididunt ut labore et dolore magna aliqua. By accessing or using this service,
+                  you agree to be bound by these Terms and Conditions.
                 </p>
                 <p className="text-sm text-black">2. Acceptance of Terms</p>
                 <p className="text-sm text-black">
-                  Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed
-                  do eiusmod tempor incididunt ut labore et dolore magna aliqua.
-                  By accessing or using this service, you agree to be bound by
-                  these Terms and Conditions.
+                  Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor
+                  incididunt ut labore et dolore magna aliqua. By accessing or using this service,
+                  you agree to be bound by these Terms and Conditions.
                 </p>
                 <p className="text-sm text-black">3. Acceptance of Terms</p>
                 <p className="text-sm text-black">
-                  Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed
-                  do eiusmod tempor incididunt ut labore et dolore magna aliqua.
-                  By accessing or using this service, you agree to be bound by
-                  these Terms and Conditions.
+                  Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor
+                  incididunt ut labore et dolore magna aliqua. By accessing or using this service,
+                  you agree to be bound by these Terms and Conditions.
                 </p>
                 <p className="text-sm text-black">4. Acceptance of Terms</p>
                 <p className="text-sm text-black">
-                  Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed
-                  do eiusmod tempor incididunt ut labore et dolore magna aliqua.
-                  By accessing or using this service, you agree to be bound by
-                  these Terms and Conditions.
+                  Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor
+                  incididunt ut labore et dolore magna aliqua. By accessing or using this service,
+                  you agree to be bound by these Terms and Conditions.
                 </p>
                 <p className="text-sm text-black">5. Acceptance of Terms</p>
                 <p className="text-sm text-black">
-                  Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed
-                  do eiusmod tempor incididunt ut labore et dolore magna aliqua.
-                  By accessing or using this service, you agree to be bound by
-                  these Terms and Conditions.
+                  Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor
+                  incididunt ut labore et dolore magna aliqua. By accessing or using this service,
+                  you agree to be bound by these Terms and Conditions.
                 </p>
                 <p className="text-sm text-black">6. Acceptance of Terms</p>
                 <p className="text-sm text-black">
-                  Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed
-                  do eiusmod tempor incididunt ut labore et dolore magna aliqua.
-                  By accessing or using this service, you agree to be bound by
-                  these Terms and Conditions.
+                  Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor
+                  incididunt ut labore et dolore magna aliqua. By accessing or using this service,
+                  you agree to be bound by these Terms and Conditions.
                 </p>
                 <p className="text-sm text-black">7. Acceptance of Terms</p>
                 <p className="text-sm text-black">
-                  Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed
-                  do eiusmod tempor incididunt ut labore et dolore magna aliqua.
-                  By accessing or using this service, you agree to be bound by
-                  these Terms and Conditions.
+                  Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor
+                  incididunt ut labore et dolore magna aliqua. By accessing or using this service,
+                  you agree to be bound by these Terms and Conditions.
                 </p>
                 <p className="text-sm text-black">8. Acceptance of Terms</p>
                 <p className="text-sm text-black">
-                  Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed
-                  do eiusmod tempor incididunt ut labore et dolore magna aliqua.
-                  By accessing or using this service, you agree to be bound by
-                  these Terms and Conditions.
+                  Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor
+                  incididunt ut labore et dolore magna aliqua. By accessing or using this service,
+                  you agree to be bound by these Terms and Conditions.
                 </p>
               </div>
             </div>

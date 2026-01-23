@@ -22,23 +22,14 @@ export default function BenefitCard({
   badgeClassess,
 }: Readonly<BenefitCardProps>) {
   return (
-    <div
-      className={`p-6 bg-white border border-gray-300 rounded-xl shadow-sm ${classess}`}
-    >
-      <Badge
-        type="pill-color"
-        color="success"
-        size="sm"
-        className={badgeClassess}
-      >
+    <div className={`p-6 bg-white border border-gray-300 rounded-xl shadow-sm ${classess}`}>
+      <Badge type="pill-color" color="success" size="sm" className={badgeClassess}>
         {badgeText}
       </Badge>
       <div className="prose mt-6 min-h-24 w-full flex items-end">
         <h2>{title}</h2>
       </div>
-      <p className="mt-2 min-h-18 h-18 w-full overflow-hidden">
-        {descriptionText}
-      </p>
+      <p className="mt-2 min-h-18 h-18 w-full overflow-hidden">{descriptionText}</p>
       <div className="text-base font-semibold mt-4">{listTitle}</div>
       <ul className="flex flex-col mt-4 space-y-2">
         <li className="flex items-center gap-2">

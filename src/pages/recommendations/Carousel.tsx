@@ -46,7 +46,7 @@ export default function CarouselSection() {
           <div className="space-y-6 bg-purple-50 border border-gray-300 rounded-xl p-4">
             {/* Carousel Content - Only this slides */}
             <Carousel.Content>
-              {didYouKnowSlides.map((slide) => (
+              {didYouKnowSlides.map(slide => (
                 <Carousel.Item key={slide.id}>
                   <div className="flex flex-col gap-2">
                     {/* Header with Icon and Title */}
@@ -84,7 +84,7 @@ export default function CarouselSection() {
                       <div
                         className={cx(
                           "size-2 rounded transition-colors cursor-pointer",
-                          isSelected ? "bg-purple-500" : "bg-gray-100",
+                          isSelected ? "bg-purple-500" : "bg-gray-100"
                         )}
                       />
                     )}

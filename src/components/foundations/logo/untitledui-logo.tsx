@@ -6,10 +6,7 @@ export const UntitledLogo = (props: HTMLAttributes<HTMLOrSVGElement>) => {
   return (
     <div
       {...props}
-      className={cx(
-        "flex h-8 w-max items-center justify-start overflow-visible",
-        props.className,
-      )}
+      className={cx("flex h-8 w-max items-center justify-start overflow-visible", props.className)}
     >
       {/* Minimal logo */}
       <UntitledLogoMinimal className="aspect-square h-full w-auto shrink-0" />
@@ -18,11 +15,7 @@ export const UntitledLogo = (props: HTMLAttributes<HTMLOrSVGElement>) => {
       <div className="aspect-[0.3] h-full" />
 
       {/* Logomark */}
-      <svg
-        viewBox="0 0 97 32"
-        fill="none"
-        className="aspect-[3] h-full shrink-0"
-      >
+      <svg viewBox="0 0 97 32" fill="none" className="aspect-[3] h-full shrink-0">
         <path
           d="M33.9101 10.2372C34.2321 10.5355 34.6179 10.6847 35.0678 10.6847C35.5176 10.6847 35.9011 10.5355 36.2183 10.2372C36.5403 9.9342 36.7013 9.57199 36.7013 9.15058C36.7013 8.73392 36.5403 8.37644 36.2183 8.07814C35.9011 7.77511 35.5176 7.6236 35.0678 7.6236C34.6179 7.6236 34.2321 7.77511 33.9101 8.07814C33.5928 8.37644 33.4342 8.73392 33.4342 9.15058C33.4342 9.57199 33.5928 9.9342 33.9101 10.2372Z"
           className="fill-fg-primary"
@@ -59,18 +52,9 @@ export const UntitledLogo = (props: HTMLAttributes<HTMLOrSVGElement>) => {
           d="M88.0229 19.1151C88.2691 18.6842 88.3922 18.1918 88.3922 17.6378V8.45456H91.4675V17.9006C91.4675 18.9612 91.2142 19.8892 90.7075 20.6847C90.2056 21.4801 89.5025 22.1004 88.5982 22.5455C87.6938 22.9858 86.6403 23.206 85.4376 23.206C84.2303 23.206 83.1744 22.9858 82.27 22.5455C81.3657 22.1004 80.6625 21.4801 80.1607 20.6847C79.6588 19.8892 79.4078 18.9612 79.4078 17.9006V8.45456H82.4831V17.6378C82.4831 18.1918 82.6038 18.6842 82.8453 19.1151C83.0915 19.5459 83.4372 19.8845 83.8822 20.1307C84.3273 20.3769 84.8458 20.5 85.4376 20.5C86.0342 20.5 86.5527 20.3769 86.993 20.1307C87.4381 19.8845 87.7814 19.5459 88.0229 19.1151Z"
           className="fill-fg-primary"
         />
-        <path
-          d="M33.5479 12.0909V23H36.5734V12.0909H33.5479Z"
-          className="fill-fg-primary"
-        />
-        <path
-          d="M49.2305 23V8.45456H46.2049V23H49.2305Z"
-          className="fill-fg-primary"
-        />
-        <path
-          d="M96.6729 23V8.45456H93.5977V23H96.6729Z"
-          className="fill-fg-primary"
-        />
+        <path d="M33.5479 12.0909V23H36.5734V12.0909H33.5479Z" className="fill-fg-primary" />
+        <path d="M49.2305 23V8.45456H46.2049V23H49.2305Z" className="fill-fg-primary" />
+        <path d="M96.6729 23V8.45456H93.5977V23H96.6729Z" className="fill-fg-primary" />
       </svg>
     </div>
   );

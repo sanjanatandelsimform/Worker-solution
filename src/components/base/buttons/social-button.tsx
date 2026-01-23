@@ -1,11 +1,8 @@
-import type {
-  AnchorHTMLAttributes,
-  ButtonHTMLAttributes,
-  DetailedHTMLProps,
-} from "react";
+import type { AnchorHTMLAttributes, ButtonHTMLAttributes, DetailedHTMLProps } from "react";
 import type { ButtonProps as AriaButtonProps } from "react-aria-components";
 import { Button as AriaButton, Link as AriaLink } from "react-aria-components";
-import { cx, sortCx } from "@/utils/cx";
+import { cx } from "@/utils/cx";
+import { styles } from "./social-button-styles";
 import {
   AppleLogo,
   DribbleLogo,
@@ -16,51 +13,7 @@ import {
   TwitterLogo,
 } from "./social-logos";
 
-export const styles = sortCx({
-  common: {
-    root: "group relative inline-flex h-max cursor-pointer items-center justify-center font-semibold whitespace-nowrap outline-focus-ring transition duration-100 ease-linear before:absolute focus-visible:outline-2 focus-visible:outline-offset-2 disabled:cursor-not-allowed disabled:stroke-fg-disabled disabled:text-fg-disabled disabled:*:text-fg-disabled",
-    icon: "pointer-events-none shrink-0 transition-inherit-all",
-  },
-
-  sizes: {
-    sm: {
-      root: "gap-2 rounded-lg px-3 py-2 text-sm before:rounded-[7px] data-icon-only:p-2",
-    },
-    md: {
-      root: "gap-2.5 rounded-lg px-3.5 py-2.5 text-sm before:rounded-[7px] data-icon-only:p-2.5",
-    },
-    lg: {
-      root: "gap-3 rounded-lg px-4 py-2.5 text-md before:rounded-[7px] data-icon-only:p-2.5",
-    },
-    xl: {
-      root: "gap-3.5 rounded-lg px-4.5 py-3 text-md before:rounded-[7px] data-icon-only:p-3.5",
-    },
-    "2xl": {
-      root: "gap-4 rounded-[10px] px-5.5 py-4 text-lg before:rounded-[9px] data-icon-only:p-4",
-    },
-  },
-
-  colors: {
-    gray: {
-      root: "bg-primary text-secondary shadow-xs-skeumorphic ring-1 ring-gray-300 ring-inset hover:bg-primary_hover hover:text-secondary_hover",
-      icon: "text-fg-quaternary group-hover:text-fg-quaternary_hover",
-    },
-    black: {
-      root: "bg-black text-white shadow-xs-skeumorphic ring-1 ring-transparent ring-inset before:absolute before:inset-px before:border before:border-white/12 before:mask-b-from-0%",
-      icon: "",
-    },
-
-    facebook: {
-      root: "bg-[#1877F2] text-white shadow-xs-skeumorphic ring-1 ring-transparent ring-inset before:absolute before:inset-px before:border before:border-white/12 before:mask-b-from-0% hover:bg-[#0C63D4]",
-      icon: "",
-    },
-
-    dribble: {
-      root: "bg-[#EA4C89] text-white shadow-xs-skeumorphic ring-1 ring-transparent ring-inset before:absolute before:inset-px before:border before:border-white/12 before:mask-b-from-0% hover:bg-[#E62872]",
-      icon: "",
-    },
-  },
-});
+// styles moved to social-button-styles.ts
 
 interface CommonProps {
   social: "google" | "facebook" | "apple" | "twitter" | "figma" | "dribble";
@@ -82,10 +35,7 @@ interface ButtonProps
 interface LinkProps
   extends
     CommonProps,
-    DetailedHTMLProps<
-      Omit<AnchorHTMLAttributes<HTMLAnchorElement>, "color">,
-      HTMLAnchorElement
-    > {}
+    DetailedHTMLProps<Omit<AnchorHTMLAttributes<HTMLAnchorElement>, "color">, HTMLAnchorElement> {}
 
 export type SocialButtonProps = ButtonProps | LinkProps;
 
@@ -112,10 +62,7 @@ export const SocialButton = ({
     dribble: "dribble",
   } as const;
 
-  const colorStyles =
-    theme === "brand"
-      ? styles.colors[socialToColor[social]]
-      : styles.colors.gray;
+  const colorStyles = theme === "brand" ? styles.colors[socialToColor[social]] : styles.colors.gray;
 
   const logos = {
     google: GoogleLogo,
@@ -155,12 +102,7 @@ export const SocialButton = ({
       isDisabled={disabled}
       {...props}
       data-icon-only={isIconOnly ? true : undefined}
-      className={cx(
-        styles.common.root,
-        styles.sizes[size].root,
-        colorStyles.root,
-        className,
-      )}
+      className={cx(styles.common.root, styles.sizes[size].root, colorStyles.root, className)}
     >
       <Logo
         className={cx(
@@ -168,14 +110,11 @@ export const SocialButton = ({
           theme === "gray"
             ? colorStyles.icon
             : theme === "brand" &&
-                (social === "facebook" ||
-                  social === "apple" ||
-                  social === "twitter")
+                (social === "facebook" || social === "apple" || social === "twitter")
               ? "text-white"
-              : theme === "color" &&
-                  (social === "apple" || social === "twitter")
+              : theme === "color" && (social === "apple" || social === "twitter")
                 ? "text-alpha-black"
-                : "",
+                : ""
         )}
         colorful={
           (theme === "brand" && (social === "google" || social === "figma")) ||
@@ -192,3 +131,5 @@ export const SocialButton = ({
     </Component>
   );
 };
+
+// Move constants or functions to a separate file to comply with the react-refresh/only-export-components rule.

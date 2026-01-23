@@ -15,9 +15,7 @@ interface NavListProps {
 export const NavList = ({ activeUrl, items, className }: NavListProps) => {
   const [open, setOpen] = useState(false);
   const activeItem = items.find(
-    (item) =>
-      item.href === activeUrl ||
-      item.items?.some((subItem) => subItem.href === activeUrl),
+    item => item.href === activeUrl || item.items?.some(subItem => subItem.href === activeUrl)
   );
   const [currentItem, setCurrentItem] = useState(activeItem);
 
@@ -38,23 +36,18 @@ export const NavList = ({ activeUrl, items, className }: NavListProps) => {
               key={item.label}
               open={activeItem?.href === item.href}
               className="appearance-none py-0.5"
-              onToggle={(e) => {
+              onToggle={e => {
                 setOpen(e.currentTarget.open);
                 setCurrentItem(item);
               }}
             >
-              <NavItemBase
-                href={item.href}
-                badge={item.badge}
-                icon={item.icon}
-                type="collapsible"
-              >
+              <NavItemBase href={item.href} badge={item.badge} icon={item.icon} type="collapsible">
                 {item.label}
               </NavItemBase>
 
               <dd>
                 <ul className="py-0.5">
-                  {item.items.map((childItem) => (
+                  {item.items.map(childItem => (
                     <li key={childItem.label} className="py-0.5">
                       <NavItemBase
                         href={childItem.href}
@@ -81,6 +74,7 @@ export const NavList = ({ activeUrl, items, className }: NavListProps) => {
               href={item.href}
               current={currentItem?.href === item.href}
               open={open && currentItem?.href === item.href}
+              onClick={item.onClick} // Pass the onClick handler
             >
               {item.label}
             </NavItemBase>

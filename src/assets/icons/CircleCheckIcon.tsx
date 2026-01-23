@@ -1,8 +1,4 @@
-export function CircleCheckIcon({
-  className,
-}: {
-  readonly className?: string;
-}) {
+export function CircleCheckIcon({ className }: { readonly className?: string }) {
   return (
     <span className={`custom-icon ${className ?? ""}`}>
       <svg

@@ -17,15 +17,22 @@ export type AuthMethod = "email" | "google";
 export interface UserAccount {
   id: string;
   email: string;
+  businessEmail?: string;
   firstName: string;
   lastName: string;
   businessName: string;
   phoneNumber: string;
+  businessPhone?: string;
   industry: Industry;
   zipCode: string;
-  authMethod: AuthMethod;
+  authMethod?: AuthMethod;
   emailVerified: boolean;
-  profileComplete: boolean;
+  googleId?: string | null;
+  resetToken?: string | null;
+  resetTokenExpiry?: string | null;
+  refreshToken?: string | null;
+  count?: number;
+  profileComplete?: boolean;
   createdAt: string;
   updatedAt: string;
 }
@@ -37,7 +44,7 @@ export interface RegistrationData {
   businessEmail: string;
   businessPhone: string;
   industry: Industry;
-  zipCode: string;
+  zipCode: number;
   password: string;
   confirmPassword: string;
   acceptTerms: boolean;
@@ -66,6 +73,14 @@ export interface AuthResponse {
   success: boolean;
   message?: string;
   user?: UserAccount;
+}
+
+export interface SignInResponse {
+  user: UserAccount;
+  tokens?: {
+    accessToken: string;
+    refreshToken: string;
+  };
 }
 
 export interface EmailCheckResponse {

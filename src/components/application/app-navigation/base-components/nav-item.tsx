@@ -47,7 +47,7 @@ export const NavItemBase = ({
       aria-hidden="true"
       className={cx(
         "mr-2 size-5 shrink-0 text-nav-menu transition-inherit-all",
-        current && "text-white",
+        current && "text-white"
       )}
     />
   );
@@ -66,7 +66,7 @@ export const NavItemBase = ({
       className={cx(
         "flex-1 text-md font-semibold text-nav-menu transition-inherit-all group-hover:text-secondary_hover",
         truncate && "truncate",
-        current && "text-white",
+        current && "text-white"
       )}
     >
       {children}
@@ -104,11 +104,7 @@ export const NavItemBase = ({
         href={href!}
         target={isExternal ? "_blank" : "_self"}
         rel="noopener noreferrer"
-        className={cx(
-          "py-2 pr-3 pl-10",
-          styles.root,
-          current && styles.rootSelected,
-        )}
+        className={cx("py-2 pr-3 pl-10", styles.root, current && styles.rootSelected)}
         onClick={onClick}
         aria-current={current ? "page" : undefined}
       >

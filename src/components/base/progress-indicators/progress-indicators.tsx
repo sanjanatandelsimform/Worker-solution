@@ -27,10 +27,7 @@ export interface ProgressBarProps {
    * Optional function to format the displayed value.
    * It receives the raw value and the calculated percentage.
    */
-  valueFormatter?: (
-    value: number,
-    valueInPercentage: number,
-  ) => string | number;
+  valueFormatter?: (value: number, valueInPercentage: number) => string | number;
 }
 
 /**
@@ -51,28 +48,21 @@ export const ProgressBarBase = ({
       aria-valuenow={value}
       aria-valuemin={min}
       aria-valuemax={max}
-      className={cx(
-        "h-2 w-full overflow-hidden rounded-md bg-quaternary",
-        className,
-      )}
+      className={cx("h-2 w-full overflow-hidden rounded-md bg-quaternary", className)}
     >
       <div
         // Use transform instead of width to avoid layout thrashing (and for smoother animation)
         style={{ transform: `translateX(-${100 - percentage}%)` }}
         className={cx(
           "size-full rounded-md bg-fg-brand-primary transition duration-75 ease-linear",
-          progressClassName,
+          progressClassName
         )}
       />
     </div>
   );
 };
 
-type ProgressBarLabelPosition =
-  | "right"
-  | "bottom"
-  | "top-floating"
-  | "bottom-floating";
+type ProgressBarLabelPosition = "right" | "bottom" | "top-floating" | "bottom-floating";
 
 export interface ProgressIndicatorWithTextProps extends ProgressBarProps {
   /**
@@ -126,9 +116,7 @@ export const ProgressBar = ({
       return (
         <div className="flex flex-col items-end gap-2">
           {baseProgressBar}
-          <span className="text-sm font-medium text-secondary tabular-nums">
-            {formattedValue}
-          </span>
+          <span className="text-sm font-medium text-secondary tabular-nums">{formattedValue}</span>
         </div>
       );
     case "top-floating":
@@ -153,9 +141,7 @@ export const ProgressBar = ({
             style={{ left: `${percentage}%` }}
             className="absolute -bottom-2 -translate-x-1/2 translate-y-full rounded-lg bg-primary_alt px-3 py-2 shadow-lg ring-1 ring-secondary_alt"
           >
-            <div className="text-xs font-semibold text-secondary">
-              {formattedValue}
-            </div>
+            <div className="text-xs font-semibold text-secondary">{formattedValue}</div>
           </div>
         </div>
       );

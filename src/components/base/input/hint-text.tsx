@@ -22,7 +22,7 @@ export const HintText = ({ isInvalid, className, ...props }: HintTextProps) => {
         isInvalid && "text-error-primary",
         "group-invalid:text-error-primary",
 
-        className,
+        className
       )}
     />
   );

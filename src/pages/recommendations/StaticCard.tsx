@@ -22,9 +22,7 @@ export default function StaticCard({
   placements,
 }: Readonly<StaticCardProps>) {
   return (
-    <div
-      className={`bg-white ring ring-gray-300  rounded-xl py-5 px-6 ${classess}`}
-    >
+    <div className={`bg-white ring ring-gray-300  rounded-xl py-5 px-6 ${classess}`}>
       <p
         className={`flex items-center text-base text-gray-600 gap-2 justify-${itemAlign || "start"}`}
       >

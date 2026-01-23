@@ -49,26 +49,22 @@ export default function BenchmarkPage() {
           <div className="w-3/4">
             <div className="w-full space-y-6">
               <p className="text-base color-text-600">
-                The Wholesale Trade sector comprises establishments engaged in
-                wholesaling merchandise, generally without transformation, and
-                rendering services incidental to the sale of merchandise. The
-                merchandise described in this sector includes the outputs of
-                agriculture, mining, manufacturing, and certain information
-                industries, such as publishing.
+                The Wholesale Trade sector comprises establishments engaged in wholesaling
+                merchandise, generally without transformation, and rendering services incidental to
+                the sale of merchandise. The merchandise described in this sector includes the
+                outputs of agriculture, mining, manufacturing, and certain information industries,
+                such as publishing.
               </p>
               <p className="text-base color-text-600">
-                The wholesaling process is an intermediate step in the
-                distribution of merchandise. Wholesalers are organized to sell
-                or arrange the purchase or sale of (a) goods for resale (i.e.,
-                goods sold to other wholesalers or retailers), (b) capital or
-                durable nonconsumer goods, and (c) raw and intermediate
-                materials and supplies used in production. Wholesalers sell
-                merchandise to other businesses and normally operate from a
-                warehouse or office. These warehouses and offices are
-                characterized by having little or no display of merchandise. In
-                addition, neither the design nor the location of the premises is
-                intended to solicit walk-in traffic. Wholesalers do not normally
-                use advertising directed to the general public.{" "}
+                The wholesaling process is an intermediate step in the distribution of merchandise.
+                Wholesalers are organized to sell or arrange the purchase or sale of (a) goods for
+                resale (i.e., goods sold to other wholesalers or retailers), (b) capital or durable
+                nonconsumer goods, and (c) raw and intermediate materials and supplies used in
+                production. Wholesalers sell merchandise to other businesses and normally operate
+                from a warehouse or office. These warehouses and offices are characterized by having
+                little or no display of merchandise. In addition, neither the design nor the
+                location of the premises is intended to solicit walk-in traffic. Wholesalers do not
+                normally use advertising directed to the general public.{" "}
               </p>
               <Link to="" className="text-purple-700 text-base underline">
                 Read more
@@ -83,12 +79,11 @@ export default function BenchmarkPage() {
                 <h4>Insight:</h4>
               </div>
               <p className="mt-4 text-base">
-                Wholesale trade plays a critical middleman role in distribution,
-                relying on long-term B2B relationships rather than consumer
-                outreach. Its workforce is heavily concentrated in
-                transportation and sales, with transportation roles growing and
-                sales roles shrinking, though both continue to have large
-                replacement-driven hiring needs.
+                Wholesale trade plays a critical middleman role in distribution, relying on
+                long-term B2B relationships rather than consumer outreach. Its workforce is heavily
+                concentrated in transportation and sales, with transportation roles growing and
+                sales roles shrinking, though both continue to have large replacement-driven hiring
+                needs.
               </p>
             </div>
             <div className="w-2/5">

@@ -47,9 +47,7 @@ export const BaseModalWithIcon = ({
   backgroundPattern = "success",
 }: BaseModalWithIconProps) => {
   const backgroundClass =
-    backgroundPattern === "success"
-      ? "background-pattern"
-      : "background-pattern-unsuccess";
+    backgroundPattern === "success" ? "background-pattern" : "background-pattern-unsuccess";
 
   return (
     <Modal isOpen={isOpen} onOpenChange={onClose} size={size}>
@@ -85,9 +83,7 @@ export const BaseModalWithIcon = ({
             </ModalTitle>
             {subtitle && (
               <>
-                <p className="font-body text-sm font-normal leading-5 text-tertiary">
-                  {subtitle}
-                </p>
+                <p className="font-body text-sm font-normal leading-5 text-tertiary">{subtitle}</p>
                 <p className="font-body text-sm font-normal leading-5 text-tertiary">
                   {subtitleOne}
                 </p>
@@ -101,7 +97,7 @@ export const BaseModalWithIcon = ({
 
         {/* Modal Footer with Buttons */}
         <ModalFooter className="flex items-start gap-3 border-0 pb-6 px-6 pt-0">
-          {buttons.map((button) => (
+          {buttons.map(button => (
             <Button
               key={button.text}
               type="button"

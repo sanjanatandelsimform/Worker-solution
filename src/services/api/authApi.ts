@@ -12,8 +12,8 @@ import type {
 // Create Axios instance with base configuration
 const apiClient = axios.create({
   baseURL: import.meta.env.VITE_API_BASE_URL || "http://localhost:3000/api",
-  timeout: 10000, // 10-second timeout
-  withCredentials: true, // Include HttpOnly cookies
+  timeout: 10000,
+  withCredentials: true,
   headers: {
     "Content-Type": "application/json",
   },
@@ -21,14 +21,20 @@ const apiClient = axios.create({
 
 // Response interceptor for 401 handling
 apiClient.interceptors.response.use(
-  (response) => response,
+  response => response,
   (error: AxiosError) => {
-    if (error.response?.status === 401) {
-      // Redirect to sign-in page on unauthorized
-      window.location.href = "/sign-in";
+    // Only redirect on 401 if NOT on auth pages (login/register)
+    const isAuthPage =
+      window.location.pathname.includes("/sign-in") ||
+      window.location.pathname.includes("/register");
+
+    if (error.response?.status === 401 && !isAuthPage) {
+      // Clear any stored auth state
+      localStorage.removeItem("userDetail");
+      // Redirect to sign-in page
     }
     return Promise.reject(error);
-  },
+  }
 );
 
 // Helper function to extract error message
@@ -53,9 +59,9 @@ const getErrorMessage = (error: unknown): string => {
 /**
  * Register a new user account with business information
  */
-export const signup = async (data: RegistrationData): Promise<AuthResponse> => {
+export const signup = async (data: RegistrationData): Promise<UserAccount> => {
   try {
-    const response = await apiClient.post<AuthResponse>("/auth/signup", {
+    const response = await apiClient.post<UserAccount>("/users/create", {
       firstName: data.firstName,
       lastName: data.lastName,
       businessName: data.businessName,
@@ -64,6 +70,7 @@ export const signup = async (data: RegistrationData): Promise<AuthResponse> => {
       industry: data.industry,
       zipCode: data.zipCode,
       password: data.password,
+      confirmPassword: data.confirmPassword,
     });
     return response.data;
   } catch (error) {
@@ -74,25 +81,44 @@ export const signup = async (data: RegistrationData): Promise<AuthResponse> => {
 /**
  * Sign in an existing user
  */
-export const signin = async (data: SignInData): Promise<AuthResponse> => {
+export const signin = async (
+  data: SignInData
+): Promise<{
+  status: boolean | string;
+  message: string;
+  data?: {
+    user: UserAccount;
+    tokens: { accessToken: string; refreshToken: string };
+  };
+}> => {
   try {
-    const response = await apiClient.post<AuthResponse>("/auth/signin", {
+    const response = await apiClient.post("/auth/login", {
       businessEmail: data.businessEmail,
       password: data.password,
       rememberMe: data.rememberMe,
     });
+
     return response.data;
-  } catch (error) {
-    throw new Error(getErrorMessage(error));
+  } catch (error: unknown) {
+    // Return backend error instead of throwing; safely extract a message
+    const message = axios.isAxiosError(error)
+      ? ((error.response?.data as ApiError | undefined)?.message ?? "Incorrect email or password")
+      : getErrorMessage(error);
+
+    return {
+      status: "error",
+      message,
+    };
   }
 };
 
 /**
  * Sign out the current user
  */
-export const signout = async (): Promise<void> => {
+export const signout = async (token?: string): Promise<void> => {
   try {
-    await apiClient.post("/auth/signout");
+    const headers = token ? { Authorization: `Bearer ${token}` } : {};
+    await apiClient.post("/auth/logout", {}, { headers });
   } catch (error) {
     throw new Error(getErrorMessage(error));
   }
@@ -103,9 +129,7 @@ export const signout = async (): Promise<void> => {
  */
 export const getCurrentUser = async (): Promise<UserAccount | null> => {
   try {
-    const response = await apiClient.get<{ user: UserAccount | null }>(
-      "/auth/me",
-    );
+    const response = await apiClient.get<{ user: UserAccount | null }>("/auth/me");
     return response.data.user;
   } catch (error) {
     // Don't throw on 401 - just return null (user not authenticated)
@@ -119,14 +143,9 @@ export const getCurrentUser = async (): Promise<UserAccount | null> => {
 /**
  * Check if an email is available for registration
  */
-export const checkEmailAvailability = async (
-  email: string,
-): Promise<boolean> => {
+export const checkEmailAvailability = async (email: string): Promise<boolean> => {
   try {
-    const response = await apiClient.post<EmailCheckResponse>(
-      "/auth/check-email",
-      { email },
-    );
+    const response = await apiClient.post<EmailCheckResponse>("/auth/check-email", { email });
     return response.data.available;
   } catch (error) {
     throw new Error(getErrorMessage(error));
@@ -136,14 +155,9 @@ export const checkEmailAvailability = async (
 /**
  * Submit business information for Google SSO users
  */
-export const submitBusinessInfo = async (
-  data: BusinessInfoData,
-): Promise<AuthResponse> => {
+export const submitBusinessInfo = async (data: BusinessInfoData): Promise<AuthResponse> => {
   try {
-    const response = await apiClient.post<AuthResponse>(
-      "/auth/complete-profile",
-      data,
-    );
+    const response = await apiClient.post<AuthResponse>("/auth/complete-profile", data);
     return response.data;
   } catch (error) {
     throw new Error(getErrorMessage(error));
