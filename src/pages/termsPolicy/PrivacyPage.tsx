@@ -1,5 +1,7 @@
 import { Button } from "@/components/base/buttons/button";
+import { useNavigate } from "react-router-dom";
 export default function PrivacyPage() {
+  const navigate = useNavigate();
   return (
     <div className="flex min-h-screen items-center justify-center bg-secondary">
       <div className="flex w-3xl items-center justify-center rounded-xl border border-solid border-primary bg-primary pt-6">
@@ -11,7 +13,7 @@ export default function PrivacyPage() {
           <div className="flex w-full flex-col items-start gap-6">
             <div className="prose w-full">
               <h2 className="text-black">Privacy Policy</h2>
-              <p className="text-card-subtitle text-lg">Last updated: [Month Day, Year]</p>
+              <p className="text-card-subtitle text-lg">Last updated: [January 23, 2026]</p>
             </div>
             <div className="w-full h-110 overflow-y-scroll">
               <div className="prose max-w-none">
@@ -66,7 +68,7 @@ export default function PrivacyPage() {
               </div>
             </div>
             <div className="flex items-center justify-end w-full">
-              <Button color="primary" size="lg">
+              <Button color="primary" size="lg" onClick={() => navigate(-1)}>
                 Back
               </Button>
             </div>

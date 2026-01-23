@@ -20,7 +20,7 @@ function App() {
         <Routes>
           {/* Public routes - accessible without authentication */}
           <Route
-            path="/register"
+            path="/sign-up"
             element={
               <PublicRoute>
                 <RegisterPage />
@@ -44,7 +44,7 @@ function App() {
             }
           /> */}
           <Route
-            path="/privacy-page"
+            path="/privacy-policy"
             element={
               <PublicRoute>
                 <PrivacyPage />
