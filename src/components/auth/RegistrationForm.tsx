@@ -2,7 +2,7 @@
 import { useState } from "react";
 import { useForm, useWatch } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, Link } from "react-router-dom";
 import { Button } from "@/components/base/buttons/button";
 import { Input, InputBase } from "@/components/base/input/input";
 import { InputGroup } from "@/components/base/input/input-group";
@@ -378,8 +378,13 @@ export const RegistrationForm = () => {
                 />
                 <p className="text-sm font-normal leading-5 text-primary">
                   I've read and agree to the Worker Solutions®{" "}
-                  <span className="cursor-pointer text-cyan-500">Terms</span> and{" "}
-                  <span className="cursor-pointer text-cyan-500">Privacy Policies</span>
+                  <Link to="/terms-page" className="cursor-pointer text-cyan-500">
+                    Terms
+                  </Link>{" "}
+                  and{" "}
+                  <Link to="/privacy-policy" className="cursor-pointer text-cyan-500">
+                    Privacy Policies
+                  </Link>
                 </p>
               </div>
               {errors.agreeToTerms && (
