@@ -8,6 +8,9 @@ import { SuccessModalWithLogo } from "../modals/SuccessModalWithLogo";
 import { signout } from "@/services/api/authApi";
 import logoutIcon from "@/assets/checkmark-icon.svg";
 import { clearUser } from "@/store/slices/authSlice";
+import { BaseModalWithIcon } from "../modals/BaseModalWithIcon";
+import { AlertOctagon } from "@untitledui/icons";
+import alertIcon from "@/assets/alert-icon.svg";
 
 interface DashboardSidebarProps {
   activeUrl?: string;
@@ -93,13 +96,13 @@ export const DashboardSidebar = ({ activeUrl = "/" }: DashboardSidebarProps) => 
         />
 
         {/* Logout Button */}
-        <button
+        {/* <button
           onClick={handleLogout}
           className="mt-2 flex w-full items-center gap-3 rounded-lg px-3 py-3 text-sm font-medium text-tertiary transition-colors hover:bg-secondary hover:text-primary hover:bg-cyan-500 hover:text-white hover:cursor-pointer"
         >
           <LogOut04 className="h-5 w-5" />
           <span>Logout</span>
-        </button>
+        </button> */}
       </nav>
 
       {/* User Account Card at Bottom - Dynamic User Info */}
@@ -142,7 +145,7 @@ export const DashboardSidebar = ({ activeUrl = "/" }: DashboardSidebarProps) => 
           </div>
         </div>
       )}
-      <SuccessModalWithLogo
+      {/* <SuccessModalWithLogo
         isOpen={isLogoutModalOpen}
         onClose={() => setIsLogoutModalOpen(false)}
         size="xl"
@@ -154,6 +157,27 @@ export const DashboardSidebar = ({ activeUrl = "/" }: DashboardSidebarProps) => 
           onClick: handleLogout,
           color: "primary",
         }}
+      /> */}
+      <BaseModalWithIcon
+        isOpen={isLogoutModalOpen}
+        onClose={() => setIsLogoutModalOpen(false)}
+        size="sm"
+        title="Are you sure you want to log out?"
+        icon={<AlertOctagon className="size-6" />}
+        messageImg={alertIcon}
+        backgroundPattern="unsuccess"
+        buttons={[
+          {
+            text: "Cancel",
+            onClick: () => setIsLogoutModalOpen(false),
+            color: "secondary",
+          },
+          {
+            text: "Yes",
+            onClick: handleLogout,
+            color: "primary-destructive",
+          },
+        ]}
       />
     </div>
   );

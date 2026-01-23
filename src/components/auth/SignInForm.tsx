@@ -238,7 +238,7 @@ export const SignInForm = () => {
           {/* Sign up link */}
           <div className="flex w-full items-baseline justify-center gap-1">
             <p className="text-sm font-normal leading-5 text-tertiary">Don't have an account?</p>
-            <Button href="/register" color="link-color" size="md">
+            <Button href="/sign-up" color="link-color" size="md">
               Sign up
             </Button>
           </div>

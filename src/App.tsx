@@ -1,12 +1,12 @@
 import { Routes, Route, Navigate } from "react-router-dom";
 import { AuthErrorBoundary } from "./components/auth/AuthErrorBoundary";
-import { ProtectedRoute } from "./components/auth/ProtectedRoute";
-import { PublicRoute } from "./components/auth/PublicRoute";
+import { ProtectedRoute } from "./components/routes/ProtectedRoute";
+import { PublicRoute } from "./components/routes/PublicRoute";
 import { RegisterPage } from "./pages/auth/RegisterPage";
 import { SignInPage } from "./pages/auth/SignInPage";
 import { DashboardPage } from "./pages/dashboard/DashboardPage";
 import { SettingsPage } from "./pages/settings/SettingsPage";
-// import { SuccessPage } from "./pages/auth/successPages/SuccessPage";
+import { SuccessPage } from "./pages/successPage/SuccessPage";
 import PrivacyPage from "./pages/termsPolicy/PrivacyPage";
 import TermsPage from "./pages/termsPolicy/TermsPage";
 import ForgotPasswordForm from "./components/auth/ForgotPasswordForm";
@@ -35,14 +35,6 @@ function App() {
               </PublicRoute>
             }
           />
-          {/* <Route
-            path="/success"
-            element={
-              <PublicRoute>
-                <SuccessPage />
-              </PublicRoute>
-            }
-          /> */}
           <Route
             path="/privacy-policy"
             element={
@@ -68,15 +60,21 @@ function App() {
             }
           />
           <Route
-            path="/reset-password"
+            path="/success"
             element={
               <PublicRoute>
-                <ResetPasswordForm />
+                <SuccessPage />
               </PublicRoute>
             }
           />
-
-          {/* Protected routes - require authentication */}
+          <Route
+            path="/reset-password"
+            element={
+              <ProtectedRoute>
+                <ResetPasswordForm />
+              </ProtectedRoute>
+            }
+          />
           <Route
             path="/"
             element={
