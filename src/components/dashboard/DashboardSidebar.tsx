@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { useAppDispatch } from "@/store/hooks";
+import { useAppDispatch, useAppSelector } from "@/store/hooks";
 import { Settings01, LogOut04, Speedometer03 } from "@untitledui/icons";
 import { NavList } from "@/components/application/app-navigation/base-components/nav-list";
 import type { NavItemType } from "@/components/application/app-navigation/config";
@@ -17,6 +17,9 @@ export const DashboardSidebar = ({ activeUrl = "/" }: DashboardSidebarProps) => 
   const navigate = useNavigate();
   const dispatch = useAppDispatch();
   const [isLogoutModalOpen, setIsLogoutModalOpen] = useState(false);
+
+  // Get user details from Redux store
+  const { user } = useAppSelector(state => state.auth);
 
   const handleLogout = async () => {
     try {
@@ -35,7 +38,7 @@ export const DashboardSidebar = ({ activeUrl = "/" }: DashboardSidebarProps) => 
   };
 
   const handleLogoutClick = (event?: React.MouseEvent) => {
-    event?.preventDefault(); // Prevent default navigation behavior
+    event?.preventDefault();
     setIsLogoutModalOpen(true);
   };
 
@@ -44,7 +47,6 @@ export const DashboardSidebar = ({ activeUrl = "/" }: DashboardSidebarProps) => 
       label: "Dashboard",
       href: "/dashboard",
       icon: Speedometer03,
-      //badge: <Badge color="brand">New</Badge>,
     },
   ];
 
@@ -61,6 +63,14 @@ export const DashboardSidebar = ({ activeUrl = "/" }: DashboardSidebarProps) => 
       onClick: handleLogoutClick,
     },
   ];
+
+  // Get full name or fallback to email
+  const displayName =
+    user?.firstName && user?.lastName
+      ? `${user.firstName} ${user.lastName}`
+      : user?.businessName || "User";
+
+  const displayEmail = user?.email || "No email available";
 
   return (
     <div className="flex h-[calc(100vh-32px)] w-66 flex-col border-0 border-primary bg-primary py-10 px-6 m-4 rounded-xl shadow-xs">
@@ -81,12 +91,12 @@ export const DashboardSidebar = ({ activeUrl = "/" }: DashboardSidebarProps) => 
         />
       </nav>
 
-      {/* User Account Card at Bottom */}
+      {/* User Account Card at Bottom - Dynamic User Info */}
       <div className="border border-gray-300 rounded-xl p-3 mt-6">
         <div className="flex items-start gap-3">
           <div className="flex-1">
-            <p className="text-sm font-semibold text-primary">John Doe</p>
-            <p className="text-sm text-tertiary mt-1">john@example.com</p>
+            <p className="text-sm font-semibold text-primary">{displayName}</p>
+            <p className="text-sm text-tertiary mt-1">{displayEmail}</p>
           </div>
         </div>
       </div>
