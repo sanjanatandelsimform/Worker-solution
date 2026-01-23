@@ -32,7 +32,6 @@ apiClient.interceptors.response.use(
       // Clear any stored auth state
       localStorage.removeItem("userDetail");
       // Redirect to sign-in page
-      window.location.href = "/sign-in";
     }
     return Promise.reject(error);
   }
@@ -116,9 +115,10 @@ export const signin = async (
 /**
  * Sign out the current user
  */
-export const signout = async (): Promise<void> => {
+export const signout = async (token?: string): Promise<void> => {
   try {
-    await apiClient.post("/auth/signout");
+    const headers = token ? { Authorization: `Bearer ${token}` } : {};
+    await apiClient.post("/auth/logout", {}, { headers });
   } catch (error) {
     throw new Error(getErrorMessage(error));
   }
