@@ -7,7 +7,7 @@ import { Input } from "@/components/base/input/input";
 import { InputGroup } from "@/components/base/input/input-group";
 import { Checkbox } from "@/components/base/checkbox/checkbox";
 import { GoogleSSOButton } from "./GoogleSSOButton";
-import { Eye, EyeOff } from "@untitledui/icons";
+import { Eye, EyeOff, Mail01 } from "@untitledui/icons";
 import type { Industry, SignInData } from "@/types/auth";
 import { signin } from "@/services/api/authApi";
 import { ChangePasswordModal } from "../modals/ChangePasswordModal";
@@ -21,7 +21,7 @@ import {
   type SignInFormData,
 } from "@/services/validation/authSchemas";
 
-export const SignInForm = () => {
+export const ForgotPasswordForm = () => {
   const dispatch = useAppDispatch();
   const [showPassword, setShowPassword] = useState(false);
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
@@ -150,10 +150,10 @@ export const SignInForm = () => {
             {/* Title and Description */}
             <div className="flex w-full flex-col items-start gap-3 text-center">
               <h2 className="w-full text-4xl font-semibold leading-9.5 text-primary">
-                Log in to your account
+                Forgot your password?
               </h2>
               <p className="w-full text-medium font-normal leading-6 text-tertiary">
-                Welcome back! Please enter your details.
+                Enter the email address associated with your account and we’ll send you a link to reset your password.
               </p>
             </div>
           </div>
@@ -169,10 +169,11 @@ export const SignInForm = () => {
                 <Input
                   name="email"
                   size="md"
+                  icon={Mail01}
                   isRequired
-                  label="Email"
+                  label="Business Email Address"
                   hint={errors.email?.message}
-                  placeholder="Enter your email"
+                  placeholder="olivia@untitledui.com"
                   isInvalid={!!errors.email}
                   className={errors.email ? "error-ring" : ""}
                   value={email}
@@ -183,66 +184,6 @@ export const SignInForm = () => {
                 />
               </InputGroup>
 
-              {/* Password Input Field */}
-              <InputGroup className="relative">
-                <Input
-                  name="password"
-                  isRequired
-                  label="Password"
-                  hint={errors.password?.message}
-                  placeholder="Password"
-                  size="md"
-                  type={showPassword ? "text" : "password"}
-                  isInvalid={!!errors.password}
-                  className={errors.password ? "error-ring" : ""}
-                  value={password}
-                  onChange={(value) => {
-                    setValue("password", value);
-                    trigger("password");
-                  }}
-                />
-                <Button
-                  color="tertiary"
-                  size="sm"
-                  type="button"
-                  onClick={() => setShowPassword(!showPassword)}
-                  aria-label={showPassword ? "Hide password" : "Show password"}
-                  className="absolute right-0 top-7"
-                >
-                  {showPassword ? (
-                    <Eye className="size-5 text-gray-400" />
-                  ) : (
-                    <EyeOff className="size-5 text-gray-400" />
-                  )}
-                </Button>
-              </InputGroup>
-
-              {/* Error Message Display */}
-              {errorMessage && (
-                <div className="text-red-500 text-sm">{errorMessage}</div>
-              )}
-
-              {/* Remember Me & Forgot Password */}
-              <div className="flex w-full items-center">
-                <div className="flex flex-1 items-start gap-2">
-                  <Checkbox
-                    size="sm"
-                    isSelected={rememberMe}
-                    onChange={(selected) => setValue("rememberMe", selected)}
-                    label="Remember for 30 days"
-                  />
-                </div>
-
-                <Button
-                  type="button"
-                  color="link-color"
-                  href="/forgot-password"
-                  size="md"
-                >
-                  Forgot password
-                </Button>
-              </div>
-
               {/* Actions */}
               <div className="flex w-full flex-col items-start gap-4">
                 {/* Sign in Button */}
@@ -250,16 +191,12 @@ export const SignInForm = () => {
                   type="submit"
                   color="primary"
                   size="lg"
+                  href="/reset-password"
                   isDisabled={isSubmitting}
                   className="w-full"
                 >
-                  {isSubmitting ? "Signing in..." : "Sign in"}
+                  {isSubmitting ? "Sending..." : "Send Link"}
                 </Button>
-
-                {/* Social button groups */}
-                <div className="flex w-full flex-col items-center justify-center gap-3">
-                  <GoogleSSOButton />
-                </div>
               </div>
             </form>
           </div>
@@ -267,10 +204,10 @@ export const SignInForm = () => {
           {/* Sign up link */}
           <div className="flex w-full items-baseline justify-center gap-1">
             <p className="text-sm font-normal leading-5 text-tertiary">
-              Don't have an account?
+              Already have an account?
             </p>
-            <Button href="/register" color="link-color" size="md">
-              Sign up
+            <Button href="/sign-in" color="link-color" size="md">
+              Sign in
             </Button>
           </div>
         </div>
@@ -298,4 +235,4 @@ export const SignInForm = () => {
   );
 };
 
-export default SignInForm;
+export default ForgotPasswordForm;

@@ -394,6 +394,9 @@
 .border-color-200 {
   border-color: var(--color-border-200);
 }
+.h-110 {
+  height: 450px;
+}
 
 .background-pattern{
   background-image: url('./assets/background-pattern-success.svg');
