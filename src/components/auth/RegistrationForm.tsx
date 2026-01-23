@@ -14,7 +14,7 @@ import { signup } from "@/services/api/authApi";
 import type { RegistrationData, Industry } from "@/types/auth";
 import { registrationSchema, type RegistrationFormData } from "@/services/validation/authSchemas";
 import { INDUSTRIES, COUNTRY_CODES } from "@/constants/formOptions";
-import { SuccessModalWithLogo } from "../modals";
+// import { SuccessModalWithLogo } from "../modals";
 import checkmarkIcon from "@/assets/checkmark-icon.svg";
 
 export const RegistrationForm = () => {
@@ -22,7 +22,7 @@ export const RegistrationForm = () => {
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
   const [phoneNumber, setPhoneNumber] = useState("");
   const [countryCode, setCountryCode] = useState("US");
-  const [isOpen, setIsOpen] = useState(false);
+  // const [isOpen, setIsOpen] = useState(false);
   const [submitError, setSubmitError] = useState<string | null>(null);
   const navigate = useNavigate();
 
@@ -94,7 +94,17 @@ export const RegistrationForm = () => {
       };
 
       await signup(registrationData);
-      setIsOpen(true);
+      // setIsOpen(true);
+      // navigate to success page and pass modal data via location.state
+      navigate("/success", {
+        state: {
+          messageImg: checkmarkIcon,
+          title: "Account created successfully!",
+          subtitle: "Welcome aboard! Start your success journey with Worker Solutions®",
+          buttonText: "Let's Get Started",
+          buttonPath: "/sign-in",
+        },
+      });
       setValue("password", "");
       setValue("confirmPassword", "");
     } catch (error) {
@@ -105,9 +115,9 @@ export const RegistrationForm = () => {
     }
   };
 
-  const handleGetStarted = () => {
-    navigate("/sign-in");
-  };
+  // const handleGetStarted = () => {
+  //   navigate("/sign-in");
+  // };
   return (
     <div className="flex min-h-screen items-center justify-center bg-secondary">
       {/* Container */}
@@ -433,7 +443,8 @@ export const RegistrationForm = () => {
           </form>
         </div>
       </div>
-      <SuccessModalWithLogo
+      {/* After discussion, we will uncomment this if needed; otherwise, we will remove it. */}
+      {/* <SuccessModalWithLogo
         isOpen={isOpen}
         onClose={() => setIsOpen(false)}
         size="xl"
@@ -445,7 +456,7 @@ export const RegistrationForm = () => {
           onClick: handleGetStarted,
           color: "primary",
         }}
-      />
+      /> */}
     </div>
   );
 };
