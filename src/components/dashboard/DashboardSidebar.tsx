@@ -106,8 +106,8 @@ export const DashboardSidebar = ({ activeUrl = "/" }: DashboardSidebarProps) => 
         onClose={() => setIsLogoutModalOpen(false)}
         size="xl"
         messageImg={logoutIcon}
-        title="You've been logged out!"
-        subtitle="You've been logged out of your account. Log back in anytime to continue"
+        title="You’ve been logged out!"
+        subtitle="You’ve been logged out of your account. Log back in anytime to continue"
         button={{
           text: "Log back in",
           onClick: handleLogout,
