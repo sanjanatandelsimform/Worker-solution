@@ -11,9 +11,14 @@ import {
   ModalFooter,
 } from "@/components/base/modal/modal";
 import { Button } from "@/components/base/buttons/button";
-import { Input } from "@/components/base/input/input";
+import { Input, InputBase } from "@/components/base/input/input";
 import { InputGroup } from "@/components/base/input/input-group";
-import { Mail01, X } from "@untitledui/icons";
+import { X } from "@untitledui/icons";
+import { NativeSelect } from "../base/select/select-native";
+import { useState } from "react";
+import { TextArea } from "../base/textarea/textarea";
+import { Checkbox } from "../base/checkbox/checkbox";
+import { Link } from "react-router-dom";
 
 // Validation schema using Zod
 const changePasswordSchema = z
@@ -40,7 +45,9 @@ interface UpdateYourEmailModalProps {
   onClose: () => void;
 }
 
-export const UpdateYourEmailModal = ({ isOpen, onClose }: UpdateYourEmailModalProps) => {
+export const GetInTouchModal = ({ isOpen, onClose }: UpdateYourEmailModalProps) => {
+  const [phoneNumber, setPhoneNumber] = useState("");
+  const [countryCode, setCountryCode] = useState("US");
   const {
     handleSubmit,
     formState: { isSubmitting },
@@ -80,10 +87,10 @@ export const UpdateYourEmailModal = ({ isOpen, onClose }: UpdateYourEmailModalPr
         <ModalHeader>
           <div className="flex items-center justify-between w-full relative">
             <div className="flex flex-col  gap-1">
-              <ModalTitle>Update your email</ModalTitle>
+              <ModalTitle>Get in touch</ModalTitle>
               <ModalDescription>
-                Update your email by entering a new address. After submitting, check your inbox for
-                a verification link and follow the steps to confirm the update.
+                We’d love to hear your thoughts. Your feedback helps us improve and create a better
+                experience for you.
               </ModalDescription>
             </div>
             <div className="absolute -right-2 -top-2">
@@ -99,34 +106,65 @@ export const UpdateYourEmailModal = ({ isOpen, onClose }: UpdateYourEmailModalPr
         <form onSubmit={handleSubmit(onSubmit)}>
           <ModalBody>
             <div className="flex flex-col gap-4">
-              {/* Current Password */}
+              <div className="flex items-center justify-between gap-4">
+                <InputGroup className="relative">
+                  <Input isRequired label="First name" size="md" placeholder="First name" />
+                </InputGroup>
+                <InputGroup className="relative">
+                  <Input isRequired label="Last name" size="md" placeholder="Last name" />
+                </InputGroup>
+              </div>
               <InputGroup className="relative">
-                <Input
-                  isRequired
-                  icon={Mail01}
-                  size="md"
-                  label="Current Email"
-                  placeholder="janet@jacksonfivestudio.com"
+                <Input isRequired size="md" label="Email" placeholder="your@company.com" />
+              </InputGroup>
+              <InputGroup
+                label="Phone number"
+                leadingAddon={
+                  <NativeSelect
+                    value={countryCode}
+                    onChange={e => setCountryCode(e.target.value)}
+                    options={[
+                      { label: "US +1", value: "US" },
+                      { label: "UK +44", value: "UK" },
+                      { label: "IN +91", value: "IN" },
+                      { label: "CA +1", value: "CA" },
+                      { label: "AU +61", value: "AU" },
+                      { label: "DE +49", value: "DE" },
+                      { label: "FR +33", value: "FR" },
+                      { label: "JP +81", value: "JP" },
+                      { label: "CN +86", value: "CN" },
+                    ]}
+                  />
+                }
+              >
+                <InputBase
+                  placeholder="(555) 000-0000"
+                  type="tel"
+                  size="sm"
+                  value={phoneNumber}
+                  onChange={setPhoneNumber}
                 />
               </InputGroup>
-
-              {/* New Password */}
               <InputGroup className="relative">
-                <Input
-                  isRequired
-                  icon={Mail01}
-                  size="md"
-                  label="New Email"
-                  placeholder="hr@jacksonfivestudio.com"
-                />
+                <TextArea isRequired label="Message" rows={5} placeholder="Leave us a message..." />
               </InputGroup>
+              <div className="flex flex-1 items-start gap-2">
+                <Checkbox
+                  size="sm"
+                  label={
+                    <>
+                      You agree to our friendly{" "}
+                      <Link to="/" className="underline">
+                        privacy policy.
+                      </Link>
+                    </>
+                  }
+                />
+              </div>
             </div>
           </ModalBody>
 
           <ModalFooter>
-            {/* <Button type="button" color="secondary" size="md" onClick={handleClose}>
-              Cancel
-            </Button> */}
             <Button
               type="submit"
               color="primary"
@@ -134,7 +172,7 @@ export const UpdateYourEmailModal = ({ isOpen, onClose }: UpdateYourEmailModalPr
               className="w-full"
               isDisabled={isSubmitting}
             >
-              {isSubmitting ? "Updating..." : "Update Email"}
+              {isSubmitting ? "Sharing..." : "Share feedback"}
             </Button>
           </ModalFooter>
         </form>

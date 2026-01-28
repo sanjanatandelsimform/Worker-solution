@@ -60,9 +60,9 @@ export const SelectItem = ({
         <div
           className={cx(
             "flex cursor-pointer items-center gap-2 rounded-md outline-hidden select-none",
-            state.isSelected && "bg-cyan-500",
+            state.isSelected && "bg-cyan-400",
             state.isDisabled && "cursor-not-allowed",
-            state.isFocused && "bg-primary_hover",
+            state.isFocused && "bg-gray-50",
             state.isFocusVisible && "ring-2 ring-focus-ring ring-inset",
 
             // Icon styles
@@ -84,7 +84,7 @@ export const SelectItem = ({
             <AriaText
               slot="label"
               className={cx(
-                "truncate text-md font-medium whitespace-nowrap text-primary",
+                "truncate text-sm font-medium whitespace-nowrap text-500",
                 state.isDisabled && "text-disabled"
               )}
             >

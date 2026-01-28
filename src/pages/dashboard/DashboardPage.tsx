@@ -5,6 +5,7 @@ import DashboardCard from "./DashboardCard";
 import { Tabs } from "@/components/base/tabs/tabs";
 import RecommendationsPage from "../recommendations/RecommendationsPage";
 import BenchmarkPage from "../benchmark/BenchmarkPage";
+import { Link } from "react-router-dom";
 
 export const DashboardPage = () => {
   return (
@@ -19,7 +20,7 @@ export const DashboardPage = () => {
           <div className="space-y-6"></div>
           <div>
             <h2 className="text-4xl font-medium text-primary">Welcome!</h2>
-            <div className="mt-6 border border-gray-300 rounded-xl p-4 bg-dashboard-card shadow-sm flex gap-4 justify-between">
+            <div className="mt-6 border border-gray-300 rounded-xl p-4 bg-dashboard-card shadow-sm flex gap-4 justify-between flex-col lg:flex-row">
               <div className="flex-1">
                 <h2 className="text-dashboard-card-title text-3xl font-medium mb-2">
                   Thanks for signing up.
@@ -34,7 +35,14 @@ export const DashboardPage = () => {
             </div>
             <DashboardCard
               title="Verify your email"
-              description="One quick step to secure your account. Didn’t get the email? Resend verification"
+              description={
+                <>
+                  One quick step to secure your account. Didn't get the email?{" "}
+                  <Link to="/" className="underline">
+                    Resend verification
+                  </Link>
+                </>
+              }
               avatarIconSrc={emailIcon}
               buttonLabel="Verify email"
               buttonType="primary"

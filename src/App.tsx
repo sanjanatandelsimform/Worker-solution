@@ -11,7 +11,7 @@ import PrivacyPage from "./pages/termsPolicy/PrivacyPage";
 import TermsPage from "./pages/termsPolicy/TermsPage";
 import ForgotPasswordForm from "./components/auth/ForgotPasswordForm";
 import ResetPasswordForm from "./components/auth/ResetPasswordForm";
-// import DesignReference from "./pages/designReference/DesignReference";
+import AssessmentWorkforcePage from "./pages/assessmentWorkforce/AssessmentWorkforce";
 
 function App() {
   return (
@@ -67,6 +67,7 @@ function App() {
               </PublicRoute>
             }
           />
+          {/* Protected routes - require authentication */}
           <Route
             path="/reset-password"
             element={
@@ -96,6 +97,14 @@ function App() {
             element={
               <ProtectedRoute>
                 <SettingsPage />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/assessment"
+            element={
+              <ProtectedRoute>
+                <AssessmentWorkforcePage />
               </ProtectedRoute>
             }
           />

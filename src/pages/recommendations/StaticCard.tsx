@@ -6,6 +6,8 @@ export interface StaticCardProps {
   count?: string;
   infoIcon?: boolean;
   classess?: string;
+  titleClass?: string;
+  countClass?: string;
   tooltipText?: string;
   descriptionText?: string;
   itemAlign?: "start" | "between" | "end";
@@ -16,15 +18,17 @@ export default function StaticCard({
   count,
   infoIcon = false,
   classess,
+  titleClass,
+  countClass,
   tooltipText,
   descriptionText,
   itemAlign,
   placements,
 }: Readonly<StaticCardProps>) {
   return (
-    <div className={`bg-white ring ring-gray-300  rounded-xl py-5 px-6 ${classess}`}>
+    <div className={`bg-white w-full ring ring-gray-300  rounded-xl py-5 px-6 ${classess}`}>
       <p
-        className={`flex items-center text-base text-gray-600 gap-2 justify-${itemAlign || "start"}`}
+        className={`flex items-center text-base text-gray-600 gap-2 justify-${itemAlign || "start"} ${titleClass}`}
       >
         {title}
         <span>
@@ -35,7 +39,7 @@ export default function StaticCard({
               placement={placements || "top"}
             >
               <TooltipTrigger className="group relative flex cursor-pointer flex-col items-center gap-2 text-fg-quaternary transition duration-100 ease-linear hover:text-fg-quaternary_hover focus:text-fg-quaternary_hover">
-                <InfoCircle className="size-4 text-gray-400" />
+                <InfoCircle className="size-5 text-gray-400" />
               </TooltipTrigger>
             </Tooltip>
           ) : (
@@ -43,7 +47,7 @@ export default function StaticCard({
           )}
         </span>
       </p>
-      <h2 className="text-4xl font-semibold mt-6">{count}</h2>
+      <h2 className={`font-semibold mt-6 ${countClass} text-3xl lg:text-4xl`}>{count}</h2>
     </div>
   );
 }

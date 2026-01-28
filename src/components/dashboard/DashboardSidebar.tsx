@@ -109,8 +109,8 @@ export const DashboardSidebar = ({ activeUrl = "/" }: DashboardSidebarProps) => 
       <div className="border border-gray-300 rounded-xl p-3 mt-6">
         <div className="flex items-start gap-3">
           <div className="flex-1">
-            <p className="text-sm font-semibold text-primary">{displayName}</p>
-            <p className="text-sm text-tertiary mt-1">{displayEmail}</p>
+            <p className="text-sm font-semibold text-primary truncate w-50">{displayName}</p>
+            <p className="text-sm text-tertiary mt-1 truncate w-50">{displayEmail}</p>
           </div>
         </div>
       </div>

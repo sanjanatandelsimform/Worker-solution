@@ -93,7 +93,9 @@
   --color-text-card-subtitle: rgba(150, 150, 150, 1);
   --color-nav-menu-text: rgba(125, 137, 176, 1);
   --color-text-400: rgba(4, 35, 60, 1);
+  --color-text-500: rgba(65, 70, 81, 1);
   --color-text-600: rgba(30, 24, 78, 1);
+  --color-text-gray-500: rgba(139, 139, 139, 1);
   --color-text-purple-500: rgba(127, 86, 217, 1);
 
   /* ========== Light Mode - Background Colors ========== */
@@ -109,6 +111,7 @@
   --color-bg-gray-25: rgba(253, 253, 253, 1);
   --color-bg-gray-100: rgba(233, 234, 235, 1);
   --color-bg-purple-50: rgba(252, 250, 255, 1);
+  --color-bg-gray-invoice: rgba(234, 236, 239, 1);
   --color-bg-purple-500: rgb(127, 86, 217, 1);
 
   /* ========== Light Mode - Foreground/Text Colors for Components ========== */
@@ -298,6 +301,9 @@
 .bg-card-avatar {
   background-color: var(--color-bg-card-avatar);
 }
+.bg-gray-invoice {
+  background-color: var(--color-bg-gray-invoice);
+}
 .border-primary {
   border-color: var(--color-border-primary);
 }
@@ -357,13 +363,18 @@
 .text-400 {
   color: var(--color-text-400);
 }
+.text-500 {
+  color: var(--color-text-500);
+}
 .color-text-600 {
   color: var(--color-text-600);
 }
 .color-base-black {
   color: var(--color-base-black);
 }
-
+.text-gray-500 {
+  color: var(--color-text-gray-500);
+}
 .font-display {
   font-family: var(--font-family-display);
 }
