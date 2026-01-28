@@ -3,7 +3,7 @@ import { Button } from "@/components/base/buttons/button";
 
 export interface DashboardCardProps {
   title: string;
-  description?: string;
+  description?: React.ReactNode;
   avatarIconSrc?: string;
   buttonLabel?: string;
   buttonType?: "primary" | "secondary" | "tertiary";
@@ -18,7 +18,7 @@ export default function DashboardCard({
   buttonIsDisabled = false,
 }: Readonly<DashboardCardProps>) {
   return (
-    <div className="mt-6 border border-gray-300 rounded-xl p-4 bg-primary shadow-sm flex gap-4 justify-between items-center">
+    <div className="mt-6 border border-gray-300 rounded-xl p-4 bg-primary shadow-sm flex gap-4 justify-between items-center flex-col lg:flex-row">
       <div className="flex items-center gap-4">
         <Avatar
           size="xl"

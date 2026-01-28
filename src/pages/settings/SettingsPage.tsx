@@ -154,9 +154,9 @@ export const SettingsPage = () => {
                   </div>
                   <div className="w-1/2 flex  gap-4">
                     <Button
-                      color="primary-destructive"
+                      color="secondary"
                       size="md"
-                      className="w-full"
+                      className="w-full text-red-700"
                       onClick={() => setIsAccountDeleteModalOpen(true)}
                     >
                       Delete Account

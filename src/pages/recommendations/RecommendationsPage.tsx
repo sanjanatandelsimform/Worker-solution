@@ -2,6 +2,7 @@ import { Badge } from "@/components/base/badges/badges";
 import CarouselSection from "./Carousel";
 import StaticCard from "./StaticCard";
 import workforceImg from "@/assets/workforce-hero.jpg";
+import didHeroImg from "@/assets/did-hero.jpg";
 import StrategiesCard from "./StrategiesCard";
 import { RefreshIcon } from "@/assets/icons/RefreshIcon";
 import BenefitCard from "./BenefitCard";
@@ -12,13 +13,14 @@ import { CheckIcon } from "@/assets/icons/CheckIcon";
 export default function RecommendationsPage() {
   return (
     <div className="bg-gray-card border border-gray-300 rounded-xl p-6 space-y-6">
-      <h2>Your Company at a Glance</h2>
-      <div className="grid grid-cols-2 gap-4 w-full">
-        <StaticCard title="Total Workforce" count="235" />
-        <StaticCard title="Average Hourly Wage" count="$34.62" />
-        <StaticCard title="Average Salary" count="$72K" />
+      <h2 className="text-2xl lg:text-4xl font-medium text-primary">Your Company at a Glance</h2>
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 w-full">
+        <StaticCard title="Total Workforce" titleClass="text-card-subtitle" count="235" />
+        <StaticCard title="Average Hourly Wage" titleClass="text-card-subtitle" count="$34.62" />
+        <StaticCard title="Average Salary" titleClass="text-card-subtitle" count="$72K" />
         <StaticCard
           title="Working Class Population"
+          titleClass="text-card-subtitle"
           count="89 (38%)"
           infoIcon={true}
           tooltipText="How is this calculated"
@@ -28,12 +30,14 @@ export default function RecommendationsPage() {
       </div>
       <CarouselSection />
       <div className="bg-white py-8 px-6 border border-gray-300 rounded-2xl">
-        <Badge type="pill-color" color="gray" size="lg">
+        <Badge type="pill-color" color="gray" size="lg" className="py-3 px-4 text-xl font-semibold">
           Recommendation
         </Badge>
-        <h2 className="mt-6 text-4xl text-600 font-medium">Core Benefits Enhancement</h2>
-        <div className="flex mt-2 gap-6">
-          <div className="prose w-1/2">
+        <h2 className="mt-6 text-2xl lg:text-4xl text-600 font-medium">
+          Core Benefits Enhancement
+        </h2>
+        <div className="flex mt-2 gap-6 flex-col lg:flex-row">
+          <div className="prose w-full lg:w-1/2">
             <p>Your comprehensive plan to enhance worker financial health and retirement.</p>
             <p>
               Here are some impactful ways to start uplifting your workforce with proven strategies,
@@ -42,7 +46,7 @@ export default function RecommendationsPage() {
             </p>
             <img src={workforceImg} alt="Workforce hero" />
           </div>
-          <div className="w-1/2">
+          <div className="w-full lg:w-1/2">
             <h3 className="text-2xl text-600 font-medium mb-5">Proven strategies</h3>
             <div className="mt-4 space-y-4">
               <StrategiesCard
@@ -66,27 +70,32 @@ export default function RecommendationsPage() {
       </div>
 
       <div className="bg-white py-8 px-6 border border-gray-300 rounded-2xl">
-        <Badge type="pill-color" color="brand" size="lg" className="mb-6">
+        <Badge
+          type="pill-color"
+          color="brand"
+          size="lg"
+          className="mb-6 py-3 px-4 text-xl font-semibold"
+        >
           Strategic Recommendations
         </Badge>
-        <div className="flex mt-2 gap-6">
-          <div className="prose w-1/2">
-            <h1 className="text-600 font-medium">Core Benefits Enhancement</h1>
+        <div className="flex mt-2 gap-6 flex-col lg:flex-row">
+          <div className="prose w-full lg:w-1/2">
+            <h1 className="text-2xl lg:text-4xl font-medium">Benefit Solutions</h1>
             <p>
               Here are some top benefit solutions that address your company goals and employee needs
               based on the information provided.
             </p>
           </div>
-          <div className="w-1/2">
-            <div className="bg-purple-100 flex gape-4 rounded-xl">
-              <div className="w-1/3">
+          <div className="w-full lg:w-1/2">
+            <div className="bg-purple-100 flex gape-4 rounded-xl max-h-33">
+              <div className="w-1/4">
                 <img
-                  src={workforceImg}
+                  src={didHeroImg}
                   alt="Workforce hero"
-                  className="w-full rounded-tl-xl rounded-bl-xl h-full"
+                  className="w-38 rounded-tl-xl rounded-bl-xl h-full object-cover"
                 />
               </div>
-              <div className="w-2/3 p-4">
+              <div className="w-3/4 p-4 overflow-auto">
                 <h4 className="text-base font-medium mb-2 color-text-600">Did you know?</h4>
                 <p className="text-base color-text-600">
                   The cost of replacing an individual employee can range from one-half to two times
@@ -100,10 +109,10 @@ export default function RecommendationsPage() {
           <div className="prose">
             <h3>Recommended Benefit Providers</h3>
           </div>
-          <div className="grid grid-cols-3 gap-5 w-full mt-6">
+          <div className="grid xl:grid-cols-3 gap-5 w-full mt-6">
             <BenefitCard
               badgeText="Financial"
-              badgeClassess="px-3 py-1"
+              badgeClassess="bg-cyan-100 ring-0 px-4 py-1.5"
               title="Healthcare Alternatives"
               descriptionText="Allows employees to pay for healthcare costs interest-free and over time, like a healthcare BNPL."
               listTitle="Key Benefits"
@@ -115,7 +124,7 @@ export default function RecommendationsPage() {
             />
             <BenefitCard
               badgeText="Financial"
-              badgeClassess="px-3 py-1"
+              badgeClassess="bg-cyan-100 ring-0 px-4 py-1.5"
               title="Financial Planning"
               descriptionText="Financial wellness platform offering no-cost rainy day funds and financial therapy"
               listTitle="Key Benefits"
@@ -127,7 +136,7 @@ export default function RecommendationsPage() {
             />
             <BenefitCard
               badgeText="Financial"
-              badgeClassess="px-3 py-1"
+              badgeClassess="bg-cyan-100 ring-0 px-4 py-1.5"
               title="Emergency Savings"
               descriptionText="Encourages workers to save for emergencies with employer-matched savings accounts."
               listTitle="Key Benefits"

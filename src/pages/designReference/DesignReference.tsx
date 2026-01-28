@@ -1,8 +1,9 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Button } from "@/components/base/buttons/button";
 import { SocialButton } from "@/components/base/buttons/social-button";
 import { Input, InputBase } from "@/components/base/input/input";
 import { InputGroup } from "@/components/base/input/input-group";
+import { TextArea } from "@/components/base/textarea/textarea";
 import { Checkbox } from "@/components/base/checkbox/checkbox";
 import { NativeSelect } from "@/components/base/select/select-native";
 import { Mail01, Eye, EyeOff, Lightbulb02, ChevronLeft, ChevronRight } from "@untitledui/icons";
@@ -15,6 +16,7 @@ import { ChangePasswordFailedModal } from "@/components/modals/ChangePasswordFai
 import { InProgressModal } from "@/components/modals/InProgressModal";
 import DashboardSidebar from "@/components/dashboard/DashboardSidebar";
 import { Carousel } from "@/components/application/carousel/carousel-base";
+import { BarChart, Bar, XAxis, Cell, ResponsiveContainer } from "recharts";
 
 // Did You Know carousel data
 const didYouKnowSlides = [
@@ -42,6 +44,7 @@ function DesignReference() {
   const [phoneNumber, setPhoneNumber] = useState("");
   const [countryCode, setCountryCode] = useState("US");
   const [showPassword, setShowPassword] = useState(false);
+  const [textareaValue, setTextareaValue] = useState("");
   // const [mobileNumber, setMobileNumber] = useState("");
   // const [workNumber, setWorkNumber] = useState("");
   // const [homeNumber, setHomeNumber] = useState("");
@@ -269,6 +272,84 @@ function DesignReference() {
                     </Select.Item>
                   )}
                 </Select>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        {/* Demo Section for Untitled UI Textarea Component */}
+        <div className="mt-8 space-y-6">
+          <h2 className="text-2xl font-bold">Untitled UI Textarea Component</h2>
+          <div className="space-y-4">
+            <div className="space-y-2">
+              <div className="flex flex-wrap gap-2">
+                <TextArea
+                  label="About"
+                  placeholder="Tell us about yourself..."
+                  hint="Write a few sentences about yourself."
+                  value={textareaValue}
+                  onChange={setTextareaValue}
+                />
+              </div>
+              <div className="flex flex-wrap gap-2">
+                <TextArea
+                  label="Bio"
+                  placeholder="Write your bio here..."
+                  hint="This will be displayed on your profile."
+                  value={textareaValue}
+                  onChange={setTextareaValue}
+                />
+              </div>
+              <div className="flex flex-wrap gap-2">
+                <TextArea
+                  isRequired
+                  label="Comment"
+                  placeholder="Leave a comment..."
+                  hint="Your comment will be visible to everyone."
+                  tooltip="This is a tooltip"
+                  value={textareaValue}
+                  onChange={setTextareaValue}
+                />
+              </div>
+              <div className="flex flex-wrap gap-2">
+                <TextArea
+                  isRequired
+                  label="Feedback"
+                  placeholder="Share your feedback..."
+                  hint="Your feedback helps us improve."
+                  tooltip="This is a tooltip for feedback"
+                  value={textareaValue}
+                  onChange={setTextareaValue}
+                />
+              </div>
+              <div className="flex flex-wrap gap-2">
+                <TextArea
+                  isDisabled
+                  label="Disabled Textarea"
+                  placeholder="This textarea is disabled"
+                  value={textareaValue}
+                  onChange={setTextareaValue}
+                />
+              </div>
+              <div className="flex flex-wrap gap-2">
+                <TextArea
+                  label="Description"
+                  placeholder="Enter a description..."
+                  rows={6}
+                  value={textareaValue}
+                  onChange={setTextareaValue}
+                />
+              </div>
+              <div className="flex flex-wrap gap-2">
+                <TextArea
+                  label="Message"
+                  placeholder="Type your message..."
+                  rows={4}
+                  cols={50}
+                  hint="Message should be between 10-500 characters."
+                  value={textareaValue}
+                  onChange={setTextareaValue}
+                />
               </div>
             </div>
           </div>
@@ -775,10 +856,172 @@ function DesignReference() {
           </div>
         </div>
 
+        {/* Demo Section for Benchmark Chart */}
+        <div className="mt-8 space-y-6">
+          <h2 className="text-2xl font-bold">Benchmark Chart Component</h2>
+          <p className="text-secondary">
+            Pixel-perfect implementation of the benchmark comparison chart showing Industry,
+            Company, and National averages.
+          </p>
+
+          {/* Benchmark Chart */}
+          <div className="max-w-4xl">
+            <BenchmarkChart />
+          </div>
+        </div>
+
         <DashboardSidebar />
       </div>
     </div>
   );
 }
+
+// Benchmark Chart Component
+const BenchmarkChart = () => {
+  const [mounted, setMounted] = useState(false);
+
+  useEffect(() => {
+    // Use setTimeout to avoid synchronous setState in effect
+    const timer = setTimeout(() => setMounted(true), 0);
+    return () => clearTimeout(timer);
+  }, []);
+
+  const salaryData = [
+    { name: "Industry average", value: 33.75, color: "#00C4C7" },
+    { name: "Your company", value: 54.375, color: "#22CCEE" },
+    { name: "National average", value: 100, color: "#DBEBEB" },
+  ];
+
+  const hourlyData = [
+    { name: "Industry average", value: 33.75, color: "#00C4C7" },
+    { name: "Your company", value: 54.375, color: "#22CCEE" },
+    { name: "National average", value: 100, color: "#DBEBEB" },
+  ];
+
+  if (!mounted) {
+    return (
+      <div
+        className="bg-white border border-[#D5D7DA] rounded-xl p-6 flex items-center justify-center"
+        style={{ minHeight: "400px" }}
+      >
+        <p className="text-tertiary">Loading chart...</p>
+      </div>
+    );
+  }
+
+  return (
+    <div className="bg-white border border-[#D5D7DA] rounded-xl p-6 flex flex-col gap-8">
+      {/* Charts Container */}
+      <div className="flex gap-8 items-center justify-center">
+        {/* Salary Chart */}
+        <div className="flex flex-col gap-[13px] items-center">
+          <div className="relative" style={{ width: "173px", height: "320px" }}>
+            <ResponsiveContainer width="100%" height="100%">
+              <BarChart data={salaryData} barGap={0} barCategoryGap={0}>
+                <XAxis hide />
+                <Bar dataKey="value" radius={[2, 2, 0, 0]} barSize={57.692}>
+                  {salaryData.map((entry, index) => (
+                    <Cell
+                      key={`cell-${index}`}
+                      fill={entry.color}
+                      opacity={index === 2 ? 0.4 : 0.8}
+                      stroke={index === 1 ? "#D5D7DA" : index === 0 ? "#D5D7DA" : "#000000"}
+                      strokeWidth={1}
+                    />
+                  ))}
+                </Bar>
+              </BarChart>
+            </ResponsiveContainer>
+          </div>
+          <p
+            className="font-normal text-center text-black"
+            style={{
+              fontSize: "18px",
+              lineHeight: "28px",
+              fontFamily: "Inter, sans-serif",
+            }}
+          >
+            Salary
+          </p>
+        </div>
+
+        {/* Hourly Chart */}
+        <div className="flex flex-col gap-[13px] items-center">
+          <div className="relative" style={{ width: "173px", height: "320px" }}>
+            <ResponsiveContainer width="100%" height="100%">
+              <BarChart data={hourlyData} barGap={0} barCategoryGap={0}>
+                <XAxis hide />
+                <Bar dataKey="value" radius={[2, 2, 0, 0]} barSize={57.692}>
+                  {hourlyData.map((entry, index) => (
+                    <Cell
+                      key={`cell-${index}`}
+                      fill={entry.color}
+                      opacity={index === 2 ? 0.4 : 0.8}
+                      stroke={index === 1 ? "#D5D7DA" : index === 0 ? "#D5D7DA" : "#000000"}
+                      strokeWidth={1}
+                    />
+                  ))}
+                </Bar>
+              </BarChart>
+            </ResponsiveContainer>
+          </div>
+          <p
+            className="font-normal text-center text-black"
+            style={{
+              fontSize: "18px",
+              lineHeight: "28px",
+              fontFamily: "Inter, sans-serif",
+            }}
+          >
+            Hourly
+          </p>
+        </div>
+      </div>
+
+      {/* Legend */}
+      <div className="flex gap-6 items-center justify-center w-full">
+        <div className="flex gap-4 items-center">
+          <div className="w-[18px] h-[18px] rounded-[2px]" style={{ backgroundColor: "#00C4C7" }} />
+          <p
+            className="font-normal text-black"
+            style={{
+              fontSize: "18px",
+              lineHeight: "28px",
+              fontFamily: "Inter, sans-serif",
+            }}
+          >
+            Industry average
+          </p>
+        </div>
+        <div className="flex gap-4 items-center">
+          <div className="w-[18px] h-[18px] rounded-[2px]" style={{ backgroundColor: "#22CCEE" }} />
+          <p
+            className="font-normal text-black"
+            style={{
+              fontSize: "18px",
+              lineHeight: "28px",
+              fontFamily: "Inter, sans-serif",
+            }}
+          >
+            Your company
+          </p>
+        </div>
+        <div className="flex gap-4 items-center">
+          <div className="w-[18px] h-[18px] rounded-[2px]" style={{ backgroundColor: "#DBEBEB" }} />
+          <p
+            className="font-normal text-black"
+            style={{
+              fontSize: "18px",
+              lineHeight: "28px",
+              fontFamily: "Inter, sans-serif",
+            }}
+          >
+            National average
+          </p>
+        </div>
+      </div>
+    </div>
+  );
+};
 
 export default DesignReference;
