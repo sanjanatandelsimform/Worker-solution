@@ -52,7 +52,7 @@ export const BarChartPage = () => {
             tickMargin={2}
             interval="preserveStartEnd"
             dataKey="date"
-            tickFormatter={value =>
+            tickFormatter={(value: string | number) =>
               new Date(value).toLocaleDateString(undefined, { month: "short" })
             }
             ticks={selectEvenlySpacedItems(data, 2).map(item => item.date)}
@@ -70,7 +70,7 @@ export const BarChartPage = () => {
             axisLine={false}
             tickLine={false}
             interval="preserveStartEnd"
-            tickFormatter={value => Number(value).toLocaleString()}
+            tickFormatter={(value: string | number) => Number(value).toLocaleString()}
           >
             <Label
               //value="Active users"
@@ -84,10 +84,13 @@ export const BarChartPage = () => {
 
           <Tooltip
             content={<ChartTooltipContent />}
-            formatter={value => Number(value).toLocaleString()}
+            formatter={(value: string | number | undefined) =>
+              value !== undefined ? Number(value).toLocaleString() : ""
+            }
             // Custom label formatter to show the week range
-            labelFormatter={value => {
-              const date = new Date(value);
+            labelFormatter={(value: React.ReactNode) => {
+              if (!value) return "";
+              const date = new Date(String(value));
               const endDate = new Date(date);
               endDate.setDate(date.getDate() + 6); // Set end date to 7 days after start date
 
