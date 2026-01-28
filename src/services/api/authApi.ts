@@ -2,8 +2,8 @@ import axios, { AxiosError } from "axios";
 import type {
   RegistrationData,
   SignInData,
-  BusinessInfoData,
-  AuthResponse,
+  // BusinessInfoData,
+  // AuthResponse,
   UserAccount,
   EmailCheckResponse,
   ApiError,
@@ -145,7 +145,9 @@ export const getCurrentUser = async (): Promise<UserAccount | null> => {
  */
 export const checkEmailAvailability = async (email: string): Promise<boolean> => {
   try {
-    const response = await apiClient.post<EmailCheckResponse>("/auth/check-email", { email });
+    const response = await apiClient.get<EmailCheckResponse>("/auth/check-email", {
+      params: { email },
+    });
     return response.data.available;
   } catch (error) {
     throw new Error(getErrorMessage(error));
@@ -153,11 +155,31 @@ export const checkEmailAvailability = async (email: string): Promise<boolean> =>
 };
 
 /**
- * Submit business information for Google SSO users
+ * Request password reset / forgot password
  */
-export const submitBusinessInfo = async (data: BusinessInfoData): Promise<AuthResponse> => {
+export const forgotPassword = async (email: string): Promise<{ message?: string }> => {
   try {
-    const response = await apiClient.post<AuthResponse>("/auth/complete-profile", data);
+    const response = await apiClient.post<{ message?: string }>("/auth/forgot-password", {
+      businessEmail: email,
+    });
+    return response.data;
+  } catch (error) {
+    throw new Error(getErrorMessage(error));
+  }
+};
+
+/**
+ * Reset password using reset token
+ */
+export const resetPassword = async (
+  resetToken: string,
+  newPassword: string
+): Promise<{ message?: string }> => {
+  try {
+    const response = await apiClient.post<{ message?: string }>("/auth/reset-password", {
+      resetToken,
+      newPassword,
+    });
     return response.data;
   } catch (error) {
     throw new Error(getErrorMessage(error));

@@ -332,9 +332,9 @@ export const RegistrationForm = () => {
                   className="absolute right-0 top-7"
                 >
                   {showPassword ? (
-                    <EyeOff className="size-5 text-gray-400" />
-                  ) : (
                     <Eye className="size-5 text-gray-400" />
+                  ) : (
+                    <EyeOff className="size-5 text-gray-400" />
                   )}
                 </Button>
               </InputGroup>
@@ -366,9 +366,9 @@ export const RegistrationForm = () => {
                   className="absolute right-0 top-7"
                 >
                   {showConfirmPassword ? (
-                    <EyeOff className="size-5 text-gray-400" />
-                  ) : (
                     <Eye className="size-5 text-gray-400" />
+                  ) : (
+                    <EyeOff className="size-5 text-gray-400" />
                   )}
                 </Button>
               </InputGroup>

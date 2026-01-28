@@ -1,9 +1,26 @@
 "use client";
-import type { TooltipProps } from "recharts";
-import type { Props as LegendContentProps } from "recharts/types/component/DefaultLegendContent";
-import type { NameType, ValueType } from "recharts/types/component/DefaultTooltipContent";
-import type { Props as DotProps } from "recharts/types/shape/Dot";
 import { cx } from "@/utils/cx";
+
+// Type definitions for recharts components
+type LegendContentProps = {
+  payload?: Array<{
+    value: string;
+    type: string;
+    color: string;
+    dataKey: string;
+    payload?: { className?: string };
+  }>;
+  [key: string]: unknown;
+};
+
+type NameType = string | number;
+type ValueType = string | number | Array<string | number>;
+
+type DotProps = {
+  cx?: number;
+  cy?: number;
+  [key: string]: unknown;
+};
 
 /**
  * Renders the legend content for a chart.
@@ -32,24 +49,38 @@ export const ChartLegendContent = ({
         className
       )}
     >
-      {payload?.map((entry, index) => (
-        <li className="flex items-center gap-2 text-sm text-tertiary" key={index}>
-          <span
-            className={cx(
-              "h-2 w-2 rounded-full bg-current",
-              (entry.payload as { className?: string })?.className
-            )}
-          />
-          {entry.value}
-        </li>
-      ))}
+      {payload?.map(
+        (
+          entry: {
+            value: string;
+            type: string;
+            color: string;
+            dataKey: string;
+            payload?: { className?: string };
+          },
+          index: number
+        ) => (
+          <li className="flex items-center gap-2 text-sm text-tertiary" key={index}>
+            <span
+              className={cx(
+                "h-2 w-2 rounded-full bg-current",
+                (entry.payload as { className?: string })?.className
+              )}
+            />
+            {entry.value}
+          </li>
+        )
+      )}
     </ul>
   );
 };
-interface ChartTooltipContentProps extends TooltipProps<ValueType, NameType> {
+interface ChartTooltipContentProps {
   isRadialChart?: boolean;
   isPieChart?: boolean;
   label?: string;
+  active?: boolean;
+  formatter?: (value: ValueType, name: NameType, item: unknown, index: number) => React.ReactNode;
+  labelFormatter?: (label: string, payload: unknown[]) => React.ReactNode;
   // We have to use `any` here because the `payload` prop is not typed correctly in the `recharts` library.
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   payload?: any;
@@ -86,7 +117,7 @@ export const ChartTooltipContent = ({
     : payload;
   title =
     isSingleDataPoint && formatter
-      ? formatter(title, payload?.[0].name || label, payload[0], 0, payload)
+      ? formatter(title, payload?.[0].name || label, payload[0], 0)
       : labelFormatter
         ? labelFormatter(title, payload)
         : title;
@@ -99,7 +130,7 @@ export const ChartTooltipContent = ({
         <div>
           {secondaryTitle.map((entry, index) => (
             <p key={index} className={cx("text-xs text-gray-100")}>
-              {`${entry.name}: ${formatter ? formatter(entry.value, entry.name, entry, index, entry.payload) : entry.value}`}
+              {`${entry.name}: ${formatter ? formatter(entry.value, entry.name, entry, index) : entry.value}`}
             </p>
           ))}
         </div>
@@ -110,6 +141,8 @@ export const ChartTooltipContent = ({
   );
 };
 interface ChartActiveDotProps extends DotProps {
+  cx?: number;
+  cy?: number;
   // We have to use `any` here because the `payload` prop is not typed correctly in the `recharts` library.
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   payload?: any;

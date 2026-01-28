@@ -1,9 +1,55 @@
+import { useState } from "react";
+import { useForm } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { useNavigate } from "react-router-dom";
 import { Button } from "../base/buttons/button";
-import { InputGroup } from "../base/input/input-group";
 import { Input } from "../base/input/input";
+import { InputGroup } from "../base/input/input-group";
 import { Mail01 } from "@untitledui/icons";
+import { forgotPassword } from "@/services/api/authApi";
+import {
+  forgotPasswordSchema,
+  type ForgotPasswordFormData,
+} from "@/services/validation/authSchemas";
+import checkmarkIcon from "@/assets/checkmark-icon.svg";
+import { SuccessModalWithLogo } from "../modals/SuccessModalWithLogo";
 
 export default function ForgotPasswordForm() {
+  const navigate = useNavigate();
+  const [isOpen, setIsOpen] = useState(false);
+  const [errorMessage, setErrorMessage] = useState<string | null>(null);
+
+  const {
+    handleSubmit,
+    formState: { errors, isSubmitting },
+    setValue,
+    trigger,
+    reset,
+    getValues,
+  } = useForm<ForgotPasswordFormData>({
+    resolver: zodResolver(forgotPasswordSchema),
+    mode: "onBlur",
+    defaultValues: { email: "" },
+  });
+
+  const onSubmit = async (data: ForgotPasswordFormData) => {
+    try {
+      setErrorMessage(null);
+      await forgotPassword(data.email);
+      setIsOpen(true);
+      reset();
+    } catch (err) {
+      console.error("Forgot password error:", err);
+      setErrorMessage(
+        err instanceof Error ? err.message : "Unable to process request. Please try again."
+      );
+    }
+  };
+
+  const handleGetStarted = () => {
+    setIsOpen(false);
+    navigate("/sign-in");
+  };
   return (
     <div className="flex min-h-screen items-center justify-center bg-secondary">
       <div className="flex w-2xl items-center justify-center rounded-xl border border-solid border-primary bg-primary py-28">
@@ -29,20 +75,35 @@ export default function ForgotPasswordForm() {
 
           {/* Form Content */}
           <div className="flex w-full flex-col items-center gap-6 rounded-xl">
-            <form className="flex w-full cursor-pointer flex-col gap-5">
+            <form
+              onSubmit={handleSubmit(onSubmit)}
+              className="flex w-full cursor-pointer flex-col gap-5"
+            >
               {/* Email Input Field */}
               <InputGroup>
                 <Input
                   name="email"
-                  size="md"
                   icon={Mail01}
+                  size="md"
                   isRequired
                   label="Business Email Address"
                   placeholder="olivia@untitledui.com"
-                  value={"email"}
+                  hint={errors.email?.message}
+                  isInvalid={!!errors.email}
+                  value={getValues("email")}
+                  onChange={value => {
+                    setValue("email", value);
+                    trigger("email");
+                  }}
                 />
               </InputGroup>
 
+              {/* Error and Success Messages */}
+              {errorMessage && (
+                <div className="rounded-lg bg-error-50 border border-error-300 px-4 py-3">
+                  <p className="text-error-600 text-sm font-medium">{errorMessage}</p>
+                </div>
+              )}
               {/* Actions */}
               <div className="flex w-full flex-col items-start gap-4">
                 {/* Sign in Button */}
@@ -50,10 +111,10 @@ export default function ForgotPasswordForm() {
                   type="submit"
                   color="primary"
                   size="lg"
-                  href="/reset-password"
+                  isDisabled={isSubmitting}
                   className="w-full"
                 >
-                  Send Link
+                  {isSubmitting ? "Sending..." : "Send Link"}
                 </Button>
               </div>
             </form>
@@ -68,6 +129,22 @@ export default function ForgotPasswordForm() {
           </div>
         </div>
       </div>
+      <SuccessModalWithLogo
+        isOpen={isOpen}
+        onClose={() => {
+          setIsOpen(false);
+          navigate("/sign-in");
+        }}
+        size="xl"
+        messageImg={checkmarkIcon}
+        title="Email Verification!"
+        subtitle="A link has been sent to your email. Please check your inbox to reset your password and verify your email"
+        button={{
+          text: "Back to login",
+          onClick: handleGetStarted,
+          color: "primary",
+        }}
+      />
     </div>
   );
 }

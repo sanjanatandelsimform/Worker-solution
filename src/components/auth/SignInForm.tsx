@@ -252,7 +252,10 @@ export const SignInForm = () => {
       />
       <SuccessModalWithLogo
         isOpen={isOpen}
-        onClose={() => setIsOpen(false)}
+        onClose={() => {
+          setIsOpen(false);
+          navigate("/dashboard");
+        }}
         size="xl"
         messageImg={checkmarkIcon}
         title="Sign In Successful!"
