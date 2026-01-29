@@ -199,7 +199,7 @@ export default function ResetPasswordForm() {
         title="Password Reset Successful"
         subtitle="Your password has been updated successfully. You can now sign in using your new password."
         button={{
-          text: "Login in",
+          text: "Log in",
           onClick: handleGetStarted,
           color: "primary",
         }}

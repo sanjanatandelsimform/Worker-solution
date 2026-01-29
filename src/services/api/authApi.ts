@@ -186,4 +186,24 @@ export const resetPassword = async (
   }
 };
 
+/**
+ * Verify email using verification token
+ */
+export const verifyEmail = async (
+  token: string
+): Promise<{ message?: string; user?: UserAccount }> => {
+  try {
+    const response = await apiClient.post<{ message?: string; user?: UserAccount }>(
+      "/verification/verify",
+      {},
+      {
+        params: { token },
+      }
+    );
+    return response.data;
+  } catch (error) {
+    throw new Error(getErrorMessage(error));
+  }
+};
+
 export default apiClient;
