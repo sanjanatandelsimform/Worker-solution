@@ -1,6 +1,10 @@
-import insightHero from "@/assets/checkmark-icon.svg";
-import { Button } from "@/components/base/buttons/button";
+import { useEffect } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
+import { useAppDispatch } from "@/store/hooks";
+import { clearUser, setUser } from "@/store/slices/authSlice";
+import { Button } from "@/components/base/buttons/button";
+import insightHero from "@/assets/checkmark-icon.svg";
+import type { UserAccount } from "@/types/auth";
 
 export interface SuccessCardProps {
   successImageSrc?: string;
@@ -19,13 +23,64 @@ export const SuccessPage: React.FC<SuccessCardProps> = ({
 }) => {
   const navigate = useNavigate();
   const location = useLocation();
+  const dispatch = useAppDispatch();
+
   const state = (location.state || {}) as {
     messageImg?: string;
     title?: string;
     subtitle?: string;
     buttonText?: string;
     buttonPath?: string;
+    shouldClearUser?: boolean;
+    user?: UserAccount;
+    tokens?: {
+      accessToken: string;
+      refreshToken: string;
+    };
   };
+
+  // Clear user state and storage if coming from logout
+  useEffect(() => {
+    if (state.shouldClearUser) {
+      dispatch(clearUser());
+      localStorage.removeItem("userDetail");
+    }
+    // Only run once on mount
+    // eslint-disable-next-line
+  }, []);
+
+  // Get user from location.state
+  const user = state.user;
+  const tokens = state.tokens;
+
+  // Handler for button click - stores user data and navigates
+  const handleButtonClick = () => {
+    // Store user data in Redux when button is clicked (if user exists)
+    if (user && tokens) {
+      dispatch(
+        setUser({
+          user: {
+            id: user.id,
+            email: user.businessEmail || user.email,
+            firstName: user.firstName,
+            lastName: user.lastName,
+            businessName: user.businessName,
+            phoneNumber: user.businessPhone || user.phoneNumber,
+            industry: user.industry,
+            zipCode: user.zipCode.toString(),
+            authMethod: user.googleId ? "google" : "email",
+            emailVerified: user.emailVerified,
+            profileComplete: true,
+            createdAt: user.createdAt,
+            updatedAt: user.updatedAt,
+          },
+          tokens,
+        })
+      );
+    }
+    navigate(state.buttonPath || "/sign-in");
+  };
+
   return (
     <div className={`flex min-h-screen items-center justify-center bg-secondary ${classess}`}>
       <div className="flex w-2xl items-center justify-center rounded-xl border border-solid border-primary bg-primary py-28">
@@ -37,7 +92,11 @@ export const SuccessPage: React.FC<SuccessCardProps> = ({
               <h1 className="text-5xl font-bold leading-15 text-primary">BeneStat</h1>
             </div>
             <div>
-              <img src={successImageSrc || insightHero} alt="Insight hero" className="w-full" />
+              <img
+                src={successImageSrc || state.messageImg || insightHero}
+                alt="Success"
+                className="w-full"
+              />
             </div>
 
             {/* Title and Description */}
@@ -51,13 +110,8 @@ export const SuccessPage: React.FC<SuccessCardProps> = ({
                   "Welcome aboard! Start your success journey with BeneStat"}
               </p>
             </div>
-            <Button
-              color="primary"
-              size="lg"
-              className="mt-4"
-              onClick={() => navigate(state.buttonPath || "/sign-in")}
-            >
-              {buttonLabel || state.buttonText || "Let’s Get Started"}
+            <Button color="primary" size="lg" className="mt-4" onClick={handleButtonClick}>
+              {buttonLabel || state.buttonText || "Let's Get Started"}
             </Button>
           </div>
         </div>

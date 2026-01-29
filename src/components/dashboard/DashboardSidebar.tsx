@@ -1,16 +1,14 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { useAppDispatch, useAppSelector } from "@/store/hooks";
+import { useAppSelector } from "@/store/hooks";
 import { Settings01, LogOut04, Speedometer03 } from "@untitledui/icons";
 import { NavList } from "@/components/application/app-navigation/base-components/nav-list";
 import type { NavItemType } from "@/components/application/app-navigation/config";
-// import { SuccessModalWithLogo } from "../modals/SuccessModalWithLogo";
 import { signout } from "@/services/api/authApi";
-// import logoutIcon from "@/assets/checkmark-icon.svg";
-import { clearUser } from "@/store/slices/authSlice";
 import { BaseModalWithIcon } from "../modals/BaseModalWithIcon";
 import { AlertOctagon } from "@untitledui/icons";
 import alertIcon from "@/assets/alert-icon.svg";
+import checkmarkIcon from "@/assets/checkmark-icon.svg";
 
 interface DashboardSidebarProps {
   activeUrl?: string;
@@ -18,7 +16,6 @@ interface DashboardSidebarProps {
 
 export const DashboardSidebar = ({ activeUrl = "/" }: DashboardSidebarProps) => {
   const navigate = useNavigate();
-  const dispatch = useAppDispatch();
   const [isLogoutModalOpen, setIsLogoutModalOpen] = useState(false);
   const [logoutError, setLogoutError] = useState<string | null>(null);
 
@@ -28,16 +25,24 @@ export const DashboardSidebar = ({ activeUrl = "/" }: DashboardSidebarProps) => 
     setLogoutError(null);
     try {
       await signout(tokens.accessToken || undefined);
-      // Only clear storage and redirect if API call succeeds
-      dispatch(clearUser());
-      localStorage.removeItem("userDetail");
-      setIsLogoutModalOpen(false);
-      navigate("/sign-in");
+
+      // Navigate to success page FIRST, pass a flag to clear user
+      navigate("/success", {
+        state: {
+          messageImg: checkmarkIcon,
+          title: "You’ve been logged out",
+          subtitle: "You’ve been logged out of your account. Log back in anytime to continue.",
+          buttonText: "Log back in",
+          buttonPath: "/sign-in",
+          pageType: "logout",
+          shouldClearUser: true, // <-- pass this flag
+        },
+      });
     } catch (error) {
       console.error("Logout error:", error);
-      const errorMessage =
-        error instanceof Error ? error.message : "Failed to logout. Please try again.";
-      setLogoutError(errorMessage);
+      setLogoutError(
+        error instanceof Error ? error.message : "Failed to logout. Please try again."
+      );
       setIsLogoutModalOpen(false);
     }
   };
@@ -94,15 +99,6 @@ export const DashboardSidebar = ({ activeUrl = "/" }: DashboardSidebarProps) => 
           activeUrl={activeUrl}
           className="mt-4 border-t border-primary"
         />
-
-        {/* Logout Button */}
-        {/* <button
-          onClick={handleLogout}
-          className="mt-2 flex w-full items-center gap-3 rounded-lg px-3 py-3 text-sm font-medium text-tertiary transition-colors hover:bg-secondary hover:text-primary hover:bg-cyan-500 hover:text-white hover:cursor-pointer"
-        >
-          <LogOut04 className="h-5 w-5" />
-          <span>Logout</span>
-        </button> */}
       </nav>
 
       {/* User Account Card at Bottom - Dynamic User Info */}
@@ -145,19 +141,6 @@ export const DashboardSidebar = ({ activeUrl = "/" }: DashboardSidebarProps) => 
           </div>
         </div>
       )}
-      {/* <SuccessModalWithLogo
-        isOpen={isLogoutModalOpen}
-        onClose={() => setIsLogoutModalOpen(false)}
-        size="xl"
-        messageImg={logoutIcon}
-        title="You’ve been logged out!"
-        subtitle="You’ve been logged out of your account. Log back in anytime to continue"
-        button={{
-          text: "Log back in",
-          onClick: handleLogout,
-          color: "primary",
-        }}
-      /> */}
       <BaseModalWithIcon
         isOpen={isLogoutModalOpen}
         onClose={() => setIsLogoutModalOpen(false)}

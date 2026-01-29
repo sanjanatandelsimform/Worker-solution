@@ -25,6 +25,7 @@ export const registrationSchema = z
     lastName: z
       .string()
       .min(1, "Last Name is required")
+      .min(2, "Last Name must be at least 2 characters")
       .max(20, "Last Name must not exceed 20 characters"),
     legalBusinessName: z
       .string()
@@ -67,7 +68,14 @@ export const registrationSchema = z
 // Sign-in form validation schema
 export const signInSchema = z.object({
   email: z.string().min(1, "Email is required").email("Enter a valid email address"),
-  password: z.string().min(1, "Password is required"),
+  password: z
+    .string()
+    .min(1, "Password is required")
+    .min(8, "Password must be at least 8 characters")
+    .regex(/[A-Z]/, "Password must contain at least one uppercase letter")
+    .regex(/[a-z]/, "Password must contain at least one lowercase letter")
+    .regex(/[0-9]/, "Password must contain at least one number")
+    .regex(/[!@#$%^&*(),.?":{}|<>]/, "Password must contain at least one special character"),
   rememberMe: z.boolean().optional(),
 });
 

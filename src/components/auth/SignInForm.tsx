@@ -6,30 +6,19 @@ import { Button } from "@/components/base/buttons/button";
 import { Input } from "@/components/base/input/input";
 import { InputGroup } from "@/components/base/input/input-group";
 import { Checkbox } from "@/components/base/checkbox/checkbox";
-import { GoogleSSOButton } from "./GoogleSSOButton";
+// import { GoogleSSOButton } from "./GoogleSSOButton";
 import { Eye, EyeOff } from "@untitledui/icons";
-import type { SignInData, UserAccount } from "@/types/auth";
+import type { SignInData } from "@/types/auth";
 import { signin } from "@/services/api/authApi";
 import { ChangePasswordModal } from "../modals/ChangePasswordModal";
-import { SuccessModalWithLogo } from "../modals/SuccessModalWithLogo";
 import checkmarkIcon from "@/assets/checkmark-icon.svg";
-import { useAppDispatch } from "@/store/hooks";
-import { setUser } from "@/store/slices/authSlice";
-
 import { signInSchema, type SignInFormData } from "@/services/validation/authSchemas";
 
 export const SignInForm = () => {
-  const dispatch = useAppDispatch();
   const [showPassword, setShowPassword] = useState(false);
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
   const [isChangePasswordModalOpen, setIsChangePasswordModalOpen] = useState(false);
-  const [isOpen, setIsOpen] = useState(false);
   const navigate = useNavigate();
-
-  const [pendingAuth, setPendingAuth] = useState<{
-    user: UserAccount;
-    tokens: { accessToken: string; refreshToken: string };
-  } | null>(null);
 
   const {
     handleSubmit,
@@ -40,6 +29,7 @@ export const SignInForm = () => {
   } = useForm<SignInFormData>({
     resolver: zodResolver(signInSchema),
     mode: "onBlur",
+    reValidateMode: "onChange",
     defaultValues: {
       email: "",
       password: "",
@@ -53,7 +43,13 @@ export const SignInForm = () => {
 
   const onSubmit = async (data: SignInFormData) => {
     try {
-      setErrorMessage(null); // Clear previous errors
+      setErrorMessage(null);
+
+      // Trigger validation on all fields to show errors
+      const isValid = await trigger();
+      if (!isValid) {
+        return;
+      }
 
       const signInData: SignInData = {
         businessEmail: data.email,
@@ -68,46 +64,27 @@ export const SignInForm = () => {
       }
 
       const { user, tokens } = response.data;
-      setPendingAuth({ user, tokens });
 
-      setValue("email", "");
+      // Clear password field
       setValue("password", "");
-      setErrorMessage(null);
-      setIsOpen(true);
+      // Navigate to success page
+      navigate("/success", {
+        state: {
+          messageImg: checkmarkIcon,
+          title: "Sign In Successful!",
+          subtitle: "Welcome back! Continue your success journey with Worker Solutions®",
+          buttonText: "Go to Dashboard",
+          buttonPath: "/dashboard",
+          user: user,
+          tokens: tokens,
+        },
+      });
     } catch (error) {
       console.error("Sign in error:", error);
       setErrorMessage(
         error instanceof Error ? error.message : "An unexpected error occurred. Please try again."
       );
     }
-  };
-
-  const handleGetStarted = () => {
-    if (!pendingAuth) return;
-    dispatch(
-      setUser({
-        user: {
-          id: pendingAuth.user.id,
-          email: pendingAuth.user.businessEmail || pendingAuth.user.email,
-          firstName: pendingAuth.user.firstName,
-          lastName: pendingAuth.user.lastName,
-          businessName: pendingAuth.user.businessName,
-          phoneNumber: pendingAuth.user.businessPhone || pendingAuth.user.phoneNumber,
-          industry: pendingAuth.user.industry,
-          zipCode: pendingAuth.user.zipCode.toString(),
-          authMethod: pendingAuth.user.googleId ? "google" : "email",
-          emailVerified: pendingAuth.user.emailVerified,
-          profileComplete: true,
-          createdAt: pendingAuth.user.createdAt,
-          updatedAt: pendingAuth.user.updatedAt,
-        },
-        tokens: pendingAuth.tokens,
-      })
-    );
-
-    setPendingAuth(null);
-    setIsOpen(false);
-    navigate("/dashboard");
   };
 
   return (
@@ -143,17 +120,17 @@ export const SignInForm = () => {
                 <Input
                   name="email"
                   size="md"
-                  isRequired
                   label="Email"
                   hint={errors.email?.message}
                   placeholder="Enter your email"
                   isInvalid={!!errors.email}
-                  className={errors.email ? "error-ring" : ""}
                   value={email}
                   onChange={value => {
-                    setValue("email", value);
-                    trigger("email");
+                    const sanitized = value.replace(/^\s+/, "");
+                    setValue("email", sanitized);
+                    if (errors.email) trigger("email");
                   }}
+                  onBlur={() => trigger("email")}
                 />
               </InputGroup>
 
@@ -161,19 +138,21 @@ export const SignInForm = () => {
               <InputGroup className="relative">
                 <Input
                   name="password"
-                  isRequired
                   label="Password"
                   hint={errors.password?.message}
                   placeholder="Password"
                   size="md"
                   type={showPassword ? "text" : "password"}
                   isInvalid={!!errors.password}
-                  className={errors.password ? "error-ring" : ""}
                   value={password}
+                  minLength={8}
+                  maxLength={20}
                   onChange={value => {
-                    setValue("password", value);
-                    trigger("password");
+                    const sanitized = value.replace(/^\s+/, "");
+                    setValue("password", sanitized);
+                    if (errors.password) trigger("password");
                   }}
+                  onBlur={() => trigger("password")}
                 />
                 <Button
                   color="tertiary"
@@ -228,9 +207,9 @@ export const SignInForm = () => {
                 </Button>
 
                 {/* Social button groups */}
-                <div className="flex w-full flex-col items-center justify-center gap-3">
+                {/* <div className="flex w-full flex-col items-center justify-center gap-3">
                   <GoogleSSOButton />
-                </div>
+                </div> */}
               </div>
             </form>
           </div>
@@ -249,22 +228,6 @@ export const SignInForm = () => {
       <ChangePasswordModal
         isOpen={isChangePasswordModalOpen}
         onClose={() => setIsChangePasswordModalOpen(false)}
-      />
-      <SuccessModalWithLogo
-        isOpen={isOpen}
-        onClose={() => {
-          setIsOpen(false);
-          navigate("/dashboard");
-        }}
-        size="xl"
-        messageImg={checkmarkIcon}
-        title="Sign In Successful!"
-        subtitle="Welcome aboard! Start your success journey with Worker Solutions®"
-        button={{
-          text: "Let's Get Started",
-          onClick: handleGetStarted,
-          color: "primary",
-        }}
       />
     </div>
   );

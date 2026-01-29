@@ -94,7 +94,6 @@ export default function ResetPasswordForm() {
               <InputGroup className="relative">
                 <Input
                   name="newPassword"
-                  isRequired
                   label="New Password"
                   placeholder="New Password"
                   size="md"
@@ -103,7 +102,8 @@ export default function ResetPasswordForm() {
                   isInvalid={!!errors.newPassword}
                   value={getValues("newPassword")}
                   onChange={value => {
-                    setValue("newPassword", value);
+                    const sanitized = value.replace(/^\s+/, "");
+                    setValue("newPassword", sanitized);
                     trigger("newPassword");
                   }}
                 />
@@ -127,7 +127,6 @@ export default function ResetPasswordForm() {
               <InputGroup className="relative">
                 <Input
                   name="confirmPassword"
-                  isRequired
                   label="Confirm Password"
                   placeholder="Confirm Password"
                   size="md"
@@ -136,7 +135,8 @@ export default function ResetPasswordForm() {
                   isInvalid={!!errors.confirmPassword}
                   value={getValues("confirmPassword")}
                   onChange={value => {
-                    setValue("confirmPassword", value);
+                    const sanitized = value.replace(/^\s+/, "");
+                    setValue("confirmPassword", sanitized);
                     trigger("confirmPassword");
                   }}
                 />
