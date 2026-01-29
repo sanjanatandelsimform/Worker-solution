@@ -301,11 +301,16 @@ const InnerMultiSelect = ({
         comboBoxContext?.selectedItems?.items?.map(value => (
           <span
             key={value.id}
-            className="flex items-center rounded-md bg-primary py-0.5 pr-1 pl-1.25 ring-1 ring-primary ring-inset"
+            className="flex items-center rounded-md bg-primary py-0.5 pr-1 pl-1.25 ring-1 ring-gray-300 ring-inset"
           >
-            <Avatar size="xxs" alt={value?.label} src={value?.avatarUrl} />
+            {value?.avatarUrl && <Avatar size="xxs" alt={value?.label} src={value?.avatarUrl} />}
 
-            <p className="ml-1.25 truncate text-sm font-medium whitespace-nowrap text-secondary select-none">
+            <p
+              className={cx(
+                "truncate text-sm font-medium whitespace-nowrap text-secondary select-none",
+                value?.avatarUrl && "ml-1.25"
+              )}
+            >
               {value?.label}
             </p>
 
@@ -344,7 +349,7 @@ const InnerMultiSelect = ({
           >
             <span
               className={cx(
-                "pointer-events-none rounded px-1 py-px text-xs font-medium text-quaternary ring-1 ring-secondary select-none ring-inset",
+                "pointer-events-none rounded px-1 py-px text-xs font-medium text-quaternary ring-1 ring-gray-300 select-none ring-inset",
                 isDisabled && "bg-transparent text-disabled"
               )}
             >
@@ -372,7 +377,7 @@ export const MultiSelectTagsValue = ({
       {...otherProps}
       className={({ isFocusWithin, isDisabled }) =>
         cx(
-          "relative flex w-full items-center gap-2 rounded-lg bg-primary shadow-xs ring-1 ring-primary outline-hidden transition duration-100 ease-linear ring-inset",
+          "relative flex w-full items-center gap-2 rounded-lg bg-primary shadow-xs ring-1 ring-gray-300 outline-hidden transition duration-100 ease-linear ring-inset",
           isDisabled && "cursor-not-allowed bg-disabled_subtle",
           isFocusWithin && "ring-2 ring-brand",
           sizes[size].root

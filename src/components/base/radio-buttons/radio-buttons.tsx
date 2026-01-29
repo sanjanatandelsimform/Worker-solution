@@ -31,9 +31,9 @@ export const RadioButtonBase = ({
   return (
     <div
       className={cx(
-        "flex size-4 min-h-4 min-w-4 cursor-pointer appearance-none items-center justify-center rounded-full bg-primary ring-1 ring-primary ring-inset",
+        "flex size-4 min-h-4 min-w-4 cursor-pointer appearance-none items-center justify-center rounded-full bg-primary ring-1 ring-gray-300 ring-inset",
         size === "md" && "size-5 min-h-5 min-w-5",
-        isSelected && !isDisabled && "bg-brand-solid ring-bg-brand-solid",
+        isSelected && !isDisabled && "bg-blue-700 ring-blue-700",
         isDisabled && "cursor-not-allowed border-disabled bg-disabled_subtle",
         isFocusVisible && "outline-2 outline-offset-2 outline-focus-ring",
         className
@@ -41,7 +41,7 @@ export const RadioButtonBase = ({
     >
       <div
         className={cx(
-          "size-1.5 rounded-full bg-fg-white opacity-0 transition-inherit-all",
+          "size-1.5 rounded-full bg-white opacity-0 transition-inherit-all",
           size === "md" && "size-2",
           isDisabled && "bg-fg-disabled_subtle",
           isSelected && "opacity-100"
