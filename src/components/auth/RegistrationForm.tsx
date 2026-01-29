@@ -32,10 +32,10 @@ export const RegistrationForm = () => {
     control,
     setValue,
     trigger,
+    // control,
   } = useForm<RegistrationFormData>({
     resolver: zodResolver(registrationSchema),
-    mode: "onSubmit",
-    reValidateMode: "onChange",
+    mode: "onSubmit", // <-- important for submit validation
     defaultValues: {
       firstName: "",
       lastName: "",
@@ -80,6 +80,11 @@ export const RegistrationForm = () => {
   const onSubmit = async (data: RegistrationFormData) => {
     try {
       setSubmitError(null);
+
+      // Validate all fields before processing
+      const isValid = await trigger();
+      if (!isValid) return; // Show errors, don't submit
+
       const registrationData: RegistrationData = {
         firstName: data.firstName,
         lastName: data.lastName,
@@ -94,8 +99,7 @@ export const RegistrationForm = () => {
       };
 
       await signup(registrationData);
-      // setIsOpen(true);
-      // navigate to success page and pass modal data via location.state
+
       navigate("/success", {
         state: {
           messageImg: checkmarkIcon,
@@ -118,6 +122,7 @@ export const RegistrationForm = () => {
   // const handleGetStarted = () => {
   //   navigate("/sign-in");
   // };
+  console.log("errors", errors);
   return (
     <div className="flex min-h-screen items-center justify-center bg-secondary">
       {/* Container */}
@@ -147,7 +152,6 @@ export const RegistrationForm = () => {
                 <Input
                   name="firstName"
                   size="md"
-                  isRequired
                   label="First Name"
                   hint={errors.firstName?.message}
                   placeholder="First Name"
@@ -156,7 +160,9 @@ export const RegistrationForm = () => {
                   maxLength={20}
                   className={errors.firstName ? "error-ring" : ""}
                   onChange={value => {
-                    setValue("firstName", value);
+                    // Remove leading spaces only
+                    const sanitized = value.replace(/^\s+/, "");
+                    setValue("firstName", sanitized);
                     trigger("firstName");
                   }}
                 />
@@ -166,7 +172,6 @@ export const RegistrationForm = () => {
                 <Input
                   name="lastName"
                   size="md"
-                  isRequired
                   label="Last Name"
                   hint={errors.lastName?.message}
                   placeholder="Last Name"
@@ -175,7 +180,8 @@ export const RegistrationForm = () => {
                   maxLength={20}
                   className={errors.lastName ? "error-ring" : ""}
                   onChange={value => {
-                    setValue("lastName", value);
+                    const sanitized = value.replace(/^\s+/, "");
+                    setValue("lastName", sanitized);
                     trigger("lastName");
                   }}
                 />
@@ -186,7 +192,6 @@ export const RegistrationForm = () => {
                 <Input
                   name="legalBusinessName"
                   size="md"
-                  isRequired
                   label="Legal Business Name"
                   hint={errors.legalBusinessName?.message}
                   placeholder="Legal Business Name"
@@ -195,15 +200,16 @@ export const RegistrationForm = () => {
                   maxLength={50}
                   className={errors.legalBusinessName ? "error-ring" : ""}
                   onChange={value => {
-                    setValue("legalBusinessName", value);
+                    const sanitized = value.replace(/^\s+/, "");
+                    setValue("legalBusinessName", sanitized);
                     trigger("legalBusinessName");
                   }}
                 />
               </InputGroup>
 
               <Select
-                className="w-full flex items-start"
-                isRequired
+                // className="w-full flex items-start"
+                className={errors.industry ? "error-ring" : "w-full flex items-start"}
                 size="md"
                 label="Select Your Industry"
                 placeholder="Select Option"
@@ -234,7 +240,6 @@ export const RegistrationForm = () => {
                 <Input
                   name="zipCode"
                   size="md"
-                  isRequired
                   label="Zip Code"
                   hint={errors.zipCode?.message}
                   placeholder=""
@@ -259,7 +264,6 @@ export const RegistrationForm = () => {
                 <Input
                   name="businessEmail"
                   size="md"
-                  isRequired
                   label="Business Email Address"
                   hint={errors.businessEmail?.message}
                   placeholder="olivia@untitledui.com"
@@ -268,14 +272,15 @@ export const RegistrationForm = () => {
                   value={businessEmail}
                   className={errors.businessEmail ? "error-ring" : ""}
                   onChange={value => {
-                    setValue("businessEmail", value);
+                    const sanitized = value.replace(/^\s+/, "");
+                    setValue("businessEmail", sanitized);
                     trigger("businessEmail");
                   }}
                 />
               </InputGroup>
               <InputGroup
-                className="col-start-2"
-                isRequired
+                // className="col-start-2"
+                className={errors.businessPhone ? "error-ring" : "col-start-2"}
                 label="Business Phone"
                 hint={errors.businessPhone?.message}
                 isInvalid={!!errors.businessPhone}
@@ -308,7 +313,6 @@ export const RegistrationForm = () => {
               <InputGroup className="relative">
                 <Input
                   name="password"
-                  isRequired
                   label="Password"
                   hint={errors.password?.message}
                   placeholder="Password"
@@ -316,10 +320,10 @@ export const RegistrationForm = () => {
                   type={showPassword ? "text" : "password"}
                   isInvalid={!!errors.password}
                   value={password}
-                  maxLength={8}
                   className="relative"
                   onChange={value => {
-                    setValue("password", value);
+                    const sanitized = value.replace(/^\s+/, "");
+                    setValue("password", sanitized);
                     trigger("password");
                   }}
                 />
@@ -342,7 +346,6 @@ export const RegistrationForm = () => {
               <InputGroup className="relative">
                 <Input
                   name="confirmPassword"
-                  isRequired
                   label="Confirm Password"
                   hint={errors.confirmPassword?.message}
                   placeholder="Confirm Password"
@@ -350,10 +353,10 @@ export const RegistrationForm = () => {
                   type={showConfirmPassword ? "text" : "password"}
                   isInvalid={!!errors.confirmPassword}
                   value={confirmPassword}
-                  maxLength={8}
                   className="relative"
                   onChange={value => {
-                    setValue("confirmPassword", value);
+                    const sanitized = value.replace(/^\s+/, "");
+                    setValue("confirmPassword", sanitized);
                     trigger("confirmPassword");
                   }}
                 />

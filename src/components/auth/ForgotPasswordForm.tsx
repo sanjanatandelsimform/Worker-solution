@@ -12,11 +12,9 @@ import {
   type ForgotPasswordFormData,
 } from "@/services/validation/authSchemas";
 import checkmarkIcon from "@/assets/checkmark-icon.svg";
-import { SuccessModalWithLogo } from "../modals/SuccessModalWithLogo";
 
 export default function ForgotPasswordForm() {
   const navigate = useNavigate();
-  const [isOpen, setIsOpen] = useState(false);
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
 
   const {
@@ -36,8 +34,19 @@ export default function ForgotPasswordForm() {
     try {
       setErrorMessage(null);
       await forgotPassword(data.email);
-      setIsOpen(true);
       reset();
+
+      // Navigate to success page
+      navigate("/success", {
+        state: {
+          messageImg: checkmarkIcon,
+          title: "Email Verification!",
+          subtitle:
+            "A link has been sent to your email. Please check your inbox to reset your password and verify your email",
+          buttonText: "Back to login",
+          buttonPath: "/sign-in",
+        },
+      });
     } catch (err) {
       console.error("Forgot password error:", err);
       setErrorMessage(
@@ -46,10 +55,6 @@ export default function ForgotPasswordForm() {
     }
   };
 
-  const handleGetStarted = () => {
-    setIsOpen(false);
-    navigate("/sign-in");
-  };
   return (
     <div className="flex min-h-screen items-center justify-center bg-secondary">
       <div className="flex w-2xl items-center justify-center rounded-xl border border-solid border-primary bg-primary py-28">
@@ -67,7 +72,7 @@ export default function ForgotPasswordForm() {
                 Forgot your password?
               </h2>
               <p className="w-full text-medium font-normal leading-6 text-tertiary">
-                Enter the email address associated with your account and we’ll send you a link to
+                Enter the email address associated with your account and we'll send you a link to
                 reset your password.
               </p>
             </div>
@@ -85,28 +90,29 @@ export default function ForgotPasswordForm() {
                   name="email"
                   icon={Mail01}
                   size="md"
-                  isRequired
                   label="Business Email Address"
                   placeholder="olivia@untitledui.com"
                   hint={errors.email?.message}
                   isInvalid={!!errors.email}
                   value={getValues("email")}
                   onChange={value => {
-                    setValue("email", value);
+                    const sanitized = value.replace(/^\s+/, "");
+                    setValue("email", sanitized);
                     trigger("email");
                   }}
                 />
               </InputGroup>
 
-              {/* Error and Success Messages */}
+              {/* Error Messages */}
               {errorMessage && (
                 <div className="rounded-lg bg-error-50 border border-error-300 px-4 py-3">
                   <p className="text-error-600 text-sm font-medium">{errorMessage}</p>
                 </div>
               )}
+
               {/* Actions */}
               <div className="flex w-full flex-col items-start gap-4">
-                {/* Sign in Button */}
+                {/* Submit Button */}
                 <Button
                   type="submit"
                   color="primary"
@@ -120,7 +126,7 @@ export default function ForgotPasswordForm() {
             </form>
           </div>
 
-          {/* Sign up link */}
+          {/* Sign in link */}
           <div className="flex w-full items-baseline justify-center gap-1">
             <p className="text-sm font-normal leading-5 text-tertiary">Already have an account?</p>
             <Button href="/sign-in" color="link-color" size="md">
@@ -129,22 +135,6 @@ export default function ForgotPasswordForm() {
           </div>
         </div>
       </div>
-      <SuccessModalWithLogo
-        isOpen={isOpen}
-        onClose={() => {
-          setIsOpen(false);
-          navigate("/sign-in");
-        }}
-        size="xl"
-        messageImg={checkmarkIcon}
-        title="Email Verification!"
-        subtitle="A link has been sent to your email. Please check your inbox to reset your password and verify your email"
-        button={{
-          text: "Back to login",
-          onClick: handleGetStarted,
-          color: "primary",
-        }}
-      />
     </div>
   );
 }
