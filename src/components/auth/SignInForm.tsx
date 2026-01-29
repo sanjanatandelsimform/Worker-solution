@@ -210,7 +210,7 @@ export const SignInForm = () => {
                 </div>
 
                 <Button type="button" color="link-color" href="/forgot-password" size="md">
-                  Forgot password
+                  Forgot password?
                 </Button>
               </div>
 

@@ -1,155 +1,341 @@
-/**
- * CostBurdenBarChart - Pixel-perfect implementation from Figma design
- * Figma node: 387-6447
- * Shows rent burdened households by income level with percentage grid lines
- */
+import { useEffect, useRef, useState } from "react";
 
-// Grid line component for percentage markers
-const GridLine = ({ percentage }: { percentage: number }) => (
-  <div className="flex gap-4 items-center w-full">
-    <p className="text-tertiary text-base leading-6 w-12 shrink-0">{percentage}%</p>
-    <div className="flex-1 h-px bg-gray-300" />
-  </div>
-);
+interface ChartDataItem {
+  label: string;
+  sublabel: string;
+  value1: number; // Darker cyan bar
+  value2: number; // Lighter cyan bar
+}
 
-// Individual bar component with stacked bars and labels
-const IncomeBar = ({
-  burdenedHeight,
-  severelyBurdenedHeight,
-  burdenedLabel,
-  severelyBurdenedLabel,
-  title,
-  subtitle,
-}: {
-  burdenedHeight: number;
-  severelyBurdenedHeight: number;
-  burdenedLabel: string;
-  severelyBurdenedLabel: string;
-  title: string;
-  subtitle: string;
-}) => {
+interface CanvasChartProps {
+  readonly data: ChartDataItem[];
+  readonly width?: number;
+  readonly height?: number;
+}
+
+interface TooltipData {
+  x: number;
+  y: number;
+  label: string;
+  value: number;
+  color: string;
+}
+
+export default function CostBurdenBarChart({ data, width, height = 400 }: CanvasChartProps) {
+  const canvasRef = useRef<HTMLCanvasElement>(null);
+  const containerRef = useRef<HTMLDivElement>(null);
+  const [tooltip, setTooltip] = useState<TooltipData | null>(null);
+  const [canvasWidth, setCanvasWidth] = useState(width || 800);
+
+  // Update canvas width based on container
+  useEffect(() => {
+    if (!width && containerRef.current) {
+      const updateWidth = () => {
+        if (containerRef.current) {
+          setCanvasWidth(containerRef.current.offsetWidth);
+        }
+      };
+
+      updateWidth();
+      window.addEventListener("resize", updateWidth);
+      return () => window.removeEventListener("resize", updateWidth);
+    }
+  }, [width]);
+
+  useEffect(() => {
+    const canvas = canvasRef.current;
+    if (!canvas) return;
+
+    const ctx = canvas.getContext("2d");
+    if (!ctx) return;
+
+    // Set canvas resolution for sharp rendering
+    const dpr = window.devicePixelRatio || 1;
+    canvas.width = canvasWidth * dpr;
+    canvas.height = height * dpr;
+    canvas.style.width = `${canvasWidth}px`;
+    canvas.style.height = `${height}px`;
+    ctx.scale(dpr, dpr);
+
+    // Clear canvas
+    ctx.clearRect(0, 0, canvasWidth, height);
+
+    // Chart configuration
+    const padding = { top: 50, right: 30, bottom: 80, left: 60 };
+    const chartWidth = canvasWidth - padding.left - padding.right;
+    const chartHeight = height - padding.top - padding.bottom;
+
+    // Calculate max value for scaling
+    const maxValue = Math.max(...data.map(item => item.value1 + item.value2));
+    const yScale = chartHeight / maxValue;
+
+    // Bar configuration
+    const barWidth = 128;
+    const totalBarsWidth = barWidth * data.length;
+    const availableSpaceForGaps = chartWidth - totalBarsWidth;
+    const barSpacing = data.length > 1 ? availableSpaceForGaps / (data.length + 1) : 0;
+    const barGap = 18; // Gap between stacked bars
+
+    // Colors from Figma
+    const color1 = "#6dc5d3"; // Darker cyan
+    const color2 = "#a5f0fc"; // Lighter cyan
+    const textColor = "#000000";
+    const gridLineColor = "#ccc";
+
+    // Draw horizontal grid lines and Y-axis labels
+    ctx.strokeStyle = gridLineColor;
+    ctx.lineWidth = 1;
+    ctx.font = "400 14px Inter, sans-serif";
+    ctx.fillStyle = "#6b7280";
+    ctx.textAlign = "right";
+    ctx.textBaseline = "middle";
+
+    const gridSteps = 5;
+    for (let i = 0; i <= gridSteps; i++) {
+      const y = padding.top + (chartHeight * i) / gridSteps;
+      const value = Math.round(maxValue * (1 - i / gridSteps));
+
+      // Draw grid line
+      ctx.beginPath();
+      ctx.moveTo(padding.left, y);
+      ctx.lineTo(canvasWidth - padding.right, y);
+      ctx.stroke();
+
+      // Draw Y-axis label
+      ctx.fillText(`${value}%`, padding.left - 10, y);
+    }
+
+    // Draw bars and labels
+    data.forEach((item, index) => {
+      const x =
+        data.length > 1
+          ? padding.left + barSpacing + index * (barWidth + barSpacing)
+          : padding.left + (chartWidth - barWidth) / 2; // Center single bar
+      const baseY = padding.top + chartHeight;
+
+      // Calculate bar heights
+      // Darker bar goes from bottom to value1 height
+      // Lighter bar ALSO starts from bottom, goes to value2 height (inside darker bar)
+      const bar1Height = item.value1 * yScale;
+      const bar2Height = item.value2 * yScale;
+
+      // Draw darker cyan bar (full width, goes up to value1)
+      ctx.fillStyle = color1;
+      ctx.fillRect(x, baseY - bar1Height, barWidth, bar1Height);
+
+      // Draw lighter cyan bar (narrower, ALSO starts from bottom, nested inside)
+      if (item.value2 > 0) {
+        ctx.fillStyle = color2;
+        const bar2Width = barWidth - barGap * 2;
+        ctx.fillRect(x + barGap, baseY - bar2Height, bar2Width, bar2Height);
+      }
+
+      // Draw value1 label (above the darker cyan bar)
+      ctx.fillStyle = textColor;
+      ctx.font = "500 14px Inter, sans-serif";
+      ctx.textAlign = "center";
+
+      // Position value1 label - if bar is too small or would go outside chart, place inside
+      const minLabelSpace = 25; // Minimum space needed above bar for label
+      const value1Y = baseY - bar1Height - 8;
+      const chartTop = padding.top;
+
+      if (value1Y < chartTop + minLabelSpace) {
+        // Place label inside the bar
+        ctx.textBaseline = "top";
+        ctx.fillText(`${item.value1}%`, x + barWidth / 2, baseY - bar1Height + 8);
+      } else {
+        // Place label above the bar
+        ctx.textBaseline = "bottom";
+        ctx.fillText(`${item.value1}%`, x + barWidth / 2, value1Y);
+      }
+
+      // Draw value2 label (above or inside the lighter cyan bar)
+      if (item.value2 > 0) {
+        const value2Y = baseY - bar2Height - 8;
+
+        if (value2Y < chartTop + minLabelSpace) {
+          // Place label inside the bar
+          ctx.textBaseline = "top";
+          ctx.fillText(`${item.value2}%`, x + barWidth / 2, baseY - bar2Height + 8);
+        } else {
+          // Place label above the bar
+          ctx.textBaseline = "bottom";
+          ctx.fillText(`${item.value2}%`, x + barWidth / 2, value2Y);
+        }
+      }
+
+      // Draw main label
+      ctx.font = "500 14px Inter, sans-serif";
+      ctx.fillStyle = textColor;
+      ctx.textBaseline = "top";
+
+      const labelY = baseY + 12;
+      ctx.fillText(item.label, x + barWidth / 2, labelY);
+
+      // Draw sublabel
+      ctx.font = "400 14px Inter, sans-serif";
+      ctx.fillStyle = textColor;
+
+      const sublabelY = labelY + 24;
+      ctx.fillText(item.sublabel, x + barWidth / 2, sublabelY);
+    });
+  }, [data, canvasWidth, height]);
+
+  // Mouse move handler for tooltips
+  const handleMouseMove = (e: React.MouseEvent<HTMLDivElement>) => {
+    const canvas = canvasRef.current;
+    if (!canvas) return;
+
+    const rect = canvas.getBoundingClientRect();
+    const mouseX = e.clientX - rect.left;
+    const mouseY = e.clientY - rect.top;
+
+    // Chart configuration (same as in useEffect)
+    const padding = { top: 60, right: 100, bottom: 80, left: 60 };
+    const chartWidth = canvasWidth - padding.left - padding.right;
+    const chartHeight = height - padding.top - padding.bottom;
+    const maxValue = Math.max(...data.map(item => item.value1 + item.value2));
+    const yScale = chartHeight / maxValue;
+    const barWidth = 128;
+    const totalBarsWidth = barWidth * data.length;
+    const availableSpaceForGaps = chartWidth - totalBarsWidth;
+    const barSpacing = data.length > 1 ? availableSpaceForGaps / (data.length + 1) : 0;
+    const barGap = 18;
+
+    // Check each bar
+    let foundTooltip: TooltipData | null = null;
+
+    data.forEach((item, index) => {
+      const x =
+        data.length > 1
+          ? padding.left + barSpacing + index * (barWidth + barSpacing)
+          : padding.left + (chartWidth - barWidth) / 2;
+      const baseY = padding.top + chartHeight;
+      const bar1Height = item.value1 * yScale;
+      const bar2Height = item.value2 * yScale;
+
+      // Check if mouse is over darker bar (wider bar)
+      if (
+        mouseX >= x &&
+        mouseX <= x + barWidth &&
+        mouseY >= baseY - bar1Height &&
+        mouseY <= baseY
+      ) {
+        // Check if mouse is specifically over lighter bar (narrower, nested)
+        const isOverLighterBar =
+          item.value2 > 0 &&
+          mouseX >= x + barGap &&
+          mouseX <= x + barWidth - barGap &&
+          mouseY >= baseY - bar2Height &&
+          mouseY <= baseY;
+
+        if (isOverLighterBar) {
+          foundTooltip = {
+            x: mouseX,
+            y: mouseY,
+            label: item.sublabel,
+            value: item.value2,
+            color: "#a5f0fc",
+          };
+        } else {
+          foundTooltip = {
+            x: mouseX,
+            y: mouseY,
+            label: item.sublabel,
+            value: item.value1,
+            color: "#6dc5d3",
+          };
+        }
+      }
+    });
+
+    setTooltip(foundTooltip);
+  };
+
+  const handleMouseLeave = () => {
+    setTooltip(null);
+  };
+
   return (
-    <div className="flex flex-col gap-2 items-center justify-end">
-      {/* Bar container with grid layout for positioning percentages */}
-      <div className="inline-grid grid-cols-1 grid-rows-1 items-start justify-items-start leading-none relative shrink-0">
-        {/* Outer bar (Burdened) - #6dc5d3 */}
+    <div
+      ref={containerRef}
+      className="relative w-full"
+      onMouseMove={handleMouseMove}
+      onMouseLeave={handleMouseLeave}
+    >
+      <canvas
+        ref={canvasRef}
+        className="block w-full"
+        style={{ width: `${canvasWidth}px`, height: `${height}px` }}
+      />
+      {tooltip && (
         <div
-          className="col-start-1 row-start-1 bg-[#6dc5d3]"
+          className="pointer-events-none absolute rounded-lg border border-gray-200 bg-white px-3 py-2 shadow-lg"
           style={{
-            width: "127.71px",
-            height: `${(burdenedHeight / 100) * 323}px`,
-            marginTop: `${323 - (burdenedHeight / 100) * 323}px`,
-          }}
-        />
-        {/* Burdened percentage label */}
-        <p
-          className="col-start-1 row-start-1 text-sm font-medium leading-5 text-black relative"
-          style={{
-            marginLeft: "49.36px",
-            marginTop: `${323 - (burdenedHeight / 100) * 323 - 20}px`,
+            left: `${tooltip.x + 10}px`,
+            top: `${tooltip.y - 10}px`,
+            transform: "translateY(-100%)",
           }}
         >
-          {burdenedLabel}
-        </p>
-        {/* Inner bar (Severely Burdened) - #a5f0fc */}
-        <div
-          className="col-start-1 row-start-1 bg-[#a5f0fc]"
-          style={{
-            width: "91.566px",
-            height: `${(severelyBurdenedHeight / 100) * 323}px`,
-            marginLeft: "18.07px",
-            marginTop: `${323 - (severelyBurdenedHeight / 100) * 323}px`,
-          }}
-        />
-        {/* Severely Burdened percentage label */}
-        {severelyBurdenedHeight > 0 && (
-          <p
-            className="col-start-1 row-start-1 text-sm font-medium leading-5 text-black relative"
-            style={{
-              marginLeft: "48.86px",
-              marginTop: `${323 - (severelyBurdenedHeight / 100) * 323 - 20}px`,
-            }}
-          >
-            {severelyBurdenedLabel}
-          </p>
-        )}
-      </div>
-      {/* Income level labels */}
-      <div className="flex flex-col gap-1 items-center text-sm leading-5 text-black">
-        <p className="font-medium">{title}</p>
-        <p className="font-normal">{subtitle}</p>
-      </div>
+          <div className="flex items-center gap-2">
+            <div className="h-3 w-3 rounded" style={{ backgroundColor: tooltip.color }} />
+            <div className="text-sm">
+              <div className="font-medium text-gray-900">{tooltip.value}%</div>
+              <div className="text-xs text-gray-500">{tooltip.label}</div>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
-};
+}
 
-export default function CostBurdenBarChart() {
-  const incomeData = [
+// Example usage with the Figma data
+export function IncomeDistributionChart() {
+  const chartData: ChartDataItem[] = [
     {
-      title: "Low income",
-      subtitle: "$55,250 or less",
-      burdenedHeight: 74,
-      severelyBurdenedHeight: 44,
-      burdenedLabel: "74%",
-      severelyBurdenedLabel: "44%",
+      label: "Low income",
+      sublabel: "$55,250 or less",
+      value1: 74,
+      value2: 44,
     },
     {
-      title: "Moderate income",
-      subtitle: "$55,250 - $88,400",
-      burdenedHeight: 40,
-      severelyBurdenedHeight: 4,
-      burdenedLabel: "40%",
-      severelyBurdenedLabel: "4%",
+      label: "Moderate income",
+      sublabel: "$55,250 - $88,400",
+      value1: 40,
+      value2: 4,
     },
     {
-      title: "Median income",
-      subtitle: "$88,400 - $132,600",
-      burdenedHeight: 10,
-      severelyBurdenedHeight: 1,
-      burdenedLabel: "10%",
-      severelyBurdenedLabel: "1%",
+      label: "Median income",
+      sublabel: "$88,400 - $132,600",
+      value1: 10,
+      value2: 1,
     },
     {
-      title: "Upper income",
-      subtitle: "$132,600 or more",
-      burdenedHeight: 1,
-      severelyBurdenedHeight: 0,
-      burdenedLabel: "1%",
-      severelyBurdenedLabel: "0%",
+      label: "Upper income",
+      sublabel: "$132,600 or more",
+      value1: 1,
+      value2: 0,
     },
   ];
 
   return (
-    <div className="bg-white border-0 rounded-xl p-6 flex flex-col gap-6 size-full">
-      {/* Chart area with grid lines and bars */}
-      <div className="relative flex flex-col gap-8">
-        {/* Grid lines container - absolute positioning */}
-        <div className="absolute left-0 top-0 flex flex-col gap-8 h-[323px] items-start justify-end w-full">
-          <GridLine percentage={100} />
-          <GridLine percentage={80} />
-          <GridLine percentage={60} />
-          <GridLine percentage={40} />
-          <GridLine percentage={20} />
-          <GridLine percentage={0} />
-        </div>
-
-        {/* Bars container - positioned over grid lines */}
-        <div className="flex h-[362px] items-end justify-between px-15 relative">
-          {incomeData.map(data => (
-            <IncomeBar key={data.title} {...data} />
-          ))}
-        </div>
-      </div>
-
+    <div className="w-full">
+      <CostBurdenBarChart data={chartData} height={400} />
       {/* Legend */}
       <div className="flex gap-6 items-center justify-center">
         <div className="flex gap-4 items-center">
-          <div className="size-4.5 rounded-xs bg-[#6dc5d3]" />
-          <p className="font-normal text-lg leading-7 text-black">Burdened</p>
+          <div className="size-4.5 rounded-xs bg-[#00C4C7]" />
+          <p className="font-normal text-lg leading-7 text-black">Industry average</p>
         </div>
         <div className="flex gap-4 items-center">
-          <div className="size-4.5 rounded-xs bg-[#a5f0fc]" />
-          <p className="font-normal text-lg leading-7 text-black">Severely Burdened</p>
+          <div className="size-4.5 rounded-xs bg-[#22CCEE]" />
+          <p className="font-normal text-lg leading-7 text-black">Your company</p>
+        </div>
+        <div className="flex gap-4 items-center">
+          <div className="size-4.5 rounded-xs bg-[#DBEBEB]" />
+          <p className="font-normal text-lg leading-7 text-black">National average</p>
         </div>
       </div>
     </div>

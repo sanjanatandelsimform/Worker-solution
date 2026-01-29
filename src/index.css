@@ -304,6 +304,9 @@
 .bg-gray-invoice {
   background-color: var(--color-bg-gray-invoice);
 }
+.bg-tertiary {
+  background-color: var(--color-bg-tertiary);
+}
 .border-primary {
   border-color: var(--color-border-primary);
 }

@@ -6,3 +6,4 @@ export * from "./CircleCheckIcon";
 export * from "./KeyIcon";
 export * from "./RefreshIcon";
 export * from "./SmileFaceIcon";
+export * from "./TabArrow";

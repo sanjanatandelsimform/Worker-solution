@@ -2,15 +2,14 @@
 import { useState } from "react";
 import { Button } from "@/components/base/buttons/button";
 import StaticCard from "../recommendations/StaticCard";
-import { Link } from "react-router-dom";
 import insightHero from "@/assets/insight-hero.png";
 import CostCard from "./CostCard";
 import { Select } from "@/components/base/select/select";
-import { WageBarChart } from "./WageBarChart";
-import CostBurdenBarChart from "./CostBurdenBarChart";
+import { IncomeDistributionChart } from "./CostBurdenBarChart";
 import { Tooltip, TooltipTrigger } from "@/components/base/tooltip/tooltip";
 import { InfoCircle } from "@untitledui/icons";
 import { GetInTouchModal } from "@/components/modals/GetInTouchModal";
+import WageBarChart from "./WageBarChart";
 
 const items = [
   { label: "03301", id: "@03301" },
@@ -19,6 +18,7 @@ const items = [
 
 export default function BenchmarkPage() {
   const [isGetInTouchModalOpen, setIsGetInTouchModalOpen] = useState(false);
+  const [showMoreContent, setShowMoreContent] = useState(false);
   return (
     <div className="bg-gray-card border border-gray-300 rounded-xl p-6 space-y-6">
       <div className="w-full flex items-center justify-between flex-col lg:flex-row">
@@ -65,7 +65,9 @@ export default function BenchmarkPage() {
             />
           </div>
           <div className="flex-1">
-            <div className="w-full space-y-6">
+            <div
+              className={`w-full space-y-6 ${showMoreContent ? "max-h-100 overflow-y-auto pr-4" : "max-h-100 overflow-hidden pr-4"}`}
+            >
               <p className="text-base color-text-600">
                 The Wholesale Trade sector comprises establishments engaged in wholesaling
                 merchandise, generally without transformation, and rendering services incidental to
@@ -84,32 +86,41 @@ export default function BenchmarkPage() {
                 location of the premises is intended to solicit walk-in traffic. Wholesalers do not
                 normally use advertising directed to the general public.{" "}
               </p>
-              <p className="text-base color-text-600">
-                The wholesaling process is an intermediate step in the distribution of merchandise.
-                Wholesalers are organized to sell or arrange the purchase or sale of (a) goods for
-                resale (i.e., goods sold to other wholesalers or retailers), (b) capital or durable
-                nonconsumer goods, and (c) raw and intermediate materials and supplies used in
-                production. Wholesalers sell merchandise to other businesses and normally operate
-                from a warehouse or office. These warehouses and offices are characterized by having
-                little or no display of merchandise. In addition, neither the design nor the
-                location of the premises is intended to solicit walk-in traffic. Wholesalers do not
-                normally use advertising directed to the general public.{" "}
-              </p>
-              <p className="text-base color-text-600">
-                The wholesaling process is an intermediate step in the distribution of merchandise.
-                Wholesalers are organized to sell or arrange the purchase or sale of (a) goods for
-                resale (i.e., goods sold to other wholesalers or retailers), (b) capital or durable
-                nonconsumer goods, and (c) raw and intermediate materials and supplies used in
-                production. Wholesalers sell merchandise to other businesses and normally operate
-                from a warehouse or office. These warehouses and offices are characterized by having
-                little or no display of merchandise. In addition, neither the design nor the
-                location of the premises is intended to solicit walk-in traffic. Wholesalers do not
-                normally use advertising directed to the general public.{" "}
-              </p>
-              <Link to="" className="text-purple-700 text-base underline">
-                Read more
-              </Link>
+              {showMoreContent && (
+                <>
+                  <p className="text-base color-text-600">
+                    The wholesaling process is an intermediate step in the distribution of
+                    merchandise. Wholesalers are organized to sell or arrange the purchase or sale
+                    of (a) goods for resale (i.e., goods sold to other wholesalers or retailers),
+                    (b) capital or durable nonconsumer goods, and (c) raw and intermediate materials
+                    and supplies used in production. Wholesalers sell merchandise to other
+                    businesses and normally operate from a warehouse or office. These warehouses and
+                    offices are characterized by having little or no display of merchandise. In
+                    addition, neither the design nor the location of the premises is intended to
+                    solicit walk-in traffic. Wholesalers do not normally use advertising directed to
+                    the general public.{" "}
+                  </p>
+                  <p className="text-base color-text-600">
+                    The wholesaling process is an intermediate step in the distribution of
+                    merchandise. Wholesalers are organized to sell or arrange the purchase or sale
+                    of (a) goods for resale (i.e., goods sold to other wholesalers or retailers),
+                    (b) capital or durable nonconsumer goods, and (c) raw and intermediate materials
+                    and supplies used in production. Wholesalers sell merchandise to other
+                    businesses and normally operate from a warehouse or office. These warehouses and
+                    offices are characterized by having little or no display of merchandise. In
+                    addition, neither the design nor the location of the premises is intended to
+                    solicit walk-in traffic. Wholesalers do not normally use advertising directed to
+                    the general public.{" "}
+                  </p>
+                </>
+              )}
             </div>
+            <button
+              onClick={() => setShowMoreContent(!showMoreContent)}
+              className="text-purple-700 text-base underline mt-2"
+            >
+              {showMoreContent ? "Read less" : "Read more"}
+            </button>
           </div>
         </div>
         <div className="bg-white p-6 border border-gray-300 rounded-2xl space-y-6">
@@ -179,17 +190,33 @@ export default function BenchmarkPage() {
           </div>
         </div>
         <div className="flex justify-between gap-4 mt-6 flex-col lg:flex-row">
-          <div className="flex-1">
-            <WageBarChart />
+          <div className="w-3/4">
+            <WageBarChart
+              data={[
+                {
+                  name: "Salary",
+                  industryAverage: 33.75,
+                  yourCompany: 54.38,
+                  nationalAverage: 100,
+                },
+                {
+                  name: "Hourly",
+                  industryAverage: 33.75,
+                  yourCompany: 54.38,
+                  nationalAverage: 100,
+                },
+              ]}
+              height={375}
+            />
           </div>
-          <div className="space-y-4">
+          <div className="space-y-4 w-1/4">
             <StaticCard
               title="Median Hourly Wages"
               itemAlign="between"
               count="$14.03"
               infoIcon={false}
               countClass="mt-9"
-              classess="bg-secondary"
+              classess="bg-secondary w-90"
             />
             <StaticCard
               title="Median Living Wage"
@@ -197,7 +224,7 @@ export default function BenchmarkPage() {
               count="$24.03"
               infoIcon={false}
               countClass="mt-9"
-              classess="bg-secondary"
+              classess="bg-secondary flex-1 max-w-lg"
             />
             <StaticCard
               title="National Average"
@@ -205,7 +232,7 @@ export default function BenchmarkPage() {
               count="$83,245"
               infoIcon={false}
               countClass="mt-9"
-              classess="bg-secondary"
+              classess="bg-secondary flex-1 max-w-lg"
             />
           </div>
         </div>
@@ -367,7 +394,7 @@ export default function BenchmarkPage() {
             />
           </div>
           <div className="flex-1">
-            <CostBurdenBarChart />
+            <IncomeDistributionChart />
           </div>
         </div>
       </div>
