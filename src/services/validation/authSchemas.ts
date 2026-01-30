@@ -32,14 +32,14 @@ export const registrationSchema = z
       .min(1, "Legal Business Name is required")
       .min(2, "Legal Business Name must be at least 2 characters")
       .max(50, "Legal Business Name must not exceed 50 characters"),
-    industry: z.string().min(1, "Industry is required"),
+    industry: z.string().min(1, "Please select your industry from the list"),
     zipCode: z
       .string()
       .min(1, "Zip Code is required")
       .regex(/^\d{5}$/, "Zip Code must be exactly 5 digits"),
     businessEmail: z
       .string()
-      .min(1, "Business Email Address is required")
+      .min(1,"Please enter a valid email address")
       .email("Enter a valid email address"),
     businessPhone: z
       .string()
