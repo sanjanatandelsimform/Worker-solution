@@ -12,7 +12,7 @@ import {
   type ForgotPasswordFormData,
 } from "@/services/validation/authSchemas";
 import checkmarkIcon from "@/assets/checkmark-icon.svg";
-import ErrorMessage from "./ErrorMessage";
+import ErrorMessage from "../common/ErrorMessage";
 import { getErrorState, type ErrorState } from "@/utils/errorHandler";
 
 export default function ForgotPasswordForm() {

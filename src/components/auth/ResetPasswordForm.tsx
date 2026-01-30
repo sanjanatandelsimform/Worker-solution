@@ -10,7 +10,7 @@ import { resetPassword } from "@/services/api/authApi";
 import { resetPasswordSchema, type ResetPasswordFormData } from "@/services/validation/authSchemas";
 import checkmarkIcon from "@/assets/checkmark-icon.svg";
 import { SuccessModalWithLogo } from "../modals/SuccessModalWithLogo";
-import ErrorMessage from "./ErrorMessage";
+import ErrorMessage from "../common/ErrorMessage";
 import { getErrorState, type ErrorState } from "@/utils/errorHandler";
 
 export default function ResetPasswordForm() {

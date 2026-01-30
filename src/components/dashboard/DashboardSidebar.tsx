@@ -24,25 +24,45 @@ export const DashboardSidebar = ({ activeUrl = "/" }: DashboardSidebarProps) => 
   const handleLogout = async () => {
     setLogoutError(null);
     try {
-      await signout(tokens.accessToken || undefined);
+      // Get fresh token from localStorage
+      const storedState = localStorage.getItem("userDetail");
+      let currentToken = tokens?.accessToken;
 
-      // Navigate to success page FIRST, pass a flag to clear user
+      if (storedState) {
+        const parsedState = JSON.parse(storedState);
+        currentToken = parsedState?.auth?.tokens?.accessToken || currentToken;
+      }
+
+      await signout(currentToken || undefined);
+
+      // Navigate to success page with logout flag
       navigate("/success", {
         state: {
           messageImg: checkmarkIcon,
-          title: "You’ve been logged out",
-          subtitle: "You’ve been logged out of your account. Log back in anytime to continue.",
+          title: "You've been logged out",
+          subtitle: "You've been logged out of your account. Log back in anytime to continue.",
           buttonText: "Log back in",
           buttonPath: "/sign-in",
           pageType: "logout",
-          shouldClearUser: true, // <-- pass this flag
+          shouldClearUser: true,
         },
       });
     } catch (error) {
       console.error("Logout error:", error);
-      setLogoutError(
-        error instanceof Error ? error.message : "Failed to logout. Please try again."
-      );
+
+      // Even if logout fails, clear local state and navigate
+      navigate("/success", {
+        state: {
+          messageImg: checkmarkIcon,
+          title: "You've been logged out",
+          subtitle: "You've been logged out of your account. Log back in anytime to continue.",
+          buttonText: "Log back in",
+          buttonPath: "/sign-in",
+          pageType: "logout",
+          shouldClearUser: true,
+        },
+      });
+    } finally {
       setIsLogoutModalOpen(false);
     }
   };
@@ -74,7 +94,6 @@ export const DashboardSidebar = ({ activeUrl = "/" }: DashboardSidebarProps) => 
     },
   ];
 
-  // Get full name or fallback to email
   const displayName =
     user?.firstName && user?.lastName
       ? `${user.firstName} ${user.lastName}`

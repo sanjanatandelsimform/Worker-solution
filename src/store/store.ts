@@ -29,13 +29,10 @@ export const store = configureStore({
   middleware: getDefaultMiddleware =>
     getDefaultMiddleware({
       serializableCheck: {
-        ignoredActions: ["auth/setUser"],
+        ignoredActions: ["auth/setUser", "auth/setTokens"],
       },
     }),
 });
-
-export type RootState = ReturnType<typeof store.getState>;
-export type AppDispatch = typeof store.dispatch;
 
 // Save state to localStorage
 const saveState = (state: RootState) => {
@@ -47,7 +44,23 @@ const saveState = (state: RootState) => {
   }
 };
 
-// Subscribe to store changes
+// Subscribe to store changes and save to localStorage
 store.subscribe(() => {
   saveState(store.getState());
 });
+
+// Type exports
+export type RootState = ReturnType<typeof store.getState>;
+export type AppDispatch = typeof store.dispatch;
+
+// Extend Window interface for TypeScript
+declare global {
+  interface Window {
+    store: typeof store;
+  }
+}
+
+// Expose store globally for interceptor access
+if (typeof window !== "undefined") {
+  window.store = store;
+}
