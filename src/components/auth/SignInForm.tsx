@@ -7,12 +7,13 @@ import { Input } from "@/components/base/input/input";
 import { InputGroup } from "@/components/base/input/input-group";
 import { Checkbox } from "@/components/base/checkbox/checkbox";
 // import { GoogleSSOButton } from "./GoogleSSOButton";
-import { Eye, EyeOff } from "@untitledui/icons";
+import { Eye, EyeOff, AlertOctagon } from "@untitledui/icons";
 import type { SignInData } from "@/types/auth";
 import { signin } from "@/services/api/authApi";
 import { ChangePasswordModal } from "../modals/ChangePasswordModal";
 import checkmarkIcon from "@/assets/checkmark-icon.svg";
 import { signInSchema, type SignInFormData } from "@/services/validation/authSchemas";
+import ErrorMessage from "./ErrorMessage";
 
 export const SignInForm = () => {
   const [showPassword, setShowPassword] = useState(false);
@@ -172,9 +173,11 @@ export const SignInForm = () => {
 
               {/* Error Message Display */}
               {errorMessage && (
-                <div className="rounded-lg bg-error-50 border border-error-300 px-4 py-3">
-                  <p className="text-error-600 text-sm font-medium">{errorMessage}</p>
-                </div>
+                <ErrorMessage
+                  alertIcon={AlertOctagon}
+                  errorMessage={errorMessage}
+                  onClose={() => setErrorMessage(null)}
+                />
               )}
 
               {/* Remember Me & Forgot Password */}

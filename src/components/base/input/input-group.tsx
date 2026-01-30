@@ -115,15 +115,15 @@ export const InputGroup = ({
           <div
             data-input-size={size}
             className={cx(
-              "group relative flex h-max w-full flex-row justify-center rounded-lg bg-primary transition-all duration-100 ease-linear",
+              "group relative flex h-max w-full flex-row justify-center rounded-lg bg-white transition-all duration-100 ease-linear",
 
               // Only apply focus ring when child is select and input is focused
-              "has-[&>select]:shadow-xs has-[&>select]:ring-1 has-[&>select]:ring-border-gray-300 has-[&>select]:ring-inset has-[&>select]:has-[input:focus]:ring-2 has-[&>select]:has-[input:focus]:ring-border-gray-300",
+              "has-[&>select]:shadow-0 has-[&>select]:ring-0 has-[&>select]:ring-gray-300 has-[&>select]:has-[input:focus]:ring-1 has-[&>select]:has-[input:focus]:ring-gray-300",
 
               isDisabled &&
                 "cursor-not-allowed has-[&>select]:bg-disabled_subtle has-[&>select]:ring-border-disabled",
               isInvalid &&
-                "has-[&>select]:ring-border-error_subtle has-[&>select]:has-[input:focus]:ring-border-error"
+                "has-[&>select]:ring-1 has-[&>select]:ring-red-500 has-[&>select]:has-[input:focus]:ring-red-500 has-[&>select]:shadow-0 has-[&>select]:has-[input:focus]:shadow-0"
             )}
           >
             {leadingAddon && (
