@@ -67,7 +67,7 @@ export default function ForgotPasswordForm() {
             </div>
 
             {/* Title and Description */}
-            <div className="flex w-full flex-col items-start gap-3 text-center">
+            <div className="flex w-full flex-col items-start gap-3">
               <h2 className="w-full text-4xl font-semibold leading-9.5 text-primary">
                 Forgot your password?
               </h2>
@@ -111,14 +111,14 @@ export default function ForgotPasswordForm() {
               )}
 
               {/* Actions */}
-              <div className="flex w-full flex-col items-start gap-4">
+              <div className="flex w-full flex-col items-center gap-4">
                 {/* Submit Button */}
                 <Button
                   type="submit"
                   color="primary"
                   size="lg"
                   isDisabled={isSubmitting}
-                  className="w-full"
+                  className="w-auto"
                 >
                   {isSubmitting ? "Sending..." : "Send Link"}
                 </Button>

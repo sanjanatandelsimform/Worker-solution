@@ -281,7 +281,7 @@ export const RegistrationForm = () => {
               <InputGroup
                 // className="col-start-2"
                 className={errors.businessPhone ? "error-ring" : "col-start-2"}
-                label="Business Phone"
+                label="Business Phone Number"
                 hint={errors.businessPhone?.message}
                 isInvalid={!!errors.businessPhone}
                 leadingAddon={
