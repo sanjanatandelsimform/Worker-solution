@@ -7,7 +7,7 @@ import { Input } from "@/components/base/input/input";
 import { InputGroup } from "@/components/base/input/input-group";
 import { Checkbox } from "@/components/base/checkbox/checkbox";
 // import { GoogleSSOButton } from "./GoogleSSOButton";
-import { Eye, EyeOff, AlertOctagon } from "@untitledui/icons";
+import { Eye, EyeOff, AlertCircle } from "@untitledui/icons";
 import type { SignInData } from "@/types/auth";
 import { signin } from "@/services/api/authApi";
 import { ChangePasswordModal } from "../modals/ChangePasswordModal";
@@ -174,7 +174,8 @@ export const SignInForm = () => {
               {/* Error Message Display */}
               {errorMessage && (
                 <ErrorMessage
-                  alertIcon={AlertOctagon}
+                  errorType="warning"
+                  alertIcon={AlertCircle}
                   errorMessage={errorMessage}
                   onClose={() => setErrorMessage(null)}
                 />
