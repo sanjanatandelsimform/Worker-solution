@@ -22,10 +22,11 @@ export const RegistrationForm = () => {
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
   const [phoneNumber, setPhoneNumber] = useState("");
   const [countryCode, setCountryCode] = useState("US");
-  // const [isOpen, setIsOpen] = useState(false);
+  const [isFormSubmitted, setIsFormSubmitted] = useState(false);
   const [submitError, setSubmitError] = useState<string | null>(null);
   const navigate = useNavigate();
 
+  console.log(isFormSubmitted);
   const {
     handleSubmit,
     formState: { errors, isSubmitting },
@@ -79,6 +80,7 @@ export const RegistrationForm = () => {
 
   const onSubmit = async (data: RegistrationFormData) => {
     try {
+      setIsFormSubmitted(true);
       setSubmitError(null);
 
       // Validate all fields before processing
@@ -119,6 +121,7 @@ export const RegistrationForm = () => {
     }
   };
 
+  const hasError = firstName === "";
   // const handleGetStarted = () => {
   //   navigate("/sign-in");
   // };
@@ -155,7 +158,7 @@ export const RegistrationForm = () => {
                   label="First Name"
                   hint={errors.firstName?.message}
                   placeholder="First Name"
-                  isInvalid={!!errors.firstName}
+                  isInvalid={firstName === "" ? hasError : !!errors.firstName}
                   value={firstName}
                   maxLength={20}
                   className={errors.firstName ? "error-ring" : ""}
@@ -219,7 +222,8 @@ export const RegistrationForm = () => {
                   setValue("industry", key as string);
                   trigger("industry");
                 }}
-                isInvalid={!!errors.industry}
+                //isInvalid={!!errors.industry}
+                isInvalid={hasError}
                 hint={errors.industry?.message}
               >
                 {item => (
@@ -278,12 +282,15 @@ export const RegistrationForm = () => {
                   }}
                 />
               </InputGroup>
+
               <InputGroup
                 // className="col-start-2"
                 className={errors.businessPhone ? "error-ring" : "col-start-2"}
-                label="Business Phone"
+                label="Business Phone Number"
                 hint={errors.businessPhone?.message}
-                isInvalid={!!errors.businessPhone}
+                // isInvalid={!!errors.businessPhone}
+                isInvalid={hasError}
+                //hint={hasError ? "Phone number is required" : ""}
                 leadingAddon={
                   <NativeSelect
                     value={countryCode}

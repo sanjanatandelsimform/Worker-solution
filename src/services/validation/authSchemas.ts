@@ -39,7 +39,7 @@ export const registrationSchema = z
       .regex(/^\d{5}$/, "Zip Code must be exactly 5 digits"),
     businessEmail: z
       .string()
-      .min(1,"Please enter a valid email address")
+      .min(1, "Please enter a valid email address")
       .email("Enter a valid email address"),
     businessPhone: z
       .string()

@@ -22,6 +22,7 @@ export type SelectItemType = {
   label?: string;
   avatarUrl?: string;
   isDisabled?: boolean;
+  isInvalid?: boolean;
   supportingText?: string;
   icon?: FC | ReactNode;
 };
@@ -50,6 +51,7 @@ interface SelectValueProps {
   size: "sm" | "md";
   isFocused: boolean;
   isDisabled: boolean;
+  isInvalid: boolean;
   placeholder?: string;
   ref?: Ref<HTMLButtonElement>;
   placeholderIcon?: FC | ReactNode;
@@ -61,6 +63,7 @@ const SelectValue = ({
   isOpen,
   isFocused,
   isDisabled,
+  isInvalid,
   size,
   placeholder,
   placeholderIcon,
@@ -72,7 +75,8 @@ const SelectValue = ({
       className={cx(
         "relative flex w-full cursor-pointer items-center rounded-lg bg-primary shadow-xs ring-1 ring-gray-300 outline-hidden transition duration-100 ease-linear ring-inset color-text-600 text-base",
         (isFocused || isOpen) && "ring-2 ring-brand",
-        isDisabled && "cursor-not-allowed bg-disabled_subtle text-disabled"
+        isDisabled && "cursor-not-allowed bg-disabled_subtle text-disabled",
+        isInvalid && "ring-1 ring-red-500"
       )}
     >
       <AriaSelectValue<SelectItemType>
