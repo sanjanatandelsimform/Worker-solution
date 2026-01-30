@@ -7,19 +7,18 @@ import { Input } from "@/components/base/input/input";
 import { InputGroup } from "@/components/base/input/input-group";
 import { Checkbox } from "@/components/base/checkbox/checkbox";
 // import { GoogleSSOButton } from "./GoogleSSOButton";
-import { Eye, EyeOff, AlertCircle } from "@untitledui/icons";
+import { Eye, EyeOff, AlertTriangle } from "@untitledui/icons";
 import type { SignInData } from "@/types/auth";
 import { signin } from "@/services/api/authApi";
 import { ChangePasswordModal } from "../modals/ChangePasswordModal";
 import checkmarkIcon from "@/assets/checkmark-icon.svg";
 import { signInSchema, type SignInFormData } from "@/services/validation/authSchemas";
 import ErrorMessage from "./ErrorMessage";
-import { getErrorState, type ErrorState } from "@/utils/errorHandler";
 
 export const SignInForm = () => {
   const [showPassword, setShowPassword] = useState(false);
+  const [errorMessage, setErrorMessage] = useState<string | null>(null);
   const [isChangePasswordModalOpen, setIsChangePasswordModalOpen] = useState(false);
-  const [error, setError] = useState<ErrorState | null>(null);
   const navigate = useNavigate();
 
   const {
@@ -45,7 +44,8 @@ export const SignInForm = () => {
 
   const onSubmit = async (data: SignInFormData) => {
     try {
-      setError(null);
+      setErrorMessage(null);
+
       // Trigger validation on all fields to show errors
       const isValid = await trigger();
       if (!isValid) {
@@ -68,7 +68,6 @@ export const SignInForm = () => {
 
       // Clear password field
       setValue("password", "");
-
       // Navigate to success page
       navigate("/success", {
         state: {
@@ -83,14 +82,15 @@ export const SignInForm = () => {
       });
     } catch (error) {
       console.error("Sign in error:", error);
-      // Automatically determine error type based on error characteristics
-      setError(getErrorState(error));
+      setErrorMessage(
+        error instanceof Error ? error.message : "An unexpected error occurred. Please try again."
+      );
     }
   };
 
   return (
     <div className="flex min-h-screen items-center justify-center bg-secondary">
-      <div className="flex w-2xl items-center justify-center rounded-xl border border-solid border-primary bg-primary py-28">
+      <div className="flex w-2xl items-center justify-center rounded-xl border border-solid border-primary bg-primary py-22">
         <div className="flex w-full max-w-md flex-col items-center gap-8">
           {/* Header */}
           <div className="flex w-full flex-col items-center gap-6">
@@ -172,12 +172,11 @@ export const SignInForm = () => {
               </InputGroup>
 
               {/* Error Message Display */}
-              {error && (
+              {errorMessage && (
                 <ErrorMessage
-                  errorType={error.type}
-                  alertIcon={AlertCircle}
-                  errorMessage={error.message}
-                  onClose={() => setError(null)}
+                  alertIcon={AlertTriangle}
+                  errorMessage={errorMessage}
+                  onClose={() => setErrorMessage(null)}
                 />
               )}
 

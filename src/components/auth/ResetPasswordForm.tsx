@@ -43,7 +43,7 @@ export default function ResetPasswordForm() {
     if (!resetToken) {
       setError({
         message: "Invalid or missing reset token. Please request a new password reset link.",
-        type: "warning"
+        type: "warning",
       });
       return;
     }
@@ -65,7 +65,7 @@ export default function ResetPasswordForm() {
   };
   return (
     <div className="flex min-h-screen items-center justify-center bg-secondary">
-      <div className="flex w-2xl items-center justify-center rounded-xl border border-solid border-primary bg-primary py-28">
+      <div className="flex w-2xl items-center justify-center rounded-xl border border-solid border-primary bg-primary py-22">
         <div className="flex w-full max-w-md flex-col items-center gap-8">
           {/* Header */}
           <div className="flex w-full flex-col items-center gap-6">

@@ -62,7 +62,7 @@ export const getErrorState = (error: unknown): ErrorState => {
       type = "info";
       message = "Request timed out. Please try again.";
     }
-  } 
+  }
   // Handle standard JavaScript errors
   else if (error instanceof Error) {
     message = error.message;
@@ -94,10 +94,7 @@ export const getErrorState = (error: unknown): ErrorState => {
       lowerMessage.includes("access denied")
     ) {
       type = "warning";
-    } else if (
-      lowerMessage.includes("server error") ||
-      lowerMessage.includes("internal error")
-    ) {
+    } else if (lowerMessage.includes("server error") || lowerMessage.includes("internal error")) {
       type = "danger";
     }
   }
