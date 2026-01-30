@@ -5,17 +5,19 @@ import { useNavigate } from "react-router-dom";
 import { Button } from "../base/buttons/button";
 import { Input } from "../base/input/input";
 import { InputGroup } from "../base/input/input-group";
-import { Mail01 } from "@untitledui/icons";
+import { Mail01, AlertCircle } from "@untitledui/icons";
 import { forgotPassword } from "@/services/api/authApi";
 import {
   forgotPasswordSchema,
   type ForgotPasswordFormData,
 } from "@/services/validation/authSchemas";
 import checkmarkIcon from "@/assets/checkmark-icon.svg";
+import ErrorMessage from "./ErrorMessage";
+import { getErrorState, type ErrorState } from "@/utils/errorHandler";
 
 export default function ForgotPasswordForm() {
   const navigate = useNavigate();
-  const [errorMessage, setErrorMessage] = useState<string | null>(null);
+  const [error, setError] = useState<ErrorState | null>(null);
 
   const {
     handleSubmit,
@@ -32,7 +34,7 @@ export default function ForgotPasswordForm() {
 
   const onSubmit = async (data: ForgotPasswordFormData) => {
     try {
-      setErrorMessage(null);
+      setError(null);
       await forgotPassword(data.email);
       reset();
 
@@ -49,9 +51,8 @@ export default function ForgotPasswordForm() {
       });
     } catch (err) {
       console.error("Forgot password error:", err);
-      setErrorMessage(
-        err instanceof Error ? err.message : "Unable to process request. Please try again."
-      );
+      // Automatically determine error type based on error characteristics
+      setError(getErrorState(err));
     }
   };
 
@@ -104,10 +105,13 @@ export default function ForgotPasswordForm() {
               </InputGroup>
 
               {/* Error Messages */}
-              {errorMessage && (
-                <div className="rounded-lg bg-error-50 border border-error-300 px-4 py-3">
-                  <p className="text-error-600 text-sm font-medium">{errorMessage}</p>
-                </div>
+              {error && (
+                <ErrorMessage
+                  errorType={error.type}
+                  alertIcon={AlertCircle}
+                  errorMessage={error.message}
+                  onClose={() => setError(null)}
+                />
               )}
 
               {/* Actions */}
