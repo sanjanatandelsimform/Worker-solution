@@ -15,7 +15,7 @@ import type { RegistrationData, Industry } from "@/types/auth";
 import { registrationSchema, type RegistrationFormData } from "@/services/validation/authSchemas";
 import { INDUSTRIES, COUNTRY_CODES } from "@/constants/formOptions";
 import checkmarkIcon from "@/assets/checkmark-icon.svg";
-import ErrorMessage from "./ErrorMessage";
+import ErrorMessage from "../common/ErrorMessage";
 import { getErrorState, type ErrorState } from "@/utils/errorHandler";
 
 export const RegistrationForm = () => {

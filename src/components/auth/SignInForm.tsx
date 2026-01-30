@@ -13,7 +13,7 @@ import { signin } from "@/services/api/authApi";
 import { ChangePasswordModal } from "../modals/ChangePasswordModal";
 import checkmarkIcon from "@/assets/checkmark-icon.svg";
 import { signInSchema, type SignInFormData } from "@/services/validation/authSchemas";
-import ErrorMessage from "./ErrorMessage";
+import ErrorMessage from "../common/ErrorMessage";
 
 export const SignInForm = () => {
   const [showPassword, setShowPassword] = useState(false);
