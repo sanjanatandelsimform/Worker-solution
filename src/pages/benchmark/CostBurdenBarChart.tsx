@@ -326,16 +326,12 @@ export function IncomeDistributionChart() {
       {/* Legend */}
       <div className="flex gap-6 items-center justify-center">
         <div className="flex gap-4 items-center">
-          <div className="size-4.5 rounded-xs bg-[#00C4C7]" />
-          <p className="font-normal text-lg leading-7 text-black">Industry average</p>
+          <div className="size-4.5 rounded-xs bg-cyan-400" />
+          <p className="font-normal text-lg leading-7 text-black">Burdened</p>
         </div>
         <div className="flex gap-4 items-center">
-          <div className="size-4.5 rounded-xs bg-[#22CCEE]" />
-          <p className="font-normal text-lg leading-7 text-black">Your company</p>
-        </div>
-        <div className="flex gap-4 items-center">
-          <div className="size-4.5 rounded-xs bg-[#DBEBEB]" />
-          <p className="font-normal text-lg leading-7 text-black">National average</p>
+          <div className="size-4.5 rounded-xs bg-cyan-200" />
+          <p className="font-normal text-lg leading-7 text-black">Severely Burdened</p>
         </div>
       </div>
     </div>

@@ -1,5 +1,6 @@
 import { X } from "@untitledui/icons";
 import { Button } from "../base/buttons/button";
+import { useEffect } from "react";
 
 export interface CostCardProps {
   errorType?: "success" | "warning" | "danger" | "info" | "neutral";
@@ -17,6 +18,16 @@ export default function ErrorMessage({
   classess,
   onClose,
 }: CostCardProps) {
+  useEffect(() => {
+    if (onClose) {
+      const timer = setTimeout(() => {
+        onClose();
+      }, 5000); // 8 seconds
+
+      return () => clearTimeout(timer);
+    }
+  }, [onClose]);
+
   return (
     <div className={`${errorType} ${classess}`}>
       <div className={`${textColor} text-sm font-medium flex items-center justify-between`}>

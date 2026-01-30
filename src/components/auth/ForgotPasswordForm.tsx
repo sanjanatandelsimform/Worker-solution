@@ -58,7 +58,7 @@ export default function ForgotPasswordForm() {
 
   return (
     <div className="flex min-h-screen items-center justify-center bg-secondary">
-      <div className="flex w-2xl items-center justify-center rounded-xl border border-solid border-primary bg-primary py-28">
+      <div className="flex w-2xl items-center justify-center rounded-xl border border-solid border-primary bg-primary py-22">
         <div className="flex w-full max-w-md flex-col items-center gap-8">
           {/* Header */}
           <div className="flex w-full flex-col items-center gap-6">
