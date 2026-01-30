@@ -5,17 +5,19 @@ import { useNavigate, useSearchParams } from "react-router-dom";
 import { Button } from "../base/buttons/button";
 import { Input } from "../base/input/input";
 import { InputGroup } from "../base/input/input-group";
-import { Eye, EyeOff } from "@untitledui/icons";
+import { Eye, EyeOff, AlertCircle } from "@untitledui/icons";
 import { resetPassword } from "@/services/api/authApi";
 import { resetPasswordSchema, type ResetPasswordFormData } from "@/services/validation/authSchemas";
 import checkmarkIcon from "@/assets/checkmark-icon.svg";
 import { SuccessModalWithLogo } from "../modals/SuccessModalWithLogo";
+import ErrorMessage from "./ErrorMessage";
+import { getErrorState, type ErrorState } from "@/utils/errorHandler";
 
 export default function ResetPasswordForm() {
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
   const [isOpen, setIsOpen] = useState(false);
-  const [errorMessage, setErrorMessage] = useState<string | null>(null);
+  const [error, setError] = useState<ErrorState | null>(null);
   const [searchParams] = useSearchParams();
   const navigate = useNavigate();
 
@@ -39,22 +41,21 @@ export default function ResetPasswordForm() {
 
   const onSubmit = async (data: ResetPasswordFormData) => {
     if (!resetToken) {
-      setErrorMessage("Invalid or missing reset token. Please request a new password reset link.");
+      setError({
+        message: "Invalid or missing reset token. Please request a new password reset link.",
+        type: "warning"
+      });
       return;
     }
 
     try {
-      setErrorMessage(null);
+      setError(null);
       await resetPassword(resetToken, data.newPassword);
       setIsOpen(true);
       reset();
     } catch (err) {
       console.error("Reset password error:", err);
-      setErrorMessage(
-        err instanceof Error
-          ? err.message
-          : "Unable to reset password. Please try again or request a new link."
-      );
+      setError(getErrorState(err));
     }
   };
 
@@ -157,10 +158,13 @@ export default function ResetPasswordForm() {
               </InputGroup>
 
               {/* Error and Success Messages */}
-              {errorMessage && (
-                <div className="rounded-lg bg-error-50 border border-error-300 px-4 py-3">
-                  <p className="text-error-600 text-sm font-medium">{errorMessage}</p>
-                </div>
+              {error && (
+                <ErrorMessage
+                  errorType={error.type}
+                  alertIcon={AlertCircle}
+                  errorMessage={error.message}
+                  onClose={() => setError(null)}
+                />
               )}
 
               {/* Actions */}

@@ -14,11 +14,12 @@ import { ChangePasswordModal } from "../modals/ChangePasswordModal";
 import checkmarkIcon from "@/assets/checkmark-icon.svg";
 import { signInSchema, type SignInFormData } from "@/services/validation/authSchemas";
 import ErrorMessage from "./ErrorMessage";
+import { getErrorState, type ErrorState } from "@/utils/errorHandler";
 
 export const SignInForm = () => {
   const [showPassword, setShowPassword] = useState(false);
-  const [errorMessage, setErrorMessage] = useState<string | null>(null);
   const [isChangePasswordModalOpen, setIsChangePasswordModalOpen] = useState(false);
+  const [error, setError] = useState<ErrorState | null>(null);
   const navigate = useNavigate();
 
   const {
@@ -44,8 +45,7 @@ export const SignInForm = () => {
 
   const onSubmit = async (data: SignInFormData) => {
     try {
-      setErrorMessage(null);
-
+      setError(null);
       // Trigger validation on all fields to show errors
       const isValid = await trigger();
       if (!isValid) {
@@ -68,6 +68,7 @@ export const SignInForm = () => {
 
       // Clear password field
       setValue("password", "");
+
       // Navigate to success page
       navigate("/success", {
         state: {
@@ -82,9 +83,8 @@ export const SignInForm = () => {
       });
     } catch (error) {
       console.error("Sign in error:", error);
-      setErrorMessage(
-        error instanceof Error ? error.message : "An unexpected error occurred. Please try again."
-      );
+      // Automatically determine error type based on error characteristics
+      setError(getErrorState(error));
     }
   };
 
@@ -172,12 +172,12 @@ export const SignInForm = () => {
               </InputGroup>
 
               {/* Error Message Display */}
-              {errorMessage && (
+              {error && (
                 <ErrorMessage
-                  errorType="warning"
+                  errorType={error.type}
                   alertIcon={AlertCircle}
-                  errorMessage={errorMessage}
-                  onClose={() => setErrorMessage(null)}
+                  errorMessage={error.message}
+                  onClose={() => setError(null)}
                 />
               )}
 

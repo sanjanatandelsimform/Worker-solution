@@ -7,23 +7,23 @@ import { Button } from "@/components/base/buttons/button";
 import { Input, InputBase } from "@/components/base/input/input";
 import { InputGroup } from "@/components/base/input/input-group";
 import { Checkbox } from "@/components/base/checkbox/checkbox";
-import { Eye, EyeOff, Mail01 } from "@untitledui/icons";
+import { Eye, EyeOff, Mail01, AlertCircle } from "@untitledui/icons";
 import { NativeSelect } from "../base/select/select-native";
 import { Select } from "../base/select/select";
 import { signup } from "@/services/api/authApi";
 import type { RegistrationData, Industry } from "@/types/auth";
 import { registrationSchema, type RegistrationFormData } from "@/services/validation/authSchemas";
 import { INDUSTRIES, COUNTRY_CODES } from "@/constants/formOptions";
-// import { SuccessModalWithLogo } from "../modals";
 import checkmarkIcon from "@/assets/checkmark-icon.svg";
+import ErrorMessage from "./ErrorMessage";
+import { getErrorState, type ErrorState } from "@/utils/errorHandler";
 
 export const RegistrationForm = () => {
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
   const [phoneNumber, setPhoneNumber] = useState("");
   const [countryCode, setCountryCode] = useState("US");
-  // const [isOpen, setIsOpen] = useState(false);
-  const [submitError, setSubmitError] = useState<string | null>(null);
+  const [submitError, setSubmitError] = useState<ErrorState | null>(null);
   const navigate = useNavigate();
 
   const {
@@ -113,9 +113,7 @@ export const RegistrationForm = () => {
       setValue("confirmPassword", "");
     } catch (error) {
       console.error("Registration error:", error);
-      setSubmitError(
-        error instanceof Error ? error.message : "An unexpected error occurred. Please try again."
-      );
+      setSubmitError(getErrorState(error));
     }
   };
 
@@ -407,13 +405,12 @@ export const RegistrationForm = () => {
 
             {/* Submit Error Display */}
             {submitError && (
-              <div
-                className="mt-4 rounded-lg border border-error-primary bg-error-secondary px-4 py-3 text-sm"
-                role="alert"
-                style={{ color: "var(--color-text-error-primary)" }}
-              >
-                {submitError}
-              </div>
+              <ErrorMessage
+                errorType={submitError.type}
+                alertIcon={AlertCircle}
+                errorMessage={submitError.message}
+                onClose={() => setSubmitError(null)}
+              />
             )}
 
             {/* Footer */}
@@ -446,20 +443,6 @@ export const RegistrationForm = () => {
           </form>
         </div>
       </div>
-      {/* After discussion, we will uncomment this if needed; otherwise, we will remove it. */}
-      {/* <SuccessModalWithLogo
-        isOpen={isOpen}
-        onClose={() => setIsOpen(false)}
-        size="xl"
-        messageImg={checkmarkIcon}
-        title="Account created successfully!"
-        subtitle="Welcome aboard! Start your success journey with Worker Solutions®"
-        button={{
-          text: "Let's Get Started",
-          onClick: handleGetStarted,
-          color: "primary",
-        }}
-      /> */}
     </div>
   );
 };
