@@ -44,6 +44,8 @@ export const SuccessPage: React.FC<SuccessCardProps> = ({
     if (state.shouldClearUser) {
       dispatch(clearUser());
       localStorage.removeItem("userDetail");
+      sessionStorage.removeItem("registrationFormData");
+      sessionStorage.removeItem("registrationFormActive");
     }
     // Only run once on mount
     // eslint-disable-next-line

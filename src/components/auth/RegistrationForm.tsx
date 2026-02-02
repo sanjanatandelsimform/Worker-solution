@@ -1,5 +1,5 @@
 // Ensure that this file only exports components to comply with the react-refresh/only-export-components rule.
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useForm, useWatch } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useNavigate, Link } from "react-router-dom";
@@ -18,11 +18,52 @@ import checkmarkIcon from "@/assets/checkmark-icon.svg";
 import ErrorMessage from "../common/ErrorMessage";
 import { getErrorState, type ErrorState } from "@/utils/errorHandler";
 
+// Load saved form data OUTSIDE the component (synchronous)
+const loadSavedFormData = () => {
+  try {
+    const savedFormData = sessionStorage.getItem("registrationFormData");
+    if (savedFormData) {
+      const parsedData = JSON.parse(savedFormData);
+      return {
+        firstName: parsedData.firstName || "",
+        lastName: parsedData.lastName || "",
+        legalBusinessName: parsedData.legalBusinessName || "",
+        industry: parsedData.industry || "",
+        zipCode: parsedData.zipCode || "",
+        businessEmail: parsedData.businessEmail || "",
+        businessPhone: parsedData.businessPhone || "",
+        password: parsedData.password || "",
+        confirmPassword: parsedData.confirmPassword || "",
+        agreeToTerms: parsedData.agreeToTerms || false,
+        countryCode: parsedData.countryCode || "US",
+        phoneNumber: parsedData.businessPhone || "",
+      };
+    }
+  } catch (error) {
+    console.error("Error loading saved form data:", error);
+  }
+  return {
+    firstName: "",
+    lastName: "",
+    legalBusinessName: "",
+    industry: "",
+    zipCode: "",
+    businessEmail: "",
+    businessPhone: "",
+    password: "",
+    confirmPassword: "",
+    agreeToTerms: false,
+    countryCode: "US",
+    phoneNumber: "",
+  };
+};
+
 export const RegistrationForm = () => {
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
-  const [phoneNumber, setPhoneNumber] = useState("");
-  const [countryCode, setCountryCode] = useState("US");
+  const savedData = loadSavedFormData();
+  const [phoneNumber, setPhoneNumber] = useState(savedData.phoneNumber);
+  const [countryCode, setCountryCode] = useState(savedData.countryCode);
   const [submitError, setSubmitError] = useState<ErrorState | null>(null);
   const navigate = useNavigate();
 
@@ -32,22 +73,10 @@ export const RegistrationForm = () => {
     control,
     setValue,
     trigger,
-    // control,
   } = useForm<RegistrationFormData>({
     resolver: zodResolver(registrationSchema),
-    mode: "onSubmit", // <-- important for submit validation
-    defaultValues: {
-      firstName: "",
-      lastName: "",
-      legalBusinessName: "",
-      industry: "",
-      zipCode: "",
-      businessEmail: "",
-      businessPhone: "",
-      password: "",
-      confirmPassword: "",
-      agreeToTerms: false,
-    },
+    mode: "onSubmit",
+    defaultValues: loadSavedFormData(),
   });
 
   const watchedFields = useWatch({
@@ -77,13 +106,74 @@ export const RegistrationForm = () => {
     agreeToTerms,
   ] = watchedFields;
 
+  // Clear form data on page refresh/unmount (when component truly unmounts, not on navigation)
+  useEffect(() => {
+    // Mark that the form is currently active
+    sessionStorage.setItem("registrationFormActive", "true");
+
+    // Cleanup function runs when component unmounts
+    return () => {
+      // Only clear if we're actually leaving the registration flow (page refresh/close)
+      // Navigation to Terms/Privacy won't trigger this because sessionStorage persists
+      const isActive = sessionStorage.getItem("registrationFormActive");
+      if (isActive) {
+        sessionStorage.removeItem("registrationFormActive");
+      }
+    };
+  }, []);
+
+  // Handle page refresh - clear data when page is refreshed
+  useEffect(() => {
+    const handleBeforeUnload = () => {
+      // This fires on page refresh or tab close
+      sessionStorage.removeItem("registrationFormData");
+      sessionStorage.removeItem("registrationFormActive");
+    };
+
+    window.addEventListener("beforeunload", handleBeforeUnload);
+
+    return () => {
+      window.removeEventListener("beforeunload", handleBeforeUnload);
+    };
+  }, []);
+
+  // Save form data to sessionStorage whenever it changes
+  useEffect(() => {
+    const formData = {
+      firstName,
+      lastName,
+      legalBusinessName,
+      industry,
+      zipCode,
+      businessEmail,
+      businessPhone: phoneNumber,
+      countryCode,
+      password,
+      confirmPassword,
+      agreeToTerms,
+    };
+    sessionStorage.setItem("registrationFormData", JSON.stringify(formData));
+  }, [
+    firstName,
+    lastName,
+    legalBusinessName,
+    industry,
+    zipCode,
+    businessEmail,
+    phoneNumber,
+    countryCode,
+    password,
+    confirmPassword,
+    agreeToTerms,
+  ]);
+
   const onSubmit = async (data: RegistrationFormData) => {
     try {
       setSubmitError(null);
 
       // Validate all fields before processing
       const isValid = await trigger();
-      if (!isValid) return; // Show errors, don't submit
+      if (!isValid) return;
 
       const registrationData: RegistrationData = {
         firstName: data.firstName,
@@ -99,6 +189,10 @@ export const RegistrationForm = () => {
       };
 
       await signup(registrationData);
+
+      // Clear saved form data on successful submission
+      sessionStorage.removeItem("registrationFormData");
+      sessionStorage.removeItem("registrationFormActive");
 
       navigate("/success", {
         state: {
