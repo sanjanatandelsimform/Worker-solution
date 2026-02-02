@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { useNavigate } from "react-router";
+import { useNavigate } from "react-router-dom";
 import { ChevronLeft, XClose } from "@untitledui/icons";
 import { Button } from "@/components/base/buttons/button";
 import { ProgressStepper } from "./ProgressStepper";
