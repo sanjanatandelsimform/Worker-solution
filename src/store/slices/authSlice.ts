@@ -21,7 +21,7 @@ const initialState: AuthState = {
   },
 };
 
-const authSlice = createSlice({
+export const authSlice = createSlice({
   name: "auth",
   initialState,
   reducers: {
@@ -58,8 +58,22 @@ const authSlice = createSlice({
       state.tokens = action.payload;
       state.isAuthenticated = true;
     },
+    logout: state => {
+      state.user = null;
+      state.tokens = {
+        accessToken: null,
+        refreshToken: null,
+      };
+      state.isAuthenticated = false;
+
+      // Clear all auth-related data from localStorage and sessionStorage
+      localStorage.removeItem("userDetail");
+      sessionStorage.removeItem("registrationFormData");
+      sessionStorage.removeItem("registrationFormActive");
+    },
   },
 });
 
-export const { setUser, clearUser, setLoading, updateUserProfile, setTokens } = authSlice.actions;
+export const { setUser, clearUser, setLoading, updateUserProfile, setTokens, logout } =
+  authSlice.actions;
 export default authSlice.reducer;
