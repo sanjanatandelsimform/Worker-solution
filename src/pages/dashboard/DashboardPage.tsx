@@ -1,4 +1,4 @@
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { DashboardSidebar } from "@/components/dashboard/DashboardSidebar";
 import emailIcon from "@/assets/mail-icon.svg";
@@ -8,72 +8,65 @@ import { Tabs } from "@/components/base/tabs/tabs";
 import RecommendationsPage from "../recommendations/RecommendationsPage";
 import BenchmarkPage from "../benchmark/BenchmarkPage";
 import { Link } from "react-router-dom";
-// import { InProgressModal } from "@/components/modals/InProgressModal";
 import { useAppSelector, useAppDispatch } from "@/store/hooks";
-// import { getUserById } from "@/services/api/userApi";
-// import { updateUserProfile } from "@/store/slices/authSlice";
-// import ErrorMessage from "@/components/common/ErrorMessage";
-// import { AlertCircle } from "@untitledui/icons";
-// import { getErrorState, type ErrorState } from "@/utils/errorHandler";
+import { selectUser } from "@/store/selectors/authSelectors";
+// import { verifyEmail } from "@/services/api/authApi";
+import { BaseModalWithIcon } from "@/components/modals/BaseModalWithIcon";
+import ErrorMessage from "@/components/common/ErrorMessage";
+import checkmarkIcon from "@/assets/checkmark-icon.svg";
+import { AlertCircle } from "@untitledui/icons";
+import { fetchUserById } from "@/store/slices/userSlice";
 
 export const DashboardPage = () => {
   const navigate = useNavigate();
+  const user = useAppSelector(selectUser);
   const dispatch = useAppDispatch();
-  const { user, tokens } = useAppSelector(state => state.auth);
 
-  // const [isLoading, setIsLoading] = useState(true);
-  // const [userData, setUserData] = useState(user);
-  // const [error, setError] = useState<ErrorState | null>(null);
+  const emailVerify = user?.emailVerify || false;
+
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [errorMessage, setErrorMessage] = useState<string | null>(null);
 
   useEffect(() => {
-    const fetchUserData = async () => {
-      if (!user?.id || !tokens?.accessToken) {
-        navigate("/sign-in");
-        return;
+    if (user?.id) {
+      const userDetail = localStorage.getItem("userDetail");
+      if (userDetail) {
+        const parsedUserDetail = JSON.parse(userDetail);
+        const accessToken = parsedUserDetail?.auth?.tokens?.accessToken;
+        if (accessToken) {
+          dispatch(fetchUserById({ userId: user.id, token: accessToken }));
+        }
       }
+    }
+  }, [user?.id, dispatch]);
 
-      // try {
-      //   setIsLoading(true);
-      //   setError(null);
-      //   const fetchedUser = await getUserById(user.id, tokens.accessToken);
-
-      //   setUserData(fetchedUser);
-      //   dispatch(updateUserProfile(fetchedUser));
-      // } catch (error) {
-      //   console.error("Failed to fetch user data:", error);
-      //   const errorState = getErrorState(error);
-      //   setError(errorState);
-
-      //   // If it's an auth error, redirect to sign-in after showing error
-      //   if (error instanceof Error && error.message.includes("token")) {
-      //     setTimeout(() => {
-      //       navigate("/sign-in");
-      //     }, 3000);
-      //   }
-      // } finally {
-      //   setIsLoading(false);
-      // }
-    };
-
-    fetchUserData();
-  }, [user?.id, tokens?.accessToken, dispatch, navigate]);
-
-  // Show loading modal while fetching data
-  // if (isLoading) {
-  //   return (
-  //     <InProgressModal
-  //       isOpen={isLoading}
-  //       onClose={() => {
-  //         // Don't allow closing during data fetch
-  //       }}
-  //       onGoToDashboard={() => {
-  //         // Disabled during loading
-  //       }}
-  //       title="Loading Dashboard..."
-  //       subtitle="Please wait while we prepare your dashboard."
-  //     />
-  //   );
-  // }
+  const handleVerifyEmail = async () => {
+    // try {
+    //   setErrorMessage(null);
+    //   const userDetail = localStorage.getItem("userDetail");
+    //   if (!userDetail) {
+    //     throw new Error("User details not found in storage.");
+    //   }
+    //   const parsedUserDetail = JSON.parse(userDetail);
+    //   const verificationToken = parsedUserDetail?.auth?.verificationDetails?.verificationToken;
+    //   const accessToken = parsedUserDetail?.auth?.tokens?.accessToken;
+    //   if (!verificationToken || !accessToken) {
+    //     throw new Error("Verification token or access token not found.");
+    //   }
+    //   const response = await verifyEmail(verificationToken, accessToken);
+    //   if (response.message === "success") {
+    //     setIsModalOpen(true);
+    //   } else {
+    //     throw new Error(response.message || "Verification failed.");
+    //   }
+    // } catch (error) {
+    //   setErrorMessage(
+    //     error instanceof Error
+    //       ? error.message
+    //       : "An unexpected error occurred. Please try again."
+    //   );
+    // }
+  };
 
   return (
     <div className="flex h-screen overflow-hidden bg-dashboard">
@@ -84,24 +77,8 @@ export const DashboardPage = () => {
       <div className="flex flex-1 flex-col overflow-hidden">
         {/* Main Content */}
         <main className="flex-1 overflow-y-auto px-6 py-10">
-          {/* Error Message Display */}
-          {/* {error && (
-            <div className="mb-6">
-              <ErrorMessage
-                errorType={error.type}
-                alertIcon={AlertCircle}
-                errorMessage={error.message}
-                onClose={() => setError(null)}
-              />
-            </div>
-          )} */}
-
-          <div className="space-y-6"></div>
           <div>
-            <h2 className="text-4xl font-medium text-primary">
-              {/* Welcome{userData?.firstName ? `, ${userData.firstName}` : ""}! */}
-              Welcome!
-            </h2>
+            <h2 className="text-4xl font-medium text-primary">Welcome!</h2>
             <div className="mt-6 border border-gray-300 rounded-xl p-4 bg-dashboard-card shadow-sm flex gap-4 justify-between flex-col lg:flex-row">
               <div className="flex-1">
                 <h2 className="text-dashboard-card-title text-3xl font-medium mb-2">
@@ -128,6 +105,8 @@ export const DashboardPage = () => {
               avatarIconSrc={emailIcon}
               buttonLabel="Verify email"
               buttonType="primary"
+              buttonIsDisabled={emailVerify}
+              onClick={handleVerifyEmail} // Add click handler
             />
             <DashboardCard
               title="Take the Assessment"
@@ -135,9 +114,10 @@ export const DashboardPage = () => {
               avatarIconSrc={checkIcon}
               buttonLabel="Take Assessment"
               buttonType="secondary"
-              buttonIsDisabled={true}
+              buttonIsDisabled={!emailVerify}
             />
           </div>
+          {/* This will be conditionally rendered; uncomment when this feature is implemented. */}
           <div className="mt-10">
             <Tabs>
               <Tabs.List
@@ -158,6 +138,39 @@ export const DashboardPage = () => {
           </div>
         </main>
       </div>
+
+      {/* Success Modal */}
+      <BaseModalWithIcon
+        isOpen={isModalOpen}
+        onClose={() => setIsModalOpen(false)}
+        size="sm"
+        title="Email Verified"
+        subtitle="Your email has been successfully verified. You can now access all features."
+        icon={<img src={checkmarkIcon} alt="Success" />}
+        buttons={[
+          {
+            text: "Go to Dashboard",
+            onClick: () => {
+              setIsModalOpen(false);
+              navigate("/dashboard");
+            },
+            color: "primary",
+          },
+        ]}
+      />
+
+      {/* Error Message */}
+      {errorMessage && (
+        <div className="mt-4">
+          <ErrorMessage
+            errorType="danger"
+            textColor="text-red-700"
+            alertIcon={AlertCircle}
+            errorMessage={errorMessage}
+            onClose={() => setErrorMessage(null)}
+          />
+        </div>
+      )}
     </div>
   );
 };

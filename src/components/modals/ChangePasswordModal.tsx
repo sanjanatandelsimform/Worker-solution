@@ -1,8 +1,5 @@
 "use no memo";
-import { useState } from "react";
-import { useForm, useWatch } from "react-hook-form";
-import { zodResolver } from "@hookform/resolvers/zod";
-import { z } from "zod";
+import { useState, useEffect } from "react";
 import {
   Modal,
   ModalContent,
@@ -15,30 +12,19 @@ import {
 import { Button } from "@/components/base/buttons/button";
 import { Input } from "@/components/base/input/input";
 import { InputGroup } from "@/components/base/input/input-group";
-import { Eye, EyeOff, X } from "@untitledui/icons";
+import { Eye, EyeOff, X, AlertCircle } from "@untitledui/icons";
 import { ChangePasswordSuccessModal } from "./ChangePasswordSuccessModal";
-import { ChangePasswordFailedModal } from "./ChangePasswordFailedModal";
-import { InProgressModal } from "./InProgressModal";
-
-// Validation schema using Zod
-const changePasswordSchema = z
-  .object({
-    currentPassword: z.string().min(1, "Current password is required"),
-    newPassword: z
-      .string()
-      .min(6, "Password must be at least 6 characters")
-      .regex(
-        /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]/,
-        "Must be min 6 characters, include number, upper case, lower case and symbol."
-      ),
-    confirmPassword: z.string().min(1, "Confirm password is required"),
-  })
-  .refine(data => data.newPassword === data.confirmPassword, {
-    message: "Passwords do not match",
-    path: ["confirmPassword"],
-  });
-
-type ChangePasswordFormData = z.infer<typeof changePasswordSchema>;
+import ErrorMessage from "@/components/common/ErrorMessage";
+import { useAppDispatch, useAppSelector } from "@/store/hooks";
+import { changePassword } from "@/store/slices/profileSlice";
+import {
+  selectProfileLoading,
+  selectProfileError,
+  selectPasswordAttempts,
+  selectIsAccountLocked,
+  selectLockoutExpiry,
+} from "@/store/selectors/profileSelectors";
+import { validatePassword, isPasswordDifferent } from "@/utils/validation";
 
 interface ChangePasswordModalProps {
   isOpen: boolean;
@@ -46,69 +32,150 @@ interface ChangePasswordModalProps {
 }
 
 export const ChangePasswordModal = ({ isOpen, onClose }: ChangePasswordModalProps) => {
+  const dispatch = useAppDispatch();
+  const profileLoading = useAppSelector(selectProfileLoading);
+  const profileError = useAppSelector(selectProfileError);
+  const passwordAttempts = useAppSelector(selectPasswordAttempts);
+  const isAccountLocked = useAppSelector(selectIsAccountLocked);
+  const lockoutExpiry = useAppSelector(selectLockoutExpiry);
+
   const [showCurrentPassword, setShowCurrentPassword] = useState(false);
   const [showNewPassword, setShowNewPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
   const [isSuccessModalOpen, setIsSuccessModalOpen] = useState(false);
-  const [isFailedModalOpen, setIsFailedModalOpen] = useState(false);
-  const [isInProgressModalOpen, setIsInProgressModalOpen] = useState(false);
 
-  const {
-    handleSubmit,
-    formState: { errors, isSubmitting },
-    control,
-    setValue,
-    trigger,
-    reset,
-  } = useForm<ChangePasswordFormData>({
-    resolver: zodResolver(changePasswordSchema),
-    mode: "onBlur",
-    defaultValues: {
-      currentPassword: "",
-      newPassword: "",
-      confirmPassword: "",
-    },
-  });
+  const [currentPassword, setCurrentPassword] = useState("");
+  const [newPassword, setNewPassword] = useState("");
+  const [confirmPassword, setConfirmPassword] = useState("");
 
-  const currentPassword = useWatch({ control, name: "currentPassword" });
-  const newPassword = useWatch({ control, name: "newPassword" });
-  const confirmPassword = useWatch({ control, name: "confirmPassword" });
+  const [currentPasswordError, setCurrentPasswordError] = useState("");
+  const [newPasswordError, setNewPasswordError] = useState("");
+  const [confirmPasswordError, setConfirmPasswordError] = useState("");
+  const [showError, setShowError] = useState(false);
+  const [attemptsRemaining, setAttemptsRemaining] = useState(5);
+  const [lockoutMessage, setLockoutMessage] = useState("");
 
-  const onSubmit = async (data: ChangePasswordFormData) => {
+  // Reset form when modal opens
+  useEffect(() => {
+    if (isOpen) {
+      setCurrentPassword("");
+      setNewPassword("");
+      setConfirmPassword("");
+      setCurrentPasswordError("");
+      setNewPasswordError("");
+      setConfirmPasswordError("");
+      setShowError(false);
+      setLockoutMessage("");
+    }
+  }, [isOpen]);
+
+  // Update attempts remaining from Redux
+  useEffect(() => {
+    setAttemptsRemaining(5 - passwordAttempts);
+  }, [passwordAttempts]);
+
+  // Handle account lockout
+  useEffect(() => {
+    if (isAccountLocked && lockoutExpiry) {
+      const remaining = Math.ceil((lockoutExpiry - Date.now()) / 1000 / 60);
+      setLockoutMessage(`Account locked for ${remaining} minutes. Please try again later.`);
+    } else {
+      setLockoutMessage("");
+    }
+  }, [isAccountLocked, lockoutExpiry]);
+
+  // Validate passwords
+  const validatePasswords = (): boolean => {
+    let isValid = true;
+
+    // Validate current password
+    if (!currentPassword.trim()) {
+      setCurrentPasswordError("Current password is required");
+      isValid = false;
+    } else {
+      setCurrentPasswordError("");
+    }
+
+    // Validate new password
+    const newPasswordValidation = validatePassword(newPassword);
+    if (!newPasswordValidation.isValid) {
+      setNewPasswordError(newPasswordValidation.message || "Invalid password");
+      isValid = false;
+    } else if (!isPasswordDifferent(currentPassword, newPassword)) {
+      setNewPasswordError("New password must be different from current password");
+      isValid = false;
+    } else {
+      setNewPasswordError("");
+    }
+
+    // Validate confirm password
+    if (!confirmPassword.trim()) {
+      setConfirmPasswordError("Please confirm your password");
+      isValid = false;
+    } else if (newPassword !== confirmPassword) {
+      setConfirmPasswordError("Passwords do not match");
+      isValid = false;
+    } else {
+      setConfirmPasswordError("");
+    }
+
+    return isValid;
+  };
+
+  const handleUpdateClick = async () => {
+    // Check if account is locked
+    if (isAccountLocked) {
+      setShowError(true);
+      return;
+    }
+
+    // Validate passwords
+    if (!validatePasswords()) {
+      return;
+    }
+
     try {
-      // Handle password change logic
-      console.log("Password change submitted:", data);
-      // Add your password change API call here
+      await dispatch(
+        changePassword({
+          currentPassword,
+          newPassword,
+        })
+      ).unwrap();
 
       // Success - close change password modal and show success modal
-      reset();
       onClose();
       setIsSuccessModalOpen(true);
-    } catch (error) {
-      console.error("Password change error:", error);
+      setShowError(false);
+    } catch (error: unknown) {
+      setShowError(true);
+      // Parse error for attempts remaining
+      if (typeof error === "string" && error.includes("attempts remaining")) {
+        const match = error.match(/(\d+)\s+attempts? remaining/);
+        if (match) {
+          setAttemptsRemaining(parseInt(match[1]));
+        }
+      }
     }
   };
 
-  const handleUpdateClick = () => {
-    // Check if all fields are empty
-    if (!currentPassword && !newPassword && !confirmPassword) {
-      setIsFailedModalOpen(true);
-      return;
-    }
-
-    // Check if there are validation errors
-    if (Object.keys(errors).length > 0) {
-      setIsFailedModalOpen(true);
-      return;
-    }
-
-    // If validation passes, submit the form
-    handleSubmit(onSubmit)();
+  const handleRetry = () => {
+    setShowError(false);
+    handleUpdateClick();
   };
 
   const handleClose = () => {
-    reset();
+    setCurrentPassword("");
+    setNewPassword("");
+    setConfirmPassword("");
+    setCurrentPasswordError("");
+    setNewPasswordError("");
+    setConfirmPasswordError("");
+    setShowError(false);
     onClose();
+  };
+
+  const handleSuccessModalClose = () => {
+    setIsSuccessModalOpen(false);
   };
 
   return (
@@ -134,8 +201,43 @@ export const ChangePasswordModal = ({ isOpen, onClose }: ChangePasswordModalProp
             </div>
           </ModalHeader>
 
-          <form onSubmit={handleSubmit(onSubmit)}>
+          <form
+            onSubmit={e => {
+              e.preventDefault();
+              handleUpdateClick();
+            }}
+          >
             <ModalBody>
+              {/* Account Lockout Message */}
+              {isAccountLocked && lockoutMessage && (
+                <div className="mb-4 p-4 bg-red-50 border border-red-200 rounded-lg">
+                  <p className="text-red-800 text-sm font-medium">{lockoutMessage}</p>
+                </div>
+              )}
+
+              {/* Error Message */}
+              {showError && profileError && !isAccountLocked && (
+                <div className="mb-4">
+                  <ErrorMessage
+                    errorType="danger"
+                    textColor="text-red-700"
+                    alertIcon={AlertCircle}
+                    errorMessage={`${profileError}${attemptsRemaining > 0 ? ` (${attemptsRemaining} attempts remaining)` : ""}`}
+                  />
+                  <div className="mt-2">
+                    <Button
+                      type="button"
+                      color="secondary"
+                      size="sm"
+                      onClick={handleRetry}
+                      isDisabled={isAccountLocked}
+                    >
+                      Retry
+                    </Button>
+                  </div>
+                </div>
+              )}
+
               <div className="flex flex-col gap-4">
                 {/* Current Password */}
                 <InputGroup className="relative">
@@ -143,17 +245,18 @@ export const ChangePasswordModal = ({ isOpen, onClose }: ChangePasswordModalProp
                     name="currentPassword"
                     isRequired
                     label="Current Password"
-                    hint={errors.currentPassword?.message}
+                    hint={currentPasswordError}
                     placeholder="Enter current password"
                     size="md"
                     type={showCurrentPassword ? "text" : "password"}
-                    isInvalid={!!errors.currentPassword}
+                    isInvalid={!!currentPasswordError}
                     value={currentPassword}
                     className="relative"
-                    //onFocus={() => setIsInProgressModalOpen(true)}
-                    onChange={value => {
-                      setValue("currentPassword", value);
-                      trigger("currentPassword");
+                    isDisabled={profileLoading || isAccountLocked}
+                    onChange={(value: string) => {
+                      setCurrentPassword(value);
+                      setCurrentPasswordError("");
+                      setShowError(false);
                     }}
                   />
                   <Button
@@ -178,17 +281,21 @@ export const ChangePasswordModal = ({ isOpen, onClose }: ChangePasswordModalProp
                     name="newPassword"
                     isRequired
                     label="New Password"
-                    hint={errors.newPassword?.message}
+                    hint={
+                      newPasswordError ||
+                      "Must be min 8 characters, include number, upper case, lower case and special character."
+                    }
                     placeholder="Enter new password"
                     size="md"
                     type={showNewPassword ? "text" : "password"}
-                    isInvalid={!!errors.newPassword}
+                    isInvalid={!!newPasswordError}
                     value={newPassword}
                     className="relative"
-                    //onFocus={() => setIsInProgressModalOpen(true)}
-                    onChange={value => {
-                      setValue("newPassword", value);
-                      trigger("newPassword");
+                    isDisabled={profileLoading || isAccountLocked}
+                    onChange={(value: string) => {
+                      setNewPassword(value);
+                      setNewPasswordError("");
+                      setShowError(false);
                     }}
                   />
                   <Button
@@ -213,17 +320,18 @@ export const ChangePasswordModal = ({ isOpen, onClose }: ChangePasswordModalProp
                     name="confirmPassword"
                     isRequired
                     label="Confirm Password"
-                    hint={errors.confirmPassword?.message}
+                    hint={confirmPasswordError}
                     placeholder="Confirm new password"
                     size="md"
                     type={showConfirmPassword ? "text" : "password"}
-                    isInvalid={!!errors.confirmPassword}
+                    isInvalid={!!confirmPasswordError}
                     value={confirmPassword}
                     className="relative"
-                    //onFocus={() => setIsInProgressModalOpen(true)}
-                    onChange={value => {
-                      setValue("confirmPassword", value);
-                      trigger("confirmPassword");
+                    isDisabled={profileLoading || isAccountLocked}
+                    onChange={(value: string) => {
+                      setConfirmPassword(value);
+                      setConfirmPasswordError("");
+                      setShowError(false);
                     }}
                   />
                   <Button
@@ -245,18 +353,20 @@ export const ChangePasswordModal = ({ isOpen, onClose }: ChangePasswordModalProp
             </ModalBody>
 
             <ModalFooter>
-              {/* <Button type="button" color="secondary" size="md" onClick={handleClose}>
-              Cancel
-            </Button> */}
               <Button
-                type="button"
+                type="submit"
                 color="primary"
                 size="md"
                 className="w-full"
-                isDisabled={isSubmitting}
-                onClick={handleUpdateClick}
+                isDisabled={
+                  profileLoading ||
+                  isAccountLocked ||
+                  !currentPassword ||
+                  !newPassword ||
+                  !confirmPassword
+                }
               >
-                {isSubmitting ? "Updating..." : "Update"}
+                {profileLoading ? "Updating..." : "Update"}
               </Button>
             </ModalFooter>
           </form>
@@ -266,31 +376,8 @@ export const ChangePasswordModal = ({ isOpen, onClose }: ChangePasswordModalProp
       {/* Success Modal */}
       <ChangePasswordSuccessModal
         isOpen={isSuccessModalOpen}
-        onClose={() => setIsSuccessModalOpen(false)}
-        onBackToSettings={() => {
-          console.log("Back to Settings clicked");
-          setIsSuccessModalOpen(false);
-        }}
-      />
-
-      {/* Failed Modal */}
-      <ChangePasswordFailedModal
-        isOpen={isFailedModalOpen}
-        onClose={() => setIsFailedModalOpen(false)}
-        onContinue={() => {
-          console.log("Continue clicked in failed modal");
-          setIsFailedModalOpen(false);
-        }}
-      />
-
-      {/* In Progress Modal */}
-      <InProgressModal
-        isOpen={isInProgressModalOpen}
-        onClose={() => setIsInProgressModalOpen(false)}
-        onGoToDashboard={() => {
-          console.log("Go to Dashboard clicked");
-          setIsInProgressModalOpen(false);
-        }}
+        onClose={handleSuccessModalClose}
+        onBackToSettings={handleSuccessModalClose}
       />
     </>
   );

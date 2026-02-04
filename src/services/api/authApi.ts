@@ -333,8 +333,8 @@ export const verifyEmail = async (
       }
     );
     return response.data;
-  } catch (error) {
-    throw new Error(getErrorMessage(error));
+  } catch (_error) {
+    throw new Error("Failed to verify email. Please try again.");
   }
 };
 

@@ -8,7 +8,9 @@ export interface DashboardCardProps {
   buttonLabel?: string;
   buttonType?: "primary" | "secondary" | "tertiary";
   buttonIsDisabled?: boolean;
+  onClick?: () => void;
 }
+
 export default function DashboardCard({
   title,
   description,
@@ -16,6 +18,7 @@ export default function DashboardCard({
   buttonLabel,
   buttonType = "primary",
   buttonIsDisabled = false,
+  onClick,
 }: Readonly<DashboardCardProps>) {
   return (
     <div className="mt-6 border border-gray-300 rounded-xl p-4 bg-primary shadow-sm flex gap-4 justify-between items-center flex-col lg:flex-row">
@@ -31,7 +34,7 @@ export default function DashboardCard({
           <p className="text-card-subtitle text-base">{description}</p>
         </div>
       </div>
-      <Button color={buttonType} size="sm" isDisabled={buttonIsDisabled}>
+      <Button color={buttonType} size="sm" isDisabled={buttonIsDisabled} onClick={onClick}>
         {buttonLabel}
       </Button>
     </div>
