@@ -99,7 +99,7 @@ export const DashboardSidebar = ({ activeUrl = "/" }: DashboardSidebarProps) => 
       ? `${user.firstName} ${user.lastName}`
       : user?.businessName || "User";
 
-  const displayEmail = user?.email || "No email available";
+  const displayEmail = user?.businessEmail || "No email available";
 
   return (
     <div className="flex h-[calc(100vh-32px)] w-66 flex-col border-0 border-primary bg-primary py-10 px-6 m-4 rounded-xl shadow-xs">

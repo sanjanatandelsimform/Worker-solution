@@ -17,55 +17,60 @@ import { INDUSTRIES, COUNTRY_CODES } from "@/constants/formOptions";
 import checkmarkIcon from "@/assets/checkmark-icon.svg";
 import ErrorMessage from "../common/ErrorMessage";
 import { getErrorState, type ErrorState } from "@/utils/errorHandler";
+import { useAppDispatch, useAppSelector } from "@/store/hooks";
+import { saveFormData, clearFormData } from "@/store/slices/registrationFormSlice";
+import { selectRegistrationFormData } from "@/store/selectors/registrationFormSelectors";
 
-// Load saved form data OUTSIDE the component (synchronous)
-const loadSavedFormData = () => {
-  try {
-    const savedFormData = sessionStorage.getItem("registrationFormData");
-    if (savedFormData) {
-      const parsedData = JSON.parse(savedFormData);
-      return {
-        firstName: parsedData.firstName || "",
-        lastName: parsedData.lastName || "",
-        legalBusinessName: parsedData.legalBusinessName || "",
-        industry: parsedData.industry || "",
-        zipCode: parsedData.zipCode || "",
-        businessEmail: parsedData.businessEmail || "",
-        businessPhone: parsedData.businessPhone || "",
-        password: parsedData.password || "",
-        confirmPassword: parsedData.confirmPassword || "",
-        agreeToTerms: parsedData.agreeToTerms || false,
-        countryCode: parsedData.countryCode || "US",
-        phoneNumber: parsedData.businessPhone || "",
-      };
-    }
-  } catch (error) {
-    console.error("Error loading saved form data:", error);
-  }
-  return {
-    firstName: "",
-    lastName: "",
-    legalBusinessName: "",
-    industry: "",
-    zipCode: "",
-    businessEmail: "",
-    businessPhone: "",
-    password: "",
-    confirmPassword: "",
-    agreeToTerms: false,
-    countryCode: "US",
-    phoneNumber: "",
-  };
-};
+// // Load saved form data OUTSIDE the component (synchronous)
+// const loadSavedFormData = () => {
+//   try {
+//     const savedFormData = sessionStorage.getItem("registrationFormData");
+//     if (savedFormData) {
+//       const parsedData = JSON.parse(savedFormData);
+//       return {
+//         firstName: parsedData.firstName || "",
+//         lastName: parsedData.lastName || "",
+//         legalBusinessName: parsedData.legalBusinessName || "",
+//         industry: parsedData.industry || "",
+//         zipCode: parsedData.zipCode || "",
+//         businessEmail: parsedData.businessEmail || "",
+//         businessPhone: parsedData.businessPhone || "",
+//         password: parsedData.password || "",
+//         confirmPassword: parsedData.confirmPassword || "",
+//         agreeToTerms: parsedData.agreeToTerms || false,
+//         countryCode: parsedData.countryCode || "US",
+//         phoneNumber: parsedData.businessPhone || "",
+//       };
+//     }
+//   } catch (error) {
+//     console.error("Error loading saved form data:", error);
+//   }
+//   return {
+//     firstName: "",
+//     lastName: "",
+//     legalBusinessName: "",
+//     industry: "",
+//     zipCode: "",
+//     businessEmail: "",
+//     businessPhone: "",
+//     password: "",
+//     confirmPassword: "",
+//     agreeToTerms: false,
+//     countryCode: "US",
+//     phoneNumber: "",
+//   };
+// };
 
 export const RegistrationForm = () => {
+  const dispatch = useAppDispatch();
+  const navigate = useNavigate();
+  const savedFormData = useAppSelector(selectRegistrationFormData);
+
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
-  const savedData = loadSavedFormData();
-  const [phoneNumber, setPhoneNumber] = useState(savedData.phoneNumber);
-  const [countryCode, setCountryCode] = useState(savedData.countryCode);
+  const [phoneNumber, setPhoneNumber] = useState(savedFormData?.businessPhone || "");
+  const [countryCode, setCountryCode] = useState("US");
   const [submitError, setSubmitError] = useState<ErrorState | null>(null);
-  const navigate = useNavigate();
 
   const {
     handleSubmit,
@@ -76,7 +81,18 @@ export const RegistrationForm = () => {
   } = useForm<RegistrationFormData>({
     resolver: zodResolver(registrationSchema),
     mode: "onSubmit",
-    defaultValues: loadSavedFormData(),
+    defaultValues: {
+      firstName: savedFormData?.firstName || "",
+      lastName: savedFormData?.lastName || "",
+      legalBusinessName: savedFormData?.legalBusinessName || "",
+      industry: savedFormData?.industry || "",
+      zipCode: savedFormData?.zipCode || "",
+      businessEmail: savedFormData?.businessEmail || "",
+      businessPhone: savedFormData?.businessPhone || "",
+      password: "", // Never persist passwords
+      confirmPassword: "", // Never persist passwords
+      agreeToTerms: savedFormData?.agreeToTerms || false,
+    },
   });
 
   const watchedFields = useWatch({
@@ -106,40 +122,9 @@ export const RegistrationForm = () => {
     agreeToTerms,
   ] = watchedFields;
 
-  // Clear form data on page refresh/unmount (when component truly unmounts, not on navigation)
+  // Auto-save form data on change (except passwords)
   useEffect(() => {
-    // Mark that the form is currently active
-    sessionStorage.setItem("registrationFormActive", "true");
-
-    // Cleanup function runs when component unmounts
-    return () => {
-      // Only clear if we're actually leaving the registration flow (page refresh/close)
-      // Navigation to Terms/Privacy won't trigger this because sessionStorage persists
-      const isActive = sessionStorage.getItem("registrationFormActive");
-      if (isActive) {
-        sessionStorage.removeItem("registrationFormActive");
-      }
-    };
-  }, []);
-
-  // Handle page refresh - clear data when page is refreshed
-  useEffect(() => {
-    const handleBeforeUnload = () => {
-      // This fires on page refresh or tab close
-      sessionStorage.removeItem("registrationFormData");
-      sessionStorage.removeItem("registrationFormActive");
-    };
-
-    window.addEventListener("beforeunload", handleBeforeUnload);
-
-    return () => {
-      window.removeEventListener("beforeunload", handleBeforeUnload);
-    };
-  }, []);
-
-  // Save form data to sessionStorage whenever it changes
-  useEffect(() => {
-    const formData = {
+    const formData: Partial<RegistrationFormData> = {
       firstName,
       lastName,
       legalBusinessName,
@@ -147,12 +132,10 @@ export const RegistrationForm = () => {
       zipCode,
       businessEmail,
       businessPhone: phoneNumber,
-      countryCode,
-      password,
-      confirmPassword,
       agreeToTerms,
+      // Do NOT persist passwords
     };
-    sessionStorage.setItem("registrationFormData", JSON.stringify(formData));
+    dispatch(saveFormData(formData));
   }, [
     firstName,
     lastName,
@@ -161,17 +144,14 @@ export const RegistrationForm = () => {
     zipCode,
     businessEmail,
     phoneNumber,
-    countryCode,
-    password,
-    confirmPassword,
     agreeToTerms,
+    dispatch,
   ]);
 
   const onSubmit = async (data: RegistrationFormData) => {
     try {
       setSubmitError(null);
 
-      // Validate all fields before processing
       const isValid = await trigger();
       if (!isValid) return;
 
@@ -190,9 +170,8 @@ export const RegistrationForm = () => {
 
       await signup(registrationData);
 
-      // Clear saved form data on successful submission
-      sessionStorage.removeItem("registrationFormData");
-      sessionStorage.removeItem("registrationFormActive");
+      // Clear form data after successful registration
+      dispatch(clearFormData());
 
       navigate("/success", {
         state: {
@@ -203,6 +182,8 @@ export const RegistrationForm = () => {
           buttonPath: "/sign-in",
         },
       });
+
+      // Clear passwords from form
       setValue("password", "");
       setValue("confirmPassword", "");
     } catch (error) {
@@ -211,16 +192,12 @@ export const RegistrationForm = () => {
     }
   };
 
-  // const handleGetStarted = () => {
-  //   navigate("/sign-in");
-  // };
-  console.log("errors", errors);
   return (
     <div className="flex min-h-screen items-center justify-center bg-secondary">
       {/* Container */}
       <div className="flex w-3xl items-center justify-center rounded-xl border border-solid border-primary bg-primary p-10">
         {/* Content */}
-        <div className="flex w-full flex-col items-center gap-6">
+        <div className="flex w-full flex-col items-center gap-8">
           {/* Logo */}
           <div className="flex items-center justify-center rounded-xl bg-tertiary px-2 py-1">
             <h1 className="text-5xl font-bold leading-15 text-primary">BeneStat</h1>
@@ -252,7 +229,6 @@ export const RegistrationForm = () => {
                   maxLength={20}
                   className={errors.firstName ? "error-ring" : ""}
                   onChange={value => {
-                    // Remove leading spaces only
                     const sanitized = value.replace(/^\s+/, "");
                     setValue("firstName", sanitized);
                     trigger("firstName");
@@ -470,7 +446,7 @@ export const RegistrationForm = () => {
             </div>
 
             {/* Agreement Section */}
-            <div className="mt-6 flex items-center flex-col justify-center gap-2">
+            <div className="col-span-2 mt-6 flex items-center flex-col justify-center gap-2">
               <div className="flex gap-2 items-start">
                 <Checkbox
                   size="sm"
@@ -514,24 +490,18 @@ export const RegistrationForm = () => {
                 type="submit"
                 color="primary"
                 size="lg"
+                className="w-full"
                 isDisabled={isSubmitting}
-                className="w-auto"
               >
-                {isSubmitting ? "Creating Account..." : "Create Account"}
+                {isSubmitting ? "Creating account..." : "Get started"}
               </Button>
 
               {/* Sign in link */}
-              <p className="text-sm font-normal leading-5 text-tertiary">
+              <p className="text-sm font-normal leading-5 text-primary">
                 Already have an account?{" "}
-                <Button
-                  type="button"
-                  color="link-color"
-                  size="md"
-                  href="/sign-in"
-                  className="font-extrabold"
-                >
-                  Sign in
-                </Button>
+                <Link to="/sign-in" className="font-semibold text-cyan-500">
+                  Log in
+                </Link>
               </p>
             </div>
           </form>

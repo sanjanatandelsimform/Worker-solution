@@ -16,23 +16,23 @@ export type AuthMethod = "email" | "google";
 
 export interface UserAccount {
   id: string;
-  email: string;
+  // email: string;
   businessEmail?: string;
   firstName: string;
   lastName: string;
   businessName: string;
   phoneNumber: string;
   businessPhone?: string;
-  industry: Industry;
-  zipCode: string;
-  authMethod?: AuthMethod;
-  emailVerified: boolean;
+  industry: string;
+  zipCode: number;
+  authMethod?: "email" | "google";
+  emailVerify: boolean;
   googleId?: string | null;
   resetToken?: string | null;
   resetTokenExpiry?: string | null;
   refreshToken?: string | null;
   count?: number;
-  profileComplete?: boolean;
+  // profileComplete?: boolean;
   createdAt: string;
   updatedAt: string;
 }

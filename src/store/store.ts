@@ -1,18 +1,37 @@
-import { configureStore } from "@reduxjs/toolkit";
+import { configureStore, combineReducers } from "@reduxjs/toolkit";
 import authReducer from "./slices/authSlice";
+import profileReducer from "./slices/profileSlice";
+import registrationFormReducer from "./slices/registrationFormSlice";
+import userReducer from "./slices/userSlice";
 import type { AuthState } from "./slices/authSlice";
+import type { ProfileState } from "@/types/profileTypes";
+import type { UserState } from "@/types/userTypes";
+import type { RegistrationFormState } from "./slices/registrationFormSlice";
 
 // Use consistent localStorage key
 const STORAGE_KEY = "userDetail";
 
 // Load persisted state
-const loadState = (): { auth: AuthState } | undefined => {
+const loadState = ():
+  | {
+      auth: AuthState;
+      profile?: ProfileState;
+      registrationForm?: RegistrationFormState;
+    }
+  | undefined => {
   try {
     const serializedState = localStorage.getItem(STORAGE_KEY);
     if (serializedState === null) {
       return undefined;
     }
-    return JSON.parse(serializedState);
+    const parsed = JSON.parse(serializedState);
+
+    // Return only auth and registrationForm (no user slice)
+    return {
+      auth: parsed.auth,
+      profile: parsed.profile,
+      registrationForm: parsed.registrationForm,
+    };
   } catch (err) {
     console.error("Error loading state from localStorage:", err);
     return undefined;
@@ -21,10 +40,15 @@ const loadState = (): { auth: AuthState } | undefined => {
 
 const persistedState = loadState();
 
+const rootReducer = combineReducers({
+  auth: authReducer,
+  profile: profileReducer,
+  registrationForm: registrationFormReducer,
+  user: userReducer,
+});
+
 export const store = configureStore({
-  reducer: {
-    auth: authReducer,
-  },
+  reducer: rootReducer,
   preloadedState: persistedState,
   middleware: getDefaultMiddleware =>
     getDefaultMiddleware({
@@ -37,7 +61,11 @@ export const store = configureStore({
 // Save state to localStorage
 const saveState = (state: RootState) => {
   try {
-    const serializedState = JSON.stringify(state);
+    const serializedState = JSON.stringify({
+      auth: state.auth,
+      // profile: state.profile,
+      registrationForm: state.registrationForm, // NEW: persist form data
+    });
     localStorage.setItem(STORAGE_KEY, serializedState);
   } catch (err) {
     console.error("Error saving state to localStorage:", err);
@@ -50,7 +78,12 @@ store.subscribe(() => {
 });
 
 // Type exports
-export type RootState = ReturnType<typeof store.getState>;
+export type RootState = {
+  auth: AuthState;
+  profile: ProfileState;
+  registrationForm: RegistrationFormState;
+  user: UserState;
+};
 export type AppDispatch = typeof store.dispatch;
 
 // Extend Window interface for TypeScript
