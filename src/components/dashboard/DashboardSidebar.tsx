@@ -8,7 +8,7 @@ import { signout } from "@/services/api/authApi";
 import { BaseModalWithIcon } from "../modals/BaseModalWithIcon";
 import { AlertOctagon } from "@untitledui/icons";
 import alertIcon from "@/assets/alert-icon.svg";
-import checkmarkIcon from "@/assets/checkmark-icon.svg";
+import logoutIcon from "@/assets/logout-Icon.svg";
 
 interface DashboardSidebarProps {
   activeUrl?: string;
@@ -17,11 +17,13 @@ interface DashboardSidebarProps {
 export const DashboardSidebar = ({ activeUrl = "/" }: DashboardSidebarProps) => {
   const navigate = useNavigate();
   const [isLogoutModalOpen, setIsLogoutModalOpen] = useState(false);
+  const [isLogoutButtonDisabled, setIsLogoutButtonDisabled] = useState(false);
   const [logoutError, setLogoutError] = useState<string | null>(null);
 
   const { user, tokens } = useAppSelector(state => state.auth);
 
   const handleLogout = async () => {
+    setIsLogoutButtonDisabled(true); // Disable the button to prevent multiple clicks
     setLogoutError(null);
     try {
       // Get fresh token from localStorage
@@ -38,7 +40,7 @@ export const DashboardSidebar = ({ activeUrl = "/" }: DashboardSidebarProps) => 
       // Navigate to success page with logout flag
       navigate("/success", {
         state: {
-          messageImg: checkmarkIcon,
+          messageImg: logoutIcon,
           title: "You've been logged out",
           subtitle: "You've been logged out of your account. Log back in anytime to continue.",
           buttonText: "Log back in",
@@ -53,7 +55,7 @@ export const DashboardSidebar = ({ activeUrl = "/" }: DashboardSidebarProps) => 
       // Even if logout fails, clear local state and navigate
       navigate("/success", {
         state: {
-          messageImg: checkmarkIcon,
+          messageImg: logoutIcon,
           title: "You've been logged out",
           subtitle: "You've been logged out of your account. Log back in anytime to continue.",
           buttonText: "Log back in",
@@ -63,6 +65,7 @@ export const DashboardSidebar = ({ activeUrl = "/" }: DashboardSidebarProps) => 
         },
       });
     } finally {
+      setIsLogoutButtonDisabled(false);
       setIsLogoutModalOpen(false);
     }
   };
@@ -178,6 +181,7 @@ export const DashboardSidebar = ({ activeUrl = "/" }: DashboardSidebarProps) => 
             text: "Yes",
             onClick: handleLogout,
             color: "primary-destructive",
+            isDisabled: isLogoutButtonDisabled,
           },
         ]}
       />
