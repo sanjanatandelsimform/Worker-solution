@@ -1,19 +1,18 @@
-import { Navigate, useLocation } from "react-router-dom";
+import { Navigate } from "react-router-dom";
 import { useAppSelector } from "@/store/hooks";
 
 interface PublicRouteProps {
   children: React.ReactNode;
+  /** Path to redirect to if user is authenticated (default: /dashboard) */
+  redirectTo?: string;
 }
 
-export const PublicRoute = ({ children }: PublicRouteProps) => {
+export const PublicRoute = ({ children, redirectTo = "/dashboard" }: PublicRouteProps) => {
   const { tokens } = useAppSelector(state => state.auth);
-  const location = useLocation();
 
-  // Only redirect to dashboard if logged in and not on /success
-  if (tokens?.accessToken && location.pathname !== "/success") {
-    return <Navigate to="/dashboard" replace />;
+  if (tokens?.accessToken) {
+    return <Navigate to={redirectTo} replace />;
   }
 
-  // Do NOT redirect to /sign-in if not authenticated and on /success
   return <>{children}</>;
 };
