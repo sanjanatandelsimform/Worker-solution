@@ -158,11 +158,6 @@ export const ChangePasswordModal = ({ isOpen, onClose }: ChangePasswordModalProp
     }
   };
 
-  const handleRetry = () => {
-    setShowError(false);
-    handleUpdateClick();
-  };
-
   const handleClose = () => {
     setCurrentPassword("");
     setNewPassword("");
@@ -224,17 +219,6 @@ export const ChangePasswordModal = ({ isOpen, onClose }: ChangePasswordModalProp
                     alertIcon={AlertCircle}
                     errorMessage={`${profileError}${attemptsRemaining > 0 ? ` (${attemptsRemaining} attempts remaining)` : ""}`}
                   />
-                  <div className="mt-2">
-                    <Button
-                      type="button"
-                      color="secondary"
-                      size="sm"
-                      onClick={handleRetry}
-                      isDisabled={isAccountLocked}
-                    >
-                      Retry
-                    </Button>
-                  </div>
                 </div>
               )}
 

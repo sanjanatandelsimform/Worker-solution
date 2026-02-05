@@ -4,28 +4,29 @@ import { DashboardSidebar } from "@/components/dashboard/DashboardSidebar";
 import emailIcon from "@/assets/mail-icon.svg";
 import checkIcon from "@/assets/file-check.svg";
 import DashboardCard from "./DashboardCard";
-import { Tabs } from "@/components/base/tabs/tabs";
-import RecommendationsPage from "../recommendations/RecommendationsPage";
-import BenchmarkPage from "../benchmark/BenchmarkPage";
 import { Link } from "react-router-dom";
 import { useAppSelector, useAppDispatch } from "@/store/hooks";
 import { selectUser } from "@/store/selectors/authSelectors";
-// import { verifyEmail } from "@/services/api/authApi";
 import { BaseModalWithIcon } from "@/components/modals/BaseModalWithIcon";
 import ErrorMessage from "@/components/common/ErrorMessage";
 import checkmarkIcon from "@/assets/checkmark-icon.svg";
-import { AlertCircle } from "@untitledui/icons";
+import { AlertCircle, CheckCircle } from "@untitledui/icons";
 import { fetchUserById } from "@/store/slices/userSlice";
+import { resendVerificationEmail } from "@/store/slices/profileSlice";
+import { selectProfileError } from "@/store/selectors/profileSelectors";
 
 export const DashboardPage = () => {
   const navigate = useNavigate();
   const user = useAppSelector(selectUser);
   const dispatch = useAppDispatch();
+  const profileError = useAppSelector(selectProfileError);
 
   const emailVerify = user?.emailVerify || false;
 
-  const [isModalOpen, setIsModalOpen] = useState(false);
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
+  const [showResendSuccess, setShowResendSuccess] = useState(false);
+  const [showCooldownModal, setShowCooldownModal] = useState(false);
+  const [cooldown, setCooldown] = useState<number>(0); // Cooldown in seconds
 
   useEffect(() => {
     if (user?.id) {
@@ -40,32 +41,46 @@ export const DashboardPage = () => {
     }
   }, [user?.id, dispatch]);
 
+  // Cooldown timer effect
+  useEffect(() => {
+    if (cooldown > 0) {
+      const timer = setInterval(() => {
+        setCooldown(prev => {
+          const newCooldown = prev - 1;
+          if (newCooldown === 0) {
+            setShowCooldownModal(false);
+          }
+          return newCooldown;
+        });
+      }, 1000);
+
+      return () => clearInterval(timer);
+    }
+  }, [cooldown]);
+
   const handleVerifyEmail = async () => {
-    // try {
-    //   setErrorMessage(null);
-    //   const userDetail = localStorage.getItem("userDetail");
-    //   if (!userDetail) {
-    //     throw new Error("User details not found in storage.");
-    //   }
-    //   const parsedUserDetail = JSON.parse(userDetail);
-    //   const verificationToken = parsedUserDetail?.auth?.verificationDetails?.verificationToken;
-    //   const accessToken = parsedUserDetail?.auth?.tokens?.accessToken;
-    //   if (!verificationToken || !accessToken) {
-    //     throw new Error("Verification token or access token not found.");
-    //   }
-    //   const response = await verifyEmail(verificationToken, accessToken);
-    //   if (response.message === "success") {
-    //     setIsModalOpen(true);
-    //   } else {
-    //     throw new Error(response.message || "Verification failed.");
-    //   }
-    // } catch (error) {
-    //   setErrorMessage(
-    //     error instanceof Error
-    //       ? error.message
-    //       : "An unexpected error occurred. Please try again."
-    //   );
-    // }
+    if (emailVerify) {
+      return;
+    }
+
+    if (cooldown > 0) {
+      setShowCooldownModal(true);
+      return;
+    }
+
+    try {
+      setErrorMessage(null);
+      await dispatch(resendVerificationEmail()).unwrap();
+      setCooldown(60);
+      setShowResendSuccess(true);
+    } catch (error) {
+      console.error("Failed to resend verification email:", error);
+      setErrorMessage(
+        error instanceof Error
+          ? error.message
+          : profileError || "Failed to resend verification email. Please try again."
+      );
+    }
   };
 
   return (
@@ -79,6 +94,20 @@ export const DashboardPage = () => {
         <main className="flex-1 overflow-y-auto px-6 py-10">
           <div>
             <h2 className="text-4xl font-medium text-primary">Welcome!</h2>
+
+            {/* Error Message */}
+            {errorMessage && (
+              <div className="mt-6">
+                <ErrorMessage
+                  errorType="danger"
+                  textColor="text-red-700"
+                  alertIcon={AlertCircle}
+                  errorMessage={errorMessage}
+                  onClose={() => setErrorMessage(null)}
+                />
+              </div>
+            )}
+
             <div className="mt-6 border border-gray-300 rounded-xl p-4 bg-dashboard-card shadow-sm flex gap-4 justify-between flex-col lg:flex-row">
               <div className="flex-1">
                 <h2 className="text-dashboard-card-title text-3xl font-medium mb-2">
@@ -92,22 +121,33 @@ export const DashboardPage = () => {
                 FPO Img
               </div>
             </div>
-            <DashboardCard
-              title="Verify your email"
-              description={
-                <>
-                  One quick step to secure your account. Didn't get the email?{" "}
-                  <Link to="/" className="underline">
-                    Resend verification
-                  </Link>
-                </>
-              }
-              avatarIconSrc={emailIcon}
-              buttonLabel="Verify email"
-              buttonType="primary"
-              buttonIsDisabled={emailVerify}
-              onClick={handleVerifyEmail} // Add click handler
-            />
+            {!emailVerify && (
+              <DashboardCard
+                title="Verify your email"
+                description={
+                  <>
+                    One quick step to secure your account. Didn't get the email?{" "}
+                    <Link
+                      to="#"
+                      onClick={e => {
+                        e.preventDefault();
+                        if (!emailVerify) {
+                          handleVerifyEmail();
+                        }
+                      }}
+                      className="underline"
+                    >
+                      Resend verification
+                    </Link>
+                  </>
+                }
+                avatarIconSrc={emailIcon}
+                buttonLabel="Verify email"
+                buttonType="primary"
+                buttonIsDisabled={emailVerify}
+                onClick={handleVerifyEmail}
+              />
+            )}
             <DashboardCard
               title="Take the Assessment"
               description="Take our 15 minute assessment for specific recommendations to improve your business"
@@ -115,43 +155,27 @@ export const DashboardPage = () => {
               buttonLabel="Take Assessment"
               buttonType="secondary"
               buttonIsDisabled={!emailVerify}
+              onClick={() => navigate("/assessment")}
             />
-          </div>
-          {/* This will be conditionally rendered; uncomment when this feature is implemented. */}
-          <div className="mt-10">
-            <Tabs>
-              <Tabs.List
-                size="md"
-                type="button-brand"
-                items={[
-                  { id: "recommendations", label: "Recommendations" },
-                  { id: "benchmark", label: "Benchmark" },
-                ]}
-              />
-              <Tabs.Panel id="recommendations" className="pt-12">
-                <RecommendationsPage />
-              </Tabs.Panel>
-              <Tabs.Panel id="benchmark" className="pt-12">
-                <BenchmarkPage />
-              </Tabs.Panel>
-            </Tabs>
           </div>
         </main>
       </div>
 
-      {/* Success Modal */}
+      {/* Success Modal for Resend Verification */}
       <BaseModalWithIcon
-        isOpen={isModalOpen}
-        onClose={() => setIsModalOpen(false)}
+        isOpen={showResendSuccess}
+        onClose={() => setShowResendSuccess(false)}
         size="sm"
-        title="Email Verified"
-        subtitle="Your email has been successfully verified. You can now access all features."
-        icon={<img src={checkmarkIcon} alt="Success" />}
+        title="Email sent"
+        subtitle={`We’ve sent a verification link to ${user?.businessEmail}. Verify your email to continue.`}
+        icon={<CheckCircle className="size-6" />}
+        messageImg={checkmarkIcon}
+        backgroundPattern="success"
         buttons={[
           {
-            text: "Go to Dashboard",
+            text: "Return to dashboard",
             onClick: () => {
-              setIsModalOpen(false);
+              setShowResendSuccess(false);
               navigate("/dashboard");
             },
             color: "primary",
@@ -159,18 +183,23 @@ export const DashboardPage = () => {
         ]}
       />
 
-      {/* Error Message */}
-      {errorMessage && (
-        <div className="mt-4">
-          <ErrorMessage
-            errorType="danger"
-            textColor="text-red-700"
-            alertIcon={AlertCircle}
-            errorMessage={errorMessage}
-            onClose={() => setErrorMessage(null)}
-          />
-        </div>
-      )}
+      {/* Cooldown Modal */}
+      <BaseModalWithIcon
+        isOpen={showCooldownModal}
+        onClose={() => setShowCooldownModal(false)}
+        size="sm"
+        title="Please wait"
+        subtitle={`Email just sent. Please wait ${cooldown} seconds before trying again.`}
+        icon={<AlertCircle className="size-6 text-yellow-500" />}
+        backgroundPattern="unsuccess"
+        buttons={[
+          {
+            text: "Okay",
+            onClick: () => setShowCooldownModal(false),
+            color: "primary",
+          },
+        ]}
+      />
     </div>
   );
 };

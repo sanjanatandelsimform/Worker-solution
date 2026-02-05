@@ -60,16 +60,17 @@ export const validatePassword = (password: string): { isValid: boolean; message?
  * @returns Object with isValid boolean, trimmed name, and error message if invalid
  */
 export const validateName = (
+  key: string,
   name: string
 ): { isValid: boolean; trimmedName: string; message?: string } => {
   const trimmedName = name.trim();
 
   if (trimmedName.length === 0) {
-    return { isValid: false, trimmedName, message: "Name cannot be empty" };
+    return { isValid: false, trimmedName, message: `${key || "Name"} cannot be empty` };
   }
 
   if (trimmedName.length > 50) {
-    return { isValid: false, trimmedName, message: "Name cannot exceed 50 characters" };
+    return { isValid: false, trimmedName, message: `${key || "Name"} cannot exceed 50 characters` };
   }
 
   return { isValid: true, trimmedName };
