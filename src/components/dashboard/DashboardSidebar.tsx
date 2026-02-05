@@ -6,9 +6,8 @@ import { NavList } from "@/components/application/app-navigation/base-components
 import type { NavItemType } from "@/components/application/app-navigation/config";
 import { signout } from "@/services/api/authApi";
 import { BaseModalWithIcon } from "../modals/BaseModalWithIcon";
-import { AlertOctagon } from "@untitledui/icons";
-import alertIcon from "@/assets/alert-icon.svg";
 import logoutIcon from "@/assets/logout-Icon.svg";
+import { useModalConfig } from "@/hooks/useModalConfig";
 
 interface DashboardSidebarProps {
   activeUrl?: string;
@@ -26,7 +25,6 @@ export const DashboardSidebar = ({ activeUrl = "/" }: DashboardSidebarProps) => 
     setIsLogoutButtonDisabled(true); // Disable the button to prevent multiple clicks
     setLogoutError(null);
     try {
-      // Get fresh token from localStorage
       const storedState = localStorage.getItem("userDetail");
       let currentToken = tokens?.accessToken;
 
@@ -37,7 +35,6 @@ export const DashboardSidebar = ({ activeUrl = "/" }: DashboardSidebarProps) => 
 
       await signout(currentToken || undefined);
 
-      // Navigate to success page with logout flag
       navigate("/success", {
         state: {
           messageImg: logoutIcon,
@@ -52,7 +49,6 @@ export const DashboardSidebar = ({ activeUrl = "/" }: DashboardSidebarProps) => 
     } catch (error) {
       console.error("Logout error:", error);
 
-      // Even if logout fails, clear local state and navigate
       navigate("/success", {
         state: {
           messageImg: logoutIcon,
@@ -74,6 +70,13 @@ export const DashboardSidebar = ({ activeUrl = "/" }: DashboardSidebarProps) => 
     event?.preventDefault();
     setIsLogoutModalOpen(true);
   };
+
+  const logoutModalConfig = useModalConfig("logoutConfirmation", {
+    isOpen: isLogoutModalOpen,
+    onClose: () => setIsLogoutModalOpen(false),
+    onConfirm: handleLogout,
+    additionalData: { isDisabled: isLogoutButtonDisabled },
+  });
 
   const navigationItems: NavItemType[] = [
     {
@@ -166,24 +169,7 @@ export const DashboardSidebar = ({ activeUrl = "/" }: DashboardSidebarProps) => 
       <BaseModalWithIcon
         isOpen={isLogoutModalOpen}
         onClose={() => setIsLogoutModalOpen(false)}
-        size="sm"
-        title="Are you sure you want to log out?"
-        icon={<AlertOctagon className="size-6" />}
-        messageImg={alertIcon}
-        backgroundPattern="unsuccess"
-        buttons={[
-          {
-            text: "Cancel",
-            onClick: () => setIsLogoutModalOpen(false),
-            color: "secondary",
-          },
-          {
-            text: "Yes",
-            onClick: handleLogout,
-            color: "primary-destructive",
-            isDisabled: isLogoutButtonDisabled,
-          },
-        ]}
+        {...logoutModalConfig}
       />
     </div>
   );
