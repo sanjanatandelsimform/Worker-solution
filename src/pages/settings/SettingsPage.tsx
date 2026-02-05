@@ -22,7 +22,6 @@ import { clearUser, updateUser } from "@/store/slices/authSlice";
 import { selectProfileLoading, selectProfileError } from "@/store/selectors/profileSelectors";
 import { selectUser } from "@/store/selectors/authSelectors";
 import { validateName } from "@/utils/validation";
-import { isSessionValid, saveModalContext } from "@/utils/sessionManager";
 import { CheckCircle } from "@untitledui/icons";
 import { BaseModalWithIcon } from "../../components/modals/BaseModalWithIcon";
 import checkmarkIcon from "@/assets/checkmark-icon.svg";
@@ -41,25 +40,15 @@ export const SettingsPage = () => {
   const [isAccountDeleteModalOpen, setIsAccountDeleteModalOpen] = useState(false);
   const [isUpdateCompletedModalOpen, setIsUpdateCompletedModalOpen] = useState(false);
   const [isSessionExpiredModalOpen, setIsSessionExpiredModalOpen] = useState(false);
+  const [firstName, setFirstName] = useState(() => userData?.firstName ?? "");
+  const [lastName, setLastName] = useState(() => userData?.lastName ?? "");
 
-  // Initialize form state from userData using useMemo
-  const initialFirstName = useMemo(() => userData?.firstName || "", [userData?.firstName]);
-  const initialLastName = useMemo(() => userData?.lastName || "", [userData?.lastName]);
-
-  const [firstName, setFirstName] = useState(initialFirstName);
-  const [lastName, setLastName] = useState(initialLastName);
   const [firstNameError, setFirstNameError] = useState("");
   const [lastNameError, setLastNameError] = useState("");
   const [showError, setShowError] = useState(false);
   const [showSuccess, setShowSuccess] = useState(false);
   const [resendVerification, setResendVerification] = useState(false);
   const [resendError, setResendError] = useState<string | null>(null);
-
-  // Update form when userData changes (sync from Redux)
-  if (userData && (firstName !== userData.firstName || lastName !== userData.lastName)) {
-    setFirstName(userData.firstName);
-    setLastName(userData.lastName);
-  }
 
   // Calculate hasChanges derived from state
   const hasChanges = useMemo(() => {
@@ -69,17 +58,8 @@ export const SettingsPage = () => {
 
   // Handle save
   const handleSave = async () => {
-    if (!isSessionValid()) {
-      saveModalContext({
-        modalType: "profile",
-        formData: { firstName, lastName },
-      });
-      setIsSessionExpiredModalOpen(true);
-      return;
-    }
-
-    const firstNameValidation = validateName(firstName);
-    const lastNameValidation = validateName(lastName);
+    const firstNameValidation = validateName("FirstName", firstName);
+    const lastNameValidation = validateName("LastName", lastName);
 
     if (!firstNameValidation.isValid || !lastNameValidation.isValid) {
       setFirstNameError(firstNameValidation.isValid ? "" : firstNameValidation.message || "");
@@ -361,7 +341,7 @@ export const SettingsPage = () => {
                           ? handleResendVerification
                           : () => setIsUpdateEmailModalOpen(true)
                       }
-                      isDisabled={profileLoading}
+                      isDisabled={profileLoading || !firstName || !lastName}
                     >
                       {resendVerification ? "Resend Verification Email" : "Update email"}
                     </Button>
@@ -387,7 +367,7 @@ export const SettingsPage = () => {
                     <Button
                       color="link-color"
                       onClick={() => setIsChangePasswordModalOpen(true)}
-                      isDisabled={profileLoading}
+                      isDisabled={profileLoading || !firstName || !lastName}
                     >
                       Change password
                     </Button>
