@@ -9,11 +9,14 @@ import { useAppSelector, useAppDispatch } from "@/store/hooks";
 import { selectUser } from "@/store/selectors/authSelectors";
 import { BaseModalWithIcon } from "@/components/modals/BaseModalWithIcon";
 import ErrorMessage from "@/components/common/ErrorMessage";
-import checkmarkIcon from "@/assets/checkmark-icon.svg";
-import { AlertCircle, CheckCircle } from "@untitledui/icons";
+import { AlertCircle } from "@untitledui/icons";
 import { fetchUserById } from "@/store/slices/userSlice";
 import { resendVerificationEmail } from "@/store/slices/profileSlice";
 import { selectProfileError } from "@/store/selectors/profileSelectors";
+import { useModalConfig } from "@/hooks/useModalConfig";
+// import { Tabs } from "@/components/base/tabs/tabs";
+// import RecommendationsPage from "../recommendations/RecommendationsPage";
+// import BenchmarkPage from "../benchmark/BenchmarkPage";
 
 export const DashboardPage = () => {
   const navigate = useNavigate();
@@ -82,6 +85,22 @@ export const DashboardPage = () => {
       );
     }
   };
+
+  const resendSuccessModal = useModalConfig("resendSuccess", {
+    isOpen: showResendSuccess,
+    onClose: () => setShowResendSuccess(false),
+    onConfirm: () => {
+      setShowResendSuccess(false);
+      navigate("/dashboard");
+    },
+    additionalData: { email: user?.businessEmail },
+  });
+
+  const cooldownModal = useModalConfig("cooldown", {
+    isOpen: showCooldownModal,
+    onClose: () => setShowCooldownModal(false),
+    additionalData: { cooldown },
+  });
 
   return (
     <div className="flex h-screen overflow-hidden bg-dashboard">
@@ -158,6 +177,25 @@ export const DashboardPage = () => {
               onClick={() => navigate("/assessment")}
             />
           </div>
+          {/* This will be conditionally rendered; uncomment when this feature is implemented. */}
+          {/* <div className="mt-10">
+            <Tabs>
+              <Tabs.List
+                size="md"
+                type="button-brand"
+                items={[
+                  { id: "recommendations", label: "Recommendations" },
+                  { id: "benchmark", label: "Benchmark" },
+                ]}
+              />
+              <Tabs.Panel id="recommendations" className="pt-12">
+                <RecommendationsPage />
+              </Tabs.Panel>
+              <Tabs.Panel id="benchmark" className="pt-12">
+                <BenchmarkPage />
+              </Tabs.Panel>
+            </Tabs>
+          </div> */}
         </main>
       </div>
 
@@ -165,40 +203,14 @@ export const DashboardPage = () => {
       <BaseModalWithIcon
         isOpen={showResendSuccess}
         onClose={() => setShowResendSuccess(false)}
-        size="sm"
-        title="Email sent"
-        subtitle={`We’ve sent a verification link to ${user?.businessEmail}. Verify your email to continue.`}
-        icon={<CheckCircle className="size-6" />}
-        messageImg={checkmarkIcon}
-        backgroundPattern="success"
-        buttons={[
-          {
-            text: "Return to dashboard",
-            onClick: () => {
-              setShowResendSuccess(false);
-              navigate("/dashboard");
-            },
-            color: "primary",
-          },
-        ]}
+        {...resendSuccessModal}
       />
 
       {/* Cooldown Modal */}
       <BaseModalWithIcon
         isOpen={showCooldownModal}
         onClose={() => setShowCooldownModal(false)}
-        size="sm"
-        title="Please wait"
-        subtitle={`Email just sent. Please wait ${cooldown} seconds before trying again.`}
-        icon={<AlertCircle className="size-6 text-yellow-500" />}
-        backgroundPattern="unsuccess"
-        buttons={[
-          {
-            text: "Okay",
-            onClick: () => setShowCooldownModal(false),
-            color: "primary",
-          },
-        ]}
+        {...cooldownModal}
       />
     </div>
   );

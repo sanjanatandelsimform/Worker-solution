@@ -43,6 +43,7 @@ export const SuccessPage: React.FC<SuccessCardProps> = ({
   useEffect(() => {
     if (state.shouldClearUser) {
       dispatch(clearUser());
+      // dispatch(clearProfileData());
       localStorage.removeItem("userDetail");
       sessionStorage.removeItem("registrationFormData");
       sessionStorage.removeItem("registrationFormActive");

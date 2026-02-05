@@ -7,24 +7,21 @@ import { ChangePasswordModal } from "@/components/modals/ChangePasswordModal";
 import { UpdateYourEmailModal } from "@/components/modals/UpdateYourEmailModal";
 import SessionExpiredModal from "@/components/modals/SessionExpiredModal";
 import DashboardSidebar from "@/components/dashboard/DashboardSidebar";
-import RetakeAssessmentModal from "@/components/modals/RetakeAssessmentModal";
-import AccountDeleteModal from "@/components/modals/AccountDeleteModal";
-import UpdateCompletedModal from "@/components/modals/UpdateCompletedModal";
 import ErrorMessage from "@/components/common/ErrorMessage";
+import { BaseModalWithIcon } from "@/components/modals/BaseModalWithIcon";
+import checkmarkIcon from "@/assets/checkmark-icon.svg";
 import { useAppDispatch, useAppSelector } from "@/store/hooks";
 import {
   updateProfileData,
   deleteUserAccount,
-  clearProfileData,
+  // clearProfileData,
   resendVerificationEmail,
 } from "@/store/slices/profileSlice";
 import { clearUser, updateUser } from "@/store/slices/authSlice";
 import { selectProfileLoading, selectProfileError } from "@/store/selectors/profileSelectors";
 import { selectUser } from "@/store/selectors/authSelectors";
 import { validateName } from "@/utils/validation";
-import { CheckCircle } from "@untitledui/icons";
-import { BaseModalWithIcon } from "../../components/modals/BaseModalWithIcon";
-import checkmarkIcon from "@/assets/checkmark-icon.svg";
+import { useModalConfig } from "@/hooks/useModalConfig";
 
 export const SettingsPage = () => {
   const dispatch = useAppDispatch();
@@ -33,6 +30,8 @@ export const SettingsPage = () => {
   const userData = useAppSelector(selectUser);
   const profileLoading = useAppSelector(selectProfileLoading);
   const profileError = useAppSelector(selectProfileError);
+
+  // Modal states
   const [activeUrl] = useState("/settings");
   const [isChangePasswordModalOpen, setIsChangePasswordModalOpen] = useState(false);
   const [isUpdateEmailModalOpen, setIsUpdateEmailModalOpen] = useState(false);
@@ -40,23 +39,48 @@ export const SettingsPage = () => {
   const [isAccountDeleteModalOpen, setIsAccountDeleteModalOpen] = useState(false);
   const [isUpdateCompletedModalOpen, setIsUpdateCompletedModalOpen] = useState(false);
   const [isSessionExpiredModalOpen, setIsSessionExpiredModalOpen] = useState(false);
+  const [showSuccess, setShowSuccess] = useState(false);
+
+  // Form states
   const [firstName, setFirstName] = useState(() => userData?.firstName ?? "");
   const [lastName, setLastName] = useState(() => userData?.lastName ?? "");
-
   const [firstNameError, setFirstNameError] = useState("");
   const [lastNameError, setLastNameError] = useState("");
   const [showError, setShowError] = useState(false);
-  const [showSuccess, setShowSuccess] = useState(false);
   const [resendVerification, setResendVerification] = useState(false);
   const [resendError, setResendError] = useState<string | null>(null);
 
-  // Calculate hasChanges derived from state
+  // Modal configurations using the hook
+  const updateCompleteModal = useModalConfig("updateComplete", {
+    isOpen: isUpdateCompletedModalOpen,
+    onClose: () => setIsUpdateCompletedModalOpen(false),
+  });
+
+  const emailUpdatedModal = useModalConfig("emailUpdated", {
+    isOpen: showSuccess,
+    onClose: () => setShowSuccess(false),
+    onConfirm: () => setShowSuccess(false),
+  });
+
+  const retakeAssessmentModal = useModalConfig("retakeAssessment", {
+    isOpen: isRetakeAssessmentModalOpen,
+    onClose: () => setIsRetakeAssessmentModalOpen(false),
+    onConfirm: handleRetakeAssessment,
+  });
+
+  const accountDeleteModal = useModalConfig("accountDelete", {
+    isOpen: isAccountDeleteModalOpen,
+    onClose: () => setIsAccountDeleteModalOpen(false),
+    onConfirm: handleDeleteAccount,
+  });
+
+  // Calculate hasChanges
   const hasChanges = useMemo(() => {
     if (!userData) return false;
     return firstName !== userData.firstName || lastName !== userData.lastName;
   }, [firstName, lastName, userData]);
 
-  // Handle save
+  // Handler functions
   const handleSave = async () => {
     const firstNameValidation = validateName("FirstName", firstName);
     const lastNameValidation = validateName("LastName", lastName);
@@ -88,7 +112,7 @@ export const SettingsPage = () => {
       setShowError(true);
     }
   };
-  // Handle cancel
+
   const handleCancel = () => {
     if (userData) {
       setFirstName(userData.firstName);
@@ -99,44 +123,43 @@ export const SettingsPage = () => {
     }
   };
 
-  // Handle modal close and refresh
-  const handleUpdateCompletedClose = () => {
-    setIsUpdateCompletedModalOpen(false);
-  };
-
-  // Handle retake assessment
-  const handleRetakeAssessment = () => {
+  function handleRetakeAssessment() {
     setIsRetakeAssessmentModalOpen(false);
     navigate("/assessment");
-  };
+  }
 
-  // Handle delete account
-  const handleDeleteAccount = async () => {
+  async function handleDeleteAccount() {
     if (!userData?.id) return;
 
     try {
       await dispatch(deleteUserAccount(userData.id)).unwrap();
 
-      dispatch(clearProfileData());
-      dispatch(clearUser());
-      localStorage.removeItem("userDetail");
+      // Clear profile data and user state
+      // dispatch(clearProfileData());
+      // dispatch(clearUser());
+      // localStorage.removeItem("userDetail");
 
+      // Close the modal before navigation
+      setIsAccountDeleteModalOpen(false);
+
+      // Redirect to success page with account deletion message
       navigate("/success", {
         state: {
           messageImg: checkmarkIcon,
-          title: "Account Deleted",
-          subtitle: "Your account has been successfully deleted.",
-          buttonText: "Return to Sign In",
-          buttonPath: "/sign-in",
+          title: "Your account has been deleted",
+          subtitle:
+            "Your profile and associated data has been permenantly deleted. This action can’t be reversed. Create a new account to begin.",
+          buttonText: "Create an account",
+          buttonPath: "/sign-up",
           shouldClearUser: true,
         },
       });
     } catch (_error) {
       console.error("Failed to delete account:", _error);
+      setIsAccountDeleteModalOpen(false);
     }
-  };
+  }
 
-  // Handle session expiry
   const handleLoginAgain = () => {
     setIsSessionExpiredModalOpen(false);
     dispatch(clearUser());
@@ -168,19 +191,10 @@ export const SettingsPage = () => {
     }
 
     setIsUpdateEmailModalOpen(false);
-
-    setTimeout(() => {
-      setShowSuccess(true);
-    }, 100);
-
+    setTimeout(() => setShowSuccess(true), 100);
     setResendVerification(true);
   };
 
-  const handleBackToSettings = () => {
-    setShowSuccess(false);
-  };
-
-  // Handle resend verification email
   const handleResendVerification = async () => {
     try {
       await dispatch(resendVerificationEmail()).unwrap();
@@ -219,12 +233,9 @@ export const SettingsPage = () => {
 
   return (
     <div className="flex h-screen overflow-hidden bg-dashboard">
-      {/* Sidebar */}
       <DashboardSidebar activeUrl={activeUrl} />
 
-      {/* Main Content Area */}
       <div className="flex flex-1 flex-col overflow-hidden">
-        {/* Main Content */}
         <main className="flex-1 overflow-y-auto px-6 py-10">
           <div>
             <h2 className="text-4xl font-medium text-primary">Settings</h2>
@@ -233,7 +244,8 @@ export const SettingsPage = () => {
               that can add more value to your benefits packages and employee support.
             </p>
           </div>
-          {/* Error Message */}
+
+          {/* Error Messages */}
           {showError && profileError && (
             <div className="mt-6">
               <ErrorMessage
@@ -260,6 +272,7 @@ export const SettingsPage = () => {
 
           <div className="space-y-6 mt-6">
             <div className="bg-gray-card border border-gray-300 rounded-xl p-6">
+              {/* Personal Info Section */}
               <div className="flex items-center justify-between gap-2">
                 <div className="flex flex-col">
                   <h2 className="text-lg font-semibold text-black">Personal info</h2>
@@ -269,7 +282,9 @@ export const SettingsPage = () => {
                 </div>
               </div>
               <hr className="border-t border-gray-200 mt-5 mb-6" />
+
               <div className="bg-primary border border-primary rounded-xl py-8 px-6 mb-6">
+                {/* Name Fields */}
                 <div className="flex mb-6">
                   <div className="w-1/3">
                     <label htmlFor="firstName" className="text-black font-medium text-sm">
@@ -317,13 +332,15 @@ export const SettingsPage = () => {
                     </div>
                   </div>
                 </div>
+
+                {/* Email Field */}
                 <div className="flex mb-6">
                   <div className="w-1/3">
                     <label htmlFor="email" className="text-black font-medium text-sm">
                       Email address <span>*</span>
                     </label>
                   </div>
-                  <div className="w-2/3 flex flex-col  gap-4">
+                  <div className="w-2/3 flex flex-col gap-4">
                     <Input
                       id="email"
                       name="email"
@@ -347,13 +364,15 @@ export const SettingsPage = () => {
                     </Button>
                   </div>
                 </div>
+
+                {/* Password Field */}
                 <div className="flex mb-6">
                   <div className="w-1/3">
                     <label htmlFor="password" className="text-black font-medium text-sm">
                       Password <span>*</span>
                     </label>
                   </div>
-                  <div className="w-2/3 flex flex-col  gap-4">
+                  <div className="w-2/3 flex flex-col gap-4">
                     <Input
                       type="password"
                       id="password"
@@ -374,6 +393,8 @@ export const SettingsPage = () => {
                   </div>
                 </div>
               </div>
+
+              {/* Account Management Section */}
               <div className="flex items-center justify-between gap-2">
                 <div className="flex flex-col">
                   <h2 className="text-lg font-semibold text-black">Account Management</h2>
@@ -383,7 +404,9 @@ export const SettingsPage = () => {
                 </div>
               </div>
               <hr className="border-t border-gray-200 mt-5 mb-6" />
+
               <div className="bg-primary border border-primary rounded-xl py-8 px-6 mb-6">
+                {/* Retake Assessment */}
                 <div className="flex mb-6">
                   <div className="w-1/2 flex flex-col">
                     <label htmlFor="firstName" className="text-black font-medium text-sm">
@@ -393,7 +416,7 @@ export const SettingsPage = () => {
                       Retaking the assessment will result in loss of progress.
                     </span>
                   </div>
-                  <div className="w-1/2 flex  gap-4">
+                  <div className="w-1/2 flex gap-4">
                     <Button
                       color="secondary"
                       size="md"
@@ -404,6 +427,8 @@ export const SettingsPage = () => {
                     </Button>
                   </div>
                 </div>
+
+                {/* Delete Account */}
                 <div className="flex mb-6">
                   <div className="w-1/2 flex flex-col">
                     <label htmlFor="firstName" className="text-black font-medium text-sm">
@@ -411,7 +436,7 @@ export const SettingsPage = () => {
                     </label>
                     <span className="text-gray-600 text-sm">This cannot be undone</span>
                   </div>
-                  <div className="w-1/2 flex  gap-4">
+                  <div className="w-1/2 flex gap-4">
                     <Button
                       color="secondary"
                       size="md"
@@ -423,6 +448,8 @@ export const SettingsPage = () => {
                   </div>
                 </div>
               </div>
+
+              {/* Action Buttons */}
               <div className="flex items-center justify-end gap-3">
                 <Button
                   color="secondary"
@@ -456,42 +483,32 @@ export const SettingsPage = () => {
         onClose={() => setIsUpdateEmailModalOpen(false)}
         getResponse={handleGetResponse}
       />
-      <RetakeAssessmentModal
-        isOpen={isRetakeAssessmentModalOpen}
-        onClose={() => setIsRetakeAssessmentModalOpen(false)}
-        onContinue={handleRetakeAssessment}
-      />
-      <AccountDeleteModal
-        isOpen={isAccountDeleteModalOpen}
-        onClose={() => setIsAccountDeleteModalOpen(false)}
-        onContinue={handleDeleteAccount}
-      />
-      <UpdateCompletedModal
-        isOpen={isUpdateCompletedModalOpen}
-        onClose={handleUpdateCompletedClose}
-      />
       <SessionExpiredModal
         isOpen={isSessionExpiredModalOpen}
         onClose={() => setIsSessionExpiredModalOpen(false)}
         onLoginAgain={handleLoginAgain}
       />
 
+      {/* Refactored modals using the hook */}
+      <BaseModalWithIcon
+        isOpen={isUpdateCompletedModalOpen}
+        onClose={() => setIsUpdateCompletedModalOpen(false)}
+        {...updateCompleteModal}
+      />
       <BaseModalWithIcon
         isOpen={showSuccess}
         onClose={() => setShowSuccess(false)}
-        size="sm"
-        title="Email updated"
-        subtitle="All set! Your email has been updated. We've sent a verification link to your new address. Please verify your email."
-        icon={<CheckCircle className="size-6" />}
-        messageImg={checkmarkIcon}
-        backgroundPattern="success"
-        buttons={[
-          {
-            text: "Back to Settings",
-            onClick: handleBackToSettings,
-            color: "primary",
-          },
-        ]}
+        {...emailUpdatedModal}
+      />
+      <BaseModalWithIcon
+        isOpen={isRetakeAssessmentModalOpen}
+        onClose={() => setIsRetakeAssessmentModalOpen(false)}
+        {...retakeAssessmentModal}
+      />
+      <BaseModalWithIcon
+        isOpen={isAccountDeleteModalOpen}
+        onClose={() => setIsAccountDeleteModalOpen(false)}
+        {...accountDeleteModal}
       />
     </div>
   );

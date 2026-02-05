@@ -1,0 +1,161 @@
+import { useMemo } from "react";
+import { CheckCircle, AlertOctagon } from "@untitledui/icons";
+import checkmarkIcon from "@/assets/checkmark-icon.svg";
+import alertIcon from "@/assets/alert-icon.svg";
+import type { BaseModalWithIconProps } from "@/components/modals/BaseModalWithIcon";
+
+type ModalType =
+  | "updateComplete"
+  | "emailUpdated"
+  | "retakeAssessment"
+  | "accountDelete"
+  | "resendSuccess"
+  | "cooldown"
+  | "logoutConfirmation";
+
+interface ModalConfig {
+  isOpen: boolean;
+  onClose: () => void;
+  onConfirm?: () => void;
+  additionalData?: Record<string, unknown>;
+}
+
+export const useModalConfig = (
+  type: ModalType,
+  config: ModalConfig
+): Omit<BaseModalWithIconProps, "isOpen" | "onClose"> => {
+  return useMemo(() => {
+    const configs: Record<ModalType, Omit<BaseModalWithIconProps, "isOpen" | "onClose">> = {
+      updateComplete: {
+        size: "sm",
+        title: "Update Complete",
+        subtitle: "All set! Your changes have been saved.",
+        icon: <CheckCircle className="size-6" />,
+        messageImg: checkmarkIcon,
+        backgroundPattern: "success",
+        buttons: [
+          {
+            text: "Back to Settings",
+            onClick: config.onClose,
+            color: "primary",
+          },
+        ],
+      },
+      emailUpdated: {
+        size: "sm",
+        title: "Email updated",
+        subtitle:
+          "All set! Your email has been updated. We've sent a verification link to your new address. Please verify your email.",
+        icon: <CheckCircle className="size-6" />,
+        messageImg: checkmarkIcon,
+        backgroundPattern: "success",
+        buttons: [
+          {
+            text: "Back to Settings",
+            onClick: config.onConfirm || config.onClose,
+            color: "primary",
+          },
+        ],
+      },
+      retakeAssessment: {
+        size: "sm",
+        title: "Are you sure?",
+        subtitle:
+          "Retaking the assessment will remove all data from your dashboard and you will need to retake the assessment form. This action can't be reversed.",
+        subtitleOne: "If you're certain this is what you want, confirm below to proceed.",
+        icon: <AlertOctagon className="size-6" />,
+        messageImg: alertIcon,
+        backgroundPattern: "unsuccess",
+        buttons: [
+          {
+            text: "Cancel",
+            onClick: config.onClose,
+            color: "secondary",
+          },
+          {
+            text: "Yes, Retake assessment",
+            onClick: config.onConfirm || config.onClose,
+            color: "primary-destructive",
+          },
+        ],
+      },
+      accountDelete: {
+        size: "sm",
+        title: "Confirm Account Deletion",
+        subtitle:
+          "Deleting your account will permanently erase your profile and all associated data. This action can't be reversed.",
+        subtitleOne: "If you're certain this is what you want, confirm below to proceed.",
+        icon: <AlertOctagon className="size-6" />,
+        messageImg: alertIcon,
+        backgroundPattern: "unsuccess",
+        buttons: [
+          {
+            text: "Cancel",
+            onClick: config.onClose,
+            color: "secondary",
+          },
+          {
+            text: "Yes, Delete my account",
+            onClick: config.onConfirm || config.onClose,
+            color: "primary-destructive",
+          },
+        ],
+      },
+      resendSuccess: {
+        size: "sm",
+        title: "Email sent",
+        subtitle: `We've sent a verification link to ${
+          (config.additionalData?.email as string) || "your email"
+        }. Verify your email to continue.`,
+        icon: <CheckCircle className="size-6" />,
+        messageImg: checkmarkIcon,
+        backgroundPattern: "success",
+        buttons: [
+          {
+            text: "Return to dashboard",
+            onClick: config.onConfirm || config.onClose,
+            color: "primary",
+          },
+        ],
+      },
+      cooldown: {
+        size: "sm",
+        title: "Please wait",
+        subtitle: `Email just sent. Please wait ${
+          config.additionalData?.cooldown || 0
+        } seconds before trying again.`,
+        icon: <AlertOctagon className="size-6 text-yellow-500" />,
+        backgroundPattern: "unsuccess",
+        buttons: [
+          {
+            text: "Okay",
+            onClick: config.onClose,
+            color: "primary",
+          },
+        ],
+      },
+      logoutConfirmation: {
+        size: "sm",
+        title: "Are you sure you want to log out?",
+        icon: <AlertOctagon className="size-6" />,
+        messageImg: alertIcon,
+        backgroundPattern: "unsuccess",
+        buttons: [
+          {
+            text: "Cancel",
+            onClick: config.onClose,
+            color: "secondary",
+          },
+          {
+            text: "Yes",
+            onClick: config.onConfirm || config.onClose,
+            color: "primary-destructive",
+            isDisabled: config.additionalData?.isDisabled as boolean,
+          },
+        ],
+      },
+    };
+
+    return configs[type];
+  }, [type, config]);
+};
