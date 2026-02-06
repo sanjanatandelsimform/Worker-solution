@@ -43,6 +43,7 @@ export const SuccessPage: React.FC<SuccessCardProps> = ({
   useEffect(() => {
     if (state.shouldClearUser) {
       dispatch(clearUser());
+      // dispatch(clearProfileData());
       localStorage.removeItem("userDetail");
       sessionStorage.removeItem("registrationFormData");
       sessionStorage.removeItem("registrationFormActive");
@@ -63,16 +64,15 @@ export const SuccessPage: React.FC<SuccessCardProps> = ({
         setUser({
           user: {
             id: user.id,
-            email: user.businessEmail || user.email,
+            businessEmail: user.businessEmail || "",
             firstName: user.firstName,
             lastName: user.lastName,
             businessName: user.businessName,
             phoneNumber: user.businessPhone || user.phoneNumber,
             industry: user.industry,
-            zipCode: user.zipCode.toString(),
+            zipCode: typeof user.zipCode === "string" ? parseInt(user.zipCode) : user.zipCode,
             authMethod: user.googleId ? "google" : "email",
-            emailVerified: user.emailVerified,
-            profileComplete: true,
+            emailVerify: user.emailVerify ?? false,
             createdAt: user.createdAt,
             updatedAt: user.updatedAt,
           },

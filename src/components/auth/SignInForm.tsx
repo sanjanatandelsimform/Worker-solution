@@ -7,17 +7,18 @@ import { Input } from "@/components/base/input/input";
 import { InputGroup } from "@/components/base/input/input-group";
 import { Checkbox } from "@/components/base/checkbox/checkbox";
 // import { GoogleSSOButton } from "./GoogleSSOButton";
-import { Eye, EyeOff, AlertTriangle } from "@untitledui/icons";
+import { Eye, EyeOff, AlertCircle } from "@untitledui/icons";
 import type { SignInData } from "@/types/auth";
 import { signin } from "@/services/api/authApi";
 import { ChangePasswordModal } from "../modals/ChangePasswordModal";
 import checkmarkIcon from "@/assets/checkmark-icon.svg";
 import { signInSchema, type SignInFormData } from "@/services/validation/authSchemas";
 import ErrorMessage from "../common/ErrorMessage";
+import { getErrorState, type ErrorState } from "@/utils/errorHandler";
 
 export const SignInForm = () => {
   const [showPassword, setShowPassword] = useState(false);
-  const [errorMessage, setErrorMessage] = useState<string | null>(null);
+  const [errorMessage, setErrorMessage] = useState<ErrorState | null>(null);
   const [isChangePasswordModalOpen, setIsChangePasswordModalOpen] = useState(false);
   const navigate = useNavigate();
 
@@ -81,10 +82,7 @@ export const SignInForm = () => {
         },
       });
     } catch (error) {
-      console.error("Sign in error:", error);
-      setErrorMessage(
-        error instanceof Error ? error.message : "An unexpected error occurred. Please try again."
-      );
+      setErrorMessage(getErrorState(error));
     }
   };
 
@@ -174,8 +172,9 @@ export const SignInForm = () => {
               {/* Error Message Display */}
               {errorMessage && (
                 <ErrorMessage
-                  alertIcon={AlertTriangle}
-                  errorMessage={errorMessage}
+                  errorType={errorMessage.type}
+                  alertIcon={AlertCircle}
+                  errorMessage={errorMessage.message}
                   onClose={() => setErrorMessage(null)}
                 />
               )}

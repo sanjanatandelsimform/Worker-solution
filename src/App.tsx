@@ -2,6 +2,7 @@ import { Routes, Route, Navigate } from "react-router-dom";
 import { AuthErrorBoundary } from "./components/auth/AuthErrorBoundary";
 import { ProtectedRoute } from "./components/routes/ProtectedRoute";
 import { PublicRoute } from "./components/routes/PublicRoute";
+import { UnrestrictedRoute } from "./components/routes/UnrestrictedRoute";
 import { RegisterPage } from "./pages/auth/RegisterPage";
 import { SignInPage } from "./pages/auth/SignInPage";
 import { DashboardPage } from "./pages/dashboard/DashboardPage";
@@ -19,7 +20,7 @@ function App() {
     <AuthErrorBoundary>
       <div className="min-h-screen bg-gray-50">
         <Routes>
-          {/* Public routes - accessible without authentication */}
+          {/* Public routes - only accessible when NOT authenticated */}
           <Route
             path="/sign-up"
             element={
@@ -37,34 +38,10 @@ function App() {
             }
           />
           <Route
-            path="/privacy-policy"
-            element={
-              <PublicRoute>
-                <PrivacyPage />
-              </PublicRoute>
-            }
-          />
-          <Route
-            path="/terms-page"
-            element={
-              <PublicRoute>
-                <TermsPage />
-              </PublicRoute>
-            }
-          />
-          <Route
             path="/forgot-password"
             element={
               <PublicRoute>
                 <ForgotPasswordForm />
-              </PublicRoute>
-            }
-          />
-          <Route
-            path="/success"
-            element={
-              <PublicRoute>
-                <SuccessPage />
               </PublicRoute>
             }
           />
@@ -76,15 +53,42 @@ function App() {
               </PublicRoute>
             }
           />
+
+          {/* Unrestricted routes - accessible to everyone */}
+          <Route
+            path="/success"
+            element={
+              <UnrestrictedRoute>
+                <SuccessPage />
+              </UnrestrictedRoute>
+            }
+          />
           <Route
             path="/verify-email"
             element={
-              <PublicRoute>
+              <UnrestrictedRoute>
                 <VerifyEmailPage />
-              </PublicRoute>
+              </UnrestrictedRoute>
             }
           />
-          {/* Protected routes - require authentication */}
+          <Route
+            path="/privacy-policy"
+            element={
+              <UnrestrictedRoute>
+                <PrivacyPage />
+              </UnrestrictedRoute>
+            }
+          />
+          <Route
+            path="/terms-page"
+            element={
+              <UnrestrictedRoute>
+                <TermsPage />
+              </UnrestrictedRoute>
+            }
+          />
+
+          {/* Protected routes - only accessible when authenticated */}
           <Route
             path="/"
             element={

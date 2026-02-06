@@ -1,79 +1,106 @@
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { DashboardSidebar } from "@/components/dashboard/DashboardSidebar";
 import emailIcon from "@/assets/mail-icon.svg";
 import checkIcon from "@/assets/file-check.svg";
 import DashboardCard from "./DashboardCard";
-import { Tabs } from "@/components/base/tabs/tabs";
-import RecommendationsPage from "../recommendations/RecommendationsPage";
-import BenchmarkPage from "../benchmark/BenchmarkPage";
 import { Link } from "react-router-dom";
-// import { InProgressModal } from "@/components/modals/InProgressModal";
 import { useAppSelector, useAppDispatch } from "@/store/hooks";
-// import { getUserById } from "@/services/api/userApi";
-// import { updateUserProfile } from "@/store/slices/authSlice";
-// import ErrorMessage from "@/components/common/ErrorMessage";
-// import { AlertCircle } from "@untitledui/icons";
-// import { getErrorState, type ErrorState } from "@/utils/errorHandler";
+import { selectUser } from "@/store/selectors/authSelectors";
+import { BaseModalWithIcon } from "@/components/modals/BaseModalWithIcon";
+import ErrorMessage from "@/components/common/ErrorMessage";
+import { AlertCircle } from "@untitledui/icons";
+import { fetchUserById } from "@/store/slices/userSlice";
+import { resendVerificationEmail } from "@/store/slices/profileSlice";
+import { selectProfileError } from "@/store/selectors/profileSelectors";
+import { useModalConfig } from "@/hooks/useModalConfig";
+// import { Tabs } from "@/components/base/tabs/tabs";
+// import RecommendationsPage from "../recommendations/RecommendationsPage";
+// import BenchmarkPage from "../benchmark/BenchmarkPage";
 
 export const DashboardPage = () => {
   const navigate = useNavigate();
+  const user = useAppSelector(selectUser);
   const dispatch = useAppDispatch();
-  const { user, tokens } = useAppSelector(state => state.auth);
+  const profileError = useAppSelector(selectProfileError);
 
-  // const [isLoading, setIsLoading] = useState(true);
-  // const [userData, setUserData] = useState(user);
-  // const [error, setError] = useState<ErrorState | null>(null);
+  const emailVerify = user?.emailVerify || false;
+
+  const [errorMessage, setErrorMessage] = useState<string | null>(null);
+  const [showResendSuccess, setShowResendSuccess] = useState(false);
+  const [showCooldownModal, setShowCooldownModal] = useState(false);
+  const [cooldown, setCooldown] = useState<number>(0); // Cooldown in seconds
 
   useEffect(() => {
-    const fetchUserData = async () => {
-      if (!user?.id || !tokens?.accessToken) {
-        navigate("/sign-in");
-        return;
+    if (user?.id) {
+      const userDetail = localStorage.getItem("userDetail");
+      if (userDetail) {
+        const parsedUserDetail = JSON.parse(userDetail);
+        const accessToken = parsedUserDetail?.auth?.tokens?.accessToken;
+        if (accessToken) {
+          dispatch(fetchUserById({ userId: user.id, token: accessToken }));
+        }
       }
+    }
+  }, [user?.id, dispatch]);
 
-      // try {
-      //   setIsLoading(true);
-      //   setError(null);
-      //   const fetchedUser = await getUserById(user.id, tokens.accessToken);
+  // Cooldown timer effect
+  useEffect(() => {
+    if (cooldown > 0) {
+      const timer = setInterval(() => {
+        setCooldown(prev => {
+          const newCooldown = prev - 1;
+          if (newCooldown === 0) {
+            setShowCooldownModal(false);
+          }
+          return newCooldown;
+        });
+      }, 1000);
 
-      //   setUserData(fetchedUser);
-      //   dispatch(updateUserProfile(fetchedUser));
-      // } catch (error) {
-      //   console.error("Failed to fetch user data:", error);
-      //   const errorState = getErrorState(error);
-      //   setError(errorState);
+      return () => clearInterval(timer);
+    }
+  }, [cooldown]);
 
-      //   // If it's an auth error, redirect to sign-in after showing error
-      //   if (error instanceof Error && error.message.includes("token")) {
-      //     setTimeout(() => {
-      //       navigate("/sign-in");
-      //     }, 3000);
-      //   }
-      // } finally {
-      //   setIsLoading(false);
-      // }
-    };
+  const handleVerifyEmail = async () => {
+    if (emailVerify) {
+      return;
+    }
 
-    fetchUserData();
-  }, [user?.id, tokens?.accessToken, dispatch, navigate]);
+    if (cooldown > 0) {
+      setShowCooldownModal(true);
+      return;
+    }
 
-  // Show loading modal while fetching data
-  // if (isLoading) {
-  //   return (
-  //     <InProgressModal
-  //       isOpen={isLoading}
-  //       onClose={() => {
-  //         // Don't allow closing during data fetch
-  //       }}
-  //       onGoToDashboard={() => {
-  //         // Disabled during loading
-  //       }}
-  //       title="Loading Dashboard..."
-  //       subtitle="Please wait while we prepare your dashboard."
-  //     />
-  //   );
-  // }
+    try {
+      setErrorMessage(null);
+      await dispatch(resendVerificationEmail()).unwrap();
+      setCooldown(60);
+      setShowResendSuccess(true);
+    } catch (error) {
+      console.error("Failed to resend verification email:", error);
+      setErrorMessage(
+        error instanceof Error
+          ? error.message
+          : profileError || "Failed to resend verification email. Please try again."
+      );
+    }
+  };
+
+  const resendSuccessModal = useModalConfig("resendSuccess", {
+    isOpen: showResendSuccess,
+    onClose: () => setShowResendSuccess(false),
+    onConfirm: () => {
+      setShowResendSuccess(false);
+      navigate("/dashboard");
+    },
+    additionalData: { email: user?.businessEmail },
+  });
+
+  const cooldownModal = useModalConfig("cooldown", {
+    isOpen: showCooldownModal,
+    onClose: () => setShowCooldownModal(false),
+    additionalData: { cooldown },
+  });
 
   return (
     <div className="flex h-screen overflow-hidden bg-dashboard">
@@ -84,24 +111,22 @@ export const DashboardPage = () => {
       <div className="flex flex-1 flex-col overflow-hidden">
         {/* Main Content */}
         <main className="flex-1 overflow-y-auto px-6 py-10">
-          {/* Error Message Display */}
-          {/* {error && (
-            <div className="mb-6">
-              <ErrorMessage
-                errorType={error.type}
-                alertIcon={AlertCircle}
-                errorMessage={error.message}
-                onClose={() => setError(null)}
-              />
-            </div>
-          )} */}
-
-          <div className="space-y-6"></div>
           <div>
-            <h2 className="text-4xl font-medium text-primary">
-              {/* Welcome{userData?.firstName ? `, ${userData.firstName}` : ""}! */}
-              Welcome!
-            </h2>
+            <h2 className="text-4xl font-medium text-primary">Welcome!</h2>
+
+            {/* Error Message */}
+            {errorMessage && (
+              <div className="mt-6">
+                <ErrorMessage
+                  errorType="danger"
+                  textColor="text-red-700"
+                  alertIcon={AlertCircle}
+                  errorMessage={errorMessage}
+                  onClose={() => setErrorMessage(null)}
+                />
+              </div>
+            )}
+
             <div className="mt-6 border border-gray-300 rounded-xl p-4 bg-dashboard-card shadow-sm flex gap-4 justify-between flex-col lg:flex-row">
               <div className="flex-1">
                 <h2 className="text-dashboard-card-title text-3xl font-medium mb-2">
@@ -115,30 +140,45 @@ export const DashboardPage = () => {
                 FPO Img
               </div>
             </div>
-            <DashboardCard
-              title="Verify your email"
-              description={
-                <>
-                  One quick step to secure your account. Didn't get the email?{" "}
-                  <Link to="/" className="underline">
-                    Resend verification
-                  </Link>
-                </>
-              }
-              avatarIconSrc={emailIcon}
-              buttonLabel="Verify email"
-              buttonType="primary"
-            />
+            {!emailVerify && (
+              <DashboardCard
+                title="Verify your email"
+                description={
+                  <>
+                    One quick step to secure your account. Didn't get the email?{" "}
+                    <Link
+                      to="#"
+                      onClick={e => {
+                        e.preventDefault();
+                        if (!emailVerify) {
+                          handleVerifyEmail();
+                        }
+                      }}
+                      className="underline"
+                    >
+                      Resend verification
+                    </Link>
+                  </>
+                }
+                avatarIconSrc={emailIcon}
+                buttonLabel="Verify email"
+                buttonType="primary"
+                buttonIsDisabled={emailVerify}
+                onClick={handleVerifyEmail}
+              />
+            )}
             <DashboardCard
               title="Take the Assessment"
               description="Take our 15 minute assessment for specific recommendations to improve your business"
               avatarIconSrc={checkIcon}
               buttonLabel="Take Assessment"
               buttonType="secondary"
-              buttonIsDisabled={true}
+              buttonIsDisabled={!emailVerify}
+              onClick={() => navigate("/assessment")}
             />
           </div>
-          <div className="mt-10">
+          {/* This will be conditionally rendered; uncomment when this feature is implemented. */}
+          {/* <div className="mt-10">
             <Tabs>
               <Tabs.List
                 size="md"
@@ -155,9 +195,23 @@ export const DashboardPage = () => {
                 <BenchmarkPage />
               </Tabs.Panel>
             </Tabs>
-          </div>
+          </div> */}
         </main>
       </div>
+
+      {/* Success Modal for Resend Verification */}
+      <BaseModalWithIcon
+        isOpen={showResendSuccess}
+        onClose={() => setShowResendSuccess(false)}
+        {...resendSuccessModal}
+      />
+
+      {/* Cooldown Modal */}
+      <BaseModalWithIcon
+        isOpen={showCooldownModal}
+        onClose={() => setShowCooldownModal(false)}
+        {...cooldownModal}
+      />
     </div>
   );
 };

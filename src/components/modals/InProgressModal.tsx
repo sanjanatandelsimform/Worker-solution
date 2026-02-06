@@ -12,9 +12,17 @@ interface InProgressModalProps {
   isOpen: boolean;
   onClose: () => void;
   onGoToDashboard?: () => void;
+  title?: string;
+  subtitle?: string;
 }
 
-export const InProgressModal = ({ isOpen, onClose, onGoToDashboard }: InProgressModalProps) => {
+export const InProgressModal = ({
+  isOpen,
+  onClose,
+  onGoToDashboard,
+  title = "Preparing...",
+  subtitle = "One moment while we prepare your results and recommendations.",
+}: InProgressModalProps) => {
   const handleGoToDashboard = () => {
     if (onGoToDashboard) {
       onGoToDashboard();
@@ -22,15 +30,12 @@ export const InProgressModal = ({ isOpen, onClose, onGoToDashboard }: InProgress
     onClose();
   };
 
-  // Loading icon SVG from Figma
   const loadingIcon = "http://localhost:3845/assets/0e6fb58232a90ae859fbd35b8641df1dea24e1f2.svg";
 
   return (
     <Modal isOpen={isOpen} onOpenChange={onClose} size="sm">
       <ModalContent>
-        {/* Modal Header with Featured Icon and Close Button */}
         <ModalHeader className="relative flex flex-col items-start gap-4 border-0 pb-0 pt-6 px-6">
-          {/* Featured Icon - Blue Loading Icon */}
           <div
             className="flex size-12 items-center justify-center overflow-clip rounded-full shrink-0"
             style={{
@@ -50,7 +55,6 @@ export const InProgressModal = ({ isOpen, onClose, onGoToDashboard }: InProgress
             </div>
           </div>
 
-          {/* Close Button */}
           <Button
             color="tertiary"
             size="sm"
@@ -67,21 +71,16 @@ export const InProgressModal = ({ isOpen, onClose, onGoToDashboard }: InProgress
             />
           </Button>
 
-          {/* Text and Supporting Text */}
           <div className="flex w-full flex-col gap-1">
             <ModalTitle className="text-[36px] font-medium leading-11 tracking-[-0.72px] font-display text-primary">
-              Preparing...
+              {title}
             </ModalTitle>
-            <p className="text-sm font-normal leading-5 font-body text-tertiary">
-              One moment while we prepare your results and recommendations.
-            </p>
+            <p className="text-sm font-normal leading-5 font-body text-tertiary">{subtitle}</p>
           </div>
 
-          {/* Padding Bottom */}
           <div className="h-5 w-full shrink-0" />
         </ModalHeader>
 
-        {/* Modal Footer with Disabled Button */}
         <ModalFooter className="flex items-start gap-3 border-0 pb-6 pt-8 px-6">
           <Button
             type="button"

@@ -6,9 +6,8 @@ import { NavList } from "@/components/application/app-navigation/base-components
 import type { NavItemType } from "@/components/application/app-navigation/config";
 import { signout } from "@/services/api/authApi";
 import { BaseModalWithIcon } from "../modals/BaseModalWithIcon";
-import { AlertOctagon } from "@untitledui/icons";
-import alertIcon from "@/assets/alert-icon.svg";
-import checkmarkIcon from "@/assets/checkmark-icon.svg";
+import logoutIcon from "@/assets/logout-Icon.svg";
+import { useModalConfig } from "@/hooks/useModalConfig";
 
 interface DashboardSidebarProps {
   activeUrl?: string;
@@ -17,14 +16,15 @@ interface DashboardSidebarProps {
 export const DashboardSidebar = ({ activeUrl = "/" }: DashboardSidebarProps) => {
   const navigate = useNavigate();
   const [isLogoutModalOpen, setIsLogoutModalOpen] = useState(false);
+  const [isLogoutButtonDisabled, setIsLogoutButtonDisabled] = useState(false);
   const [logoutError, setLogoutError] = useState<string | null>(null);
 
   const { user, tokens } = useAppSelector(state => state.auth);
 
   const handleLogout = async () => {
+    setIsLogoutButtonDisabled(true); // Disable the button to prevent multiple clicks
     setLogoutError(null);
     try {
-      // Get fresh token from localStorage
       const storedState = localStorage.getItem("userDetail");
       let currentToken = tokens?.accessToken;
 
@@ -35,10 +35,9 @@ export const DashboardSidebar = ({ activeUrl = "/" }: DashboardSidebarProps) => 
 
       await signout(currentToken || undefined);
 
-      // Navigate to success page with logout flag
       navigate("/success", {
         state: {
-          messageImg: checkmarkIcon,
+          messageImg: logoutIcon,
           title: "You've been logged out",
           subtitle: "You've been logged out of your account. Log back in anytime to continue.",
           buttonText: "Log back in",
@@ -50,10 +49,9 @@ export const DashboardSidebar = ({ activeUrl = "/" }: DashboardSidebarProps) => 
     } catch (error) {
       console.error("Logout error:", error);
 
-      // Even if logout fails, clear local state and navigate
       navigate("/success", {
         state: {
-          messageImg: checkmarkIcon,
+          messageImg: logoutIcon,
           title: "You've been logged out",
           subtitle: "You've been logged out of your account. Log back in anytime to continue.",
           buttonText: "Log back in",
@@ -63,6 +61,7 @@ export const DashboardSidebar = ({ activeUrl = "/" }: DashboardSidebarProps) => 
         },
       });
     } finally {
+      setIsLogoutButtonDisabled(false);
       setIsLogoutModalOpen(false);
     }
   };
@@ -71,6 +70,13 @@ export const DashboardSidebar = ({ activeUrl = "/" }: DashboardSidebarProps) => 
     event?.preventDefault();
     setIsLogoutModalOpen(true);
   };
+
+  const logoutModalConfig = useModalConfig("logoutConfirmation", {
+    isOpen: isLogoutModalOpen,
+    onClose: () => setIsLogoutModalOpen(false),
+    onConfirm: handleLogout,
+    additionalData: { isDisabled: isLogoutButtonDisabled },
+  });
 
   const navigationItems: NavItemType[] = [
     {
@@ -99,7 +105,7 @@ export const DashboardSidebar = ({ activeUrl = "/" }: DashboardSidebarProps) => 
       ? `${user.firstName} ${user.lastName}`
       : user?.businessName || "User";
 
-  const displayEmail = user?.email || "No email available";
+  const displayEmail = user?.businessEmail || "No email available";
 
   return (
     <div className="flex h-[calc(100vh-32px)] w-66 flex-col border-0 border-primary bg-primary py-10 px-6 m-4 rounded-xl shadow-xs">
@@ -163,23 +169,7 @@ export const DashboardSidebar = ({ activeUrl = "/" }: DashboardSidebarProps) => 
       <BaseModalWithIcon
         isOpen={isLogoutModalOpen}
         onClose={() => setIsLogoutModalOpen(false)}
-        size="sm"
-        title="Are you sure you want to log out?"
-        icon={<AlertOctagon className="size-6" />}
-        messageImg={alertIcon}
-        backgroundPattern="unsuccess"
-        buttons={[
-          {
-            text: "Cancel",
-            onClick: () => setIsLogoutModalOpen(false),
-            color: "secondary",
-          },
-          {
-            text: "Yes",
-            onClick: handleLogout,
-            color: "primary-destructive",
-          },
-        ]}
+        {...logoutModalConfig}
       />
     </div>
   );

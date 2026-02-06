@@ -32,10 +32,17 @@ export const authSlice = createSlice({
         tokens: { accessToken: string; refreshToken: string };
       }>
     ) => {
-      state.user = action.payload.user;
+      const { user, tokens } = action.payload;
+
+      state.user = user;
       state.isAuthenticated = true;
       state.isLoading = false;
-      state.tokens = action.payload.tokens;
+      state.tokens = tokens;
+    },
+    updateUser: (state, action: PayloadAction<Partial<UserAccount>>) => {
+      if (state.user) {
+        state.user = { ...state.user, ...action.payload };
+      }
     },
     clearUser: state => {
       state.user = null;
@@ -45,14 +52,11 @@ export const authSlice = createSlice({
         accessToken: null,
         refreshToken: null,
       };
+      // Clear localStorage
+      localStorage.removeItem("userDetail");
     },
     setLoading: (state, action: PayloadAction<boolean>) => {
       state.isLoading = action.payload;
-    },
-    updateUserProfile: (state, action: PayloadAction<Partial<UserAccount>>) => {
-      if (state.user) {
-        state.user = { ...state.user, ...action.payload };
-      }
     },
     setTokens: (state, action: PayloadAction<{ accessToken: string; refreshToken: string }>) => {
       state.tokens = action.payload;
@@ -74,6 +78,5 @@ export const authSlice = createSlice({
   },
 });
 
-export const { setUser, clearUser, setLoading, updateUserProfile, setTokens, logout } =
-  authSlice.actions;
+export const { setUser, updateUser, clearUser, setLoading, setTokens } = authSlice.actions;
 export default authSlice.reducer;
