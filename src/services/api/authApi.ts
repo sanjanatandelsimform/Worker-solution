@@ -9,7 +9,7 @@ import type {
 
 // Create Axios instance with base configuration
 const apiClient = axios.create({
-  baseURL: import.meta.env.VITE_API_BASE_URL || "http://localhost:3000/api/v1",
+  baseURL: import.meta.env.VITE_API_BASE_URL || "https://dev-api.benestats.com/api/v1",
   timeout: 10000,
   withCredentials: true,
   headers: {
@@ -148,9 +148,9 @@ apiClient.interceptors.response.use(
       localStorage.setItem("userDetail", JSON.stringify(updatedState));
 
       // Dispatch Redux action to update tokens in store
-      if (typeof window !== "undefined" && window.store) {
+      if (typeof window !== "undefined" && (window as { store?: unknown }).store) {
         const { setTokens } = await import("@/store/slices/authSlice");
-        window.store.dispatch(
+        (window as { store: { dispatch: (action: unknown) => void } }).store.dispatch(
           setTokens({
             accessToken: newAccessToken,
             refreshToken: newRefreshToken,
@@ -335,6 +335,24 @@ export const verifyEmail = async (
     return response.data;
   } catch (_error) {
     throw new Error("Failed to verify email. Please try again.");
+  }
+};
+
+/**
+ * Set tokens utility (for other services)
+ */
+export const setTokens = (tokens: { accessToken: string; refreshToken: string }): void => {
+  const storedState = localStorage.getItem("userDetail");
+  if (storedState) {
+    const parsedState = JSON.parse(storedState);
+    const updatedState = {
+      ...parsedState,
+      auth: {
+        ...parsedState.auth,
+        tokens,
+      },
+    };
+    localStorage.setItem("userDetail", JSON.stringify(updatedState));
   }
 };
 
