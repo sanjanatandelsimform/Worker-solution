@@ -569,36 +569,6 @@
             { "id": "insperity", "label": "Insperity", "value": "insperity" },
             { "id": "other", "label": "Other", "value": "other" }
           ]
-        },
-        {
-          "key": "handlesHRPayrollInHouse",
-          "questionText": "Do you handle HR/payroll in-house?",
-          "questionType": "SINGLE_SELECT",
-          "displayOrder": 5,
-          "validationRules": {
-            "type": "SINGLE_SELECT",
-            "required": true,
-            "errorMessage": "Please indicate if you handle HR/payroll in-house"
-          },
-          "schemaVersion": 1,
-          "isRequired": true,
-          "options": [
-            {
-              "label": "Yes",
-              "value": "Yes",
-              "displayOrder": 1
-            },
-            {
-              "label": "No",
-              "value": "No",
-              "displayOrder": 2
-            },
-            {
-              "label": "Unsure",
-              "value": "Unsure",
-              "displayOrder": 3
-            }
-          ]
         }
       ]
     },
@@ -1641,18 +1611,27 @@
           ]
         },
         {
-          "key": "desklessEmployees",
-          "questionText": "Are many employees deskless (performing job duties outside of an office setting)?",
-          "questionType": "YES_NO",
-          "displayOrder": 3,
+          "key": "workforceGoalsRanking",
+          "questionText": "Rank your company's top three workforce goals (from above list)",
+          "questionType": "RANKING",
+          "displayOrder": 2,
           "validationRules": {
-            "type": "BOOLEAN",
+            "type": "ARRAY",
             "required": true,
-            "errorMessage": "Select an option"
+            "minItems": 3,
+            "maxItems": 3,
+            "conditionalOn": "workforceGoals",
+            "conditionalRequired": true,
+            "customValidation": "Must contain exactly 3 goals selected from workforceGoals",
+            "errorMessage": "Please rank exactly 3 goals from your selected workforce goals"
           },
           "schemaVersion": 1,
           "isRequired": true,
-          "options": []
+          "options": [],
+          "dynamicOptions": {
+            "sourceField": "workforceGoals",
+            "description": "Options are dynamically populated from selected workforceGoals"
+          }
         }
       ]
     }
