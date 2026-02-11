@@ -1,12 +1,15 @@
 import React, { useEffect, useState } from "react";
 import { useNavigate, useSearchParams } from "react-router-dom";
 import { verifyEmail } from "@/services/api/authApi";
-import { InProgressModal } from "@/components/modals/InProgressModal";
 import checkmarkIcon from "@/assets/checkmark-icon.svg";
+import { useAppDispatch } from "@/store/hooks";
+import { updateUser, setTokens } from "@/store/slices/authSlice";
+import { Oval } from "react-loader-spinner";
 
 export const VerifyEmailPage: React.FC = () => {
   const [searchParams] = useSearchParams();
   const navigate = useNavigate();
+  const dispatch = useAppDispatch();
   const [isVerifying, setIsVerifying] = useState(true);
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
 
@@ -23,15 +26,66 @@ export const VerifyEmailPage: React.FC = () => {
       }
 
       try {
-        await verifyEmail(token);
+        const response = await verifyEmail(token);
+
+        // Update localStorage with verified user data and new tokens
+        if (response.user && response.tokens) {
+          const userDetail = localStorage.getItem("userDetail");
+
+          if (userDetail) {
+            try {
+              const parsedUserDetail = JSON.parse(userDetail);
+
+              // Update the user data with emailVerify: true and new tokens
+              const updatedUserDetail = {
+                ...parsedUserDetail,
+                auth: {
+                  ...parsedUserDetail.auth,
+                  user: {
+                    ...parsedUserDetail.auth.user,
+                    id: response.user.id,
+                    businessEmail: response.user.businessEmail,
+                    emailVerify: response.user.emailVerify,
+                  },
+                  tokens: {
+                    accessToken: response.tokens.accessToken,
+                    refreshToken: response.tokens.refreshToken,
+                  },
+                },
+              };
+
+              // Save updated data to localStorage
+              localStorage.setItem("userDetail", JSON.stringify(updatedUserDetail));
+
+              // Update Redux store
+              dispatch(
+                updateUser({
+                  id: response.user.id,
+                  businessEmail: response.user.businessEmail,
+                  emailVerify: response.user.emailVerify,
+                })
+              );
+
+              dispatch(
+                setTokens({
+                  accessToken: response.tokens.accessToken,
+                  refreshToken: response.tokens.refreshToken,
+                })
+              );
+            } catch (error) {
+              console.error("Failed to update localStorage:", error);
+            }
+          }
+        }
+
         // Success - redirect to success page
         navigate("/success", {
           state: {
             messageImg: checkmarkIcon,
             title: "Your email has been verified!",
-            subtitle: "Your email has been verified. You can now sign in to your account.",
-            buttonText: "Go to Sign In",
-            buttonPath: "/sign-in",
+            subtitle: "Welcome aboard! Start your success journey with Worker Solutions®",
+            buttonText: "Take the Assessment",
+            buttonPath: "/assessment",
           },
         });
       } catch (error) {
@@ -46,7 +100,7 @@ export const VerifyEmailPage: React.FC = () => {
     };
 
     handleVerification();
-  }, [token, navigate]);
+  }, [token, navigate, dispatch]);
 
   // Show error state if verification fails
   if (!isVerifying && errorMessage) {
@@ -84,17 +138,21 @@ export const VerifyEmailPage: React.FC = () => {
     );
   }
 
-  // Show in-progress modal while verifying
+  // Show simple loader while verifying
   return (
-    <InProgressModal
-      isOpen={isVerifying}
-      onClose={() => {
-        // Don't allow closing during verification
-      }}
-      onGoToDashboard={() => {
-        // Disabled during verification
-      }}
-    />
+    <div className="flex min-h-screen items-center justify-center bg-secondary">
+      <Oval
+        height={80}
+        width={80}
+        color="#06b6d4"
+        wrapperClass="flex items-center justify-center"
+        visible={true}
+        ariaLabel="oval-loading"
+        secondaryColor="#0891b2"
+        strokeWidth={2}
+        strokeWidthSecondary={2}
+      />
+    </div>
   );
 };
 

@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { ChevronLeft, XClose } from "@untitledui/icons";
 import { Button } from "@/components/base/buttons/button";
@@ -7,6 +7,8 @@ import WorkforceTab from "./WorkforceTab";
 import CompensationTab from "./CompensationTab";
 import BenefitsTab from "./BenefitsTab";
 import GoalsTab from "./GoalsTab";
+import { useAppSelector } from "@/store/hooks";
+import { selectUser } from "@/store/selectors/authSelectors";
 
 const steps = [
   { id: "workforce", label: "Workforce" },
@@ -18,6 +20,14 @@ const steps = [
 export default function AssessmentWorkforcePage() {
   const [currentStep, setCurrentStep] = useState("workforce");
   const navigate = useNavigate();
+  const user = useAppSelector(selectUser);
+
+  // Check if email is verified before allowing access
+  useEffect(() => {
+    if (!user?.emailVerify) {
+      navigate("/dashboard");
+    }
+  }, [user?.emailVerify, navigate]);
 
   const currentStepIndex = steps.findIndex(step => step.id === currentStep);
   const isFirstStep = currentStepIndex === 0;
