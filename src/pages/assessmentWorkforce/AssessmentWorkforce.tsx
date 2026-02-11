@@ -18,7 +18,7 @@ const steps = [
 ];
 
 export default function AssessmentWorkforcePage() {
-  const [currentStep, setCurrentStep] = useState("goals");
+  const [currentStep, setCurrentStep] = useState("workforce");
   const navigate = useNavigate();
   const user = useAppSelector(selectUser);
 
