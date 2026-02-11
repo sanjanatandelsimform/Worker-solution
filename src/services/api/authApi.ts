@@ -324,16 +324,46 @@ export const resetPassword = async (
  */
 export const verifyEmail = async (
   token: string
-): Promise<{ message?: string; user?: UserAccount }> => {
+): Promise<{
+  message?: string;
+  user?: {
+    id: string;
+    businessEmail: string;
+    emailVerify: boolean;
+  };
+  tokens?: {
+    accessToken: string;
+    refreshToken: string;
+  };
+}> => {
   try {
-    const response = await apiClient.post<{ message?: string; user?: UserAccount }>(
+    const response = await apiClient.post<{
+      message?: string;
+      data?: {
+        user: {
+          id: string;
+          businessEmail: string;
+          emailVerify: boolean;
+        };
+        tokens: {
+          accessToken: string;
+          refreshToken: string;
+        };
+      };
+    }>(
       "/verification/verify",
       {},
       {
         params: { token },
       }
     );
-    return response.data;
+
+    // Return flattened response for easier consumption
+    return {
+      message: response.data.message,
+      user: response.data.data?.user,
+      tokens: response.data.data?.tokens,
+    };
   } catch (_error) {
     throw new Error("Failed to verify email. Please try again.");
   }
