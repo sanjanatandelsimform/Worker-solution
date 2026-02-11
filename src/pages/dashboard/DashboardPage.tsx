@@ -14,6 +14,7 @@ import { fetchUserById } from "@/store/slices/userSlice";
 import { resendVerificationEmail } from "@/store/slices/profileSlice";
 import { selectProfileError } from "@/store/selectors/profileSelectors";
 import { useModalConfig } from "@/hooks/useModalConfig";
+import { loadCompletionStatus } from "@/utils/assessmentStorage";
 // import { Tabs } from "@/components/base/tabs/tabs";
 // import RecommendationsPage from "../recommendations/RecommendationsPage";
 // import BenchmarkPage from "../benchmark/BenchmarkPage";
@@ -30,6 +31,9 @@ export const DashboardPage = () => {
   const [showResendSuccess, setShowResendSuccess] = useState(false);
   const [showCooldownModal, setShowCooldownModal] = useState(false);
   const [cooldown, setCooldown] = useState<number>(0); // Cooldown in seconds
+
+  const completion = loadCompletionStatus();
+  const completionCount = completion?.completionCount || 0;
 
   useEffect(() => {
     if (user?.id) {
@@ -168,10 +172,10 @@ export const DashboardPage = () => {
               />
             )}
             <DashboardCard
-              title="Take the Assessment"
+              title={`${completionCount > 0 ? `${completionCount} ` : ""}Take the Assessment`}
               description="Take our 15 minute assessment for specific recommendations to improve your business"
               avatarIconSrc={checkIcon}
-              buttonLabel="Take Assessment"
+              buttonLabel={completionCount > 0 ? "Continue" : "Take Assessment"}
               buttonType="secondary"
               buttonIsDisabled={!emailVerify}
               onClick={() => navigate("/assessment")}

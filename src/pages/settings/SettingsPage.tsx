@@ -463,7 +463,16 @@ export const SettingsPage = () => {
                   color="primary"
                   size="sm"
                   onClick={handleSave}
-                  isDisabled={!hasChanges || profileLoading || !!firstNameError || !!lastNameError}
+                  // isDisabled={profileLoading || !firstName || !lastName}
+
+                  isDisabled={
+                    !hasChanges ||
+                    profileLoading ||
+                    !!firstNameError ||
+                    !!lastNameError ||
+                    !firstName ||
+                    !lastName
+                  }
                 >
                   {profileLoading ? "Saving..." : "Save"}
                 </Button>

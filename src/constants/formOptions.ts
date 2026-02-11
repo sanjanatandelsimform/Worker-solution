@@ -14,19 +14,6 @@ export interface CountryCodeOption {
   value: string;
 }
 
-export const INDUSTRIES: IndustryOption[] = [
-  { id: "technology", label: "Technology" },
-  { id: "healthcare", label: "Healthcare" },
-  { id: "finance", label: "Finance" },
-  { id: "retail", label: "Retail" },
-  { id: "manufacturing", label: "Manufacturing" },
-  { id: "education", label: "Education" },
-  { id: "hospitality", label: "Hospitality" },
-  { id: "construction", label: "Construction" },
-  { id: "transportation", label: "Transportation" },
-  { id: "other", label: "Other" },
-];
-
 export const COUNTRY_CODES: CountryCodeOption[] = [
   { label: "US +1", value: "US" },
   { label: "UK +44", value: "UK" },

@@ -10,10 +10,10 @@ import { Checkbox } from "@/components/base/checkbox/checkbox";
 import { Eye, EyeOff, Mail01, AlertCircle } from "@untitledui/icons";
 import { NativeSelect } from "../base/select/select-native";
 import { Select } from "../base/select/select";
-import { signup } from "@/services/api/authApi";
+import { signup, getIndustries } from "@/services/api/authApi";
 import type { RegistrationData, Industry } from "@/types/auth";
 import { registrationSchema, type RegistrationFormData } from "@/services/validation/authSchemas";
-import { INDUSTRIES, COUNTRY_CODES } from "@/constants/formOptions";
+import { COUNTRY_CODES } from "@/constants/formOptions";
 import checkmarkIcon from "@/assets/checkmark-icon.svg";
 import ErrorMessage from "../common/ErrorMessage";
 import { getErrorState, type ErrorState } from "@/utils/errorHandler";
@@ -71,6 +71,9 @@ export const RegistrationForm = () => {
   const [phoneNumber, setPhoneNumber] = useState(savedFormData?.businessPhone || "");
   const [countryCode, setCountryCode] = useState("US");
   const [submitError, setSubmitError] = useState<ErrorState | null>(null);
+  const [industries, setIndustries] = useState<Industry[]>([]);
+  const [isLoadingIndustries, setIsLoadingIndustries] = useState(true);
+  const [industryError, setIndustryError] = useState<string | null>(null);
 
   const {
     handleSubmit,
@@ -147,6 +150,28 @@ export const RegistrationForm = () => {
     agreeToTerms,
     dispatch,
   ]);
+  // Fetch industries on component mount
+  useEffect(() => {
+    const fetchIndustries = async () => {
+      try {
+        setIsLoadingIndustries(true);
+        const data = await getIndustries();
+        // console.log("Fetched industries:", data.data.industries);
+        setIndustries(data.data.industries || []);
+        setIndustryError(null);
+      } catch (error) {
+        console.error("Failed to load industries:", error);
+        setIndustryError(
+          error instanceof Error ? error.message : "Failed to load industries. Please try again."
+        );
+      } finally {
+        setIsLoadingIndustries(false);
+      }
+    };
+    fetchIndustries();
+  }, []);
+
+  console.log("industries", industries);
 
   const onSubmit = async (data: RegistrationFormData) => {
     try {
@@ -159,7 +184,7 @@ export const RegistrationForm = () => {
         firstName: data.firstName,
         lastName: data.lastName,
         businessName: data.legalBusinessName,
-        industry: data.industry as Industry,
+        industry: data.industry,
         zipCode: parseInt(data.zipCode, 10),
         businessEmail: data.businessEmail,
         businessPhone: data.businessPhone,
@@ -276,19 +301,23 @@ export const RegistrationForm = () => {
               </InputGroup>
 
               <Select
-                // className="w-full flex items-start"
-                className={errors.industry ? "error-ring" : "w-full flex items-start"}
+                className="w-full flex items-start"
+                isRequired
                 size="md"
                 label="Select Your Industry"
                 placeholder="Select Option"
-                items={INDUSTRIES}
+                items={industries.map(i => ({
+                  id: i.industry_code, // Changed from i.id.toString()
+                  label: i.industry_name,
+                }))}
                 selectedKey={industry}
                 onSelectionChange={key => {
                   setValue("industry", key as string);
                   trigger("industry");
                 }}
-                isInvalid={!!errors.industry}
-                hint={errors.industry?.message}
+                isDisabled={isLoadingIndustries || !!industryError}
+                isInvalid={!!errors.industry || !!industryError}
+                hint={industryError || errors.industry?.message}
               >
                 {item => (
                   <Select.Item
@@ -302,7 +331,9 @@ export const RegistrationForm = () => {
                   </Select.Item>
                 )}
               </Select>
-
+              {isLoadingIndustries && (
+                <p className="text-sm text-gray-600 mt-1.5">Loading industries...</p>
+              )}
               {/* Row 3 - Zip Code & (empty space for layout) */}
               <InputGroup>
                 <Input

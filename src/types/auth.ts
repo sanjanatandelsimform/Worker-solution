@@ -1,16 +1,10 @@
 // Authentication Types for Business Onboarding Module
 
-export type Industry =
-  | "Manufacturing"
-  | "Retail"
-  | "Healthcare"
-  | "Technology"
-  | "Finance"
-  | "Construction"
-  | "Education"
-  | "Hospitality"
-  | "Transportation"
-  | "Other";
+export interface Industry {
+  id: number;
+  industry_name: string;
+  industry_code: string;
+}
 
 export type AuthMethod = "email" | "google";
 
@@ -43,7 +37,7 @@ export interface RegistrationData {
   businessName: string;
   businessEmail: string;
   businessPhone: string;
-  industry: Industry;
+  industry: string;
   zipCode: number;
   password: string;
   confirmPassword: string;
