@@ -281,17 +281,8 @@ export const submitBenefits = async (responses: Record<string, unknown>): Promis
  */
 export const submitGoals = async (responses: Record<string, unknown>): Promise<ApiResponse> => {
   try {
-    const updatedResponse = {
-      ...responses,
-      workforceGoalsRanking: [
-        "Improve Benefits Participation",
-        "Reduce 401k Withdrawals",
-        "Increase Financial Health",
-      ],
-    };
-
     const response = await api.post("/assessment/goals", {
-      responses: updatedResponse,
+      responses,
     });
     return {
       success: true,

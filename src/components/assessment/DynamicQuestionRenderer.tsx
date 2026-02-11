@@ -9,13 +9,9 @@ import { Plus, Trash01, InfoCircle } from "@untitledui/icons";
 import { Tooltip, TooltipTrigger } from "@/components/base/tooltip/tooltip";
 import type { Question } from "@/types/questionTypes";
 import { cx } from "@/utils/cx";
-
-interface DynamicQuestionRendererProps {
-  question: Question;
-  answers: Record<string, unknown>;
-  onAnswerChange: (key: string, value: unknown) => void;
-  errors: Record<string, string>;
-}
+import { RankingList } from "../common/RankList";
+import { useEffect, useMemo } from "react";
+import questionData from "@/data/assessment/questionData.json";
 
 // Helper to generate unique IDs
 let idCounter = 0;
@@ -160,6 +156,23 @@ export const DynamicQuestionRenderer = ({
     onAnswerChange(parentKey, { ...current, [fieldKey]: value });
   };
 
+  // Handle RANKING question type - auto-populate from workforceGoals
+  useEffect(() => {
+    if (question.questionType === "RANKING" && question.dynamicOptions?.sourceField) {
+      const sourceField = question.dynamicOptions.sourceField;
+      const selectedGoals = answers[sourceField];
+
+      if (
+        Array.isArray(selectedGoals) &&
+        selectedGoals.length >= 3 &&
+        (!currentAnswer || (Array.isArray(currentAnswer) && currentAnswer.length === 0))
+      ) {
+        // Auto-select first 3 goals for ranking
+        onAnswerChange(question.key, selectedGoals.slice(0, 3));
+      }
+    }
+  }, [question.questionType, question.dynamicOptions, question.key, answers, currentAnswer, onAnswerChange]);
+
   // Main render switch
   switch (question.questionType) {
     case "SINGLE_SELECT":
@@ -244,26 +257,60 @@ export const DynamicQuestionRenderer = ({
             {question.displayOrder}. {question.questionText}
           </Label>
           <div className="flex flex-col gap-4">
-            {question.options?.map(option => (
-              <Checkbox
-                key={option.value}
-                label={option.label}
-                isSelected={
-                  (Array.isArray(currentAnswer) && currentAnswer.includes(option.value)) || false
-                }
-                onChange={isChecked => {
-                  const current = Array.isArray(currentAnswer) ? currentAnswer : [];
-                  if (isChecked) {
-                    onAnswerChange(question.key, [...current, option.value]);
-                  } else {
-                    onAnswerChange(
-                      question.key,
-                      current.filter((v: string) => v !== option.value)
-                    );
+            {question.key === "workforceGoals" && question.optionGroups ? (
+              // Grouped display for workforceGoals
+              question.optionGroups.map(group => (
+                <div key={group.groupName} className="flex flex-col gap-3">
+                  <h3 className="text-sm font-semibold text-gray-900">{group.groupName}</h3>
+                  <div className="flex flex-col gap-4 pl-2">
+                    {group.options.map(option => (
+                      <Checkbox
+                        key={option.value}
+                        label={option.label}
+                        isSelected={
+                          (Array.isArray(currentAnswer) &&
+                            currentAnswer.includes(option.value)) ||
+                          false
+                        }
+                        onChange={isChecked => {
+                          const current = Array.isArray(currentAnswer) ? currentAnswer : [];
+                          if (isChecked) {
+                            onAnswerChange(question.key, [...current, option.value]);
+                          } else {
+                            onAnswerChange(
+                              question.key,
+                              current.filter((v: string) => v !== option.value)
+                            );
+                          }
+                        }}
+                      />
+                    ))}
+                  </div>
+                </div>
+              ))
+            ) : (
+              // Default flat display for other MULTIPLE_CHOICE questions
+              question.options?.map(option => (
+                <Checkbox
+                  key={option.value}
+                  label={option.label}
+                  isSelected={
+                    (Array.isArray(currentAnswer) && currentAnswer.includes(option.value)) || false
                   }
-                }}
-              />
-            ))}
+                  onChange={isChecked => {
+                    const current = Array.isArray(currentAnswer) ? currentAnswer : [];
+                    if (isChecked) {
+                      onAnswerChange(question.key, [...current, option.value]);
+                    } else {
+                      onAnswerChange(
+                        question.key,
+                        current.filter((v: string) => v !== option.value)
+                      );
+                    }
+                  }}
+                />
+              ))
+            )}
           </div>
           {error && <span className="text-sm text-red-600">{error}</span>}
         </div>
@@ -608,6 +655,57 @@ export const DynamicQuestionRenderer = ({
           )}
         </div>
       );
+
+    case "RANKING": {
+      // Get source field from dynamicOptions
+      const sourceField = question.dynamicOptions?.sourceField;
+      console.log("sourceField",sourceField)
+      if (!sourceField) {
+        return (
+          <div className="text-red-600">
+            RANKING question requires dynamicOptions.sourceField configuration
+          </div>
+        );
+      }
+
+      // Get selected goals from the source field (workforceGoals)
+      const selectedGoals = answers[sourceField];
+      const selectedGoalsArray = Array.isArray(selectedGoals) ? selectedGoals : [];
+
+      // Find the workforceGoals question from questionData to get all options with labels
+      const goalsSection = questionData.sections.find(section => section.name === "Goals");
+      const workforceGoalsQuestion = goalsSection?.questions.find(q => q.key === sourceField);
+
+      // Build a map of all available options from the workforceGoals question
+      const allWorkforceOptions: Array<{ label: string; value: string }> = [];
+      if (workforceGoalsQuestion?.options) {
+        workforceGoalsQuestion.options.forEach(opt => {
+          allWorkforceOptions.push({
+            label: opt.label,
+            value: opt.value,
+          });
+        });
+      }
+
+      // Filter to only include options that were selected in workforceGoals
+      const availableOptions = allWorkforceOptions.filter(opt =>
+        selectedGoalsArray.includes(opt.value)
+      );
+      return (
+        
+        <div className="flex w-full flex-col gap-2" data-question-key={question.key}>
+          <RankingList
+            label={question.questionText}
+            isRequired={question.isRequired}
+            displayOrder={question.displayOrder}
+            availableOptions={availableOptions}
+            value={(currentAnswer as string[]) || []}
+            onChange={value => onAnswerChange(question.key, value)}
+            error={error}
+          />
+        </div>
+      );
+    }
 
     default:
       return <div className="text-red-500">Unsupported question type: {question.questionType}</div>;

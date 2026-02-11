@@ -18,7 +18,7 @@ const steps = [
 ];
 
 export default function AssessmentWorkforcePage() {
-  const [currentStep, setCurrentStep] = useState("workforce");
+  const [currentStep, setCurrentStep] = useState("goals");
   const navigate = useNavigate();
   const user = useAppSelector(selectUser);
 
@@ -34,38 +34,38 @@ export default function AssessmentWorkforcePage() {
   const isLastStep = currentStepIndex === steps.length - 1;
 
   const handleNext = async () => {
-    setCurrentStep(steps[currentStepIndex + 1].id);
+    // setCurrentStep(steps[currentStepIndex + 1].id);
     // This code is required; I will uncomment it.
-    // const dynamicTabValidation = (
-    //   window as {
-    //     __dynamicTabValidation?: {
-    //       submit: () => Promise<{ success: boolean }>;
-    //       validate: () => boolean;
-    //       getAnswers: () => Record<string, unknown>;
-    //       getErrors: () => Record<string, string>;
-    //     };
-    //   }
-    // ).__dynamicTabValidation;
+    const dynamicTabValidation = (
+      window as {
+        __dynamicTabValidation?: {
+          submit: () => Promise<{ success: boolean }>;
+          validate: () => boolean;
+          getAnswers: () => Record<string, unknown>;
+          getErrors: () => Record<string, string>;
+        };
+      }
+    ).__dynamicTabValidation;
 
-    // if (!dynamicTabValidation) {
-    //   console.error("[AssessmentWorkforce] Dynamic tab validation not found!");
-    //   alert("Validation system not initialized. Please refresh the page.");
-    //   return;
-    // }
+    if (!dynamicTabValidation) {
+      console.error("[AssessmentWorkforce] Dynamic tab validation not found!");
+      alert("Validation system not initialized. Please refresh the page.");
+      return;
+    }
 
-    // try {
-    //   const response = await dynamicTabValidation.submit();
+    try {
+      const response = await dynamicTabValidation.submit();
 
-    //   if (response.success) {
-    //     if (isLastStep) {
-    //       navigate("/dashboard");
-    //     } else {
-    //       setCurrentStep(steps[currentStepIndex + 1].id);
-    //     }
-    //   }
-    // } catch (error) {
-    //   console.error("[AssessmentWorkforce] Submit error:", error);
-    // }
+      if (response.success) {
+        if (isLastStep) {
+          navigate("/dashboard");
+        } else {
+          setCurrentStep(steps[currentStepIndex + 1].id);
+        }
+      }
+    } catch (error) {
+      console.error("[AssessmentWorkforce] Submit error:", error);
+    }
   };
 
   const handleBack = () => {
@@ -81,7 +81,7 @@ export default function AssessmentWorkforcePage() {
   };
 
   // Get loading state from DynamicTab
-  // const isSaving = (window as any).__dynamicTabValidation?.isSaving || false;
+  const isSaving = (window as any).__dynamicTabValidation?.isSaving || false;
 
   return (
     <div className="flex min-h-screen flex-col bg-gray-50">
@@ -153,6 +153,7 @@ export default function AssessmentWorkforcePage() {
           size="md"
           onClick={handleNext}
           className="min-w-30"
+          // isDisabled={ isSaving}
           // isDisabled={isSubmitting || isSaving}
           // isLoading={isSubmitting}
         >
