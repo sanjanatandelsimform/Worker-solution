@@ -45,7 +45,7 @@ export const Modal = ({ children, className, size = "md", ...props }: ModalProps
     >
       <AriaModal
         className={cx(
-          "w-full rounded-xl bg-primary shadow-2xl outline-hidden",
+          "w-full rounded-xl bg-ws-white shadow-2xl outline-hidden",
           "entering:animate-in entering:zoom-in-95 entering:duration-200",
           "exiting:animate-out exiting:zoom-out-95 exiting:duration-150",
           sizeClasses[size]
@@ -86,7 +86,7 @@ export const ModalTitle = ({
   children: ReactNode;
   className?: string;
 }) => {
-  return <h2 className={cx("text-4xl font-medium text-primary mb-3", className)}>{children}</h2>;
+  return <h2 className={cx("text-4xl font-medium text-ws-black mb-3", className)}>{children}</h2>;
 };
 
 export const ModalDescription = ({
@@ -96,7 +96,7 @@ export const ModalDescription = ({
   children: ReactNode;
   className?: string;
 }) => {
-  return <p className={cx("text-sm text-tertiary", className)}>{children}</p>;
+  return <p className={cx("text-sm text-ws-black-10", className)}>{children}</p>;
 };
 
 export const ModalBody = ({ children, className }: { children: ReactNode; className?: string }) => {

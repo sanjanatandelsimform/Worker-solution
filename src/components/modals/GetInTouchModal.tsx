@@ -95,7 +95,7 @@ export const GetInTouchModal = ({ isOpen, onClose }: UpdateYourEmailModalProps) 
             </div>
             <div className="absolute -right-2 -top-2">
               <Button
-                iconTrailing={<X data-icon className="text-gray-400" />}
+                iconTrailing={<X data-icon className="text-ws-gray-70" />}
                 onClick={onClose}
                 color="tertiary"
               />

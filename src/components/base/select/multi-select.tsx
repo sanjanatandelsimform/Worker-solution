@@ -6,7 +6,6 @@ import type {
   RefObject,
 } from "react";
 import { createContext, useCallback, useContext, useRef, useState } from "react";
-import { SearchLg } from "@untitledui/icons";
 import { FocusScope, useFilter, useFocusManager } from "react-aria";
 import type {
   ComboBoxProps as AriaComboBoxProps,
@@ -33,6 +32,7 @@ import { TagCloseX } from "@/components/base/tags/base-components/tag-close-x";
 import { useResizeObserver } from "@/hooks/use-resize-observer";
 import { cx } from "@/utils/cx";
 import { SelectItem } from "./select-item";
+import { SelectArrow } from "@/assets/icons/SelectArrow";
 
 interface ComboBoxValueProps extends AriaGroupProps {
   size: "sm" | "md";
@@ -301,7 +301,7 @@ const InnerMultiSelect = ({
         comboBoxContext?.selectedItems?.items?.map(value => (
           <span
             key={value.id}
-            className="flex items-center rounded-md bg-primary py-0.5 pr-1 pl-1.25 ring-1 ring-gray-300 ring-inset"
+            className="flex items-center rounded-md bg-primary py-0.5 pr-1 pl-1.25 ring-1 ring-ws-gray-50 ring-inset"
           >
             {value?.avatarUrl && <Avatar size="xxs" alt={value?.label} src={value?.avatarUrl} />}
 
@@ -349,7 +349,7 @@ const InnerMultiSelect = ({
           >
             <span
               className={cx(
-                "pointer-events-none rounded px-1 py-px text-xs font-medium text-quaternary ring-1 ring-gray-300 select-none ring-inset",
+                "pointer-events-none rounded px-1 py-px text-xs font-medium text-quaternary ring-1 ring-ws-gray-50 select-none ring-inset",
                 isDisabled && "bg-transparent text-disabled"
               )}
             >
@@ -367,7 +367,7 @@ export const MultiSelectTagsValue = ({
   shortcut,
   placeholder,
   shortcutClassName,
-  placeholderIcon: Icon = SearchLg,
+  placeholderIcon: Icon = SelectArrow,
   // Omit this prop to avoid invalid HTML attribute warning
   isDisabled: _isDisabled,
   ...otherProps
@@ -377,7 +377,7 @@ export const MultiSelectTagsValue = ({
       {...otherProps}
       className={({ isFocusWithin, isDisabled }) =>
         cx(
-          "relative flex w-full items-center gap-2 rounded-lg bg-primary shadow-xs ring-1 ring-gray-300 outline-hidden transition duration-100 ease-linear ring-inset",
+          "relative flex w-full items-center gap-2 rounded-lg bg-primary shadow-xs ring-1 ring-ws-gray-50 outline-hidden transition duration-100 ease-linear ring-inset pr-10!",
           isDisabled && "cursor-not-allowed bg-disabled_subtle",
           isFocusWithin && "ring-2 ring-brand",
           sizes[size].root
@@ -386,7 +386,9 @@ export const MultiSelectTagsValue = ({
     >
       {({ isDisabled }) => (
         <>
-          {Icon && <Icon className="pointer-events-none size-5 text-fg-quaternary" />}
+          {Icon && (
+            <Icon className="pointer-events-none size-5 flex items-center justify-center absolute right-3" />
+          )}
           <FocusScope contain={false} autoFocus={false} restoreFocus={false}>
             <InnerMultiSelect
               isDisabled={isDisabled}

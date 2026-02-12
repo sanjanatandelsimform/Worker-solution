@@ -22,20 +22,18 @@ export default function BenefitCard({
   badgeClassess,
 }: Readonly<BenefitCardProps>) {
   return (
-    <div
-      className={`p-6 bg-white border border-gray-300 rounded-xl shadow-sm hover:shadow-2xl transition-transform duration-300 hover:scale-102 hover:cursor-pointer ${classess}`}
-    >
+    <div className={`p-6 bg-ws-white border border-ws-gray-50 rounded-xl shadow-sm ${classess}`}>
       <Badge type="pill-color" color="success" size="sm" className={badgeClassess}>
         {badgeText}
       </Badge>
-      <div className="prose mt-6 min-h-auto xl:min-h-24 w-full flex items-end">
-        <h2 className="text-xl lg:text-3xl font-medium">{title}</h2>
+      <div className="mt-6 w-full flex items-end">
+        <h2 className="text-2xl font-medium text-ws-black">{title}</h2>
       </div>
-      <p className="mt-2 min-h-18 h-18 w-full overflow-hidden text-gray-500 text-base">
+      <p className="mt-2 min-h-auto w-full xl:min-h-18 overflow-hidden text-ws-gray-100 text-base">
         {descriptionText}
       </p>
-      <div className="text-base font-semibold mt-4">{listTitle}</div>
-      <ul className="flex flex-col mt-4 space-y-2 text-gray-500 text-base">
+      <div className="text-base font-medium mt-4 text-ws-black-50">{listTitle}</div>
+      <ul className="flex flex-col mt-4 space-y-2 text-ws-gray-100 text-base">
         <li className="flex items-center gap-2">
           {listIcon} {listTexts?.[0]}
         </li>

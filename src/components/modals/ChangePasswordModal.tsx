@@ -188,7 +188,7 @@ export const ChangePasswordModal = ({ isOpen, onClose }: ChangePasswordModalProp
               </div>
               <div className="absolute -right-2 -top-2">
                 <Button
-                  iconTrailing={<X data-icon className="text-gray-400" />}
+                  iconTrailing={<X data-icon className="text-ws-gray-70" />}
                   onClick={onClose}
                   color="tertiary"
                 />
@@ -260,9 +260,9 @@ export const ChangePasswordModal = ({ isOpen, onClose }: ChangePasswordModalProp
                     className="absolute right-0 top-7"
                   >
                     {showCurrentPassword ? (
-                      <Eye className="size-5 text-gray-400" />
+                      <Eye className="size-5 text-ws-gray-70" />
                     ) : (
-                      <EyeOff className="size-5 text-gray-400" />
+                      <EyeOff className="size-5 text-ws-gray-70" />
                     )}
                   </Button>
                 </InputGroup>
@@ -317,9 +317,9 @@ export const ChangePasswordModal = ({ isOpen, onClose }: ChangePasswordModalProp
                     className="absolute right-0 top-7"
                   >
                     {showNewPassword ? (
-                      <Eye className="size-5 text-gray-400" />
+                      <Eye className="size-5 text-ws-gray-70" />
                     ) : (
-                      <EyeOff className="size-5 text-gray-400" />
+                      <EyeOff className="size-5 text-ws-gray-70" />
                     )}
                   </Button>
                 </InputGroup>
@@ -361,9 +361,9 @@ export const ChangePasswordModal = ({ isOpen, onClose }: ChangePasswordModalProp
                     className="absolute right-0 top-7"
                   >
                     {showConfirmPassword ? (
-                      <Eye className="size-5 text-gray-400" />
+                      <Eye className="size-5 text-ws-gray-70" />
                     ) : (
-                      <EyeOff className="size-5 text-gray-400" />
+                      <EyeOff className="size-5 text-ws-gray-70" />
                     )}
                   </Button>
                 </InputGroup>

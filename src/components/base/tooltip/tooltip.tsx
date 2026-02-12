@@ -88,7 +88,7 @@ export const Tooltip = ({
         {({ isEntering, isExiting }) => (
           <div
             className={cx(
-              "z-50 flex max-w-xs origin-(--trigger-anchor-point) flex-col items-start gap-1 rounded-lg bg-black px-3 shadow-lg will-change-transform font-semibold",
+              "z-50 flex max-w-xs origin-(--trigger-anchor-point) flex-col items-start gap-1 rounded-lg bg-ws-black text-ws-white px-3 shadow-lg will-change-transform font-semibold",
               description ? "py-3" : "py-2",
 
               isEntering &&
@@ -97,17 +97,17 @@ export const Tooltip = ({
                 "ease-in animate-out fade-out zoom-out-95 in-placement-left:slide-out-to-right-0.5 in-placement-right:slide-out-to-left-0.5 in-placement-top:slide-out-to-bottom-0.5 in-placement-bottom:slide-out-to-top-0.5"
             )}
           >
-            <span className="text-xs font-semibold text-white">{title}</span>
+            <span className="text-xs font-semibold text-ws-white">{title}</span>
 
             {description && (
-              <span className="text-xs font-medium text-gray-300">{description}</span>
+              <span className="text-xs font-medium text-ws-gray-50">{description}</span>
             )}
 
             {arrow && (
               <AriaOverlayArrow>
                 <svg
                   viewBox="0 0 100 100"
-                  className="size-2.5 fill-bg-primary-solid in-placement-left:-rotate-90 in-placement-right:rotate-90 in-placement-top:rotate-0 in-placement-bottom:rotate-180"
+                  className="size-2.5 fill-bg-ws-white-solid in-placement-left:-rotate-90 in-placement-right:rotate-90 in-placement-top:rotate-0 in-placement-bottom:rotate-180"
                 >
                   <path d="M0,0 L35.858,35.858 Q50,50 64.142,35.858 L100,0 Z" />
                 </svg>
