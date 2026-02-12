@@ -18,7 +18,7 @@ const steps = [
 ];
 
 export default function AssessmentWorkforcePage() {
-  const [currentStep, setCurrentStep] = useState("workforce");
+  const [currentStep, setCurrentStep] = useState("benefits");
   const navigate = useNavigate();
   const user = useAppSelector(selectUser);
 
@@ -81,7 +81,7 @@ export default function AssessmentWorkforcePage() {
   };
 
   // Get loading state from DynamicTab
-  const isSaving = (window as any).__dynamicTabValidation?.isSaving || false;
+  // const isSaving = (window as any).__dynamicTabValidation?.isSaving || false;
 
   return (
     <div className="flex min-h-screen flex-col bg-gray-50">
