@@ -84,21 +84,33 @@ export function RankingList({
   // Update items when availableOptions changes (real-time on each selection)
   useEffect(() => {
     // Build items from availableOptions (selected goals from Question 1)
-    const newItems = availableOptions
-      .slice(0, maxItems)
-      .map(opt => ({
-        id: opt.value,
-        label: opt.label,
-      }));
+    const newItems = availableOptions.slice(0, maxItems).map(opt => ({
+      id: opt.value,
+      label: opt.label,
+    }));
 
-    setItems(newItems);
+    // Schedule state update asynchronously to avoid synchronous setState inside effect
+    let t: ReturnType<typeof setTimeout> | null = null;
+    t = setTimeout(() => {
+      setItems(prev => (JSON.stringify(prev) === JSON.stringify(newItems) ? prev : newItems));
+    }, 0);
 
     // Auto-update parent with new order if items changed
     const newValues = newItems.map(item => item.id);
     if (JSON.stringify(newValues) !== JSON.stringify(value)) {
       onChange(newValues);
     }
-  }, [availableOptions.map(opt => opt.value).join(','), maxItems]);
+
+    return () => {
+      if (t) clearTimeout(t);
+    };
+  }, [
+    // derive stable dependency for availableOptions
+    availableOptions.map(opt => opt.value).join(","),
+    maxItems,
+    onChange,
+    value,
+  ]);
 
   function handleDragEnd(event: DragEndEvent) {
     const { active, over } = event;
