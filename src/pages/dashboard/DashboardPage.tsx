@@ -196,7 +196,7 @@ export const DashboardPage = () => {
             />
           </div>
           {/* This will be conditionally rendered; uncomment when this feature is implemented. */}
-          <div className="mt-10">
+          {/*<div className="mt-10">
             <Tabs>
               <Tabs.List
                 size="md"
@@ -213,7 +213,7 @@ export const DashboardPage = () => {
                 <BenchmarkPage />
               </Tabs.Panel>
             </Tabs>
-          </div>
+          </div>*/}
         </main>
       </div>
 

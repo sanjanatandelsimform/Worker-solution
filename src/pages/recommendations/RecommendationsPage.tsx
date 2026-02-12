@@ -13,7 +13,9 @@ import { CheckIcon } from "@/assets/icons/CheckIcon";
 export default function RecommendationsPage() {
   return (
     <div className="bg-ws-gray-20 border border-ws-gray-50 rounded-xl p-6 space-y-6">
-      <h2 className="text-2xl lg:text-4xl font-medium text-ws-black-60 leading-10">Your Company at a Glance</h2>
+      <h2 className="text-2xl lg:text-4xl font-medium text-ws-black-60 leading-10">
+        Your Company at a Glance
+      </h2>
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 w-full">
         <StaticCard
           title="Total Workforce"
@@ -47,7 +49,11 @@ export default function RecommendationsPage() {
       </div>
       <CarouselSection />
       <div className="bg-ws-white py-8 px-6 border border-ws-gray-50 rounded-2xl">
-        <Badge type="pill-color" size="lg" className="py-3 px-4 text-xl font-semibold bg-ws-gray-30 text-ws-black-80">
+        <Badge
+          type="pill-color"
+          size="lg"
+          className="py-3 px-4 text-xl font-semibold bg-ws-gray-30 text-ws-black-80"
+        >
           Recommendation
         </Badge>
         <h2 className="mt-6 text-2xl lg:text-4xl font-medium text-ws-black-70">
@@ -55,7 +61,9 @@ export default function RecommendationsPage() {
         </h2>
         <div className="flex mt-2 gap-6 flex-col xl:flex-row">
           <div className="prose w-full xl:w-1/2">
-            <p className="text-ws-black-70">Your comprehensive plan to enhance worker financial health and retirement.</p>
+            <p className="text-ws-black-70">
+              Your comprehensive plan to enhance worker financial health and retirement.
+            </p>
             <p className="text-ws-black-70">
               Here are some impactful ways to start uplifting your workforce with proven strategies,
               consider strengthening core benefits by implementing new policies that increase access

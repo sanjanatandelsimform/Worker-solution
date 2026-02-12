@@ -277,9 +277,7 @@ export default function WageBarChart({ data, width, height = 350 }: CanvasChartP
         </div>
         <div className="flex items-center gap-2">
           <div className="size-4.5 rounded-xs bg-[#22CCEE]" />
-          <p className="whitespace-nowrap text-lg font-normal leading-7 text-black">
-            Your company
-          </p>
+          <p className="whitespace-nowrap text-lg font-normal leading-7 text-black">Your company</p>
         </div>
         <div className="flex items-center gap-2">
           <div className="size-4.5 rounded-xs bg-[#DBEBEB]" />

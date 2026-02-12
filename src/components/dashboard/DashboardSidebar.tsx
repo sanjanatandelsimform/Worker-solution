@@ -6,9 +6,6 @@ import { NavList } from "@/components/application/app-navigation/base-components
 import type { NavItemType } from "@/components/application/app-navigation/config";
 import { signout } from "@/services/api/authApi";
 import { BaseModalWithIcon } from "../modals/BaseModalWithIcon";
-import { AlertOctagon } from "@untitledui/icons";
-import alertIcon from "@/assets/alert-icon.svg";
-import checkmarkIcon from "@/assets/checkmark-icon.svg";
 import { useBreakpoint } from "@/hooks/use-breakpoint";
 import { Button } from "../base/buttons/button";
 import { useModalConfig } from "@/hooks/useModalConfig";

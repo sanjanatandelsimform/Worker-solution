@@ -8,7 +8,6 @@ import { Select } from "@/components/base/select/select";
 import type { SelectItemType } from "@/components/base/select/select";
 import { MultiSelect } from "@/components/base/select/multi-select";
 import { Label } from "@/components/base/input/label";
-import { InputInfo } from "@/assets/icons/inputInfo";
 
 // Helper component for location inputs
 interface LocationInputProps {

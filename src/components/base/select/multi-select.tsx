@@ -6,7 +6,6 @@ import type {
   RefObject,
 } from "react";
 import { createContext, useCallback, useContext, useRef, useState } from "react";
-import { SearchLg } from "@untitledui/icons";
 import { FocusScope, useFilter, useFocusManager } from "react-aria";
 import type {
   ComboBoxProps as AriaComboBoxProps,

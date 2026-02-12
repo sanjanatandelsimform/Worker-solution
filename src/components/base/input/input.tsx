@@ -8,7 +8,7 @@ import {
   createContext,
   useContext,
 } from "react";
-import { HelpCircle, InfoCircle } from "@untitledui/icons";
+import { InfoCircle } from "@untitledui/icons";
 import type {
   InputProps as AriaInputProps,
   TextFieldProps as AriaTextFieldProps,

@@ -143,7 +143,11 @@ export default function BenchmarkPage() {
               </p>
             </div>
             <div className="w-full xl:w-2/5">
-              <img src={insightHero} alt="Insight hero" className="w-full max-h-40 object-cover rounded-md object-bottom" />
+              <img
+                src={insightHero}
+                alt="Insight hero"
+                className="w-full max-h-40 object-cover rounded-md object-bottom"
+              />
             </div>
           </div>
         </div>
@@ -169,7 +173,9 @@ export default function BenchmarkPage() {
       <div className="bg-ws-white border border-ws-gray-50 rounded-xl px-6 py-8">
         <div className="flex items-center justify-between md:items-start flex-col xl:flex-row">
           <div className="space-y-1">
-            <h3 className="text-2xl font-medium text-ws-black-60">Area Median Wage: [State Name]</h3>
+            <h3 className="text-2xl font-medium text-ws-black-60">
+              Area Median Wage: [State Name]
+            </h3>
             <p className="text-base text-ws-black">Select an area to examine the median wage</p>
           </div>
           <div className="w-full md:w-full md:mt-4 lg:w-auto">
