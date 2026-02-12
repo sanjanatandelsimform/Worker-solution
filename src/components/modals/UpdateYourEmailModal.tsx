@@ -16,7 +16,7 @@ import ErrorMessage from "@/components/common/ErrorMessage";
 import { useAppDispatch, useAppSelector } from "@/store/hooks";
 import { updateEmailAddress } from "@/store/slices/profileSlice";
 import { selectUser } from "@/store/selectors/authSelectors";
-import { selectProfileLoading, selectProfileError } from "@/store/selectors/profileSelectors";
+import { selectProfileLoading } from "@/store/selectors/profileSelectors";
 import { validateEmail } from "@/utils/validation";
 
 interface UpdateYourEmailModalProps {
@@ -37,21 +37,39 @@ export const UpdateYourEmailModal = ({
   const dispatch = useAppDispatch();
   const userData = useAppSelector(selectUser);
   const profileLoading = useAppSelector(selectProfileLoading);
-  const profileError = useAppSelector(selectProfileError);
 
   const [newEmail, setNewEmail] = useState("");
   const [newEmailError, setNewEmailError] = useState("");
   const [showError, setShowError] = useState(false);
   const [showSuccess, setShowSuccess] = useState(false);
 
-  // Handle new email input change
+  // Handle new email input change with real-time validation
   const handleNewEmailChange = (value: string) => {
     setNewEmail(value);
-    setNewEmailError("");
     setShowError(false);
+
+    // Real-time validation as user types
+    if (!value.trim()) {
+      setNewEmailError("Email cannot be empty");
+      return;
+    }
+
+    if (!validateEmail(value)) {
+      setNewEmailError("Please enter a valid email address");
+      return;
+    }
+
+    const currentEmail = userData?.businessEmail || "";
+    if (value.trim().toLowerCase() === currentEmail.toLowerCase()) {
+      setNewEmailError("New email must be different from current email");
+      return;
+    }
+
+    // All validations passed - clear error
+    setNewEmailError("");
   };
 
-  // Validate email
+  // Validate email for submit (runs full validation)
   const validateNewEmail = (): boolean => {
     if (!newEmail.trim()) {
       setNewEmailError("Email cannot be empty");
@@ -77,12 +95,12 @@ export const UpdateYourEmailModal = ({
     e.preventDefault();
 
     if (!validateNewEmail()) {
+      setShowError(true);
       return;
     }
 
     try {
       const response = await dispatch(updateEmailAddress({ email: newEmail.trim() })).unwrap();
-      console.log("Email update successful:", response);
 
       if (response.success) {
         handleClose();
@@ -92,8 +110,6 @@ export const UpdateYourEmailModal = ({
         setShowError(true);
       }
     } catch (error: unknown) {
-      console.error("Email update failed:", error);
-
       const errorMessage =
         typeof error === "string"
           ? error
@@ -133,7 +149,7 @@ export const UpdateYourEmailModal = ({
             </div>
             <div className="absolute -right-2 -top-2">
               <Button
-                iconTrailing={<X data-icon className="text-gray-400" />}
+                iconTrailing={<X data-icon className="text-ws-gray-70" />}
                 onClick={handleClose}
                 color="tertiary"
               />
@@ -148,6 +164,18 @@ export const UpdateYourEmailModal = ({
                 <p className="text-green-800 text-sm font-medium">
                   Verification email sent! Please check your inbox.
                 </p>
+              </div>
+            )}
+
+            {showError && newEmailError && (
+              <div className="mb-4">
+                <ErrorMessage
+                  errorType="danger"
+                  textColor="text-red-700"
+                  alertIcon={AlertCircle}
+                  errorMessage={newEmailError}
+                  onClose={() => setShowError(false)}
+                />
               </div>
             )}
 
@@ -201,17 +229,6 @@ export const UpdateYourEmailModal = ({
             )}
           </ModalFooter>
         </form>
-        {showError && profileError && (
-          <div className="mb-4">
-            <ErrorMessage
-              errorType="danger"
-              textColor="text-red-700"
-              alertIcon={AlertCircle}
-              errorMessage={profileError}
-              onClose={() => setShowError(false)}
-            />
-          </div>
-        )}
       </ModalContent>
     </Modal>
   );

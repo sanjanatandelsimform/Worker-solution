@@ -112,12 +112,16 @@
 
 ### Implementation for User Story 3
 
-- [x] T031 [US3] Integrate ChangePasswordModal in src/pages/settings/settingPage.tsx (fields for current password and new password)
-- [x] T032 [US3] Add password validation in ChangePasswordModal (min 8 chars, uppercase, lowercase, number, special char, not same as current)
+- [x] T031 [US3] Integrate ChangePasswordModal in src/pages/settings/settingPage.tsx (three fields: current password, new password, and confirm password - all displayed masked as ••••)
+- [x] T032 [US3] Add password validation in ChangePasswordModal in src/components/modals/ChangePasswordModal.tsx:
+  - Current password: Real-time format validation (required, min 8 chars), correctness verified on submit only
+  - New password: Real-time validation (required, min 8 chars, uppercase, lowercase, number, special char, different from current)
+  - Confirm password: Real-time validation (required, must match new password exactly)
+  - All fields masked as ••••, errors displayed inside modal body
 - [x] T033 [US3] Connect ChangePasswordModal to updatePassword action in src/pages/settings/settingPage.tsx
-- [x] T034 [US3] Implement attempt tracking in src/store/slices/profile.slice.ts (max 5 attempts, track remaining attempts)
-- [x] T035 [US3] Handle incorrect password error (401 Unauthorized) in src/pages/settings/settingPage.tsx (show error with remaining attempts count)
-- [x] T036 [US3] Handle account lockout (429 Too Many Requests) in src/pages/settings/settingPage.tsx (show "Account locked for 15 minutes" message with lockout duration)
+- [x] T034 [US3] Implement client-side attempt tracking display in src/store/slices/profile.slice.ts (store attemptsRemaining value from API 401 error response, display to user). NOTE: Actual attempt count and lockout enforcement is SERVER-SIDE per specification.
+- [x] T035 [US3] Handle incorrect password error (401 Unauthorized) in src/pages/settings/settingPage.tsx (extract attemptsRemaining from API response, show error: "Incorrect password. X attempts remaining.")
+- [x] T036 [US3] Handle account lockout (429 Too Many Requests) in src/pages/settings/settingPage.tsx (extract lockoutDuration from API response, show "Account locked for X minutes due to too many failed attempts" message)
 - [x] T037 [US3] Open success modal in src/pages/settings/index.tsx (show success modal with "Back to Settings" button)
 
 **Checkpoint**: All critical user stories (P1, P2) should now be independently functional
@@ -182,9 +186,18 @@
 
 ### Implementation for Edge Cases
 
-- [ ] T055 [P] Implement session expiry detection in src/pages/settings/settingPage.tsx (check before API calls, show warning, redirect to login)
-- [ ] T056 [P] Implement modal context restoration in src/store/slices/profile.slice.ts (save which modal was open in sessionStorage, restore after re-auth, clear sensitive fields)
-- [ ] T057 [P] Implement cross-tab communication in src/pages/settings/index.tsx (BroadcastChannel or localStorage events, detect profile updates in other tabs)
+- [ ] T055 [P] Implement session expiry detection in src/pages/settings/settingPage.tsx:
+  - Proactive: Check JWT token expiry before form submission (decode token, check exp claim, warn if expires within 5 minutes)
+  - Reactive: Handle 401 Unauthorized API responses (redirect to login with session expired message)
+  - Store modal context in sessionStorage before redirect (key: 'profile-modal-context')
+- [ ] T056 [P] Implement modal context restoration in src/store/slices/profile.slice.ts:
+  - Save which modal was open in sessionStorage (key: 'profile-modal-context', value: modal identifier)
+  - Restore modal after re-auth by checking sessionStorage
+  - Clear all password values and sensitive data from form state (user must re-enter)
+- [ ] T057 [P] Implement cross-tab communication in src/pages/settings/index.tsx:
+  - Use BroadcastChannel API: `const channel = new BroadcastChannel('profile-updates')`
+  - Broadcast on profile update: `channel.postMessage({ type: 'PROFILE_UPDATED', timestamp: Date.now() })`
+  - Fallback: localStorage event listener for older browsers
 - [ ] T058 [P] Add "Profile updated in another tab" notification in src/pages/settings/index.tsx (with refresh button to reload data)
 - [ ] T059 [P] Implement refresh functionality in src/pages/settings/index.tsx (reload profile data when refresh button clicked)
 
@@ -202,7 +215,12 @@
 - [ ] T063 [P] Verify all 12 success criteria metrics (SC-001 through SC-012)
 - [ ] T064 [P] Cross-browser testing (Chrome, Firefox, Safari)
 - [ ] T065 [P] Mobile responsiveness testing (ensure all modals and forms work on mobile)
-- [ ] T066 [P] Accessibility audit (WCAG 2.1 AA compliance, keyboard navigation, ARIA labels)
+- [ ] T066 [P] Accessibility audit (WCAG 2.1 AA compliance, keyboard navigation, ARIA labels):
+  - [ ] T066A Keyboard navigation audit: Tab through all modals/forms, verify focus order, test Escape/Enter keys
+  - [ ] T066B ARIA labels audit: Verify all form inputs have labels or aria-label, check aria-required on required fields
+  - [ ] T066C Screen reader testing: Test with NVDA/JAWS/VoiceOver, verify announcements for errors/success/loading
+  - [ ] T066D Color contrast audit: Use axe DevTools to verify 4.5:1 ratio for text, 3:1 for large text
+  - [ ] T066E Focus indicators: Verify 2px visible borders on all interactive elements (3:1 contrast)
 - [ ] T067 [P] Performance profiling (verify 2s page load, 3s API response, 500ms validation)
 - [ ] T068 Code cleanup and refactoring (remove console.logs, unused code, improve readability)
 - [ ] T069 [P] Documentation updates in README.md (add profile settings usage, API patterns)

@@ -13,36 +13,36 @@ const sizes = sortCx({
   xxs: {
     strokeWidth: 6,
     radius: 29,
-    valueClass: "text-sm font-semibold text-primary",
-    labelClass: "text-xs font-medium text-tertiary",
+    valueClass: "text-sm font-semibold text-ws-black",
+    labelClass: "text-xs font-medium text-ws-black-10",
     halfCircleTextPosition: "absolute bottom-0.5 text-center",
   },
   xs: {
     strokeWidth: 16,
     radius: 72,
-    valueClass: "text-display-xs font-semibold text-primary",
-    labelClass: "text-xs font-medium text-tertiary",
+    valueClass: "text-display-xs font-semibold text-ws-black",
+    labelClass: "text-xs font-medium text-ws-black-10",
     halfCircleTextPosition: "absolute bottom-0.5 text-center",
   },
   sm: {
     strokeWidth: 20,
     radius: 90,
-    valueClass: "text-display-sm font-semibold text-primary",
-    labelClass: "text-xs font-medium text-tertiary",
+    valueClass: "text-display-sm font-semibold text-ws-black",
+    labelClass: "text-xs font-medium text-ws-black-10",
     halfCircleTextPosition: "absolute bottom-1 text-center",
   },
   md: {
     strokeWidth: 24,
     radius: 108,
-    valueClass: "text-display-md font-semibold text-primary",
-    labelClass: "text-sm font-medium text-tertiary",
+    valueClass: "text-display-md font-semibold text-ws-black",
+    labelClass: "text-sm font-medium text-ws-black-10",
     halfCircleTextPosition: "absolute bottom-1 text-center",
   },
   lg: {
     strokeWidth: 28,
     radius: 126,
-    valueClass: "text-display-lg font-semibold text-primary",
-    labelClass: "text-sm font-medium text-tertiary",
+    valueClass: "text-display-lg font-semibold text-ws-black",
+    labelClass: "text-sm font-medium text-ws-black-10",
     halfCircleTextPosition: "absolute bottom-0 text-center",
   },
 });
@@ -68,7 +68,7 @@ export const ProgressBarCircle = ({
   const cx = diameter / 2;
   const cy = diameter / 2;
 
-  const textPosition = label ? "absolute text-center" : "absolute text-primary";
+  const textPosition = label ? "absolute text-center" : "absolute text-ws-black";
   const strokeDashoffset = 100 - percentage;
 
   return (

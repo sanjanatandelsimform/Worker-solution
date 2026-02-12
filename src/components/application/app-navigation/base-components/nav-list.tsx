@@ -10,9 +10,11 @@ interface NavListProps {
   className?: string;
   /** List of items to display. */
   items: (NavItemType | NavItemDividerType)[];
+  /** Whether the navigation is collapsed (for tablet responsive behavior). */
+  isCollapsed?: boolean;
 }
 
-export const NavList = ({ activeUrl, items, className }: NavListProps) => {
+export const NavList = ({ activeUrl, items, className, isCollapsed = false }: NavListProps) => {
   const [open, setOpen] = useState(false);
   const activeItem = items.find(
     item => item.href === activeUrl || item.items?.some(subItem => subItem.href === activeUrl)
@@ -20,7 +22,13 @@ export const NavList = ({ activeUrl, items, className }: NavListProps) => {
   const [currentItem, setCurrentItem] = useState(activeItem);
 
   return (
-    <ul className={cx("mt-0 flex flex-col px-0 lg:px-0", className)}>
+    <ul
+      className={cx(
+        "mt-0 flex flex-col w-full px-0 lg:px-0",
+        isCollapsed ? "items-center" : "items-start",
+        className
+      )}
+    >
       {items.map((item, index) => {
         if (item.divider) {
           return (
@@ -46,7 +54,7 @@ export const NavList = ({ activeUrl, items, className }: NavListProps) => {
               </NavItemBase>
 
               <dd>
-                <ul className="py-0.5">
+                <ul className="py-0.5 md:w-full">
                   {item.items.map(childItem => (
                     <li key={childItem.label} className="py-0.5">
                       <NavItemBase
@@ -66,7 +74,7 @@ export const NavList = ({ activeUrl, items, className }: NavListProps) => {
         }
 
         return (
-          <li key={item.label} className="py-0.5 first:mt-4">
+          <li key={item.label} className="w-full py-0.5 first:mt-4 text-ws-gray-200">
             <NavItemBase
               type="link"
               badge={item.badge}
@@ -75,6 +83,7 @@ export const NavList = ({ activeUrl, items, className }: NavListProps) => {
               current={currentItem?.href === item.href}
               open={open && currentItem?.href === item.href}
               onClick={item.onClick} // Pass the onClick handler
+              isCollapsed={isCollapsed}
             >
               {item.label}
             </NavItemBase>
