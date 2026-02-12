@@ -62,11 +62,11 @@ export default function GoalsTab() {
   return (
     <div className="flex w-full flex-col gap-8">
       {/* Benefits Section */}
-      <div className="flex w-full flex-col gap-6 rounded-xl border border-gray-300 bg-white px-6 py-8">
+      <div className="flex w-full flex-col gap-6 rounded-xl border border-ws-gray-50 bg-ws-white px-6 py-8">
         {/* Header Section */}
         <div className="flex flex-col gap-2">
-          <h2 className="text-3xl font-medium leading-9.5 text-gray-900">Goals</h2>
-          <p className=" text-base leading-6 text-gray-500">
+          <h2 className="text-3xl font-medium leading-9.5 text-ws-black-90">Goals</h2>
+          <p className=" text-base leading-6 text-ws-gray-100">
             Pick the goal that best reflects your company’s workforce priorities. This helps us
             share insights and tips that fit your team’s needs.
           </p>
@@ -196,8 +196,8 @@ export default function GoalsTab() {
                     key={goal.id}
                     className="flex items-center gap-3 rounded-lg border border-gray-200 bg-gray-50 px-4 py-3"
                   >
-                    <Menu01 className="h-5 w-5 text-gray-400" />
-                    <span className="text-sm leading-5 text-gray-900">
+                    <Menu01 className="h-5 w-5 text-ws-gray-70" />
+                    <span className="text-sm leading-5 text-ws-black-90">
                       {index + 1}. {goal.label}
                     </span>
                   </div>

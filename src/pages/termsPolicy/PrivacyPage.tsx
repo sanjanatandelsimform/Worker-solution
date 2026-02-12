@@ -4,11 +4,11 @@ export default function PrivacyPage() {
   const navigate = useNavigate();
   return (
     <div className="flex min-h-screen items-center justify-center bg-secondary">
-      <div className="flex w-3xl items-center justify-center rounded-xl border border-solid border-primary bg-primary pt-6">
+      <div className="flex w-3xl items-center justify-center rounded-xl border border-solid border-ws-gray-50 bg-ws-white pt-6">
         <div className="flex w-full flex-col items-center p-6 ">
           {/* Logo */}
-          <div className="flex items-center justify-center rounded-xl bg-tertiary px-2 py-1 mb-6">
-            <h1 className="text-5xl font-bold leading-15 text-primary">BeneStat</h1>
+          <div className="flex items-center justify-center px-2 py-1 mb-6">
+            <h1 className="text-5xl font-bold leading-15 text-ws-black">BeneStats</h1>
           </div>
           <div className="flex w-full flex-col items-start gap-6">
             <div className="prose w-full">

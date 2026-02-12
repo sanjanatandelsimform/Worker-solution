@@ -10,14 +10,14 @@ export function ArrowLeft({ className }: { readonly className?: string }) {
       >
         <path
           d="M19 12H5"
-          stroke="#7F56D9"
+          stroke="var(--color-ws-purple-30)"
           strokeWidth="1.25"
           strokeLinecap="round"
           strokeLinejoin="round"
         />
         <path
           d="M12 19L5 12L12 5"
-          stroke="#7F56D9"
+          stroke="var(--color-ws-purple-30)"
           strokeWidth="1.25"
           strokeLinecap="round"
           strokeLinejoin="round"

@@ -8,6 +8,7 @@ import { Select } from "@/components/base/select/select";
 import type { SelectItemType } from "@/components/base/select/select";
 import { MultiSelect } from "@/components/base/select/multi-select";
 import { Label } from "@/components/base/input/label";
+import { InputInfo } from "@/assets/icons/inputInfo";
 
 // Helper component for location inputs
 interface LocationInputProps {
@@ -25,11 +26,11 @@ function OccupationInput({ onRemove, showRemoveButton }: OccupationInputProps) {
     <div className="flex w-full gap-4 items-start">
       <div className="flex flex-col gap-1.5 w-2/3">
         <Input placeholder="Occupation" size="md" />
-        <p className="text-sm leading-5 text-gray-600">i.e. Document Specialist</p>
+        <p className="text-sm leading-5 text-ws-black-10">i.e. Document Specialist</p>
       </div>
       <div className="flex flex-col gap-1.5 w-1/3">
         <Input placeholder="Percentage" size="md" />
-        <p className="text-sm leading-5 text-gray-600">i.e. 30%</p>
+        <p className="text-sm leading-5 text-ws-black-10">i.e. 30%</p>
       </div>
       {showRemoveButton && (
         <Button
@@ -37,7 +38,7 @@ function OccupationInput({ onRemove, showRemoveButton }: OccupationInputProps) {
           size="md"
           iconLeading={Trash01}
           onClick={onRemove}
-          className="h-10 shrink-0 px-2 bg-tertiary"
+          className="h-10 shrink-0 px-2 bg-ws-gray-30"
           aria-label="Remove occupation"
         />
       )}
@@ -106,9 +107,9 @@ export default function WorkforceTab() {
           </Select>
         </div>
         <div className="flex flex-1 flex-col gap-1.5">
-          <label className="flex gap-0.5 text-sm font-medium text-gray-700">
+          <label className="flex gap-0.5 text-sm font-medium text-ws-black-20">
             <span>Zip Code</span>
-            <span className="text-red-600">*</span>
+            <span className="text-ws-red-30">*</span>
           </label>
           <Input placeholder="Zip code" size="md" />
         </div>
@@ -118,7 +119,7 @@ export default function WorkforceTab() {
             size="md"
             iconLeading={Trash01}
             onClick={onRemove}
-            className="h-10 shrink-0 px-2 bg-tertiary"
+            className="h-10 shrink-0 px-2 bg-ws-gray-30"
             aria-label="Remove location"
           />
         )}
@@ -127,11 +128,11 @@ export default function WorkforceTab() {
   }
 
   return (
-    <div className="flex w-full flex-col gap-6 rounded-xl border border-gray-300 bg-white px-6 py-8">
+    <div className="flex w-full flex-col gap-6 rounded-xl border border-ws-gray-50 bg-ws-white px-6 py-8">
       {/* Header */}
       <div className="flex flex-col gap-2">
-        <h2 className="text-3xl font-medium leading-[38px] text-gray-900">Workforce</h2>
-        <p className="w-full max-w-[676px] text-base leading-6 text-gray-500">
+        <h2 className="text-3xl font-medium leading-[38px] text-ws-black-90">Workforce</h2>
+        <p className="w-full max-w-[676px] text-base leading-6 text-ws-gray-100">
           We'd like to get a better understanding of your workforce and how they're structured. This
           will help us customize relevant solution providers.
         </p>
@@ -319,7 +320,7 @@ export default function WorkforceTab() {
               <RadioButton label="No" value="no" />
               {resideSameZip === "no" && (
                 <div className="flex w-full flex-col gap-4 pl-6">
-                  <p className="text-base text-gray-900">
+                  <p className="text-base text-ws-black-90">
                     If no, where do most of your employees reside?
                   </p>
                   {resideLocations.map(location => (

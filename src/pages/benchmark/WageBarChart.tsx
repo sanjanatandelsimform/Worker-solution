@@ -105,7 +105,7 @@ export default function WageBarChart({ data, width, height = 350 }: CanvasChartP
       ctx.fillStyle = colors.nationalAverage;
       ctx.globalAlpha = 0.4;
       ctx.fillRect(groupX + barWidth * 2, baseY - bar3Height, barWidth, bar3Height);
-      ctx.strokeStyle = "#D5D7DA";
+      ctx.strokeStyle = "#ADADAD";
       ctx.lineWidth = 1;
       ctx.strokeRect(groupX + barWidth * 2, baseY - bar3Height, barWidth, bar3Height);
       ctx.globalAlpha = 1;
@@ -233,7 +233,7 @@ export default function WageBarChart({ data, width, height = 350 }: CanvasChartP
   };
 
   return (
-    <div className="flex w-full flex-col rounded-xl border border-gray-300 bg-white p-6">
+    <div className="flex w-full flex-col rounded-xl border border-ws-gray-50 bg-ws-white p-6">
       {/* Chart Container */}
       <figure
         ref={containerRef}
@@ -249,17 +249,17 @@ export default function WageBarChart({ data, width, height = 350 }: CanvasChartP
         />
         {tooltip && (
           <div
-            className="pointer-events-none absolute rounded-lg border border-gray-200 bg-white px-3 py-2 shadow-lg"
+            className="pointer-events-none absolute rounded-lg border border-ws-gray-50 bg-ws-white px-3 py-2 shadow-lg"
             style={{
               left: `${tooltip.x + 10}px`,
               top: `${tooltip.y - 10}px`,
               transform: "translateY(-100%)",
             }}
           >
-            <p className="mb-1 text-sm font-medium text-gray-900">{tooltip.label}</p>
+            <p className="mb-1 text-sm font-medium text-ws-black-90">{tooltip.label}</p>
             <div className="flex items-center gap-2">
               <div className="h-3 w-3 rounded" style={{ backgroundColor: tooltip.color }} />
-              <span className="text-sm text-gray-900">
+              <span className="text-sm text-ws-black-90">
                 {tooltip.barName}: ${tooltip.value.toFixed(2)}
               </span>
             </div>
@@ -268,18 +268,24 @@ export default function WageBarChart({ data, width, height = 350 }: CanvasChartP
       </figure>
 
       {/* Legend */}
-      <div className="flex items-center justify-center gap-6">
-        <div className="flex items-center gap-4">
+      <div className="flex flex-nowrap items-center justify-center gap-5 overflow-x-auto pt-4">
+        <div className="flex items-center gap-2">
           <div className="size-4.5 rounded-xs bg-[#00C4C7]" />
-          <p className="text-lg font-normal leading-7 text-black">Industry average</p>
+          <p className="whitespace-nowrap text-lg font-normal leading-7 text-black">
+            Industry average
+          </p>
         </div>
-        <div className="flex items-center gap-4">
+        <div className="flex items-center gap-2">
           <div className="size-4.5 rounded-xs bg-[#22CCEE]" />
-          <p className="text-lg font-normal leading-7 text-black">Your company</p>
+          <p className="whitespace-nowrap text-lg font-normal leading-7 text-black">
+            Your company
+          </p>
         </div>
-        <div className="flex items-center gap-4">
+        <div className="flex items-center gap-2">
           <div className="size-4.5 rounded-xs bg-[#DBEBEB]" />
-          <p className="text-lg font-normal leading-7 text-black">National average</p>
+          <p className="whitespace-nowrap text-lg font-normal leading-7 text-black">
+            National average
+          </p>
         </div>
       </div>
     </div>

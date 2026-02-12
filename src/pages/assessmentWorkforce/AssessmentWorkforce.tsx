@@ -52,7 +52,7 @@ export default function AssessmentWorkforcePage() {
         {/* <Button
           onClick={handleBack}
           disabled={isFirstStep}
-          className={`flex items-center gap-1 text-lg font-normal text-white transition-opacity ${
+          className={`flex items-center gap-1 text-lg font-normal text-ws-white transition-opacity ${
             isFirstStep ? "cursor-not-allowed opacity-40" : "hover:opacity-80"
           }`}
         >
@@ -65,19 +65,19 @@ export default function AssessmentWorkforcePage() {
           iconLeading={<ChevronLeft data-icon />}
           onClick={handleBack}
           disabled={isFirstStep}
-          className={`flex items-center gap-1 text-lg font-normal text-white transition-opacity ${
+          className={`flex items-center gap-1 text-lg font-normal text-ws-white transition-opacity ${
             isFirstStep ? "cursor-not-allowed opacity-40" : "hover:opacity-80"
           }`}
         >
           Back
         </Button>
         {/* Title */}
-        <h1 className="text-lg font-medium text-white">Assessment</h1>
+        <h1 className="text-lg font-medium text-ws-white">Assessment</h1>
 
         {/* Close Button */}
         {/* <Button
           onClick={handleClose}
-          className="text-white transition-opacity hover:opacity-80"
+          className="text-ws-white transition-opacity hover:opacity-80"
           aria-label="Close assessment"
         >
           <XClose className="size-6" />
@@ -87,17 +87,17 @@ export default function AssessmentWorkforcePage() {
           size="md"
           iconLeading={<XClose data-icon />}
           onClick={handleClose}
-          className="text-white transition-opacity hover:opacity-80"
+          className="text-ws-white transition-opacity hover:opacity-80"
         />
       </div>
 
       {/* Main Content Area */}
-      <div className="mx-auto w-full max-w-4xl flex-1 space-y-3 py-8">
+      <div className="mx-auto w-full max-w-4xl flex-1 space-y-3 py-8 px-4">
         {/* Progress Stepper */}
         <ProgressStepper steps={steps} currentStep={currentStep} onStepChange={setCurrentStep} />
 
         {/* Content Area */}
-        <div className="bg-white my-8 mx-12.5">
+        <div className="bg-ws-white my-8 mx-12.5">
           {currentStep === "workforce" && <WorkforceTab />}
           {currentStep === "compensation" && <CompensationTab />}
           {currentStep === "benefits" && <BenefitsTab />}
@@ -106,7 +106,7 @@ export default function AssessmentWorkforcePage() {
       </div>
 
       {/* Bottom Navigation Bar */}
-      <div className="flex items-center justify-end border-t border-gray-300 bg-white px-6 py-2.5">
+      <div className="flex items-center justify-end border-t border-ws-gray-50 bg-ws-white px-6 py-2.5">
         <Button color="primary" size="md" onClick={handleNext} className="min-w-30">
           {isLastStep ? "Submit" : "Next"}
         </Button>

@@ -18,14 +18,14 @@ export const InputPrefix = ({ isDisabled, children, ...props }: InputPrefixProps
   <span
     {...props}
     className={cx(
-      "flex text-md text-tertiary shadow-xs ring-1 ring-gray-300 ring-inset",
+      "flex text-md text-ws-black-10 shadow-xs ring-1 ring-ws-gray-50 ring-inset",
       // Styles when the prefix is within an `InputGroup`
       "in-data-input-wrapper:in-data-leading:-mr-px in-data-input-wrapper:in-data-leading:rounded-l-lg",
       "in-data-input-wrapper:in-data-trailing:-ml-px in-data-input-wrapper:in-data-trailing:rounded-r-lg",
       // Size styles based on size when within an `InputGroup`
       "in-data-input-wrapper:in-data-[input-size=md]:py-2.5 in-data-input-wrapper:in-data-[input-size=md]:pr-3 in-data-input-wrapper:in-data-[input-size=md]:pl-3.5 in-data-input-wrapper:in-data-[input-size=sm]:px-3 in-data-input-wrapper:in-data-[input-size=sm]:py-2",
       // Disabled styles
-      isDisabled && "border-disabled bg-disabled_subtle text-tertiary",
+      isDisabled && "border-disabled bg-disabled_subtle text-ws-black-10",
       "in-data-input-wrapper:group-disabled:bg-disabled_subtle in-data-input-wrapper:group-disabled:text-disabled in-data-input-wrapper:group-disabled:ring-border-disabled",
 
       props.className
@@ -115,10 +115,10 @@ export const InputGroup = ({
           <div
             data-input-size={size}
             className={cx(
-              "group relative flex h-max w-full flex-row justify-center rounded-lg bg-white transition-all duration-100 ease-linear",
+              "group relative flex h-max w-full flex-row justify-center rounded-lg bg-ws-white transition-all duration-100 ease-linear",
 
               // Only apply focus ring when child is select and input is focused
-              "has-[&>select]:shadow-0 has-[&>select]:ring-0 has-[&>select]:ring-gray-300 has-[&>select]:has-[input:focus]:ring-1 has-[&>select]:has-[input:focus]:ring-gray-300",
+              "has-[&>select]:shadow-0 has-[&>select]:ring-0 has-[&>select]:ring-ws-gray-50 has-[&>select]:has-[input:focus]:ring-1 has-[&>select]:has-[input:focus]:ring-ws-gray-50",
 
               isDisabled &&
                 "cursor-not-allowed has-[&>select]:bg-disabled_subtle has-[&>select]:ring-border-disabled",
@@ -132,7 +132,7 @@ export const InputGroup = ({
 
             {prefix && (
               <span className={cx("my-auto grow pr-2", paddings[size].leadingText)}>
-                <p className={cx("text-md text-tertiary", isDisabled && "text-disabled")}>
+                <p className={cx("text-md text-ws-black-10", isDisabled && "text-disabled")}>
                   {prefix}
                 </p>
               </span>

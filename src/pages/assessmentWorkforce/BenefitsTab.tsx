@@ -71,11 +71,11 @@ export default function BenefitsTab() {
   return (
     <div className="flex w-full flex-col gap-8">
       {/* Benefits Section */}
-      <div className="flex w-full flex-col gap-6 rounded-xl border border-gray-300 bg-white px-6 py-8">
+      <div className="flex w-full flex-col gap-6 rounded-xl border border-ws-gray-50 bg-ws-white px-6 py-8">
         {/* Header Section */}
         <div className="flex flex-col gap-2">
-          <h2 className="text-3xl font-medium leading-9.5 text-gray-900">Benefits</h2>
-          <p className=" text-base leading-6 text-gray-500">
+          <h2 className="text-3xl font-medium leading-9.5 text-ws-black-90">Benefits</h2>
+          <p className=" text-base leading-6 text-ws-gray-100">
             To understand what gaps may exist in your current benefits offerings, please select all
             relevant options that you currently offer.
           </p>
@@ -157,7 +157,7 @@ export default function BenefitsTab() {
                 <RadioButton label="Yes" value="yes" />
                 {worksBenefitsBroker === "yes" && (
                   <div className="flex w-80 flex-col gap-1.5 pl-6">
-                    <Label className="text-sm font-medium text-gray-700">
+                    <Label className="text-sm font-medium text-ws-black-20">
                       If yes, please provide your broker name
                     </Label>
                     <Input
@@ -203,10 +203,10 @@ export default function BenefitsTab() {
       </div>
 
       {/* Retirement Section */}
-      <div className="flex w-full flex-col gap-6 rounded-xl border border-gray-300 bg-white px-6 py-8">
+      <div className="flex w-full flex-col gap-6 rounded-xl border border-ws-gray-50 bg-ws-white px-6 py-8">
         {/* Header Section */}
         <div className="flex flex-col gap-2">
-          <h2 className="text-2xl font-medium leading-8 text-gray-900">Retirement</h2>
+          <h2 className="text-2xl font-medium leading-8 text-ws-black-90">Retirement</h2>
           <div className="h-px w-full bg-gray-300" />
         </div>
 
@@ -292,7 +292,7 @@ export default function BenefitsTab() {
                 <RadioButton label="Yes" value="yes" />
                 {employerMatch === "yes" && (
                   <div className="flex w-80 flex-col gap-1.5 pl-6">
-                    <Label className="text-base font-normal text-gray-900">
+                    <Label className="text-base font-normal text-ws-black-90">
                       If yes, What is the percentage?
                     </Label>
                     <Input
@@ -355,7 +355,7 @@ export default function BenefitsTab() {
                 <RadioButton label="Yes" value="yes" />
                 {hardshipWithdrawals === "yes" && (
                   <div className="flex w-full flex-col gap-1.5 pl-6">
-                    <Label className="text-base font-normal text-gray-900">
+                    <Label className="text-base font-normal text-ws-black-90">
                       If yes, What is the percentage?
                     </Label>
                     <Input
@@ -374,10 +374,10 @@ export default function BenefitsTab() {
       </div>
 
       {/* Healthcare Section */}
-      <div className="flex w-full flex-col gap-6 rounded-xl border border-gray-300 bg-white px-6 py-8">
+      <div className="flex w-full flex-col gap-6 rounded-xl border border-ws-gray-50 bg-ws-white px-6 py-8">
         {/* Header Section */}
         <div className="flex flex-col gap-2">
-          <h2 className="text-2xl font-medium leading-8 text-gray-900">Healthcare</h2>
+          <h2 className="text-2xl font-medium leading-8 text-ws-black-90">Healthcare</h2>
           <div className="h-px w-full bg-gray-300" />
         </div>
 
@@ -398,7 +398,7 @@ export default function BenefitsTab() {
                 <RadioButton label="Yes" value="yes" />
                 {offersHealthcare === "yes" && (
                   <div className="flex w-full flex-col gap-1.5 px-6">
-                    <Label className="text-sm font-medium text-gray-700">
+                    <Label className="text-sm font-medium text-ws-black-20">
                       if yes, What types of healthcare plans does your company offer?
                     </Label>
                     <div className="w-full">
@@ -441,7 +441,7 @@ export default function BenefitsTab() {
                 value={monthlyPremium}
                 onChange={setMonthlyPremium}
               />
-              <p className="text-sm leading-5 text-gray-600">i.e. $300</p>
+              <p className="text-sm leading-5 text-ws-black-10">i.e. $300</p>
             </div>
           </div>
 
@@ -487,7 +487,7 @@ export default function BenefitsTab() {
                   Don't participate
                   <Tooltip title="This is a tooltip">
                     <TooltipTrigger className="group relative flex cursor-pointer flex-col items-center gap-2 text-fg-quaternary transition duration-100 ease-linear hover:text-fg-quaternary_hover focus:text-fg-quaternary_hover">
-                      <InfoCircle className="size-5 text-gray-400" />
+                      <InfoCircle className="size-5 text-ws-gray-70" />
                     </TooltipTrigger>
                   </Tooltip>
                 </p>
@@ -500,7 +500,7 @@ export default function BenefitsTab() {
                   className="flex-1"
                   onChange={setDontParticipate}
                 />
-                <p className="text-sm leading-5 text-gray-600">i.e. 30%</p>
+                <p className="text-sm leading-5 text-ws-black-10">i.e. 30%</p>
               </div>
             </div>
 
@@ -511,7 +511,7 @@ export default function BenefitsTab() {
                   Employee only
                   <Tooltip title="This is a tooltip">
                     <TooltipTrigger className="group relative flex cursor-pointer flex-col items-center gap-2 text-fg-quaternary transition duration-100 ease-linear hover:text-fg-quaternary_hover focus:text-fg-quaternary_hover">
-                      <InfoCircle className="size-5 text-gray-400" />
+                      <InfoCircle className="size-5 text-ws-gray-70" />
                     </TooltipTrigger>
                   </Tooltip>
                 </p>
@@ -524,7 +524,7 @@ export default function BenefitsTab() {
                   value={employeeOnly}
                   onChange={setEmployeeOnly}
                 />
-                <p className="text-sm leading-5 text-gray-600">i.e. 30%</p>
+                <p className="text-sm leading-5 text-ws-black-10">i.e. 30%</p>
               </div>
             </div>
 
@@ -535,7 +535,7 @@ export default function BenefitsTab() {
                   Employee + Spouse/Domestic Partner
                   <Tooltip title="This is a tooltip">
                     <TooltipTrigger className="group relative flex cursor-pointer flex-col items-center gap-2 text-fg-quaternary transition duration-100 ease-linear hover:text-fg-quaternary_hover focus:text-fg-quaternary_hover">
-                      <InfoCircle className="size-5 text-gray-400" />
+                      <InfoCircle className="size-5 text-ws-gray-70" />
                     </TooltipTrigger>
                   </Tooltip>
                 </p>
@@ -547,7 +547,7 @@ export default function BenefitsTab() {
                   value={employeeSpouse}
                   onChange={setEmployeeSpouse}
                 />
-                <p className="text-sm leading-5 text-gray-600">i.e. 30%</p>
+                <p className="text-sm leading-5 text-ws-black-10">i.e. 30%</p>
               </div>
             </div>
 
@@ -558,7 +558,7 @@ export default function BenefitsTab() {
                   Employee + Children
                   <Tooltip title="This is a tooltip">
                     <TooltipTrigger className="group relative flex cursor-pointer flex-col items-center gap-2 text-fg-quaternary transition duration-100 ease-linear hover:text-fg-quaternary_hover focus:text-fg-quaternary_hover">
-                      <InfoCircle className="size-5 text-gray-400" />
+                      <InfoCircle className="size-5 text-ws-gray-70" />
                     </TooltipTrigger>
                   </Tooltip>
                 </p>
@@ -571,7 +571,7 @@ export default function BenefitsTab() {
                   value={employeeChildren}
                   onChange={setEmployeeChildren}
                 />
-                <p className="text-sm leading-5 text-gray-600">i.e. 30%</p>
+                <p className="text-sm leading-5 text-ws-black-10">i.e. 30%</p>
               </div>
             </div>
 
@@ -582,7 +582,7 @@ export default function BenefitsTab() {
                   Employee + Family (not spouse)
                   <Tooltip title="This is a tooltip">
                     <TooltipTrigger className="group relative flex cursor-pointer flex-col items-center gap-2 text-fg-quaternary transition duration-100 ease-linear hover:text-fg-quaternary_hover focus:text-fg-quaternary_hover">
-                      <InfoCircle className="size-5 text-gray-400" />
+                      <InfoCircle className="size-5 text-ws-gray-70" />
                     </TooltipTrigger>
                   </Tooltip>
                 </p>
@@ -595,7 +595,7 @@ export default function BenefitsTab() {
                   value={employeeFamily}
                   onChange={setEmployeeFamily}
                 />
-                <p className="text-sm leading-5 text-gray-600">i.e. 30%</p>
+                <p className="text-sm leading-5 text-ws-black-10">i.e. 30%</p>
               </div>
             </div>
           </div>

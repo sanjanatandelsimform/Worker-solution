@@ -47,11 +47,11 @@ export default function CompensationTab() {
   const [handlesPayrollInHouse, setHandlesPayrollInHouse] = useState("");
 
   return (
-    <div className="flex w-full flex-col gap-6 rounded-xl border border-gray-300 bg-white px-6 py-8">
+    <div className="flex w-full flex-col gap-6 rounded-xl border border-ws-gray-50 bg-ws-white px-6 py-8">
       {/* Header Section */}
       <div className="flex flex-col gap-2">
-        <h2 className="text-3xl font-medium leading-9.5 text-gray-900">Compensation</h2>
-        <p className="text-base leading-6 text-gray-500">
+        <h2 className="text-3xl font-medium leading-9.5 text-ws-black-90">Compensation</h2>
+        <p className="text-base leading-6 text-ws-gray-100">
           Select salary that apply best to your workforce. This doesn't have to be exact.
         </p>
       </div>
@@ -61,9 +61,9 @@ export default function CompensationTab() {
         {/* Question 1 */}
         <div className="flex w-full flex-col gap-2">
           <ol className="ml-0 list-decimal pl-6" start={1}>
-            <li className="text-base leading-6 text-gray-900">
+            <li className="text-base leading-6 text-ws-black-90">
               What range best describes your employees' median annual earnings?{" "}
-              <span className="text-red-600">*</span>
+              <span className="text-ws-red-30">*</span>
             </li>
           </ol>
           <RadioGroup value={medianEarnings} onChange={setMedianEarnings}>
@@ -78,7 +78,7 @@ export default function CompensationTab() {
         {/* Question 2 */}
         <div className="flex w-full flex-col gap-2">
           <ol className="ml-0 list-decimal pl-6" start={2}>
-            <li className="text-base leading-6 text-gray-900">
+            <li className="text-base leading-6 text-ws-black-90">
               What range best describes your HOURLY employees' median annual earnings?
             </li>
           </ol>
@@ -94,7 +94,7 @@ export default function CompensationTab() {
         {/* Question 3 */}
         <div className="flex w-full flex-col gap-2">
           <ol className="ml-0 list-decimal pl-6" start={3}>
-            <li className="text-base leading-6 text-gray-900">
+            <li className="text-base leading-6 text-ws-black-90">
               What range best describes your SALARIED employees' median annual earnings?
             </li>
           </ol>
@@ -110,7 +110,7 @@ export default function CompensationTab() {
         {/* Question 4 */}
         <div className="flex w-full flex-col gap-2">
           <ol className="ml-0 list-decimal pl-6" start={4}>
-            <li className="text-base leading-6 text-gray-900">Do you offer annual raises?</li>
+            <li className="text-base leading-6 text-ws-black-90">Do you offer annual raises?</li>
           </ol>
           <RadioGroup
             value={offersRaises}
@@ -123,7 +123,7 @@ export default function CompensationTab() {
             {/* Conditional question for "If yes, when?" */}
             {offersRaises === "yes" && (
               <div className="ml-6 flex w-80 flex-col gap-4">
-                <p className="text-base text-gray-900">If yes, when?</p>
+                <p className="text-base text-ws-black-90">If yes, when?</p>
                 <Select
                   className="w-full flex items-start"
                   size="md"
@@ -152,7 +152,7 @@ export default function CompensationTab() {
         {/* Question 5 */}
         <div className="flex w-full flex-col gap-2">
           <ol className="ml-0 list-decimal pl-6" start={5}>
-            <li className="text-base leading-6 text-gray-900">
+            <li className="text-base leading-6 text-ws-black-90">
               Do you handle HR/payroll in-house?
             </li>
           </ol>
@@ -166,7 +166,7 @@ export default function CompensationTab() {
         {/* Question 6 */}
         <div className="flex w-full flex-col gap-2">
           <ol className="ml-0 list-decimal pl-6" start={6}>
-            <li className="text-base leading-6 text-gray-900">
+            <li className="text-base leading-6 text-ws-black-90">
               Who is your company's payroll provider?
             </li>
           </ol>

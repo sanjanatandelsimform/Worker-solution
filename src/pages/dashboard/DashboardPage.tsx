@@ -14,6 +14,10 @@ import { fetchUserById } from "@/store/slices/userSlice";
 import { resendVerificationEmail } from "@/store/slices/profileSlice";
 import { selectProfileError } from "@/store/selectors/profileSelectors";
 import { useModalConfig } from "@/hooks/useModalConfig";
+import fpoHero from "@/assets/fpo-hero-image.png";
+import { Tabs } from "@/components/base/tabs/tabs";
+import RecommendationsPage from "../recommendations/RecommendationsPage";
+import BenchmarkPage from "../benchmark/BenchmarkPage";
 // import { Tabs } from "@/components/base/tabs/tabs";
 // import RecommendationsPage from "../recommendations/RecommendationsPage";
 // import BenchmarkPage from "../benchmark/BenchmarkPage";
@@ -103,16 +107,29 @@ export const DashboardPage = () => {
   });
 
   return (
-    <div className="flex h-screen overflow-hidden bg-dashboard">
+    <div className="flex h-screen overflow-hidden bg-ws-gray-500">
       {/* Sidebar */}
       <DashboardSidebar activeUrl="/dashboard" />
 
       {/* Main Content Area */}
       <div className="flex flex-1 flex-col overflow-hidden">
         {/* Main Content */}
-        <main className="flex-1 overflow-y-auto px-6 py-10">
+        <main className="flex-1 overflow-y-auto p-5 xl:p-10 xl:pl-0">
+          {/* Error Message Display */}
+          {/* {error && (
+            <div className="mb-6">
+              <ErrorMessage
+                errorType={error.type}
+                alertIcon={AlertCircle}
+                errorMessage={error.message}
+                onClose={() => setError(null)}
+              />
+            </div>
+          )} */}
+
+          <div className="space-y-6"></div>
           <div>
-            <h2 className="text-4xl font-medium text-primary">Welcome!</h2>
+            <h2 className="text-4xl font-medium text-ws-black">Welcome!</h2>
 
             {/* Error Message */}
             {errorMessage && (
@@ -127,17 +144,18 @@ export const DashboardPage = () => {
               </div>
             )}
 
-            <div className="mt-6 border border-gray-300 rounded-xl p-4 bg-dashboard-card shadow-sm flex gap-4 justify-between flex-col lg:flex-row">
+            <div className="mt-6 border border-ws-gray-50 rounded-xl p-4 bg-ws-black-80 shadow-sm flex gap-4 justify-between flex-col lg:flex-row">
               <div className="flex-1">
-                <h2 className="text-dashboard-card-title text-3xl font-medium mb-2">
+                <h2 className="text-ws-cyan-10 text-3xl font-medium mb-2">
                   Thanks for signing up.
                 </h2>
-                <p className="text-white">
-                  👋 Welcome aboard! Please check your inbox and verify your email to get started.
+                <p className="text-ws-white text-base pr-10">
+                  Pick up where you left off and complete your company assessment for results and
+                  recommendations.
                 </p>
               </div>
-              <div className="flex-1 bg-dashboard-card-image rounded-lg p-4 flex items-center justify-center text-2xl font-medium text-white">
-                FPO Img
+              <div className="flex-1 rounded-lg">
+                <img src={fpoHero} alt="Insight hero" className="w-full" />
               </div>
             </div>
             {!emailVerify && (
@@ -178,7 +196,7 @@ export const DashboardPage = () => {
             />
           </div>
           {/* This will be conditionally rendered; uncomment when this feature is implemented. */}
-          {/* <div className="mt-10">
+          <div className="mt-10">
             <Tabs>
               <Tabs.List
                 size="md"
@@ -195,7 +213,7 @@ export const DashboardPage = () => {
                 <BenchmarkPage />
               </Tabs.Panel>
             </Tabs>
-          </div> */}
+          </div>
         </main>
       </div>
 
