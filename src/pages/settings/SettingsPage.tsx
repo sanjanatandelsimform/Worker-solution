@@ -123,6 +123,42 @@ export const SettingsPage = () => {
     }
   };
 
+  // Real-time validation for first name
+  const handleFirstNameChange = (value: string) => {
+    const sanitized = value.replace(/^\s+/, "");
+    setFirstName(sanitized);
+
+    // Real-time validation as user types
+    if (sanitized) {
+      const validation = validateName("FirstName", sanitized);
+      if (validation.isValid) {
+        setFirstNameError("");
+      } else {
+        setFirstNameError(validation.message || "");
+      }
+    } else {
+      setFirstNameError("First name cannot be empty");
+    }
+  };
+
+  // Real-time validation for last name
+  const handleLastNameChange = (value: string) => {
+    const sanitized = value.replace(/^\s+/, "");
+    setLastName(sanitized);
+
+    // Real-time validation as user types
+    if (sanitized) {
+      const validation = validateName("LastName", sanitized);
+      if (validation.isValid) {
+        setLastNameError("");
+      } else {
+        setLastNameError(validation.message || "");
+      }
+    } else {
+      setLastNameError("Last name cannot be empty");
+    }
+  };
+
   function handleRetakeAssessment() {
     setIsRetakeAssessmentModalOpen(false);
     navigate("/assessment");
@@ -302,10 +338,7 @@ export const SettingsPage = () => {
                           isRequired={true}
                           placeholder="First name"
                           value={firstName}
-                          onChange={value => {
-                            const sanitized = value.replace(/^\s+/, "");
-                            setFirstName(sanitized);
-                          }}
+                          onChange={handleFirstNameChange}
                           isDisabled={profileLoading}
                         />
                         {firstNameError && (
@@ -320,10 +353,7 @@ export const SettingsPage = () => {
                           isRequired={true}
                           placeholder="Last name"
                           value={lastName}
-                          onChange={value => {
-                            const sanitized = value.replace(/^\s+/, "");
-                            setLastName(sanitized);
-                          }}
+                          onChange={handleLastNameChange}
                           isDisabled={profileLoading}
                         />
                         {lastNameError && (
@@ -466,7 +496,16 @@ export const SettingsPage = () => {
                   color="primary"
                   size="sm"
                   onClick={handleSave}
-                  isDisabled={!hasChanges || profileLoading || !!firstNameError || !!lastNameError}
+                  // isDisabled={profileLoading || !firstName || !lastName}
+
+                  isDisabled={
+                    !hasChanges ||
+                    profileLoading ||
+                    !!firstNameError ||
+                    !!lastNameError ||
+                    !firstName ||
+                    !lastName
+                  }
                 >
                   {profileLoading ? "Saving..." : "Save"}
                 </Button>

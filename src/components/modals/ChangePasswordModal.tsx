@@ -239,8 +239,16 @@ export const ChangePasswordModal = ({ isOpen, onClose }: ChangePasswordModalProp
                     isDisabled={profileLoading || isAccountLocked}
                     onChange={(value: string) => {
                       setCurrentPassword(value);
-                      setCurrentPasswordError("");
                       setShowError(false);
+
+                      // Real-time format validation for current password
+                      if (!value.trim()) {
+                        setCurrentPasswordError("Current password is required");
+                      } else if (value.length < 8) {
+                        setCurrentPasswordError("Password must be at least 8 characters");
+                      } else {
+                        setCurrentPasswordError("");
+                      }
                     }}
                   />
                   <Button
@@ -278,8 +286,26 @@ export const ChangePasswordModal = ({ isOpen, onClose }: ChangePasswordModalProp
                     isDisabled={profileLoading || isAccountLocked}
                     onChange={(value: string) => {
                       setNewPassword(value);
-                      setNewPasswordError("");
                       setShowError(false);
+
+                      // Real-time validation for new password
+                      const newPasswordValidation = validatePassword(value);
+                      if (!newPasswordValidation.isValid) {
+                        setNewPasswordError(newPasswordValidation.message || "Invalid password");
+                      } else if (currentPassword && !isPasswordDifferent(currentPassword, value)) {
+                        setNewPasswordError("New password must be different from current password");
+                      } else {
+                        setNewPasswordError("");
+                      }
+
+                      // Re-validate confirm password if it has a value
+                      if (confirmPassword) {
+                        if (value !== confirmPassword) {
+                          setConfirmPasswordError("Passwords do not match");
+                        } else {
+                          setConfirmPasswordError("");
+                        }
+                      }
                     }}
                   />
                   <Button
@@ -314,8 +340,16 @@ export const ChangePasswordModal = ({ isOpen, onClose }: ChangePasswordModalProp
                     isDisabled={profileLoading || isAccountLocked}
                     onChange={(value: string) => {
                       setConfirmPassword(value);
-                      setConfirmPasswordError("");
                       setShowError(false);
+
+                      // Real-time validation for confirm password
+                      if (!value.trim()) {
+                        setConfirmPasswordError("Please confirm your password");
+                      } else if (newPassword !== value) {
+                        setConfirmPasswordError("Passwords do not match");
+                      } else {
+                        setConfirmPasswordError("");
+                      }
                     }}
                   />
                   <Button
@@ -347,7 +381,10 @@ export const ChangePasswordModal = ({ isOpen, onClose }: ChangePasswordModalProp
                   isAccountLocked ||
                   !currentPassword ||
                   !newPassword ||
-                  !confirmPassword
+                  !confirmPassword ||
+                  !!currentPasswordError ||
+                  !!newPasswordError ||
+                  !!confirmPasswordError
                 }
               >
                 {profileLoading ? "Updating..." : "Update"}

@@ -35,10 +35,11 @@ A user wants to change their email address for account communications and login.
 **Acceptance Scenarios**:
 
 1. **Given** a user is on the settings page, **When** they click the "Update Email" link, **Then** the Update Email modal opens displaying their current email (disabled) and a field for the new email address
-2. **Given** the Update Email modal is open, **When** the user enters a valid new email address and submits, **Then** the system updates the email and displays a success modal with confirmation message
-3. **Given** the email update was successful, **When** the user returns to the settings page, **Then** the "Update Email" link is replaced with "Resend Verification Email" link
-4. **Given** the Update Email modal is open, **When** the user enters an invalid email format, **Then** validation feedback is displayed preventing submission
-5. **Given** the email update fails, **When** the error response is received, **Then** an error message component displays the failure details
+2. **Given** the Update Email modal is open, **When** the user enters a valid new email address and submits, **Then** the system updates the email, sends verification email with magic link to new address, and displays a success modal with confirmation message
+3. **Given** the email update was successful, **When** the user returns to the settings page, **Then** the "Update Email" link is replaced with "Resend Verification Email" link AND a "Verification pending" badge appears next to the email field
+4. **Given** the user clicks the verification magic link in their email, **When** the verification completes successfully, **Then** the settings page updates to show verified status (removes "Verification pending" badge) and restores "Update Email" link
+5. **Given** the Update Email modal is open, **When** the user enters an invalid email format, **Then** validation feedback is displayed preventing submission
+6. **Given** the email update fails, **When** the error response is received, **Then** an error message component displays the failure details
 
 ---
 
@@ -114,6 +115,14 @@ A user who has updated their email but hasn't received the verification email ne
 
 ## Clarifications
 
+### Session 2026-02-12
+
+- Q: When should validation errors be displayed to the user - as they type in real-time, only when they try to submit, or hybrid approach? → A: Real-time validation - show validation errors as the user types, immediately clearing errors when the input is corrected
+- Q: Where should error messages display and should invalid fields have visual indicators like red borders or icons? → A: Error message only - display text error message below/inside the input field, no border change or icon on the input field itself
+- Q: Should Save/Update buttons be disabled when validation errors exist, or remain enabled for users to attempt submission? → A: Disable submit when errors exist - Save/Update buttons are disabled (grayed out) whenever any field has a validation error
+- Q: When should current password field be validated - in real-time with format checks, or only on submit? → A: Real-time validation for current password too - Validate all three fields (current, new, confirm) as user types, showing errors immediately for empty/too-short current password, but actual correctness of current password only validated on submit
+- Q: How should confirm password field be displayed - masked like new password or visible for verification? → A: Both masked - Both new password and confirm password fields display as masked dots (••••) for security
+
 ### Session 2026-01-30
 
 - Q: When a user tries to update their email to an address that's already registered by another user, what should happen? → A: Display specific error "This email is already in use" and prevent update
@@ -145,23 +154,30 @@ A user who has updated their email but hasn't received the verification email ne
 - **FR-004**: Password field MUST be displayed as a masked placeholder "••••••••" (read-only, disabled) with a "Change Password" link next to it - do NOT show an actual password input field
 - **FR-004a**: Clicking the "Change Password" link next to the password field MUST open the ChangePasswordModal
 - **FR-005**: Users MUST be able to edit their First Name and Last Name fields
-- **FR-006**: System MUST validate that First Name and Last Name are not empty before allowing save
+- **FR-006**: System MUST validate that First Name and Last Name are not empty and display real-time validation errors as the user types, clearing errors immediately when the input is corrected
+- **FR-006a**: System MUST disable the "Save" button when any validation error exists in the First Name or Last Name fields, preventing submission until all errors are resolved
 - **FR-007**: System MUST send profile updates (first name, last name) to the backend via PATCH request when user clicks "Save"
 - **FR-008**: System MUST display a success modal (BaseModalWithIcon) with "Update Complete" title, success styling, checkmark icon, and "Back to Settings" button after successful profile update
 - **FR-009**: System MUST redirect user back to settings page when they click "Back to Settings" in any success modal
 - **FR-010**: System MUST display an error message (ErrorMessage component) with details when any API request fails
-- **FR-010a**: System MUST automatically retry failed API requests once before displaying error, and provide a "Retry" button that preserves user's form data
+- **FR-010a**: System MUST automatically retry failed API requests once before displaying error, and provide a "Retry" button that preserves user's form data. EXCEPTION: Password fields MUST NOT be preserved for security reasons - user must re-enter passwords on retry.
 - **FR-011**: Users MUST be able to open the Update Email modal by clicking "Update Email" link
 - **FR-012**: Update Email modal MUST display the current email address in a disabled field
-- **FR-013**: Update Email modal MUST provide an input field for the new email address with validation
-- **FR-014**: System MUST validate email format before allowing submission of email update
+- **FR-013**: Update Email modal MUST provide an input field for the new email address with real-time validation that displays errors as the user types and clears errors immediately when corrected
+- **FR-014**: System MUST validate email format in real-time, displaying validation errors as the user types and preventing submission when validation fails
+- **FR-014b**: System MUST disable the "Update Email" button when any validation error exists in the new email field, preventing submission until all errors are resolved
 - **FR-014a**: System MUST check for duplicate email addresses and display error message "This email is already in use" if the email is already registered to another account
 - **FR-015**: System MUST send email update to backend via PATCH request when user submits new email
-- **FR-016**: System MUST change "Update Email" link to "Resend Verification Email" link after successful email update
+- **FR-016**: System MUST change "Update Email" link to "Resend Verification Email" link after successful email update AND display "Verification pending" badge or indicator next to email field. Badge MUST be removed after user successfully verifies email via magic link. Verification status MUST be stored in Redux state and checked on settings page load.
 - **FR-017**: Users MUST be able to open the Change Password modal by clicking "Change Password" link
-- **FR-018**: Change Password modal MUST provide fields for current password and new password with validation
-- **FR-019**: System MUST validate password fields (format, strength requirements) before allowing submission
-- **FR-020**: System MUST send password update to backend via PATCH request when user submits password change
+- **FR-018**: Change Password modal MUST provide fields for current password, new password, and confirm password with real-time validation that displays errors as the user types and clears errors immediately when corrected
+- **FR-018a**: Change Password modal MUST display validation errors inside the modal body (consistent with Update Email Modal), below or adjacent to the corresponding input fields
+- **FR-019**: System MUST validate all password fields in real-time:
+  - Current password: Required, minimum 8 characters
+  - New password: Required, minimum 8 characters, must contain uppercase, lowercase, number, special character, and be different from current password
+  - Confirm password: Required, must match new password exactly
+- **FR-019a**: System MUST disable the "Change Password" submit button when any validation error exists in current password, new password, or confirm password fields, preventing submission until all errors are resolved
+- **FR-020**: System MUST send password update to backend via PATCH request when user submits valid password change
 - **FR-021**: Users MUST be able to trigger retake assessment by clicking "Retake the Assessment" button
 - **FR-022**: System MUST display a confirmation modal (BaseModalWithIcon) with warning styling, explanatory message, and "Yes, Retake Assessment" and "Cancel" buttons before allowing retake
 - **FR-023**: System MUST redirect user to dashboard when they confirm retake assessment
@@ -173,18 +189,18 @@ A user who has updated their email but hasn't received the verification email ne
 - **FR-027b**: System MUST redirect user to `/account-deleted-success` page after successful account deletion
 - **FR-027c**: Account deleted success page MUST display confirmation message "Your account has been successfully deleted"
 - **FR-027d**: Account deleted success page MUST provide links to homepage or sign-up page and prevent navigation back to authenticated pages
-- **FR-027e**: System MUST prevent deleted user credentials from being used to log back in
+- **FR-027e**: System MUST prevent deleted user credentials from being used to log back in. After successful account deletion: (1) API MUST invalidate the current session token immediately, (2) Client MUST clear all stored authentication data (tokens, refresh tokens, user session), (3) API MUST mark user account as deleted in database, (4) Any subsequent API requests with deleted user credentials MUST return 401 Unauthorized with error message "Account has been deleted".
 - **FR-028**: System MUST manage modal visibility state using Redux Toolkit for all modals (UpdateYourEmailModal, ChangePasswordModal, confirmation modals)
 - **FR-029**: System MUST use existing ErrorMessage component consistently for all error scenarios
 - **FR-030**: System MUST use existing BaseModalWithIcon component for all confirmation and success messages
 - **FR-031**: System MUST follow the API calling patterns established in the existing auth module
-- **FR-032**: System MUST detect session expiry and show warning message before redirecting to login
-- **FR-033**: System MUST restore the user's modal context (which modal was open) after successful re-authentication, but must clear any sensitive data (passwords) from the form
-- **FR-034**: System MUST detect when profile data is updated in another browser tab and display notification "Profile updated in another tab" with a refresh button
+- **FR-032**: System MUST detect session expiry via TWO mechanisms: (1) Proactive detection by checking JWT token expiry timestamp before modal submission (warn user if token expires within 5 minutes), (2) Reactive detection by handling 401 Unauthorized API responses (redirect to login with session expired message). Both mechanisms MUST work together for optimal UX.
+- **FR-033**: System MUST restore the user's modal context (which modal was open) after successful re-authentication using sessionStorage key 'profile-modal-context'. Store modal identifier (e.g., 'change-password', 'update-email') before redirect to login. After re-auth, check sessionStorage and reopen the modal if context exists. MUST clear all password field values and any other sensitive data from form state - user must re-enter sensitive information.
+- **FR-034**: System MUST detect when profile data is updated in another browser tab using BroadcastChannel API (for modern browsers) with localStorage event listener fallback (for older browsers). When profile update occurs in one tab, broadcast 'profile-updated' event with timestamp. All other tabs listening on same channel display notification "Profile updated in another tab" with a refresh button.
 - **FR-035**: System MUST reload profile data when user clicks the refresh button in the concurrent update notification
-- **FR-036**: System MUST track failed password change attempts and allow maximum of 5 attempts
-- **FR-037**: System MUST display error message with remaining attempts count after each failed password change attempt
-- **FR-038**: System MUST lock the account for 15 minutes after 5 failed password change attempts and require verification to unlock
+- **FR-036**: System MUST track failed password change attempts SERVER-SIDE and allow maximum of 5 attempts per account. Failed attempt count MUST persist on server and be returned in API error responses. Client-side tracking is for display purposes only and MUST NOT enforce security policy.
+- **FR-037**: System MUST display error message with remaining attempts count after each failed password change attempt. Remaining count MUST be retrieved from API 401 Unauthorized response field `attemptsRemaining`.
+- **FR-038**: System MUST lock the account SERVER-SIDE for 15 minutes after 5 failed password change attempts. Lockout enforcement MUST be server-side (API rejects password change requests during lockout). Client displays lockout message retrieved from API 429 Too Many Requests response with `lockoutDuration` field (900 seconds).
 
 ## API Endpoints *(mandatory)*
 
@@ -282,19 +298,45 @@ A user who has updated their email but hasn't received the verification email ne
 - Maximum length: 255 characters
 - Must be different from current email address
 
-### Password Validation (New Password)
+### Password Validation - Current Password
 
+- Required field (cannot be empty)
+- Minimum length: 8 characters
+- No maximum length restriction
+- Display as masked field (dots/asterisks)
+- Validated against user's current password on submit
+
+### Password Validation - New Password
+
+- Required field (cannot be empty)
 - Minimum length: 8 characters
 - Must contain at least one uppercase letter (A-Z)
 - Must contain at least one lowercase letter (a-z)
 - Must contain at least one number (0-9)
 - Must contain at least one special character (!@#$%^&*()_+-=[]{}|;:,.<>?)
 - Cannot be the same as current password
+- Display as masked field (dots/asterisks)
+
+### Password Validation - Confirm Password
+
+- Required field (cannot be empty)
+- Must match new password exactly
+- Character-by-character comparison
+- Display as masked field (dots/asterisks)
+- Matched validation message: "Passwords do not match" when confirm differs from new password
+
+### Password Error Display
+
+- All password validation errors (current, new, confirm) MUST be displayed inside the Change Password Modal
+- Error location: Inside ModalBody, below or adjacent to the corresponding input field
+- Error styling: Consistent with Update Email Modal error display (text-only, no visual indicators)
+- Real-time validation: Display errors as user types, clearing errors immediately when corrected
+- Error messages MUST be visibly rendered and dismissible
 
 ### Password Change Security
 
 - Maximum 5 failed attempts allowed for incorrect current password
-- Display remaining attempts count after each failure
+- Display remaining attempts count after each failure (e.g., "4 attempts remaining")
 - After 5 failed attempts, lock account for 15 minutes
 - Require verification to unlock account after lockout period
 
@@ -315,7 +357,13 @@ A user who has updated their email but hasn't received the verification email ne
 - Handle loading states for all async operations (loading, success, error)
 - Implement proper state cleanup when modals close
 - Use selectors to access profile data from state
-- Implement cross-tab communication (e.g., BroadcastChannel or localStorage events) to detect profile updates in other tabs and show notification with refresh button
+- Implement cross-tab communication using BroadcastChannel API (preferred) with localStorage event listener fallback
+  - Create channel: `const channel = new BroadcastChannel('profile-updates')`
+  - Broadcast on profile update: `channel.postMessage({ type: 'PROFILE_UPDATED', timestamp: Date.now() })`
+  - Listen in all tabs: `channel.onmessage = (event) => { /* show notification */ }`
+  - Fallback: Use `window.addEventListener('storage', handler)` for browsers without BroadcastChannel
+- Store modal context in sessionStorage with key 'profile-modal-context' for session expiry recovery
+- Track password attempt count in Redux state from API response (display only, not enforcement)
 
 ### API Integration
 
@@ -323,25 +371,36 @@ A user who has updated their email but hasn't received the verification email ne
 - Use existing API service layer/utilities for HTTP requests
 - Implement consistent error handling using try-catch blocks in async thunks
 - Implement automatic retry logic: retry once on network failure before showing error to user
-- Preserve user form data during network failures to enable easy retry via "Retry" button
+- Preserve user form data during network failures to enable easy retry via "Retry" button (EXCEPT password fields - never preserve passwords)
 - Pass `accessToken` via headers: `Authorization: Bearer ${accessToken}`
+- Implement session expiry detection:
+  - Proactive: Check JWT token expiry before form submission (decode token, check `exp` claim, warn if expires within 5 minutes)
+  - Reactive: Handle 401 Unauthorized responses by redirecting to login with session expired message
 - Handle HTTP status codes appropriately:
   - 200/201: Success
   - 400: Validation errors
-  - 401: Unauthorized (redirect to login)
+  - 401: Unauthorized (session expired OR incorrect password - check error message)
   - 403: Forbidden
   - 404: Resource not found
+  - 409: Conflict (duplicate email)
+  - 429: Too Many Requests (account locked - extract lockoutDuration from response)
   - 500: Server error
+- Parse API error responses for user-friendly display:
+  - 401 with `attemptsRemaining`: Show "Incorrect password. X attempts remaining."
+  - 429 with `lockoutDuration`: Show "Account locked for X minutes due to too many failed attempts."
+  - 409: Show "This email is already in use."
 - Implement request timeout handling
-- Parse error responses and display user-friendly messages
 
 ### Component Reuse
 
-- **ErrorMessage**: Use for all error scenarios with consistent styling
-- **BaseModalWithIcon**: Use for all confirmations and success messages
-- **UpdateYourEmailModal**: Existing modal component (do not recreate)
-- **ChangePasswordModal**: Existing modal component (do not recreate)
-- **Settings Page**: Existing page component (do not recreate)
+- **ErrorMessage**: Use for all error scenarios with consistent styling (text-only, red-700 text color, danger type)
+- **BaseModalWithIcon**: Use for all confirmations and success messages with specific configurations:
+  - Success modals: Use CheckCircle icon from @untitledui/icons, green/success theme (green-50 background, green-600 icon), success background pattern
+  - Warning modals: Use AlertTriangle icon, yellow/warning theme (yellow-50 background, yellow-600 icon), warning background pattern
+  - Confirmation modals: Use AlertCircle icon, red/danger theme (red-50 background, red-600 icon), danger background pattern
+- **UpdateYourEmailModal**: Existing modal component (do not recreate) - errors displayed inside ModalBody
+- **ChangePasswordModal**: Existing modal component (do not recreate) - 3 password fields, errors displayed inside ModalBody
+- **Settings Page**: Existing page component (do not recreate) - integrate modals and handle state
 
 ### File Naming Convention for md file
 
@@ -360,9 +419,12 @@ All files must use `profile.` prefix:
 - Follow existing TypeScript/React coding standards in the codebase
 - Use proper type definitions for all API requests/responses
 - Implement proper error boundaries
-- Write comprehensive unit tests for all components
-- Follow accessibility best practices (ARIA labels, keyboard navigation)
+- Write comprehensive unit tests for all components (TDD approach - tests BEFORE implementation)
+- Follow accessibility best practices (WCAG 2.1 Level AA - see Accessibility Requirements section)
 - Ensure responsive design works on all screen sizes
+- All interactive elements MUST meet 44×44px minimum touch target size
+- Color contrast MUST meet 4.5:1 ratio for normal text, 3:1 for large text
+- Keyboard navigation MUST be fully functional (Tab, Shift+Tab, Enter, Escape)
 
 ## Navigation & Redirects *(mandatory)*
 
@@ -399,6 +461,58 @@ All files must use `profile.` prefix:
 - **DC-005**: Maintain existing color schemes, typography, and spacing
 - **DC-006**: Use existing icon sets and asset libraries
 - **DC-007**: Preserve existing responsive breakpoints and mobile layouts
+
+## Accessibility Requirements *(mandatory)*
+
+**WCAG 2.1 Level AA Compliance**: All profile settings features MUST meet Web Content Accessibility Guidelines 2.1 Level AA standards.
+
+### Form Accessibility
+
+- All form inputs MUST have associated `<label>` elements with explicit `for` attributes OR `aria-label` attributes
+- Input fields MUST have `aria-required="true"` for required fields
+- Validation error messages MUST be announced to screen readers using `aria-live="polite"` regions
+- Error messages MUST use `aria-describedby` to associate with their input fields
+- Input placeholders MUST NOT be the only form of labeling
+
+### Modal Accessibility
+
+- All modal dialogs MUST have `role="dialog"` attribute
+- Modals MUST have `aria-labelledby` pointing to the modal title
+- Modals MUST have `aria-describedby` pointing to the modal description (if present)
+- Focus MUST be trapped within modal when open (Tab cycles through modal elements only)
+- Focus MUST return to triggering element when modal closes
+- Modals MUST be dismissible via Escape key
+
+### Keyboard Navigation
+
+- All interactive elements MUST be keyboard accessible (Tab, Shift+Tab)
+- Focus order MUST follow logical reading order (top to bottom, left to right)
+- Focus indicators MUST be clearly visible (minimum 2px border, 3:1 contrast ratio)
+- Submit actions MUST be triggerable via Enter key when appropriate
+- Cancel actions MUST be triggerable via Escape key
+- Custom components MUST implement ARIA keyboard patterns (e.g., aria-expanded for dropdowns)
+
+### Visual Accessibility
+
+- Text MUST meet minimum contrast ratio of 4.5:1 for normal text, 3:1 for large text (18pt or 14pt bold)
+- Error messages MUST use color AND text/icons (not color alone) to convey meaning
+- Link text MUST be distinguishable from body text (not by color alone)
+- Interactive elements MUST have minimum touch target size of 44×44 CSS pixels
+
+### Screen Reader Support
+
+- Page title MUST update when navigating to Settings page
+- Dynamic content changes MUST be announced (e.g., "Profile updated successfully")
+- Loading states MUST be announced (e.g., "Saving profile information")
+- Error states MUST be announced with clear context
+- Success states MUST be announced with confirmation message
+
+### Testing Requirements
+
+- Manual keyboard navigation testing MUST pass (Tab through all forms/modals)
+- Automated accessibility scan MUST pass using axe DevTools or similar
+- Screen reader testing MUST pass on at least one platform (NVDA, JAWS, or VoiceOver)
+- Color contrast audit MUST verify all text meets WCAG AA standards
 
 ## Success Criteria *(mandatory)*
 

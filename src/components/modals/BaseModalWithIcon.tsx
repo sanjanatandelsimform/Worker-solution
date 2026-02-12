@@ -46,8 +46,7 @@ export const BaseModalWithIcon = ({
   paddingBottom = "h-5",
   backgroundPattern = "success",
 }: BaseModalWithIconProps) => {
-  const backgroundClass =
-    backgroundPattern === "success" ? "background-pattern" : "background-pattern-unsuccess";
+  const backgroundClass = backgroundPattern === "success" ? " " : "background-pattern-unsuccess";
 
   return (
     <Modal isOpen={isOpen} onOpenChange={onClose} size={size}>

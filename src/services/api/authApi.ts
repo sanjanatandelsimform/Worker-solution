@@ -5,11 +5,12 @@ import type {
   UserAccount,
   EmailCheckResponse,
   ApiError,
+  Industry,
 } from "../../types/auth";
 
 // Create Axios instance with base configuration
 const apiClient = axios.create({
-  baseURL: import.meta.env.VITE_API_BASE_URL || "http://localhost:3000/api/v1",
+  baseURL: import.meta.env.VITE_API_BASE_URL || "https://dev-api.benestats.com/api/v1",
   timeout: 10000,
   withCredentials: true,
   headers: {
@@ -148,9 +149,9 @@ apiClient.interceptors.response.use(
       localStorage.setItem("userDetail", JSON.stringify(updatedState));
 
       // Dispatch Redux action to update tokens in store
-      if (typeof window !== "undefined" && window.store) {
+      if (typeof window !== "undefined" && (window as { store?: unknown }).store) {
         const { setTokens } = await import("@/store/slices/authSlice");
-        window.store.dispatch(
+        (window as { store: { dispatch: (action: unknown) => void } }).store.dispatch(
           setTokens({
             accessToken: newAccessToken,
             refreshToken: newRefreshToken,
@@ -323,18 +324,86 @@ export const resetPassword = async (
  */
 export const verifyEmail = async (
   token: string
-): Promise<{ message?: string; user?: UserAccount }> => {
+): Promise<{
+  message?: string;
+  user?: {
+    id: string;
+    businessEmail: string;
+    emailVerify: boolean;
+  };
+  tokens?: {
+    accessToken: string;
+    refreshToken: string;
+  };
+}> => {
   try {
-    const response = await apiClient.post<{ message?: string; user?: UserAccount }>(
+    const response = await apiClient.post<{
+      message?: string;
+      data?: {
+        user: {
+          id: string;
+          businessEmail: string;
+          emailVerify: boolean;
+        };
+        tokens: {
+          accessToken: string;
+          refreshToken: string;
+        };
+      };
+    }>(
       "/verification/verify",
       {},
       {
         params: { token },
       }
     );
-    return response.data;
+
+    // Return flattened response for easier consumption
+    return {
+      message: response.data.message,
+      user: response.data.data?.user,
+      tokens: response.data.data?.tokens,
+    };
   } catch (_error) {
     throw new Error("Failed to verify email. Please try again.");
+  }
+};
+
+/**
+ * Set tokens utility (for other services)
+ */
+export const setTokens = (tokens: { accessToken: string; refreshToken: string }): void => {
+  const storedState = localStorage.getItem("userDetail");
+  if (storedState) {
+    const parsedState = JSON.parse(storedState);
+    const updatedState = {
+      ...parsedState,
+      auth: {
+        ...parsedState.auth,
+        tokens,
+      },
+    };
+    localStorage.setItem("userDetail", JSON.stringify(updatedState));
+  }
+};
+
+/**
+ * Fetch list of available industries for registration form
+ * @returns Promise resolving to array of Industry objects
+ * @throws Error with user-friendly message on failure
+ */
+export const getIndustries = async (): Promise<{ data: { industries: Industry[] } }> => {
+  try {
+    const response = await apiClient.get<{ data: { industries: Industry[] } }>("/industry/lookup");
+
+    // Validate non-empty response (per clarification #4)
+    if (!response.data?.data?.industries || response.data.data.industries.length === 0) {
+      throw new Error("No industries available. Please try again later.");
+    }
+
+    return response.data;
+  } catch (error) {
+    throw new Error(getErrorMessage(error));
   }
 };
 
