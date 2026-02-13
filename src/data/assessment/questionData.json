@@ -84,6 +84,7 @@
               "questionText": "If yes, how long are employees commuting to the office (estimated average time)?",
               "questionType": "TEXT_INPUT",
               "placeholder": "e.g., 45 minutes, 1 hour",
+              "displayOrder": 5,
               "validationRules": {
                 "type": "STRING",
                 "required": false,
@@ -100,7 +101,7 @@
           "key": "contractorsSeasonalEmployees",
           "questionText": "Do independent contractors and/or seasonal employees make up a large portion (greater than 30%) of your workforce?",
           "questionType": "YES_NO",
-          "displayOrder": 5,
+          "displayOrder": 6,
           "validationRules": {
             "type": "BOOLEAN",
             "required": false,
@@ -114,7 +115,7 @@
           "key": "commonJobTitles",
           "questionText": "What are the most common job titles or functions that make up most of your workforce and percentage of those roles?",
           "questionType": "STRUCTURED_ARRAY",
-          "displayOrder": 6,
+          "displayOrder": 7,
           "validationRules": {
             "type": "STRUCTURED_ARRAY",
             "required": false,
@@ -147,7 +148,7 @@
           "key": "hourlyEmployeesPercentage",
           "questionText": "Estimated % of hourly employees",
           "questionType": "NUMERIC",
-          "displayOrder": 7,
+          "displayOrder": 8,
           "validationRules": {
             "type": "NUMERIC",
             "required": true,
@@ -168,7 +169,7 @@
           "key": "salaryEmployeesPercentage",
           "questionText": "Estimated % of salary employees",
           "questionType": "NUMERIC",
-          "displayOrder": 8,
+          "displayOrder": 9,
           "validationRules": {
             "type": "NUMERIC",
             "required": true,
@@ -189,10 +190,10 @@
           "key": "topWorkLocations",
           "questionText": "List the top 5 work locations that employees are commuting to",
           "questionType": "STRUCTURED_ARRAY",
-          "displayOrder": 9,
+          "displayOrder": 10,
           "validationRules": {
             "type": "STRUCTURED_ARRAY",
-            "required": true,
+            "required": false,
             "maxItems": 5,
             "fields": [
               {
@@ -274,7 +275,7 @@
           "key": "employeesResideInSameZipCodes",
           "questionText": "Do the majority of employees reside in the same zip codes above?",
           "questionType": "YES_NO",
-          "displayOrder": 10,
+          "displayOrder": 11,
           "validationRules": {
             "type": "BOOLEAN",
             "required": true,
@@ -289,6 +290,7 @@
               "key": "employeeLivingZipCodes",
               "questionText": "If no, where do your employees live? Select top 5 common zip code areas",
               "questionType": "STRUCTURED_ARRAY",
+              "displayOrder": 12,
               "validationRules": {
                 "type": "STRUCTURED_ARRAY",
                 "required": false,
@@ -377,7 +379,7 @@
           "key": "educationLevel",
           "questionText": "What level of education do majority of your workers have?",
           "questionType": "SINGLE_SELECT",
-          "displayOrder": 11,
+          "displayOrder": 13,
           "validationRules": {
             "type": "SINGLE_SELECT",
             "required": false
@@ -397,7 +399,7 @@
           "key": "involuntaryTurnoverRate",
           "questionText": "What is your involuntary turnover rate?",
           "questionType": "NUMERIC",
-          "displayOrder": 12,
+          "displayOrder": 14,
           "validationRules": {
             "type": "NUMERIC",
             "required": false,
@@ -413,7 +415,7 @@
           "key": "voluntaryTurnoverRate",
           "questionText": "What is your voluntary turnover rate?",
           "questionType": "NUMERIC",
-          "displayOrder": 13,
+          "displayOrder": 15,
           "validationRules": {
             "type": "NUMERIC",
             "required": false,
@@ -542,10 +544,10 @@
           "questionText": "Who is your company's payroll provider?",
           "questionType": "SINGLE_SELECT_DROPDOWN",
           "displayOrder": 5,
-          "isRequired": true,
+          "isRequired": false,
           "validationRules": {
             "type": "SINGLE_SELECT_DROPDOWN",
-            "required": true,
+            "required": false,
             "errorMessage": "Please select your payroll provider"
           },
           "placeholder": "Select payroll provider",
@@ -566,25 +568,37 @@
             { "id": "superpayroll", "label": "SuperPayroll", "value": "superpayroll" },
             { "id": "insperity", "label": "Insperity", "value": "insperity" },
             { "id": "other", "label": "Other", "value": "other" }
-          ],
-          "conditionalQuestion": {
-            "showWhen": "other",
-            "question": {
-              "key": "payrollProviderOther",
-              "questionText": "Please enter your payroll provider if not listed",
-              "questionType": "TEXT_INPUT",
-              "placeholder": "Enter payroll provider name",
-              "validationRules": {
-                "type": "STRING",
-                "required": true,
-                "maxLength": 100,
-                "errorMessage": "Please specify your payroll provider"
-              },
-              "schemaVersion": 1,
-              "isRequired": true,
-              "options": []
+          ]
+        },
+        {
+          "key": "handlesHRPayrollInHouse",
+          "questionText": "Do you handle HR/payroll in-house?",
+          "questionType": "SINGLE_SELECT",
+          "displayOrder": 5,
+          "validationRules": {
+            "type": "SINGLE_SELECT",
+            "required": true,
+            "errorMessage": "Please indicate if you handle HR/payroll in-house"
+          },
+          "schemaVersion": 1,
+          "isRequired": true,
+          "options": [
+            {
+              "label": "Yes",
+              "value": "Yes",
+              "displayOrder": 1
+            },
+            {
+              "label": "No",
+              "value": "No",
+              "displayOrder": 2
+            },
+            {
+              "label": "Unsure",
+              "value": "Unsure",
+              "displayOrder": 3
             }
-          }
+          ]
         }
       ]
     },
@@ -600,67 +614,229 @@
           "displayOrder": 1,
           "validationRules": {
             "type": "ARRAY",
-            "required": true
+            "required": false
           },
           "schemaVersion": 1,
-          "isRequired": true,
+          "isRequired": false,
           "optionGroups": [
             {
               "groupName": "Retirement and Savings",
               "options": [
-                { "label": "Earned Wage Access", "value": "Earned Wage Access", "displayOrder": 1 },
-                { "label": "Loans for employees", "value": "Employee Loans", "displayOrder": 2 },
-                { "label": "Employee hardship grants", "value": "Hardship Grants", "displayOrder": 3 },
-                { "label": "Financial coaching and/or education", "value": "Financial Coaching", "displayOrder": 4 },
-                { "label": "Emergency savings benefits", "value": "Emergency Savings", "displayOrder": 5 },
-                { "label": "Student loan support", "value": "Student Loan Support", "displayOrder": 6 },
-                { "label": "Credit building services", "value": "Credit Building", "displayOrder": 7 },
-                { "label": "Retirement account migration and consolidation", "value": "Retirement Migration", "displayOrder": 8 }
+                {
+                  "label": "Earned Wage Access",
+                  "value": "Earned Wage Access",
+                  "displayOrder": 1
+                },
+                {
+                  "label": "Loans for employees",
+                  "value": "Employee Loans",
+                  "displayOrder": 2
+                },
+                {
+                  "label": "Employee hardship grants",
+                  "value": "Hardship Grants",
+                  "displayOrder": 3
+                },
+                {
+                  "label": "Financial coaching and/or education",
+                  "value": "Financial Coaching",
+                  "displayOrder": 4
+                },
+                {
+                  "label": "Emergency savings benefits",
+                  "value": "Emergency Savings",
+                  "displayOrder": 5
+                },
+                {
+                  "label": "Student loan support",
+                  "value": "Student Loan Support",
+                  "displayOrder": 6
+                },
+                {
+                  "label": "Credit building services",
+                  "value": "Credit Building",
+                  "displayOrder": 7
+                },
+                {
+                  "label": "Retirement account migration and consolidation",
+                  "value": "Retirement Migration",
+                  "displayOrder": 8
+                }
               ]
             },
             {
               "groupName": "Health and Wellness",
               "options": [
-                { "label": "Mental health support", "value": "Mental Health", "displayOrder": 9 },
-                { "label": "Medical expense assistance", "value": "Medical Expense Help", "displayOrder": 10 },
-                { "label": "Care navigation services", "value": "Care Navigation", "displayOrder": 11 }
+                {
+                  "label": "Mental health support",
+                  "value": "Mental Health",
+                  "displayOrder": 9
+                },
+                {
+                  "label": "Medical expense assistance",
+                  "value": "Medical Expense Help",
+                  "displayOrder": 10
+                },
+                {
+                  "label": "Care navigation services",
+                  "value": "Care Navigation",
+                  "displayOrder": 11
+                }
               ]
             },
             {
               "groupName": "Other Supplemental Benefits",
               "options": [
-                { "label": "Workplace benefits navigation", "value": "Benefits Navigation", "displayOrder": 12 },
-                { "label": "Education support (e.g. tuition reimbursement)", "value": "Education Support", "displayOrder": 13 },
-                { "label": "Other", "value": "Other", "displayOrder": 14 },
-                { "label": "Unsure", "value": "Unsure", "displayOrder": 15 },
-                { "label": "My company does not offer any supplemental benefits", "value": "None", "displayOrder": 16 }
+                {
+                  "label": "Workplace benefits navigation",
+                  "value": "Benefits Navigation",
+                  "displayOrder": 12
+                },
+                {
+                  "label": "Education support (e.g. tuition reimbursement)",
+                  "value": "Education Support",
+                  "displayOrder": 13
+                },
+                {
+                  "label": "Other",
+                  "value": "Other",
+                  "displayOrder": 14
+                },
+                {
+                  "label": "Unsure",
+                  "value": "Unsure",
+                  "displayOrder": 15
+                },
+                {
+                  "label": "My company does not offer any supplemental benefits",
+                  "value": "None",
+                  "displayOrder": 16
+                }
               ]
             }
           ],
           "options": [
-            { "label": "Earned Wage Access", "value": "Earned Wage Access", "displayOrder": 1, "group": "Retirement and Savings" },
-            { "label": "Loans for employees", "value": "Employee Loans", "displayOrder": 2, "group": "Retirement and Savings" },
-            { "label": "Employee hardship grants", "value": "Hardship Grants", "displayOrder": 3, "group": "Retirement and Savings" },
-            { "label": "Financial coaching and/or education", "value": "Financial Coaching", "displayOrder": 4, "group": "Retirement and Savings" },
-            { "label": "Emergency savings benefits", "value": "Emergency Savings", "displayOrder": 5, "group": "Retirement and Savings" },
-            { "label": "Student loan support", "value": "Student Loan Support", "displayOrder": 6, "group": "Retirement and Savings" },
-            { "label": "Credit building services", "value": "Credit Building", "displayOrder": 7, "group": "Retirement and Savings" },
-            { "label": "Retirement account migration and consolidation", "value": "Retirement Migration", "displayOrder": 8, "group": "Retirement and Savings" },
-            { "label": "Mental health support", "value": "Mental Health", "displayOrder": 9, "group": "Health and Wellness" },
-            { "label": "Medical expense assistance", "value": "Medical Expense Help", "displayOrder": 10, "group": "Health and Wellness" },
-            { "label": "Care navigation services", "value": "Care Navigation", "displayOrder": 11, "group": "Health and Wellness" },
-            { "label": "Workplace benefits navigation", "value": "Benefits Navigation", "displayOrder": 12, "group": "Other Supplemental Benefits" },
-            { "label": "Education support (e.g. tuition reimbursement)", "value": "Education Support", "displayOrder": 13, "group": "Other Supplemental Benefits" },
-            { "label": "Other", "value": "Other", "displayOrder": 14, "group": "Other Supplemental Benefits" },
-            { "label": "Unsure", "value": "Unsure", "displayOrder": 15, "group": "Other Supplemental Benefits" },
-            { "label": "My company does not offer any supplemental benefits", "value": "None", "displayOrder": 16, "group": "Other Supplemental Benefits" }
+            {
+              "label": "Earned Wage Access",
+              "value": "Earned Wage Access",
+              "displayOrder": 1,
+              "group": "Retirement and Savings"
+            },
+            {
+              "label": "Loans for employees",
+              "value": "Employee Loans",
+              "displayOrder": 2,
+              "group": "Retirement and Savings"
+            },
+            {
+              "label": "Employee hardship grants",
+              "value": "Hardship Grants",
+              "displayOrder": 3,
+              "group": "Retirement and Savings"
+            },
+            {
+              "label": "Financial coaching and/or education",
+              "value": "Financial Coaching",
+              "displayOrder": 4,
+              "group": "Retirement and Savings"
+            },
+            {
+              "label": "Emergency savings benefits",
+              "value": "Emergency Savings",
+              "displayOrder": 5,
+              "group": "Retirement and Savings"
+            },
+            {
+              "label": "Student loan support",
+              "value": "Student Loan Support",
+              "displayOrder": 6,
+              "group": "Retirement and Savings"
+            },
+            {
+              "label": "Credit building services",
+              "value": "Credit Building",
+              "displayOrder": 7,
+              "group": "Retirement and Savings"
+            },
+            {
+              "label": "Retirement account migration and consolidation",
+              "value": "Retirement Migration",
+              "displayOrder": 8,
+              "group": "Retirement and Savings"
+            },
+            {
+              "label": "Mental health support",
+              "value": "Mental Health",
+              "displayOrder": 9,
+              "group": "Health and Wellness"
+            },
+            {
+              "label": "Medical expense assistance",
+              "value": "Medical Expense Help",
+              "displayOrder": 10,
+              "group": "Health and Wellness"
+            },
+            {
+              "label": "Care navigation services",
+              "value": "Care Navigation",
+              "displayOrder": 11,
+              "group": "Health and Wellness"
+            },
+            {
+              "label": "Workplace benefits navigation",
+              "value": "Benefits Navigation",
+              "displayOrder": 12,
+              "group": "Other Supplemental Benefits"
+            },
+            {
+              "label": "Education support (e.g. tuition reimbursement)",
+              "value": "Education Support",
+              "displayOrder": 13,
+              "group": "Other Supplemental Benefits"
+            },
+            {
+              "label": "Other",
+              "value": "Other",
+              "displayOrder": 14,
+              "group": "Other Supplemental Benefits"
+            },
+            {
+              "label": "Unsure",
+              "value": "Unsure",
+              "displayOrder": 15,
+              "group": "Other Supplemental Benefits"
+            },
+            {
+              "label": "My company does not offer any supplemental benefits",
+              "value": "None",
+              "displayOrder": 16,
+              "group": "Other Supplemental Benefits"
+            }
           ]
+        },
+        {
+          "key": "supplementalBenefitsOther",
+          "questionText": "Please specify other supplemental benefits",
+          "questionType": "TEXT_INPUT",
+          "displayOrder": 2,
+          "validationRules": {
+            "type": "STRING",
+            "required": false,
+            "maxLength": 10000,
+            "conditionalOn": "supplementalBenefits",
+            "conditionalValue": "Other",
+            "conditionalRequired": true,
+            "errorMessage": "Please specify other supplemental benefits when selecting 'Other'"
+          },
+          "schemaVersion": 1,
+          "isRequired": false,
+          "options": []
         },
         {
           "key": "workWithBenefitsBroker",
           "questionText": "Do you work with a benefits broker?",
           "questionType": "SINGLE_SELECT",
-          "displayOrder": 2,
+          "displayOrder": 3,
           "validationRules": {
             "type": "SINGLE_SELECT",
             "required": true,
@@ -669,16 +845,42 @@
           "schemaVersion": 1,
           "isRequired": true,
           "options": [
-            { "label": "Yes", "value": "Yes", "displayOrder": 1 },
-            { "label": "No", "value": "No", "displayOrder": 2 },
-            { "label": "Unsure", "value": "Unsure", "displayOrder": 3 }
+            {
+              "label": "Yes",
+              "value": "Yes",
+              "displayOrder": 1
+            },
+            {
+              "label": "No",
+              "value": "No",
+              "displayOrder": 2
+            },
+            {
+              "label": "Unsure",
+              "value": "Unsure",
+              "displayOrder": 3
+            }
           ]
+        },
+        {
+          "key": "benefitsBrokerName",
+          "questionText": "If yes, please provide your broker name",
+          "questionType": "TEXT_INPUT",
+          "displayOrder": 4,
+          "validationRules": {
+            "type": "STRING",
+            "required": false,
+            "maxLength": 10000
+          },
+          "schemaVersion": 1,
+          "isRequired": false,
+          "options": []
         },
         {
           "key": "benefitEnrollmentMonth",
           "questionText": "When is your benefits enrollment period?",
           "questionType": "SINGLE_SELECT_DROPDOWN",
-          "displayOrder": 3,
+          "displayOrder": 5,
           "validationRules": {
             "type": "SINGLE_SELECT_DROPDOWN",
             "required": true,
@@ -687,25 +889,73 @@
           "schemaVersion": 1,
           "isRequired": true,
           "options": [
-            { "label": "January", "value": "Jan", "displayOrder": 1 },
-            { "label": "February", "value": "Feb", "displayOrder": 2 },
-            { "label": "March", "value": "Mar", "displayOrder": 3 },
-            { "label": "April", "value": "Apr", "displayOrder": 4 },
-            { "label": "May", "value": "May", "displayOrder": 5 },
-            { "label": "June", "value": "Jun", "displayOrder": 6 },
-            { "label": "July", "value": "Jul", "displayOrder": 7 },
-            { "label": "August", "value": "Aug", "displayOrder": 8 },
-            { "label": "September", "value": "Sep", "displayOrder": 9 },
-            { "label": "October", "value": "Oct", "displayOrder": 10 },
-            { "label": "November", "value": "Nov", "displayOrder": 11 },
-            { "label": "December", "value": "Dec", "displayOrder": 12 }
+            {
+              "label": "January",
+              "value": "Jan",
+              "displayOrder": 1
+            },
+            {
+              "label": "February",
+              "value": "Feb",
+              "displayOrder": 2
+            },
+            {
+              "label": "March",
+              "value": "Mar",
+              "displayOrder": 3
+            },
+            {
+              "label": "April",
+              "value": "Apr",
+              "displayOrder": 4
+            },
+            {
+              "label": "May",
+              "value": "May",
+              "displayOrder": 5
+            },
+            {
+              "label": "June",
+              "value": "Jun",
+              "displayOrder": 6
+            },
+            {
+              "label": "July",
+              "value": "Jul",
+              "displayOrder": 7
+            },
+            {
+              "label": "August",
+              "value": "Aug",
+              "displayOrder": 8
+            },
+            {
+              "label": "September",
+              "value": "Sep",
+              "displayOrder": 9
+            },
+            {
+              "label": "October",
+              "value": "Oct",
+              "displayOrder": 10
+            },
+            {
+              "label": "November",
+              "value": "Nov",
+              "displayOrder": 11
+            },
+            {
+              "label": "December",
+              "value": "Dec",
+              "displayOrder": 12
+            }
           ]
         },
         {
           "key": "offersRetirementBenefit",
           "questionText": "Do you offer a company-sponsored retirement benefit to your workers?",
           "questionType": "YES_NO",
-          "displayOrder": 4,
+          "displayOrder": 6,
           "validationRules": {
             "type": "BOOLEAN",
             "required": true,
@@ -713,116 +963,210 @@
           },
           "schemaVersion": 1,
           "isRequired": true,
-          "options": [],
-          "conditionalQuestion": {
-            "showWhen": "yes",
-            "question": {
-              "key": "retirementProvider",
-              "questionText": "Who is your retirement benefits record keeper or provider?",
-              "questionType": "SINGLE_SELECT_DROPDOWN",
-              "validationRules": {
-                "type": "SINGLE_SELECT_DROPDOWN",
-                "required": false,
-                "errorMessage": "Please select your retirement provider"
-              },
-              "schemaVersion": 1,
-              "isRequired": false,
-              "placeholder": "Select retirement provider",
-              "options": [
-                { "id": "401GO", "label": "401GO", "value": "401GO" },
-                { "id": "adp_retirement", "label": "ADP Retirement Services", "value": "ADP Retirement Services" },
-                { "id": "alerus", "label": "Alerus Retirement and Benefits", "value": "Alerus Retirement and Benefits" },
-                { "id": "alight", "label": "Alight Solutions", "value": "Alight Solutions" },
-                { "id": "alliance", "label": "Alliance Benefit Group", "value": "Alliance Benefit Group" },
-                { "id": "american_funds", "label": "American Funds (Capital Group)", "value": "American Funds (Capital Group)" },
-                { "id": "american_trust", "label": "American Trust", "value": "American Trust" },
-                { "id": "ascensus", "label": "Ascensus", "value": "Ascensus" },
-                { "id": "benefit_plans", "label": "Benefit Plans Plus", "value": "Benefit Plans Plus" },
-                { "id": "benefit_trust", "label": "Benefit Trust Company", "value": "Benefit Trust Company" },
-                { "id": "betterment", "label": "Betterment for Business", "value": "Betterment for Business" },
-                { "id": "calsavers", "label": "CalSavers", "value": "CalSavers" },
-                { "id": "certified_financial", "label": "Certified Financial Group", "value": "Certified Financial Group" },
-                { "id": "charles_schwab", "label": "Charles Schwab", "value": "Charles Schwab" },
-                { "id": "colorado_secure", "label": "Colorado SecureSavings", "value": "Colorado SecureSavings" },
-                { "id": "corebridge", "label": "Corebridge Financial", "value": "Corebridge Financial" },
-                { "id": "definiti", "label": "Definiti", "value": "Definiti" },
-                { "id": "delaware_earns", "label": "Delaware Earns", "value": "Delaware Earns" },
-                { "id": "empower", "label": "Empower", "value": "Empower" },
-                { "id": "epic", "label": "EPIC Retirement Plan Services", "value": "EPIC Retirement Plan Services" },
-                { "id": "evolve", "label": "Evolve", "value": "Evolve" },
-                { "id": "fidelity", "label": "Fidelity", "value": "Fidelity" },
-                { "id": "forusall", "label": "ForUsAll", "value": "ForUsAll" },
-                { "id": "guideline", "label": "Guideline", "value": "Guideline" },
-                { "id": "human_interest", "label": "Human Interest", "value": "Human Interest" },
-                { "id": "illinois_secure", "label": "Illinois Secure Choice", "value": "Illinois Secure Choice" },
-                { "id": "jp_morgan", "label": "J.P. Morgan", "value": "J.P. Morgan" },
-                { "id": "john_hancock", "label": "John Hancock", "value": "John Hancock" },
-                { "id": "jocelyn", "label": "Jocelyn Pension", "value": "Jocelyn Pension" },
-                { "id": "july_business", "label": "July Business Services", "value": "July Business Services" },
-                { "id": "lincoln", "label": "Lincoln Financial Group", "value": "Lincoln Financial Group" },
-                { "id": "maryland_saves", "label": "MarylandSaves", "value": "MarylandSaves" },
-                { "id": "milliman", "label": "Milliman", "value": "Milliman" },
-                { "id": "mutual_america", "label": "Mutual of America", "value": "Mutual of America" },
-                { "id": "mvp", "label": "MVP Administrators", "value": "MVP Administrators" },
-                { "id": "nationwide", "label": "Nationwide", "value": "Nationwide" },
-                { "id": "nwps", "label": "NWPS", "value": "NWPS" },
-                { "id": "oregon_saves", "label": "OregonSaves", "value": "OregonSaves" },
-                { "id": "paychex", "label": "Paychex", "value": "Paychex" },
-                { "id": "pbh", "label": "PB&H Benefits", "value": "PB&H Benefits" },
-                { "id": "pensionmark", "label": "Pensionmark", "value": "Pensionmark" },
-                { "id": "pcs", "label": "PCS Retirement", "value": "PCS Retirement" },
-                { "id": "principal", "label": "Principal", "value": "Principal" },
-                { "id": "primark", "label": "Primark Benefits", "value": "Primark Benefits" },
-                { "id": "retire_ready", "label": "RetireReady NJ", "value": "RetireReady NJ" },
-                { "id": "retirement_alliance", "label": "Retirement Alliance", "value": "Retirement Alliance" },
-                { "id": "retirement_plan_co", "label": "Retirement Plan Company", "value": "Retirement Plan Company" },
-                { "id": "retirement_consultants", "label": "Retirement Plan Consultants", "value": "Retirement Plan Consultants" },
-                { "id": "retirement_strategies", "label": "Retirement Strategies Group", "value": "Retirement Strategies Group" },
-                { "id": "sentinel", "label": "Sentinel Benefits & Financial Group", "value": "Sentinel Benefits & Financial Group" },
-                { "id": "slavic", "label": "Slavic401k", "value": "Slavic401k" },
-                { "id": "spectrum", "label": "Spectrum Pension Consultants", "value": "Spectrum Pension Consultants" },
-                { "id": "tra", "label": "The Retirement Advantage (TRA)", "value": "The Retirement Advantage (TRA)" },
-                { "id": "standard", "label": "The Standard", "value": "The Standard" },
-                { "id": "tiaa", "label": "TIAA", "value": "TIAA" },
-                { "id": "transamerica", "label": "Transamerica", "value": "Transamerica" },
-                { "id": "triad", "label": "TRI-AD", "value": "TRI-AD" },
-                { "id": "trustage", "label": "TruStage (CUNA Mutual)", "value": "TruStage (CUNA Mutual)" },
-                { "id": "trust_oklahoma", "label": "Trust Company of Oklahoma", "value": "Trust Company of Oklahoma" },
-                { "id": "ubiquity", "label": "Ubiquity Retirement + Savings", "value": "Ubiquity Retirement + Savings" },
-                { "id": "unified_trust", "label": "Unified Trust Company", "value": "Unified Trust Company" },
-                { "id": "usi", "label": "USI Consulting Group", "value": "USI Consulting Group" },
-                { "id": "vanguard", "label": "Vanguard", "value": "Vanguard" },
-                { "id": "vermont_saves", "label": "Vermont Saves", "value": "Vermont Saves" },
-                { "id": "vestwell", "label": "Vestwell", "value": "Vestwell" },
-                { "id": "voya", "label": "Voya Financial", "value": "Voya Financial" },
-                { "id": "other", "label": "Other", "value": "Other" }
-              ],
-              "conditionalQuestion": {
-                "showWhen": "Other",
-                "question": {
-                  "key": "retirementProviderOther",
-                  "questionText": "Please specify your retirement benefits record keeper name",
-                  "questionType": "TEXT_INPUT",
-                  "validationRules": {
-                    "type": "STRING",
-                    "required": true,
-                    "maxLength": 100,
-                    "errorMessage": "Please specify your retirement benefits record keeper name"
-                  },
-                  "schemaVersion": 1,
-                  "isRequired": true,
-                  "placeholder": "Enter record keeper name",
-                  "options": []
-                }
-              }
-            }
-          }
+          "options": []
+        },
+        {
+          "key": "retirementProvider",
+          "questionText": "Who is your retirement benefits record keeper or provider?",
+          "questionType": "SINGLE_SELECT_DROPDOWN",
+          "displayOrder": 7,
+          "validationRules": {
+            "type": "SINGLE_SELECT_DROPDOWN",
+            "required": false,
+            "conditionalOn": "offersRetirementBenefit",
+            "conditionalValue": true
+          },
+          "schemaVersion": 1,
+          "isRequired": false,
+          "options": [
+            { "label": "401GO", "value": "401GO", "displayOrder": 1 },
+            {
+              "label": "ADP Retirement Services",
+              "value": "ADP Retirement Services",
+              "displayOrder": 2
+            },
+            {
+              "label": "Alerus Retirement and Benefits",
+              "value": "Alerus Retirement and Benefits",
+              "displayOrder": 3
+            },
+            { "label": "Alight Solutions", "value": "Alight Solutions", "displayOrder": 4 },
+            {
+              "label": "Alliance Benefit Group",
+              "value": "Alliance Benefit Group",
+              "displayOrder": 5
+            },
+            {
+              "label": "American Funds (Capital Group)",
+              "value": "American Funds (Capital Group)",
+              "displayOrder": 6
+            },
+            { "label": "American Trust", "value": "American Trust", "displayOrder": 7 },
+            { "label": "Ascensus", "value": "Ascensus", "displayOrder": 8 },
+            { "label": "Benefit Plans Plus", "value": "Benefit Plans Plus", "displayOrder": 9 },
+            {
+              "label": "Benefit Trust Company",
+              "value": "Benefit Trust Company",
+              "displayOrder": 10
+            },
+            {
+              "label": "Betterment for Business",
+              "value": "Betterment for Business",
+              "displayOrder": 11
+            },
+            { "label": "CalSavers", "value": "CalSavers", "displayOrder": 12 },
+            {
+              "label": "Certified Financial Group",
+              "value": "Certified Financial Group",
+              "displayOrder": 13
+            },
+            { "label": "Charles Schwab", "value": "Charles Schwab", "displayOrder": 14 },
+            {
+              "label": "Colorado SecureSavings",
+              "value": "Colorado SecureSavings",
+              "displayOrder": 15
+            },
+            {
+              "label": "Corebridge Financial",
+              "value": "Corebridge Financial",
+              "displayOrder": 16
+            },
+            { "label": "Definiti", "value": "Definiti", "displayOrder": 17 },
+            { "label": "Delaware Earns", "value": "Delaware Earns", "displayOrder": 18 },
+            { "label": "Empower", "value": "Empower", "displayOrder": 19 },
+            {
+              "label": "EPIC Retirement Plan Services",
+              "value": "EPIC Retirement Plan Services",
+              "displayOrder": 20
+            },
+            { "label": "Evolve", "value": "Evolve", "displayOrder": 21 },
+            { "label": "Fidelity", "value": "Fidelity", "displayOrder": 22 },
+            { "label": "ForUsAll", "value": "ForUsAll", "displayOrder": 23 },
+            { "label": "Guideline", "value": "Guideline", "displayOrder": 24 },
+            { "label": "Human Interest", "value": "Human Interest", "displayOrder": 25 },
+            {
+              "label": "Illinois Secure Choice",
+              "value": "Illinois Secure Choice",
+              "displayOrder": 26
+            },
+            { "label": "J.P. Morgan", "value": "J.P. Morgan", "displayOrder": 27 },
+            { "label": "John Hancock", "value": "John Hancock", "displayOrder": 28 },
+            { "label": "Jocelyn Pension", "value": "Jocelyn Pension", "displayOrder": 29 },
+            {
+              "label": "July Business Services",
+              "value": "July Business Services",
+              "displayOrder": 30
+            },
+            {
+              "label": "Lincoln Financial Group",
+              "value": "Lincoln Financial Group",
+              "displayOrder": 31
+            },
+            { "label": "MarylandSaves", "value": "MarylandSaves", "displayOrder": 32 },
+            { "label": "Milliman", "value": "Milliman", "displayOrder": 33 },
+            { "label": "Mutual of America", "value": "Mutual of America", "displayOrder": 34 },
+            { "label": "MVP Administrators", "value": "MVP Administrators", "displayOrder": 35 },
+            { "label": "Nationwide", "value": "Nationwide", "displayOrder": 36 },
+            { "label": "NWPS", "value": "NWPS", "displayOrder": 37 },
+            { "label": "OregonSaves", "value": "OregonSaves", "displayOrder": 38 },
+            { "label": "Paychex", "value": "Paychex", "displayOrder": 39 },
+            { "label": "PB&H Benefits", "value": "PB&H Benefits", "displayOrder": 40 },
+            { "label": "Pensionmark", "value": "Pensionmark", "displayOrder": 41 },
+            { "label": "PCS Retirement", "value": "PCS Retirement", "displayOrder": 42 },
+            { "label": "Principal", "value": "Principal", "displayOrder": 43 },
+            { "label": "Primark Benefits", "value": "Primark Benefits", "displayOrder": 44 },
+            { "label": "RetireReady NJ", "value": "RetireReady NJ", "displayOrder": 45 },
+            { "label": "Retirement Alliance", "value": "Retirement Alliance", "displayOrder": 46 },
+            {
+              "label": "Retirement Plan Company",
+              "value": "Retirement Plan Company",
+              "displayOrder": 47
+            },
+            {
+              "label": "Retirement Plan Consultants",
+              "value": "Retirement Plan Consultants",
+              "displayOrder": 48
+            },
+            {
+              "label": "Retirement Strategies Group",
+              "value": "Retirement Strategies Group",
+              "displayOrder": 49
+            },
+            {
+              "label": "Sentinel Benefits & Financial Group",
+              "value": "Sentinel Benefits & Financial Group",
+              "displayOrder": 50
+            },
+            { "label": "Slavic401k", "value": "Slavic401k", "displayOrder": 51 },
+            {
+              "label": "Spectrum Pension Consultants",
+              "value": "Spectrum Pension Consultants",
+              "displayOrder": 52
+            },
+            {
+              "label": "The Retirement Advantage (TRA)",
+              "value": "The Retirement Advantage (TRA)",
+              "displayOrder": 53
+            },
+            { "label": "The Standard", "value": "The Standard", "displayOrder": 54 },
+            { "label": "TIAA", "value": "TIAA", "displayOrder": 55 },
+            { "label": "Transamerica", "value": "Transamerica", "displayOrder": 56 },
+            { "label": "TRI-AD", "value": "TRI-AD", "displayOrder": 57 },
+            {
+              "label": "TruStage (CUNA Mutual)",
+              "value": "TruStage (CUNA Mutual)",
+              "displayOrder": 58
+            },
+            {
+              "label": "Trust Company of Oklahoma",
+              "value": "Trust Company of Oklahoma",
+              "displayOrder": 59
+            },
+            {
+              "label": "Ubiquity Retirement + Savings",
+              "value": "Ubiquity Retirement + Savings",
+              "displayOrder": 60
+            },
+            {
+              "label": "Unified Trust Company",
+              "value": "Unified Trust Company",
+              "displayOrder": 61
+            },
+            {
+              "label": "USI Consulting Group",
+              "value": "USI Consulting Group",
+              "displayOrder": 62
+            },
+            { "label": "Vanguard", "value": "Vanguard", "displayOrder": 63 },
+            { "label": "Vermont Saves", "value": "Vermont Saves", "displayOrder": 64 },
+            { "label": "Vestwell", "value": "Vestwell", "displayOrder": 65 },
+            { "label": "Voya Financial", "value": "Voya Financial", "displayOrder": 66 },
+            { "label": "Other", "value": "Other", "displayOrder": 67 }
+          ]
+        },
+        {
+          "key": "retirementProviderOther",
+          "questionText": "Please specify your retirement provider",
+          "questionType": "TEXT_INPUT",
+          "displayOrder": 8,
+          "validationRules": {
+            "type": "STRING",
+            "required": false,
+            "maxLength": 10000,
+            "conditionalOn": "retirementProvider",
+            "conditionalValue": "Other",
+            "conditionalRequired": true,
+            "errorMessage": "Please specify your retirement provider"
+          },
+          "schemaVersion": 1,
+          "isRequired": false,
+          "options": []
         },
         {
           "key": "retirementEnrollmentRate",
-          "questionText": "What percentage of employees do you estimate are enrolled in retirement benefits?​",
+          "questionText": "What percentage of employees are enrolled in your retirement benefits?",
           "questionType": "SINGLE_SELECT",
-          "displayOrder": 5,
+          "displayOrder": 9,
           "validationRules": {
             "type": "SINGLE_SELECT",
             "required": true
@@ -840,39 +1184,37 @@
           "key": "retirementPlanHasMatch",
           "questionText": "Does your retirement plan feature an employer match?",
           "questionType": "YES_NO",
-          "displayOrder": 6,
+          "displayOrder": 10,
           "validationRules": {
             "type": "BOOLEAN",
             "required": false
           },
           "schemaVersion": 1,
           "isRequired": false,
-          "options": [],
-          "conditionalQuestion": {
-            "showWhen": "yes",
-            "question": {
-              "key": "retirementMatchPercentage",
-              "questionText": "What is the employer match percentage?",
-              "questionType": "NUMBER_INPUT",
-              "validationRules": {
-                "type": "NUMBER",
-                "required": true,
-                "min": 0,
-                "max": 100,
-                "errorMessage": "Please enter a valid percentage between 0 and 100"
-              },
-              "schemaVersion": 1,
-              "isRequired": true,
-              "placeholder": "Enter percentage",
-              "options": []
-            }
-          }
+          "options": []
+        },
+        {
+          "key": "retirementMatchPercentage",
+          "questionText": "What is the employer match percentage?",
+          "questionType": "NUMBER_INPUT",
+          "displayOrder": 11,
+          "validationRules": {
+            "type": "NUMBER",
+            "required": false,
+            "min": 0,
+            "max": 100,
+            "conditionalOn": "retirementPlanHasMatch",
+            "conditionalValue": true
+          },
+          "schemaVersion": 1,
+          "isRequired": false,
+          "options": []
         },
         {
           "key": "retirementVestingPeriod",
           "questionText": "What is the vesting period of your business's retirement plan? ​",
           "questionType": "SINGLE_SELECT",
-          "displayOrder": 7,
+          "displayOrder": 12,
           "validationRules": {
             "type": "SINGLE_SELECT",
             "required": true
@@ -881,9 +1223,21 @@
           "isRequired": true,
           "options": [
             { "label": "6 months or less", "value": "≤6mo", "displayOrder": 1 },
-            { "label": "Greater than 6 months – 1 year", "value": "6mo-1yr", "displayOrder": 2 },
-            { "label": "Greater than 1 year - 2 years", "value": "1-2yr", "displayOrder": 3 },
-            { "label": "Greater than 2 years – 4 years", "value": "2-4yr", "displayOrder": 4 },
+            {
+              "label": "Greater than 6 months – 1 year",
+              "value": "6mo-1yr",
+              "displayOrder": 2
+            },
+            {
+              "label": "Greater than 1 year - 2 years",
+              "value": "1-2yr",
+              "displayOrder": 3
+            },
+            {
+              "label": "Greater than 2 years – 4 years",
+              "value": "2-4yr",
+              "displayOrder": 4
+            },
             { "label": "Greater than 4 years", "value": ">4yr", "displayOrder": 5 }
           ]
         },
@@ -891,7 +1245,7 @@
           "key": "retirementAutoEnroll",
           "questionText": "Does your company auto-enroll employees in retirement benefits?",
           "questionType": "YES_NO",
-          "displayOrder": 8,
+          "displayOrder": 13,
           "validationRules": {
             "type": "BOOLEAN",
             "required": true
@@ -904,20 +1258,20 @@
           "key": "retirementAllowsHardshipWithdrawals",
           "questionText": "Does your company's retirement plan allows for hardship withdrawals and/or loans?",
           "questionType": "YES_NO",
-          "displayOrder": 9,
+          "displayOrder": 14,
           "validationRules": {
             "type": "BOOLEAN",
-            "required": true
+            "required": false
           },
           "schemaVersion": 1,
-          "isRequired": true,
+          "isRequired": false,
           "options": []
         },
         {
           "key": "offersHealthInsurance",
           "questionText": "Does your offer a company-sponsored healthcare insurance benefit to your workers?",
           "questionType": "YES_NO",
-          "displayOrder": 10,
+          "displayOrder": 15,
           "validationRules": {
             "type": "BOOLEAN",
             "required": true,
@@ -932,28 +1286,61 @@
               "key": "healthPlanTypes",
               "questionText": "What types of healthcare plans do you offer?",
               "questionType": "MULTIPLE_CHOICE",
+              "displayOrder": 16,
               "validationRules": {
                 "type": "ARRAY",
-                "required": true,
+                "required": false,
                 "errorMessage": "Please select at least one healthcare plan"
               },
               "schemaVersion": 1,
-              "isRequired": true,
+              "isRequired": false,
               "options": [
-                { "label": "HMO (Health Maintenance Organization)", "value": "HMO", "displayOrder": 1 },
-                { "label": "PPO (Preferred Provider Organization)", "value": "PPO", "displayOrder": 2 },
-                { "label": "EPO (Exclusive Provider Organization)", "value": "EPO", "displayOrder": 3 },
+                {
+                  "label": "HMO (Health Maintenance Organization)",
+                  "value": "HMO",
+                  "displayOrder": 1
+                },
+                {
+                  "label": "PPO (Preferred Provider Organization)",
+                  "value": "PPO",
+                  "displayOrder": 2
+                },
+                {
+                  "label": "EPO (Exclusive Provider Organization)",
+                  "value": "EPO",
+                  "displayOrder": 3
+                },
                 { "label": "POS (Point of Service)", "value": "POS", "displayOrder": 4 },
-                { "label": "HDHP (High Deductible Health Plan)", "value": "HDHP", "displayOrder": 5 }
+                {
+                  "label": "HDHP (High Deductible Health Plan)",
+                  "value": "HDHP",
+                  "displayOrder": 5
+                }
               ]
             }
           }
         },
         {
+          "key": "lowestHealthPlanPremium",
+          "questionText": "What is the employee-only monthly premium for the lowest-cost health plan your company offers? ",
+          "questionType": "NUMBER_INPUT",
+          "displayOrder": 17,
+          "validationRules": {
+            "type": "NUMBER",
+            "required": true,
+            "min": 0,
+            "conditionalOn": "offersHealthInsurance",
+            "conditionalValue": true
+          },
+          "schemaVersion": 1,
+          "isRequired": false,
+          "options": []
+        },
+        {
           "key": "healthPlanInsuranceType",
           "questionText": "Are your healthcare benefit plans fully insured or self-insured?",
           "questionType": "SINGLE_SELECT",
-          "displayOrder": 11,
+          "displayOrder": 18,
           "validationRules": {
             "type": "SINGLE_SELECT",
             "required": true,
@@ -963,32 +1350,48 @@
           "schemaVersion": 1,
           "isRequired": true,
           "options": [
-            { "label": "Fully insured (Traditional Group Plans)", "value": "Fully Insured", "displayOrder": 1 },
-            { "label": "Self Insured (Group Health Insurance)", "value": "Self Insured", "displayOrder": 2 }
+            {
+              "label": "Fully insured (Traditional Group Plans)",
+              "value": "Fully Insured",
+              "displayOrder": 1
+            },
+            {
+              "label": "Self Insured (Group Health Insurance)",
+              "value": "Self Insured",
+              "displayOrder": 2
+            }
           ]
         },
         {
           "key": "reimbursementArrangements",
-          "questionText": "Please select any of the following reimbursement arrangements you utilize",
+          "questionText": "What reimbursement arrangements does your company utilize?",
           "questionType": "MULTIPLE_CHOICE",
-          "displayOrder": 12,
+          "displayOrder": 19,
           "validationRules": {
             "type": "ARRAY",
-            "required": true
+            "required": false
           },
           "schemaVersion": 1,
-          "isRequired": true,
+          "isRequired": false,
           "options": [
-            { "label": "Individual Coverage Health Reimbursement Accounts (ICHRA)", "value": "ICHRA", "displayOrder": 1 },
-            { "label": "Qualified Small Employer Health Reimbursement Arrangements (QSEHRA)", "value": "QSEHRA", "displayOrder": 2 },
+            {
+              "label": "Individual Coverage Health Reimbursement Accounts (ICHRA)",
+              "value": "ICHRA",
+              "displayOrder": 1
+            },
+            {
+              "label": "Qualified Small Employer Health Reimbursement Arrangements (QSEHRA)",
+              "value": "QSEHRA",
+              "displayOrder": 2
+            },
             { "label": "Other", "value": "Other", "displayOrder": 3 }
           ]
         },
         {
           "key": "healthPlanParticipationRates",
-          "questionText": "What percentage of employees participate in the following:",
+          "questionText": "What percentage of your employees participate in each health plan coverage type?",
           "questionType": "PARTICIPATION_RATES",
-          "displayOrder": 13,
+          "displayOrder": 20,
           "validationRules": {
             "type": "OBJECT",
             "required": false
@@ -1047,22 +1450,6 @@
               ]
             }
           ],
-          "options": []
-        },
-        {
-          "key": "lowestHealthPlanPremium",
-          "questionText": "What is the employee-only monthly premium for the lowest-cost health plan your company offers?",
-          "questionType": "TEXT_INPUT",
-          "displayOrder": 14,
-          "validationRules": {
-            "type": "STRING",
-            "required": true,
-            "maxLength": 100,
-            "errorMessage": "Please enter the monthly premium"
-          },
-          "schemaVersion": 1,
-          "isRequired": true,
-          "placeholder": "Enter monthly premium (e.g., $250)",
           "options": []
         }
       ]
@@ -1254,27 +1641,18 @@
           ]
         },
         {
-          "key": "workforceGoalsRanking",
-          "questionText": "Rank your company's top three workforce goals (from above list)",
-          "questionType": "RANKING",
-          "displayOrder": 2,
+          "key": "desklessEmployees",
+          "questionText": "Are many employees deskless (performing job duties outside of an office setting)?",
+          "questionType": "YES_NO",
+          "displayOrder": 3,
           "validationRules": {
-            "type": "ARRAY",
+            "type": "BOOLEAN",
             "required": true,
-            "minItems": 3,
-            "maxItems": 3,
-            "conditionalOn": "workforceGoals",
-            "conditionalRequired": true,
-            "customValidation": "Must contain exactly 3 goals selected from workforceGoals",
-            "errorMessage": "Please rank exactly 3 goals from your selected workforce goals"
+            "errorMessage": "Select an option"
           },
           "schemaVersion": 1,
           "isRequired": true,
-          "options": [],
-          "dynamicOptions": {
-            "sourceField": "workforceGoals",
-            "description": "Options are dynamically populated from selected workforceGoals"
-          }
+          "options": []
         }
       ]
     }

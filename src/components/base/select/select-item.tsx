@@ -95,7 +95,7 @@ export const SelectItem = ({
               <AriaText
                 slot="description"
                 className={cx(
-                  "text-md whitespace-nowrap text-ws-black-10",
+                  "text-md whitespace-nowrap text-tertiary",
                   state.isDisabled && "text-disabled"
                 )}
               >

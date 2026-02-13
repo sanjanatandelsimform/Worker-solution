@@ -20,9 +20,9 @@ export default function BenchmarkPage() {
   const [isGetInTouchModalOpen, setIsGetInTouchModalOpen] = useState(false);
   const [showMoreContent, setShowMoreContent] = useState(false);
   return (
-    <div className="bg-ws-gray-20 border border-ws-gray-50 rounded-xl p-6 space-y-6">
-      <div className="w-full flex items-center justify-between">
-        <h2 className="text-2xl lg:text-4xl font-medium text-ws-black-60 leading-10">
+    <div className="bg-gray-card border border-gray-300 rounded-xl p-6 space-y-6">
+      <div className="w-full flex items-center justify-between flex-col lg:flex-row">
+        <h2 className="text-2xl lg:text-4xl font-medium text-primary">
           Current Trends for Wholesale Trade
         </h2>
 
@@ -30,59 +30,52 @@ export default function BenchmarkPage() {
           Share feedback
         </Button>
       </div>
-      <div className="bg-ws-white py-8 px-6 border border-ws-gray-50 rounded-xl space-y-6">
-        <h3 className="text-3xl font-medium text-ws-black">Industry Overview</h3>
+      <div className="bg-white py-8 px-6 border border-gray-300 rounded-2xl space-y-6">
+        <div className="prose">
+          <h3>Industry Overview</h3>
+        </div>
         <div className="flex justify-between gap-10 flex-col lg:flex-row">
-          <div className="space-y-5 w-full xl:w-1/3">
+          <div className="space-y-5">
             <StaticCard
               title="Turnover Rate 2024"
-              titleClass="text-sm font-medium text-ws-black-10"
               itemAlign="between"
               count="31%"
-              countClass="mt-2 text-3xl xl:text-5xl font-semibold text-ws-black-90"
               infoIcon={true}
-              infoCircleClass="text-ws-gray-70"
               tooltipText="How is this calculated"
               descriptionText="This is calculated based on LMI. Low-to-Moderate Income (LMI) consists of income less than 80% of the broader area's median income. "
               placements="top"
             />
             <StaticCard
               title="Avg Turnover since 2020"
-              titleClass="text-sm font-medium text-ws-black-10"
               itemAlign="between"
               count="40%"
-              countClass="mt-2 text-3xl xl:text-5xl font-semibold text-ws-black-90"
               infoIcon={true}
-              infoCircleClass="text-ws-gray-70"
               tooltipText="How is this calculated"
               descriptionText="This is calculated based on LMI. Low-to-Moderate Income (LMI) consists of income less than 80% of the broader area's median income. "
               placements="top"
             />
             <StaticCard
               title="Avg. Cost of Turnover"
-              titleClass="text-sm font-medium text-ws-black-10"
               itemAlign="between"
               count="$4,149M"
-              countClass="mt-2 text-3xl xl:text-5xl font-semibold text-ws-black-90"
               infoIcon={true}
-              infoCircleClass="text-ws-gray-70"
               tooltipText="How is this calculated"
               descriptionText="This is calculated based on LMI. Low-to-Moderate Income (LMI) consists of income less than 80% of the broader area's median income. "
               placements="top"
             />
           </div>
-          <div className="w-full xl:w-2/3">
+          <div className="flex-1">
             <div
               className={`w-full space-y-6 ${showMoreContent ? "max-h-100 overflow-y-auto pr-4" : "max-h-100 overflow-hidden pr-4"}`}
             >
-              <p className="text-base text-ws-black-40">
+              <p className="text-base color-text-600">
                 The Wholesale Trade sector comprises establishments engaged in wholesaling
                 merchandise, generally without transformation, and rendering services incidental to
                 the sale of merchandise. The merchandise described in this sector includes the
                 outputs of agriculture, mining, manufacturing, and certain information industries,
                 such as publishing.
               </p>
-              <p className="text-base text-ws-black-40">
+              <p className="text-base color-text-600">
                 The wholesaling process is an intermediate step in the distribution of merchandise.
                 Wholesalers are organized to sell or arrange the purchase or sale of (a) goods for
                 resale (i.e., goods sold to other wholesalers or retailers), (b) capital or durable
@@ -95,7 +88,7 @@ export default function BenchmarkPage() {
               </p>
               {showMoreContent && (
                 <>
-                  <p className="text-base text-ws-black-40">
+                  <p className="text-base color-text-600">
                     The wholesaling process is an intermediate step in the distribution of
                     merchandise. Wholesalers are organized to sell or arrange the purchase or sale
                     of (a) goods for resale (i.e., goods sold to other wholesalers or retailers),
@@ -107,7 +100,7 @@ export default function BenchmarkPage() {
                     solicit walk-in traffic. Wholesalers do not normally use advertising directed to
                     the general public.{" "}
                   </p>
-                  <p className="text-base text-ws-black-40">
+                  <p className="text-base color-text-600">
                     The wholesaling process is an intermediate step in the distribution of
                     merchandise. Wholesalers are organized to sell or arrange the purchase or sale
                     of (a) goods for resale (i.e., goods sold to other wholesalers or retailers),
@@ -124,17 +117,19 @@ export default function BenchmarkPage() {
             </div>
             <button
               onClick={() => setShowMoreContent(!showMoreContent)}
-              className="text-ws-purple-50 text-base underline mt-2 hover:cursor-pointer"
+              className="text-purple-700 text-base underline mt-2"
             >
               {showMoreContent ? "Read less" : "Read more"}
             </button>
           </div>
         </div>
-        <div className="bg-ws-white p-6 border border-ws-gray-50 rounded-2xl space-y-6">
-          <div className="flex justify-between gap-6 flex-col xl:flex-row">
-            <div className="w-full xl:w-3/5 space-y-4">
-              <h4 className="text-2xl text-ws-black-60 font-medium">Insight:</h4>
-              <p className="mt-4 text-base text-ws-black-70">
+        <div className="bg-white p-6 border border-gray-300 rounded-2xl space-y-6">
+          <div className="flex justify-between gap-6 flex-col lg:flex-row">
+            <div className="flex-1">
+              <div className="prose">
+                <h4>Insight:</h4>
+              </div>
+              <p className="mt-4 text-base">
                 Wholesale trade plays a critical middleman role in distribution, relying on
                 long-term B2B relationships rather than consumer outreach. Its workforce is heavily
                 concentrated in transportation and sales, with transportation roles growing and
@@ -142,17 +137,13 @@ export default function BenchmarkPage() {
                 needs.
               </p>
             </div>
-            <div className="w-full xl:w-2/5">
-              <img
-                src={insightHero}
-                alt="Insight hero"
-                className="w-full max-h-40 object-cover rounded-md object-bottom"
-              />
+            <div className="flex">
+              <img src={insightHero} alt="Insight hero" className="w-full" />
             </div>
           </div>
         </div>
       </div>
-      <div className="grid xl:grid-cols-2 gap-6">
+      <div className="flex items-center justify-between gap-4 flex-col lg:flex-row">
         <CostCard
           title="Turnover Voluntary vs Involuntary "
           year="Q4 2023"
@@ -170,17 +161,15 @@ export default function BenchmarkPage() {
           industryTradeText="Industry: Whole Trade"
         />
       </div>
-      <div className="bg-ws-white border border-ws-gray-50 rounded-xl px-6 py-8">
-        <div className="flex items-center justify-between md:items-start flex-col xl:flex-row">
+      <div className="bg-white border border-gray-300 rounded-xl px-6 py-8">
+        <div className="flex items-center justify-between">
           <div className="space-y-1">
-            <h3 className="text-2xl font-medium text-ws-black-60">
-              Area Median Wage: [State Name]
-            </h3>
-            <p className="text-base text-ws-black">Select an area to examine the median wage</p>
+            <h3 className="text-2xl font-medium">Area Median Wage: [State Name]</h3>
+            <p className="text-base">Select an area to examine the median wage</p>
           </div>
-          <div className="w-full md:w-full md:mt-4 lg:w-auto">
+          <div>
             <Select
-              className="w-full flex items-start min-w-50 md:min-w-full lg:min-w-auto"
+              className="w-full flex items-start min-w-50"
               isRequired
               size="md"
               placeholder="Select Zip Code"
@@ -200,81 +189,76 @@ export default function BenchmarkPage() {
             </Select>
           </div>
         </div>
-        <div className="grid xl:grid-cols-[3fr_2fr] gap-6 flex-col lg:flex-row mt-6">
-          <div className="w-full overflow-x-auto">
-            <div className="w-full">
-              <WageBarChart
-                data={[
-                  {
-                    name: "Salary",
-                    industryAverage: 33.75,
-                    yourCompany: 54.38,
-                    nationalAverage: 100,
-                  },
-                  {
-                    name: "Hourly",
-                    industryAverage: 33.75,
-                    yourCompany: 54.38,
-                    nationalAverage: 100,
-                  },
-                ]}
-                height={385}
-              />
-            </div>
+        <div className="flex justify-between gap-4 mt-6 flex-col lg:flex-row">
+          <div className="w-3/4">
+            <WageBarChart
+              data={[
+                {
+                  name: "Salary",
+                  industryAverage: 33.75,
+                  yourCompany: 54.38,
+                  nationalAverage: 100,
+                },
+                {
+                  name: "Hourly",
+                  industryAverage: 33.75,
+                  yourCompany: 54.38,
+                  nationalAverage: 100,
+                },
+              ]}
+              height={375}
+            />
           </div>
-          <div className="space-y-4 w-full">
+          <div className="space-y-4 w-1/4">
             <StaticCard
               title="Median Hourly Wages"
-              titleClass="text-ws-black-30 text-sm"
               itemAlign="between"
               count="$14.03"
-              countClass="mt-10 text-3xl xl:text-5xl  font-semibold text-ws-black-90"
               infoIcon={false}
-              classess="bg-secondary w-full"
+              countClass="mt-9"
+              classess="bg-secondary w-90"
             />
             <StaticCard
               title="Median Living Wage"
-              titleClass="text-ws-black-30 text-sm"
               itemAlign="between"
               count="$24.03"
               infoIcon={false}
-              countClass="mt-10 text-3xl xl:text-5xl  font-semibold text-ws-black-90"
-              classess="bg-secondary w-full"
+              countClass="mt-9"
+              classess="bg-secondary flex-1 max-w-lg"
             />
             <StaticCard
               title="National Average"
-              titleClass="text-ws-black-30 text-sm"
               itemAlign="between"
               count="$83,245"
               infoIcon={false}
-              countClass="mt-10 text-3xl xl:text-5xl  font-semibold text-ws-black-90"
-              classess="bg-secondary w-full"
+              countClass="mt-9"
+              classess="bg-secondary flex-1 max-w-lg"
             />
           </div>
         </div>
       </div>
-      <div className="bg-ws-white border border-ws-gray-50 rounded-xl px-6 py-8">
+      <div className="bg-white border border-gray-300 rounded-xl px-6 py-8">
         <div className="flex items-center">
           <div className="space-y-4">
-            <h3 className="text-2xl font-medium text-ws-black">Housing Burden</h3>
-            <p className="text-base text-ws-black-90">
+            <h3 className="text-2xl font-medium">Housing Burden</h3>
+            <p className="text-base text-primary">
               Your workers residing in New Hampshire are likely financially burdened - meaning
               workers likely spend a large portion of their wages on housing and transportation
             </p>
-            <p className="text-base text-ws-black-90">
+            <p className="text-base text-primary">
               The concept of rent (or housing cost) burden applies to both renters and homeowners,
               but it’s calculated a bit differently for each. Both renters and homeowners can be
               housing-cost burdened; the main difference is what expenses are counted, not the
               income thresholds.
             </p>
             <div className="flex items-center justify-between gap-4 flex-col lg:flex-row">
-              <p className="text-base text-ws-black-90">
+              <p className="text-base text-primary">
                 Rent Burdened: A household is considered rent burdened when it{" "}
                 <strong>spends 30% or more of its gross income on rent and utilities.</strong> At
                 this level, housing costs can start to limit spending on essentials like food,
                 healthcare, and savings.
               </p>
-              <p className="text-base text-ws-black-90">
+              <p className="text-base text-primary">
                 Severely Rent Burdened: A household is severely rent burdened when it{" "}
                 <strong>spends 50% or more of its gross income on rent and utilities.</strong> This
                 indicates a high risk of financial instability, leaving very little income for other
@@ -284,21 +268,21 @@ export default function BenchmarkPage() {
           </div>
         </div>
         <hr className="border-t border-gray-200 mt-5 mb-6" />
-        <div className="flex items-center justify-between md:items-start flex-col lg:flex-row mb-6">
+        <div className="flex items-center justify-between flex-col lg:flex-row">
           <div className="space-y-1">
-            <h3 className="text-xl font-medium text-ws-black flex items-center gap-2">
+            <h3 className="text-xl font-medium flex items-center gap-2">
               Housing Cost Burdened Owners{" "}
               <Tooltip title="This is a tooltip">
                 <TooltipTrigger className="group relative flex cursor-pointer flex-col items-center gap-2 text-fg-quaternary transition duration-100 ease-linear hover:text-fg-quaternary_hover focus:text-fg-quaternary_hover">
-                  <InfoCircle className="size-5 text-ws-gray-70" />
+                  <InfoCircle className="size-5 text-gray-400" />
                 </TooltipTrigger>
               </Tooltip>
             </h3>
-            <p className="text-xs text-ws-black">Q4 2023</p>
+            <p className="text-xs">Q4 2023</p>
           </div>
-          <div className="w-full md:w-full md:mt-4 lg:w-auto">
+          <div>
             <Select
-              className="w-full flex items-start min-w-50 md:min-w-full lg:min-w-auto"
+              className="w-full flex items-start min-w-50"
               isRequired
               size="md"
               placeholder="Select Zip Code"
@@ -318,32 +302,26 @@ export default function BenchmarkPage() {
             </Select>
           </div>
         </div>
-        <div className="grid xl:grid-cols-2 gap-4 flex-col lg:flex-row">
+        <div className="flex items-center justify-between w-full gap-4 mt-4 flex-col lg:flex-row">
           <StaticCard
             title="Burdened Owners"
-            titleClass="text-sm font-medium text-ws-black-10 uppercase"
             itemAlign="between"
             count="51.8%"
-            countClass="text-3xl xl:text-5xl  font-semibold text-ws-black-90 mt-2"
             infoIcon={true}
-            infoCircleClass="text-ws-gray-70"
             tooltipText="How is this calculated"
             descriptionText="This is calculated based on LMI. Low-to-Moderate Income (LMI) consists of income less than 80% of the broader area's median income. "
             placements="top"
-            classess="flex-1 bg-ws-gray-10! ring-ws-gray-40!"
+            classess="flex-1 bg-secondary"
           />
           <StaticCard
             title="Severely burdened Owners"
-            titleClass="text-sm font-medium text-ws-black-10 uppercase"
             itemAlign="between"
             count="39.8%"
-            countClass="text-3xl xl:text-5xl  font-semibold text-ws-black-90 mt-2"
             infoIcon={true}
-            infoCircleClass="text-ws-gray-70"
             tooltipText="How is this calculated"
             descriptionText="This is calculated based on LMI. Low-to-Moderate Income (LMI) consists of income less than 80% of the broader area's median income. "
             placements="top"
-            classess="flex-1 bg-ws-gray-10! ring-ws-gray-40!"
+            classess="flex-1 bg-secondary"
           />
         </div>
         <div className="flex items-center justify-between mt-6">
@@ -352,85 +330,71 @@ export default function BenchmarkPage() {
             <p className="text-xs">Q2 2023</p>
           </div>
         </div>
-        <div className="grid xl:grid-cols-2 gap-4 flex-col lg:flex-row mt-4">
+        <div className="flex items-center justify-between w-full gap-4 mt-4 flex-col lg:flex-row">
           <StaticCard
             title="Burdened Renters"
-            titleClass="text-sm font-medium text-ws-black-10 uppercase"
             itemAlign="between"
             count="11.1%"
-            countClass="text-3xl xl:text-5xl  font-semibold text-ws-black-90 mt-2"
             infoIcon={true}
-            infoCircleClass="text-ws-gray-70"
             tooltipText="How is this calculated"
             descriptionText="This is calculated based on LMI. Low-to-Moderate Income (LMI) consists of income less than 80% of the broader area's median income. "
             placements="top"
-            classess="flex-1 bg-ws-gray-10! ring-ws-gray-40!"
+            classess="flex-1 bg-secondary"
           />
           <StaticCard
             title="Severely burdened Renters"
-            titleClass="text-sm font-medium text-ws-black-10 uppercase"
             itemAlign="between"
             count="7.7%"
-            countClass="text-3xl xl:text-5xl  font-semibold text-ws-black-90 mt-2"
             infoIcon={true}
-            infoCircleClass="text-ws-gray-70"
             tooltipText="How is this calculated"
             descriptionText="This is calculated based on LMI. Low-to-Moderate Income (LMI) consists of income less than 80% of the broader area's median income. "
             placements="top"
-            classess="flex-1 bg-ws-gray-10! ring-ws-gray-40!"
+            classess="flex-1 bg-secondary"
           />
         </div>
-        <div className="bg-ws-white border border-ws-gray-50 rounded-xl px-6 py-8 mt-6">
-          <h3 className="text-2xl font-medium text-ws-black">Working Class Housing Cost Burden</h3>
-          <p className="text-base text-ws-black-10 w-full xl:w-1/2 mt-2">
+        <div className="bg-white border border-gray-300 rounded-xl px-6 py-8 mt-6">
+          <h3 className="text-2xl font-medium">Working Class Housing Cost Burden</h3>
+          <p className="text-base text-primary w-full lg:w-2xl mt-2">
             Your highest participation rate is health insurance. 89% of your employees are using
             this benefit. Your lowest partitication rate is wellness program.{" "}
           </p>
-          <div className="grid xl:grid-cols-3 gap-4 mt-6 flex-col lg:flex-row">
+          <div className="flex flex-wrap gap-5 my-6">
             <StaticCard
               title="Home Ownership Rate"
-              titleClass="uppercase text-sm font-medium text-ws-black-10"
               itemAlign="between"
+              titleClass="uppercase"
               count="72%"
-              countClass="text-3xl xl:text-5xl font-semibold text-ws-black-90 mt-2"
               infoIcon={true}
-              infoCircleClass="text-ws-gray-70"
               tooltipText="How is this calculated"
               descriptionText="This is calculated based on LMI. Low-to-Moderate Income (LMI) consists of income less than 80% of the broader area's median income. "
               placements="top"
-              classess="flex-1 bg-ws-gray-10! ring-ws-gray-40!"
+              classess="flex-1 bg-secondary"
             />
             <StaticCard
               title="Median Home Value"
               itemAlign="between"
               titleClass="uppercase"
               count="$367,200"
-              countClass="text-3xl xl:text-5xl font-semibold text-ws-black-90 mt-2"
               infoIcon={true}
-              infoCircleClass="text-ws-gray-70"
               tooltipText="How is this calculated"
               descriptionText="This is calculated based on LMI. Low-to-Moderate Income (LMI) consists of income less than 80% of the broader area's median income. "
               placements="top"
-              classess="flex-1 bg-ws-gray-10! ring-ws-gray-40!"
+              classess="flex-1 bg-secondary"
             />
             <StaticCard
               title="Median Rent"
               itemAlign="between"
               titleClass="uppercase"
               count="$1,423"
-              countClass="text-3xl xl:text-5xl font-semibold text-ws-black-90 mt-2"
               infoIcon={true}
-              infoCircleClass="text-ws-gray-70"
               tooltipText="How is this calculated"
               descriptionText="This is calculated based on LMI. Low-to-Moderate Income (LMI) consists of income less than 80% of the broader area's median income. "
               placements="top"
-              classess="flex-1 bg-ws-gray-10! ring-ws-gray-40!"
+              classess="flex-1 bg-secondary"
             />
           </div>
-          <div className="flex-1 w-full overflow-x-auto">
-            <div className="min-w-[700px]">
-              <IncomeDistributionChart />
-            </div>
+          <div className="flex-1">
+            <IncomeDistributionChart />
           </div>
         </div>
       </div>

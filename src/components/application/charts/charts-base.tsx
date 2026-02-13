@@ -60,7 +60,7 @@ export const ChartLegendContent = ({
           },
           index: number
         ) => (
-          <li className="flex items-center gap-2 text-sm text-ws-black-10" key={index}>
+          <li className="flex items-center gap-2 text-sm text-tertiary" key={index}>
             <span
               className={cx(
                 "h-2 w-2 rounded-full bg-current",
@@ -125,7 +125,7 @@ export const ChartTooltipContent = ({
     isSingleDataPoint && labelFormatter ? labelFormatter(secondaryTitle, payload) : secondaryTitle;
   return (
     <div className="flex flex-col gap-0.5 rounded-lg bg-black px-3 py-2 shadow-lg">
-      <p className="text-xs font-semibold text-ws-white">{title}</p>
+      <p className="text-xs font-semibold text-white">{title}</p>
       {!secondaryTitle ? null : Array.isArray(secondaryTitle) ? (
         <div>
           {secondaryTitle.map((entry, index) => (
@@ -164,7 +164,7 @@ export const ChartActiveDot = ({ cx = 0, cy = 0 }: ChartActiveDotProps) => {
         width="8"
         height="8"
         rx="6"
-        className="fill-bg-ws-white stroke-utility-brand-600"
+        className="fill-bg-primary stroke-utility-brand-600"
         strokeWidth="2"
       />
     </svg>

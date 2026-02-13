@@ -32,9 +32,9 @@ type TabTypeColors<T> = T extends "horizontal" ? HorizontalTypes : VerticalTypes
 // Styles for different types of tab
 const getTabStyles = ({ isFocusVisible, isSelected, isHovered }: AriaTabRenderProps) => ({
   "button-brand": cx(
-    "outline-focus-ring rounded-full bg-ws-white ring-1 ring-ws-gray-50 ring-inset text-base font-bold px-6 py-3 mr-2",
-    isFocusVisible && "outline-2 -outline-offset-2 bg-cyan-600 text-ws-white",
-    (isSelected || isHovered) && "bg-cyan-600 text-ws-white"
+    "outline-focus-ring rounded-full bg-white ring-1 ring-gray-300 ring-inset text-base font-bold px-6 py-3 mr-2",
+    isFocusVisible && "outline-2 -outline-offset-2 bg-cyan-600 text-white",
+    (isSelected || isHovered) && "bg-cyan-600 text-white"
   ),
   "button-gray": cx(
     "outline-focus-ring",
@@ -51,7 +51,7 @@ const getTabStyles = ({ isFocusVisible, isSelected, isHovered }: AriaTabRenderPr
     "rounded-lg outline-focus-ring",
     isHovered && "text-secondary",
     isFocusVisible && "outline-2 -outline-offset-2",
-    isSelected && "bg-primary_alt text-secondary shadow-xs ring-1 ring-ws-gray-50 ring-inset"
+    isSelected && "bg-primary_alt text-secondary shadow-xs ring-1 ring-gray-300 ring-inset"
   ),
   underline: cx(
     "rounded-none border-b-2 border-transparent outline-focus-ring",
@@ -89,10 +89,10 @@ const getHorizontalStyles = ({ size, fullWidth }: { size?: "sm" | "md"; fullWidt
   "button-brand": "gap-1",
   "button-gray": "gap-1",
   "button-border": cx(
-    "gap-1 rounded-[10px] bg-secondary_alt p-1 ring-1 ring-ws-gray-50 ring-inset",
+    "gap-1 rounded-[10px] bg-secondary_alt p-1 ring-1 ring-gray-300 ring-inset",
     size === "md" && "rounded-xl p-1.5"
   ),
-  "button-minimal": "gap-0.5 rounded-lg bg-secondary_alt ring-1 ring-inset ring-ws-gray-50",
+  "button-minimal": "gap-0.5 rounded-lg bg-secondary_alt ring-1 ring-inset ring-gray-300",
   underline: cx("gap-3", fullWidth && "w-full gap-4"),
   line: "gap-2",
 });
@@ -204,8 +204,8 @@ export const Tab = (props: TabComponentProps) => {
       {...otherProps}
       className={prop =>
         cx(
-          "z-10 flex h-max cursor-pointer items-center justify-center gap-2 rounded-md whitespace-nowrap text-ws-purple-60 transition duration-100 ease-linear font-bold",
-          "group-orientation-vertical:justify-start bg-ws-gray-30 ring-1 ring-border-secondary ring-inset",
+          "z-10 flex h-max cursor-pointer items-center justify-center gap-2 rounded-md whitespace-nowrap text-gray-400 transition duration-100 ease-linear",
+          "group-orientation-vertical:justify-start bg-tertiary ring-1 ring-border-secondary ring-inset",
           fullWidth && "w-full flex-1",
           sizes[size][type],
           getTabStyles(prop)[type],

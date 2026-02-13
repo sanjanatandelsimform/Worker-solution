@@ -34,10 +34,6 @@ export interface ConditionalQuestion {
   showWhen: string;
   question: Question;
 }
-export interface DynamicOptions {
-  sourceField: string;
-  description?: string;
-}
 
 export interface OptionGroup {
   groupName: string;
@@ -78,14 +74,12 @@ export interface Question {
   schemaVersion: number;
   isRequired: boolean;
   options?: QuestionOption[];
-  optionGroups?: OptionGroup[];
   subFields?: SubField[];
   placeholder?: string;
   conditionalQuestion?: {
     showWhen: string;
     question: Question;
   };
-  dynamicOptions?: DynamicOptions;
   metadata?: Record<string, unknown>;
 }
 

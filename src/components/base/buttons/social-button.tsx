@@ -111,7 +111,7 @@ export const SocialButton = ({
             ? colorStyles.icon
             : theme === "brand" &&
                 (social === "facebook" || social === "apple" || social === "twitter")
-              ? "text-ws-white"
+              ? "text-white"
               : theme === "color" && (social === "apple" || social === "twitter")
                 ? "text-alpha-black"
                 : ""

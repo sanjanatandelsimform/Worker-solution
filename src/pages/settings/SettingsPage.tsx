@@ -123,42 +123,6 @@ export const SettingsPage = () => {
     }
   };
 
-  // Real-time validation for first name
-  const handleFirstNameChange = (value: string) => {
-    const sanitized = value.replace(/^\s+/, "");
-    setFirstName(sanitized);
-
-    // Real-time validation as user types
-    if (sanitized) {
-      const validation = validateName("FirstName", sanitized);
-      if (validation.isValid) {
-        setFirstNameError("");
-      } else {
-        setFirstNameError(validation.message || "");
-      }
-    } else {
-      setFirstNameError("First name cannot be empty");
-    }
-  };
-
-  // Real-time validation for last name
-  const handleLastNameChange = (value: string) => {
-    const sanitized = value.replace(/^\s+/, "");
-    setLastName(sanitized);
-
-    // Real-time validation as user types
-    if (sanitized) {
-      const validation = validateName("LastName", sanitized);
-      if (validation.isValid) {
-        setLastNameError("");
-      } else {
-        setLastNameError(validation.message || "");
-      }
-    } else {
-      setLastNameError("Last name cannot be empty");
-    }
-  };
-
   function handleRetakeAssessment() {
     setIsRetakeAssessmentModalOpen(false);
     navigate("/assessment");
@@ -254,12 +218,12 @@ export const SettingsPage = () => {
 
   if (!userData) {
     return (
-      <div className="flex h-screen overflow-hidden bg-ws-gray-500">
+      <div className="flex h-screen overflow-hidden bg-dashboard">
         <DashboardSidebar activeUrl={activeUrl} />
         <div className="flex flex-1 flex-col overflow-hidden">
           <main className="flex-1 overflow-y-auto p-6">
             <div className="max-w-4xl mx-auto">
-              <p className="text-center text-ws-black-10">Loading user data...</p>
+              <p className="text-center text-gray-600">Loading user data...</p>
             </div>
           </main>
         </div>
@@ -268,14 +232,13 @@ export const SettingsPage = () => {
   }
 
   return (
-    <div className="flex h-screen overflow-hidden bg-ws-gray-500">
+    <div className="flex h-screen overflow-hidden bg-dashboard">
       <DashboardSidebar activeUrl={activeUrl} />
 
       <div className="flex flex-1 flex-col overflow-hidden">
-        {/* Main Content */}
-        <main className="flex-1 overflow-y-auto p-10 pl-0">
+        <main className="flex-1 overflow-y-auto px-6 py-10">
           <div>
-            <h2 className="text-4xl font-bold text-ws-black">Settings</h2>
+            <h2 className="text-4xl font-medium text-primary">Settings</h2>
             <p className="text-base text-black mt-4">
               Here's an overview of your workforce, industry, and some recommendations with partners
               that can add more value to your benefits packages and employee support.
@@ -308,27 +271,27 @@ export const SettingsPage = () => {
           )}
 
           <div className="space-y-6 mt-6">
-            <div className="bg-ws-gray-20 border border-ws-gray-50 rounded-xl p-6">
+            <div className="bg-gray-card border border-gray-300 rounded-xl p-6">
               {/* Personal Info Section */}
               <div className="flex items-center justify-between gap-2">
                 <div className="flex flex-col">
-                  <h2 className="text-lg font-semibold text-ws-black-90">Personal info</h2>
-                  <p className="text-sm text-ws-black-10">
+                  <h2 className="text-lg font-semibold text-black">Personal info</h2>
+                  <p className="text-sm text-gray-600">
                     Update your photo and personal details here.
                   </p>
                 </div>
               </div>
               <hr className="border-t border-gray-200 mt-5 mb-6" />
 
-              <div className="bg-ws-white border border-ws-gray-50 rounded-xl py-8 px-6 mb-6">
+              <div className="bg-primary border border-primary rounded-xl py-8 px-6 mb-6">
                 {/* Name Fields */}
-                <div className="flex mb-6 flex-col xl:flex-row">
-                  <div className="w-full xl:w-1/3 mb-3 xl:mb-0">
-                    <label htmlFor="firstName" className="text-ws-black-20 font-medium text-sm">
-                      Name <span className="text-ws-red-40">*</span>
+                <div className="flex mb-6">
+                  <div className="w-1/3">
+                    <label htmlFor="firstName" className="text-black font-medium text-sm">
+                      Name <span>*</span>
                     </label>
                   </div>
-                  <div className="w-full xl:w-2/3 flex flex-col gap-4">
+                  <div className="w-2/3 flex flex-col gap-4">
                     <div className="flex gap-4">
                       <div className="flex-1">
                         <Input
@@ -338,11 +301,14 @@ export const SettingsPage = () => {
                           isRequired={true}
                           placeholder="First name"
                           value={firstName}
-                          onChange={handleFirstNameChange}
+                          onChange={value => {
+                            const sanitized = value.replace(/^\s+/, "");
+                            setFirstName(sanitized);
+                          }}
                           isDisabled={profileLoading}
                         />
                         {firstNameError && (
-                          <p className="text-ws-red-30 text-sm mt-1">{firstNameError}</p>
+                          <p className="text-red-600 text-sm mt-1">{firstNameError}</p>
                         )}
                       </div>
                       <div className="flex-1">
@@ -353,11 +319,14 @@ export const SettingsPage = () => {
                           isRequired={true}
                           placeholder="Last name"
                           value={lastName}
-                          onChange={handleLastNameChange}
+                          onChange={value => {
+                            const sanitized = value.replace(/^\s+/, "");
+                            setLastName(sanitized);
+                          }}
                           isDisabled={profileLoading}
                         />
                         {lastNameError && (
-                          <p className="text-ws-red-30 text-sm mt-1">{lastNameError}</p>
+                          <p className="text-red-600 text-sm mt-1">{lastNameError}</p>
                         )}
                       </div>
                     </div>
@@ -365,13 +334,13 @@ export const SettingsPage = () => {
                 </div>
 
                 {/* Email Field */}
-                <div className="flex mb-6 flex-col xl:flex-row">
-                  <div className="w-full xl:w-1/3 mb-3 xl:mb-0">
-                    <label htmlFor="email" className="text-ws-black-20 font-medium text-sm">
-                      Email address <span className="text-ws-red-40">*</span>
+                <div className="flex mb-6">
+                  <div className="w-1/3">
+                    <label htmlFor="email" className="text-black font-medium text-sm">
+                      Email address <span>*</span>
                     </label>
                   </div>
-                  <div className="w-full xl:w-2/3 flex flex-col gap-4">
+                  <div className="w-2/3 flex flex-col gap-4">
                     <Input
                       id="email"
                       name="email"
@@ -384,7 +353,6 @@ export const SettingsPage = () => {
                     />
                     <Button
                       color="link-color"
-                      className="max-w-22"
                       onClick={
                         resendVerification
                           ? handleResendVerification
@@ -398,13 +366,13 @@ export const SettingsPage = () => {
                 </div>
 
                 {/* Password Field */}
-                <div className="flex mb-6 flex-col xl:flex-row">
-                  <div className="w-full xl:w-1/3 mb-3 xl:mb-0">
-                    <label htmlFor="password" className="text-ws-black-20 font-medium text-sm">
-                      Password <span className="text-ws-red-40">*</span>
+                <div className="flex mb-6">
+                  <div className="w-1/3">
+                    <label htmlFor="password" className="text-black font-medium text-sm">
+                      Password <span>*</span>
                     </label>
                   </div>
-                  <div className="w-full xl:w-2/3 flex flex-col gap-4">
+                  <div className="w-2/3 flex flex-col gap-4">
                     <Input
                       type="password"
                       id="password"
@@ -417,7 +385,6 @@ export const SettingsPage = () => {
                     />
                     <Button
                       color="link-color"
-                      className="max-w-22"
                       onClick={() => setIsChangePasswordModalOpen(true)}
                       isDisabled={profileLoading || !firstName || !lastName}
                     >
@@ -430,26 +397,26 @@ export const SettingsPage = () => {
               {/* Account Management Section */}
               <div className="flex items-center justify-between gap-2">
                 <div className="flex flex-col">
-                  <h2 className="text-lg font-semibold text-ws-black-90">Account Management</h2>
-                  <p className="text-sm text-ws-black-10">
+                  <h2 className="text-lg font-semibold text-black">Account Management</h2>
+                  <p className="text-sm text-gray-600">
                     Update your photo and personal details here.
                   </p>
                 </div>
               </div>
               <hr className="border-t border-gray-200 mt-5 mb-6" />
 
-              <div className="bg-ws-white border border-ws-gray-50 rounded-xl py-8 px-6 mb-6">
+              <div className="bg-primary border border-primary rounded-xl py-8 px-6 mb-6">
                 {/* Retake Assessment */}
-                <div className="flex mb-6 flex-col xl:flex-row">
-                  <div className="w-full xl:w-1/2 flex flex-col">
-                    <label htmlFor="firstName" className="text-ws-black-20 font-medium text-sm">
+                <div className="flex mb-6">
+                  <div className="w-1/2 flex flex-col">
+                    <label htmlFor="firstName" className="text-black font-medium text-sm">
                       Retake the assessment
                     </label>
-                    <span className="text-ws-black-10 text-sm">
+                    <span className="text-gray-600 text-sm">
                       Retaking the assessment will result in loss of progress.
                     </span>
                   </div>
-                  <div className="w-full xl:w-1/2 flex gap-4 mt-3 xl:mt-0">
+                  <div className="w-1/2 flex gap-4">
                     <Button
                       color="secondary"
                       size="md"
@@ -462,14 +429,14 @@ export const SettingsPage = () => {
                 </div>
 
                 {/* Delete Account */}
-                <div className="flex mb-6 flex-col xl:flex-row">
-                  <div className="w-full xl:w-1/2 flex flex-col">
-                    <label htmlFor="firstName" className="text-ws-black-20 font-medium text-sm">
+                <div className="flex mb-6">
+                  <div className="w-1/2 flex flex-col">
+                    <label htmlFor="firstName" className="text-black font-medium text-sm">
                       Delete account
                     </label>
-                    <span className="text-ws-black-10 text-sm">This cannot be undone</span>
+                    <span className="text-gray-600 text-sm">This cannot be undone</span>
                   </div>
-                  <div className="w-full xl:w-1/2 flex gap-4 mt-3 xl:mt-0">
+                  <div className="w-1/2 flex gap-4">
                     <Button
                       color="secondary"
                       size="md"

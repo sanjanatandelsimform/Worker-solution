@@ -87,22 +87,22 @@ export const SignInForm = () => {
   };
 
   return (
-    <div className="flex min-h-screen items-center justify-center bg-ws-gray-20">
-      <div className="flex w-2xl items-center justify-center rounded-xl border border-ws-gray-50 bg-ws-white py-22">
+    <div className="flex min-h-screen items-center justify-center bg-secondary">
+      <div className="flex w-2xl items-center justify-center rounded-xl border border-solid border-primary bg-primary py-22">
         <div className="flex w-full max-w-md flex-col items-center gap-8">
           {/* Header */}
           <div className="flex w-full flex-col items-center gap-6">
             {/* Logo */}
-            <div className="flex items-center justify-center">
-              <h1 className="text-5xl font-bold leading-15 text-ws-black">BeneStats</h1>
+            <div className="flex items-center justify-center rounded-xl bg-tertiary px-2 py-1">
+              <h1 className="text-5xl font-bold leading-15 text-primary">BeneStat</h1>
             </div>
 
             {/* Title and Description */}
             <div className="flex w-full flex-col items-start gap-3 text-center">
-              <h2 className="w-full text-3xl font-semibold leading-9.5 text-ws-black-90">
+              <h2 className="w-full text-4xl font-semibold leading-9.5 text-primary">
                 Log in to your account
               </h2>
-              <p className="w-full text-base font-normal leading-6 text-ws-black-10">
+              <p className="w-full text-medium font-normal leading-6 text-tertiary">
                 Welcome back! Please enter your details.
               </p>
             </div>
@@ -120,12 +120,10 @@ export const SignInForm = () => {
                   name="email"
                   size="md"
                   label="Email"
-                  isRequired
                   hint={errors.email?.message}
                   placeholder="Enter your email"
                   isInvalid={!!errors.email}
                   value={email}
-                  tooltip={errors.email ? errors.email.message : undefined}
                   onChange={value => {
                     const sanitized = value.replace(/^\s+/, "");
                     setValue("email", sanitized);
@@ -148,7 +146,6 @@ export const SignInForm = () => {
                   value={password}
                   minLength={8}
                   maxLength={20}
-                  tooltip={errors.password ? errors.password.message : undefined}
                   onChange={value => {
                     const sanitized = value.replace(/^\s+/, "");
                     setValue("password", sanitized);
@@ -164,14 +161,10 @@ export const SignInForm = () => {
                   aria-label={showPassword ? "Hide password" : "Show password"}
                   className="absolute right-0 top-7"
                 >
-                  {!errors.password && (
-                    <>
-                      {showPassword ? (
-                        <Eye className="size-5 text-ws-gray-60" />
-                      ) : (
-                        <EyeOff className="size-5 text-ws-gray-60" />
-                      )}
-                    </>
+                  {showPassword ? (
+                    <Eye className="size-5 text-gray-400" />
+                  ) : (
+                    <EyeOff className="size-5 text-gray-400" />
                   )}
                 </Button>
               </InputGroup>
@@ -194,7 +187,6 @@ export const SignInForm = () => {
                     isSelected={rememberMe}
                     onChange={selected => setValue("rememberMe", selected)}
                     label="Remember for 30 days"
-                    className="text-ws-black-20"
                   />
                 </div>
 
@@ -226,7 +218,7 @@ export const SignInForm = () => {
 
           {/* Sign up link */}
           <div className="flex w-full items-baseline justify-center gap-1">
-            <p className="text-sm font-normal leading-5 text-ws-black-10">Don't have an account?</p>
+            <p className="text-sm font-normal leading-5 text-tertiary">Don't have an account?</p>
             <Button href="/sign-up" color="link-color" size="md">
               Sign up
             </Button>

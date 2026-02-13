@@ -40,7 +40,7 @@ export const SuccessModalWithLogo = ({
 }: SuccessModalWithLogoProps) => {
   return (
     <Modal isOpen={isOpen} onOpenChange={onClose} size={size}>
-      <ModalContent className="bg-ws-white rounded-lg" aria-label={title || "Success notification"}>
+      <ModalContent className="bg-primary rounded-lg" aria-label={title || "Success notification"}>
         {/* Modal Header with Logo, Icon, and Close Button */}
         <ModalHeader className="relative flex flex-col items-center gap-6 border-0">
           {/* Logo */}
@@ -60,9 +60,9 @@ export const SuccessModalWithLogo = ({
           )}
           <div className="pt-18 flex flex-col items-center gap-6">
             {showLogo && (
-              <div className="flex items-center justify-center px-2 py-1">
-                <h1 className="font-display text-[48px] font-bold leading-15 text-ws-black">
-                  BeneStats
+              <div className="flex items-center justify-center rounded-xl bg-tertiary px-2 py-1">
+                <h1 className="font-display text-[48px] font-bold leading-15 text-primary">
+                  BeneStat
                 </h1>
               </div>
             )}
@@ -75,7 +75,7 @@ export const SuccessModalWithLogo = ({
             {(title || subtitle) && (
               <div className="flex w-full flex-col items-center gap-1 px-8 pt-0">
                 {title && (
-                  <ModalTitle className="font-display text-center text-ws-black text-4xl font-medium leading-11">
+                  <ModalTitle className="font-display text-center text-primary text-4xl font-medium leading-11">
                     {title}
                   </ModalTitle>
                 )}

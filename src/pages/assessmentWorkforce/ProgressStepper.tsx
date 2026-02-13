@@ -16,7 +16,7 @@ export function ProgressStepper({ steps, currentStep, onStepChange }: ProgressSt
   const currentIndex = steps.findIndex(step => step.id === currentStep);
 
   return (
-    <div className="flex w-full items-center gap-2 rounded-xl border border-ws-gray-50 bg-ws-white p-2">
+    <div className="flex w-full items-center gap-2 rounded-xl border border-gray-300 bg-white p-2">
       {steps.map((step, index) => {
         const isActive = step.id === currentStep;
         const isCompleted = index < currentIndex;
@@ -34,7 +34,7 @@ export function ProgressStepper({ steps, currentStep, onStepChange }: ProgressSt
         } else if (isFuture) {
           // Future/next steps: gray
           bgColor = "bg-gray-100";
-          textColor = "text-ws-gray-70";
+          textColor = "text-gray-400";
         }
 
         return (
@@ -50,9 +50,7 @@ export function ProgressStepper({ steps, currentStep, onStepChange }: ProgressSt
 
             {/* Chevron Separator (except after last step) */}
             {index < steps.length - 1 && (
-              <TabArrow
-                className={`${index < currentIndex ? "text-ws-gray-100" : "text-ws-gray-50"}`}
-              />
+              <TabArrow className={`${index < currentIndex ? "text-gray-500" : "text-gray-300"}`} />
             )}
           </div>
         );
