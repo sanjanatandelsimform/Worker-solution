@@ -18,7 +18,7 @@ const steps = [
 ];
 
 export default function AssessmentWorkforcePage() {
-  const [currentStep, setCurrentStep] = useState("benefits");
+  const [currentStep, setCurrentStep] = useState("workforce");
   const navigate = useNavigate();
   const user = useAppSelector(selectUser);
 
@@ -34,38 +34,38 @@ export default function AssessmentWorkforcePage() {
   const isLastStep = currentStepIndex === steps.length - 1;
 
   const handleNext = async () => {
-    // setCurrentStep(steps[currentStepIndex + 1].id);
+    setCurrentStep(steps[currentStepIndex + 1].id);
     // This code is required; I will uncomment it.
-    const dynamicTabValidation = (
-      window as {
-        __dynamicTabValidation?: {
-          submit: () => Promise<{ success: boolean }>;
-          validate: () => boolean;
-          getAnswers: () => Record<string, unknown>;
-          getErrors: () => Record<string, string>;
-        };
-      }
-    ).__dynamicTabValidation;
+    // const dynamicTabValidation = (
+    //   window as {
+    //     __dynamicTabValidation?: {
+    //       submit: () => Promise<{ success: boolean }>;
+    //       validate: () => boolean;
+    //       getAnswers: () => Record<string, unknown>;
+    //       getErrors: () => Record<string, string>;
+    //     };
+    //   }
+    // ).__dynamicTabValidation;
 
-    if (!dynamicTabValidation) {
-      console.error("[AssessmentWorkforce] Dynamic tab validation not found!");
-      alert("Validation system not initialized. Please refresh the page.");
-      return;
-    }
+    // if (!dynamicTabValidation) {
+    //   console.error("[AssessmentWorkforce] Dynamic tab validation not found!");
+    //   alert("Validation system not initialized. Please refresh the page.");
+    //   return;
+    // }
 
-    try {
-      const response = await dynamicTabValidation.submit();
+    // try {
+    //   const response = await dynamicTabValidation.submit();
 
-      if (response.success) {
-        if (isLastStep) {
-          navigate("/dashboard");
-        } else {
-          setCurrentStep(steps[currentStepIndex + 1].id);
-        }
-      }
-    } catch (error) {
-      console.error("[AssessmentWorkforce] Submit error:", error);
-    }
+    //   if (response.success) {
+    //     if (isLastStep) {
+    //       navigate("/dashboard");
+    //     } else {
+    //       setCurrentStep(steps[currentStepIndex + 1].id);
+    //     }
+    //   }
+    // } catch (error) {
+    //   console.error("[AssessmentWorkforce] Submit error:", error);
+    // }
   };
 
   const handleBack = () => {

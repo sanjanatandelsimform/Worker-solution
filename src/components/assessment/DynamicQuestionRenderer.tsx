@@ -193,8 +193,8 @@ export const DynamicQuestionRenderer = ({
 
     return (
       <div className="flex w-full flex-col gap-4 pl-6 mt-4">
-        <Label className="text-base text-gray-900">
-          {conditionalQuestion.displayOrder}. {conditionalQuestion.questionText}
+        <Label isRequired={conditionalQuestion.isRequired} className="text-base text-gray-900">
+          {conditionalQuestion.questionText}
         </Label>
 
         {/* TEXT_INPUT */}
@@ -207,6 +207,38 @@ export const DynamicQuestionRenderer = ({
               onChange={value => onAnswerChange(conditionalQuestion.key, value)}
               size="md"
               maxLength={conditionalQuestion.validationRules?.maxLength}
+            />
+            {errors[conditionalQuestion.key] && (
+              <span className="text-sm text-red-600">{errors[conditionalQuestion.key]}</span>
+            )}
+          </>
+        )}
+
+        {conditionalQuestion.questionType === "NUMBER_INPUT" && (
+          <>
+            <Input
+              type="number"
+              placeholder={conditionalQuestion.placeholder || "Enter number"}
+              value={String(answers[conditionalQuestion.key] ?? "")}
+              onChange={value => {
+                const numValue = value === "" ? null : Number(value);
+                if (numValue !== null) {
+                  if (
+                    conditionalQuestion.validationRules?.min !== undefined &&
+                    numValue < conditionalQuestion.validationRules.min
+                  ) {
+                    return;
+                  }
+                  if (
+                    conditionalQuestion.validationRules?.max !== undefined &&
+                    numValue > conditionalQuestion.validationRules.max
+                  ) {
+                    return;
+                  }
+                }
+                onAnswerChange(conditionalQuestion.key, numValue);
+              }}
+              size="md"
             />
             {errors[conditionalQuestion.key] && (
               <span className="text-sm text-red-600">{errors[conditionalQuestion.key]}</span>
@@ -312,7 +344,7 @@ export const DynamicQuestionRenderer = ({
                       onClick={() => addArrayItem(conditionalKey)}
                       className="max-w-60"
                     >
-                      Add another location
+                      Add another
                     </Button>
                   )}
                 </>
