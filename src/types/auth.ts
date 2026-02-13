@@ -30,7 +30,7 @@ export interface UserAccount {
   phoneNumber: string;
   businessPhone?: string;
   // industry: string;
-  Industry: Industry;
+  industry: Industry;
   zipCode: number;
   authMethod?: "email" | "google";
   emailVerify: boolean;
