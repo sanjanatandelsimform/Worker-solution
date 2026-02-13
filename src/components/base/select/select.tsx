@@ -73,7 +73,7 @@ const SelectValue = ({
     <AriaButton
       ref={ref}
       className={cx(
-        "relative flex w-full cursor-pointer items-center rounded-lg bg-ws-white shadow-xs ring-1 ring-ws-gray-50 outline-hidden transition duration-100 ease-linear ring-inset text-ws-black-70 text-base",
+        "relative flex w-full cursor-pointer items-center rounded-lg bg-primary shadow-xs ring-1 ring-gray-300 outline-hidden transition duration-100 ease-linear ring-inset color-text-600 text-base",
         (isFocused || isOpen) && "ring-2 ring-brand",
         isDisabled && "cursor-not-allowed bg-disabled_subtle text-disabled",
         isInvalid && "ring-1 ring-red-500"
@@ -84,7 +84,7 @@ const SelectValue = ({
           "flex h-max w-full items-center justify-start gap-2 truncate text-left align-middle",
 
           // Icon styles
-          "*:data-icon:size-5 *:data-icon:shrink-0 *:data-icon:text-ws-gray-70 in-disabled:*:data-icon:text-ws-gray-70",
+          "*:data-icon:size-5 *:data-icon:shrink-0 *:data-icon:text-gray-400 in-disabled:*:data-icon:text-gray-400",
 
           sizes[size].root
         )}
@@ -107,11 +107,11 @@ const SelectValue = ({
 
               {state.selectedItem ? (
                 <section className="flex w-full gap-2 truncate">
-                  <p className="truncate text-md font-medium text-ws-black">
+                  <p className="truncate text-md font-medium text-primary">
                     {state.selectedItem?.label}
                   </p>
                   {state.selectedItem?.supportingText && (
-                    <p className="text-md text-ws-black-10">{state.selectedItem?.supportingText}</p>
+                    <p className="text-md text-tertiary">{state.selectedItem?.supportingText}</p>
                   )}
                 </section>
               ) : (
@@ -123,7 +123,7 @@ const SelectValue = ({
               <ChevronDown
                 aria-hidden="true"
                 className={cx(
-                  "ml-auto shrink-0 text-ws-gray-70",
+                  "ml-auto shrink-0 text-gray-400",
                   size === "sm" ? "size-4 stroke-[2.5px]" : "size-5"
                 )}
               />

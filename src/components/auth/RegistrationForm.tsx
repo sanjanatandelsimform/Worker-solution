@@ -218,20 +218,20 @@ export const RegistrationForm = () => {
   };
 
   return (
-    <div className="flex min-h-screen items-center justify-center md:p-8 bg-ws-gray-20">
+    <div className="flex min-h-screen items-center justify-center bg-secondary">
       {/* Container */}
-      <div className="flex w-3xl items-center justify-center rounded-xl border border-ws-gray-50 bg-ws-white p-10">
+      <div className="flex w-3xl items-center justify-center rounded-xl border border-solid border-primary bg-primary p-10">
         {/* Content */}
         <div className="flex w-full flex-col items-center gap-8">
           {/* Logo */}
-          <div className="flex items-center justify-center px-2 py-1">
-            <h1 className="text-5xl font-bold leading-15 text-ws-black">BeneStats</h1>
+          <div className="flex items-center justify-center rounded-xl bg-tertiary px-2 py-1">
+            <h1 className="text-5xl font-bold leading-15 text-primary">BeneStat</h1>
           </div>
 
           {/* Header */}
           <div className="flex w-full flex-col items-start gap-2">
-            <h2 className="w-full text-4xl font-semibold leading-9.5 text-ws-black">Sign up</h2>
-            <p className="w-full text-medium font-normal leading-6 text-ws-black-10">
+            <h2 className="w-full text-4xl font-semibold leading-9.5 text-primary">Sign up</h2>
+            <p className="w-full text-medium font-normal leading-6 text-tertiary">
               We're excited that you've decided to try our Worker Solutions® platform. Before we
               begin we'll need to collect some information about your business.
             </p>
@@ -253,7 +253,6 @@ export const RegistrationForm = () => {
                   value={firstName}
                   maxLength={20}
                   className={errors.firstName ? "error-ring" : ""}
-                  tooltip={errors.firstName ? errors.firstName.message : undefined}
                   onChange={value => {
                     const sanitized = value.replace(/^\s+/, "");
                     setValue("firstName", sanitized);
@@ -273,7 +272,6 @@ export const RegistrationForm = () => {
                   isInvalid={!!errors.lastName}
                   maxLength={20}
                   className={errors.lastName ? "error-ring" : ""}
-                  tooltip={errors.lastName ? errors.lastName.message : undefined}
                   onChange={value => {
                     const sanitized = value.replace(/^\s+/, "");
                     setValue("lastName", sanitized);
@@ -294,7 +292,6 @@ export const RegistrationForm = () => {
                   value={legalBusinessName}
                   maxLength={50}
                   className={errors.legalBusinessName ? "error-ring" : ""}
-                  tooltip={errors.legalBusinessName ? errors.legalBusinessName.message : undefined}
                   onChange={value => {
                     const sanitized = value.replace(/^\s+/, "");
                     setValue("legalBusinessName", sanitized);
@@ -321,7 +318,6 @@ export const RegistrationForm = () => {
                 isDisabled={isLoadingIndustries || !!industryError}
                 isInvalid={!!errors.industry || !!industryError}
                 hint={industryError || errors.industry?.message}
-                tooltip={errors.industry ? errors.industry.message : undefined}
               >
                 {item => (
                   <Select.Item
@@ -353,7 +349,6 @@ export const RegistrationForm = () => {
                   inputMode="numeric"
                   pattern="[0-9]*"
                   className={errors.zipCode ? "error-ring" : ""}
-                  tooltip={errors.zipCode ? errors.zipCode.message : undefined}
                   onChange={value => {
                     // Only allow numeric input
                     const numericValue = value.replace(/\D/g, "");
@@ -375,7 +370,6 @@ export const RegistrationForm = () => {
                   isInvalid={!!errors.businessEmail}
                   value={businessEmail}
                   className={errors.businessEmail ? "error-ring" : ""}
-                  tooltip={errors.businessEmail ? errors.businessEmail.message : undefined}
                   onChange={value => {
                     const sanitized = value.replace(/^\s+/, "");
                     setValue("businessEmail", sanitized);
@@ -411,7 +405,6 @@ export const RegistrationForm = () => {
                     setValue("businessPhone", numericValue);
                     trigger("businessPhone");
                   }}
-                  tooltip={errors.businessPhone ? errors.businessPhone.message : undefined}
                 />
               </InputGroup>
 
@@ -424,7 +417,6 @@ export const RegistrationForm = () => {
                   placeholder="Password"
                   size="md"
                   type={showPassword ? "text" : "password"}
-                  tooltip={errors.password ? errors.password.message : undefined}
                   isInvalid={!!errors.password}
                   value={password}
                   className="relative"
@@ -442,14 +434,10 @@ export const RegistrationForm = () => {
                   aria-label={showPassword ? "Hide password" : "Show password"}
                   className="absolute right-0 top-7"
                 >
-                  {!errors.password && (
-                    <>
-                      {showPassword ? (
-                        <Eye className="size-5 text-ws-gray-70" />
-                      ) : (
-                        <EyeOff className="size-5 text-ws-gray-70" />
-                      )}
-                    </>
+                  {showPassword ? (
+                    <Eye className="size-5 text-gray-400" />
+                  ) : (
+                    <EyeOff className="size-5 text-gray-400" />
                   )}
                 </Button>
               </InputGroup>
@@ -463,7 +451,6 @@ export const RegistrationForm = () => {
                   size="md"
                   type={showConfirmPassword ? "text" : "password"}
                   isInvalid={!!errors.confirmPassword}
-                  tooltip={errors.confirmPassword ? errors.confirmPassword.message : undefined}
                   value={confirmPassword}
                   className="relative"
                   onChange={value => {
@@ -480,14 +467,10 @@ export const RegistrationForm = () => {
                   aria-label={showConfirmPassword ? "Hide password" : "Show password"}
                   className="absolute right-0 top-7"
                 >
-                  {!errors.password && (
-                    <>
-                      {showConfirmPassword ? (
-                        <Eye className="size-5 text-ws-gray-70" />
-                      ) : (
-                        <EyeOff className="size-5 text-ws-gray-70" />
-                      )}
-                    </>
+                  {showConfirmPassword ? (
+                    <Eye className="size-5 text-gray-400" />
+                  ) : (
+                    <EyeOff className="size-5 text-gray-400" />
                   )}
                 </Button>
               </InputGroup>
@@ -505,7 +488,7 @@ export const RegistrationForm = () => {
                   }}
                   aria-label="I agree to the Terms and Privacy Policies"
                 />
-                <p className="text-sm font-normal leading-5 text-ws-black">
+                <p className="text-sm font-normal leading-5 text-primary">
                   I've read and agree to the Worker Solutions®{" "}
                   <Link to="/terms-page" className="cursor-pointer text-cyan-500">
                     Terms
@@ -545,7 +528,7 @@ export const RegistrationForm = () => {
               </Button>
 
               {/* Sign in link */}
-              <p className="text-sm font-normal leading-5 text-ws-black">
+              <p className="text-sm font-normal leading-5 text-primary">
                 Already have an account?{" "}
                 <Link to="/sign-in" className="font-semibold text-cyan-500">
                   Log in

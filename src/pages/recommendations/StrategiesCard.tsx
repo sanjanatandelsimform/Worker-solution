@@ -11,11 +11,11 @@ export default function StrategiesCard({
   classess,
 }: Readonly<StrategiesCardProps>) {
   return (
-    <div className={`bg-ws-gray-20 ring ring-ws-gray-50 rounded-xl p-4 min-h-38 ${classess}`}>
-      <h2 className="flex items-center text-xl text-ws-cyan-60 font-bold gap-2">
+    <div className={`bg-gray-card ring ring-gray-300 rounded-xl p-4 min-h-38 ${classess}`}>
+      <h2 className="flex items-center text-xl text-cyan-500 font-bold gap-2">
         {titleIcon} {title}
       </h2>
-      <p className="text-sm text-ws-black mt-3">{descriptionText}</p>
+      <p className="text-sm color-base-black mt-3">{descriptionText}</p>
     </div>
   );
 }

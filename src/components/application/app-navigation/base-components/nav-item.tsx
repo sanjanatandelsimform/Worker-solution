@@ -5,7 +5,7 @@ import { Badge } from "@/components/base/badges/badges";
 import { cx, sortCx } from "@/utils/cx";
 
 const styles = sortCx({
-  root: "group relative flex w-full cursor-pointer items-center rounded-md bg-ws-white outline-focus-ring transition duration-100 ease-linear select-none hover:bg-primary_hover focus-visible:z-10 focus-visible:outline-2 focus-visible:outline-offset-2",
+  root: "group relative flex w-full cursor-pointer items-center rounded-md bg-primary outline-focus-ring transition duration-100 ease-linear select-none hover:bg-primary_hover focus-visible:z-10 focus-visible:outline-2 focus-visible:outline-offset-2",
   rootSelected: "bg-cyan-500 hover:bg-secondary_hover ",
 });
 
@@ -30,8 +30,6 @@ interface NavItemBaseProps {
   onClick?: MouseEventHandler;
   /** Content to display. */
   children?: ReactNode;
-  /** Whether the navigation is collapsed (for tablet responsive behavior). */
-  isCollapsed?: boolean;
 }
 
 export const NavItemBase = ({
@@ -43,34 +41,32 @@ export const NavItemBase = ({
   children,
   truncate = true,
   onClick,
-  isCollapsed = false,
 }: NavItemBaseProps) => {
   const iconElement = Icon && (
     <Icon
       aria-hidden="true"
       className={cx(
-        "size-5 shrink-0 text-nav-menu transition-all duration-300",
-        current && "text-ws-white"
+        "mr-2 size-5 shrink-0 text-nav-menu transition-inherit-all",
+        current && "text-white"
       )}
-      style={{
-        marginRight: isCollapsed ? 0 : "0.5rem",
-      }}
     />
   );
 
   const badgeElement =
-    badge && (typeof badge === "string" || typeof badge === "number") && !isCollapsed ? (
+    badge && (typeof badge === "string" || typeof badge === "number") ? (
       <Badge className="ml-3" color="gray" type="pill-color" size="sm">
         {badge}
       </Badge>
-    ) : null;
+    ) : (
+      badge
+    );
 
-  const labelElement = !isCollapsed && (
+  const labelElement = (
     <span
       className={cx(
-        "flex-1 text-md font-semibold text-nav-menu transition-all duration-300 group-hover:text-secondary_hover",
+        "flex-1 text-md font-semibold text-nav-menu transition-inherit-all group-hover:text-secondary_hover",
         truncate && "truncate",
-        current && "text-ws-white"
+        current && "text-white"
       )}
     >
       {children}
@@ -124,12 +120,7 @@ export const NavItemBase = ({
       href={href!}
       target={isExternal ? "_blank" : "_self"}
       rel="noopener noreferrer"
-      className={cx(
-        "w-full p-2.5",
-        isCollapsed && "justify-center",
-        styles.root,
-        current && styles.rootSelected
-      )}
+      className={cx("p-2.5", styles.root, current && styles.rootSelected)}
       onClick={onClick}
       aria-current={current ? "page" : undefined}
     >

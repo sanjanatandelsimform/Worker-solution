@@ -31,7 +31,7 @@ export const Label = ({
       data-label="true"
       {...props}
       className={cx(
-        "flex cursor-default items-center gap-0.5 text-sm font-medium text-ws-black-20",
+        "flex cursor-default items-center gap-0.5 text-sm font-medium text-secondary",
         className
       )}
     >
@@ -39,7 +39,7 @@ export const Label = ({
 
       <span
         className={cx(
-          "hidden text-brand-tertiary text-ws-red-40",
+          "hidden text-brand-tertiary text-error-primary",
           isRequired && "block",
           typeof isRequired === "undefined" && "group-required:block"
         )}
@@ -54,7 +54,7 @@ export const Label = ({
             // but we don't that. We want the tooltip be enabled even if the parent
             // field is disabled.
             isDisabled={false}
-            className="cursor-pointer text-error-primary transition duration-200 hover:text-ws-red-40 focus:text-ws-red-40"
+            className="cursor-pointer text-error-primary transition duration-200 hover:text-error-primary_hover focus:text-error-primary_hover"
           >
             <HelpCircle className="size-4" />
           </TooltipTrigger>

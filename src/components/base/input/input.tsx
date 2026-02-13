@@ -8,7 +8,7 @@ import {
   createContext,
   useContext,
 } from "react";
-import { InfoCircle } from "@untitledui/icons";
+import { HelpCircle, InfoCircle } from "@untitledui/icons";
 import type {
   InputProps as AriaInputProps,
   TextFieldProps as AriaTextFieldProps,
@@ -22,7 +22,6 @@ import { HintText } from "@/components/base/input/hint-text";
 import { Label } from "@/components/base/input/label";
 import { Tooltip, TooltipTrigger } from "@/components/base/tooltip/tooltip";
 import { cx, sortCx } from "@/utils/cx";
-import { InputInfo } from "@/assets/icons/inputInfo";
 
 export interface InputBaseProps extends TextFieldProps {
   /** Tooltip message on hover. */
@@ -98,21 +97,21 @@ export const InputBase = ({
       ref={groupRef}
       className={({ isFocusWithin, isDisabled, isInvalid }) =>
         cx(
-          "relative flex w-full flex-row place-content-center place-items-center rounded-lg bg-ws-white shadow-xs ring-1 ring-ws-gray-50 transition-shadow duration-100 ease-linear ring-inset border-0",
+          "relative flex w-full flex-row place-content-center place-items-center rounded-lg bg-primary shadow-xs ring-1 ring-gray-300 transition-shadow duration-100 ease-linear ring-inset border-0",
 
-          isFocusWithin && !isDisabled && isInvalid && "ring-2 ring-ws-red-10",
+          isFocusWithin && !isDisabled && isInvalid && "ring-2 ring-red-500",
 
           // Disabled state styles
-          isDisabled && "cursor-not-allowed bg-ws-gray-10 ring-ws-gray-50",
-          "group-disabled:cursor-not-allowed group-disabled:bg-ws-gray-10 group-disabled:ring-ws-gray-50",
+          isDisabled && "cursor-not-allowed bg-disabled_subtle ring-gray-300",
+          "group-disabled:cursor-not-allowed group-disabled:bg-disabled_subtle group-disabled:ring-disabled",
 
           // Invalid state styles
-          isInvalid && "ring-1 ring-ws-red-20",
-          "group-invalid:ring-ws-red-40",
+          isInvalid && "ring-1 ring-red-400",
+          "group-invalid:ring-red-400",
 
           // Invalid state with focus-within styles
-          isInvalid && isFocusWithin && "ring-2 ring-ws-red-20",
-          isFocusWithin && "group-invalid:ring-2 group-invalid:ring-ws-red-20",
+          isInvalid && isFocusWithin && "ring-2 ring-red-500",
+          isFocusWithin && "group-invalid:ring-2 group-invalid:ring-red-500",
 
           context?.wrapperClassName,
           wrapperClassName
@@ -123,8 +122,8 @@ export const InputBase = ({
       {Icon && (
         <Icon
           className={cx(
-            "pointer-events-none absolute size-5 text-ws-gray-60",
-            isDisabled && "text-ws-gray-30",
+            "pointer-events-none absolute size-5 text-gray-400",
+            isDisabled && "text-gray-300",
             sizes[inputSize].iconLeading,
             context?.iconClassName,
             iconClassName
@@ -138,8 +137,8 @@ export const InputBase = ({
         ref={ref}
         placeholder={placeholder}
         className={cx(
-          "m-0 w-full bg-transparent text-md text-ws-black ring-0 outline-hidden placeholder:text-ws-gray-300 autofill:rounded-lg autofill:text-ws-black",
-          isDisabled && "cursor-not-allowed bg-ws-gray-10 text-disabled",
+          "m-0 w-full bg-transparent text-md text-primary ring-0 outline-hidden placeholder:text-gray-500 autofill:rounded-lg autofill:text-primary",
+          isDisabled && "cursor-not-allowed text-disabled",
           sizes[inputSize].root,
           context?.inputClassName,
           inputClassName
@@ -151,13 +150,13 @@ export const InputBase = ({
         <Tooltip title={tooltip} placement="top">
           <TooltipTrigger
             className={cx(
-              "absolute cursor-pointer text-ws-gray-60 transition duration-200 hover:text-ws-red-40 focus:text-ws-red-40",
+              "absolute cursor-pointer text-gray-400 transition duration-200 hover:text-gray-400 focus:text-gray-400",
               sizes[inputSize].iconTrailing,
               context?.tooltipClassName,
               tooltipClassName
             )}
           >
-            <InputInfo className="size-6" />
+            <HelpCircle className="size-4" />
           </TooltipTrigger>
         </Tooltip>
       )}
@@ -178,7 +177,7 @@ export const InputBase = ({
       {shortcut && (
         <div
           className={cx(
-            "pointer-events-none absolute inset-y-0.5 right-0.5 z-10 flex items-center rounded-r-[inherit] bg-linear-to-r from-transparent to-bg-ws-white to-40% pl-8",
+            "pointer-events-none absolute inset-y-0.5 right-0.5 z-10 flex items-center rounded-r-[inherit] bg-linear-to-r from-transparent to-bg-primary to-40% pl-8",
             sizes[inputSize].shortcut
           )}
         >
