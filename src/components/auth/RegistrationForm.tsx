@@ -303,38 +303,42 @@ export const RegistrationForm = () => {
                 />
               </InputGroup>
               <InputGroup isRequired>
-                <Select
-                  className="w-full flex items-start absolute" // Make Select take full width and position absolute to avoid layout shift
-                  size="md"
-                  label="Select Your Industry"
-                  placeholder="Select Option"
-                  items={industries.map(i => ({
-                    id: i.industry_code, // Changed from i.id.toString()
-                    label: i.industry_name,
-                  }))}
-                  selectedKey={industry}
-                  onSelectionChange={key => {
-                    setValue("industry", key as string);
+              <Select
+                className="w-full flex items-start"
+                size="md"
+                label="Select Your Industry"
+                placeholder="Select Option"
+                items={industries.map(i => ({
+                  id: i.industry_code, // Changed from i.id.toString()
+                  label: i.industry_name,
+                }))}
+                selectedKey={industry || null}
+                onSelectionChange={key => {
+                  const stringKey = key ? String(key) : "";
+                  setValue("industry", stringKey);
+                  // This prevents popover positioning from resetting
+                  // setTimeout(() => {
                     trigger("industry");
-                  }}
-                  isDisabled={isLoadingIndustries || !!industryError}
-                  isInvalid={!!errors.industry || !!industryError}
-                  hint={industryError || errors.industry?.message}
-                  tooltip={errors.industry ? errors.industry.message : undefined}
-                >
-                  {item => (
-                    <Select.Item
-                      id={item.id}
-                      supportingText={item.supportingText}
-                      isDisabled={item.isDisabled}
-                      icon={item.icon}
-                      avatarUrl={item.avatarUrl}
-                    >
-                      {item.label}
-                    </Select.Item>
-                  )}
-                </Select>
-              </InputGroup>
+                  // }, 0);
+                }}
+                isDisabled={isLoadingIndustries || !!industryError}
+                isInvalid={!!errors.industry || !!industryError}
+                hint={industryError || errors.industry?.message}
+                tooltip={errors.industry ? errors.industry.message : undefined}
+              >
+                {item => (
+                  <Select.Item
+                    id={item.id}
+                    supportingText={item.supportingText}
+                    isDisabled={item.isDisabled}
+                    icon={item.icon}
+                    avatarUrl={item.avatarUrl}
+                  >
+                    {item.label}
+                  </Select.Item>
+                )}
+              </Select>
+            </InputGroup>
               {isLoadingIndustries && (
                 <p className="text-sm text-gray-600 mt-1.5">Loading industries...</p>
               )}
