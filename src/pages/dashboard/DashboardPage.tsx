@@ -191,7 +191,7 @@ export const DashboardPage = () => {
               description="Take our 15 minute assessment for specific recommendations to improve your business"
               avatarIconSrc={checkIcon}
               buttonLabel={completionCount > 0 ? "Continue" : "Take Assessment"}
-              buttonType="secondary"
+              buttonType={emailVerify ? "primary" : "secondary"}
               buttonIsDisabled={!emailVerify}
               onClick={() => navigate("/assessment")}
             />
