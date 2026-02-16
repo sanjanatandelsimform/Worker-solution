@@ -120,7 +120,6 @@ export const SignInForm = () => {
                   name="email"
                   size="md"
                   label="Email"
-                  isRequired
                   hint={errors.email?.message}
                   placeholder="Enter your email"
                   isInvalid={!!errors.email}

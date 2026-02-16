@@ -302,10 +302,8 @@ export const RegistrationForm = () => {
                   }}
                 />
               </InputGroup>
-
               <Select
                 className="w-full flex items-start"
-                isRequired
                 size="md"
                 label="Select Your Industry"
                 placeholder="Select Option"
