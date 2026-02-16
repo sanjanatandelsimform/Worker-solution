@@ -1,5 +1,5 @@
 import type { FC, ReactNode, Ref, RefAttributes } from "react";
-import { isValidElement } from "react";
+import { isValidElement, useRef } from "react";
 import { ChevronDown } from "@untitledui/icons";
 import type { SelectProps as AriaSelectProps } from "react-aria-components";
 import {
@@ -72,6 +72,7 @@ const SelectValue = ({
   return (
     <AriaButton
       ref={ref}
+      type="button"
       className={cx(
         "relative flex w-full cursor-pointer items-center rounded-lg bg-ws-white shadow-xs ring-1 ring-ws-gray-50 outline-hidden transition duration-100 ease-linear ring-inset text-ws-black-70 text-base",
         (isFocused || isOpen) && "ring-2 ring-brand",
@@ -149,6 +150,10 @@ const Select = ({
   className,
   ...rest
 }: SelectProps) => {
+  // Create a stable ref for the trigger button to prevent popover positioning issues
+  // during re-renders (e.g., when react-hook-form triggers validation)
+  const triggerRef = useRef<HTMLButtonElement>(null);
+
   return (
     <SelectContext.Provider value={{ size }}>
       <AriaSelect
@@ -168,9 +173,14 @@ const Select = ({
               </Label>
             )}
 
-            <SelectValue {...state} {...{ size, placeholder }} placeholderIcon={placeholderIcon} />
+            <SelectValue
+              {...state}
+              {...{ size, placeholder }}
+              placeholderIcon={placeholderIcon}
+              ref={triggerRef}
+            />
 
-            <Popover size={size} className={rest.popoverClassName}>
+            <Popover size={size} triggerRef={triggerRef} className={rest.popoverClassName}>
               <AriaListBox items={items} className="size-full outline-hidden">
                 {children}
               </AriaListBox>
