@@ -276,10 +276,6 @@ export const SettingsPage = () => {
         <main className="flex-1 overflow-y-auto p-10 pl-0">
           <div>
             <h2 className="text-4xl font-bold text-ws-black">Settings</h2>
-            <p className="text-base text-black mt-4">
-              Here's an overview of your workforce, industry, and some recommendations with partners
-              that can add more value to your benefits packages and employee support.
-            </p>
           </div>
 
           {/* Error Messages */}
