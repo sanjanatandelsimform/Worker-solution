@@ -11,7 +11,6 @@ import { Button } from "../base/buttons/button";
 import { useModalConfig } from "@/hooks/useModalConfig";
 import logoutIcon from "@/assets/logout-Icon.svg";
 
-
 interface DashboardSidebarProps {
   activeUrl?: string;
 }
