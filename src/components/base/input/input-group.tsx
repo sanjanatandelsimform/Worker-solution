@@ -97,7 +97,7 @@ export const InputGroup = ({
       inputClassName={cx(paddings[size].input)}
       tooltipClassName={cx(hasTrailing && !hasLeading && "group-has-[&>select]:right-0")}
       wrapperClassName={cx(
-        "z-10 myClass",
+        "z-10",
         // Apply styles based on the presence of leading or trailing elements
         hasLeading && "rounded-l-none",
         hasTrailing && "rounded-r-none",

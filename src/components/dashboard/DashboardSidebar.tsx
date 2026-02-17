@@ -8,6 +8,7 @@ import { signout } from "@/services/api/authApi";
 import { BaseModalWithIcon } from "../modals/BaseModalWithIcon";
 import logoutIcon from "@/assets/logout-Icon.svg";
 import { useModalConfig } from "@/hooks/useModalConfig";
+import logoutIcon from "@/assets/logout-Icon.svg";
 
 interface DashboardSidebarProps {
   activeUrl?: string;

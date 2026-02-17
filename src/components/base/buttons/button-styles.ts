@@ -82,20 +82,20 @@ export const styles = sortCx({
     },
     "secondary-destructive": {
       root: [
-        "bg-primary text-error-primary shadow-xs-skeumorphic ring-1 ring-error_subtle outline-error ring-inset hover:bg-error-primary hover:text-error-primary_hover data-loading:bg-error-primary",
-        "disabled:bg-primary disabled:shadow-xs disabled:ring-disabled_subtle",
+        "bg-ws-white text-ws-red-30 shadow-xs-skeumorphic ring-1 ring-error_subtle outline-error ring-inset hover:bg-error-primary hover:text-error-primary_hover data-loading:bg-error-primary",
+        "disabled:bg-ws-white disabled:shadow-xs disabled:ring-disabled_subtle",
         "*:data-icon:text-fg-error-secondary hover:*:data-icon:text-fg-error-primary",
       ].join(" "),
     },
     "tertiary-destructive": {
       root: [
-        "text-error-primary outline-error hover:bg-error-primary hover:text-error-primary_hover data-loading:bg-error-primary",
+        "text-ws-red-30 outline-error hover:bg-error-primary hover:text-error-primary_hover data-loading:bg-error-primary",
         "*:data-icon:text-fg-error-secondary hover:*:data-icon:text-fg-error-primary",
       ].join(" "),
     },
     "link-destructive": {
       root: [
-        "justify-normal rounded p-0! text-error-primary outline-error hover:text-error-primary_hover",
+        "justify-normal rounded p-0! text-ws-red-30 outline-error hover:text-error-primary_hover",
         "*:data-text:underline *:data-text:decoration-transparent *:data-text:underline-offset-2 hover:*:data-text:decoration-current",
         "*:data-icon:text-fg-error-secondary hover:*:data-icon:text-fg-error-primary",
       ].join(" "),

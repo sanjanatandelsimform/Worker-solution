@@ -35,16 +35,17 @@ export const Label = ({
         className
       )}
     >
-      {props.children}
-
-      <span
-        className={cx(
-          "hidden text-brand-tertiary text-error-primary",
-          isRequired && "block",
-          typeof isRequired === "undefined" && "group-required:block"
-        )}
-      >
-        *
+      <span className="inline">
+        {props.children}
+        <span
+          className={cx(
+            "hidden text-brand-tertiary text-ws-red-40",
+            isRequired && "inline",
+            typeof isRequired === "undefined" && "group-required:inline"
+          )}
+        >
+          {"\u00A0"}*
+        </span>
       </span>
 
       {tooltip && (
@@ -54,7 +55,7 @@ export const Label = ({
             // but we don't that. We want the tooltip be enabled even if the parent
             // field is disabled.
             isDisabled={false}
-            className="cursor-pointer text-error-primary transition duration-200 hover:text-error-primary_hover focus:text-error-primary_hover"
+            className="cursor-pointer text-ws-red-30 transition duration-200 hover:text-ws-red-40 focus:text-ws-red-40"
           >
             <HelpCircle className="size-4" />
           </TooltipTrigger>
