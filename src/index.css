@@ -2,433 +2,167 @@
 @plugin "@tailwindcss/typography";
 @import "./typography.css";
 
+@theme inline {
+  /* Worker Solutions Colors - Tailwind CSS Format */
+  /* Base Colors */
+  --color-ws-white: var(--ws-color-base-white);
+  --color-ws-black: var(--ws-color-base-black);
+  --color-ws-transparent: var(--ws-color-base-transparent);
+
+  /* WS Black Colors */
+  --color-ws-black-10: var(--ws-color-black-10);
+  --color-ws-black-20: var(--ws-color-black-20);
+  --color-ws-black-30: var(--ws-color-black-30);
+  --color-ws-black-40: var(--ws-color-black-40);
+  --color-ws-black-50: var(--ws-color-black-50);
+  --color-ws-black-60: var(--ws-color-black-60);
+  --color-ws-black-70: var(--ws-color-black-70);
+  --color-ws-black-80: var(--ws-color-black-80);
+  --color-ws-black-90: var(--ws-color-black-90);
+  --color-ws-black-100: var(--ws-color-black-100);
+  --color-ws-black-200: var(--ws-color-black-200);
+
+  /* WS Gray Colors */
+  --color-ws-gray-10: var(--ws-color-gray-10);
+  --color-ws-gray-20: var(--ws-color-gray-20);
+  --color-ws-gray-30: var(--ws-color-gray-30);
+  --color-ws-gray-40: var(--ws-color-gray-40);
+  --color-ws-gray-50: var(--ws-color-gray-50);
+  --color-ws-gray-60: var(--ws-color-gray-60);
+  --color-ws-gray-70: var(--ws-color-gray-70);
+  --color-ws-gray-80: var(--ws-color-gray-80);
+  --color-ws-gray-90: var(--ws-color-gray-90);
+  --color-ws-gray-100: var(--ws-color-gray-100);
+  --color-ws-gray-200: var(--ws-color-gray-200);
+  --color-ws-gray-300: var(--ws-color-gray-300);
+  --color-ws-gray-400: var(--ws-color-gray-400);
+  --color-ws-gray-500: var(--ws-color-gray-500);
+
+  /* WS Cyan Colors */
+  --color-ws-cyan-10: var(--ws-color-cyan-10);
+  --color-ws-cyan-20: var(--ws-color-cyan-20);
+  --color-ws-cyan-30: var(--ws-color-cyan-30);
+  --color-ws-cyan-40: var(--ws-color-cyan-40);
+  --color-ws-cyan-50: var(--ws-color-cyan-50);
+  --color-ws-cyan-60: var(--ws-color-cyan-60);
+
+  /* WS Purple Colors */
+  --color-ws-purple-10: var(--ws-color-purple-10);
+  --color-ws-purple-20: var(--ws-color-purple-20);
+  --color-ws-purple-30: var(--ws-color-purple-30);
+  --color-ws-purple-40: var(--ws-color-purple-40);
+  --color-ws-purple-50: var(--ws-color-purple-50);
+  --color-ws-purple-60: var(--ws-color-purple-60);
+
+  /* WS Teal Colors */
+  --color-ws-teal-10: var(--ws-color-teal-10);
+  --color-ws-teal-20: var(--ws-color-teal-20);
+
+  /* WS Red Colors */
+  --color-ws-red-10: var(--ws-color-red-10);
+  --color-ws-red-20: var(--ws-color-red-20);
+  --color-ws-red-30: var(--ws-color-red-30);
+  --color-ws-red-40: var(--ws-color-red-40);
+
+  /* WS Green Colors */
+  --color-ws-green-10: var(--ws-color-green-10);
+
+  /* Single Use Colors */ 
+  --color-ws-blue-100: var(--ws-color-blue-100);
+
+}
+
 :root {
   font-family: Inter, system-ui, Avenir, Helvetica, Arial, sans-serif;
   line-height: 1.5;
   font-weight: 400;
 
-  /* ========== Base Colors ========== */
-  --color-base-white: rgba(255, 255, 255, 1);
-  --color-base-black: rgba(0, 0, 0, 1);
-
-  /* ========== Error Colors ========== */
-  --color-error-25: rgba(255, 251, 250, 1);
-  --color-error-50: rgba(254, 243, 242, 1);
-  --color-error-100: rgba(254, 228, 226, 1);
-  --color-error-200: rgba(254, 205, 202, 1);
-  --color-error-300: rgba(253, 162, 155, 1);
-  --color-error-400: rgba(249, 112, 102, 1);
-  --color-error-500: rgba(240, 68, 56, 1);
-  --color-error-600: rgba(217, 45, 32, 1);
-  --color-error-700: rgba(180, 35, 24, 1);
-  --color-error-800: rgba(145, 32, 24, 1);
-  --color-error-900: rgba(122, 39, 26, 1);
-  --color-error-950: rgba(85, 22, 12, 1);
-
-  /* ========== Success Colors ========== */
-  --color-success-25: rgba(246, 254, 249, 1);
-  --color-success-50: rgba(236, 253, 243, 1);
-  --color-success-100: rgba(220, 250, 230, 1);
-  --color-success-200: rgba(171, 239, 198, 1);
-  --color-success-300: rgba(117, 224, 167, 1);
-  --color-success-400: rgba(71, 205, 137, 1);
-  --color-success-500: rgba(23, 178, 106, 1);
-  --color-success-600: rgba(7, 148, 85, 1);
-  --color-success-700: rgba(6, 118, 71, 1);
-  --color-success-800: rgba(8, 93, 58, 1);
-  --color-success-900: rgba(7, 77, 49, 1);
-  --color-success-950: rgba(5, 51, 33, 1);
-
-  /* ========== Cyan Colors ========== */
-  --color-cyan-25: rgba(245, 254, 255, 1);
-  --color-cyan-50: rgba(236, 253, 255, 1);
-  --color-cyan-100: rgba(207, 249, 254, 1);
-  --color-cyan-200: rgba(165, 240, 252, 1);
-  --color-cyan-300: rgba(103, 227, 249, 1);
-  --color-cyan-400: rgba(34, 204, 238, 1);
-  --color-cyan-500: rgba(6, 174, 212, 1);
-  --color-cyan-600: rgba(8, 138, 178, 1);
-  --color-cyan-700: rgba(14, 112, 144, 1);
-  --color-cyan-800: rgba(21, 91, 117, 1);
-  --color-cyan-900: rgba(22, 76, 99, 1);
-  --color-cyan-950: rgba(13, 45, 58, 1);
-
-  /* ========== Purple Colors ========== */
-  --color-purple-25: rgba(250, 250, 255, 1);
-  --color-purple-50: rgba(244, 243, 255, 1);
-  --color-purple-100: rgba(235, 233, 254, 1);
-  --color-purple-200: rgba(217, 214, 254, 1);
-  --color-purple-300: rgba(189, 180, 254, 1);
-  --color-purple-400: rgba(155, 138, 251, 1);
-  --color-purple-500: rgba(122, 90, 248, 1);
-  --color-purple-600: rgba(105, 56, 239, 1);
-  --color-purple-700: rgba(89, 37, 220, 1);
-  --color-purple-800: rgba(74, 31, 184, 1);
-  --color-purple-900: rgba(62, 28, 150, 1);
-  --color-purple-950: rgba(39, 17, 95, 1);
-
-  /* ========== Teal Colors ========== */
-  --color-teal-25: rgba(246, 254, 252, 1);
-  --color-teal-50: rgba(240, 253, 249, 1);
-  --color-teal-100: rgba(204, 251, 239, 1);
-  --color-teal-200: rgba(153, 246, 224, 1);
-  --color-teal-300: rgba(95, 233, 208, 1);
-  --color-teal-400: rgba(46, 211, 183, 1);
-  --color-teal-500: rgba(21, 183, 158, 1);
-  --color-teal-600: rgba(14, 147, 132, 1);
-  --color-teal-700: rgba(16, 117, 105, 1);
-  --color-teal-800: rgba(18, 93, 86, 1);
-  --color-teal-900: rgba(19, 78, 72, 1);
-  --color-teal-950: rgba(10, 41, 38, 1);
-
-  /* ========== Light Mode - Text Colors ========== */
-  --color-text-primary: rgba(24, 29, 39, 1);
-  --color-text-secondary: rgba(31, 41, 55, 1);
-  --color-text-tertiary: rgba(83, 88, 98, 1);
-  --color-text-quaternary: rgba(113, 118, 128, 1);
-  --color-text-subtitle: rgba(156, 154, 165, 1);
-  --color-text-white: rgba(255, 255, 255, 1);
-  --color-text-black: rgba(0, 0, 0, 1);
-  --color-text-dashboard-card-title: rgba(205, 242, 255, 1);
-  --color-text-card-subtitle: rgba(150, 150, 150, 1);
-  --color-nav-menu-text: rgba(125, 137, 176, 1);
-  --color-text-400: rgba(4, 35, 60, 1);
-  --color-text-500: rgba(65, 70, 81, 1);
-  --color-text-600: rgba(30, 24, 78, 1);
-  --color-text-gray-500: rgba(139, 139, 139, 1);
-  --color-text-purple-500: rgba(127, 86, 217, 1);
-
-  /* ========== Light Mode - Background Colors ========== */
-  --color-bg-primary: rgba(255, 255, 255, 1);
-  --color-bg-secondary: rgba(250, 250, 250, 1);
-  --color-bg-tertiary: rgba(245, 245, 245, 1);
-  --color-bg-dashboard: rgba(238, 238, 238, 1);
-  --color-bg-dashboard-card: rgba(4, 35, 60, 1);
-  --color-bg-dashboard-card-image: rgba(53, 85, 111, 1);
-  --color-bg-card-avatar: rgba(209, 224, 255, 1);
-  --color-bg-disabled: rgba(238, 238, 238, 1);
-  --color-bg-gray-card: rgba(248, 248, 248, 1);
-  --color-bg-gray-25: rgba(253, 253, 253, 1);
-  --color-bg-gray-100: rgba(233, 234, 235, 1);
-  --color-bg-purple-50: rgba(252, 250, 255, 1);
-  --color-bg-gray-invoice: rgba(234, 236, 239, 1);
-  --color-bg-purple-500: rgb(127, 86, 217, 1);
-
-  /* ========== Light Mode - Foreground/Text Colors for Components ========== */
-  --color-fg-disabled: rgba(172, 175, 181, 1);
-  --color-fg-disabled_subtle: rgba(213, 215, 218, 1);
-  --color-fg-quaternary: rgba(113, 118, 128, 1);
-  --color-fg-quaternary_hover: rgba(83, 88, 98, 1);
-
-  /* ========== Light Mode - Border Colors ========== */
-  --color-border-primary: rgba(213, 215, 218, 1);
-  --color-border-secondary: rgba(233, 234, 235, 1);
-  --color-border-secondary-alt: rgba(0, 0, 0, 0.08);
-  --color-border-tertiary: rgba(245, 245, 245, 1);
-  --color-border-disabled: rgba(213, 215, 218, 1);
-  --color-border-disabled-subtle: rgba(233, 234, 235, 1);
-  --color-border-brand: rgba(158, 119, 237, 1);
-  --color-border-brand-alt: rgba(127, 86, 217, 1);
-  --color-border-error: rgba(240, 68, 56, 1);
-  --color-border-error-subtle: rgba(253, 162, 155, 1);
-  --color-border-200: rgba(233, 234, 235, 1);
-
-  /* ========== Component State Colors ========== */
-  --color-disabled: rgba(240, 241, 243, 1);
-  --color-disabled_subtle: rgba(233, 234, 235, 1);
-
-  /* ========== Utility Colors ========== */
-  --color-utility-success-50: rgba(236, 253, 243, 1);
-  --color-utility-success-200: rgba(171, 239, 198, 1);
-  --color-utility-success-700: rgba(6, 118, 71, 1);
-  --color-xs-shadow: rgba(10, 13, 18, 0.18);
-
-  /* ========== Spacing ========== */
-  --spacing: 4px; /* Base spacing unit for calculations */
-  --spacing-xxs: 2px;
-  --spacing-xs: 4px;
-  --spacing-sm: 6px;
-  --spacing-md: 8px;
-  --spacing-lg: 12px;
-  --spacing-xl: 16px;
-  --spacing-4xl: 32px;
-  --spacing-7xl: 64px;
-
-  /* ========== Border Radius ========== */
-  --radius-xs: 4px;
-  --radius-sm: 6px;
-  --radius-md: 8px;
-  --radius-xl: 12px;
-  --radius-full: 9999px;
-
-  /* ========== Width ========== */
-  --width-sm: 480px;
-  --width-2xl: 1024px;
-  --width-paragraph-max: 720px;
-
-  /* ========== Typography - Font Size ========== */
-  --font-size-xs: 12px;
-  --font-size-sm: 14px;
-  --font-size-md: 16px;
-  --font-size-lg: 18px;
-  --font-size-display-xs: 24px;
-
-  /* ========== Typography - Line Height ========== */
-  --line-height-xs: 18px;
-  --line-height-sm: 20px;
-  --line-height-md: 24px;
-  --line-height-lg: 28px;
-  --line-height-display-xs: 32px;
-
-  /* ========== Typography - Text Styles (for prose/typography.css) ========== */
-  /* Text SM */
-  --text-sm: 0.875rem; /* 14px */
-  --text-sm--line-height: 1.25rem; /* 20px */
-
-  /* Text MD */
-  --text-md: 1rem; /* 16px */
-  --text-md--line-height: 1.5rem; /* 24px */
-
-  /* Text LG */
-  --text-lg: 1.125rem; /* 18px */
-  --text-lg--line-height: 1.75rem; /* 28px */
-
-  /* Text XL */
-  --text-xl: 1.25rem; /* 20px */
-  --text-xl--line-height: 1.875rem; /* 30px */
-
-  /* Text Display XS */
-  --text-display-xs: 1.5rem; /* 24px */
-  --text-display-xs--line-height: 2rem; /* 32px */
-
-  /* Text Display SM */
-  --text-display-sm: 1.875rem; /* 30px */
-  --text-display-sm--line-height: 2.375rem; /* 38px */
-
-  /* Text Display MD */
-  --text-display-md: 2.25rem; /* 36px */
-  --text-display-md--line-height: 2.75rem; /* 44px */
-
-  /* Text Display Lg */
-  --text-display-lg: 2.5rem; /* 40px */
-  --text-display-lg--line-height: 3rem; /* 48px */
-
   /* ========== Typography - Font Family ========== */
   --font-family-body: "Inter", sans-serif;
   --font-family-display: "Inter", sans-serif;
-
-  /* ========== Typography - Font Weight ========== */
-  --font-weight-regular: 400;
-  --font-weight-medium: 500;
-  --font-weight-semibold: 600;
-
-  color-scheme: light;
-  color: var(--color-text-primary);
-  background-color: var(--color-bg-primary);
-
   font-synthesis: none;
   text-rendering: optimizeLegibility;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+
+/* Worker Solutions Design Tokens */
+/* Base Colors */
+--ws-color-base-white: oklch(1.000 0.000 0); /* #FFFFFF */
+--ws-color-base-black: oklch(0.000 0.000 0); /* #000000 */
+--ws-color-base-transparent: transparent;
+
+/* Black Colors */
+--ws-color-black-10: oklch(0.445 0.020 257); /* #535862 */
+--ws-color-black-20: oklch(0.372 0.021 257); /* #414651 */
+--ws-color-black-30: oklch(0.349 0.000 0);   /* #313131 */
+--ws-color-black-40: oklch(0.325 0.008 260); /* #2E2F32 */
+--ws-color-black-50: oklch(0.296 0.045 285); /* #26203B */
+--ws-color-black-60: oklch(0.285 0.000 0);   /* #232323 */
+--ws-color-black-70: oklch(0.266 0.072 280); /* #1E184E */
+--ws-color-black-80: oklch(0.247 0.060 240); /* #04233C */
+--ws-color-black-90: oklch(0.246 0.024 257); /* #181D27 */
+--ws-color-black-100: oklch(0.000 0.000 0);  /* #000000 */
+--ws-color-black-200: oklch(0.279 0.030 257);  /* #1F2937 */
+
+/* Gray Colors */
+--ws-color-gray-10: oklch(0.985 0.000 0);    /* #FAFAFA */
+--ws-color-gray-20: oklch(0.975 0.000 0);    /* #F8F8F8 */
+--ws-color-gray-30: oklch(0.965 0.000 0);    /* #F5F5F5 */
+--ws-color-gray-40: oklch(0.915 0.004 255);  /* #E9EAEB */
+--ws-color-gray-50: oklch(0.865 0.008 255);  /* #D5D7DA */
+--ws-color-gray-60: oklch(0.720 0.012 260);  /* #A4A7AE */
+--ws-color-gray-70: oklch(0.700 0.015 255);  /* #9DA4AE */
+--ws-color-gray-80: oklch(0.690 0.018 275);  /* #9C9AA5 */
+--ws-color-gray-90: oklch(0.680 0.000 0);    /* #969696 */
+--ws-color-gray-100: oklch(0.640 0.000 0);   /* #8B8B8B */
+--ws-color-gray-200: oklch(0.630 0.060 265); /* #7D89B0 */
+--ws-color-gray-300: oklch(0.600 0.012 260); /* #717680 */
+--ws-color-gray-400: oklch(0.580 0.000 0);   /* #6C6C6C */
+--ws-color-gray-500: oklch(0.949 0.000 0);   /* #EEEEEE */
+
+/* Cyan Colors */
+--ws-color-cyan-10: oklch(0.955 0.050 200);  /* #CDF2FF */
+--ws-color-cyan-20: oklch(0.945 0.055 215);  /* #CFF9FE */
+--ws-color-cyan-30: oklch(0.900 0.080 205);  /* #A5F0FC */
+--ws-color-cyan-40: oklch(0.760 0.090 210);  /* #6DC5D3 */
+--ws-color-cyan-50: oklch(0.730 0.140 220);  /* #22CCEE */
+--ws-color-cyan-60: oklch(0.680 0.135 225);  /* #06AED4 */
+
+/* Purple Colors */
+--ws-color-purple-10: oklch(0.985 0.012 285); /* #FCFAFF */
+--ws-color-purple-20: oklch(0.930 0.035 280); /* #EBE9FE */
+--ws-color-purple-30: oklch(0.620 0.180 285); /* #7F56D9 */
+--ws-color-purple-40: oklch(0.560 0.195 285); /* #6941C6 */
+--ws-color-purple-50: oklch(0.520 0.220 285); /* #5925DC */
+--ws-color-purple-60: oklch(0.560 0.210 275); /* #6938EF */
+
+/* Teal Colors */
+--ws-color-teal-10: oklch(0.920 0.020 195);  /* #DBEBEB */
+--ws-color-teal-20: oklch(0.720 0.130 200);  /* #00C4C7 */
+
+/* Red Colors */
+--ws-color-red-10: oklch(0.780 0.140 25);    /* #FDA29B */
+--ws-color-red-20: oklch(0.630 0.210 25);    /* #F04438 */
+--ws-color-red-30: oklch(0.580 0.220 25);    /* #D92D20 */
+--ws-color-red-40: oklch(0.520 0.210 25);    /* #B42318 */
+
+/* Green Colors */
+--ws-color-green-10: oklch(0.700 0.140 150); /* #34A853 */
+
+/* Single Use Colors */
+--ws-color-blue-100: oklch(0.915 0.055 260); /* #D4DFFC */
 }
 
-/* ========== Dark Mode Colors ========== */
-.dark-mode {
-  /* Text Colors - Inverted for dark mode */
-  --color-text-primary: rgba(255, 255, 255, 0.95);
-  --color-text-secondary: rgba(255, 255, 255, 0.87);
-  --color-text-tertiary: rgba(255, 255, 255, 0.6);
-  --color-text-quaternary: rgba(255, 255, 255, 0.4);
 
-  /* Background Colors - Dark variants */
-  --color-bg-primary: rgba(18, 18, 18, 1);
-  --color-bg-secondary: rgba(26, 26, 26, 1);
-  --color-bg-disabled: rgba(38, 38, 38, 1);
-
-  /* Foreground Colors - Dark variants */
-  --color-fg-disabled: rgba(102, 102, 102, 1);
-  --color-fg-disabled_subtle: rgba(64, 64, 64, 1);
-  --color-fg-quaternary: rgba(255, 255, 255, 0.4);
-  --color-fg-quaternary_hover: rgba(255, 255, 255, 0.6);
-
-  /* Border Colors - Adjusted for dark mode */
-  --color-border-primary: rgba(64, 64, 64, 1);
-  --color-border-secondary: rgba(48, 48, 48, 1);
-  --color-border-secondary-alt: rgba(255, 255, 255, 0.08);
-  --color-border-tertiary: rgba(38, 38, 38, 1);
-  --color-border-disabled: rgba(64, 64, 64, 1);
-  --color-border-disabled-subtle: rgba(48, 48, 48, 1);
-
-  /* Component State Colors - Dark variants */
-  --color-disabled: rgba(38, 38, 38, 1);
-  --color-disabled_subtle: rgba(48, 48, 48, 1);
-
-  /* Error, Success, Cyan, Purple, Teal colors remain the same in dark mode */
-  /* Only text, background, and border colors are adjusted */
-
-  color-scheme: dark;
-  color: var(--color-text-primary);
-  background-color: var(--color-bg-primary);
-}
-
-/* ========== Semantic Color Classes ========== */
-.bg-primary {
-  background-color: var(--color-bg-primary);
-}
-
-.bg-secondary {
-  background-color: var(--color-bg-secondary);
-}
-
-.bg-destructive {
-  background-color: var(--color-error-600);
-  color: var(--color-text-white);
-}
-.bg-dashboard {
-  background-color: var(--color-bg-dashboard);
-}
-
-.bg-tertiary {
-  background-color: var(--color-bg-tertiary);
-}
-.bg-dashboard-card {
-  background-color: var(--color-bg-dashboard-card);
-}
-
-.bg-dashboard-card-image {
-  background-color: var(--color-bg-dashboard-card-image);
-}
-.bg-card-avatar {
-  background-color: var(--color-bg-card-avatar);
-}
-.bg-gray-invoice {
-  background-color: var(--color-bg-gray-invoice);
-}
-.bg-tertiary {
-  background-color: var(--color-bg-tertiary);
-}
-.border-primary {
-  border-color: var(--color-border-primary);
-}
-
-.border-secondary {
-  border-color: var(--color-border-secondary);
-}
-
-.text-primary {
-  color: var(--color-text-primary);
-}
-
-.text-secondary {
-  color: var(--color-text-secondary);
-}
-
-.text-tertiary {
-  color: var(--color-text-tertiary);
-}
-
-.text-quaternary {
-  color: var(--color-text-quaternary);
-}
-
-.text-subtitle {
-  color: var(--color-text-subtitle);
-}
-
-.text-white {
-  color: var(--color-text-white);
-}
-
-.text-black {
-  color: var(--color-text-black);
-}
-
-.text-error-primary {
-  color: var(--color-error-600);
-}
-
-.text-error-secondary {
-  color: var(--color-error-500);
-}
-.text-dashboard-card-title {
-  color: var(--color-text-dashboard-card-title);
-}
-.text-card-subtitle {
-  color: var(--color-text-card-subtitle);
-}
-.text-nav-menu {
-  color: var(--color-nav-menu-text);
-}
-
-.text-purple-500 {
-  color: var(--color-text-purple-500);
-}
-.text-400 {
-  color: var(--color-text-400);
-}
-.text-500 {
-  color: var(--color-text-500);
-}
-.color-text-600 {
-  color: var(--color-text-600);
-}
-.color-base-black {
-  color: var(--color-base-black);
-}
-.text-gray-500 {
-  color: var(--color-text-gray-500);
-}
-.font-display {
-  font-family: var(--font-family-display);
-}
-
-.font-body {
-  font-family: var(--font-family-body);
-}
-
-.bg-disabled {
-  background-color: var(--color-bg-disabled);
-}
-.bg-gray-card {
-  background-color: var(--color-bg-gray-card);
-}
-.bg-gray-25 {
-  background-color: var(--color-bg-gray-25);
-}
-.bg-gray-100 {
-  background-color: var(--color-bg-gray-100);
-}
-.bg-purple-50 {
-  background-color: var(--color-bg-purple-50);
-}
-.bg-purple-500 {
-  background-color: var(--color-bg-purple-500);
-}
-
-.border-color-200 {
-  border-color: var(--color-border-200);
-}
 .h-110 {
   height: 450px;
 }
 
-.background-pattern {
-  background-image: url("./assets/background-pattern-success.svg");
-  background-repeat: no-repeat;
-  background-size: 60%;
-  background-position: top left;
-}
-.background-pattern-unsuccess {
-  background-image: url("./assets/background-pattern-unsuccess.svg");
-  background-repeat: no-repeat;
-  background-size: 60%;
-  background-position: top left;
-}
-.myClass {
-  box-shadow: inset 2px 0 0 #fff;
+/* .myClass {
+  box-shadow: inset 2px 0 0 var(--color-white);
   border: 1px solid var(--color-gray-300);
   border-left: none;
-}
+} */
 .warning {
   border-radius: 12px;
   background-color: var(--color-yellow-50);

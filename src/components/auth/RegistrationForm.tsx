@@ -10,11 +10,10 @@ import { Checkbox } from "@/components/base/checkbox/checkbox";
 import { Eye, EyeOff, Mail01, AlertCircle } from "@untitledui/icons";
 import { NativeSelect } from "../base/select/select-native";
 import { Select } from "../base/select/select";
-// import { signup, getIndustries } from "@/services/api/authApi";
-import { signup } from "@/services/api/authApi";
+import { signup, getIndustries } from "@/services/api/authApi";
 import type { RegistrationData, Industry } from "@/types/auth";
 import { registrationSchema, type RegistrationFormData } from "@/services/validation/authSchemas";
-import { COUNTRY_CODES, INDUSTRIES} from "@/constants/formOptions";
+import { COUNTRY_CODES } from "@/constants/formOptions";
 import checkmarkIcon from "@/assets/checkmark-icon.svg";
 import ErrorMessage from "../common/ErrorMessage";
 import { getErrorState, type ErrorState } from "@/utils/errorHandler";
@@ -72,9 +71,9 @@ export const RegistrationForm = () => {
   const [phoneNumber, setPhoneNumber] = useState(savedFormData?.businessPhone || "");
   const [countryCode, setCountryCode] = useState("US");
   const [submitError, setSubmitError] = useState<ErrorState | null>(null);
-  // const [industries, setIndustries] = useState<Industry[]>([]);
-  // const [isLoadingIndustries, setIsLoadingIndustries] = useState(true);
-  // const [industryError, setIndustryError] = useState<string | null>(null);
+  const [industries, setIndustries] = useState<Industry[]>([]);
+  const [isLoadingIndustries, setIsLoadingIndustries] = useState(true);
+  const [industryError, setIndustryError] = useState<string | null>(null);
 
   const {
     handleSubmit,
@@ -152,26 +151,25 @@ export const RegistrationForm = () => {
     dispatch,
   ]);
   // Fetch industries on component mount
-  // useEffect(() => {
-  //   const fetchIndustries = async () => {
-  //     try {
-  //       setIsLoadingIndustries(true);
-  //       const data = await getIndustries();
-  //       // console.log("Fetched industries:", data.data.industries);
-  //       setIndustries(data.data.industries || []);
-  //       setIndustryError(null);
-  //     } catch (error) {
-  //       console.error("Failed to load industries:", error);
-  //       setIndustryError(
-  //         error instanceof Error ? error.message : "Failed to load industries. Please try again."
-  //       );
-  //     } finally {
-  //       setIsLoadingIndustries(false);
-  //     }
-  //   };
-  //   fetchIndustries();
-  // }, []);
-console.log("industry", errors)
+  useEffect(() => {
+    const fetchIndustries = async () => {
+      try {
+        setIsLoadingIndustries(true);
+        const data = await getIndustries();
+        // console.log("Fetched industries:", data.data.industries);
+        setIndustries(data.data.industries || []);
+        setIndustryError(null);
+      } catch (error) {
+        console.error("Failed to load industries:", error);
+        setIndustryError(
+          error instanceof Error ? error.message : "Failed to load industries. Please try again."
+        );
+      } finally {
+        setIsLoadingIndustries(false);
+      }
+    };
+    fetchIndustries();
+  }, []);
 
   const onSubmit = async (data: RegistrationFormData) => {
     try {
@@ -184,8 +182,7 @@ console.log("industry", errors)
         firstName: data.firstName,
         lastName: data.lastName,
         businessName: data.legalBusinessName,
-        // industry: data.industry,
-        industry: data.industry as Industry,
+        industry: data.industry,
         zipCode: parseInt(data.zipCode, 10),
         businessEmail: data.businessEmail,
         businessPhone: data.businessPhone,
@@ -219,20 +216,20 @@ console.log("industry", errors)
   };
 
   return (
-    <div className="flex min-h-screen items-center justify-center bg-secondary">
+    <div className="flex min-h-screen items-center justify-center md:p-8 bg-ws-gray-20">
       {/* Container */}
-      <div className="flex w-3xl items-center justify-center rounded-xl border border-solid border-primary bg-primary p-10">
+      <div className="flex w-3xl items-center justify-center rounded-xl border border-ws-gray-50 bg-ws-white p-10">
         {/* Content */}
         <div className="flex w-full flex-col items-center gap-8">
           {/* Logo */}
-          <div className="flex items-center justify-center rounded-xl bg-tertiary px-2 py-1">
-            <h1 className="text-5xl font-bold leading-15 text-primary">BeneStat</h1>
+          <div className="flex items-center justify-center px-2 py-1">
+            <h1 className="text-5xl font-bold leading-15 text-ws-black">BeneStats</h1>
           </div>
 
           {/* Header */}
           <div className="flex w-full flex-col items-start gap-2">
-            <h2 className="w-full text-4xl font-semibold leading-9.5 text-primary">Sign up</h2>
-            <p className="w-full text-medium font-normal leading-6 text-tertiary">
+            <h2 className="w-full text-4xl font-semibold leading-9.5 text-ws-black">Sign up</h2>
+            <p className="w-full text-medium font-normal leading-6 text-ws-black-10">
               We're excited that you've decided to try our Worker Solutions® platform. Before we
               begin we'll need to collect some information about your business.
             </p>
@@ -254,6 +251,7 @@ console.log("industry", errors)
                   value={firstName}
                   maxLength={20}
                   className={errors.firstName ? "error-ring" : ""}
+                  tooltip={errors.firstName ? errors.firstName.message : undefined}
                   onChange={value => {
                     const sanitized = value.replace(/^\s+/, "");
                     setValue("firstName", sanitized);
@@ -273,6 +271,7 @@ console.log("industry", errors)
                   isInvalid={!!errors.lastName}
                   maxLength={20}
                   className={errors.lastName ? "error-ring" : ""}
+                  tooltip={errors.lastName ? errors.lastName.message : undefined}
                   onChange={value => {
                     const sanitized = value.replace(/^\s+/, "");
                     setValue("lastName", sanitized);
@@ -293,6 +292,7 @@ console.log("industry", errors)
                   value={legalBusinessName}
                   maxLength={50}
                   className={errors.legalBusinessName ? "error-ring" : ""}
+                  tooltip={errors.legalBusinessName ? errors.legalBusinessName.message : undefined}
                   onChange={value => {
                     const sanitized = value.replace(/^\s+/, "");
                     setValue("legalBusinessName", sanitized);
@@ -300,10 +300,9 @@ console.log("industry", errors)
                   }}
                 />
               </InputGroup>
-
-              {/* <Select
+              <InputGroup isRequired>
+              <Select
                 className="w-full flex items-start"
-                isRequired
                 size="md"
                 label="Select Your Industry"
                 placeholder="Select Option"
@@ -311,32 +310,20 @@ console.log("industry", errors)
                   id: i.industry_code, // Changed from i.id.toString()
                   label: i.industry_name,
                 }))}
-                selectedKey={industry}
+                selectedKey={industry || null}
                 onSelectionChange={key => {
-                  setValue("industry", key as string);
-                  trigger("industry");
+                  const stringKey = key ? String(key) : "";
+                  setValue("industry", stringKey);
+                  // This prevents popover positioning from resetting
+                  // setTimeout(() => {
+                    trigger("industry");
+                  // }, 0);
                 }}
                 isDisabled={isLoadingIndustries || !!industryError}
                 isInvalid={!!errors.industry || !!industryError}
                 hint={industryError || errors.industry?.message}
-              > */}
-                <Select
-                            // className="w-full flex items-start"
-                  className={errors.industry ? "error-ring" : "w-full flex items-start"}
-                  size="md"
-                  label="Select Your Industry"
-                  placeholder="Select Option"
-                  items={INDUSTRIES}
-                  selectedKey={industry}
-                  onSelectionChange={key => {
-                  setValue("industry", key as string);
-                  trigger("industry");
-                }}
-
-                  isInvalid={!!errors.industry}
-                  tooltip={errors.industry ? errors.industry.message : undefined}
-                  hint={errors.industry?.message}
-                >
+                tooltip={errors.industry ? errors.industry.message : undefined}
+              >
                 {item => (
                   <Select.Item
                     id={item.id}
@@ -349,9 +336,10 @@ console.log("industry", errors)
                   </Select.Item>
                 )}
               </Select>
-              {/* {isLoadingIndustries && (
+            </InputGroup>
+              {isLoadingIndustries && (
                 <p className="text-sm text-gray-600 mt-1.5">Loading industries...</p>
-              )} */}
+              )}
               {/* Row 3 - Zip Code & (empty space for layout) */}
               <InputGroup>
                 <Input
@@ -367,6 +355,7 @@ console.log("industry", errors)
                   inputMode="numeric"
                   pattern="[0-9]*"
                   className={errors.zipCode ? "error-ring" : ""}
+                  tooltip={errors.zipCode ? errors.zipCode.message : undefined}
                   onChange={value => {
                     // Only allow numeric input
                     const numericValue = value.replace(/\D/g, "");
@@ -388,6 +377,7 @@ console.log("industry", errors)
                   isInvalid={!!errors.businessEmail}
                   value={businessEmail}
                   className={errors.businessEmail ? "error-ring" : ""}
+                  tooltip={errors.businessEmail ? errors.businessEmail.message : undefined}
                   onChange={value => {
                     const sanitized = value.replace(/^\s+/, "");
                     setValue("businessEmail", sanitized);
@@ -423,6 +413,7 @@ console.log("industry", errors)
                     setValue("businessPhone", numericValue);
                     trigger("businessPhone");
                   }}
+                  tooltip={errors.businessPhone ? errors.businessPhone.message : undefined}
                 />
               </InputGroup>
 
@@ -435,6 +426,7 @@ console.log("industry", errors)
                   placeholder="Password"
                   size="md"
                   type={showPassword ? "text" : "password"}
+                  tooltip={errors.password ? errors.password.message : undefined}
                   isInvalid={!!errors.password}
                   value={password}
                   className="relative"
@@ -452,10 +444,14 @@ console.log("industry", errors)
                   aria-label={showPassword ? "Hide password" : "Show password"}
                   className="absolute right-0 top-7"
                 >
-                  {showPassword ? (
-                    <Eye className="size-5 text-gray-400" />
-                  ) : (
-                    <EyeOff className="size-5 text-gray-400" />
+                  {!errors.password && (
+                    <>
+                      {showPassword ? (
+                        <Eye className="size-5 text-ws-gray-70" />
+                      ) : (
+                        <EyeOff className="size-5 text-ws-gray-70" />
+                      )}
+                    </>
                   )}
                 </Button>
               </InputGroup>
@@ -469,6 +465,7 @@ console.log("industry", errors)
                   size="md"
                   type={showConfirmPassword ? "text" : "password"}
                   isInvalid={!!errors.confirmPassword}
+                  tooltip={errors.confirmPassword ? errors.confirmPassword.message : undefined}
                   value={confirmPassword}
                   className="relative"
                   onChange={value => {
@@ -485,10 +482,14 @@ console.log("industry", errors)
                   aria-label={showConfirmPassword ? "Hide password" : "Show password"}
                   className="absolute right-0 top-7"
                 >
-                  {showConfirmPassword ? (
-                    <Eye className="size-5 text-gray-400" />
-                  ) : (
-                    <EyeOff className="size-5 text-gray-400" />
+                  {!errors.password && (
+                    <>
+                      {showConfirmPassword ? (
+                        <Eye className="size-5 text-ws-gray-70" />
+                      ) : (
+                        <EyeOff className="size-5 text-ws-gray-70" />
+                      )}
+                    </>
                   )}
                 </Button>
               </InputGroup>
@@ -506,7 +507,7 @@ console.log("industry", errors)
                   }}
                   aria-label="I agree to the Terms and Privacy Policies"
                 />
-                <p className="text-sm font-normal leading-5 text-primary">
+                <p className="text-sm font-normal leading-5 text-ws-black">
                   I've read and agree to the Worker Solutions®{" "}
                   <Link to="/terms-page" className="cursor-pointer text-cyan-500">
                     Terms
@@ -518,7 +519,7 @@ console.log("industry", errors)
                 </p>
               </div>
               {errors.agreeToTerms && (
-                <p className="mt-1 text-sm text-error-primary">{errors.agreeToTerms.message}</p>
+                <p className="mt-1 text-sm text-ws-red-30">{errors.agreeToTerms.message}</p>
               )}
             </div>
 
@@ -546,7 +547,7 @@ console.log("industry", errors)
               </Button>
 
               {/* Sign in link */}
-              <p className="text-sm font-normal leading-5 text-primary">
+              <p className="text-sm font-normal leading-5 text-ws-black">
                 Already have an account?{" "}
                 <Link to="/sign-in" className="font-semibold text-cyan-500">
                   Log in

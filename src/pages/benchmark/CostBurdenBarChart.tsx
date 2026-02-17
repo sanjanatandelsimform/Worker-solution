@@ -271,7 +271,7 @@ export default function CostBurdenBarChart({ data, width, height = 400 }: Canvas
       />
       {tooltip && (
         <div
-          className="pointer-events-none absolute rounded-lg border border-gray-200 bg-white px-3 py-2 shadow-lg"
+          className="pointer-events-none absolute rounded-lg border border-gray-200 bg-ws-white px-3 py-2 shadow-lg"
           style={{
             left: `${tooltip.x + 10}px`,
             top: `${tooltip.y - 10}px`,
@@ -281,8 +281,8 @@ export default function CostBurdenBarChart({ data, width, height = 400 }: Canvas
           <div className="flex items-center gap-2">
             <div className="h-3 w-3 rounded" style={{ backgroundColor: tooltip.color }} />
             <div className="text-sm">
-              <div className="font-medium text-gray-900">{tooltip.value}%</div>
-              <div className="text-xs text-gray-500">{tooltip.label}</div>
+              <div className="font-medium text-ws-black-90">{tooltip.value}%</div>
+              <div className="text-xs text-ws-gray-100">{tooltip.label}</div>
             </div>
           </div>
         </div>

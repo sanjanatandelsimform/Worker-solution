@@ -305,24 +305,43 @@ src/
 ---
 
 ### Phase 4: Password Change Flow (3-4 hours)
-**Goal**: Implement User Story 3 - Change password with brute-force protection
+**Goal**: Implement User Story 3 - Change password with brute-force protection and real-time validation
+
+**Validation Requirements**:
+- **Current Password**: Required field, minimum 8 characters
+- **New Password**: Required field, minimum 8 characters, must contain uppercase, lowercase, number, special character, different from current
+- **Confirm Password**: Required field, must match new password exactly
+- **Error Display**: All validation errors MUST be displayed inside the modal (consistent with Update Email Modal)
+  - Error location: Inside ModalBody, below/adjacent to corresponding input
+  - Real-time validation: Display errors as user types, clear immediately when corrected
+  - Styling: Text-only, no visual border changes or icons
+  - Button disabled: Submit button disabled when any validation error exists
 
 **Tasks**:
-1. Add "Change Password" link next to password placeholder
+1. Add "Change Password" link next to password placeholder on Settings page
 2. Integrate ChangePasswordModal (existing component - wire to Redux)
-3. Add password validation (min 8 chars, uppercase, lowercase, number, special char)
-4. Integrate with PATCH /profile/password API
-5. Implement attempt tracking in Redux (max 5 attempts)
-6. Handle incorrect password error (401) - show remaining attempts
-7. Handle account lockout (429 Too Many Requests) - show lockout duration
-8. Show success modal after successful change
-9. Clear attempt counter on success
-10. Write tests including brute-force protection scenarios
+3. Implement real-time password validation (current, new, confirm):
+   - Current password: Required, min 8 chars
+   - New password: Required, min 8 chars, strength requirements (upper, lower, number, special)
+   - Confirm password: Required, must match new password
+4. Display validation errors inside modal body (consistent with UpdateYourEmailModal pattern)
+5. Implement confirm password matching validation
+6. Disable submit button when any validation error exists
+7. Integrate with PATCH /profile/password API
+8. Implement attempt tracking in Redux (max 5 attempts)
+9. Handle incorrect current password error (401) - show remaining attempts
+10. Handle account lockout (429 Too Many Requests) - show lockout duration
+11. Show success modal after successful change
+12. Clear attempt counter on success
+13. Write tests including brute-force protection scenarios
 
 **Dependencies**: Phase 3 complete
 
 **Testing**:
-- Password validation tests (all requirements)
+- Password validation tests (all requirements including real-time error display)
+- Confirm password matching tests
+- Validation error display tests (errors appear in modal)
+- Button disabled state tests
 - Attempt tracking tests
 - Lockout behavior tests (429 response)
 - Success/error flow tests
@@ -330,12 +349,22 @@ src/
 
 **Test Cases**:
 - ✅ Should open ChangePasswordModal when clicking "Change Password" link
-- ✅ Should validate min 8 characters
-- ✅ Should require uppercase letter
-- ✅ Should require lowercase letter
-- ✅ Should require number
-- ✅ Should require special character
-- ✅ Should call PATCH /profile/password with correct payload
+- ✅ Should display validation error "Current password is required" when empty
+- ✅ Should display validation error "Current password must be at least 8 characters" when too short
+- ✅ Should display validation error "New password is required" when empty
+- ✅ Should display validation error "New password must be at least 8 characters" when too short
+- ✅ Should display validation error for missing uppercase letter
+- ✅ Should display validation error for missing lowercase letter
+- ✅ Should display validation error for missing number
+- ✅ Should display validation error for missing special character
+- ✅ Should display validation error "New password cannot be the same as current password"
+- ✅ Should display validation error "Confirm password is required" when empty
+- ✅ Should display validation error "Passwords do not match" when confirm differs from new
+- ✅ Should clear validation errors immediately as user corrects input
+- ✅ Should disable submit button when any validation error exists
+- ✅ Should enable submit button only when all fields are valid
+- ✅ Should show errors inside modal body (not outside)
+- ✅ Should call PATCH /profile/password with correct payload on valid submission
 - ✅ Should show error with remaining attempts on incorrect current password
 - ✅ Should decrement attempts counter on each failure
 - ✅ Should show lockout message after 5 failures (429)
@@ -345,14 +374,19 @@ src/
 
 **Acceptance Criteria**:
 - User Story 3 acceptance scenarios 1-5 pass
-- FR-017 to FR-020, FR-036 to FR-038 implemented
+- FR-017 to FR-020a, FR-036 to FR-038 implemented
 - SC-004, SC-006 metrics met (change < 3s, validation < 500ms)
+- Real-time validation errors displayed inside modal (consistent with email modal)
+- Confirm password validation working correctly
 - Incorrect password edge case with rate limiting handled
 
 **Deliverables**:
-- Functional password change with security features
+- Functional password change with real-time validation error display
+- Confirm password field with matching validation
+- Validation errors displayed inside modal (consistent with UpdateYourEmailModal)
 - Brute-force protection (5 attempts, 15-min lockout)
 - Attempt tracking in Redux state
+- Submit button disabled when validation errors exist
 
 ---
 

@@ -27,8 +27,8 @@ export const AvatarLabelGroup = ({
     >
       <Avatar {...props} />
       <figcaption className="min-w-0 flex-1">
-        <p className={cx("text-primary", styles[props.size].title)}>{title}</p>
-        <p className={cx("truncate text-tertiary", styles[props.size].subtitle)}>{subtitle}</p>
+        <p className={cx("text-ws-black", styles[props.size].title)}>{title}</p>
+        <p className={cx("truncate text-ws-black-10", styles[props.size].subtitle)}>{subtitle}</p>
       </figcaption>
     </figure>
   );

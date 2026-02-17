@@ -5,7 +5,7 @@ import type {
   UserAccount,
   EmailCheckResponse,
   ApiError,
-  // Industry,
+  Industry,
 } from "../../types/auth";
 
 // Create Axios instance with base configuration
@@ -387,24 +387,24 @@ export const setTokens = (tokens: { accessToken: string; refreshToken: string })
   }
 };
 
-// /**
-//  * Fetch list of available industries for registration form
-//  * @returns Promise resolving to array of Industry objects
-//  * @throws Error with user-friendly message on failure
-//  */
-// export const getIndustries = async (): Promise<{ data: { industries: Industry[] } }> => {
-//   try {
-//     const response = await apiClient.get<{ data: { industries: Industry[] } }>("/industry/lookup");
+/**
+ * Fetch list of available industries for registration form
+ * @returns Promise resolving to array of Industry objects
+ * @throws Error with user-friendly message on failure
+ */
+export const getIndustries = async (): Promise<{ data: { industries: Industry[] } }> => {
+  try {
+    const response = await apiClient.get<{ data: { industries: Industry[] } }>("/industry/lookup");
 
-//     // Validate non-empty response (per clarification #4)
-//     if (!response.data?.data?.industries || response.data.data.industries.length === 0) {
-//       throw new Error("No industries available. Please try again later.");
-//     }
+    // Validate non-empty response (per clarification #4)
+    if (!response.data?.data?.industries || response.data.data.industries.length === 0) {
+      throw new Error("No industries available. Please try again later.");
+    }
 
-//     return response.data;
-//   } catch (error) {
-//     throw new Error(getErrorMessage(error));
-//   }
-// };
+    return response.data;
+  } catch (error) {
+    throw new Error(getErrorMessage(error));
+  }
+};
 
 export default apiClient;

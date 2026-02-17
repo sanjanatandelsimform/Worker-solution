@@ -86,13 +86,13 @@ export const SuccessPage: React.FC<SuccessCardProps> = ({
 
   return (
     <div className={`flex min-h-screen items-center justify-center bg-secondary ${classess}`}>
-      <div className="flex w-2xl items-center justify-center rounded-xl border border-solid border-primary bg-primary py-22">
+      <div className="flex w-2xl items-center justify-center rounded-xl border border-ws-gray-50 bg-ws-white py-22">
         <div className="flex w-full max-w-lg flex-col items-center gap-8">
           {/* Header */}
           <div className="flex w-full flex-col items-center gap-6">
             {/* Logo */}
-            <div className="flex items-center justify-center rounded-xl bg-tertiary px-2 py-1">
-              <h1 className="text-5xl font-bold leading-15 text-primary">BeneStat</h1>
+            <div className="flex items-center justify-center px-2 py-1">
+              <h1 className="text-5xl font-bold leading-15 text-ws-black">BeneStats</h1>
             </div>
             <div>
               <img
@@ -103,14 +103,14 @@ export const SuccessPage: React.FC<SuccessCardProps> = ({
             </div>
 
             {/* Title and Description */}
-            <div className="prose flex flex-col w-full items-center justify-center text-center">
-              <h2 className="w-full text-primary">
+            <div className="flex flex-col w-full items-center justify-center text-center">
+              <h2 className="w-full text-ws-black-50 text-4xl font-medium">
                 {title || state.title || "Thanks for signing up!"}
               </h2>
-              <p className="max-w-sm text-2xl font-normal leading-8 text-subtitle">
+              <p className="max-w-md text-2xl font-normal leading-8 text-ws-gray-80 mt-2">
                 {descriptionText ||
                   state.subtitle ||
-                  "Welcome aboard! Start your success journey with BeneStat"}
+                  "Welcome aboard! Start your success journey with BeneStats"}
               </p>
             </div>
             <Button color="primary" size="lg" className="mt-4" onClick={handleButtonClick}>

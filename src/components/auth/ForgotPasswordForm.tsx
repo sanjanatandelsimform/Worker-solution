@@ -57,22 +57,22 @@ export default function ForgotPasswordForm() {
   };
 
   return (
-    <div className="flex min-h-screen items-center justify-center bg-secondary">
-      <div className="flex w-2xl items-center justify-center rounded-xl border border-solid border-primary bg-primary py-22">
+    <div className="flex min-h-screen items-center justify-center bg-ws-gray-20">
+      <div className="flex w-2xl items-center justify-center rounded-xl border border-ws-gray-50 bg-ws-white py-22">
         <div className="flex w-full max-w-md flex-col items-center gap-8">
           {/* Header */}
           <div className="flex w-full flex-col items-center gap-6">
             {/* Logo */}
-            <div className="flex items-center justify-center rounded-xl bg-tertiary px-2 py-1">
-              <h1 className="text-5xl font-bold leading-15 text-primary">BeneStat</h1>
+            <div className="flex items-center justify-center px-2 py-1">
+              <h1 className="text-5xl font-bold leading-15 text-ws-black">BeneStats</h1>
             </div>
 
             {/* Title and Description */}
             <div className="flex w-full flex-col items-start gap-3">
-              <h2 className="w-full text-4xl font-semibold leading-9.5 text-primary">
+              <h2 className="w-full text-4xl font-semibold leading-9.5 text-ws-black">
                 Forgot your password?
               </h2>
-              <p className="w-full text-medium font-normal leading-6 text-tertiary">
+              <p className="w-full text-medium font-normal leading-6 text-ws-black-10">
                 Enter the email address associated with your account and we'll send you a link to
                 reset your password.
               </p>
@@ -96,6 +96,7 @@ export default function ForgotPasswordForm() {
                   hint={errors.email?.message}
                   isInvalid={!!errors.email}
                   value={getValues("email")}
+                  tooltip={errors.email ? errors.email.message : undefined}
                   onChange={value => {
                     const sanitized = value.replace(/^\s+/, "");
                     setValue("email", sanitized);
@@ -132,7 +133,9 @@ export default function ForgotPasswordForm() {
 
           {/* Sign in link */}
           <div className="flex w-full items-baseline justify-center gap-1">
-            <p className="text-sm font-normal leading-5 text-tertiary">Already have an account?</p>
+            <p className="text-sm font-normal leading-5 text-ws-black-10">
+              Already have an account?
+            </p>
             <Button href="/sign-in" color="link-color" size="md">
               Sign in
             </Button>

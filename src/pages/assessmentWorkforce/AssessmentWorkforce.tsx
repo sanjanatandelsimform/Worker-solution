@@ -35,7 +35,7 @@ export default function AssessmentWorkforcePage() {
 
   const handleNext = async () => {
     setCurrentStep(steps[currentStepIndex + 1].id);
-    // This code is required; I will uncomment it.
+    // // This code is required; I will uncomment it.
     // const dynamicTabValidation = (
     //   window as {
     //     __dynamicTabValidation?: {
@@ -103,7 +103,7 @@ export default function AssessmentWorkforcePage() {
         </Button>
 
         {/* Title */}
-        <h1 className="text-lg font-medium text-white">Assessment</h1>
+        <h1 className="text-lg font-medium text-ws-white">Assessment</h1>
 
         {/* Close Button */}
         <Button
@@ -111,12 +111,12 @@ export default function AssessmentWorkforcePage() {
           size="md"
           iconLeading={<XClose data-icon />}
           onClick={handleClose}
-          className="text-white transition-opacity hover:opacity-80"
+          className="text-ws-white transition-opacity hover:opacity-80"
         />
       </div>
 
       {/* Main Content Area */}
-      <div className="mx-auto w-full max-w-4xl flex-1 space-y-3 py-8">
+      <div className="mx-auto w-full max-w-4xl flex-1 space-y-3 py-8 px-4">
         {/* Progress Stepper */}
         <ProgressStepper steps={steps} currentStep={currentStep} onStepChange={setCurrentStep} />
 
@@ -153,6 +153,7 @@ export default function AssessmentWorkforcePage() {
           size="md"
           onClick={handleNext}
           className="min-w-30"
+          // isDisabled={ isSaving}
           // isDisabled={isSubmitting || isSaving}
           // isLoading={isSubmitting}
         >
