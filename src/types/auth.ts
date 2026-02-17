@@ -17,7 +17,8 @@ export interface UserAccount {
   businessName: string;
   phoneNumber: string;
   businessPhone?: string;
-  industry: string;
+  // industry: string;
+  industry: Industry;
   zipCode: number;
   authMethod?: "email" | "google";
   emailVerify: boolean;

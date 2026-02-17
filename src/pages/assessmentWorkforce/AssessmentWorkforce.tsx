@@ -35,7 +35,7 @@ export default function AssessmentWorkforcePage() {
 
   const handleNext = async () => {
     setCurrentStep(steps[currentStepIndex + 1].id);
-    // This code is required; I will uncomment it.
+    // // This code is required; I will uncomment it.
     // const dynamicTabValidation = (
     //   window as {
     //     __dynamicTabValidation?: {
