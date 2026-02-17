@@ -48,7 +48,7 @@ export const DashboardSidebar = ({ activeUrl = "/" }: DashboardSidebarProps) => 
 
       navigate("/success", {
         state: {
-          //messageImg: logoutIcon,
+          messageImg: logoutIcon,
           title: "You've been logged out",
           subtitle: "You've been logged out of your account. Log back in anytime to continue.",
           buttonText: "Log back in",
@@ -62,7 +62,7 @@ export const DashboardSidebar = ({ activeUrl = "/" }: DashboardSidebarProps) => 
 
       navigate("/success", {
         state: {
-          //messageImg: logoutIcon,
+          messageImg: logoutIcon,
           title: "You've been logged out",
           subtitle: "You've been logged out of your account. Log back in anytime to continue.",
           buttonText: "Log back in",
