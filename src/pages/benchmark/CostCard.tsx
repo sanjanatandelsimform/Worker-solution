@@ -19,21 +19,23 @@ export default function CostCard({
   classess,
 }: Readonly<CostCardProps>) {
   return (
-    <div className={`bg-white p-4 border border-gray-300 rounded-lg w-full space-y-4 ${classess}`}>
+    <div
+      className={`bg-ws-white p-4 border border-ws-gray-50 rounded-lg w-full space-y-4 ${classess}`}
+    >
       <div className="flex items-center justify-between mb-2.5">
-        <h3 className="text-lg font-medium text-gray-900">{title}</h3>
-        <p className="text-sm text-black">{year}</p>
+        <h3 className="text-lg font-medium text-ws-black">{title}</h3>
+        <p className="text-sm text-ws-black">{year}</p>
       </div>
-      <div className="flex items-center bg-cyan-500 px-3 py-2 text-white text-base mb-0">
+      <div className="flex items-center bg-ws-cyan-60 px-3 py-2 text-ws-white text-base mb-0">
         {voluntaryScore}
       </div>
-      <div className="bg-gray-invoice text-black px-3 py-2 w-[70%] mb-0">{involuntaryScore}</div>
+      <div className="bg-ws-gray-40 text-ws-black px-3 py-2 w-3/5 mb-0">{involuntaryScore}</div>
       <div className="flex items-center justify-between mt-7">
-        <div className="text-sm text-black">
+        <div className="text-sm text-ws-black">
           {industryText}
-          <span className="text-purple-600">{industryCostText}</span>
+          <span className="text-ws-purple-60">{industryCostText}</span>
         </div>
-        <div className="text-sm text-black">{industryTradeText}</div>
+        <div className="text-sm text-ws-black">{industryTradeText}</div>
       </div>
     </div>
   );

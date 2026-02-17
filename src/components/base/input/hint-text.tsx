@@ -16,7 +16,7 @@ export const HintText = ({ isInvalid, className, ...props }: HintTextProps) => {
       {...props}
       slot={isInvalid ? "errorMessage" : "description"}
       className={cx(
-        "text-sm text-tertiary",
+        "text-sm text-ws-black-10",
 
         // Invalid state
         isInvalid && "text-ws-red-30",

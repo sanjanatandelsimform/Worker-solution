@@ -36,22 +36,10 @@ export const InProgressModal = ({
     <Modal isOpen={isOpen} onOpenChange={onClose} size="sm">
       <ModalContent>
         <ModalHeader className="relative flex flex-col items-start gap-4 border-0 pb-0 pt-6 px-6">
-          <div
-            className="flex size-12 items-center justify-center overflow-clip rounded-full shrink-0"
-            style={{
-              backgroundColor: "var(--color-blue-light-100)",
-            }}
-          >
+          {/* Featured Icon - Blue Loading Icon */}
+          <div className="flex size-12 items-center justify-center overflow-clip rounded-full shrink-0 bg-blue-300">
             <div className="size-6 overflow-clip">
-              <img
-                src={loadingIcon}
-                alt="Loading"
-                className="block max-w-none size-full"
-                style={{
-                  filter:
-                    "brightness(0) saturate(100%) invert(27%) sepia(89%) saturate(2234%) hue-rotate(216deg) brightness(96%) contrast(92%)",
-                }}
-              />
+              <img src={loadingIcon} alt="Loading" className="block max-w-none size-full" />
             </div>
           </div>
 
@@ -63,19 +51,14 @@ export const InProgressModal = ({
             aria-label="Close modal"
             className="absolute right-3 top-3 flex size-11 items-center justify-center overflow-clip p-2 rounded-lg"
           >
-            <X
-              className="size-6"
-              style={{
-                color: "var(--color-text-quaternary)",
-              }}
-            />
+            <X className="size-6 text-ws-black-10" />
           </Button>
 
           <div className="flex w-full flex-col gap-1">
-            <ModalTitle className="text-[36px] font-medium leading-11 tracking-[-0.72px] font-display text-primary">
+            <ModalTitle className="text-[36px] font-medium leading-11 tracking-[-0.72px] font-display text-ws-black">
               {title}
             </ModalTitle>
-            <p className="text-sm font-normal leading-5 font-body text-tertiary">{subtitle}</p>
+            <p className="text-sm font-normal leading-5 font-body text-ws-black-10">{subtitle}</p>
           </div>
 
           <div className="h-5 w-full shrink-0" />

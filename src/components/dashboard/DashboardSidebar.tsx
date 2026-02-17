@@ -1,12 +1,13 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useAppSelector } from "@/store/hooks";
-import { Settings01, LogOut04, Speedometer03 } from "@untitledui/icons";
+import { Settings01, LogOut04, Speedometer03, Menu01, XClose } from "@untitledui/icons";
 import { NavList } from "@/components/application/app-navigation/base-components/nav-list";
 import type { NavItemType } from "@/components/application/app-navigation/config";
 import { signout } from "@/services/api/authApi";
 import { BaseModalWithIcon } from "../modals/BaseModalWithIcon";
-import logoutIcon from "@/assets/logout-Icon.svg";
+import { useBreakpoint } from "@/hooks/use-breakpoint";
+import { Button } from "../base/buttons/button";
 import { useModalConfig } from "@/hooks/useModalConfig";
 import logoutIcon from "@/assets/logout-Icon.svg";
 
@@ -19,8 +20,17 @@ export const DashboardSidebar = ({ activeUrl = "/" }: DashboardSidebarProps) => 
   const [isLogoutModalOpen, setIsLogoutModalOpen] = useState(false);
   const [isLogoutButtonDisabled, setIsLogoutButtonDisabled] = useState(false);
   const [logoutError, setLogoutError] = useState<string | null>(null);
+  const [isCollapsed, setIsCollapsed] = useState(true); // Default collapsed on tablet
 
   const { user, tokens } = useAppSelector(state => state.auth);
+
+  // Check if we're in the tablet range (768px - 1023px)
+  const isMd = useBreakpoint("md"); // >= 768px
+  const isLg = useBreakpoint("lg"); // >= 1024px
+  const isTabletRange = isMd && !isLg; // 768px - 1023px
+
+  // Determine if sidebar should show collapsed (only in tablet range)
+  const shouldBeCollapsed = isTabletRange && isCollapsed;
 
   const handleLogout = async () => {
     setIsLogoutButtonDisabled(true); // Disable the button to prevent multiple clicks
@@ -38,7 +48,7 @@ export const DashboardSidebar = ({ activeUrl = "/" }: DashboardSidebarProps) => 
 
       navigate("/success", {
         state: {
-          messageImg: logoutIcon,
+          //messageImg: logoutIcon,
           title: "You've been logged out",
           subtitle: "You've been logged out of your account. Log back in anytime to continue.",
           buttonText: "Log back in",
@@ -52,7 +62,7 @@ export const DashboardSidebar = ({ activeUrl = "/" }: DashboardSidebarProps) => 
 
       navigate("/success", {
         state: {
-          messageImg: logoutIcon,
+          //messageImg: logoutIcon,
           title: "You've been logged out",
           subtitle: "You've been logged out of your account. Log back in anytime to continue.",
           buttonText: "Log back in",
@@ -108,39 +118,99 @@ export const DashboardSidebar = ({ activeUrl = "/" }: DashboardSidebarProps) => 
 
   const displayEmail = user?.businessEmail || "No email available";
 
+  // Get user initials
+  const getUserInitials = () => {
+    if (user?.firstName && user?.lastName) {
+      return `${user.firstName.charAt(0)}${user.lastName.charAt(0)}`.toUpperCase();
+    } else if (user?.businessName) {
+      const words = user.businessName.split(" ");
+      if (words.length >= 2) {
+        return `${words[0].charAt(0)}${words[1].charAt(0)}`.toUpperCase();
+      }
+      return user.businessName.substring(0, 2).toUpperCase();
+    }
+    return "U";
+  };
+
+  const toggleSidebar = () => {
+    setIsCollapsed(!isCollapsed);
+  };
+
   return (
-    <div className="flex h-[calc(100vh-32px)] w-66 flex-col border-0 border-primary bg-primary py-10 px-6 m-4 rounded-xl shadow-xs">
-      {/* Logo */}
-      <div className="flex items-center justify-start">
-        <div className="flex items-center justify-center rounded-xl bg-tertiary px-3 py-1">
-          <h1 className="font-display text-2xl font-bold leading-8 text-black">BeneStat</h1>
-        </div>
+    <div
+      className={`flex h-[calc(100vh-40px)] xl:h-[calc(100vh-80px)] flex-col border-0 border-ws-gray-50 bg-ws-white py-6 lg:py-10 m-5 xl:m-10 rounded-xl shadow-xs transition-all duration-300 ease-in-out ${
+        isTabletRange ? (isCollapsed ? "w-20 px-3" : "w-66 px-6") : "w-66 px-6"
+      }`}
+    >
+      {/* Header with Logo and Toggle Button */}
+      <div className="flex items-center justify-between">
+        {/* Logo - Hidden when collapsed on tablet */}
+        {(!isTabletRange || !isCollapsed) && (
+          <div className="flex items-center justify-start overflow-hidden flex-1">
+            <div className="flex items-center justify-center rounded-xl bg-ws-gray-30 px-3 py-1 transition-all duration-300">
+              <h1 className="font-display text-2xl font-bold leading-8 text-black whitespace-nowrap transition-all duration-300">
+                BeneStats
+              </h1>
+            </div>
+          </div>
+        )}
+
+        {/* Toggle Button - Only visible on tablet */}
+        {isTabletRange && (
+          <Button
+            onClick={toggleSidebar}
+            color="primary"
+            aria-label={isCollapsed ? "Expand sidebar" : "Collapse sidebar"}
+            className={isCollapsed ? "w-full" : ""}
+          >
+            {isCollapsed ? (
+              <Menu01 className="size-5 text-ws-white" />
+            ) : (
+              <XClose className="size-5 text-ws-white" />
+            )}
+          </Button>
+        )}
       </div>
 
       {/* Navigation */}
-      <nav className="flex-1 overflow-y-auto">
-        <NavList items={navigationItems} activeUrl={activeUrl} />
+      <nav className="flex-1 overflow-y-auto overflow-x-hidden">
+        <NavList items={navigationItems} activeUrl={activeUrl} isCollapsed={shouldBeCollapsed} />
         <NavList
           items={settingsItems}
           activeUrl={activeUrl}
-          className="mt-4 border-t border-primary"
+          className="mt-4 border-t border-ws-gray-50"
+          isCollapsed={shouldBeCollapsed}
         />
       </nav>
 
       {/* User Account Card at Bottom - Dynamic User Info */}
-      <div className="border border-gray-300 rounded-xl p-3 mt-6">
-        <div className="flex items-start gap-3">
-          <div className="flex-1">
-            <p className="text-sm font-semibold text-primary truncate w-50">{displayName}</p>
-            <p className="text-sm text-tertiary mt-1 truncate w-50">{displayEmail}</p>
+      <div className="border border-ws-gray-50 rounded-xl p-2 lg:p-3 mt-6 overflow-hidden ">
+        {isTabletRange && isCollapsed ? (
+          // Show initials when collapsed
+          <div className="flex items-center justify-center">
+            <div className="flex items-center justify-center w-10 h-10 rounded-full bg-cyan-500 text-ws-white font-semibold text-sm">
+              {getUserInitials()}
+            </div>
           </div>
-        </div>
+        ) : (
+          // Show full info when expanded
+          <div className="flex items-start gap-3">
+            <div className="flex-1 min-w-0">
+              <p className="text-sm font-semibold text-ws-black truncate transition-opacity duration-300">
+                {displayName}
+              </p>
+              <p className="text-sm text-ws-black-10 mt-1 truncate transition-opacity duration-300">
+                {displayEmail}
+              </p>
+            </div>
+          </div>
+        )}
       </div>
       {logoutError && (
         <div className="fixed top-4 right-4 z-50 rounded-lg bg-red-50 p-4 border border-red-200 shadow-lg max-w-md">
           <div className="flex items-start gap-3">
             <div className="flex-shrink-0">
-              <svg className="h-5 w-5 text-red-600" viewBox="0 0 20 20" fill="currentColor">
+              <svg className="h-5 w-5 text-ws-red-30" viewBox="0 0 20 20" fill="currentColor">
                 <path
                   fillRule="evenodd"
                   d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z"
@@ -154,7 +224,7 @@ export const DashboardSidebar = ({ activeUrl = "/" }: DashboardSidebarProps) => 
             </div>
             <button
               onClick={() => setLogoutError(null)}
-              className="flex-shrink-0 text-red-400 hover:text-red-600"
+              className="flex-shrink-0 text-red-400 hover:text-ws-red-30"
             >
               <svg className="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
                 <path

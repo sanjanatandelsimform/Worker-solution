@@ -43,14 +43,14 @@ export default function CarouselSection() {
             align: "start",
           }}
         >
-          <div className="space-y-6 bg-purple-50 border border-gray-300 rounded-xl p-4">
+          <div className="space-y-6 bg-ws-purple-10 border border-ws-gray-50 rounded-xl p-4">
             {/* Carousel Content - Only this slides */}
             <Carousel.Content>
               {didYouKnowSlides.map(slide => (
                 <Carousel.Item key={slide.id}>
                   <div className="flex flex-col gap-2">
                     {/* Header with Icon and Title */}
-                    <div className="flex items-center gap-2 text-lg color-text-600 font-medium">
+                    <div className="flex items-center gap-2 text-lg text-ws-black-70 font-medium">
                       {slide.icon}
                       <h3 className="text-lg font-medium leading-7 color-base-black">
                         {slide.title}
@@ -65,7 +65,7 @@ export default function CarouselSection() {
             </Carousel.Content>
 
             {/* Navigation Controls - Fixed position, doesn't slide */}
-            <div className="bg-gray-25 flex items-center justify-center gap-2 border border-color-200 rounded-2xl px-2 py-1 w-fit">
+            <div className="bg-ws-gray-10 flex items-center justify-center gap-2 border border-ws-gray-40 rounded-2xl px-2 py-1 w-fit">
               {/* Previous Button */}
               <Carousel.PrevTrigger asChild>
                 <Button
@@ -84,7 +84,7 @@ export default function CarouselSection() {
                       <div
                         className={cx(
                           "size-2 rounded transition-colors cursor-pointer",
-                          isSelected ? "bg-purple-500" : "bg-gray-100"
+                          isSelected ? "bg-ws-purple-40" : "bg-ws-gray-40"
                         )}
                       />
                     )}
