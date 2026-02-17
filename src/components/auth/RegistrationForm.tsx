@@ -324,7 +324,6 @@ export const RegistrationForm = () => {
                 isDisabled={isLoadingIndustries || !!industryError}
                 isInvalid={!!errors.industry || !!industryError}
                 hint={industryError || errors.industry?.message}
-                tooltip={errors.industry ? errors.industry.message : undefined}
               >
                 {item => (
                   <Select.Item
