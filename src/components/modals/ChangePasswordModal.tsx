@@ -273,10 +273,7 @@ export const ChangePasswordModal = ({ isOpen, onClose }: ChangePasswordModalProp
                     name="newPassword"
                     isRequired
                     label="New Password"
-                    hint={
-                      newPasswordError ||
-                      "Must be min 8 characters, include number, upper case, lower case and special character."
-                    }
+                    hint={newPasswordError}
                     placeholder="Enter new password"
                     size="md"
                     type={showNewPassword ? "text" : "password"}

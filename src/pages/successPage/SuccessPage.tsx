@@ -1,7 +1,7 @@
 import { useEffect } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import { useAppDispatch } from "@/store/hooks";
-import { clearUser, setUser } from "@/store/slices/authSlice";
+import { logout, setTokens, setUser } from "@/store/slices/authSlice";
 import { Button } from "@/components/base/buttons/button";
 import insightHero from "@/assets/checkmark-icon.svg";
 import type { UserAccount } from "@/types/auth";
@@ -39,27 +39,21 @@ export const SuccessPage: React.FC<SuccessCardProps> = ({
     };
   };
 
-  // Clear user state and storage if coming from logout
+  // On mount: clear auth if logout, or store tokens from location.state (e.g. cross-browser verify)
   useEffect(() => {
     if (state.shouldClearUser) {
-      dispatch(clearUser());
-      // dispatch(clearProfileData());
-      localStorage.removeItem("userDetail");
-      sessionStorage.removeItem("registrationFormData");
-      sessionStorage.removeItem("registrationFormActive");
-      localStorage.clear();
+      dispatch(logout());
+      return;
     }
-    // Only run once on mount
-    // eslint-disable-next-line
-  }, []);
+    if (state.tokens) {
+      dispatch(setTokens(state.tokens));
+    }
+  }, [state.shouldClearUser, state.tokens, dispatch]);
 
-  // Get user from location.state
   const user = state.user;
   const tokens = state.tokens;
 
-  // Handler for button click - stores user data and navigates
   const handleButtonClick = () => {
-    // Store user data in Redux when button is clicked (if user exists)
     if (user && tokens) {
       dispatch(
         setUser({

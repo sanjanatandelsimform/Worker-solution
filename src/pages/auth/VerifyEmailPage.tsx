@@ -5,6 +5,9 @@ import checkmarkIcon from "@/assets/checkmark-icon.svg";
 import { useAppDispatch } from "@/store/hooks";
 import { updateUser, setTokens } from "@/store/slices/authSlice";
 import { Oval } from "react-loader-spinner";
+import type { UserAccount } from "@/types/auth";
+
+const STORAGE_KEY = "userDetail";
 
 export const VerifyEmailPage: React.FC = () => {
   const [searchParams] = useSearchParams();
@@ -28,57 +31,56 @@ export const VerifyEmailPage: React.FC = () => {
       try {
         const response = await verifyEmail(token);
 
-        // Update localStorage with verified user data and new tokens
         if (response.user && response.tokens) {
-          const userDetail = localStorage.getItem("userDetail");
+          const { user: apiUser, tokens: apiTokens } = response;
+          let existing: { auth?: { user?: UserAccount }; registrationForm?: unknown } = {};
+          try {
+            const raw = localStorage.getItem(STORAGE_KEY);
+            if (raw) existing = JSON.parse(raw);
+          } catch {
+            // ignore
+          }
 
-          if (userDetail) {
-            try {
-              const parsedUserDetail = JSON.parse(userDetail);
+          const isSameBrowser = !!existing?.auth?.user;
 
-              // Update the user data with emailVerify: true and new tokens
-              const updatedUserDetail = {
-                ...parsedUserDetail,
-                auth: {
-                  ...parsedUserDetail.auth,
-                  user: {
-                    ...parsedUserDetail.auth.user,
-                    id: response.user.id,
-                    businessEmail: response.user.businessEmail,
-                    emailVerify: response.user.emailVerify,
-                  },
-                  tokens: {
-                    accessToken: response.tokens.accessToken,
-                    refreshToken: response.tokens.refreshToken,
-                  },
+          if (isSameBrowser) {
+            // Same browser: update existing auth
+            dispatch(
+              updateUser({
+                id: apiUser.id,
+                businessEmail: apiUser.businessEmail,
+                emailVerify: apiUser.emailVerify,
+              })
+            );
+            dispatch(setTokens(apiTokens));
+          } else {
+            // Cross-browser: create new auth session (tokens only; user will be synced by ProtectedRoute)
+            const next = {
+              ...existing,
+              auth: {
+                ...(existing.auth || {}),
+                user: {
+                  ...(existing.auth?.user || ({} as UserAccount)),
+                  id: apiUser.id,
+                  businessEmail: apiUser.businessEmail,
+                  emailVerify: apiUser.emailVerify,
                 },
-              };
-
-              // Save updated data to localStorage
-              localStorage.setItem("userDetail", JSON.stringify(updatedUserDetail));
-
-              // Update Redux store
-              dispatch(
-                updateUser({
-                  id: response.user.id,
-                  businessEmail: response.user.businessEmail,
-                  emailVerify: response.user.emailVerify,
-                })
-              );
-
-              dispatch(
-                setTokens({
-                  accessToken: response.tokens.accessToken,
-                  refreshToken: response.tokens.refreshToken,
-                })
-              );
-            } catch (error) {
-              console.error("Failed to update localStorage:", error);
-            }
+                isAuthenticated: true,
+                tokens: apiTokens,
+              },
+            };
+            localStorage.setItem(STORAGE_KEY, JSON.stringify(next));
+            dispatch(setTokens(apiTokens));
+            dispatch(
+              updateUser({
+                id: apiUser.id,
+                businessEmail: apiUser.businessEmail,
+                emailVerify: apiUser.emailVerify,
+              })
+            );
           }
         }
 
-        // Success - redirect to success page
         navigate("/success", {
           state: {
             messageImg: checkmarkIcon,
@@ -86,6 +88,8 @@ export const VerifyEmailPage: React.FC = () => {
             subtitle: "Welcome aboard! Start your success journey with Worker Solutions®",
             buttonText: "Take the Assessment",
             buttonPath: "/assessment",
+            user: response.user ?? undefined,
+            tokens: response.tokens ?? undefined,
           },
         });
       } catch (error) {
@@ -102,18 +106,14 @@ export const VerifyEmailPage: React.FC = () => {
     handleVerification();
   }, [token, navigate, dispatch]);
 
-  // Show error state if verification fails
   if (!isVerifying && errorMessage) {
     return (
       <div className="flex min-h-screen items-center justify-center bg-secondary">
         <div className="flex w-2xl items-center justify-center rounded-xl border border-solid border-ws-gray-50 bg-ws-white py-22">
           <div className="flex w-full max-w-md flex-col items-center gap-8">
-            {/* Logo */}
             <div className="flex items-center justify-center px-2 py-1">
               <h1 className="text-5xl font-bold leading-15 text-ws-black">BeneStats</h1>
             </div>
-
-            {/* Error Content */}
             <div className="flex w-full flex-col items-center gap-6 text-center">
               <h2 className="w-full text-4xl font-semibold leading-9.5 text-ws-black">
                 Verification Failed
@@ -122,8 +122,6 @@ export const VerifyEmailPage: React.FC = () => {
                 {errorMessage}
               </p>
             </div>
-
-            {/* Action Button */}
             <div className="flex w-full flex-col items-center gap-4">
               <button
                 onClick={() => navigate("/sign-in")}
@@ -138,7 +136,6 @@ export const VerifyEmailPage: React.FC = () => {
     );
   }
 
-  // Show simple loader while verifying
   return (
     <div className="flex min-h-screen items-center justify-center bg-secondary">
       <Oval
@@ -146,7 +143,7 @@ export const VerifyEmailPage: React.FC = () => {
         width={80}
         color="#06b6d4"
         wrapperClass="flex items-center justify-center"
-        visible={true}
+        visible
         ariaLabel="oval-loading"
         secondaryColor="#0891b2"
         strokeWidth={2}
