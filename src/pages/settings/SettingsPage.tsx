@@ -235,15 +235,7 @@ export const SettingsPage = () => {
     try {
       await dispatch(resendVerificationEmail()).unwrap();
 
-      navigate("/success", {
-        state: {
-          messageImg: checkmarkIcon,
-          title: "Your email has been verified!",
-          subtitle: "Welcome aboard! Start your success journey with Bene Sol",
-          buttonText: "Return to Dashboard",
-          buttonPath: "/dashboard",
-        },
-      });
+      setShowSuccess(true)
     } catch (error) {
       setResendError(
         error instanceof Error ? error.message : "Failed to resend verification email"
