@@ -1,8 +1,10 @@
 import { Routes, Route, Navigate } from "react-router-dom";
+import { Oval } from "react-loader-spinner";
 import { AuthErrorBoundary } from "./components/auth/AuthErrorBoundary";
 import { ProtectedRoute } from "./components/routes/ProtectedRoute";
 import { PublicRoute } from "./components/routes/PublicRoute";
 import { UnrestrictedRoute } from "./components/routes/UnrestrictedRoute";
+import { useAuthInit } from "./hooks/useAuthInit";
 import { RegisterPage } from "./pages/auth/RegisterPage";
 import { SignInPage } from "./pages/auth/SignInPage";
 import { DashboardPage } from "./pages/dashboard/DashboardPage";
@@ -16,6 +18,26 @@ import AssessmentWorkforcePage from "./pages/assessmentWorkforce/AssessmentWorkf
 import { VerifyEmailPage } from "./pages/auth/VerifyEmailPage";
 
 function App() {
+  const { isAuthReady } = useAuthInit();
+
+  if (!isAuthReady) {
+    return (
+      <div className="flex min-h-screen items-center justify-center bg-gray-50">
+        <Oval
+          height={48}
+          width={48}
+          color="#06b6d4"
+          wrapperClass="flex items-center justify-center"
+          visible
+          ariaLabel="loading"
+          secondaryColor="#0891b2"
+          strokeWidth={2}
+          strokeWidthSecondary={2}
+        />
+      </div>
+    );
+  }
+
   return (
     <AuthErrorBoundary>
       <div className="min-h-screen bg-gray-50">

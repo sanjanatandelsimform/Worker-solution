@@ -26,9 +26,10 @@ const loadState = ():
     }
     const parsed = JSON.parse(serializedState);
 
-    // Return only auth and registrationForm (no user slice)
+    // Return only auth and registrationForm (no user slice). Force authInitAttempted false so init runs on load.
+    const auth = parsed.auth ? { ...parsed.auth, authInitAttempted: false } : undefined;
     return {
-      auth: parsed.auth,
+      auth,
       profile: parsed.profile,
       registrationForm: parsed.registrationForm,
     };
@@ -53,7 +54,12 @@ export const store = configureStore({
   middleware: getDefaultMiddleware =>
     getDefaultMiddleware({
       serializableCheck: {
-        ignoredActions: ["auth/setUser", "auth/setTokens"],
+        ignoredActions: [
+          "auth/setUser",
+          "auth/setTokens",
+          "auth/initializeAuth/fulfilled",
+          "auth/syncUserState/fulfilled",
+        ],
       },
     }),
 });

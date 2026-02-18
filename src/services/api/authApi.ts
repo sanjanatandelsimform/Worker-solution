@@ -18,6 +18,24 @@ const apiClient = axios.create({
   },
 });
 
+const STORAGE_KEY = "userDetail";
+
+// Request interceptor: attach access token from localStorage when present
+apiClient.interceptors.request.use(config => {
+  try {
+    const raw = localStorage.getItem(STORAGE_KEY);
+    if (!raw) return config;
+    const parsed = JSON.parse(raw);
+    const token = parsed?.auth?.tokens?.accessToken;
+    if (token) {
+      config.headers.Authorization = `Bearer ${token}`;
+    }
+  } catch {
+    // ignore
+  }
+  return config;
+});
+
 // Helper function to extract error message
 const getErrorMessage = (error: unknown): string => {
   if (axios.isAxiosError(error)) {
@@ -74,6 +92,18 @@ const processQueue = (error: Error | null, token: string | null = null) => {
   failedQueue = [];
 };
 
+const dispatchLogout = () => {
+  if (
+    typeof window !== "undefined" &&
+    (window as { store?: { dispatch: (a: unknown) => void } }).store
+  ) {
+    import("@/store/slices/authSlice").then(({ logout: logoutAction }) => {
+      (window as { store: { dispatch: (a: unknown) => void } }).store.dispatch(logoutAction());
+    });
+    window.location.href = "/sign-in";
+  }
+};
+
 // Response interceptor for 401 handling with token refresh
 apiClient.interceptors.response.use(
   response => response,
@@ -95,12 +125,8 @@ apiClient.interceptors.response.use(
       return Promise.reject(error);
     }
 
-    // Get stored tokens
-    const storedState = localStorage.getItem("userDetail");
+    const storedState = localStorage.getItem(STORAGE_KEY);
     if (!storedState) {
-      if (typeof window !== "undefined") {
-        // window.location.href = "/sign-in";
-      }
       return Promise.reject(error);
     }
 
@@ -108,10 +134,8 @@ apiClient.interceptors.response.use(
     const refreshToken = parsedState?.auth?.tokens?.refreshToken;
 
     if (!refreshToken) {
-      localStorage.removeItem("userDetail");
-      if (typeof window !== "undefined") {
-        // window.location.href = "/sign-in";
-      }
+      localStorage.removeItem(STORAGE_KEY);
+      dispatchLogout();
       return Promise.reject(error);
     }
 
@@ -146,9 +170,8 @@ apiClient.interceptors.response.use(
           },
         },
       };
-      localStorage.setItem("userDetail", JSON.stringify(updatedState));
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(updatedState));
 
-      // Dispatch Redux action to update tokens in store
       if (typeof window !== "undefined" && (window as { store?: unknown }).store) {
         const { setTokens } = await import("@/store/slices/authSlice");
         (window as { store: { dispatch: (action: unknown) => void } }).store.dispatch(
@@ -159,7 +182,7 @@ apiClient.interceptors.response.use(
         );
       }
 
-      // Update Authorization header
+      apiClient.defaults.headers.common.Authorization = `Bearer ${newAccessToken}`;
       if (originalRequest.headers) {
         originalRequest.headers.Authorization = `Bearer ${newAccessToken}`;
       }
@@ -171,10 +194,7 @@ apiClient.interceptors.response.use(
     } catch (refreshError) {
       processQueue(refreshError as Error, null);
       isRefreshing = false;
-      localStorage.removeItem("userDetail");
-      if (typeof window !== "undefined") {
-        // window.location.href = "/sign-in";
-      }
+      dispatchLogout();
       return Promise.reject(refreshError);
     }
   }
