@@ -1,8 +1,5 @@
 import { useState, useEffect, useCallback } from "react";
 import {
-  saveAssessmentProgress,
-  loadSectionProgress,
-  autoSaveProgress,
   markTabCompleted,
   isTabCompleted,
   loadCompletionStatus,
@@ -14,97 +11,91 @@ import {
   submitCompensation,
   submitBenefits,
   submitGoals,
+  getAssessment,
+  type SectionType,
 } from "@/services/api/assessmentApi";
 import type { ApiResponse } from "@/services/api/assessmentApi";
 
-type SectionType = "workforce" | "compensation" | "benefits" | "goals";
-
 interface UseAssessmentOptions {
   section: SectionType;
-  enableAutoSave?: boolean;
-  autoSaveDelay?: number;
 }
 
 interface UseAssessmentReturn {
   answers: Record<string, unknown>;
   errors: Record<string, string>;
   isSubmitting: boolean;
-  isSaving: boolean;
   isCompleted: boolean;
+  isLoadingGet: boolean;
+  apiError: {
+    type: "get" | "post";
+    message: string;
+  } | null;
   updateAnswer: (key: string, value: unknown) => void;
   updateAnswers: (data: Record<string, unknown>) => void;
   setErrors: (errors: Record<string, string>) => void;
   clearError: (key: string) => void;
   submitSection: (answersToSubmit?: Record<string, unknown>) => Promise<ApiResponse>;
   resetSection: () => void;
-  loadProgress: () => void;
+  loadProgress: () => Promise<void>;
+  retryGetAssessment: () => Promise<void>;
 }
 
 /**
- * Custom hook for managing assessment form state, auto-save, and submission
+ * Custom hook for managing assessment form state and submission
  */
-export const useAssessment = ({
-  section,
-  enableAutoSave = true,
-  autoSaveDelay = 500,
-}: UseAssessmentOptions): UseAssessmentReturn => {
+export const useAssessment = ({ section }: UseAssessmentOptions): UseAssessmentReturn => {
   const [answers, setAnswers] = useState<Record<string, unknown>>({});
   const [errors, setErrors] = useState<Record<string, string>>({});
   const [isSubmitting, setIsSubmitting] = useState(false);
-  const [isSaving, setIsSaving] = useState(false);
   const [isCompleted, setIsCompleted] = useState(false);
+  const [isLoadingGet, setIsLoadingGet] = useState(false);
+  const [apiError, setApiError] = useState<{
+    type: "get" | "post";
+    message: string;
+  } | null>(null);
 
-  // Load progress on mount
-  useEffect(() => {
-    loadProgress();
-    setIsCompleted(isTabCompleted(section));
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [section]);
-
-  // Load saved progress from localStorage
-  const loadProgress = useCallback(() => {
-    const savedData = loadSectionProgress(section);
-    if (Object.keys(savedData).length > 0) {
-      setAnswers(savedData);
+  // Load progress from API on mount
+  const loadProgress = useCallback(async () => {
+    setIsLoadingGet(true);
+    setApiError(null);
+    try {
+      const response = await getAssessment();
+      if (response.success && response.data?.sections?.[section]) {
+        setAnswers(response.data.sections[section] as Record<string, unknown>);
+      } else {
+        // No data for this section yet - leave empty
+        setAnswers({});
+      }
+    } catch (error) {
+      setApiError({
+        type: "get",
+        message: error instanceof Error ? error.message : "Failed to load assessment data",
+      });
+    } finally {
+      setIsLoadingGet(false);
     }
   }, [section]);
 
-  // Update single answer
-  const updateAnswer = useCallback(
-    (key: string, value: unknown) => {
-      setAnswers(prev => {
-        const updated = { ...prev, [key]: value };
-        // Auto-save if enabled
-        if (enableAutoSave) {
-          setIsSaving(true);
-          autoSaveProgress(section, updated, autoSaveDelay);
-          // Reset saving state after delay
-          setTimeout(() => setIsSaving(false), autoSaveDelay + 100);
-        }
+  // Retry function for GET failures
+  const retryGetAssessment = useCallback(async () => {
+    await loadProgress();
+  }, [loadProgress]);
 
-        return updated;
-      });
-    },
-    [section, enableAutoSave, autoSaveDelay]
-  );
+  // Load progress on mount AND when section changes
+  useEffect(() => {
+    loadProgress();
+    setIsCompleted(isTabCompleted(section));
+  }, [section, loadProgress]); // Added section as dependency
 
-  // Update multiple answers
-  const updateAnswers = useCallback(
-    (data: Record<string, unknown>) => {
-      setAnswers(prev => {
-        const updated = { ...prev, ...data };
+  // Update single answer (no auto-save to localStorage)
+  const updateAnswer = useCallback((key: string, value: unknown) => {
+    setAnswers(prev => ({ ...prev, [key]: value }));
+  }, []);
 
-        if (enableAutoSave) {
-          setIsSaving(true);
-          autoSaveProgress(section, updated, autoSaveDelay);
-          setTimeout(() => setIsSaving(false), autoSaveDelay + 100);
-        }
-
-        return updated;
-      });
-    },
-    [section, enableAutoSave, autoSaveDelay]
-  );
+  // Update multiple answers (no auto-save to localStorage)
+  const updateAnswers = useCallback((data: Record<string, unknown>) => {
+    setAnswers(prev => ({ ...prev, ...data }));
+  }, []);
 
   // Clear single error
   const clearError = useCallback((key: string) => {
@@ -150,13 +141,24 @@ export const useAssessment = ({
         if (response.success) {
           markTabCompleted(section);
           setIsCompleted(true);
-          // Save final state
-          saveAssessmentProgress(section, dataToSubmit);
+        } else {
+          // NEW: Set field errors from API response
+          if (response.fieldErrors) {
+            setErrors(response.fieldErrors);
+          }
+          setApiError({
+            type: "post",
+            message: response.message || response.error || "Submission failed",
+          });
         }
 
         return response;
       } catch (error) {
         console.error("[useAssessment] Submission error:", error);
+        setApiError({
+          type: "post",
+          message: error instanceof Error ? error.message : "Submission failed",
+        });
         return {
           success: false,
           error: error instanceof Error ? error.message : "Submission failed",
@@ -168,12 +170,7 @@ export const useAssessment = ({
     [section, answers]
   );
 
-  // Save progress manually
-  useEffect(() => {
-    if (Object.keys(answers).length > 0) {
-      saveAssessmentProgress(section, answers);
-    }
-  }, [section, answers]);
+  // Remove auto-save effect - data persists only via POST
 
   // Reset section data
   const resetSection = useCallback(() => {
@@ -186,8 +183,9 @@ export const useAssessment = ({
     answers,
     errors,
     isSubmitting,
-    isSaving,
     isCompleted,
+    isLoadingGet,
+    apiError,
     updateAnswer,
     updateAnswers,
     setErrors,
@@ -195,6 +193,7 @@ export const useAssessment = ({
     submitSection,
     resetSection,
     loadProgress,
+    retryGetAssessment,
   };
 };
 

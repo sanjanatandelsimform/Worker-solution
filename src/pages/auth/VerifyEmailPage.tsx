@@ -1,9 +1,9 @@
 import React, { useEffect, useState } from "react";
 import { useNavigate, useSearchParams } from "react-router-dom";
 import { verifyEmail } from "@/services/api/authApi";
-import checkmarkIcon from "@/assets/checkmark-icon.svg";
 import { useAppDispatch } from "@/store/hooks";
 import { updateUser, setTokens } from "@/store/slices/authSlice";
+import checkmarkIcon from "@/assets/checkmark-icon.svg";
 import { Oval } from "react-loader-spinner";
 import type { UserAccount } from "@/types/auth";
 

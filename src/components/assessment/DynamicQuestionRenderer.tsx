@@ -12,6 +12,7 @@ import { cx } from "@/utils/cx";
 import { RankingList } from "../common/RankList";
 import React, { useEffect } from "react";
 import questionData from "@/data/assessment/questionData.json";
+import { InputInfo } from "@/assets/icons/inputInfo"
 
 // Helper to generate unique IDs
 let idCounter = 0;
@@ -33,18 +34,49 @@ export const DynamicQuestionRenderer = ({
   const currentAnswer = answers[question.key];
   const error = errors[question.key];
 
+  // Track component mount/unmount for debugging
+  useEffect(() => {
+    // eslint-disable-next-line no-console
+    console.debug(`[DynamicQuestionRenderer] Mounted: ${question.key}`, {
+      questionKey: question.key,
+      questionType: question.questionType,
+      timestamp: Date.now(),
+    });
+
+    return () => {
+      // eslint-disable-next-line no-console
+      console.debug(`[DynamicQuestionRenderer] Unmounted: ${question.key}`, {
+        questionKey: question.key,
+        timestamp: Date.now(),
+      });
+    };
+  }, []); // Empty deps - only run on mount/unmount
+
   // Helper to manage STRUCTURED_ARRAY items
   const getArrayItems = (key: string) => {
     const items = answers[key];
     if (!items || !Array.isArray(items) || items.length === 0) {
-      return [{ id: generateId() }];
+      // Initialize the array in state immediately if it doesn't exist
+      const newArray = [{ id: generateId() }];
+      onAnswerChange(key, newArray);
+      return newArray;
     }
     return items;
   };
 
   const addArrayItem = (key: string) => {
-    const currentItems = getArrayItems(key);
-    onAnswerChange(key, [...currentItems, { id: generateId() }]);
+    const currentItems = answers[key];
+
+    // Explicitly initialize array if undefined/null/empty
+    if (!currentItems || !Array.isArray(currentItems) || currentItems.length === 0) {
+      const newArray = [{ id: generateId() }];
+      onAnswerChange(key, newArray); // Initialize array with first item
+      return;
+    }
+
+    // Add new item to existing array
+    const updatedArray = [...currentItems, { id: generateId() }];
+    onAnswerChange(key, updatedArray);
   };
 
   const removeArrayItem = (key: string, itemId: number) => {
@@ -62,7 +94,19 @@ export const DynamicQuestionRenderer = ({
     value: unknown,
     fieldType?: string
   ) => {
-    const currentItems = getArrayItems(key);
+    const currentItems = answers[key];
+
+    // If array doesn't exist yet, initialize it first
+    if (!currentItems || !Array.isArray(currentItems) || currentItems.length === 0) {
+      const newArray = [
+        {
+          id: itemId,
+          [field]: fieldType === "number" && value !== "" && value !== null ? Number(value) : value,
+        },
+      ];
+      onAnswerChange(key, newArray);
+      return;
+    }
 
     // Convert value to correct type based on field type
     let convertedValue = value;
@@ -81,6 +125,109 @@ export const DynamicQuestionRenderer = ({
   };
 
   // Render field for STRUCTURED_ARRAY
+  // const renderStructuredArrayField = (
+  //   field: {
+  //     name: string;
+  //     type: string;
+  //     label: string;
+  //     placeholder?: string;
+  //     width?: string;
+  //     options?: Array<{ id: string; label: string }>;
+  //     pattern?: string;
+  //   },
+  //   index: number,
+  //   _showRemoveButton: boolean,
+  //   _onRemove: () => void,
+  //   arrayKey?: string
+  // ) => {
+  //   const keyToUse = arrayKey || question.key;
+  //   const currentItems = (answers[keyToUse] as Array<{ id: number }>) || [];
+
+  //   // Get the actual item from state, not from getArrayItems
+  //   const item = currentItems[index] || { id: generateId() };
+  //   const widthClass = field.width || "flex-1";
+
+  //   // Check for field-level error
+  //   const fieldErrorKey = `${keyToUse}.${index}.${field.name}`;
+  //   const fieldError = errors[fieldErrorKey];
+  //   // Also check question-level error for backward compatibility
+  //   const questionError = errors[keyToUse];
+  //   const hasError = !!fieldError || !!questionError;
+
+  //   // Debug logging
+  //   // eslint-disable-next-line no-console
+  //   console.debug(`[renderStructuredArrayField] ${fieldErrorKey}:`, {
+  //     fieldError,
+  //     questionError,
+  //     hasError,
+  //     errors: Object.keys(errors).filter(k => k.startsWith(keyToUse)),
+  //   });
+
+  //   return (
+  //     <div
+  //       key={`${keyToUse}-${(item as { id: number }).id}-${field.name}`}
+  //       className={cx("flex flex-col gap-1.5", widthClass)}
+  //     >
+  //       {field.type === "select" ? (
+  //         <>
+  //           <Select
+  //             className="w-full flex items-start"
+  //             key={field.name}
+  //             size="md"
+  //             label={field.label}
+  //             placeholder={field.placeholder}
+  //             items={field.options?.map(opt => ({ id: opt.id, label: opt.label }))}
+  //             selectedKey={(item as Record<string, string>)[field.name] || ""}
+  //             onSelectionChange={key =>
+  //               updateArrayItemField(
+  //                 keyToUse,
+  //                 (item as { id: number }).id,
+  //                 field.name,
+  //                 key as string,
+  //                 "text"
+  //               )
+  //             }
+  //             isInvalid={hasError}
+  //           >
+  //             {(selectItem: SelectItemType) => (
+  //               <Select.Item id={selectItem.id}>{selectItem.label || ""}</Select.Item>
+  //             )}
+  //           </Select>
+  //           {fieldError && <span className="text-sm text-red-600">{fieldError}</span>}
+  //         </>
+  //       ) : (
+  //         <>
+  //           <Input
+  //             key={field.name}
+  //             size="md"
+  //             label={field.label}
+  //             placeholder={field.placeholder}
+  //             type={field.name === "zipCode" ? "text" : "text"}
+  //             inputMode={field.name === "zipCode" ? "numeric" : undefined}
+  //             value={(item as Record<string, string>)[field.name] ?? ""}
+  //             pattern={field.name === "zipCode" ? "\\d{5}" : field.pattern}
+  //             maxLength={field.name === "zipCode" ? 5 : undefined}
+  //             isInvalid={hasError}
+  //             tooltip={fieldError ? fieldError : undefined}
+  //             onChange={(val: string) => {
+  //               if (field.name !== "zipCode" || /^\d{0,5}$/.test(val)) {
+  //                 updateArrayItemField(
+  //                   keyToUse,
+  //                   (item as { id: number }).id,
+  //                   field.name,
+  //                   val,
+  //                   field.type
+  //                 );
+  //               }
+  //             }}
+  //           />
+  //           {fieldError && <span className="text-sm text-red-600">{fieldError}</span>}
+  //         </>
+  //       )}
+  //     </div>
+  //   );
+  // };
+  // Render field for STRUCTURED_ARRAY
   const renderStructuredArrayField = (
     field: {
       name: string;
@@ -97,9 +244,27 @@ export const DynamicQuestionRenderer = ({
     arrayKey?: string
   ) => {
     const keyToUse = arrayKey || question.key;
-    const currentItems = getArrayItems(keyToUse);
-    const item = currentItems[index] || {};
+    const currentItems = (answers[keyToUse] as Array<{ id: number }>) || [];
+
+    // Get the actual item from state, not from getArrayItems
+    const item = currentItems[index] || { id: generateId() };
     const widthClass = field.width || "flex-1";
+
+    // Check for field-level error
+    const fieldErrorKey = `${keyToUse}.${index}.${field.name}`;
+    const fieldError = errors[fieldErrorKey];
+    // Also check question-level error for backward compatibility
+    const questionError = errors[keyToUse];
+    const hasError = !!fieldError || !!questionError;
+
+    // Debug logging
+    // eslint-disable-next-line no-console
+    console.debug(`[renderStructuredArrayField] ${fieldErrorKey}:`, {
+      fieldError,
+      questionError,
+      hasError,
+      errors: Object.keys(errors).filter(k => k.startsWith(keyToUse)),
+    });
 
     return (
       <div
@@ -107,51 +272,60 @@ export const DynamicQuestionRenderer = ({
         className={cx("flex flex-col gap-1.5", widthClass)}
       >
         {field.type === "select" ? (
-          <Select
-            className="w-full flex items-start"
-            key={field.name}
-            size="md"
-            label={field.label}
-            placeholder={field.placeholder}
-            items={field.options?.map(opt => ({ id: opt.id, label: opt.label }))}
-            selectedKey={(item as Record<string, string>)[field.name] || ""}
-            onSelectionChange={key =>
-              updateArrayItemField(
-                keyToUse,
-                (item as { id: number }).id,
-                field.name,
-                key as string,
-                "text"
-              )
-            }
-          >
-            {(selectItem: SelectItemType) => (
-              <Select.Item id={selectItem.id}>{selectItem.label || ""}</Select.Item>
-            )}
-          </Select>
-        ) : (
-          <Input
-            key={field.name}
-            size="md"
-            label={field.label}
-            placeholder={field.placeholder}
-            type={field.name === "zipCode" ? "text" : "text"}
-            inputMode={field.name === "zipCode" ? "numeric" : undefined}
-            value={(item as Record<string, string>)[field.name] ?? ""}
-            pattern={field.name === "zipCode" ? "\\d{5}" : field.pattern}
-            maxLength={field.name === "zipCode" ? 5 : undefined}
-            onChange={(val: string) => {
-              if (field.name !== "zipCode" || /^\d{0,5}$/.test(val)) {
+          <>
+            <Select
+              className="w-full flex items-start"
+              key={field.name}
+              size="md"
+              label={field.label}
+              placeholder={field.placeholder}
+              items={field.options?.map(opt => ({ id: opt.id, label: opt.label }))}
+              selectedKey={(item as unknown as Record<string, string>)[field.name] || ""}
+              onSelectionChange={key =>
                 updateArrayItemField(
                   keyToUse,
                   (item as { id: number }).id,
                   field.name,
-                  val,
-                  field.type
-                );
+                  key as string,
+                  "text"
+                )
               }
-            }}
-          />
+              isInvalid={hasError}
+            >
+              {(selectItem: SelectItemType) => (
+                <Select.Item id={selectItem.id}>{selectItem.label || ""}</Select.Item>
+              )}
+            </Select>
+            {fieldError && <span className="text-sm text-red-600">{fieldError}</span>}
+          </>
+        ) : (
+          <>
+            <Input
+              key={field.name}
+              size="md"
+              label={field.label}
+              placeholder={field.placeholder}
+              type={field.name === "zipCode" ? "text" : "text"}
+              inputMode={field.name === "zipCode" ? "numeric" : undefined}
+              value={(item as unknown as Record<string, string>)[field.name] ?? ""}
+              pattern={field.name === "zipCode" ? "\\d{5}" : field.pattern}
+              maxLength={field.name === "zipCode" ? 5 : undefined}
+              isInvalid={hasError}
+              tooltip={fieldError ? fieldError : undefined}
+              onChange={(val: string) => {
+                if (field.name !== "zipCode" || /^\d{0,5}$/.test(val)) {
+                  updateArrayItemField(
+                    keyToUse,
+                    (item as { id: number }).id,
+                    field.name,
+                    val,
+                    field.type
+                  );
+                }
+              }}
+            />
+            {fieldError && <span className="text-sm text-red-600">{fieldError}</span>}
+          </>
         )}
       </div>
     );
@@ -181,8 +355,10 @@ export const DynamicQuestionRenderer = ({
     } else if (showWhen === "no") {
       shouldShow = parentValue === false;
     } else {
-      // For other values (dropdown etc.) compare as strings
-      shouldShow = String(parentValue) === String(showWhen);
+      // ✅ FIX: Case-insensitive comparison for string values
+      const showWhenNormalized = String(showWhen).toLowerCase();
+      const parentValueNormalized = String(parentValue || "").toLowerCase();
+      shouldShow = parentValueNormalized === showWhenNormalized;
     }
 
     if (!shouldShow) return null;
@@ -207,6 +383,10 @@ export const DynamicQuestionRenderer = ({
               onChange={value => onAnswerChange(conditionalQuestion.key, value)}
               size="md"
               maxLength={conditionalQuestion.validationRules?.maxLength}
+              isInvalid={errors[conditionalQuestion.key] ? true : false}
+              tooltip={
+                errors[conditionalQuestion.key] ? errors[conditionalQuestion.key] : undefined
+              }
             />
             {errors[conditionalQuestion.key] && (
               <span className="text-sm text-red-600">{errors[conditionalQuestion.key]}</span>
@@ -239,6 +419,7 @@ export const DynamicQuestionRenderer = ({
                 onAnswerChange(conditionalQuestion.key, numValue);
               }}
               size="md"
+              isInvalid={errors[conditionalQuestion.key] ? true : false}
             />
             {errors[conditionalQuestion.key] && (
               <span className="text-sm text-red-600">{errors[conditionalQuestion.key]}</span>
@@ -257,8 +438,11 @@ export const DynamicQuestionRenderer = ({
                 id: opt.value,
                 label: opt.label,
               }))}
-              selectedKey={String(answers[conditionalQuestion.key] || "")}
+              selectedKey={
+                answers[conditionalQuestion.key] ? String(answers[conditionalQuestion.key]) : ""
+              }
               onSelectionChange={key => onAnswerChange(conditionalQuestion.key, key as string)}
+              isInvalid={errors[conditionalQuestion.key] ? true : false}
             >
               {(item: SelectItemType) => <Select.Item id={item.id}>{item.label || ""}</Select.Item>}
             </Select>
@@ -307,9 +491,16 @@ export const DynamicQuestionRenderer = ({
           <div className="flex flex-col gap-4">
             {(() => {
               const conditionalKey = conditionalQuestion.key;
-              const currentItems = getArrayItems(conditionalKey);
+              const currentItems = (answers[conditionalKey] as Array<{ id: number }>) || [];
               const maxItems = conditionalQuestion.validationRules?.maxItems || 5;
               const canAddMore = currentItems.length < maxItems;
+
+              // Initialize if empty
+              if (currentItems.length === 0) {
+                const newArray = [{ id: generateId() }];
+                onAnswerChange(conditionalKey, newArray);
+                return null;
+              }
 
               return (
                 <>
@@ -387,6 +578,12 @@ export const DynamicQuestionRenderer = ({
           <Label isRequired={question.isRequired} className="text-base">
             {question.displayOrder}. {question.questionText}
           </Label>
+            {error && (
+            <div className="flex items-center gap-2">
+              <InputInfo className="text-red-600" />
+              <span className="text-sm text-red-600">{error}</span>
+            </div>
+          )}
           <RadioGroup
             aria-label={question.questionText}
             value={String(currentAnswer || "")}
@@ -398,9 +595,30 @@ export const DynamicQuestionRenderer = ({
               ))}
             </div>
           </RadioGroup>
-          {error && <span className="text-sm text-red-600">{error}</span>}
         </div>
       );
+
+    // case "SINGLE_SELECT_DROPDOWN":
+    //   return (
+    //     <div className="flex w-full flex-col gap-2" data-question-key={question.key}>
+    //       <Label isRequired={question.isRequired} className="text-base">
+    //         {question.displayOrder}. {question.questionText}
+    //       </Label>
+    //       <Select
+    //         className="w-full"
+    //         // style={question?.isRequired ? { border: "1px solid red" } : {}}
+    //         size="md"
+    //         placeholder={question.placeholder || "Select an option"}
+    //         items={question.options?.map(opt => ({ id: opt.value, label: opt.label }))}
+    //         selectedKey={currentAnswer ? String(currentAnswer) : ""} // Use empty string instead of undefined
+    //         onSelectionChange={key => {
+    //           onAnswerChange(question.key, key as string); // Update state synchronously
+    //         }}
+    //         error={error ? true : false}
+    //       />
+    //       {error && <span className="text-sm text-red-600">{error}</span>}
+    //     </div>
+    //   );
 
     case "SINGLE_SELECT_DROPDOWN":
       return (
@@ -408,38 +626,49 @@ export const DynamicQuestionRenderer = ({
           <Label isRequired={question.isRequired} className="text-base">
             {question.displayOrder}. {question.questionText}
           </Label>
+          {error && (
+            <div className="flex items-center gap-2">
+              <InputInfo className="text-red-600" />
+              <span className="text-sm text-red-600">{error}</span>
+            </div>
+          )}
           <Select
             className="w-full"
             size="md"
             placeholder={question.placeholder || "Select an option"}
             items={question.options?.map(opt => ({ id: opt.value, label: opt.label }))}
-            selectedKey={String(currentAnswer || "")}
+            selectedKey={currentAnswer ? String(currentAnswer) : ""}
             onSelectionChange={key => {
-              if (!key) {
-                console.error(
-                  `[DynamicQuestionRenderer] Invalid selection for question: ${question.key}`
-                );
-                return;
-              }
+              // eslint-disable-next-line no-console
+              console.debug("[DynamicQuestionRenderer] Option changed:", {
+                questionKey: question.key,
+                newValue: key,
+                previousValue: currentAnswer,
+                timestamp: Date.now(),
+              });
               onAnswerChange(question.key, key as string);
             }}
+            isInvalid={error ? true : false}
           >
             {(item: SelectItemType) => <Select.Item id={item.id}>{item.label || ""}</Select.Item>}
           </Select>
-
+          {/* {error && <span className="text-sm text-red-600"><InputInfo/>{error}</span>} */}
           {question.conditionalQuestion &&
             renderConditionalQuestion(question.conditionalQuestion, question.key)}
-
-          {error && <span className="text-sm text-red-600">{error}</span>}
         </div>
       );
-
     case "MULTIPLE_CHOICE":
       return (
         <div className="flex w-full flex-col gap-2" data-question-key={question.key}>
           <Label isRequired={question.isRequired} className="text-base">
             {question.displayOrder}. {question.questionText}
           </Label>
+          {error && (
+            <div className="flex items-center gap-2">
+              <InputInfo className="text-red-600" />
+              <span className="text-sm text-red-600">{error}</span>
+            </div>
+          )}
           <div className="flex flex-col gap-4">
             {(question.key === "workforceGoals" || question.key === "supplementalBenefits") &&
             question.optionGroups
@@ -494,7 +723,6 @@ export const DynamicQuestionRenderer = ({
                   />
                 ))}
           </div>
-          {error && <span className="text-sm text-red-600">{error}</span>}
         </div>
       );
 
@@ -504,6 +732,12 @@ export const DynamicQuestionRenderer = ({
           <Label isRequired={question.isRequired} className="text-base">
             {question.displayOrder}. {question.questionText}
           </Label>
+          {error && (
+            <div className="flex items-center gap-2">
+              <InputInfo className="text-red-600" />
+              <span className="text-sm text-red-600">{error}</span>
+            </div>
+          )}
           <RadioGroup
             aria-label={question.questionText}
             value={currentAnswer === true ? "yes" : currentAnswer === false ? "no" : ""}
@@ -524,7 +758,6 @@ export const DynamicQuestionRenderer = ({
                 renderConditionalQuestion(question.conditionalQuestion, question.key)}
             </div>
           </RadioGroup>
-          {error && <span className="text-sm text-red-600">{error}</span>}
         </div>
       );
 
@@ -558,6 +791,8 @@ export const DynamicQuestionRenderer = ({
               onAnswerChange(question.key, numValue);
             }}
             size="md"
+            isInvalid={error ? true : false}
+            tooltip={error ? error : undefined}
           />
           {error && <span className="text-sm text-red-600">{error}</span>}
         </div>
@@ -576,17 +811,25 @@ export const DynamicQuestionRenderer = ({
             onChange={value => onAnswerChange(question.key, value)}
             size="md"
             maxLength={question.validationRules?.maxLength}
+            isInvalid={error ? true : false}
           />
           {error && <span className="text-sm text-red-600">{error}</span>}
         </div>
       );
 
     case "STRUCTURED_ARRAY": {
-      const currentItems = getArrayItems(question.key);
+      const currentItems = (answers[question.key] as Array<{ id: number }>) || [];
       const maxItems = question.validationRules?.maxItems || 5;
       const canAddMore = currentItems.length < maxItems;
 
       if (!question.validationRules?.fields) return null;
+
+      // Initialize array if empty
+      if (currentItems.length === 0) {
+        const newArray = [{ id: generateId() }];
+        onAnswerChange(question.key, newArray);
+        return null;
+      }
 
       return (
         <div className="flex w-full flex-col gap-4" data-question-key={question.key}>
@@ -620,7 +863,7 @@ export const DynamicQuestionRenderer = ({
               size="md"
               iconLeading={Plus}
               onClick={() => addArrayItem(question.key)}
-              className="max-w-60"
+              className={cx("max-w-60", error && "border-red-500")}
             >
               Add another
             </Button>
@@ -667,6 +910,7 @@ export const DynamicQuestionRenderer = ({
                     onSelectionChange={key =>
                       updateObjectField(question.key, sub.key, key as string)
                     }
+                    isInvalid={error ? true : false}
                   >
                     {(item: SelectItemType) => (
                       <Select.Item id={item.id}>{item.label || ""}</Select.Item>
@@ -678,9 +922,7 @@ export const DynamicQuestionRenderer = ({
             );
           })}
 
-          {errors[question.key] && (
-            <span className="text-sm text-red-600">{errors[question.key]}</span>
-          )}
+          {error && <span className="text-sm text-red-600">{error}</span>}
         </div>
       );
 
@@ -724,6 +966,7 @@ export const DynamicQuestionRenderer = ({
             value={(currentAnswer as string[]) || []}
             onChange={value => onAnswerChange(question.key, value)}
             error={error}
+            maxItems={question.validationRules?.maxItems || 3}
           />
         </div>
       );

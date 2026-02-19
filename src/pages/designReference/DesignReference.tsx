@@ -948,7 +948,7 @@ const BenchmarkChart = () => {
       <div className="flex gap-6 items-center justify-center w-full">
         <div className="flex gap-4 items-center">
           <div className="w-4 h-4 rounded-xs bg-cyan-400" />
-          <p className="font-normal text-black text-lg">Industry average</p>
+          <p className="font-normal text-black text-lg">State average</p>
         </div>
         <div className="flex gap-4 items-center">
           <div className="w-4 h-4 rounded-xs bg-cyan-400" />
