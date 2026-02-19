@@ -1,4 +1,5 @@
 import axios, { AxiosError, AxiosRequestConfig } from "axios";
+import { mapMonthToApiValue } from "@/utils/monthUtils";
 
 /**
  * Assessment API Service
@@ -7,9 +8,20 @@ import axios, { AxiosError, AxiosRequestConfig } from "axios";
 
 const API_TIMEOUT = 10000; // 10 seconds
 
-// Helper to get auth token from localStorage
+// Helper to get auth token: prefer Redux store (so post-verify token is used immediately), then localStorage
 const getAuthToken = (): string | null => {
   try {
+    const win = typeof window !== "undefined" ? window : null;
+    const store =
+      win &&
+      (
+        win as {
+          store?: { getState: () => { auth?: { tokens?: { accessToken?: string | null } } } };
+        }
+      ).store;
+    const fromStore = store ? store.getState?.()?.auth?.tokens?.accessToken : null;
+    if (fromStore) return fromStore;
+
     const userDetail = localStorage.getItem("userDetail");
     if (userDetail) {
       const parsed = JSON.parse(userDetail);
@@ -50,11 +62,12 @@ api.interceptors.request.use(
 /**
  * API Response type
  */
-export interface ApiResponse {
+export interface ApiResponse<T = unknown> {
   success: boolean;
-  data?: unknown;
+  data?: T;
   error?: string;
   message?: string;
+  fieldErrors?: Record<string, string>;
 }
 
 /**
@@ -65,6 +78,23 @@ export interface ApiError {
   status?: number;
   code?: string;
 }
+
+export interface AssessmentData {
+  id: string;
+  userId: string;
+  createdAt: string;
+  updatedAt: string;
+  sections: {
+    workforce?: Record<string, unknown>;
+    compensation?: Record<string, unknown>;
+    benefits?: Record<string, unknown>;
+    goals?: Record<string, unknown>;
+  };
+  status: "in_progress" | "completed";
+  completionPercentage: number;
+}
+
+export type SectionType = "workforce" | "compensation" | "benefits" | "goals";
 
 /**
  * Submit Workforce assessment
@@ -89,63 +119,9 @@ export const submitWorkforce = async (responses: Record<string, unknown>): Promi
 export const submitCompensation = async (
   responses: Record<string, unknown>
 ): Promise<ApiResponse> => {
-  // Normalize compensation-specific fields so server receives expected enum values
+  // Normalize compensation-specific fields (minimal transformation for backward compatibility)
   const transformCompensationResponses = (input: Record<string, unknown>) => {
     const out = { ...input };
-
-    const earningsMap: Record<string, string> = {
-      "less-30k": "<30K",
-      less_30k: "<30K",
-      "30k-50k": "30-50K",
-      "30k_50k": "30-50K",
-      "50k-70k": "50-75K",
-      "50k_70k": "50-75K",
-      "75k-100k": "75-100K",
-      "75k_100k": "75-100K",
-      "100k-plus": "100-125K",
-      "100k_plus": "100-125K",
-      "100kplus": "100-125K",
-      "125k-plus": "125K+",
-      "125k_plus": "125K+",
-      "125kplus": "125K+",
-    };
-
-    const providerMap: Record<string, string> = {
-      adp: "ADP",
-      paychex: "Paychex",
-      paycom: "Paycom",
-      paylocity: "Paylocity",
-      gusto: "Gusto",
-      quickbooks: "Quickbooks",
-      trinet: "TriNet",
-      deel: "Deel",
-      rippling: "Rippling",
-      paycor: "Paycor",
-      square: "Square",
-      "patriot-software": "Patriot Software",
-      patriot_software: "Patriot Software",
-      onpay: "OnPay",
-      surepayroll: "SurePayroll",
-      insperity: "Insperity",
-      other: "Other",
-    };
-
-    const mapEarningField = (key: string) => {
-      if (out[key] && typeof out[key] === "string") {
-        const k = out[key].toString();
-        const normalized = earningsMap[k] || earningsMap[k.toLowerCase()] || out[key];
-        out[key] = normalized;
-      }
-    };
-
-    mapEarningField("medianAnnualEarnings");
-    mapEarningField("hourlyMedianAnnualEarnings");
-    mapEarningField("salariedMedianAnnualEarnings");
-
-    if (out.payrollProvider && typeof out.payrollProvider === "string") {
-      const pk = out.payrollProvider.toString();
-      out.payrollProvider = providerMap[pk] || providerMap[pk.toLowerCase()] || out.payrollProvider;
-    }
 
     // Normalize offersAnnualRaises (accepts multiple incoming key names/values)
     const booleanFromString = (v: unknown): boolean | undefined => {
@@ -188,42 +164,13 @@ export const submitCompensation = async (
       }
     }
 
-    // Normalize month value to backend enum
-    const monthMap: Record<string, string> = {
-      january: "Jan",
-      jan: "Jan",
-      february: "Feb",
-      feb: "Feb",
-      march: "Mar",
-      mar: "Mar",
-      april: "Apr",
-      apr: "Apr",
-      may: "May",
-      june: "Jun",
-      jun: "Jun",
-      july: "Jul",
-      jul: "Jul",
-      august: "Aug",
-      aug: "Aug",
-      september: "Sep",
-      sept: "Sep",
-      sep: "Sep",
-      october: "Oct",
-      oct: "Oct",
-      november: "Nov",
-      nov: "Nov",
-      december: "Dec",
-      dec: "Dec",
-    };
-
+    // Normalize month value to backend enum using utility function
     if (
       out.annualRaiseMonth !== undefined &&
       out.annualRaiseMonth !== null &&
       out.annualRaiseMonth !== ""
     ) {
-      const raw = String(out.annualRaiseMonth).trim();
-      const key = raw.toLowerCase();
-      out.annualRaiseMonth = monthMap[key] || raw;
+      out.annualRaiseMonth = mapMonthToApiValue(out.annualRaiseMonth as string);
     }
 
     if (input.handlesPayrollInHouse !== undefined && out.handlesHRPayrollInHouse === undefined) {
@@ -246,7 +193,6 @@ export const submitCompensation = async (
         message: "Validation Error: annualRaiseMonth is required when offersAnnualRaises is true",
       };
     }
-
     const response = await api.post("/assessment/compensation", {
       responses: transformed,
     });
@@ -264,6 +210,17 @@ export const submitCompensation = async (
  */
 export const submitBenefits = async (responses: Record<string, unknown>): Promise<ApiResponse> => {
   try {
+    // Log payload before API call to verify types
+    // eslint-disable-next-line no-console
+    if (responses.lowestHealthPlanPremium !== undefined) {
+      // eslint-disable-next-line no-console
+      console.log("[submitBenefits] lowestHealthPlanPremium:", {
+        value: responses.lowestHealthPlanPremium,
+        type: typeof responses.lowestHealthPlanPremium,
+        isNumber: typeof responses.lowestHealthPlanPremium === "number",
+      });
+    }
+
     const response = await api.post("/assessment/benefits", {
       responses,
     });
@@ -329,18 +286,75 @@ export const getAssessmentStatus = async (): Promise<ApiResponse> => {
 /**
  * Handle API errors uniformly
  */
-const handleApiError = (error: unknown): ApiResponse => {
+// const handleApiError = <T = unknown>(error: unknown): ApiResponse<T> => {
+//   if (axios.isAxiosError(error)) {
+//     const axiosError = error as AxiosError<{ message?: string; error?: string }>;
+
+//     if (axiosError.response) {
+//       return {
+//         success: false,
+//         error:
+//           axiosError.response.data?.message ||
+//           axiosError.response.data?.error ||
+//           "Server error occurred",
+//         message: axiosError.response.data?.message || "Request failed",
+//       };
+//     } else if (axiosError.request) {
+//       return {
+//         success: false,
+//         error: "No response from server. Please check your connection.",
+//         message: "Network error",
+//       };
+//     } else if (axiosError.code === "ECONNABORTED") {
+//       return {
+//         success: false,
+//         error: "Request timed out after 10 seconds. Please try again.",
+//         message: "Timeout error",
+//       };
+//     }
+//   }
+
+//   return {
+//     success: false,
+//     error: error instanceof Error ? error.message : "An unexpected error occurred",
+//     message: "Unknown error",
+//   };
+// };
+
+// ...existing code...
+
+/**
+ * Handle API errors uniformly
+ */
+const handleApiError = <T = unknown>(error: unknown): ApiResponse<T> => {
   if (axios.isAxiosError(error)) {
-    const axiosError = error as AxiosError<{ message?: string; error?: string }>;
+    const axiosError = error as AxiosError<{
+      message?: string;
+      error?: string;
+      errors?: Record<string, string>; // Backend validation errors
+    }>;
 
     if (axiosError.response) {
+      // Extract field-level validation errors from backend
+      const fieldErrors: Record<string, string> = {};
+
+      if (axiosError.response.data?.errors) {
+        // Parse dynamic error keys like "responses.topWorkLocations.0.zipCode"
+        Object.entries(axiosError.response.data.errors).forEach(([key, message]) => {
+          // Remove "responses." prefix and convert to user-friendly key
+          const cleanKey = key.replace(/^responses\./, "");
+          fieldErrors[cleanKey] = message;
+        });
+      }
+
       return {
         success: false,
         error:
           axiosError.response.data?.message ||
           axiosError.response.data?.error ||
           "Server error occurred",
-        message: axiosError.response.data?.message || "Request failed",
+        message: axiosError.response.data?.message || "Validation Error",
+        fieldErrors: Object.keys(fieldErrors).length > 0 ? fieldErrors : undefined,
       };
     } else if (axiosError.request) {
       return {
@@ -359,9 +373,26 @@ const handleApiError = (error: unknown): ApiResponse => {
 
   return {
     success: false,
-    error: error instanceof Error ? error.message : "An unexpected error occurred",
-    message: "Unknown error",
+    error: error instanceof Error ? error.message : "An unknown error occurred",
+    message: "Request failed",
   };
+};
+
+// ...existing code...
+/**
+ * Get Assessment Data
+ * Retrieves previously submitted assessment data for all sections
+ */
+export const getAssessment = async (): Promise<ApiResponse<AssessmentData>> => {
+  try {
+    const response = await api.get<{ data: AssessmentData }>("/assessment");
+    return {
+      success: true,
+      data: response.data.data,
+    };
+  } catch (error) {
+    return handleApiError<AssessmentData>(error);
+  }
 };
 
 /**
@@ -440,8 +471,8 @@ api.interceptors.response.use(
         return api(originalRequest);
       } catch (refreshError) {
         processQueue(refreshError as Error, null);
-        localStorage.removeItem("userDetail");
-        window.location.href = "/login";
+        // localStorage.removeItem("userDetail");
+        // window.location.href = "/login";
         return Promise.reject(refreshError);
       } finally {
         isRefreshing = false;

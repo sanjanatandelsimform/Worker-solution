@@ -1,7 +1,9 @@
-import { useState, useEffect, useImperativeHandle, forwardRef, useCallback } from "react";
+import { useState, useEffect, useImperativeHandle, forwardRef, useCallback, useRef } from "react";
 import { DynamicQuestionRenderer } from "./DynamicQuestionRenderer";
 import type { Question } from "@/types/questionTypes";
 import { useAssessment } from "@/hooks/useAssessment";
+import ErrorMessage from "@/components/common/ErrorMessage";
+import { AlertCircle } from "@untitledui/icons";
 
 interface DynamicTabProps {
   section: "workforce" | "compensation" | "benefits" | "goals";
@@ -22,9 +24,19 @@ export const DynamicTab = forwardRef<
   },
   DynamicTabProps
 >(({ section, questions, onValidationChange, onNext, onSuccess }, ref) => {
-  const { answers, updateAnswer, errors: hookErrors, submitSection } = useAssessment({ section });
+  const {
+    answers,
+    updateAnswer,
+    errors: hookErrors,
+    submitSection,
+    isLoadingGet,
+    apiError,
+    retryGetAssessment,
+  } = useAssessment({ section });
   const [errors, setErrors] = useState<Record<string, string>>({});
   const [isSaving, setIsSaving] = useState(false);
+  // Track if we're in an explicit submit action (vs normal state update)
+  const isExplicitSubmitRef = useRef(false);
 
   // Sync hook errors to local state
   useEffect(() => {
@@ -35,11 +47,27 @@ export const DynamicTab = forwardRef<
 
   const handleAnswerChange = useCallback(
     (key: string, value: unknown) => {
+      // eslint-disable-next-line no-console
+      console.debug("[DynamicTab] Answer changed:", {
+        key,
+        value,
+        hasErrors: Object.keys(errors).length > 0,
+        errorForThisKey: errors[key],
+        timestamp: Date.now(),
+      });
       updateAnswer(key, value);
-      if (errors[key]) {
-        const newErrors = { ...errors };
-        delete newErrors[key];
-        setErrors(newErrors);
+      // Clear error for this key and any field-level errors (e.g. topWorkLocations.0.state, .0.zipCode)
+      const hasRelevantError =
+        errors[key] || Object.keys(errors).some(k => k.startsWith(`${key}.`));
+      if (hasRelevantError) {
+        setErrors(prev => {
+          const next = { ...prev };
+          delete next[key];
+          Object.keys(next).forEach(k => {
+            if (k.startsWith(`${key}.`)) delete next[k];
+          });
+          return next;
+        });
       }
     },
     [updateAnswer, errors]
@@ -70,6 +98,15 @@ export const DynamicTab = forwardRef<
         }
       }
 
+      // Validate ARRAY type (MULTIPLE_CHOICE) - allow up to maxItems but don't block selection
+      if (rules.type === "ARRAY" && Array.isArray(value)) {
+        if (rules.minItems && value.length < rules.minItems) {
+          newErrors[question.key] =
+            rules.errorMessage || `At least ${rules.minItems} item(s) required`;
+          isValid = false;
+        }
+      }
+
       if (rules.type === "STRUCTURED_ARRAY" && Array.isArray(value)) {
         if (rules.minItems && value.length < rules.minItems) {
           newErrors[question.key] = `At least ${rules.minItems} item(s) required`;
@@ -79,11 +116,94 @@ export const DynamicTab = forwardRef<
           newErrors[question.key] = `Maximum ${rules.maxItems} items allowed`;
           isValid = false;
         }
+        if (rules.fields && Array.isArray(value)) {
+          value.forEach((item: Record<string, unknown>, index: number) => {
+            rules.fields!.forEach(
+              (field: {
+                name: string;
+                type: string;
+                required?: boolean;
+                pattern?: string;
+                errorMessage?: string;
+              }) => {
+                const fieldValue = item[field.name];
+                const fieldKey = `${question.key}.${index}.${field.name}`;
+                if (
+                  field.required &&
+                  (fieldValue === null || fieldValue === undefined || fieldValue === "")
+                ) {
+                  newErrors[fieldKey] = field.errorMessage || `${field.name} is required`;
+                  isValid = false;
+                }
+                if (
+                  field.pattern &&
+                  fieldValue !== null &&
+                  fieldValue !== undefined &&
+                  fieldValue !== ""
+                ) {
+                  const regex = new RegExp(field.pattern);
+                  const stringValue = String(fieldValue);
+                  if (!regex.test(stringValue)) {
+                    if (field.pattern === "^[a-zA-Z\\s]+$" || field.pattern === "^[a-zA-Z ]+$") {
+                      newErrors[fieldKey] = "Only alphabetical";
+                    } else {
+                      newErrors[fieldKey] =
+                        field.errorMessage || `Invalid format for ${field.name}`;
+                    }
+                    isValid = false;
+                  }
+                }
+
+                // Auto-detect alphabetical pattern for text fields named "title", "occupation", etc.
+                if (
+                  field.type === "text" &&
+                  !field.pattern &&
+                  fieldValue !== null &&
+                  fieldValue !== undefined &&
+                  fieldValue !== "" &&
+                  (field.name === "title" || field.name === "occupation")
+                ) {
+                  const stringValue = String(fieldValue).trim();
+                  // Check if contains non-alphabetical characters (allow spaces)
+                  if (!/^[a-zA-Z\s]+$/.test(stringValue)) {
+                    newErrors[fieldKey] = "Only alphabetical";
+                    isValid = false;
+                  }
+                }
+
+                // Type validation (numeric)
+                if (
+                  field.type === "number" &&
+                  fieldValue !== null &&
+                  fieldValue !== undefined &&
+                  fieldValue !== ""
+                ) {
+                  const numValue = typeof fieldValue === "number" ? fieldValue : Number(fieldValue);
+                  if (isNaN(numValue)) {
+                    newErrors[fieldKey] = "Must be numeric digit";
+                    isValid = false;
+                  }
+                }
+              }
+            );
+          });
+        }
       }
 
       if (
         question.conditionalQuestion &&
-        value === question.conditionalQuestion.showWhen &&
+        (() => {
+          const showWhen = question.conditionalQuestion.showWhen;
+          if (showWhen === "yes") {
+            return value === true;
+          } else if (showWhen === "no") {
+            return value === false;
+          } else {
+            const showWhenNormalized = String(showWhen).toLowerCase();
+            const valueNormalized = String(value || "").toLowerCase();
+            return valueNormalized === showWhenNormalized;
+          }
+        })() &&
         question.conditionalQuestion.question.validationRules.required
       ) {
         const conditionalValue = answers[question.conditionalQuestion.question.key];
@@ -96,6 +216,37 @@ export const DynamicTab = forwardRef<
             question.conditionalQuestion.question.validationRules.errorMessage ||
             `${question.conditionalQuestion.question.questionText} is required`;
           isValid = false;
+        }
+
+        const firstLevelCq = question.conditionalQuestion.question;
+        if (
+          firstLevelCq.conditionalQuestion &&
+          conditionalValue !== null &&
+          conditionalValue !== undefined
+        ) {
+          // Check if nested condition is met
+          const nestedShowWhen = firstLevelCq.conditionalQuestion.showWhen;
+          const shouldShowNested =
+            nestedShowWhen === "yes"
+              ? conditionalValue === true
+              : nestedShowWhen === "no"
+                ? conditionalValue === false
+                : String(conditionalValue).toLowerCase() === String(nestedShowWhen).toLowerCase();
+
+          if (
+            shouldShowNested &&
+            firstLevelCq.conditionalQuestion.question.validationRules.required
+          ) {
+            const nestedKey = firstLevelCq.conditionalQuestion.question.key;
+            const nestedValue = answers[nestedKey];
+
+            if (nestedValue === null || nestedValue === undefined || nestedValue === "") {
+              newErrors[nestedKey] =
+                firstLevelCq.conditionalQuestion.question.validationRules.errorMessage ||
+                `${firstLevelCq.conditionalQuestion.question.questionText} is required`;
+              isValid = false;
+            }
+          }
         }
       }
     });
@@ -117,17 +268,18 @@ export const DynamicTab = forwardRef<
       if (value === null || value === undefined) {
         // Skip but allow conditional child
       } else {
+        // Handle different question types and convert to correct types
         if (question.questionType === "NUMERIC" || question.questionType === "NUMBER_INPUT") {
           cleaned[question.key] = typeof value === "number" ? value : Number(value);
         } else if (question.questionType === "YES_NO") {
           cleaned[question.key] = typeof value === "boolean" ? value : value === "yes";
         } else if (question.questionType === "STRUCTURED_ARRAY" && Array.isArray(value)) {
-          cleaned[question.key] = value.map(item => {
+          cleaned[question.key] = value.map((item: Record<string, unknown>) => {
             const cleanedItem: Record<string, unknown> = { ...item };
             delete cleanedItem.id;
 
-            if (question.validationRules.fields) {
-              question.validationRules.fields.forEach(field => {
+            if (question.validationRules?.fields) {
+              question.validationRules.fields.forEach((field: { name: string; type: string }) => {
                 const fieldValue = cleanedItem[field.name];
 
                 if (field.type === "number" && fieldValue !== null && fieldValue !== undefined) {
@@ -161,8 +313,8 @@ export const DynamicTab = forwardRef<
               const cleanedItem: Record<string, unknown> = { ...item };
               delete cleanedItem.id;
 
-              if (cq.validationRules?.fields) {
-                cq.validationRules.fields.forEach((field: { name: string; type: string }) => {
+              if (cq.validationRules.fields) {
+                cq.validationRules.fields.forEach((field: any) => {
                   const fieldValue = cleanedItem[field.name];
 
                   if (field.type === "number" && fieldValue !== null && fieldValue !== undefined) {
@@ -179,28 +331,65 @@ export const DynamicTab = forwardRef<
           } else {
             cleaned[cKey] = cValue;
           }
+          if (cq.conditionalQuestion?.question) {
+            const nestedCq = cq.conditionalQuestion.question;
+            const nestedKey = nestedCq.key;
+            const nestedValue = answers[nestedKey];
+
+            if (nestedValue !== null && nestedValue !== undefined && nestedValue !== "") {
+              if (nestedCq.questionType === "NUMERIC" || nestedCq.questionType === "NUMBER_INPUT") {
+                cleaned[nestedKey] =
+                  typeof nestedValue === "number" ? nestedValue : Number(nestedValue);
+              } else if (nestedCq.questionType === "YES_NO") {
+                cleaned[nestedKey] =
+                  typeof nestedValue === "boolean" ? nestedValue : nestedValue === "yes";
+              } else if (nestedCq.questionType === "TEXT_INPUT") {
+                cleaned[nestedKey] = String(nestedValue);
+              } else {
+                cleaned[nestedKey] = nestedValue;
+              }
+            }
+          }
         }
       }
     });
+    if (section === "goals") {
+      const rankingValue = answers["workforceGoalsRanking"];
+      if (Array.isArray(rankingValue)) {
+        cleaned["workforceGoalsRanking"] = rankingValue.slice(0, 3);
+      }
+    }
 
     return cleaned;
-  }, [answers, questions]);
+  }, [answers, questions, section]);
 
   const handleSubmit = useCallback(async () => {
+    isExplicitSubmitRef.current = true;
     const isValid = validateAnswers();
 
     if (!isValid) {
-      setTimeout(() => {
-        const firstErrorKey = Object.keys(errors)[0];
-        if (firstErrorKey) {
-          const errorElement = document.querySelector(`[data-question-key="${firstErrorKey}"]`);
-          if (errorElement) {
-            errorElement.scrollIntoView({ behavior: "smooth", block: "center" });
+      if (isExplicitSubmitRef.current) {
+        setTimeout(() => {
+          const firstErrorKey = Object.keys(errors)[0];
+          if (firstErrorKey) {
+            const errorElement = document.querySelector(`[data-question-key="${firstErrorKey}"]`);
+            if (errorElement) {
+              // eslint-disable-next-line no-console
+              errorElement.scrollIntoView({ behavior: "smooth", block: "center" });
+            }
           }
-        }
-      }, 100);
+          // Reset flag after scroll completes
+          isExplicitSubmitRef.current = false;
+        }, 100);
+      } else {
+        // eslint-disable-next-line no-console
+        isExplicitSubmitRef.current = false;
+      }
       return { success: false, errors };
     }
+
+    // Reset flag after successful validation
+    isExplicitSubmitRef.current = false;
 
     const cleanedAnswers = cleanAnswers();
     setIsSaving(true);
@@ -210,6 +399,19 @@ export const DynamicTab = forwardRef<
       if (response.success) {
         if (onSuccess) onSuccess();
         if (onNext) onNext();
+      } else {
+        if (response.fieldErrors) {
+          setErrors(prev => ({ ...prev, ...response.fieldErrors }));
+          setTimeout(() => {
+            const firstErrorKey = Object.keys(response.fieldErrors!)[0];
+            if (firstErrorKey) {
+              const errorElement = document.querySelector(`[data-question-key="${firstErrorKey}"]`);
+              if (errorElement) {
+                errorElement.scrollIntoView({ behavior: "smooth", block: "center" });
+              }
+            }
+          }, 100);
+        }
       }
       return response;
     } catch (error) {
@@ -232,8 +434,9 @@ export const DynamicTab = forwardRef<
       getErrors: () => errors,
       isCompleted: Object.keys(errors).length === 0,
       isSaving,
+      isLoadingGet,
     }),
-    [handleSubmit, validateAnswers, answers, errors, isSaving]
+    [handleSubmit, validateAnswers, answers, errors, isSaving, isLoadingGet]
   );
 
   useEffect(() => {
@@ -244,6 +447,7 @@ export const DynamicTab = forwardRef<
       getErrors: () => errors,
       isCompleted: Object.keys(errors).length === 0,
       isSaving,
+      isLoadingGet,
     };
 
     return () => {
@@ -251,8 +455,89 @@ export const DynamicTab = forwardRef<
     };
   }, [handleSubmit, validateAnswers, answers, errors, isSaving]);
 
+  const sectionContent: Record<string, { title: string; description: string }> = {
+    workforce: {
+      title: "Workforce",
+      description:
+        "We’d like to get a better understanding of your workforce and how they’re structured. This will help us customize relevant solution providers.",
+    },
+    compensation: {
+      title: "Compensation",
+      description:
+        "Select salary that applies best to your workforce. This doesn’t have to be exact.",
+    },
+    benefits: {
+      title: "Benefits",
+      description:
+        "To understand what gaps may exist in your current benefits offerings, please select all relevant options that you currently offer.",
+    },
+    goals: {
+      title: "Goals",
+      description:
+        "Pick the goal that best reflects your company’s workforce priorities. This helps us share insights and tips that fit your team’s needs.",
+    },
+  };
+
   return (
     <div className="space-y-6 p-6">
+      {/* Loading State - Non-blocking */}
+      {isLoadingGet && (
+        <div className="flex items-center justify-center py-4">
+          <div className="h-6 w-6 animate-spin rounded-full border-4 border-cyan-500 border-t-transparent"></div>
+          <span className="ml-3 text-sm text-gray-600">Restoring your data...</span>
+        </div>
+      )}
+
+      {/* GET Error Display */}
+      {apiError?.type === "get" && (
+        <div className="rounded-md border border-red-300 bg-red-50 p-4">
+          <p className="text-sm text-red-800">{apiError.message}</p>
+          <button
+            onClick={retryGetAssessment}
+            className="mt-2 text-sm font-medium text-red-600 hover:text-red-800"
+          >
+            Retry
+          </button>
+        </div>
+      )}
+
+      {/* POST Error Display - Show validation errors
+      {apiError?.type === "post" && Object.keys(errors).length > 0 && (
+        <div className="rounded-md border border-red-300 bg-red-50 p-4">
+          <p className="text-sm font-semibold text-red-800 mb-2">{apiError.message}</p>
+          <ul className="list-inside list-disc space-y-1 text-sm text-red-700">
+            {Object.entries(errors).map(([key, message]) => (
+              <li key={key}>{message}</li>
+            ))}
+          </ul>
+        </div>
+      )} */}
+
+{/* POST Error Display - Show validation errors using ErrorMessage component */}
+      {apiError?.type === "post" && Object.keys(errors).length > 0 && (
+        <ErrorMessage
+          errorType="danger"
+          alertIcon={AlertCircle}
+          errorMessage={
+            <div>
+              <p className="font-semibold mb-2">{apiError.message}</p>
+              <ul className="list-inside list-disc space-y-1">
+                {Object.entries(errors).map(([key, message]) => (
+                  <li key={key}>{message}</li>
+                ))}
+              </ul>
+            </div>
+          }
+        />
+      )}
+      {/* Form Content - Always visible */}
+      {sectionContent[section] && (
+        <>
+          <h2>{sectionContent[section].title}</h2>
+          <p>{sectionContent[section].description}</p>
+        </>
+      )}
+
       {questions.map(question => (
         <DynamicQuestionRenderer
           key={question.key}

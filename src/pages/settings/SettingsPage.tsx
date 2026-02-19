@@ -235,7 +235,7 @@ export const SettingsPage = () => {
     try {
       await dispatch(resendVerificationEmail()).unwrap();
 
-      setShowSuccess(true)
+      setShowSuccess(true);
     } catch (error) {
       setResendError(
         error instanceof Error ? error.message : "Failed to resend verification email"

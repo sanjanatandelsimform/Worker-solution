@@ -160,7 +160,7 @@ export default function BenchmarkPage() {
           involuntaryScore="39.8% Involuntary"
           industryText="Industry-wide cost of turnover:"
           industryCostText="$4.149.2M"
-          industryTradeText="Industry: Whole Trade"
+          // industryTradeText="Industry: Whole Trade"
         />
         <CostCard
           title="Rate of Separation"
@@ -256,16 +256,11 @@ export default function BenchmarkPage() {
       <div className="bg-ws-white border border-ws-gray-50 rounded-xl px-6 py-8">
         <div className="flex items-center">
           <div className="space-y-4">
-            <h3 className="text-2xl font-medium text-ws-black">Housing Burden</h3>
+            <h3 className="text-2xl font-medium text-ws-black">The Cost of Housing</h3>
             <p className="text-base text-ws-black-90">
-              Your workers residing in New Hampshire are likely financially burdened - meaning
-              workers likely spend a large portion of their wages on housing and transportation
-            </p>
-            <p className="text-base text-ws-black-90">
-              The concept of rent (or housing cost) burden applies to both renters and homeowners,
-              but it’s calculated a bit differently for each. Both renters and homeowners can be
-              housing-cost burdened; the main difference is what expenses are counted, not the
-              income thresholds.
+              The concept of rent (or housing cost) burden applies to both renters and homeowners, but it’s calculated a bit differently for
+              each. Both renters and homeowners can experience housing burdened costs; the main difference is what expenses are
+              counted, not the income thresholds.
             </p>
             <div className="flex items-center justify-between gap-4 flex-col lg:flex-row">
               <p className="text-base text-ws-black-90">

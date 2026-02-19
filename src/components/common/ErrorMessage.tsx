@@ -6,7 +6,7 @@ export interface CostCardProps {
   errorType?: "success" | "warning" | "danger" | "info" | "neutral";
   textColor?: string;
   alertIcon?: React.ComponentType<{ className?: string }>;
-  errorMessage?: string;
+  errorMessage?: React.ReactNode;
   classess?: string;
   onClose?: () => void;
 }

@@ -81,36 +81,80 @@ export function RankingList({
     })
   );
 
-  // Update items when availableOptions changes (real-time on each selection)
+  // Update items when availableOptions changes, but preserve user reordering
   useEffect(() => {
-    // Build items from availableOptions (selected goals from Question 1)
-    const newItems = availableOptions.slice(0, maxItems).map(opt => ({
+    // Build items from ALL availableOptions (all selected goals from Question 1)
+    // We show every selected goal in the ranking list,
+    // but only the first `maxItems` are treated as the actual ranked/top goals.
+    const expectedItems = availableOptions.map(opt => ({
       id: opt.value,
       label: opt.label,
     }));
 
-    // Schedule state update asynchronously to avoid synchronous setState inside effect
-    let t: ReturnType<typeof setTimeout> | null = null;
-    t = setTimeout(() => {
-      setItems(prev => (JSON.stringify(prev) === JSON.stringify(newItems) ? prev : newItems));
-    }, 0);
+    // Get current item IDs
+    const currentItemIds = items.map(item => item.id);
+    const expectedItemIds = expectedItems.map(item => item.id);
 
-    // Auto-update parent with new order if items changed
-    const newValues = newItems.map(item => item.id);
-    if (JSON.stringify(newValues) !== JSON.stringify(value)) {
-      onChange(newValues);
+    // If we have a value prop (existing ranking), use it to initialize order
+    // Otherwise, use the order from availableOptions
+    let initialOrder: string[] = [];
+    if (value && value.length > 0 && Array.isArray(value)) {
+      // Use existing ranking order, but ensure all selected goals are included
+      const rankedIds = value.slice(0, maxItems); // Top ranked goals
+      const unrankedIds = expectedItemIds.filter(id => !rankedIds.includes(id));
+      initialOrder = [...rankedIds, ...unrankedIds];
+    } else {
+      initialOrder = expectedItemIds;
     }
 
-    return () => {
-      if (t) clearTimeout(t);
-    };
-  }, [
-    // derive stable dependency for availableOptions
-    availableOptions.map(opt => opt.value).join(","),
-    maxItems,
-    onChange,
-    value,
-  ]);
+    // Only update if:
+    // 1. Items are missing (new selections added)
+    // 2. Items are different (selections changed)
+    // BUT preserve order if all items exist (user might have reordered)
+    const itemsChanged =
+      JSON.stringify([...currentItemIds].sort()) !== JSON.stringify([...expectedItemIds].sort());
+    const hasMissingItems = expectedItemIds.some(id => !currentItemIds.includes(id));
+
+    if (itemsChanged || hasMissingItems || items.length === 0) {
+      // Build items in the correct order
+      const orderedItems = initialOrder
+        .filter(id => expectedItemIds.includes(id))
+        .map(id => expectedItems.find(item => item.id === id)!)
+        .filter(Boolean);
+
+      // If current items exist and all expected items are present, preserve current order
+      if (items.length > 0 && expectedItemIds.every(id => currentItemIds.includes(id))) {
+        // Preserve user's reordering - only add missing items at the end
+        const missingIds = expectedItemIds.filter(id => !currentItemIds.includes(id));
+        const preservedItems = [...items];
+
+        // Add missing items
+        missingIds.forEach(id => {
+          const opt = expectedItems.find(e => e.id === id);
+          if (opt) {
+            preservedItems.push(opt);
+          }
+        });
+
+        // Remove items that are no longer in availableOptions
+        const filteredItems = preservedItems.filter(item => expectedItemIds.includes(item.id));
+        setItems(filteredItems);
+        onChange(filteredItems.slice(0, maxItems).map(item => item.id));
+      } else {
+        // Initial load or major changes - use ordered items
+        // eslint-disable-next-line no-console
+        console.debug("[RankList] Initializing or resetting items:", {
+          currentOrder: currentItemIds,
+          expectedOrder: expectedItemIds,
+          initialOrder,
+        });
+
+        setItems(orderedItems);
+        // Only treat the first `maxItems` as the ranked/top goals
+        onChange(orderedItems.slice(0, maxItems).map(item => item.id));
+      }
+    }
+  }, [availableOptions.map(opt => opt.value).join(","), maxItems, value?.join(",")]);
 
   function handleDragEnd(event: DragEndEvent) {
     const { active, over } = event;
@@ -120,15 +164,11 @@ export function RankingList({
         const oldIndex = items.findIndex(item => item.id === active.id);
         const newIndex = items.findIndex(item => item.id === over.id);
         const newItems = arrayMove(items, oldIndex, newIndex);
-
-        // Update parent component with new order
-        onChange(newItems.map(item => item.id));
+        onChange(newItems.slice(0, maxItems).map(item => item.id));
         return newItems;
       });
     }
   }
-
-  // Show empty state only when NO goals are selected
   if (items.length === 0) {
     return (
       <div className="flex w-full flex-col gap-2">

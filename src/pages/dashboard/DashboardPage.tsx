@@ -16,9 +16,9 @@ import { selectProfileError } from "@/store/selectors/profileSelectors";
 import { useModalConfig } from "@/hooks/useModalConfig";
 import fpoHero from "@/assets/fpo-hero-image.png";
 import { loadCompletionStatus } from "@/utils/assessmentStorage";
-// import { Tabs } from "@/components/base/tabs/tabs";
-// import RecommendationsPage from "../recommendations/RecommendationsPage";
-// import BenchmarkPage from "../benchmark/BenchmarkPage";
+import { Tabs } from "@/components/base/tabs/tabs";
+import RecommendationsPage from "../recommendations/RecommendationsPage";
+import BenchmarkPage from "../benchmark/BenchmarkPage";
 
 export const DashboardPage = () => {
   const navigate = useNavigate();
@@ -35,6 +35,7 @@ export const DashboardPage = () => {
 
   const completion = loadCompletionStatus();
   const completionCount = completion?.completionCount || 0;
+  console.log("completionCount", user, completionCount);
 
   useEffect(() => {
     if (user?.id) {
@@ -130,7 +131,9 @@ export const DashboardPage = () => {
 
           <div className="space-y-6"></div>
           <div>
-            <h2 className="text-4xl font-medium text-ws-black">Welcome!</h2>
+            <h2 className="text-4xl font-medium text-ws-black">
+              {completionCount !== 4 ? `Welcome!` : `Hi ${user?.lastName}`}
+            </h2>
 
             {/* Error Message */}
             {errorMessage && (
@@ -144,22 +147,27 @@ export const DashboardPage = () => {
                 />
               </div>
             )}
-
-            <div className="mt-6 border border-ws-gray-50 rounded-xl p-4 bg-ws-black-80 shadow-sm flex gap-4 justify-between flex-col lg:flex-row">
-              <div className="flex-1">
-                <h2 className="text-ws-cyan-10 text-3xl font-medium mb-2">
-                  Thanks for signing up.
-                </h2>
-                <p className="text-ws-white text-base pr-10">
-                  Pick up where you left off and complete your company assessment for results and
-                  recommendations.
-                </p>
+            {/* Currently using `completionCount` to control visibility. */}
+            {/* This logic will be replaced once the backend API provides the required flag */}
+            {completionCount !== 4 ? (
+              <div className="mt-6 border border-ws-gray-50 rounded-xl p-4 bg-ws-black-80 shadow-sm flex gap-4 justify-between flex-col lg:flex-row">
+                <div className="flex-1">
+                  <h2 className="text-ws-cyan-10 text-3xl font-medium mb-2">
+                    Thanks for signing up.
+                  </h2>
+                  <p className="text-ws-white text-base pr-10">
+                    Pick up where you left off and complete your company assessment for results and
+                    recommendations.
+                  </p>
+                </div>
+                <div className="flex-1 rounded-lg">
+                  <img src={fpoHero} alt="Insight hero" className="w-full" />
+                </div>
               </div>
-              <div className="flex-1 rounded-lg">
-                <img src={fpoHero} alt="Insight hero" className="w-full" />
-              </div>
-            </div>
-            {!emailVerify && (
+            ) : (
+              ""
+            )}
+            {(!emailVerify || completionCount !== 4) && (
               <DashboardCard
                 title="Verify your email"
                 description={
@@ -186,18 +194,22 @@ export const DashboardPage = () => {
                 onClick={handleVerifyEmail}
               />
             )}
-            <DashboardCard
-              title={`${completionCount > 0 ? `${completionCount} ` : ""}Take the Assessment`}
-              description="Take our 15 minute assessment for specific recommendations to improve your business"
-              avatarIconSrc={checkIcon}
-              buttonLabel={completionCount > 0 ? "Continue" : "Take Assessment"}
-              buttonType={emailVerify ? "primary" : "secondary"}
-              buttonIsDisabled={!emailVerify}
-              onClick={() => navigate("/assessment")}
-            />
+            {completionCount !== 4 ? (
+              <DashboardCard
+                title={`${completionCount > 0 ? `${completionCount} ` : ""}Take the Assessment`}
+                description="Take our 15 minute assessment for specific recommendations to improve your business"
+                avatarIconSrc={checkIcon}
+                buttonLabel={completionCount > 0 ? "Continue" : "Take Assessment"}
+                buttonType={emailVerify ? "primary" : "secondary"}
+                buttonIsDisabled={!emailVerify}
+                onClick={() => navigate("/assessment")}
+              />
+            ) : (
+              ""
+            )}
           </div>
           {/* This will be conditionally rendered; uncomment when this feature is implemented. */}
-          {/*<div className="mt-10">
+          <div className="mt-10">
             <Tabs>
               <Tabs.List
                 size="md"
@@ -214,7 +226,7 @@ export const DashboardPage = () => {
                 <BenchmarkPage />
               </Tabs.Panel>
             </Tabs>
-          </div>*/}
+          </div>
         </main>
       </div>
 

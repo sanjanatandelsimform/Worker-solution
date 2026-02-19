@@ -29,51 +29,99 @@ export default function AssessmentWorkforcePage() {
     }
   }, [user?.emailVerify, navigate]);
 
+  // Recalculate currentStepIndex whenever currentStep changes
   const currentStepIndex = steps.findIndex(step => step.id === currentStep);
-  const isFirstStep = currentStepIndex === 0;
   const isLastStep = currentStepIndex === steps.length - 1;
 
   const handleNext = async () => {
-    setCurrentStep(steps[currentStepIndex + 1].id);
-    // // This code is required; I will uncomment it.
-    // const dynamicTabValidation = (
-    //   window as {
-    //     __dynamicTabValidation?: {
-    //       submit: () => Promise<{ success: boolean }>;
-    //       validate: () => boolean;
-    //       getAnswers: () => Record<string, unknown>;
-    //       getErrors: () => Record<string, string>;
-    //     };
-    //   }
-    // ).__dynamicTabValidation;
+    // setCurrentStep(steps[currentStepIndex + 1].id);
+    // This code is required; I will uncomment it.
+    const dynamicTabValidation = (
+      window as {
+        __dynamicTabValidation?: {
+          submit: () => Promise<{ success: boolean }>;
+          validate: () => boolean;
+          getAnswers: () => Record<string, unknown>;
+          getErrors: () => Record<string, string>;
+        };
+      }
+    ).__dynamicTabValidation;
 
-    // if (!dynamicTabValidation) {
-    //   console.error("[AssessmentWorkforce] Dynamic tab validation not found!");
-    //   alert("Validation system not initialized. Please refresh the page.");
-    //   return;
-    // }
+    if (!dynamicTabValidation) {
+      console.error("[AssessmentWorkforce] Dynamic tab validation not found!");
+      alert("Validation system not initialized. Please refresh the page.");
+      return;
+    }
 
-    // try {
-    //   const response = await dynamicTabValidation.submit();
-
-    //   if (response.success) {
-    //     if (isLastStep) {
-    //       navigate("/dashboard");
-    //     } else {
-    //       setCurrentStep(steps[currentStepIndex + 1].id);
-    //     }
-    //   }
-    // } catch (error) {
-    //   console.error("[AssessmentWorkforce] Submit error:", error);
-    // }
+    try {
+      const response = await dynamicTabValidation.submit();
+      if (response.success) {
+        if (isLastStep) {
+          navigate("/dashboard");
+        } else {
+          setCurrentStep(steps[currentStepIndex + 1].id);
+        }
+      }
+    } catch (error) {
+      console.error("[AssessmentWorkforce] Submit error:", error);
+    }
   };
 
-  const handleBack = () => {
-    if (!isFirstStep) {
-      setCurrentStep(steps[currentStepIndex - 1].id);
-    } else {
-      navigate("/dashboard");
-    }
+  const handleBack = async () => {
+    // Use functional state update to get fresh currentStep value
+    setCurrentStep(prevStep => {
+      // Recalculate index based on CURRENT state (not closure)
+      const currentIndex = steps.findIndex(step => step.id === prevStep);
+
+      // Only navigate to dashboard if on first step (workforce)
+      if (currentIndex === 0) {
+        // eslint-disable-next-line no-console
+        console.debug("[AssessmentWorkforce] On first step, navigating to dashboard");
+        navigate("/dashboard");
+        return prevStep; // Don't change step
+      }
+
+      // Ensure we have a valid previous step (defensive check)
+      if (currentIndex < 0 || currentIndex >= steps.length) {
+        console.error(
+          "[AssessmentWorkforce] Invalid step index:",
+          currentIndex,
+          "prevStep:",
+          prevStep
+        );
+        navigate("/dashboard");
+        return prevStep; // Don't change step
+      }
+
+      // Calculate previous step explicitly
+      const previousStepIndex = currentIndex - 1;
+      const previousStep = steps[previousStepIndex];
+
+      if (!previousStep) {
+        console.error("[AssessmentWorkforce] No previous step found for index:", previousStepIndex);
+        navigate("/dashboard");
+        return prevStep; // Don't change step
+      }
+      return previousStep.id; // Return new step
+    });
+    setTimeout(async () => {
+      const dynamicTabValidation = (
+        window as {
+          __dynamicTabValidation?: {
+            submit: () => Promise<{ success: boolean }>;
+          };
+        }
+      ).__dynamicTabValidation;
+
+      if (dynamicTabValidation) {
+        try {
+          await dynamicTabValidation.submit();
+          console.debug("[AssessmentWorkforce] Data saved after Back navigation");
+        } catch (error) {
+          console.warn("[AssessmentWorkforce] Background save failed after Back:", error);
+        }
+      }
+    }, 0);
   };
 
   const handleClose = () => {
@@ -81,7 +129,17 @@ export default function AssessmentWorkforcePage() {
   };
 
   // Get loading state from DynamicTab
-  // const isSaving = (window as any).__dynamicTabValidation?.isSaving || false;
+  const dynamicTabValidation = (
+    window as {
+      __dynamicTabValidation?: {
+        isSaving?: boolean;
+        isLoadingGet?: boolean;
+      };
+    }
+  ).__dynamicTabValidation;
+
+  // const isSaving = dynamicTabValidation?.isSaving || false;
+  const isLoadingGet = dynamicTabValidation?.isLoadingGet || false;
 
   return (
     <div className="flex min-h-screen flex-col bg-gray-50">
@@ -93,11 +151,10 @@ export default function AssessmentWorkforcePage() {
           size="md"
           iconLeading={<ChevronLeft data-icon />}
           onClick={handleBack}
-          // disabled={isFirstStep}
-          // className={`flex items-center gap-1 text-lg font-normal text-white transition-opacity ${
-          //   isFirstStep ? "cursor-not-allowed opacity-40" : "hover:opacity-80"
-          // }`}
-          className={`flex items-center gap-1 text-lg font-normal text-white transition-opacity`}
+          isDisabled={isLoadingGet}
+          className={`flex items-center gap-1 text-lg font-normal text-white transition-opacity ${
+            isLoadingGet ? "cursor-not-allowed opacity-40" : "hover:opacity-80"
+          }`}
         >
           Back
         </Button>
@@ -118,7 +175,18 @@ export default function AssessmentWorkforcePage() {
       {/* Main Content Area */}
       <div className="mx-auto w-full max-w-4xl flex-1 space-y-3 py-8 px-4">
         {/* Progress Stepper */}
-        <ProgressStepper steps={steps} currentStep={currentStep} onStepChange={setCurrentStep} />
+        <ProgressStepper
+          steps={steps}
+          currentStep={currentStep}
+          onStepChange={stepId => {
+            // Only allow navigation to completed steps or current step
+            const targetIndex = steps.findIndex(step => step.id === stepId);
+            const currentIdx = steps.findIndex(step => step.id === currentStep);
+            if (targetIndex <= currentIdx) {
+              setCurrentStep(stepId);
+            }
+          }}
+        />
 
         {/* Content Area */}
         <div className="bg-white my-8 mx-12.5">
@@ -153,9 +221,8 @@ export default function AssessmentWorkforcePage() {
           size="md"
           onClick={handleNext}
           className="min-w-30"
-          // isDisabled={ isSaving}
-          // isDisabled={isSubmitting || isSaving}
-          // isLoading={isSubmitting}
+          // isDisabled={isSaving} // Only disable during save, NOT during restore
+          // isLoading={isSaving}
         >
           {isLastStep ? "Submit" : "Next"}
         </Button>
