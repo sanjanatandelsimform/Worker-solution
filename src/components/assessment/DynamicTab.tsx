@@ -56,7 +56,7 @@ export const DynamicTab = forwardRef<
         timestamp: Date.now(),
       });
       updateAnswer(key, value);
-      // Clear error for this key and any field-level errors (e.g. topWorkLocations.0.state, .0.zipCode)
+      // Clear error for this key and any field-level errors (e.g. topWorkLocations.0.state, .0.zipCode, healthPlanParticipationRates.doNotParticipate)
       const hasRelevantError =
         errors[key] || Object.keys(errors).some(k => k.startsWith(`${key}.`));
       if (hasRelevantError) {
@@ -186,6 +186,20 @@ export const DynamicTab = forwardRef<
                 }
               }
             );
+          });
+        }
+      }
+
+      // Validate PARTICIPATION_RATES subFields individually
+      if (question.questionType === "PARTICIPATION_RATES" && rules.type === "OBJECT") {
+        if (rules.required) {
+          const answerObj = (value as Record<string, unknown>) || {};
+          question.subFields?.forEach(sub => {
+            const subValue = answerObj[sub.key];
+            if (subValue === null || subValue === undefined || subValue === "") {
+              newErrors[`${question.key}.${sub.key}`] = "Enter a valid percentage.";
+              isValid = false;
+            }
           });
         }
       }
@@ -538,15 +552,43 @@ export const DynamicTab = forwardRef<
         </>
       )}
 
-      {questions.map(question => (
-        <DynamicQuestionRenderer
-          key={question.key}
-          question={question}
-          answers={answers}
-          onAnswerChange={handleAnswerChange}
-          errors={errors}
-        />
-      ))}
+      {questions.map((question, index) => {
+        // Check if this is the first question of a subsection
+        const currentSubsection = (question as Question & { subsection?: string }).subsection;
+        const prevQuestion = index > 0 ? questions[index - 1] : null;
+        const prevSubsection = prevQuestion
+          ? (prevQuestion as Question & { subsection?: string }).subsection
+          : null;
+        const isFirstInSubsection = currentSubsection && currentSubsection !== prevSubsection;
+
+        return (
+          <div key={question.key}>
+            {/* Render subsection heading and divider */}
+            {isFirstInSubsection && currentSubsection && (
+              <>
+                <h3 className="text-xl font-bold mt-6 mb-2">{currentSubsection}</h3>
+                <hr className="border-t border-gray-300 mb-4" />
+              </>
+            )}
+            <DynamicQuestionRenderer
+              question={question}
+              answers={answers}
+              onAnswerChange={handleAnswerChange}
+              errors={errors}
+              subsectionDisplayOrder={
+                currentSubsection
+                  ? questions
+                      .slice(0, index + 1)
+                      .filter(
+                        q =>
+                          (q as Question & { subsection?: string }).subsection === currentSubsection
+                      ).length
+                  : question.displayOrder
+              }
+            />
+          </div>
+        );
+      })}
     </div>
   );
 });
