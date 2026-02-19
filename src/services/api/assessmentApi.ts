@@ -211,9 +211,8 @@ export const submitCompensation = async (
 export const submitBenefits = async (responses: Record<string, unknown>): Promise<ApiResponse> => {
   try {
     // Log payload before API call to verify types
-    // eslint-disable-next-line no-console
+
     if (responses.lowestHealthPlanPremium !== undefined) {
-      // eslint-disable-next-line no-console
       console.log("[submitBenefits] lowestHealthPlanPremium:", {
         value: responses.lowestHealthPlanPremium,
         type: typeof responses.lowestHealthPlanPremium,

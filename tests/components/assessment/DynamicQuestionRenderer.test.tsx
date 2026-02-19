@@ -37,7 +37,7 @@ describe("DynamicQuestionRenderer Tests (Form Input Reliability)", () => {
 
     const handleAnswerChange = jest.fn();
 
-    const { container } = render(
+    const { container: _container } = render(
       <DynamicQuestionRenderer
         question={mockQuestion}
         answers={mockAnswers}

@@ -75,7 +75,6 @@ export default function AssessmentWorkforcePage() {
 
       // Only navigate to dashboard if on first step (workforce)
       if (currentIndex === 0) {
-        // eslint-disable-next-line no-console
         console.debug("[AssessmentWorkforce] On first step, navigating to dashboard");
         navigate("/dashboard");
         return prevStep; // Don't change step

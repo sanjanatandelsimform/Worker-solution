@@ -12,7 +12,7 @@ import { cx } from "@/utils/cx";
 import { RankingList } from "../common/RankList";
 import React, { useEffect } from "react";
 import questionData from "@/data/assessment/questionData.json";
-import { InputInfo } from "@/assets/icons/inputInfo"
+import { InputInfo } from "@/assets/icons/inputInfo";
 
 // Helper to generate unique IDs
 let idCounter = 0;
@@ -38,8 +38,8 @@ export const DynamicQuestionRenderer = ({
   const displayOrder = subsectionDisplayOrder ?? question.displayOrder;
 
   // Track component mount/unmount for debugging
+
   useEffect(() => {
-    // eslint-disable-next-line no-console
     console.debug(`[DynamicQuestionRenderer] Mounted: ${question.key}`, {
       questionKey: question.key,
       questionType: question.questionType,
@@ -47,12 +47,12 @@ export const DynamicQuestionRenderer = ({
     });
 
     return () => {
-      // eslint-disable-next-line no-console
       console.debug(`[DynamicQuestionRenderer] Unmounted: ${question.key}`, {
         questionKey: question.key,
         timestamp: Date.now(),
       });
     };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []); // Empty deps - only run on mount/unmount
 
   // Helper to manage STRUCTURED_ARRAY items
@@ -261,7 +261,7 @@ export const DynamicQuestionRenderer = ({
     const hasError = !!fieldError || !!questionError;
 
     // Debug logging
-    // eslint-disable-next-line no-console
+
     console.debug(`[renderStructuredArrayField] ${fieldErrorKey}:`, {
       fieldError,
       questionError,
@@ -282,7 +282,10 @@ export const DynamicQuestionRenderer = ({
               size="md"
               label={field.label}
               placeholder={field.placeholder}
-              items={field.options?.map(opt => ({ id: opt.id, label: opt.label }))}
+              items={field.options?.map(opt => ({
+                id: opt.id,
+                label: opt.label,
+              }))}
               selectedKey={(item as unknown as Record<string, string>)[field.name] || ""}
               onSelectionChange={key =>
                 updateArrayItemField(
@@ -509,14 +512,25 @@ export const DynamicQuestionRenderer = ({
                 <>
                   {currentItems.map((item, index) => (
                     <div key={item.id} className="flex w-full gap-4 items-start">
-                      {conditionalQuestion.validationRules.fields?.map((field: any) =>
-                        renderStructuredArrayField(
-                          field,
-                          index,
-                          currentItems.length > 1,
-                          () => removeArrayItem(conditionalKey, item.id),
-                          conditionalKey
-                        )
+                      {conditionalQuestion.validationRules.fields?.map(
+                        (field: {
+                          name: string;
+                          type: string;
+                          label: string;
+                          required?: boolean;
+                          pattern?: string;
+                          errorMessage?: string;
+                          width?: string;
+                          placeholder?: string;
+                          options?: Array<{ id: string; label: string }>;
+                        }) =>
+                          renderStructuredArrayField(
+                            field,
+                            index,
+                            currentItems.length > 1,
+                            () => removeArrayItem(conditionalKey, item.id),
+                            conditionalKey
+                          )
                       )}
                       {currentItems.length > 1 && (
                         <Button
@@ -581,7 +595,7 @@ export const DynamicQuestionRenderer = ({
           <Label isRequired={question.isRequired} className="text-base">
             {displayOrder}. {question.questionText}
           </Label>
-            {error && (
+          {error && (
             <div className="flex items-center gap-2">
               <InputInfo className="text-red-600" />
               <span className="text-sm text-red-600">{error}</span>
@@ -639,10 +653,12 @@ export const DynamicQuestionRenderer = ({
             className="w-full"
             size="md"
             placeholder={question.placeholder || "Select an option"}
-            items={question.options?.map(opt => ({ id: opt.value, label: opt.label }))}
+            items={question.options?.map(opt => ({
+              id: opt.value,
+              label: opt.label,
+            }))}
             selectedKey={currentAnswer ? String(currentAnswer) : ""}
             onSelectionChange={key => {
-              // eslint-disable-next-line no-console
               console.debug("[DynamicQuestionRenderer] Option changed:", {
                 questionKey: question.key,
                 newValue: key,
@@ -922,9 +938,7 @@ export const DynamicQuestionRenderer = ({
                     )}
                   </Select>
                   {/* Show validation error BELOW the input box */}
-                  {fieldError && (
-                    <span className="text-sm text-red-600 mt-1">{fieldError}</span>
-                  )}
+                  {fieldError && <span className="text-sm text-red-600 mt-1">{fieldError}</span>}
                 </div>
               </div>
             );

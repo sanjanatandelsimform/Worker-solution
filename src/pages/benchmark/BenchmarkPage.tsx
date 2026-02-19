@@ -258,9 +258,10 @@ export default function BenchmarkPage() {
           <div className="space-y-4">
             <h3 className="text-2xl font-medium text-ws-black">The Cost of Housing</h3>
             <p className="text-base text-ws-black-90">
-              The concept of rent (or housing cost) burden applies to both renters and homeowners, but it’s calculated a bit differently for
-              each. Both renters and homeowners can experience housing burdened costs; the main difference is what expenses are
-              counted, not the income thresholds.
+              The concept of rent (or housing cost) burden applies to both renters and homeowners,
+              but it’s calculated a bit differently for each. Both renters and homeowners can
+              experience housing burdened costs; the main difference is what expenses are counted,
+              not the income thresholds.
             </p>
             <div className="flex items-center justify-between gap-4 flex-col lg:flex-row">
               <p className="text-base text-ws-black-90">

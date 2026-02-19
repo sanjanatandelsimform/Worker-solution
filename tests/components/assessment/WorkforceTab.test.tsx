@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 /**
  * Tests for WorkforceTab Validation (US2: Validation Feedback)
  *
@@ -8,7 +9,12 @@
  * - T036: should NOT display errors on field blur (only on Next click)
  */
 
-import { render, screen, fireEvent, waitFor } from "@testing-library/react";
+import {
+  render,
+  screen as _screen,
+  fireEvent as _fireEvent,
+  waitFor,
+} from "@testing-library/react";
 import { BrowserRouter } from "react-router-dom";
 import WorkforceTab from "@/pages/assessmentWorkforce/WorkforceTab";
 import { getAssessment, submitWorkforce } from "@/services/api/assessmentApi";
@@ -165,7 +171,7 @@ describe("WorkforceTab Validation Tests", () => {
 
     // Only after explicit validation (simulating Next click) should errors appear
     await (window as any).__dynamicTabValidation.validate();
-    const errorsAfterValidation = (window as any).__dynamicTabValidation.getErrors();
+    const _errorsAfterValidation = (window as any).__dynamicTabValidation.getErrors();
 
     // If there are required fields, errors should now be present
     // (Actual assertion depends on WorkforceTab's specific required fields)
