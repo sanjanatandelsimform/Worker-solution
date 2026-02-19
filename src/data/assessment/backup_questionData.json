@@ -109,7 +109,7 @@
           "key": "contractorsSeasonalEmployees",
           "questionText": "Do independent contractors and/or seasonal employees make up a large portion (greater than 30%) of your workforce?",
           "questionType": "YES_NO",
-          "displayOrder": 5,
+          "displayOrder": 6,
           "validationRules": {
             "type": "BOOLEAN",
             "required": false,
@@ -123,7 +123,7 @@
           "key": "commonJobTitles",
           "questionText": "What are the most common job titles or functions that make up most of your workforce and percentage of those roles?",
           "questionType": "STRUCTURED_ARRAY",
-          "displayOrder": 6,
+          "displayOrder": 7,
           "validationRules": {
             "type": "STRUCTURED_ARRAY",
             "required": false,
@@ -134,7 +134,7 @@
                 "label": "Job Title",
                 "placeholder": "e.g., Document Specialist",
                 "type": "text",
-                "required": false,
+                "required": true,
                 "width": "w-2/3"
               },
               {
@@ -142,7 +142,7 @@
                 "label": "Percentage",
                 "placeholder": "e.g., 30",
                 "type": "number",
-                "required": false,
+                "required": true,
                 "width": "w-1/3"
               }
             ],
@@ -156,7 +156,7 @@
           "key": "hourlyEmployeesPercentage",
           "questionText": "Estimated % of hourly employees",
           "questionType": "NUMERIC",
-          "displayOrder": 7,
+          "displayOrder": 8,
           "validationRules": {
             "type": "NUMERIC",
             "required": true,
@@ -167,7 +167,7 @@
               "fields": ["hourlyEmployeesPercentage", "salaryEmployeesPercentage"],
               "mustEqual": 100
             },
-            "errorMessage": "Please enter 30% for hourly employees. Hourly and salary percentages must sum to 100%"
+            "errorMessage": "Please enter a percentage between 0 and 100. Hourly and salary percentages must sum to 100%"
           },
           "schemaVersion": 1,
           "isRequired": true,
@@ -177,7 +177,7 @@
           "key": "salaryEmployeesPercentage",
           "questionText": "Estimated % of salary employees",
           "questionType": "NUMERIC",
-          "displayOrder": 8,
+          "displayOrder": 9,
           "validationRules": {
             "type": "NUMERIC",
             "required": true,
@@ -188,7 +188,7 @@
               "fields": ["hourlyEmployeesPercentage", "salaryEmployeesPercentage"],
               "mustEqual": 100
             },
-            "errorMessage": "Please enter 70% for salary employees. Hourly and salary percentages must sum to 100%."
+            "errorMessage": "Please enter a percentage between 0 and 100. Hourly and salary percentages must sum to 100%"
           },
           "schemaVersion": 1,
           "isRequired": true,
@@ -198,7 +198,7 @@
           "key": "topWorkLocations",
           "questionText": "List the top 5 work locations that employees are commuting to",
           "questionType": "STRUCTURED_ARRAY",
-          "displayOrder": 9,
+          "displayOrder": 10,
           "validationRules": {
             "type": "STRUCTURED_ARRAY",
             "required": true,
@@ -283,11 +283,11 @@
           "key": "employeesResideInSameZipCodes",
           "questionText": "Do the majority of employees reside in the same zip codes above?",
           "questionType": "YES_NO",
-          "displayOrder": 10,
+          "displayOrder": 11,
           "validationRules": {
             "type": "BOOLEAN",
             "required": true,
-            "errorMessage": "Select an option"
+            "errorMessage": "Please indicate if employees work in the same area"
           },
           "schemaVersion": 1,
           "isRequired": true,
@@ -385,46 +385,15 @@
         {
           "key": "educationLevel",
           "questionText": "What level of education do majority of your workers have?",
-          "questionType": "SINGLE_SELECT",
+          "questionType": "YES_NO",
           "displayOrder": 12,
           "validationRules": {
-            "type": "SINGLE_SELECT",
+            "type": "BOOLEAN",
             "required": false
           },
           "schemaVersion": 1,
           "isRequired": false,
-          "options": [
-            {
-              "label": "Less than high school",
-              "value": "<HS",
-              "displayOrder": 1
-            },
-            {
-              "label": "High school diploma/GED",
-              "value": "HS/GED",
-              "displayOrder": 2
-            },
-            {
-              "label": "Associates Degree",
-              "value": "Associates",
-              "displayOrder": 3
-            },
-            {
-              "label": "Bachelors Degree",
-              "value": "Bachelors",
-              "displayOrder": 4
-            },
-            {
-              "label": "Masters Degree",
-              "value": "Masters",
-              "displayOrder": 5
-            },
-            {
-              "label": "Ph.D and above",
-              "value": "PhD+",
-              "displayOrder": 6
-            }
-          ]
+          "options": []
         },
         {
           "key": "involuntaryTurnoverRate",
@@ -476,15 +445,15 @@
           "validationRules": {
             "type": "SINGLE_SELECT",
             "required": true,
-            "errorMessage": "Select an option"
+            "errorMessage": "Please select the median annual earnings range"
           },
           "options": [
-            { "id": "less_30k", "label": "Less than $30,000", "value": "<30K" },
-            { "id": "30k_50k", "label": "$30,000 - $50,000", "value": "30-50K" },
-            { "id": "50k_75k", "label": "$50,000 - $75,000", "value": "50-75K" },
-            { "id": "75k_100k", "label": "$75,000 - $100,000", "value": "75-100K" },
-            { "id": "100k_125k", "label": "$100,000 - $125,000", "value": "100-125K" },
-            { "id": "125k_plus", "label": "$125,000+", "value": "125K+" }
+            { "id": "less_30k", "label": "Less than $30,000", "value": "less-30k" },
+            { "id": "30k_50k", "label": "$30,000 - $50,000", "value": "30k-50k" },
+            { "id": "50k_75k", "label": "$50,000 - $75,000", "value": "50k-75k" },
+            { "id": "75k_100k", "label": "$75,000 - $100,000", "value": "75k-100k" },
+            { "id": "100k_125k", "label": "$100,000 - $125,000", "value": "100k-125k" },
+            { "id": "125k_plus", "label": "$125,000+", "value": "125k-plus" }
           ]
         },
         {
@@ -497,14 +466,14 @@
           "validationRules": {
             "type": "SINGLE_SELECT",
             "required": false,
-            "errorMessage": "Select an option"
+            "errorMessage": "Please select the hourly employees' median annual earnings range"
           },
           "options": [
-            { "id": "less_12", "label": "Less than $12", "value": "<$12" },
-            { "id": "12_15", "label": "$12–$15", "value": "$12-$15" },
-            { "id": "16_20", "label": "$16–$20", "value": "$16-$20" },
-            { "id": "21_25", "label": "$21–$25", "value": "$21-$25" },
-            { "id": "more_25", "label": "More than $25", "value": ">$25" }
+            { "id": "less_12", "label": "Less than $12", "value": "less-12" },
+            { "id": "12_15", "label": "$12–$15", "value": "12-15" },
+            { "id": "16_20", "label": "$16–$20", "value": "16-20" },
+            { "id": "21_25", "label": "$21–$25", "value": "21-25" },
+            { "id": "more_25", "label": "More than $25", "value": "more-25" }
           ]
         },
         {
@@ -517,15 +486,15 @@
           "validationRules": {
             "type": "SINGLE_SELECT",
             "required": false,
-            "errorMessage": "Select an option"
+            "errorMessage": "Please select the salaried employees' median annual earnings range"
           },
           "options": [
-            { "id": "less_30k", "label": "Less than $30,000", "value": "<30K" },
-            { "id": "30k_50k", "label": "$30,000 - $50,000", "value": "30-50K" },
-            { "id": "50k_75k", "label": "$50,000 - $75,000", "value": "50-75K" },
-            { "id": "75k_100k", "label": "$75,000 - $100,000", "value": "75-100K" },
-            { "id": "100k_125k", "label": "$100,000 - $125,000", "value": "100-125K" },
-            { "id": "125k_plus", "label": "$125,000+", "value": "125K+" }
+            { "id": "less_30k", "label": "Less than $30,000", "value": "less-30k" },
+            { "id": "30k_50k", "label": "$30,000 - $50,000", "value": "30k-50k" },
+            { "id": "50k_75k", "label": "$50,000 - $75,000", "value": "50k-75k" },
+            { "id": "75k_100k", "label": "$75,000 - $100,000", "value": "75k-100k" },
+            { "id": "100k_125k", "label": "$100,000 - $125,000", "value": "100k-125k" },
+            { "id": "125k_plus", "label": "$125,000+", "value": "125k-plus" }
           ]
         },
         {
@@ -550,22 +519,22 @@
               "validationRules": {
                 "type": "SINGLE_SELECT_DROPDOWN",
                 "required": true,
-                "errorMessage": "Select an option"
+                "errorMessage": "Please select the month"
               },
               "placeholder": "Select Month",
               "options": [
-                { "id": "january", "label": "January", "value": "Jan" },
-                { "id": "february", "label": "February", "value": "Feb" },
-                { "id": "march", "label": "March", "value": "Mar" },
-                { "id": "april", "label": "April", "value": "Apr" },
-                { "id": "may", "label": "May", "value": "May" },
-                { "id": "june", "label": "June", "value": "Jun" },
-                { "id": "july", "label": "July", "value": "Jul" },
-                { "id": "august", "label": "August", "value": "Aug" },
-                { "id": "september", "label": "September", "value": "Sep" },
-                { "id": "october", "label": "October", "value": "Oct" },
-                { "id": "november", "label": "November", "value": "Nov" },
-                { "id": "december", "label": "December", "value": "Dec" }
+                { "id": "january", "label": "January", "value": "january" },
+                { "id": "february", "label": "February", "value": "february" },
+                { "id": "march", "label": "March", "value": "march" },
+                { "id": "april", "label": "April", "value": "april" },
+                { "id": "may", "label": "May", "value": "may" },
+                { "id": "june", "label": "June", "value": "june" },
+                { "id": "july", "label": "July", "value": "july" },
+                { "id": "august", "label": "August", "value": "august" },
+                { "id": "september", "label": "September", "value": "september" },
+                { "id": "october", "label": "October", "value": "october" },
+                { "id": "november", "label": "November", "value": "november" },
+                { "id": "december", "label": "December", "value": "december" }
               ]
             }
           },
@@ -581,26 +550,26 @@
           "validationRules": {
             "type": "SINGLE_SELECT_DROPDOWN",
             "required": true,
-            "errorMessage": "Select an option"
+            "errorMessage": "Please select your payroll provider"
           },
           "placeholder": "Select payroll provider",
           "options": [
-            { "id": "adp", "label": "ADP", "value": "ADP" },
-            { "id": "paychex", "label": "Paychex", "value": "Paychex" },
-            { "id": "paycom", "label": "Paycom", "value": "Paycom" },
-            { "id": "paylocity", "label": "Paylocity", "value": "Paylocity" },
-            { "id": "gusto", "label": "Gusto", "value": "Gusto" },
-            { "id": "quickbooks", "label": "QuickBooks Payroll", "value": "Quickbooks" },
-            { "id": "trinet", "label": "TriNet", "value": "TriNet" },
-            { "id": "deel", "label": "Deel", "value": "Deel" },
-            { "id": "rippling", "label": "Rippling", "value": "Rippling" },
-            { "id": "paycor", "label": "Paycor", "value": "Paycor" },
-            { "id": "square", "label": "Square", "value": "Square" },
-            { "id": "patriot_software", "label": "Patriot Software", "value": "Patriot Software" },
-            { "id": "onpay", "label": "OnPay", "value": "OnPay" },
-            { "id": "superpayroll", "label": "SuperPayroll", "value": "SuperPayroll" },
-            { "id": "insperity", "label": "Insperity", "value": "Insperity" },
-            { "id": "other", "label": "Other", "value": "Other" }
+            { "id": "adp", "label": "ADP", "value": "adp" },
+            { "id": "paychex", "label": "Paychex", "value": "paychex" },
+            { "id": "paycom", "label": "Paycom", "value": "paycom" },
+            { "id": "paylocity", "label": "Paylocity", "value": "paylocity" },
+            { "id": "gusto", "label": "Gusto", "value": "gusto" },
+            { "id": "quickbooks", "label": "QuickBooks Payroll", "value": "quickbooks" },
+            { "id": "trinet", "label": "TriNet", "value": "trinet" },
+            { "id": "deel", "label": "Deel", "value": "deel" },
+            { "id": "rippling", "label": "Rippling", "value": "rippling" },
+            { "id": "paycor", "label": "Paycor", "value": "paycor" },
+            { "id": "square", "label": "Square", "value": "square" },
+            { "id": "patriot_software", "label": "Patriot Software", "value": "patriot-software" },
+            { "id": "onpay", "label": "OnPay", "value": "onpay" },
+            { "id": "superpayroll", "label": "SuperPayroll", "value": "superpayroll" },
+            { "id": "insperity", "label": "Insperity", "value": "insperity" },
+            { "id": "other", "label": "Other", "value": "other" }
           ],
           "conditionalQuestion": {
             "showWhen": "other",
@@ -635,8 +604,7 @@
           "displayOrder": 1,
           "validationRules": {
             "type": "ARRAY",
-            "required": true,
-            "errorMessage": "Select an option"
+            "required": true
           },
           "schemaVersion": 1,
           "isRequired": true,
@@ -828,7 +796,7 @@
           "validationRules": {
             "type": "SINGLE_SELECT",
             "required": true,
-            "errorMessage": "Select an option"
+            "errorMessage": "Please indicate if you work with a benefits broker"
           },
           "schemaVersion": 1,
           "isRequired": true,
@@ -846,23 +814,23 @@
           "validationRules": {
             "type": "SINGLE_SELECT_DROPDOWN",
             "required": true,
-            "errorMessage": "Select an option"
+            "errorMessage": "Please select your benefits enrollment month"
           },
           "schemaVersion": 1,
           "isRequired": true,
           "options": [
-            { "label": "January", "value": "January", "displayOrder": 1 },
-            { "label": "February", "value": "February", "displayOrder": 2 },
-            { "label": "March", "value": "March", "displayOrder": 3 },
-            { "label": "April", "value": "April", "displayOrder": 4 },
+            { "label": "January", "value": "Jan", "displayOrder": 1 },
+            { "label": "February", "value": "Feb", "displayOrder": 2 },
+            { "label": "March", "value": "Mar", "displayOrder": 3 },
+            { "label": "April", "value": "Apr", "displayOrder": 4 },
             { "label": "May", "value": "May", "displayOrder": 5 },
-            { "label": "June", "value": "June", "displayOrder": 6 },
-            { "label": "July", "value": "July", "displayOrder": 7 },
+            { "label": "June", "value": "Jun", "displayOrder": 6 },
+            { "label": "July", "value": "Jul", "displayOrder": 7 },
             { "label": "August", "value": "Aug", "displayOrder": 8 },
-            { "label": "September", "value": "September", "displayOrder": 9 },
-            { "label": "October", "value": "October", "displayOrder": 10 },
-            { "label": "November", "value": "November", "displayOrder": 11 },
-            { "label": "December", "value": "December", "displayOrder": 12 }
+            { "label": "September", "value": "Sep", "displayOrder": 9 },
+            { "label": "October", "value": "Oct", "displayOrder": 10 },
+            { "label": "November", "value": "Nov", "displayOrder": 11 },
+            { "label": "December", "value": "Dec", "displayOrder": 12 }
           ]
         },
         {
@@ -870,11 +838,10 @@
           "questionText": "Do you offer a company-sponsored retirement benefit to your workers?",
           "questionType": "YES_NO",
           "displayOrder": 4,
-          "subsection": "Retirement",
           "validationRules": {
             "type": "BOOLEAN",
             "required": true,
-            "errorMessage": "Select an option"
+            "errorMessage": "Please indicate if you offer retirement benefits"
           },
           "schemaVersion": 1,
           "isRequired": true,
@@ -1092,11 +1059,9 @@
           "questionText": "What percentage of employees do you estimate are enrolled in retirement benefits?​",
           "questionType": "SINGLE_SELECT",
           "displayOrder": 5,
-          "subsection": "Retirement",
           "validationRules": {
             "type": "SINGLE_SELECT",
-            "required": true,
-            "errorMessage": "Select an option"
+            "required": true
           },
           "schemaVersion": 1,
           "isRequired": true,
@@ -1112,7 +1077,6 @@
           "questionText": "Does your retirement plan feature an employer match?",
           "questionType": "YES_NO",
           "displayOrder": 6,
-          "subsection": "Retirement",
           "validationRules": {
             "type": "BOOLEAN",
             "required": true,
@@ -1132,7 +1096,7 @@
                 "required": true,
                 "min": 0,
                 "max": 100,
-                "errorMessage": "Enter a numeric digit"
+                "errorMessage": "Please enter a valid percentage between 0 and 100"
               },
               "schemaVersion": 1,
               "isRequired": true,
@@ -1146,11 +1110,9 @@
           "questionText": "What is the vesting period of your business's retirement plan? ​",
           "questionType": "SINGLE_SELECT",
           "displayOrder": 7,
-          "subsection": "Retirement",
           "validationRules": {
             "type": "SINGLE_SELECT",
-            "required": true,
-            "errorMessage":"Select an option"
+            "required": true
           },
           "schemaVersion": 1,
           "isRequired": true,
@@ -1167,11 +1129,9 @@
           "questionText": "Does your company auto-enroll employees in retirement benefits?",
           "questionType": "YES_NO",
           "displayOrder": 8,
-          "subsection": "Retirement",
           "validationRules": {
             "type": "BOOLEAN",
-            "required": true,
-            "errorMessage": "Select an option"
+            "required": true
           },
           "schemaVersion": 1,
           "isRequired": true,
@@ -1182,43 +1142,23 @@
           "questionText": "Does your company's retirement plan allows for hardship withdrawals and/or loans?",
           "questionType": "YES_NO",
           "displayOrder": 9,
-          "subsection": "Retirement",
           "validationRules": {
             "type": "BOOLEAN",
-            "required": true,
-            "errorMessage": "Select an option"
+            "required": true
           },
           "schemaVersion": 1,
           "isRequired": true,
-          "options": []
-        },
-        {
-          "key": "lowestHealthPlanPremium",
-          "questionText": "What is the employee-only monthly premium for the lowest-cost health plan your company offers?",
-          "questionType": "TEXT_INPUT",
-          "displayOrder": 10,
-          "subsection": "HealthCare",
-          "validationRules": {
-            "type": "STRING",
-            "required": true,
-            "maxLength": 100,
-            "errorMessage": "Please enter the monthly premium"
-          },
-          "schemaVersion": 1,
-          "isRequired": true,
-          "placeholder": "Enter monthly premium (e.g., $250)",
           "options": []
         },
         {
           "key": "offersHealthInsurance",
           "questionText": "Does your offer a company-sponsored healthcare insurance benefit to your workers?",
           "questionType": "YES_NO",
-          "displayOrder": 11,
-          "subsection": "HealthCare",
+          "displayOrder": 10,
           "validationRules": {
             "type": "BOOLEAN",
             "required": true,
-            "errorMessage": "Select an optione"
+            "errorMessage": "Please indicate if you offer health insurance"
           },
           "schemaVersion": 1,
           "isRequired": true,
@@ -1266,14 +1206,12 @@
           "key": "healthPlanInsuranceType",
           "questionText": "Are your healthcare benefit plans fully insured or self-insured?",
           "questionType": "SINGLE_SELECT",
-          "displayOrder": 12,
-          "subsection": "HealthCare",
+          "displayOrder": 11,
           "validationRules": {
             "type": "SINGLE_SELECT",
             "required": true,
             "conditionalOn": "offersHealthInsurance",
-            "conditionalValue": true,
-            "errorMessage": "Select an option"
+            "conditionalValue": true
           },
           "schemaVersion": 1,
           "isRequired": true,
@@ -1294,12 +1232,10 @@
           "key": "reimbursementArrangements",
           "questionText": "Please select any of the following reimbursement arrangements you utilize:",
           "questionType": "MULTIPLE_CHOICE",
-          "displayOrder": 13,
-          "subsection": "HealthCare",
+          "displayOrder": 12,
           "validationRules": {
             "type": "ARRAY",
-            "required": true,
-            "errorMessage": "Select an option"
+            "required": true
           },
           "schemaVersion": 1,
           "isRequired": true,
@@ -1321,8 +1257,7 @@
           "key": "healthPlanParticipationRates",
           "questionText": "What percentage of employees participate in the following:",
           "questionType": "PARTICIPATION_RATES",
-          "displayOrder": 14,
-          "subsection": "HealthCare",
+          "displayOrder": 13,
           "validationRules": {
             "type": "OBJECT",
             "required": true
@@ -1382,6 +1317,22 @@
             }
           ],
           "options": []
+        },
+        {
+          "key": "lowestHealthPlanPremium",
+          "questionText": "What is the employee-only monthly premium for the lowest-cost health plan your company offers?",
+          "questionType": "TEXT_INPUT",
+          "displayOrder": 14,
+          "validationRules": {
+            "type": "STRING",
+            "required": true,
+            "maxLength": 100,
+            "errorMessage": "Please enter the monthly premium"
+          },
+          "schemaVersion": 1,
+          "isRequired": true,
+          "placeholder": "Enter monthly premium (e.g., $250)",
+          "options": []
         }
       ]
     },
@@ -1400,7 +1351,7 @@
             "required": true,
             "minItems": 3,
             "maxItems": 14,
-            "errorMessage": "Select at least one"
+            "errorMessage": "Please select at least 3 workforce goals"
           },
           "schemaVersion": 1,
           "isRequired": true,

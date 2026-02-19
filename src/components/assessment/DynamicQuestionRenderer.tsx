@@ -23,6 +23,7 @@ interface DynamicQuestionRendererProps {
   answers: Record<string, unknown>;
   onAnswerChange: (key: string, value: unknown) => void;
   errors: Record<string, string>;
+  subsectionDisplayOrder?: number;
 }
 
 export const DynamicQuestionRenderer = ({
@@ -30,9 +31,11 @@ export const DynamicQuestionRenderer = ({
   answers,
   onAnswerChange,
   errors,
+  subsectionDisplayOrder,
 }: DynamicQuestionRendererProps) => {
   const currentAnswer = answers[question.key];
   const error = errors[question.key];
+  const displayOrder = subsectionDisplayOrder ?? question.displayOrder;
 
   // Track component mount/unmount for debugging
   useEffect(() => {
@@ -576,7 +579,7 @@ export const DynamicQuestionRenderer = ({
       return (
         <div className="flex w-full flex-col gap-2" data-question-key={question.key}>
           <Label isRequired={question.isRequired} className="text-base">
-            {question.displayOrder}. {question.questionText}
+            {displayOrder}. {question.questionText}
           </Label>
             {error && (
             <div className="flex items-center gap-2">
@@ -624,7 +627,7 @@ export const DynamicQuestionRenderer = ({
       return (
         <div className="flex w-full flex-col gap-2" data-question-key={question.key}>
           <Label isRequired={question.isRequired} className="text-base">
-            {question.displayOrder}. {question.questionText}
+            {displayOrder}. {question.questionText}
           </Label>
           {error && (
             <div className="flex items-center gap-2">
@@ -661,7 +664,7 @@ export const DynamicQuestionRenderer = ({
       return (
         <div className="flex w-full flex-col gap-2" data-question-key={question.key}>
           <Label isRequired={question.isRequired} className="text-base">
-            {question.displayOrder}. {question.questionText}
+            {displayOrder}. {question.questionText}
           </Label>
           {error && (
             <div className="flex items-center gap-2">
@@ -730,7 +733,7 @@ export const DynamicQuestionRenderer = ({
       return (
         <div className="flex w-full flex-col gap-2" data-question-key={question.key}>
           <Label isRequired={question.isRequired} className="text-base">
-            {question.displayOrder}. {question.questionText}
+            {displayOrder}. {question.questionText}
           </Label>
           {error && (
             <div className="flex items-center gap-2">
@@ -766,7 +769,7 @@ export const DynamicQuestionRenderer = ({
       return (
         <div className="flex w-full flex-col gap-2" data-question-key={question.key}>
           <Label isRequired={question.isRequired} className="text-base">
-            {question.displayOrder}. {question.questionText}
+            {displayOrder}. {question.questionText}
           </Label>
           <Input
             type="number"
@@ -802,7 +805,7 @@ export const DynamicQuestionRenderer = ({
       return (
         <div className="flex w-full flex-col gap-2" data-question-key={question.key}>
           <Label isRequired={question.isRequired} className="text-base">
-            {question.displayOrder}. {question.questionText}
+            {displayOrder}. {question.questionText}
           </Label>
           <Input
             type="text"
@@ -834,7 +837,7 @@ export const DynamicQuestionRenderer = ({
       return (
         <div className="flex w-full flex-col gap-4" data-question-key={question.key}>
           <Label isRequired={question.isRequired} className="text-base">
-            {question.displayOrder}. {question.questionText}
+            {displayOrder}. {question.questionText}
           </Label>
 
           {currentItems.map((item: { id: number }, index: number) => (
@@ -878,12 +881,14 @@ export const DynamicQuestionRenderer = ({
       return (
         <div className="flex w-full flex-col gap-4" data-question-key={question.key}>
           <Label isRequired={question.isRequired} className="text-base">
-            {question.displayOrder}. {question.questionText}
+            {displayOrder}. {question.questionText}
           </Label>
 
           {question.subFields?.map(sub => {
             const answerObj = (answers[question.key] as Record<string, unknown>) || {};
             const currentVal = String(answerObj[sub.key] || "");
+            // Check for field-specific error
+            const fieldError = errors[`${question.key}.${sub.key}`];
             return (
               <div key={sub.key} className="flex w-full items-start gap-4">
                 <div className="flex w-84.75 items-center gap-2 px-3 py-2">
@@ -910,19 +915,20 @@ export const DynamicQuestionRenderer = ({
                     onSelectionChange={key =>
                       updateObjectField(question.key, sub.key, key as string)
                     }
-                    isInvalid={error ? true : false}
+                    isInvalid={fieldError ? true : false}
                   >
                     {(item: SelectItemType) => (
                       <Select.Item id={item.id}>{item.label || ""}</Select.Item>
                     )}
                   </Select>
-                  <p className="text-sm leading-5 text-gray-600">Select a range</p>
+                  {/* Show validation error BELOW the input box */}
+                  {fieldError && (
+                    <span className="text-sm text-red-600 mt-1">{fieldError}</span>
+                  )}
                 </div>
               </div>
             );
           })}
-
-          {error && <span className="text-sm text-red-600">{error}</span>}
         </div>
       );
 
@@ -961,7 +967,7 @@ export const DynamicQuestionRenderer = ({
           <RankingList
             label={question.questionText}
             isRequired={question.isRequired}
-            displayOrder={question.displayOrder}
+            displayOrder={displayOrder}
             availableOptions={availableOptions}
             value={(currentAnswer as string[]) || []}
             onChange={value => onAnswerChange(question.key, value)}
