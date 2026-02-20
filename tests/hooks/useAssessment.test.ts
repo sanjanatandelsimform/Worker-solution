@@ -11,7 +11,7 @@
 import { renderHook, waitFor } from "@testing-library/react";
 import { act } from "react";
 import { useAssessment } from "@/hooks/useAssessment";
-import { getAssessment, submitWorkforce } from "@/services/api/assessmentApi";
+import { getAssessment } from "@/services/api/assessmentApi";
 import type { ApiResponse, AssessmentData } from "@/services/api/assessmentApi";
 
 // Mock API module

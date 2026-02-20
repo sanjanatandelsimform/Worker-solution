@@ -15,7 +15,10 @@ interface DynamicTabProps {
 
 export const DynamicTab = forwardRef<
   {
-    submit: () => Promise<{ success: boolean; errors?: Record<string, string> }>;
+    submit: () => Promise<{
+      success: boolean;
+      errors?: Record<string, string>;
+    }>;
     validate: () => boolean;
     getAnswers: () => Record<string, unknown>;
     getErrors: () => Record<string, string>;
@@ -47,7 +50,6 @@ export const DynamicTab = forwardRef<
 
   const handleAnswerChange = useCallback(
     (key: string, value: unknown) => {
-      // eslint-disable-next-line no-console
       console.debug("[DynamicTab] Answer changed:", {
         key,
         value,
@@ -293,16 +295,24 @@ export const DynamicTab = forwardRef<
             delete cleanedItem.id;
 
             if (question.validationRules?.fields) {
-              question.validationRules.fields.forEach((field: { name: string; type: string }) => {
-                const fieldValue = cleanedItem[field.name];
+              question.validationRules.fields.forEach(
+                (field: {
+                  name: string;
+                  type: string;
+                  required?: boolean;
+                  pattern?: string;
+                  errorMessage?: string;
+                }) => {
+                  const fieldValue = cleanedItem[field.name];
 
-                if (field.type === "number" && fieldValue !== null && fieldValue !== undefined) {
-                  cleanedItem[field.name] =
-                    typeof fieldValue === "number" ? fieldValue : Number(fieldValue);
-                } else if (field.type === "text") {
-                  cleanedItem[field.name] = String(fieldValue || "");
+                  if (field.type === "number" && fieldValue !== null && fieldValue !== undefined) {
+                    cleanedItem[field.name] =
+                      typeof fieldValue === "number" ? fieldValue : Number(fieldValue);
+                  } else if (field.type === "text") {
+                    cleanedItem[field.name] = String(fieldValue || "");
+                  }
                 }
-              });
+              );
             }
 
             return cleanedItem;
@@ -328,16 +338,28 @@ export const DynamicTab = forwardRef<
               delete cleanedItem.id;
 
               if (cq.validationRules.fields) {
-                cq.validationRules.fields.forEach((field: any) => {
-                  const fieldValue = cleanedItem[field.name];
+                cq.validationRules.fields.forEach(
+                  (field: {
+                    name: string;
+                    type: string;
+                    required?: boolean;
+                    pattern?: string;
+                    errorMessage?: string;
+                  }) => {
+                    const fieldValue = cleanedItem[field.name];
 
-                  if (field.type === "number" && fieldValue !== null && fieldValue !== undefined) {
-                    cleanedItem[field.name] =
-                      typeof fieldValue === "number" ? fieldValue : Number(fieldValue);
-                  } else if (field.type === "text") {
-                    cleanedItem[field.name] = String(fieldValue || "");
+                    if (
+                      field.type === "number" &&
+                      fieldValue !== null &&
+                      fieldValue !== undefined
+                    ) {
+                      cleanedItem[field.name] =
+                        typeof fieldValue === "number" ? fieldValue : Number(fieldValue);
+                    } else if (field.type === "text") {
+                      cleanedItem[field.name] = String(fieldValue || "");
+                    }
                   }
-                });
+                );
               }
 
               return cleanedItem;
@@ -388,15 +410,16 @@ export const DynamicTab = forwardRef<
           if (firstErrorKey) {
             const errorElement = document.querySelector(`[data-question-key="${firstErrorKey}"]`);
             if (errorElement) {
-              // eslint-disable-next-line no-console
-              errorElement.scrollIntoView({ behavior: "smooth", block: "center" });
+              errorElement.scrollIntoView({
+                behavior: "smooth",
+                block: "center",
+              });
             }
           }
           // Reset flag after scroll completes
           isExplicitSubmitRef.current = false;
         }, 100);
       } else {
-        // eslint-disable-next-line no-console
         isExplicitSubmitRef.current = false;
       }
       return { success: false, errors };
@@ -421,7 +444,10 @@ export const DynamicTab = forwardRef<
             if (firstErrorKey) {
               const errorElement = document.querySelector(`[data-question-key="${firstErrorKey}"]`);
               if (errorElement) {
-                errorElement.scrollIntoView({ behavior: "smooth", block: "center" });
+                errorElement.scrollIntoView({
+                  behavior: "smooth",
+                  block: "center",
+                });
               }
             }
           }, 100);
@@ -467,7 +493,7 @@ export const DynamicTab = forwardRef<
     return () => {
       delete (window as { __dynamicTabValidation?: unknown }).__dynamicTabValidation;
     };
-  }, [handleSubmit, validateAnswers, answers, errors, isSaving]);
+  }, [handleSubmit, validateAnswers, answers, errors, isSaving, isLoadingGet]);
 
   const sectionContent: Record<string, { title: string; description: string }> = {
     workforce: {
@@ -527,7 +553,7 @@ export const DynamicTab = forwardRef<
         </div>
       )} */}
 
-{/* POST Error Display - Show validation errors using ErrorMessage component */}
+      {/* POST Error Display - Show validation errors using ErrorMessage component */}
       {apiError?.type === "post" && Object.keys(errors).length > 0 && (
         <ErrorMessage
           errorType="danger"

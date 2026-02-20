@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 /**
  * Tests for GoalsTab Completion Modals (US4: Completion Flow)
  *

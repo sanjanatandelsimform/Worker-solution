@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useMemo, useRef } from "react";
 import {
   DndContext,
   closestCenter,
@@ -81,80 +81,117 @@ export function RankingList({
     })
   );
 
-  // Update items when availableOptions changes, but preserve user reordering
-  useEffect(() => {
-    // Build items from ALL availableOptions (all selected goals from Question 1)
-    // We show every selected goal in the ranking list,
-    // but only the first `maxItems` are treated as the actual ranked/top goals.
-    const expectedItems = availableOptions.map(opt => ({
-      id: opt.value,
-      label: opt.label,
-    }));
+  // Build expected items from availableOptions
+  const expectedItems = useMemo(
+    () =>
+      availableOptions.map(opt => ({
+        id: opt.value,
+        label: opt.label,
+      })),
+    [availableOptions]
+  );
 
-    // Get current item IDs
-    const currentItemIds = items.map(item => item.id);
-    const expectedItemIds = expectedItems.map(item => item.id);
+  const expectedItemIds = useMemo(() => expectedItems.map(item => item.id), [expectedItems]);
 
-    // If we have a value prop (existing ranking), use it to initialize order
-    // Otherwise, use the order from availableOptions
-    let initialOrder: string[] = [];
+  // Compute initial order based on value prop
+  const initialOrder = useMemo(() => {
     if (value && value.length > 0 && Array.isArray(value)) {
-      // Use existing ranking order, but ensure all selected goals are included
-      const rankedIds = value.slice(0, maxItems); // Top ranked goals
+      const rankedIds = value.slice(0, maxItems);
       const unrankedIds = expectedItemIds.filter(id => !rankedIds.includes(id));
-      initialOrder = [...rankedIds, ...unrankedIds];
+      return [...rankedIds, ...unrankedIds];
+    }
+    return expectedItemIds;
+  }, [value, maxItems, expectedItemIds]);
+
+  // Track previous values to determine if update is needed
+  const prevExpectedItemIdsRef = useRef<string>("");
+  const prevValueRef = useRef<string>("");
+  const itemsRef = useRef(items);
+
+  // Sync items when availableOptions or value changes
+  useEffect(() => {
+    // Update ref at the start of effect (not during render)
+    itemsRef.current = items;
+
+    const currentExpectedIds = expectedItemIds.join(",");
+    const currentValueKey = value?.join(",") || "";
+    const prevExpectedIds = prevExpectedItemIdsRef.current;
+    const prevValueKey = prevValueRef.current;
+    const currentItems = itemsRef.current;
+
+    // Skip if nothing has changed
+    if (
+      currentExpectedIds === prevExpectedIds &&
+      currentValueKey === prevValueKey &&
+      currentItems.length > 0
+    ) {
+      return;
+    }
+
+    const currentItemIds = currentItems.map(item => item.id);
+
+    // Build items in the correct order
+    const orderedItems = initialOrder
+      .filter(id => expectedItemIds.includes(id))
+      .map(id => expectedItems.find(item => item.id === id)!)
+      .filter(Boolean);
+
+    let newItems: Array<{ id: string; label: string }>;
+
+    // If current items exist and all expected items are present, preserve current order
+    if (currentItems.length > 0 && expectedItemIds.every(id => currentItemIds.includes(id))) {
+      // Preserve user's reordering - only add missing items at the end
+      const missingIds = expectedItemIds.filter(id => !currentItemIds.includes(id));
+      const preservedItems = [...currentItems];
+
+      // Add missing items
+      missingIds.forEach(id => {
+        const opt = expectedItems.find(e => e.id === id);
+        if (opt) {
+          preservedItems.push(opt);
+        }
+      });
+
+      // Remove items that are no longer in availableOptions
+      newItems = preservedItems.filter(item => expectedItemIds.includes(item.id));
     } else {
-      initialOrder = expectedItemIds;
+      // Initial load or major changes - use ordered items
+      console.debug("[RankList] Initializing or resetting items:", {
+        currentOrder: currentItemIds,
+        expectedOrder: expectedItemIds,
+        initialOrder,
+      });
+      newItems = orderedItems;
     }
 
-    // Only update if:
-    // 1. Items are missing (new selections added)
-    // 2. Items are different (selections changed)
-    // BUT preserve order if all items exist (user might have reordered)
-    const itemsChanged =
-      JSON.stringify([...currentItemIds].sort()) !== JSON.stringify([...expectedItemIds].sort());
-    const hasMissingItems = expectedItemIds.some(id => !currentItemIds.includes(id));
+    // Only update if items actually changed
+    const itemsChanged = JSON.stringify(newItems.map(i => i.id)) !== JSON.stringify(currentItemIds);
 
-    if (itemsChanged || hasMissingItems || items.length === 0) {
-      // Build items in the correct order
-      const orderedItems = initialOrder
-        .filter(id => expectedItemIds.includes(id))
-        .map(id => expectedItems.find(item => item.id === id)!)
-        .filter(Boolean);
+    if (itemsChanged) {
+      // Use setTimeout to defer state update and avoid synchronous setState warning
+      const timeoutId = setTimeout(() => {
+        setItems(newItems);
+        onChange(newItems.slice(0, maxItems).map(item => item.id));
+      }, 0);
 
-      // If current items exist and all expected items are present, preserve current order
-      if (items.length > 0 && expectedItemIds.every(id => currentItemIds.includes(id))) {
-        // Preserve user's reordering - only add missing items at the end
-        const missingIds = expectedItemIds.filter(id => !currentItemIds.includes(id));
-        const preservedItems = [...items];
+      prevExpectedItemIdsRef.current = currentExpectedIds;
+      prevValueRef.current = currentValueKey;
 
-        // Add missing items
-        missingIds.forEach(id => {
-          const opt = expectedItems.find(e => e.id === id);
-          if (opt) {
-            preservedItems.push(opt);
-          }
-        });
-
-        // Remove items that are no longer in availableOptions
-        const filteredItems = preservedItems.filter(item => expectedItemIds.includes(item.id));
-        setItems(filteredItems);
-        onChange(filteredItems.slice(0, maxItems).map(item => item.id));
-      } else {
-        // Initial load or major changes - use ordered items
-        // eslint-disable-next-line no-console
-        console.debug("[RankList] Initializing or resetting items:", {
-          currentOrder: currentItemIds,
-          expectedOrder: expectedItemIds,
-          initialOrder,
-        });
-
-        setItems(orderedItems);
-        // Only treat the first `maxItems` as the ranked/top goals
-        onChange(orderedItems.slice(0, maxItems).map(item => item.id));
-      }
+      return () => clearTimeout(timeoutId);
     }
-  }, [availableOptions.map(opt => opt.value).join(","), maxItems, value?.join(",")]);
+
+    prevExpectedItemIdsRef.current = currentExpectedIds;
+    prevValueRef.current = currentValueKey;
+  }, [
+    availableOptions,
+    expectedItems,
+    expectedItemIds,
+    initialOrder,
+    items,
+    maxItems,
+    onChange,
+    value,
+  ]);
 
   function handleDragEnd(event: DragEndEvent) {
     const { active, over } = event;
