@@ -495,7 +495,7 @@ export const DynamicTab = forwardRef<
     };
   }, [handleSubmit, validateAnswers, answers, errors, isSaving, isLoadingGet]);
 
-  const sectionContent: Record<string, { title: string; description: string }> = {
+  const sectionContent: Record<string, { title: React.ReactNode; description: React.ReactNode }> = {
     workforce: {
       title: "Workforce",
       description:
@@ -519,22 +519,22 @@ export const DynamicTab = forwardRef<
   };
 
   return (
-    <div className="space-y-6 p-6">
+    <div className="bg-ws-white space-y-6 p-6">
       {/* Loading State - Non-blocking */}
       {isLoadingGet && (
         <div className="flex items-center justify-center py-4">
-          <div className="h-6 w-6 animate-spin rounded-full border-4 border-cyan-500 border-t-transparent"></div>
-          <span className="ml-3 text-sm text-gray-600">Restoring your data...</span>
+          <div className="h-6 w-6 animate-spin rounded-full border-4 border-ws-cyan-60 border-t-transparent"></div>
+          <span className="ml-3 text-sm text-ws-gray-60">Restoring your data...</span>
         </div>
       )}
 
       {/* GET Error Display */}
       {apiError?.type === "get" && (
-        <div className="rounded-md border border-red-300 bg-red-50 p-4">
-          <p className="text-sm text-red-800">{apiError.message}</p>
+        <div className="rounded-md border border-ws-red-20 bg-ws-red-40 p-4">
+          <p className="text-sm text-ws-red-40">{apiError.message}</p>
           <button
             onClick={retryGetAssessment}
-            className="mt-2 text-sm font-medium text-red-600 hover:text-red-800"
+            className="mt-2 text-sm font-medium text-ws-red-40 hover:text-ws-red-30"
           >
             Retry
           </button>
@@ -573,8 +573,8 @@ export const DynamicTab = forwardRef<
       {/* Form Content - Always visible */}
       {sectionContent[section] && (
         <>
-          <h2>{sectionContent[section].title}</h2>
-          <p>{sectionContent[section].description}</p>
+          <h2 className="text-3xl font-semibold mb-2">{sectionContent[section].title}</h2>
+          <p className="text-base text-ws-gray-90">{sectionContent[section].description}</p>
         </>
       )}
 
@@ -592,8 +592,12 @@ export const DynamicTab = forwardRef<
             {/* Render subsection heading and divider */}
             {isFirstInSubsection && currentSubsection && (
               <>
-                <h3 className="text-xl font-bold mt-6 mb-2">{currentSubsection}</h3>
-                <hr className="border-t border-gray-300 mb-4" />
+                <hr className="border-t border-ws-gray-40 mb-4" />
+                <div className="ring-1 ring-ws-gray-50 rounded-sm mb-4 mt-6">
+                  <h3 className="text-xl font-bold mb-1 bg-ws-gray-20 px-4 py-2 rounded-sm">
+                    {currentSubsection}
+                  </h3>
+                </div>
               </>
             )}
             <DynamicQuestionRenderer

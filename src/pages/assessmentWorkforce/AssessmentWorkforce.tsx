@@ -188,7 +188,7 @@ export default function AssessmentWorkforcePage() {
         />
 
         {/* Content Area */}
-        <div className="bg-white my-8 mx-12.5">
+        <div className="my-8 mx-12.5">
           {currentStep === "workforce" && (
             <WorkforceTab
               onNext={() => setCurrentStep(steps[currentStepIndex + 1].id)}

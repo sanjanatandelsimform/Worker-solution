@@ -39,7 +39,7 @@ export default function BenchmarkPage() {
               titleClass="text-sm font-medium text-ws-black-10"
               itemAlign="between"
               count="31%"
-              countClass="mt-2 text-3xl xl:text-5xl font-semibold text-ws-black-90"
+              countClass="mt-2 text-3xl xl:text-5xl font-medium text-ws-black-90"
               infoIcon={true}
               infoCircleClass="text-ws-gray-70"
               tooltipText="How is this calculated"
@@ -51,7 +51,7 @@ export default function BenchmarkPage() {
               titleClass="text-sm font-medium text-ws-black-10"
               itemAlign="between"
               count="40%"
-              countClass="mt-2 text-3xl xl:text-5xl font-semibold text-ws-black-90"
+              countClass="mt-2 text-3xl xl:text-5xl font-medium text-ws-black-90"
               infoIcon={true}
               infoCircleClass="text-ws-gray-70"
               tooltipText="How is this calculated"
@@ -63,7 +63,7 @@ export default function BenchmarkPage() {
               titleClass="text-sm font-medium text-ws-black-10"
               itemAlign="between"
               count="$4,149M"
-              countClass="mt-2 text-3xl xl:text-5xl font-semibold text-ws-black-90"
+              countClass="mt-2 text-3xl xl:text-5xl font-medium text-ws-black-90"
               infoIcon={true}
               infoCircleClass="text-ws-gray-70"
               tooltipText="How is this calculated"
@@ -228,7 +228,7 @@ export default function BenchmarkPage() {
               titleClass="text-ws-black-30 text-sm"
               itemAlign="between"
               count="$14.03"
-              countClass="mt-10 text-3xl xl:text-5xl  font-semibold text-ws-black-90"
+              countClass="mt-10 text-3xl xl:text-5xl  font-medium text-ws-black-90"
               infoIcon={false}
               classess="bg-secondary w-full"
             />
@@ -238,7 +238,7 @@ export default function BenchmarkPage() {
               itemAlign="between"
               count="$24.03"
               infoIcon={false}
-              countClass="mt-10 text-3xl xl:text-5xl  font-semibold text-ws-black-90"
+              countClass="mt-10 text-3xl xl:text-5xl  font-medium text-ws-black-90"
               classess="bg-secondary w-full"
             />
             <StaticCard
@@ -247,7 +247,7 @@ export default function BenchmarkPage() {
               itemAlign="between"
               count="$83,245"
               infoIcon={false}
-              countClass="mt-10 text-3xl xl:text-5xl  font-semibold text-ws-black-90"
+              countClass="mt-10 text-3xl xl:text-5xl font-medium text-ws-black-90"
               classess="bg-secondary w-full"
             />
           </div>
@@ -320,7 +320,7 @@ export default function BenchmarkPage() {
             titleClass="text-sm font-medium text-ws-black-10 uppercase"
             itemAlign="between"
             count="51.8%"
-            countClass="text-3xl xl:text-5xl  font-semibold text-ws-black-90 mt-2"
+            countClass="text-3xl xl:text-5xl  font-medium text-ws-black-90 mt-2"
             infoIcon={true}
             infoCircleClass="text-ws-gray-70"
             tooltipText="How is this calculated"
@@ -333,7 +333,7 @@ export default function BenchmarkPage() {
             titleClass="text-sm font-medium text-ws-black-10 uppercase"
             itemAlign="between"
             count="39.8%"
-            countClass="text-3xl xl:text-5xl  font-semibold text-ws-black-90 mt-2"
+            countClass="text-3xl xl:text-5xl  font-medium text-ws-black-90 mt-2"
             infoIcon={true}
             infoCircleClass="text-ws-gray-70"
             tooltipText="How is this calculated"
@@ -354,7 +354,7 @@ export default function BenchmarkPage() {
             titleClass="text-sm font-medium text-ws-black-10 uppercase"
             itemAlign="between"
             count="11.1%"
-            countClass="text-3xl xl:text-5xl  font-semibold text-ws-black-90 mt-2"
+            countClass="text-3xl xl:text-5xl  font-medium text-ws-black-90 mt-2"
             infoIcon={true}
             infoCircleClass="text-ws-gray-70"
             tooltipText="How is this calculated"
@@ -367,7 +367,7 @@ export default function BenchmarkPage() {
             titleClass="text-sm font-medium text-ws-black-10 uppercase"
             itemAlign="between"
             count="7.7%"
-            countClass="text-3xl xl:text-5xl  font-semibold text-ws-black-90 mt-2"
+            countClass="text-3xl xl:text-5xl  font-medium text-ws-black-90 mt-2"
             infoIcon={true}
             infoCircleClass="text-ws-gray-70"
             tooltipText="How is this calculated"
@@ -388,7 +388,7 @@ export default function BenchmarkPage() {
               titleClass="uppercase text-sm font-medium text-ws-black-10"
               itemAlign="between"
               count="72%"
-              countClass="text-3xl xl:text-5xl font-semibold text-ws-black-90 mt-2"
+              countClass="text-3xl xl:text-5xl font-medium text-ws-black-90 mt-2"
               infoIcon={true}
               infoCircleClass="text-ws-gray-70"
               tooltipText="How is this calculated"
@@ -401,7 +401,7 @@ export default function BenchmarkPage() {
               itemAlign="between"
               titleClass="uppercase"
               count="$367,200"
-              countClass="text-3xl xl:text-5xl font-semibold text-ws-black-90 mt-2"
+              countClass="text-3xl xl:text-5xl font-medium text-ws-black-90 mt-2"
               infoIcon={true}
               infoCircleClass="text-ws-gray-70"
               tooltipText="How is this calculated"
@@ -414,7 +414,7 @@ export default function BenchmarkPage() {
               itemAlign="between"
               titleClass="uppercase"
               count="$1,423"
-              countClass="text-3xl xl:text-5xl font-semibold text-ws-black-90 mt-2"
+              countClass="text-3xl xl:text-5xl font-medium text-ws-black-90 mt-2"
               infoIcon={true}
               infoCircleClass="text-ws-gray-70"
               tooltipText="How is this calculated"

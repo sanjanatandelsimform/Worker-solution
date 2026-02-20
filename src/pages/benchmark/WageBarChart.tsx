@@ -272,7 +272,7 @@ export default function WageBarChart({ data, width, height = 350 }: CanvasChartP
         <div className="flex items-center gap-2">
           <div className="size-4.5 rounded-xs bg-[#00C4C7]" />
           <p className="whitespace-nowrap text-lg font-normal leading-7 text-black">
-            Industry average
+            State average
           </p>
         </div>
         <div className="flex items-center gap-2">
