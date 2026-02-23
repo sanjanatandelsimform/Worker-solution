@@ -23,7 +23,6 @@ jest.mock("@/services/api/assessmentApi", () => ({
   submitGoals: jest.fn(),
 }));
 
-
 describe("useAssessment Hook", () => {
   beforeEach(() => {
     jest.clearAllMocks();

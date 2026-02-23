@@ -27,7 +27,6 @@ jest.mock("@/services/api/assessmentApi", () => ({
   submitGoals: jest.fn(),
 }));
 
-
 const mockGetAssessmentWithGoals: ApiResponse = {
   success: true,
   data: {

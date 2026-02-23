@@ -115,13 +115,13 @@ export const DynamicTab = forwardRef<
         }
 
         // Validate ARRAY type (MULTIPLE_CHOICE) - allow up to maxItems but don't block selection
-          if (rules.type === "ARRAY" && Array.isArray(value)) {
-            if (rules.minItems && value.length < rules.minItems) {
-              newErrors[question.key] =
-                rules.errorMessage || `At least ${rules.minItems} item(s) required`;
-              isValid = false;
-            }
+        if (rules.type === "ARRAY" && Array.isArray(value)) {
+          if (rules.minItems && value.length < rules.minItems) {
+            newErrors[question.key] =
+              rules.errorMessage || `At least ${rules.minItems} item(s) required`;
+            isValid = false;
           }
+        }
 
         if (rules.type === "STRUCTURED_ARRAY" && Array.isArray(value)) {
           if (rules.minItems && value.length < rules.minItems) {
@@ -518,7 +518,7 @@ export const DynamicTab = forwardRef<
       try {
         const response = await submitSection(cleanedAnswers);
         return response;
-      } catch (error) {
+      } catch (_error) {
         return { success: false };
       } finally {
         setIsSaving(false);
@@ -542,7 +542,16 @@ export const DynamicTab = forwardRef<
         isSaving,
         isLoadingGet,
       }),
-      [handleSubmit, validateAnswers, answers, errors, isSaving, isLoadingGet]
+      [
+        handleSubmit,
+        validateAnswers,
+        saveWithoutValidation,
+        clearErrors,
+        answers,
+        errors,
+        isSaving,
+        isLoadingGet,
+      ]
     );
 
     useEffect(() => {
@@ -670,12 +679,12 @@ export const DynamicTab = forwardRef<
             <div key={question.key}>
               {/* Visual card break for subsections — mimics separate white cards */}
               {isFirstInSubsection && currentSubsection && (
-              <div className="-mx-6 px-6 pt-8 pb-6 mt-6 border-t-25 border-gray-50">
-                <h2 className="text-2xl font-medium text-ws-black-90 pb-4 border-b border-ws-gray-40">
-                  {currentSubsection === "HealthCare" ? "Healthcare" : currentSubsection}
-                </h2>
-              </div>
-            )}
+                <div className="-mx-6 px-6 pt-8 pb-6 mt-6 border-t-25 border-gray-50">
+                  <h2 className="text-2xl font-medium text-ws-black-90 pb-4 border-b border-ws-gray-40">
+                    {currentSubsection === "HealthCare" ? "Healthcare" : currentSubsection}
+                  </h2>
+                </div>
+              )}
               <DynamicQuestionRenderer
                 question={question}
                 answers={answers}

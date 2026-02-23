@@ -296,25 +296,25 @@ export function IncomeDistributionChart() {
   const chartData: ChartDataItem[] = [
     {
       label: "Low income",
-      sublabel: "$55,250 or less",
+      sublabel: "$50,000 or less",
       value1: 74,
       value2: 44,
     },
     {
       label: "Moderate income",
-      sublabel: "$55,250 - $88,400",
+      sublabel: "$50,000 - $74,499",
       value1: 40,
       value2: 4,
     },
     {
       label: "Median income",
-      sublabel: "$88,400 - $132,600",
+      sublabel: "$75,000 - $99,499",
       value1: 10,
       value2: 1,
     },
     {
       label: "Upper income",
-      sublabel: "$132,600 or more",
+      sublabel: "$100,000 or more",
       value1: 1,
       value2: 0,
     },
