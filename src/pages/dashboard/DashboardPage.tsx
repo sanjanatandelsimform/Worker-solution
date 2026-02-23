@@ -33,7 +33,7 @@ export const DashboardPage = () => {
   const [showCooldownModal, setShowCooldownModal] = useState(false);
   const [cooldown, setCooldown] = useState<number>(0); // Cooldown in seconds
 
-  const { completionCount, isLoading: isLoadingAssessment } = useAssessmentStatus();
+  const { completionCount, isLoading: _isLoadingAssessment } = useAssessmentStatus();
 
   // Function to refetch user data
   const refetchUserData = async () => {
@@ -85,7 +85,7 @@ export const DashboardPage = () => {
       document.removeEventListener("visibilitychange", handleVisibilityChange);
       window.removeEventListener("focus", handleWindowFocus);
     };
-  }, [user?.id]);
+  }, [user?.id, refetchUserData]);
 
   // Cooldown timer effect
   useEffect(() => {
