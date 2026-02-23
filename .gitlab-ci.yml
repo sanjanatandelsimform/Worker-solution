@@ -39,11 +39,6 @@ variables:
   # NPM cache directory for faster dependency installation
   NPM_CACHE_FOLDER: '$CI_PROJECT_DIR/.npm'
 
-  # Dummy DATABASE_URL for Prisma client type generation
-  # Note: This is NOT used for actual database connections - all tests use mocked dependencies
-  # Required by Prisma CLI during 'prisma generate' to create TypeScript types
-  DATABASE_URL: 'postgresql://dummy:dummy@localhost:5432/dummy_db'
-
 # =============================================================================
 # Node.js Build, Test, and Lint Jobs
 # =============================================================================
@@ -63,9 +58,6 @@ install_dependencies:
     - npm config set cache $NPM_CACHE_FOLDER --global
     # Install dependencies (prefer ci for deterministic installs)
     - npm ci || npm install
-    # Generate Prisma client types once - all jobs reuse this artifact
-    # This creates TypeScript type definitions in node_modules/.prisma/client
-    - npx prisma generate
   artifacts:
     paths:
       - node_modules/ # Share node_modules with downstream jobs
