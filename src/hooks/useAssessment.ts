@@ -1,12 +1,5 @@
 import { useState, useEffect, useCallback } from "react";
 import {
-  markTabCompleted,
-  isTabCompleted,
-  loadCompletionStatus,
-  saveCurrentStep,
-  loadCurrentStep,
-} from "@/utils/assessmentStorage";
-import {
   submitWorkforce,
   submitCompensation,
   submitBenefits,
@@ -42,6 +35,7 @@ interface UseAssessmentReturn {
 
 /**
  * Custom hook for managing assessment form state and submission
+ * Uses API (/assessment) as single source of truth - NO localStorage
  */
 export const useAssessment = ({ section }: UseAssessmentOptions): UseAssessmentReturn => {
   const [answers, setAnswers] = useState<Record<string, unknown>>({});
@@ -62,9 +56,12 @@ export const useAssessment = ({ section }: UseAssessmentOptions): UseAssessmentR
       const response = await getAssessment();
       if (response.success && response.data?.sections?.[section]) {
         setAnswers(response.data.sections[section] as Record<string, unknown>);
+        // Mark as completed if section exists in API response
+        setIsCompleted(true);
       } else {
         // No data for this section yet - leave empty
         setAnswers({});
+        setIsCompleted(false);
       }
     } catch (error) {
       setApiError({
@@ -84,15 +81,14 @@ export const useAssessment = ({ section }: UseAssessmentOptions): UseAssessmentR
   // Load progress on mount AND when section changes
   useEffect(() => {
     loadProgress();
-    setIsCompleted(isTabCompleted(section));
-  }, [section, loadProgress]); // Added section as dependency
+  }, [section, loadProgress]);
 
-  // Update single answer (no auto-save to localStorage)
+  // Update single answer (no localStorage auto-save)
   const updateAnswer = useCallback((key: string, value: unknown) => {
     setAnswers(prev => ({ ...prev, [key]: value }));
   }, []);
 
-  // Update multiple answers (no auto-save to localStorage)
+  // Update multiple answers (no localStorage auto-save)
   const updateAnswers = useCallback((data: Record<string, unknown>) => {
     setAnswers(prev => ({ ...prev, ...data }));
   }, []);
@@ -120,8 +116,7 @@ export const useAssessment = ({ section }: UseAssessmentOptions): UseAssessmentR
             response = await submitWorkforce(dataToSubmit);
             break;
           case "compensation":
-            // Ensure we pass the flat cleaned answers object, not { responses: cleanedAnswers }
-            response = await submitCompensation(dataToSubmit); // <--- use this
+            response = await submitCompensation(dataToSubmit);
             break;
           case "benefits":
             response = await submitBenefits(dataToSubmit);
@@ -137,12 +132,11 @@ export const useAssessment = ({ section }: UseAssessmentOptions): UseAssessmentR
             };
         }
 
-        // Mark as completed on success
+        // Mark as completed on success (API is authoritative)
         if (response.success) {
-          markTabCompleted(section);
           setIsCompleted(true);
         } else {
-          // NEW: Set field errors from API response
+          // Set field errors from API response
           if (response.fieldErrors) {
             setErrors(response.fieldErrors);
           }
@@ -169,8 +163,6 @@ export const useAssessment = ({ section }: UseAssessmentOptions): UseAssessmentR
     },
     [section, answers]
   );
-
-  // Remove auto-save effect - data persists only via POST
 
   // Reset section data
   const resetSection = useCallback(() => {
@@ -199,15 +191,13 @@ export const useAssessment = ({ section }: UseAssessmentOptions): UseAssessmentR
 
 /**
  * Hook for managing overall assessment navigation
+ * Uses API completion status instead of localStorage
  */
 export const useAssessmentNavigation = () => {
-  const savedStep = loadCurrentStep();
-  const [currentStep, setCurrentStep] = useState(savedStep || "workforce");
-  const [completionStatus] = useState(() => loadCompletionStatus());
+  const [currentStep, setCurrentStep] = useState("workforce");
 
   const goToStep = useCallback((step: string) => {
     setCurrentStep(step);
-    saveCurrentStep(step);
   }, []);
 
   const goToNextStep = useCallback(() => {
@@ -216,7 +206,6 @@ export const useAssessmentNavigation = () => {
     if (currentIndex < steps.length - 1) {
       const nextStep = steps[currentIndex + 1];
       setCurrentStep(nextStep);
-      saveCurrentStep(nextStep);
     }
   }, [currentStep]);
 
@@ -226,7 +215,6 @@ export const useAssessmentNavigation = () => {
     if (currentIndex > 0) {
       const prevStep = steps[currentIndex - 1];
       setCurrentStep(prevStep);
-      saveCurrentStep(prevStep);
     }
   }, [currentStep]);
 
@@ -235,7 +223,6 @@ export const useAssessmentNavigation = () => {
 
   return {
     currentStep,
-    completionStatus,
     goToStep,
     goToNextStep,
     goToPreviousStep,

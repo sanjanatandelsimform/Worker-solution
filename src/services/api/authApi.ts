@@ -55,6 +55,7 @@ const getErrorMessage = (error: unknown): string => {
 
 /**
  * Refresh access token using refresh token
+ * UPDATED: Ensures new tokens are stored immediately after successful refresh
  */
 export const refreshAccessToken = async (
   refreshToken: string
@@ -68,8 +69,37 @@ export const refreshAccessToken = async (
     }>("/auth/refresh-token", {
       refreshToken,
     });
-    return response.data.tokens;
+
+    const newTokens = response.data.tokens;
+
+    // CRITICAL: Update localStorage IMMEDIATELY after successful refresh
+    try {
+      const raw = localStorage.getItem(STORAGE_KEY);
+      const parsed = raw ? JSON.parse(raw) : {};
+      const updatedState = {
+        ...parsed,
+        auth: {
+          ...(parsed.auth || {}),
+          tokens: {
+            accessToken: newTokens.accessToken,
+            refreshToken: newTokens.refreshToken,
+          },
+          isAuthenticated: true,
+        },
+      };
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(updatedState));
+    } catch (storageError) {
+      console.error("Failed to update tokens in localStorage:", storageError);
+      // Still return tokens even if storage update fails
+    }
+
+    // Update axios default header for subsequent requests
+    apiClient.defaults.headers.common.Authorization = `Bearer ${newTokens.accessToken}`;
+
+    return newTokens;
   } catch (error) {
+    // Clear tokens on refresh failure
+    localStorage.removeItem(STORAGE_KEY);
     throw new Error(getErrorMessage(error));
   }
 };
@@ -104,7 +134,7 @@ const dispatchLogout = () => {
   }
 };
 
-// Response interceptor for 401 handling with token refresh
+// UPDATED Response interceptor with improved token storage handling
 apiClient.interceptors.response.use(
   response => response,
   async (error: AxiosError) => {
@@ -130,7 +160,15 @@ apiClient.interceptors.response.use(
       return Promise.reject(error);
     }
 
-    const parsedState = JSON.parse(storedState);
+    let parsedState;
+    try {
+      parsedState = JSON.parse(storedState);
+    } catch {
+      localStorage.removeItem(STORAGE_KEY);
+      dispatchLogout();
+      return Promise.reject(error);
+    }
+
     const refreshToken = parsedState?.auth?.tokens?.refreshToken;
 
     if (!refreshToken) {
@@ -139,6 +177,7 @@ apiClient.interceptors.response.use(
       return Promise.reject(error);
     }
 
+    // Queue requests while refresh is in progress
     if (isRefreshing) {
       return new Promise((resolve, reject) => {
         failedQueue.push({ resolve, reject });
@@ -156,22 +195,11 @@ apiClient.interceptors.response.use(
     isRefreshing = true;
 
     try {
+      // Call refreshAccessToken which now handles storage update internally
       const { accessToken: newAccessToken, refreshToken: newRefreshToken } =
         await refreshAccessToken(refreshToken);
 
-      // Update stored tokens
-      const updatedState = {
-        ...parsedState,
-        auth: {
-          ...parsedState.auth,
-          tokens: {
-            accessToken: newAccessToken,
-            refreshToken: newRefreshToken,
-          },
-        },
-      };
-      localStorage.setItem(STORAGE_KEY, JSON.stringify(updatedState));
-
+      // Sync Redux store if available
       if (typeof window !== "undefined" && (window as { store?: unknown }).store) {
         const { setTokens } = await import("@/store/slices/authSlice");
         (window as { store: { dispatch: (action: unknown) => void } }).store.dispatch(
@@ -182,18 +210,22 @@ apiClient.interceptors.response.use(
         );
       }
 
-      apiClient.defaults.headers.common.Authorization = `Bearer ${newAccessToken}`;
+      // Update original request header
       if (originalRequest.headers) {
         originalRequest.headers.Authorization = `Bearer ${newAccessToken}`;
       }
 
+      // Process queued requests with new token
       processQueue(null, newAccessToken);
       isRefreshing = false;
 
+      // Retry original request with new token
       return apiClient(originalRequest);
     } catch (refreshError) {
+      // Clear tokens and logout on refresh failure
       processQueue(refreshError as Error, null);
       isRefreshing = false;
+      localStorage.removeItem(STORAGE_KEY);
       dispatchLogout();
       return Promise.reject(refreshError);
     }
@@ -274,21 +306,6 @@ export const signout = async (token?: string): Promise<void> => {
   } catch (error) {
     // If logout fails due to invalid token, still clear local state
     console.error("Logout error:", error);
-    throw new Error(getErrorMessage(error));
-  }
-};
-
-/**
- * Get the current authenticated user
- */
-export const getCurrentUser = async (): Promise<UserAccount | null> => {
-  try {
-    const response = await apiClient.get<{ user: UserAccount | null }>("/auth/me");
-    return response.data.user;
-  } catch (error) {
-    if (axios.isAxiosError(error) && error.response?.status === 401) {
-      return null;
-    }
     throw new Error(getErrorMessage(error));
   }
 };

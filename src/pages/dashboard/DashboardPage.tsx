@@ -15,7 +15,7 @@ import { resendVerificationEmail } from "@/store/slices/profileSlice";
 import { selectProfileError } from "@/store/selectors/profileSelectors";
 import { useModalConfig } from "@/hooks/useModalConfig";
 import fpoHero from "@/assets/fpo-hero-image.png";
-import { loadCompletionStatus } from "@/utils/assessmentStorage";
+import { useAssessmentStatus } from "@/hooks/useAssessmentStatus";
 import { Tabs } from "@/components/base/tabs/tabs";
 import RecommendationsPage from "../recommendations/RecommendationsPage";
 import BenchmarkPage from "../benchmark/BenchmarkPage";
@@ -33,9 +33,25 @@ export const DashboardPage = () => {
   const [showCooldownModal, setShowCooldownModal] = useState(false);
   const [cooldown, setCooldown] = useState<number>(0); // Cooldown in seconds
 
-  const completion = loadCompletionStatus();
-  const completionCount = completion?.completionCount || 0;
-  console.log("completionCount", user, completionCount);
+  const { completionCount, isLoading: isLoadingAssessment } = useAssessmentStatus();
+
+  // Function to refetch user data
+  const refetchUserData = async () => {
+    if (user?.id) {
+      try {
+        const userDetail = localStorage.getItem("userDetail");
+        if (userDetail) {
+          const parsedUserDetail = JSON.parse(userDetail);
+          const accessToken = parsedUserDetail?.auth?.tokens?.accessToken;
+          if (accessToken) {
+            await dispatch(fetchUserById({ userId: user.id, token: accessToken })).unwrap();
+          }
+        }
+      } catch (error) {
+        console.error("Failed to refetch user data:", error);
+      }
+    }
+  };
 
   useEffect(() => {
     if (user?.id) {
@@ -49,6 +65,27 @@ export const DashboardPage = () => {
       }
     }
   }, [user?.id, dispatch]);
+
+  // Handle visibility change and window focus to keep UI in sync
+  useEffect(() => {
+    const handleVisibilityChange = () => {
+      if (document.visibilityState === "visible") {
+        refetchUserData();
+      }
+    };
+
+    const handleWindowFocus = () => {
+      refetchUserData();
+    };
+
+    document.addEventListener("visibilitychange", handleVisibilityChange);
+    window.addEventListener("focus", handleWindowFocus);
+
+    return () => {
+      document.removeEventListener("visibilitychange", handleVisibilityChange);
+      window.removeEventListener("focus", handleWindowFocus);
+    };
+  }, [user?.id]);
 
   // Cooldown timer effect
   useEffect(() => {
@@ -84,11 +121,20 @@ export const DashboardPage = () => {
       setShowResendSuccess(true);
     } catch (error) {
       console.error("Failed to resend verification email:", error);
-      setErrorMessage(
+      const errorMsg =
         error instanceof Error
           ? error.message
-          : profileError || "Failed to resend verification email. Please try again."
-      );
+          : profileError || "Failed to resend verification email. Please try again.";
+
+      // If email is already verified, refetch user data to update UI
+      if (
+        errorMsg.includes("Email address is already verified") ||
+        errorMsg.toLowerCase().includes("already verified")
+      ) {
+        await refetchUserData();
+      } else {
+        setErrorMessage(errorMsg);
+      }
     }
   };
 
@@ -117,23 +163,17 @@ export const DashboardPage = () => {
       <div className="flex flex-1 flex-col overflow-hidden">
         {/* Main Content */}
         <main className="flex-1 overflow-y-auto p-5 xl:p-10 xl:pl-0">
-          {/* Error Message Display */}
-          {/* {error && (
-            <div className="mb-6">
-              <ErrorMessage
-                errorType={error.type}
-                alertIcon={AlertCircle}
-                errorMessage={error.message}
-                onClose={() => setError(null)}
-              />
-            </div>
-          )} */}
-
           <div className="space-y-6"></div>
           <div>
             <h2 className="text-4xl font-medium text-ws-black">
               {completionCount !== 4 ? `Welcome!` : `Hi ${user?.lastName}`}
             </h2>
+            {completionCount == 4 && (
+              <p>
+                Here's an overview of your workforce, industry, and some recommendations with
+                partners that can add more value to your benefits packages and employee support.
+              </p>
+            )}
 
             {/* Error Message */}
             {errorMessage && (
@@ -149,7 +189,7 @@ export const DashboardPage = () => {
             )}
             {/* Currently using `completionCount` to control visibility. */}
             {/* This logic will be replaced once the backend API provides the required flag */}
-            {completionCount !== 4 ? (
+            {completionCount !== 4 && (
               <div className="mt-6 border border-ws-gray-50 rounded-xl p-4 bg-ws-black-80 shadow-sm flex gap-4 justify-between flex-col lg:flex-row">
                 <div className="flex-1">
                   <h2 className="text-ws-cyan-10 text-3xl font-medium mb-2">
@@ -164,10 +204,8 @@ export const DashboardPage = () => {
                   <img src={fpoHero} alt="Insight hero" className="w-full" />
                 </div>
               </div>
-            ) : (
-              ""
             )}
-            {(!emailVerify || completionCount !== 4) && (
+            {!emailVerify && (
               <DashboardCard
                 title="Verify your email"
                 description={
@@ -209,24 +247,26 @@ export const DashboardPage = () => {
             )}
           </div>
           {/* This will be conditionally rendered; uncomment when this feature is implemented. */}
-          <div className="mt-10">
-            <Tabs>
-              <Tabs.List
-                size="md"
-                type="button-brand"
-                items={[
-                  { id: "recommendations", label: "Recommendations" },
-                  { id: "benchmark", label: "Benchmark" },
-                ]}
-              />
-              <Tabs.Panel id="recommendations" className="pt-12">
-                <RecommendationsPage />
-              </Tabs.Panel>
-              <Tabs.Panel id="benchmark" className="pt-12">
-                <BenchmarkPage />
-              </Tabs.Panel>
-            </Tabs>
-          </div>
+          {emailVerify && completionCount == 4 && (
+            <div className="mt-10">
+              <Tabs>
+                <Tabs.List
+                  size="md"
+                  type="button-brand"
+                  items={[
+                    { id: "recommendations", label: "Recommendations" },
+                    { id: "benchmark", label: "Benchmark" },
+                  ]}
+                />
+                <Tabs.Panel id="recommendations" className="pt-12">
+                  <RecommendationsPage />
+                </Tabs.Panel>
+                <Tabs.Panel id="benchmark" className="pt-12">
+                  <BenchmarkPage />
+                </Tabs.Panel>
+              </Tabs>
+            </div>
+          )}
         </main>
       </div>
 

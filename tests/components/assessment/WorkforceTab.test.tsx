@@ -26,14 +26,6 @@ jest.mock("@/services/api/assessmentApi", () => ({
   submitWorkforce: jest.fn(),
 }));
 
-// Mock localStorage utilities
-jest.mock("@/utils/assessmentStorage", () => ({
-  markTabCompleted: jest.fn(),
-  isTabCompleted: jest.fn(() => false),
-  loadCompletionStatus: jest.fn(),
-  saveCurrentStep: jest.fn(),
-  loadCurrentStep: jest.fn(),
-}));
 
 const mockGetAssessmentEmpty: ApiResponse = {
   success: true,

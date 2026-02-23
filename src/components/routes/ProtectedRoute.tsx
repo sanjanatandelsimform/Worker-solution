@@ -1,4 +1,4 @@
-import { useEffect } from "react";
+import { useEffect, useRef } from "react";
 import { Navigate, useLocation } from "react-router-dom";
 import { useAppDispatch, useAppSelector } from "@/store/hooks";
 import { syncUserState } from "@/store/slices/authSlice";
@@ -31,9 +31,8 @@ interface ProtectedRouteProps {
 /**
  * Production ProtectedRoute:
  * - Uses BOTH Redux and localStorage for token check (avoids hydration/timing races)
- * - Only redirects when accessToken is invalid AND refresh fails
- * - Token validation: axios interceptor handles 401 + refresh; ProtectedRoute trusts
- *   stored tokens until syncUserState/getCurrentUser explicitly fails
+ * - Only syncs user state ONCE per session (not on every route change)
+ * - Only redirects when tokens are truly invalid
  */
 export const ProtectedRoute = ({
   children,
@@ -45,13 +44,18 @@ export const ProtectedRoute = ({
   const location = useLocation();
   const { tokens, user } = useAppSelector(state => state.auth);
 
+  // Track if we've already synced user in this session
+  const hasSyncedRef = useRef(false);
+
   const hasTokensInRedux = !!tokens?.accessToken;
   const hasTokensInStorage = !!getStoredTokens();
   const hasTokens = hasTokensInRedux || hasTokensInStorage;
 
   useEffect(() => {
-    if (!hasTokens || user) return;
-    dispatch(syncUserState());
+    if (hasTokens && !user && !hasSyncedRef.current) {
+      hasSyncedRef.current = true;
+      dispatch(syncUserState());
+    }
   }, [hasTokens, user, dispatch]);
 
   if (!hasTokens) {

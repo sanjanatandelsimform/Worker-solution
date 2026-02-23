@@ -126,110 +126,6 @@ export const DynamicQuestionRenderer = ({
       )
     );
   };
-
-  // Render field for STRUCTURED_ARRAY
-  // const renderStructuredArrayField = (
-  //   field: {
-  //     name: string;
-  //     type: string;
-  //     label: string;
-  //     placeholder?: string;
-  //     width?: string;
-  //     options?: Array<{ id: string; label: string }>;
-  //     pattern?: string;
-  //   },
-  //   index: number,
-  //   _showRemoveButton: boolean,
-  //   _onRemove: () => void,
-  //   arrayKey?: string
-  // ) => {
-  //   const keyToUse = arrayKey || question.key;
-  //   const currentItems = (answers[keyToUse] as Array<{ id: number }>) || [];
-
-  //   // Get the actual item from state, not from getArrayItems
-  //   const item = currentItems[index] || { id: generateId() };
-  //   const widthClass = field.width || "flex-1";
-
-  //   // Check for field-level error
-  //   const fieldErrorKey = `${keyToUse}.${index}.${field.name}`;
-  //   const fieldError = errors[fieldErrorKey];
-  //   // Also check question-level error for backward compatibility
-  //   const questionError = errors[keyToUse];
-  //   const hasError = !!fieldError || !!questionError;
-
-  //   // Debug logging
-  //   // eslint-disable-next-line no-console
-  //   console.debug(`[renderStructuredArrayField] ${fieldErrorKey}:`, {
-  //     fieldError,
-  //     questionError,
-  //     hasError,
-  //     errors: Object.keys(errors).filter(k => k.startsWith(keyToUse)),
-  //   });
-
-  //   return (
-  //     <div
-  //       key={`${keyToUse}-${(item as { id: number }).id}-${field.name}`}
-  //       className={cx("flex flex-col gap-1.5", widthClass)}
-  //     >
-  //       {field.type === "select" ? (
-  //         <>
-  //           <Select
-  //             className="w-full flex items-start"
-  //             key={field.name}
-  //             size="md"
-  //             label={field.label}
-  //             placeholder={field.placeholder}
-  //             items={field.options?.map(opt => ({ id: opt.id, label: opt.label }))}
-  //             selectedKey={(item as Record<string, string>)[field.name] || ""}
-  //             onSelectionChange={key =>
-  //               updateArrayItemField(
-  //                 keyToUse,
-  //                 (item as { id: number }).id,
-  //                 field.name,
-  //                 key as string,
-  //                 "text"
-  //               )
-  //             }
-  //             isInvalid={hasError}
-  //           >
-  //             {(selectItem: SelectItemType) => (
-  //               <Select.Item id={selectItem.id}>{selectItem.label || ""}</Select.Item>
-  //             )}
-  //           </Select>
-  //           {fieldError && <span className="text-sm text-red-600">{fieldError}</span>}
-  //         </>
-  //       ) : (
-  //         <>
-  //           <Input
-  //             key={field.name}
-  //             size="md"
-  //             label={field.label}
-  //             placeholder={field.placeholder}
-  //             type={field.name === "zipCode" ? "text" : "text"}
-  //             inputMode={field.name === "zipCode" ? "numeric" : undefined}
-  //             value={(item as Record<string, string>)[field.name] ?? ""}
-  //             pattern={field.name === "zipCode" ? "\\d{5}" : field.pattern}
-  //             maxLength={field.name === "zipCode" ? 5 : undefined}
-  //             isInvalid={hasError}
-  //             tooltip={fieldError ? fieldError : undefined}
-  //             onChange={(val: string) => {
-  //               if (field.name !== "zipCode" || /^\d{0,5}$/.test(val)) {
-  //                 updateArrayItemField(
-  //                   keyToUse,
-  //                   (item as { id: number }).id,
-  //                   field.name,
-  //                   val,
-  //                   field.type
-  //                 );
-  //               }
-  //             }}
-  //           />
-  //           {fieldError && <span className="text-sm text-red-600">{fieldError}</span>}
-  //         </>
-  //       )}
-  //     </div>
-  //   );
-  // };
   // Render field for STRUCTURED_ARRAY
   const renderStructuredArrayField = (
     field: {
@@ -614,41 +510,12 @@ export const DynamicQuestionRenderer = ({
           </RadioGroup>
         </div>
       );
-
-    // case "SINGLE_SELECT_DROPDOWN":
-    //   return (
-    //     <div className="flex w-full flex-col gap-2" data-question-key={question.key}>
-    //       <Label isRequired={question.isRequired} className="text-base">
-    //         {question.displayOrder}. {question.questionText}
-    //       </Label>
-    //       <Select
-    //         className="w-full"
-    //         // style={question?.isRequired ? { border: "1px solid red" } : {}}
-    //         size="md"
-    //         placeholder={question.placeholder || "Select an option"}
-    //         items={question.options?.map(opt => ({ id: opt.value, label: opt.label }))}
-    //         selectedKey={currentAnswer ? String(currentAnswer) : ""} // Use empty string instead of undefined
-    //         onSelectionChange={key => {
-    //           onAnswerChange(question.key, key as string); // Update state synchronously
-    //         }}
-    //         error={error ? true : false}
-    //       />
-    //       {error && <span className="text-sm text-red-600">{error}</span>}
-    //     </div>
-    //   );
-
     case "SINGLE_SELECT_DROPDOWN":
       return (
         <div className="flex w-full flex-col gap-2" data-question-key={question.key}>
           <Label isRequired={question.isRequired} className="text-base">
             {displayOrder}. {question.questionText}
           </Label>
-          {error && (
-            <div className="flex items-center gap-2">
-              <InputInfo className="text-red-600" />
-              <span className="text-sm text-red-600">{error}</span>
-            </div>
-          )}
           <Select
             className="w-full"
             size="md"
@@ -671,6 +538,12 @@ export const DynamicQuestionRenderer = ({
           >
             {(item: SelectItemType) => <Select.Item id={item.id}>{item.label || ""}</Select.Item>}
           </Select>
+          {error && (
+            <div className="flex items-center gap-2">
+              <InputInfo className="text-red-600" />
+              <span className="text-sm text-red-600">{error}</span>
+            </div>
+          )}
           {/* {error && <span className="text-sm text-red-600"><InputInfo/>{error}</span>} */}
           {question.conditionalQuestion &&
             renderConditionalQuestion(question.conditionalQuestion, question.key)}

@@ -13,7 +13,7 @@ import { selectUser } from "@/store/selectors/authSelectors";
 const steps = [
   { id: "workforce", label: "Workforce" },
   { id: "compensation", label: "Compensation" },
-  { id: "benefits", label: "Benefits" },
+  { id: "benefits", label: "benefits" },
   { id: "goals", label: "Goals" },
 ];
 
@@ -40,6 +40,7 @@ export default function AssessmentWorkforcePage() {
       window as {
         __dynamicTabValidation?: {
           submit: () => Promise<{ success: boolean }>;
+          clearErrors?: () => void;
           validate: () => boolean;
           getAnswers: () => Record<string, unknown>;
           getErrors: () => Record<string, string>;
@@ -68,59 +69,38 @@ export default function AssessmentWorkforcePage() {
   };
 
   const handleBack = async () => {
-    // Use functional state update to get fresh currentStep value
+    // First clear errors on current tab BEFORE navigating away
+    const dynamicTabValidation = (
+      window as {
+        __dynamicTabValidation?: {
+          submit: () => Promise<{ success: boolean }>;
+          saveWithoutValidation?: () => Promise<{ success: boolean }>;
+          clearErrors?: () => void;
+        };
+      }
+    ).__dynamicTabValidation;
+
+    dynamicTabValidation?.clearErrors?.();
     setCurrentStep(prevStep => {
-      // Recalculate index based on CURRENT state (not closure)
       const currentIndex = steps.findIndex(step => step.id === prevStep);
 
-      // Only navigate to dashboard if on first step (workforce)
       if (currentIndex === 0) {
-        console.debug("[AssessmentWorkforce] On first step, navigating to dashboard");
         navigate("/dashboard");
-        return prevStep; // Don't change step
+        return prevStep;
       }
 
-      // Ensure we have a valid previous step (defensive check)
       if (currentIndex < 0 || currentIndex >= steps.length) {
-        console.error(
-          "[AssessmentWorkforce] Invalid step index:",
-          currentIndex,
-          "prevStep:",
-          prevStep
-        );
         navigate("/dashboard");
-        return prevStep; // Don't change step
+        return prevStep;
       }
 
-      // Calculate previous step explicitly
-      const previousStepIndex = currentIndex - 1;
-      const previousStep = steps[previousStepIndex];
-
+      const previousStep = steps[currentIndex - 1];
       if (!previousStep) {
-        console.error("[AssessmentWorkforce] No previous step found for index:", previousStepIndex);
         navigate("/dashboard");
-        return prevStep; // Don't change step
+        return prevStep;
       }
-      return previousStep.id; // Return new step
+      return previousStep.id;
     });
-    setTimeout(async () => {
-      const dynamicTabValidation = (
-        window as {
-          __dynamicTabValidation?: {
-            submit: () => Promise<{ success: boolean }>;
-          };
-        }
-      ).__dynamicTabValidation;
-
-      if (dynamicTabValidation) {
-        try {
-          await dynamicTabValidation.submit();
-          console.debug("[AssessmentWorkforce] Data saved after Back navigation");
-        } catch (error) {
-          console.warn("[AssessmentWorkforce] Background save failed after Back:", error);
-        }
-      }
-    }, 0);
   };
 
   const handleClose = () => {
