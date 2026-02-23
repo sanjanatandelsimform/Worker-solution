@@ -71,7 +71,7 @@ install_dependencies:
       - node_modules/ # Share node_modules with downstream jobs
     expire_in: 1h
   rules:
-    - if: $CI_MERGE_REQUEST_TARGET_BRANCH_NAME == "develop" || $CI_MERGE_REQUEST_TARGET_BRANCH_NAME == "qa"
+    - if: $CI_MERGE_REQUEST_TARGET_BRANCH_NAME == "develop1" || $CI_MERGE_REQUEST_TARGET_BRANCH_NAME == "qa"
       when: always
 
 # Job: Lint
@@ -85,7 +85,7 @@ lint:
   script:
     - npm run lint
   rules:
-    - if: $CI_MERGE_REQUEST_TARGET_BRANCH_NAME == "develop" || $CI_MERGE_REQUEST_TARGET_BRANCH_NAME == "qa"
+    - if: $CI_MERGE_REQUEST_TARGET_BRANCH_NAME == "develop1" || $CI_MERGE_REQUEST_TARGET_BRANCH_NAME == "qa"
       when: always
 
 # Job: Unit Tests
@@ -108,7 +108,7 @@ npm-test:
         path: coverage/cobertura-coverage.xml
     expire_in: 1 week
   rules:
-    - if: $CI_MERGE_REQUEST_TARGET_BRANCH_NAME == "develop" || $CI_MERGE_REQUEST_TARGET_BRANCH_NAME == "qa"
+    - if: $CI_MERGE_REQUEST_TARGET_BRANCH_NAME == "develop1" || $CI_MERGE_REQUEST_TARGET_BRANCH_NAME == "qa"
       when: always
 
 # Job: Build
@@ -126,7 +126,7 @@ build:
       - dist/ # Compiled JavaScript output
     expire_in: 1 week
   rules:
-    - if: $CI_MERGE_REQUEST_TARGET_BRANCH_NAME == "develop" || $CI_MERGE_REQUEST_TARGET_BRANCH_NAME == "qa"
+    - if: $CI_MERGE_REQUEST_TARGET_BRANCH_NAME == "develop1" || $CI_MERGE_REQUEST_TARGET_BRANCH_NAME == "qa"
       when: always
 
 # =============================================================================
@@ -167,5 +167,5 @@ sonarqube:
         -Dsonar.sources=./src \
         -Dsonar.javascript.lcov.reportPaths=coverage/lcov.info
   rules:
-    - if: $CI_MERGE_REQUEST_TARGET_BRANCH_NAME == "develop" || $CI_MERGE_REQUEST_TARGET_BRANCH_NAME == "qa"
+    - if: $CI_MERGE_REQUEST_TARGET_BRANCH_NAME == "develop1" || $CI_MERGE_REQUEST_TARGET_BRANCH_NAME == "qa"
       when: always
