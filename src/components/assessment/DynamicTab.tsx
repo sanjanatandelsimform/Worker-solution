@@ -64,31 +64,39 @@ export const DynamicTab = forwardRef<
 
     const handleAnswerChange = useCallback(
       (key: string, value: unknown) => {
-        console.debug("[DynamicTab] Answer changed:", {
-          key,
-          value,
-          hasErrors: Object.keys(errors).length > 0,
-          errorForThisKey: errors[key],
-          timestamp: Date.now(),
-        });
         updateAnswer(key, value);
-        // Clear error for this key and any field-level errors (e.g. topWorkLocations.0.state, .0.zipCode, healthPlanParticipationRates.doNotParticipate)
-        const hasRelevantError =
-          errors[key] || Object.keys(errors).some(k => k.startsWith(`${key}.`));
-        if (hasRelevantError) {
-          setErrors(prev => {
-            const next = { ...prev };
-            delete next[key];
-            Object.keys(next).forEach(k => {
-              if (k.startsWith(`${key}.`)) delete next[k];
-            });
-            return next;
+
+        if (Object.keys(errors).length === 0) return;
+
+        setErrors(prev => {
+          const next = { ...prev };
+
+          // Clear exact key error
+          delete next[key];
+
+          Object.keys(next).forEach(k => {
+            if (k.startsWith(`${key}.`)) {
+              const remainder = k.slice(key.length + 1);
+              if (/^\d+\./.test(remainder)) {
+                delete next[k];
+              } else if (!remainder.includes(".")) {
+                const incomingObj = value as Record<string, unknown>;
+                if (
+                  incomingObj &&
+                  incomingObj[remainder] !== undefined &&
+                  incomingObj[remainder] !== ""
+                ) {
+                  delete next[k];
+                }
+              }
+            }
           });
-        }
+
+          return next;
+        });
       },
       [updateAnswer, errors]
     );
-
     const validateAnswers = useCallback(() => {
       const newErrors: Record<string, string> = {};
       let isValid = true;
@@ -220,78 +228,64 @@ export const DynamicTab = forwardRef<
             });
           }
         }
-
-        if (
-          question.conditionalQuestion &&
-          (() => {
+        if (question.conditionalQuestion) {
+          // First, determine if the conditional question is currently visible
+          const isFirstLevelShown = (() => {
             const showWhen = question.conditionalQuestion.showWhen;
-            if (showWhen === "yes") {
-              return value === true;
-            } else if (showWhen === "no") {
-              return value === false;
-            } else {
-              const showWhenNormalized = String(showWhen).toLowerCase();
-              const valueNormalized = String(value || "").toLowerCase();
-              return valueNormalized === showWhenNormalized;
-            }
-          })() &&
-          question.conditionalQuestion.question.validationRules.required
-        ) {
-          const conditionalValue = answers[question.conditionalQuestion.question.key];
-          const conditionalRules = question.conditionalQuestion.question.validationRules;
+            if (showWhen === "yes") return value === true;
+            if (showWhen === "no") return value === false;
+            return String(value || "").toLowerCase() === String(showWhen).toLowerCase();
+          })();
 
-          if (
-            conditionalValue === null ||
-            conditionalValue === undefined ||
-            conditionalValue === ""
-          ) {
-            newErrors[question.conditionalQuestion.question.key] =
-              question.conditionalQuestion.question.validationRules.errorMessage ||
-              `${question.conditionalQuestion.question.questionText} is required`;
-            isValid = false;
-          }
+          if (isFirstLevelShown) {
+            const conditionalValue = answers[question.conditionalQuestion.question.key];
+            const conditionalRules = question.conditionalQuestion.question.validationRules;
 
-          const isConditionalEmpty =
-            conditionalRules.type === "ARRAY"
-              ? !Array.isArray(conditionalValue) || (conditionalValue as unknown[]).length === 0
-              : conditionalValue === null ||
-                conditionalValue === undefined ||
-                conditionalValue === "";
+            // Only enforce required validation if the first-level CQ is marked required
+            if (conditionalRules.required) {
+              const isConditionalEmpty =
+                conditionalRules.type === "ARRAY"
+                  ? !Array.isArray(conditionalValue) || (conditionalValue as unknown[]).length === 0
+                  : conditionalValue === null ||
+                    conditionalValue === undefined ||
+                    conditionalValue === "";
 
-          if (isConditionalEmpty) {
-            newErrors[question.conditionalQuestion.question.key] =
-              conditionalRules.errorMessage ||
-              `${question.conditionalQuestion.question.questionText} is required`;
-            isValid = false;
-          }
-
-          const firstLevelCq = question.conditionalQuestion.question;
-          if (
-            firstLevelCq.conditionalQuestion &&
-            conditionalValue !== null &&
-            conditionalValue !== undefined
-          ) {
-            // Check if nested condition is met
-            const nestedShowWhen = firstLevelCq.conditionalQuestion.showWhen;
-            const shouldShowNested =
-              nestedShowWhen === "yes"
-                ? conditionalValue === true
-                : nestedShowWhen === "no"
-                  ? conditionalValue === false
-                  : String(conditionalValue).toLowerCase() === String(nestedShowWhen).toLowerCase();
-
-            if (
-              shouldShowNested &&
-              firstLevelCq.conditionalQuestion.question.validationRules.required
-            ) {
-              const nestedKey = firstLevelCq.conditionalQuestion.question.key;
-              const nestedValue = answers[nestedKey];
-
-              if (nestedValue === null || nestedValue === undefined || nestedValue === "") {
-                newErrors[nestedKey] =
-                  firstLevelCq.conditionalQuestion.question.validationRules.errorMessage ||
-                  `${firstLevelCq.conditionalQuestion.question.questionText} is required`;
+              if (isConditionalEmpty) {
+                newErrors[question.conditionalQuestion.question.key] =
+                  conditionalRules.errorMessage ||
+                  `${question.conditionalQuestion.question.questionText} is required`;
                 isValid = false;
+              }
+            }
+            const firstLevelCq = question.conditionalQuestion.question;
+            if (
+              firstLevelCq.conditionalQuestion &&
+              conditionalValue !== null &&
+              conditionalValue !== undefined &&
+              conditionalValue !== ""
+            ) {
+              const nestedShowWhen = firstLevelCq.conditionalQuestion.showWhen;
+              const shouldShowNested =
+                nestedShowWhen === "yes"
+                  ? conditionalValue === true
+                  : nestedShowWhen === "no"
+                    ? conditionalValue === false
+                    : String(conditionalValue).toLowerCase() ===
+                      String(nestedShowWhen).toLowerCase();
+
+              if (
+                shouldShowNested &&
+                firstLevelCq.conditionalQuestion.question.validationRules.required
+              ) {
+                const nestedKey = firstLevelCq.conditionalQuestion.question.key;
+                const nestedValue = answers[nestedKey];
+
+                if (nestedValue === null || nestedValue === undefined || nestedValue === "") {
+                  newErrors[nestedKey] =
+                    firstLevelCq.conditionalQuestion.question.validationRules.errorMessage ||
+                    `${firstLevelCq.conditionalQuestion.question.questionText} is required`;
+                  isValid = false;
+                }
               }
             }
           }
