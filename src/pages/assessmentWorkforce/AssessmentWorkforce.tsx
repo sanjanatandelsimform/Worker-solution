@@ -9,6 +9,7 @@ import BenefitsTab from "./BenefitsTab";
 import GoalsTab from "./GoalsTab";
 import { useAppSelector } from "@/store/hooks";
 import { selectUser } from "@/store/selectors/authSelectors";
+import { useAssessmentStatus } from "@/hooks/useAssessmentStatus";
 
 const steps = [
   { id: "workforce", label: "Workforce" },
@@ -16,11 +17,26 @@ const steps = [
   { id: "benefits", label: "benefits" },
   { id: "goals", label: "Goals" },
 ];
+// Helper: returns first incomplete step id
+const getInitialStep = (completionCount: number): string | null => {
+  if (completionCount >= steps.length) return null;
+  return steps[completionCount].id;
+};
 
 export default function AssessmentWorkforcePage() {
-  const [currentStep, setCurrentStep] = useState("workforce");
+  const { completionCount, isLoading } = useAssessmentStatus();
+  const [manualStep, setManualStep] = useState<string | null>(null);
+  const resolvedStep = !isLoading ? getInitialStep(completionCount) : null;
+  const currentStep = manualStep ?? resolvedStep;
+
   const navigate = useNavigate();
   const user = useAppSelector(selectUser);
+
+  useEffect(() => {
+    if (!isLoading && completionCount >= steps.length) {
+      navigate("/dashboard");
+    }
+  }, [isLoading, completionCount, navigate]);
 
   // Check if email is verified before allowing access
   useEffect(() => {
@@ -34,7 +50,7 @@ export default function AssessmentWorkforcePage() {
   const isLastStep = currentStepIndex === steps.length - 1;
 
   const handleNext = async () => {
-    // setCurrentStep(steps[currentStepIndex + 1].id);
+    // setManualStep(steps[currentStepIndex + 1].id);
     // This code is required; I will uncomment it.
     const dynamicTabValidation = (
       window as {
@@ -60,7 +76,7 @@ export default function AssessmentWorkforcePage() {
         if (isLastStep) {
           navigate("/dashboard");
         } else {
-          setCurrentStep(steps[currentStepIndex + 1].id);
+          setManualStep(steps[currentStepIndex + 1].id);
         }
       }
     } catch (error) {
@@ -69,7 +85,6 @@ export default function AssessmentWorkforcePage() {
   };
 
   const handleBack = async () => {
-    // First clear errors on current tab BEFORE navigating away
     const dynamicTabValidation = (
       window as {
         __dynamicTabValidation?: {
@@ -81,44 +96,30 @@ export default function AssessmentWorkforcePage() {
     ).__dynamicTabValidation;
 
     dynamicTabValidation?.clearErrors?.();
-    setCurrentStep(prevStep => {
-      const currentIndex = steps.findIndex(step => step.id === prevStep);
 
-      if (currentIndex === 0) {
-        navigate("/dashboard");
-        return prevStep;
-      }
+    // Use currentStep directly (manualStep ?? resolvedStep) instead of prevStep
+    // prevStep would be null if user landed here via resolvedStep without setting manualStep
+    const currentIndex = steps.findIndex(step => step.id === currentStep);
 
-      if (currentIndex < 0 || currentIndex >= steps.length) {
-        navigate("/dashboard");
-        return prevStep;
-      }
+    if (currentIndex <= 0) {
+      navigate("/dashboard");
+      return;
+    }
 
-      const previousStep = steps[currentIndex - 1];
-      if (!previousStep) {
-        navigate("/dashboard");
-        return prevStep;
-      }
-      return previousStep.id;
-    });
+    const previousStep = steps[currentIndex - 1];
+    if (!previousStep) {
+      navigate("/dashboard");
+      return;
+    }
+
+    setManualStep(previousStep.id);
   };
 
   const handleClose = () => {
     navigate("/dashboard");
   };
 
-  // Get loading state from DynamicTab
-  const dynamicTabValidation = (
-    window as {
-      __dynamicTabValidation?: {
-        isSaving?: boolean;
-        isLoadingGet?: boolean;
-      };
-    }
-  ).__dynamicTabValidation;
-
-  // const isSaving = dynamicTabValidation?.isSaving || false;
-  const isLoadingGet = dynamicTabValidation?.isLoadingGet || false;
+  const isLoadingGet = currentStep === null;
 
   return (
     <div className="flex min-h-screen flex-col bg-gray-50">
@@ -156,39 +157,47 @@ export default function AssessmentWorkforcePage() {
         {/* Progress Stepper */}
         <ProgressStepper
           steps={steps}
-          currentStep={currentStep}
+          currentStep={currentStep ?? "workforce"}
           onStepChange={stepId => {
             // Only allow navigation to completed steps or current step
             const targetIndex = steps.findIndex(step => step.id === stepId);
             const currentIdx = steps.findIndex(step => step.id === currentStep);
             if (targetIndex <= currentIdx) {
-              setCurrentStep(stepId);
+              setManualStep(stepId);
             }
           }}
         />
-
         {/* Content Area */}
         <div className="my-8 mx-12.5">
-          {currentStep === "workforce" && (
-            <WorkforceTab
-              onNext={() => setCurrentStep(steps[currentStepIndex + 1].id)}
-              onSuccess={() => {}}
-            />
-          )}
-          {currentStep === "compensation" && (
-            <CompensationTab
-              onNext={() => setCurrentStep(steps[currentStepIndex + 1].id)}
-              onSuccess={() => {}}
-            />
-          )}
-          {currentStep === "benefits" && (
-            <BenefitsTab
-              onNext={() => setCurrentStep(steps[currentStepIndex + 1].id)}
-              onSuccess={() => {}}
-            />
-          )}
-          {currentStep === "goals" && (
-            <GoalsTab onNext={() => navigate("/dashboard")} onSuccess={() => {}} />
+          {currentStep === null ? (
+            // Don't render anything until we know which tab to start on
+            <div className="flex items-center justify-center py-12">
+              <div className="h-6 w-6 animate-spin rounded-full border-4 border-ws-cyan-60 border-t-transparent" />
+            </div>
+          ) : (
+            <>
+              {currentStep === "workforce" && (
+                <WorkforceTab
+                  onNext={() => setManualStep(steps[currentStepIndex + 1].id)}
+                  onSuccess={() => {}}
+                />
+              )}
+              {currentStep === "compensation" && (
+                <CompensationTab
+                  onNext={() => setManualStep(steps[currentStepIndex + 1].id)}
+                  onSuccess={() => {}}
+                />
+              )}
+              {currentStep === "benefits" && (
+                <BenefitsTab
+                  onNext={() => setManualStep(steps[currentStepIndex + 1].id)}
+                  onSuccess={() => {}}
+                />
+              )}
+              {currentStep === "goals" && (
+                <GoalsTab onNext={() => navigate("/dashboard")} onSuccess={() => {}} />
+              )}
+            </>
           )}
         </div>
       </div>
