@@ -1,6 +1,6 @@
 import { createSlice, createAsyncThunk, type PayloadAction } from "@reduxjs/toolkit";
 import type { UserAccount } from "@/types/auth";
-import { getCurrentUser, refreshAccessToken, signout as signoutApi } from "@/services/api/authApi";
+import { refreshAccessToken, signout as signoutApi } from "@/services/api/authApi";
 
 const STORAGE_KEY = "userDetail";
 
@@ -19,6 +19,17 @@ const getStoredTokens = (): { accessToken: string; refreshToken: string } | null
     const refreshToken = parsed?.auth?.tokens?.refreshToken;
     if (accessToken && refreshToken) return { accessToken, refreshToken };
     return null;
+  } catch {
+    return null;
+  }
+};
+
+const getStoredUser = (): UserAccount | null => {
+  try {
+    const raw = localStorage.getItem(STORAGE_KEY);
+    if (!raw) return null;
+    const parsed = JSON.parse(raw);
+    return parsed?.auth?.user || null;
   } catch {
     return null;
   }
@@ -50,7 +61,6 @@ export interface AuthState {
   user: UserAccount | null;
   isAuthenticated: boolean;
   isLoading: boolean;
-  /** Set to true after first initializeAuth attempt (fulfilled or rejected) */
   authInitAttempted: boolean;
   tokens: {
     accessToken: string | null;
@@ -63,45 +73,38 @@ export const initializeAuth = createAsyncThunk<
   void,
   { rejectValue: string }
 >("auth/initializeAuth", async (_, { rejectWithValue }) => {
-  const stored = getStoredTokens();
-  if (!stored) {
+  const storedTokens = getStoredTokens();
+  const storedUser = getStoredUser();
+
+  if (!storedTokens || !storedUser) {
     return null;
   }
 
-  const tryWithToken = async (
-    accessToken: string,
-    refreshToken: string
-  ): Promise<{ user: UserAccount; tokens: { accessToken: string; refreshToken: string } }> => {
-    const user = await getCurrentUser();
-    if (user) {
-      return { user, tokens: { accessToken, refreshToken } };
-    }
-    const newTokens = await refreshAccessToken(refreshToken);
-    // Persist new tokens so request interceptor sends them on next getCurrentUser
-    try {
-      const raw = localStorage.getItem(STORAGE_KEY);
-      const base = raw ? JSON.parse(raw) : {};
-      const next = {
-        ...base,
-        auth: {
-          ...(base.auth || {}),
-          tokens: newTokens,
-        },
-      };
-      localStorage.setItem(STORAGE_KEY, JSON.stringify(next));
-    } catch {
-      // ignore
-    }
-    const userAfterRefresh = await getCurrentUser();
-    if (!userAfterRefresh) {
-      throw new Error("Session invalid");
-    }
-    return { user: userAfterRefresh, tokens: newTokens };
-  };
-
+  // NEW: Check if access token is expired before attempting refresh
+  // This prevents unnecessary refresh calls when token is still valid
   try {
-    return await tryWithToken(stored.accessToken, stored.refreshToken);
+    // Decode JWT to check expiry (simple check - in production, use a library like jwt-decode)
+    const tokenPayload = JSON.parse(atob(storedTokens.accessToken.split(".")[1]));
+    const expiryTime = tokenPayload.exp * 1000; // Convert to milliseconds
+    const currentTime = Date.now();
+    const bufferTime = 5 * 60 * 1000; // 5-minute buffer
+
+    // If token is still valid (not expired within buffer), use stored tokens
+    if (expiryTime > currentTime + bufferTime) {
+      console.debug("[initializeAuth] Access token still valid, using stored credentials");
+      return { user: storedUser, tokens: storedTokens };
+    }
+
+    // Token is about to expire or already expired - attempt refresh
+    console.debug("[initializeAuth] Access token expired, attempting refresh");
+    const newTokens = await refreshAccessToken(storedTokens.refreshToken);
+
+    // Update localStorage with new tokens
+    persistAuth(storedUser, newTokens);
+
+    return { user: storedUser, tokens: newTokens };
   } catch (e) {
+    // If JWT decode fails or refresh fails, check if it's an auth failure or network issue
     const isAuthFailure =
       e instanceof Error &&
       (e.message?.includes("Session invalid") || /unauthorized|invalid|expired/i.test(e.message));
@@ -111,41 +114,25 @@ export const initializeAuth = createAsyncThunk<
       return rejectWithValue(e instanceof Error ? e.message : "Auth initialization failed");
     }
 
-    // Network/server error: keep session, fulfill with stored user/tokens so user can retry
-    try {
-      const raw = localStorage.getItem(STORAGE_KEY);
-      const parsed = raw ? JSON.parse(raw) : null;
-      const user = parsed?.auth?.user;
-      if (user && stored) {
-        return { user, tokens: stored };
-      }
-    } catch {
-      // ignore
-    }
-    clearAuthStorage();
-    return rejectWithValue(e instanceof Error ? e.message : "Auth initialization failed");
+    // Network/server error: keep session, return stored user/tokens
+    console.warn("[initializeAuth] Token refresh failed, using stored credentials:", e);
+    return { user: storedUser, tokens: storedTokens };
   }
 });
 
 export const syncUserState = createAsyncThunk<UserAccount, void, { rejectValue: string }>(
   "auth/syncUserState",
-  async (_, { getState, dispatch, rejectWithValue }) => {
+  async (_, { getState, rejectWithValue }) => {
     const state = getState() as { auth: AuthState };
-    let tokens = state.auth.tokens;
-    if (!tokens?.accessToken) {
-      const stored = getStoredTokens();
-      if (stored) {
-        dispatch(setTokens(stored));
-        tokens = stored;
-      }
-    }
-    if (!tokens?.accessToken) {
-      return rejectWithValue("No token");
-    }
-    const user = await getCurrentUser();
+    const storedUser = getStoredUser();
+
+    // Use Redux user if available, otherwise use stored user
+    const user = state.auth.user || storedUser;
+
     if (!user) {
-      return rejectWithValue("Session invalid");
+      return rejectWithValue("No user data available");
     }
+
     return user;
   }
 );
@@ -163,7 +150,6 @@ export const logoutThunk = createAsyncThunk<
     }
   } catch (e) {
     console.error("Logout API error:", e);
-    // Still clear local state
   }
   clearAuthStorage();
 });

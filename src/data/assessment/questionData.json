@@ -538,7 +538,7 @@
           "validationRules": {
             "type": "YES_NO",
             "required": true,
-            "errorMessage": "Please indicate if you offer annual raises"
+            "errorMessage": "Select an option"
           },
           "conditionalQuestion": {
             "showWhen": "yes",
@@ -858,7 +858,7 @@
             { "label": "May", "value": "May", "displayOrder": 5 },
             { "label": "June", "value": "June", "displayOrder": 6 },
             { "label": "July", "value": "July", "displayOrder": 7 },
-            { "label": "August", "value": "Aug", "displayOrder": 8 },
+            { "label": "August", "value": "August", "displayOrder": 8 },
             { "label": "September", "value": "September", "displayOrder": 9 },
             { "label": "October", "value": "October", "displayOrder": 10 },
             { "label": "November", "value": "November", "displayOrder": 11 },
@@ -1150,7 +1150,7 @@
           "validationRules": {
             "type": "SINGLE_SELECT",
             "required": true,
-            "errorMessage":"Select an option"
+            "errorMessage": "Select an option"
           },
           "schemaVersion": 1,
           "isRequired": true,
@@ -1195,13 +1195,13 @@
         {
           "key": "lowestHealthPlanPremium",
           "questionText": "What is the employee-only monthly premium for the lowest-cost health plan your company offers?",
-          "questionType": "TEXT_INPUT",
+          "questionType": "NUMBER_INPUT",
           "displayOrder": 10,
           "subsection": "HealthCare",
           "validationRules": {
-            "type": "STRING",
+            "type": "NUMBER",
             "required": true,
-            "maxLength": 100,
+            "min": 0,
             "errorMessage": "Please enter the monthly premium"
           },
           "schemaVersion": 1,

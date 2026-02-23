@@ -43,6 +43,7 @@ export const SuccessPage: React.FC<SuccessCardProps> = ({
   useEffect(() => {
     if (state.shouldClearUser) {
       dispatch(logout());
+      localStorage.clear();
       return;
     }
     if (state.tokens) {
