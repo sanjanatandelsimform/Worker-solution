@@ -11,6 +11,9 @@ interface DynamicTabProps {
   onValidationChange?: (isValid: boolean) => void;
   onNext?: () => void;
   onSuccess?: () => void;
+  onSubmitStart?: () => void;
+  onEmptySubmission?: () => void;
+  onApiError?: (errorMessage: string) => void;
   hideHeader?: boolean;
   disableWindowRegistration?: boolean;
 }
@@ -36,6 +39,9 @@ export const DynamicTab = forwardRef<
       onValidationChange,
       onNext,
       onSuccess,
+      onSubmitStart,
+      onEmptySubmission,
+      onApiError,
       hideHeader = false,
       disableWindowRegistration = false,
     },
@@ -482,6 +488,26 @@ export const DynamicTab = forwardRef<
       isExplicitSubmitRef.current = false;
 
       const cleanedAnswers = cleanAnswers();
+
+      // Check if answers are empty (for goals section)
+      const hasAnyAnswers =
+        Object.keys(cleanedAnswers).length > 0 &&
+        Object.values(cleanedAnswers).some(value => {
+          if (value === null || value === undefined || value === "") return false;
+          if (Array.isArray(value)) return value.length > 0;
+          return true;
+        });
+
+      if (!hasAnyAnswers && section === "goals") {
+        if (onEmptySubmission) {
+          onEmptySubmission();
+          return { success: false, error: "No answers provided" };
+        }
+      }
+
+      // Trigger loading modal
+      if (onSubmitStart) onSubmitStart();
+
       setIsSaving(true);
 
       try {
@@ -490,6 +516,11 @@ export const DynamicTab = forwardRef<
           if (onSuccess) onSuccess();
           if (onNext) onNext();
         } else {
+          // Handle API errors
+          if (onApiError) {
+            const errorMsg = response.error || "Failed to submit assessment. Please try again.";
+            onApiError(errorMsg);
+          }
           if (response.fieldErrors) {
             setErrors(prev => ({ ...prev, ...response.fieldErrors }));
             setTimeout(() => {
@@ -511,14 +542,29 @@ export const DynamicTab = forwardRef<
         return response;
       } catch (error) {
         console.error("[DynamicTab] Submission error:", error);
+        const errorMsg = error instanceof Error ? error.message : "An unexpected error occurred";
+        if (onApiError) {
+          onApiError(errorMsg);
+        }
         return {
           success: false,
-          error: error instanceof Error ? error.message : "An error occurred",
+          error: errorMsg,
         };
       } finally {
         setIsSaving(false);
       }
-    }, [validateAnswers, errors, cleanAnswers, submitSection, onSuccess, onNext]);
+    }, [
+      validateAnswers,
+      errors,
+      cleanAnswers,
+      submitSection,
+      onSuccess,
+      onNext,
+      onSubmitStart,
+      onEmptySubmission,
+      onApiError,
+      section,
+    ]);
 
     const saveWithoutValidation = useCallback(async () => {
       const cleanedAnswers = cleanAnswers();
