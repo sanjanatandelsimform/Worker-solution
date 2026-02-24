@@ -32,13 +32,13 @@ export default function AssessmentWorkforcePage() {
   const navigate = useNavigate();
   const user = useAppSelector(selectUser);
 
-  useEffect(() => {
-    if (!isLoading && completionCount >= steps.length) {
-      navigate("/dashboard");
-    }
-  }, [isLoading, completionCount, navigate]);
+  // useEffect(() => {
+  //   if (!isLoading && completionCount >= steps.length) {
+  //     navigate("/dashboard");
+  //   }
+  // }, [isLoading, completionCount, navigate]);
 
-  // Check if email is verified before allowing access
+  // // Check if email is verified before allowing access
   useEffect(() => {
     if (!user?.emailVerify) {
       navigate("/dashboard");
@@ -74,7 +74,7 @@ export default function AssessmentWorkforcePage() {
       const response = await dynamicTabValidation.submit();
       if (response.success) {
         if (isLastStep) {
-          navigate("/dashboard");
+          // navigate("/dashboard");
         } else {
           setManualStep(steps[currentStepIndex + 1].id);
         }
@@ -194,9 +194,7 @@ export default function AssessmentWorkforcePage() {
                   onSuccess={() => {}}
                 />
               )}
-              {currentStep === "goals" && (
-                <GoalsTab onNext={() => navigate("/dashboard")} onSuccess={() => {}} />
-              )}
+              {currentStep === "goals" && <GoalsTab onNext={() => {}} onSuccess={() => {}} />}
             </>
           )}
         </div>
