@@ -9,8 +9,16 @@ import BenefitCard from "./BenefitCard";
 import { Link } from "react-router-dom";
 import { CircleCheckIcon } from "@/assets/icons/CircleCheckIcon";
 import { CheckIcon } from "@/assets/icons/CheckIcon";
+import { useAppSelector } from "@/store/hooks";
+import {
+  selectCompanyAtGlance,
+  selectStrategicRecommendations,
+} from "@/store/selectors/dashboardSelectors";
+import { formatNumber, formatCurrency, formatCurrencyWithCents } from "@/utils/formatters";
 
 export default function RecommendationsPage() {
+  const companyAtGlance = useAppSelector(selectCompanyAtGlance);
+  const strategicRecommendations = useAppSelector(selectStrategicRecommendations);
   return (
     <div className="bg-ws-gray-20 border border-ws-gray-50 rounded-xl p-6 space-y-6">
       <h2 className="text-2xl lg:text-4xl font-medium text-ws-black-60 leading-10">
@@ -20,26 +28,49 @@ export default function RecommendationsPage() {
         <StaticCard
           title="Total Workforce"
           titleClass="text-ws-gray-90 text-base"
-          count="100-500"
+          count={
+            typeof companyAtGlance?.totalWorkforce === "string"
+              ? companyAtGlance.totalWorkforce
+              : formatNumber(companyAtGlance?.totalWorkforce)
+          }
           countClass="text-ws-black-30 text-3xl xl:text-4xl font-semibold mt-6"
         />
         <StaticCard
           title="Average Hourly Wage"
           titleClass="text-ws-gray-90 text-base"
-          count="> $26"
+          count={
+            typeof companyAtGlance?.averageHourlyWage === "string"
+              ? companyAtGlance.averageHourlyWage
+              : formatCurrencyWithCents(companyAtGlance?.averageHourlyWage)
+          }
           countClass="text-ws-black-30 text-3xl xl:text-4xl font-semibold mt-6"
         />
         <StaticCard
           title="Average Salary"
           titleClass="text-ws-gray-90 text-base"
-          count="$30,000 - $50,000K"
+          count={
+            typeof companyAtGlance?.averageSalary === "string"
+              ? companyAtGlance.averageSalary
+              : formatCurrency(companyAtGlance?.averageSalary)
+          }
           countClass="text-ws-black-30 text-3xl xl:text-4xl font-semibold mt-6"
         />
         <StaticCard
-          title="Working Class Population"
+          title="Industry Average Wage"
           titleClass="text-ws-gray-90 text-base"
-          count="89 (38%)"
-          infoIcon={true}
+          // count={
+          //   companyAtGlance?.industryAverageWage
+          //     ? formatNumber(companyAtGlance?.industryAverageWage)
+          //     : "N/A"
+          // }
+            count={
+              companyAtGlance?.industryAverageWage
+                ? typeof companyAtGlance.industryAverageWage === 'number'
+                  ? formatNumber(companyAtGlance.industryAverageWage)
+                  : companyAtGlance.industryAverageWage
+                : "N/A"
+            }
+          // infoIcon={true}
           infoCircleClass="text-ws-black-200"
           tooltipText="How is this calculated"
           descriptionText="This is calculated based on LMI. Low-to-Moderate Income (LMI) consists of income less than 80% of the broader area's median income. "
@@ -132,44 +163,30 @@ export default function RecommendationsPage() {
         </div>
         <div className="mt-6">
           <h3 className="text-2xl font-medium text-ws-black-70">Recommended Benefit Providers</h3>
-          <div className="grid xl:grid-cols-3 gap-5 w-full mt-6">
-            <BenefitCard
-              badgeText="Financial"
-              badgeClassess="bg-ws-cyan-20 ring-0 px-4 py-1.5 text-ws-black-20"
-              title="Healthcare Alternatives"
-              descriptionText="Allows employees to pay for healthcare costs interest-free and over time, like a healthcare BNPL."
-              listTitle="Key Benefits"
-              listIcon={<CircleCheckIcon />}
-              listTexts={[
-                "All employees pre-approved",
-                "Access to financial education and self-guided tools",
-              ]}
-            />
-            <BenefitCard
-              badgeText="Financial"
-              badgeClassess="bg-ws-cyan-20 ring-0 px-4 py-1.5 text-ws-black-20"
-              title="Financial Planning"
-              descriptionText="Financial wellness platform offering no-cost rainy day funds and financial therapy"
-              listTitle="Key Benefits"
-              listIcon={<CircleCheckIcon />}
-              listTexts={[
-                "All employees pre-approved",
-                "Access to financial education and self-guided tools",
-              ]}
-            />
-            <BenefitCard
-              badgeText="Financial"
-              badgeClassess="bg-cyan-100 ring-0 px-4 py-1.5"
-              title="Emergency Savings"
-              descriptionText="Encourages workers to save for emergencies with employer-matched savings accounts."
-              listTitle="Key Benefits"
-              listIcon={<CircleCheckIcon />}
-              listTexts={[
-                "All employees pre-approved",
-                "Access to financial education and self-guided tools",
-              ]}
-            />
-          </div>
+          {strategicRecommendations.length > 0 ? (
+            <div className="grid xl:grid-cols-3 gap-5 w-full mt-6">
+              {strategicRecommendations.map(recommendation => (
+                <BenefitCard
+                  key={recommendation.order}
+                  badgeText={recommendation.category}
+                  badgeClassess="bg-ws-cyan-20 ring-0 px-4 py-1.5 text-ws-black-20"
+                  title={recommendation.title}
+                  descriptionText={recommendation.description}
+                  listTitle="Key Features"
+                  listIcon={<CircleCheckIcon />}
+                  listTexts={
+                    Array.isArray(recommendation.keyFeatures)
+                      ? recommendation.keyFeatures
+                      : [recommendation.keyFeatures]
+                  }
+                />
+              ))}
+            </div>
+          ) : (
+            <div className="mt-6 p-6 bg-ws-gray-30 rounded-lg text-center">
+              <p className="text-ws-gray-300">No recommendations available at this time.</p>
+            </div>
+          )}
         </div>
       </div>
 

@@ -24,6 +24,8 @@ export default function CostCard({
     >
       <div className="flex items-center justify-between mb-2.5">
         <h3 className="text-lg font-medium text-ws-black">{title}</h3>
+      </div>
+      <div>
         <p className="text-sm text-ws-black">{year}</p>
       </div>
       <div className="flex items-center bg-ws-cyan-60 px-3 py-2 text-ws-white text-base mb-0">

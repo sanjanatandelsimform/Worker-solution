@@ -292,33 +292,50 @@ export default function CostBurdenBarChart({ data, width, height = 400 }: Canvas
 }
 
 // Example usage with the Figma data
-export function IncomeDistributionChart() {
-  const chartData: ChartDataItem[] = [
-    {
-      label: "Low income",
-      sublabel: "$50,000 or less",
-      value1: 74,
-      value2: 44,
-    },
-    {
-      label: "Moderate income",
-      sublabel: "$50,000 - $74,499",
-      value1: 40,
-      value2: 4,
-    },
-    {
-      label: "Median income",
-      sublabel: "$75,000 - $99,499",
-      value1: 10,
-      value2: 1,
-    },
-    {
-      label: "Upper income",
-      sublabel: "$100,000 or more",
-      value1: 1,
-      value2: 0,
-    },
-  ];
+export function IncomeDistributionChart({
+  data,
+}: {
+  data?: Array<{
+    incomeCategory: string;
+    label: string;
+    range: string;
+    burdened: number;
+    severelyBurdened: number;
+  }> | null;
+}) {
+  const chartData: ChartDataItem[] = data
+    ? data.map(item => ({
+        label: item.label,
+        sublabel: item.range,
+        value1: item.burdened,
+        value2: item.severelyBurdened,
+      }))
+    : [
+        {
+          label: "Low income",
+          sublabel: "$50,000 or less",
+          value1: 74,
+          value2: 44,
+        },
+        {
+          label: "Moderate income",
+          sublabel: "$50,000 - $74,499",
+          value1: 40,
+          value2: 4,
+        },
+        {
+          label: "Median income",
+          sublabel: "$75,000 - $99,499",
+          value1: 10,
+          value2: 1,
+        },
+        {
+          label: "Upper income",
+          sublabel: "$100,000 or more",
+          value1: 1,
+          value2: 0,
+        },
+      ];
 
   return (
     <div className="w-full">
