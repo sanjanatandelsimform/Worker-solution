@@ -434,7 +434,7 @@ export const DynamicQuestionRenderer = ({
                           size="md"
                           iconLeading={Trash01}
                           onClick={() => removeArrayItem(conditionalKey, item.id)}
-                          className="mt-6 h-10 shrink-0 px-2 bg-tertiary"
+                          className="mt-6 h-10 shrink-0 px-2 bg-tertiary *:data-icon:text-gray-400"
                           aria-label="Remove item"
                         />
                       )}
@@ -742,7 +742,7 @@ export const DynamicQuestionRenderer = ({
                   size="md"
                   iconLeading={Trash01}
                   onClick={() => removeArrayItem(question.key, (item as { id: number }).id)}
-                  className="mt-6 h-10 shrink-0 px-2 bg-tertiary"
+                  className="mt-6 h-10 shrink-0 px-2 bg-tertiary *:data-icon:text-gray-400"
                   aria-label="Remove item"
                 />
               )}

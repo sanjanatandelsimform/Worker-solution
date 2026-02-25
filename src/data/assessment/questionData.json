@@ -109,7 +109,7 @@
           "key": "contractorsSeasonalEmployees",
           "questionText": "Do independent contractors and/or seasonal employees make up a large portion (greater than 30%) of your workforce?",
           "questionType": "YES_NO",
-          "displayOrder": 5,
+          "displayOrder": 6,
           "validationRules": {
             "type": "BOOLEAN",
             "required": false,
@@ -123,7 +123,7 @@
           "key": "commonJobTitles",
           "questionText": "What are the most common job titles or functions that make up most of your workforce and percentage of those roles?",
           "questionType": "STRUCTURED_ARRAY",
-          "displayOrder": 6,
+          "displayOrder": 7,
           "validationRules": {
             "type": "STRUCTURED_ARRAY",
             "required": false,
@@ -156,7 +156,7 @@
           "key": "hourlyEmployeesPercentage",
           "questionText": "Estimated % of hourly employees",
           "questionType": "NUMERIC",
-          "displayOrder": 7,
+          "displayOrder": 8,
           "validationRules": {
             "type": "NUMERIC",
             "required": true,
@@ -177,7 +177,7 @@
           "key": "salaryEmployeesPercentage",
           "questionText": "Estimated % of salary employees",
           "questionType": "NUMERIC",
-          "displayOrder": 8,
+          "displayOrder": 9,
           "validationRules": {
             "type": "NUMERIC",
             "required": true,
@@ -198,7 +198,7 @@
           "key": "topWorkLocations",
           "questionText": "List the top 5 work locations that employees are commuting to",
           "questionType": "STRUCTURED_ARRAY",
-          "displayOrder": 9,
+          "displayOrder": 10,
           "validationRules": {
             "type": "STRUCTURED_ARRAY",
             "required": true,
@@ -283,7 +283,7 @@
           "key": "employeesResideInSameZipCodes",
           "questionText": "Do the majority of employees reside in the same zip codes above?",
           "questionType": "YES_NO",
-          "displayOrder": 10,
+          "displayOrder": 11,
           "validationRules": {
             "type": "BOOLEAN",
             "required": true,
