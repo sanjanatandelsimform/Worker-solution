@@ -1,9 +1,4 @@
-import {
-  Modal,
-  ModalContent,
-  ModalHeader,
-  ModalTitle,
-} from "@/components/base/modal/modal";
+import { Modal, ModalContent, ModalHeader, ModalTitle } from "@/components/base/modal/modal";
 import { Button } from "@/components/base/buttons/button";
 import { X } from "@untitledui/icons";
 import prepareIcon from "@/assets/preparing-icon.svg";
@@ -22,7 +17,6 @@ export const InProgressModal = ({
   title = "Preparing...",
   subtitle = "One moment while we prepare your results and recommendations.",
 }: InProgressModalProps) => {
-
   return (
     <Modal isOpen={isOpen} onOpenChange={onClose} size="sm">
       <ModalContent>

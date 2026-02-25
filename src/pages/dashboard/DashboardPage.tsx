@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, useCallback } from "react";
 import { useNavigate } from "react-router-dom";
 import { DashboardSidebar } from "@/components/dashboard/DashboardSidebar";
 import emailIcon from "@/assets/mail-icon.svg";
@@ -19,6 +19,12 @@ import { useAssessmentStatus } from "@/hooks/useAssessmentStatus";
 import { Tabs } from "@/components/base/tabs/tabs";
 import RecommendationsPage from "../recommendations/RecommendationsPage";
 import BenchmarkPage from "../benchmark/BenchmarkPage";
+import { fetchDashboard } from "@/store/slices/dashboardSlice";
+import {
+  selectDashboardLoading,
+  selectDashboardError,
+  selectDashboardIsLoaded,
+} from "@/store/selectors/dashboardSelectors";
 
 export const DashboardPage = () => {
   const navigate = useNavigate();
@@ -35,8 +41,29 @@ export const DashboardPage = () => {
 
   const { completionCount, isLoading: _isLoadingAssessment } = useAssessmentStatus();
 
+  // Dashboard data state
+  const dashboardLoading = useAppSelector(selectDashboardLoading);
+  const dashboardError = useAppSelector(selectDashboardError);
+  const dashboardIsLoaded = useAppSelector(selectDashboardIsLoaded);
+
   // Function to refetch user data
-  const refetchUserData = async () => {
+  // const refetchUserData = async () => {
+  //   if (user?.id) {
+  //     try {
+  //       const userDetail = localStorage.getItem("userDetail");
+  //       if (userDetail) {
+  //         const parsedUserDetail = JSON.parse(userDetail);
+  //         const accessToken = parsedUserDetail?.auth?.tokens?.accessToken;
+  //         if (accessToken) {
+  //           await dispatch(fetchUserById({ userId: user.id, token: accessToken })).unwrap();
+  //         }
+  //       }
+  //     } catch (error) {
+  //       console.error("Failed to refetch user data:", error);
+  //     }
+  //   }
+  // };
+  const refetchUserData = useCallback(async () => {
     if (user?.id) {
       try {
         const userDetail = localStorage.getItem("userDetail");
@@ -51,7 +78,7 @@ export const DashboardPage = () => {
         console.error("Failed to refetch user data:", error);
       }
     }
-  };
+  }, [user, dispatch]);
 
   useEffect(() => {
     if (user?.id) {
@@ -103,6 +130,16 @@ export const DashboardPage = () => {
       return () => clearInterval(timer);
     }
   }, [cooldown]);
+
+  useEffect(() => {
+    if (completionCount === 4 && !dashboardIsLoaded && !dashboardLoading) {
+      dispatch(fetchDashboard());
+    }
+  }, [completionCount, dashboardIsLoaded, dashboardLoading, dispatch]);
+
+  const handleRetryDashboard = () => {
+    dispatch(fetchDashboard());
+  };
 
   const handleVerifyEmail = async () => {
     if (emailVerify) {
@@ -187,6 +224,26 @@ export const DashboardPage = () => {
                 />
               </div>
             )}
+
+            {/* Dashboard Error with Retry */}
+            {completionCount === 4 && dashboardError && (
+              <div className="mt-6">
+                <ErrorMessage
+                  errorType="danger"
+                  textColor="text-red-700"
+                  alertIcon={AlertCircle}
+                  errorMessage={dashboardError}
+                  onClose={() => {}} // Keep error visible until retry succeeds
+                />
+                <button
+                  onClick={handleRetryDashboard}
+                  className="mt-4 px-4 py-2 bg-ws-primary text-white rounded-lg hover:bg-ws-primary-dark transition-colors"
+                  disabled={dashboardLoading}
+                >
+                  {dashboardLoading ? "Retrying..." : "Retry"}
+                </button>
+              </div>
+            )}
             {/* Currently using `completionCount` to control visibility. */}
             {/* This logic will be replaced once the backend API provides the required flag */}
             {completionCount !== 4 && (
@@ -249,22 +306,29 @@ export const DashboardPage = () => {
           {/* This will be conditionally rendered; uncomment when this feature is implemented. */}
           {emailVerify && completionCount == 4 && (
             <div className="mt-10">
-              <Tabs>
-                <Tabs.List
-                  size="md"
-                  type="button-brand"
-                  items={[
-                    { id: "recommendations", label: "Recommendations" },
-                    { id: "benchmark", label: "Benchmark" },
-                  ]}
-                />
-                <Tabs.Panel id="recommendations" className="pt-12">
-                  <RecommendationsPage />
-                </Tabs.Panel>
-                <Tabs.Panel id="benchmark" className="pt-12">
-                  <BenchmarkPage />
-                </Tabs.Panel>
-              </Tabs>
+              {dashboardLoading ? (
+                <div className="flex justify-center items-center py-12">
+                  <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-ws-primary"></div>
+                  <p className="ml-4 text-ws-gray-300">Loading dashboard data...</p>
+                </div>
+              ) : (
+                <Tabs>
+                  <Tabs.List
+                    size="md"
+                    type="button-brand"
+                    items={[
+                      { id: "recommendations", label: "Recommendations" },
+                      { id: "benchmark", label: "Benchmark" },
+                    ]}
+                  />
+                  <Tabs.Panel id="recommendations" className="pt-12">
+                    <RecommendationsPage />
+                  </Tabs.Panel>
+                  <Tabs.Panel id="benchmark" className="pt-12">
+                    <BenchmarkPage />
+                  </Tabs.Panel>
+                </Tabs>
+              )}
             </div>
           )}
         </main>

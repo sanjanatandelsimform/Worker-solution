@@ -1,0 +1,508 @@
+openapi: 3.0.3
+info:
+  title: WorkQuality Platform - Dashboard API
+  description: API contract for retrieving company dashboard data including insights, recommendations, and industry benchmarks
+  version: 1.0.0
+  contact:
+    name: WorkQuality Platform Team
+    
+servers:
+  - url: https://api.workquality.platform
+    description: Production server
+  - url: https://staging-api.workquality.platform
+    description: Staging server
+  - url: http://localhost:3000
+    description: Local development server
+
+paths:
+  /dashboard:
+    get:
+      summary: Get Dashboard Data
+      description: |
+        Retrieves complete dashboard data for the authenticated user's company, including:
+        - Company at-a-glance metrics (workforce, wages)
+        - Strategic recommendations based on assessment
+        - Industry benchmark comparisons
+        - Turnover and separation metrics
+        - Area median wage comparisons
+        - Housing cost burden data
+        
+        This endpoint should be called once after Goals assessment completion from the success modal.
+        The response should be cached client-side to avoid redundant calls during tab navigation.
+      operationId: getDashboard
+      tags:
+        - Dashboard
+      security:
+        - BearerAuth: []
+      parameters:
+        - name: refresh
+          in: query
+          description: Force refresh of cached data (optional)
+          required: false
+          schema:
+            type: boolean
+            default: false
+      responses:
+        '200':
+          description: Successful retrieval of dashboard data
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DashboardResponse'
+              examples:
+                fullResponse:
+                  summary: Complete dashboard with all data
+                  value:
+                    companyAtGlance:
+                      totalWorkforce: 1250
+                      averageHourlyWage: 18.50
+                      averageSalary: 52000
+                    strategicRecommendations:
+                      - order: 1
+                        category: "Retention"
+                        title: "Implement Flexible Work Arrangements"
+                        description: "Based on industry trends and your workforce demographics, flexible work options could reduce turnover by up to 15%."
+                        keyFeatures:
+                          - "Remote work options"
+                          - "Flexible scheduling"
+                          - "Compressed work weeks"
+                      - order: 2
+                        category: "Compensation"
+                        title: "Wage Competitiveness Review"
+                        description: "Current wages are below area median. Consider a 5-7% adjustment to align with regional standards."
+                        keyFeatures:
+                          - "Market rate analysis"
+                          - "Phased wage increases"
+                          - "Performance-based bonuses"
+                    industryOverview:
+                      turnoverRate: 22.5
+                      avgTurnover: 45
+                      avgCostOfTurnover: 15000
+                    turnoverVoluntaryVsInvoluntary:
+                      voluntary: 35
+                      involuntary: 10
+                      voluntaryPercentage: 77.8
+                      involuntaryPercentage: 22.2
+                    rateOfSeparation:
+                      rate: 18.2
+                      count: 42
+                      period: "annual"
+                    areaMedianWage:
+                      - stateAverage: 19.25
+                        yourCompany: 18.50
+                        nationalAverage: 20.10
+                        region: "California"
+                    housingCost:
+                      - burdenedOwnersPercentage: 38.5
+                        burdenedRentersPercentage: 52.3
+                        workingClassHousingCost: 1850
+                        workingClassHousingGraph:
+                          - label: "2020"
+                            value: 1600
+                          - label: "2021"
+                            value: 1700
+                          - label: "2022"
+                            value: 1750
+                          - label: "2023"
+                            value: 1800
+                          - label: "2024"
+                            value: 1850
+                        region: "San Francisco Bay Area"
+                partialResponse:
+                  summary: Partial data with some null fields
+                  value:
+                    companyAtGlance:
+                      totalWorkforce: 850
+                      averageHourlyWage: null
+                      averageSalary: 48000
+                    strategicRecommendations: []
+                    industryOverview:
+                      turnoverRate: 20.0
+                      avgTurnover: null
+                      avgCostOfTurnover: null
+                    turnoverVoluntaryVsInvoluntary:
+                      voluntary: 25
+                      involuntary: 8
+                      voluntaryPercentage: null
+                      involuntaryPercentage: null
+                    rateOfSeparation:
+                      rate: 15.5
+                      count: 30
+                      period: "annual"
+                    areaMedianWage: []
+                    housingCost: []
+        '400':
+          description: Bad request - Invalid parameters
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+              example:
+                error: "Bad Request"
+                message: "Invalid refresh parameter"
+                statusCode: 400
+        '401':
+          description: Unauthorized - Authentication required
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+              example:
+                error: "Unauthorized"
+                message: "Authentication token missing or invalid"
+                statusCode: 401
+        '403':
+          description: Forbidden - User not authorized to access dashboard
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+              example:
+                error: "Forbidden"
+                message: "Assessment not completed. Please complete Goals assessment first."
+                statusCode: 403
+        '404':
+          description: Not found - Dashboard data not available for user
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+              example:
+                error: "Not Found"
+                message: "Dashboard data not available for this user"
+                statusCode: 404
+        '500':
+          description: Internal server error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+              example:
+                error: "Internal Server Error"
+                message: "An unexpected error occurred while fetching dashboard data"
+                statusCode: 500
+        '504':
+          description: Gateway timeout - Request took longer than 30 seconds
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+              example:
+                error: "Gateway Timeout"
+                message: "Request timeout after 30 seconds"
+                statusCode: 504
+
+components:
+  securitySchemes:
+    BearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+      description: JWT token obtained from authentication endpoint
+
+  schemas:
+    DashboardResponse:
+      type: object
+      description: Complete dashboard data response
+      required:
+        - companyAtGlance
+        - strategicRecommendations
+        - industryOverview
+        - turnoverVoluntaryVsInvoluntary
+        - rateOfSeparation
+        - areaMedianWage
+        - housingCost
+      properties:
+        companyAtGlance:
+          $ref: '#/components/schemas/CompanyAtGlance'
+        strategicRecommendations:
+          type: array
+          description: Array of strategic recommendations sorted by priority (order field)
+          items:
+            $ref: '#/components/schemas/StrategicRecommendation'
+        industryOverview:
+          $ref: '#/components/schemas/IndustryOverview'
+        turnoverVoluntaryVsInvoluntary:
+          $ref: '#/components/schemas/TurnoverMetrics'
+        rateOfSeparation:
+          $ref: '#/components/schemas/SeparationMetrics'
+        areaMedianWage:
+          type: array
+          description: Array of area median wage data (first element used for display)
+          items:
+            $ref: '#/components/schemas/AreaMedianWage'
+        housingCost:
+          type: array
+          description: Array of housing cost data (first element used for display)
+          items:
+            $ref: '#/components/schemas/HousingCost'
+
+    CompanyAtGlance:
+      type: object
+      description: High-level company metrics snapshot
+      properties:
+        totalWorkforce:
+          type: integer
+          nullable: true
+          description: Total number of employees
+          example: 1250
+          minimum: 0
+        averageHourlyWage:
+          type: number
+          format: float
+          nullable: true
+          description: Average hourly wage in USD
+          example: 18.50
+          minimum: 0
+        averageSalary:
+          type: number
+          format: float
+          nullable: true
+          description: Average annual salary in USD
+          example: 52000
+          minimum: 0
+
+    StrategicRecommendation:
+      type: object
+      description: Actionable strategic recommendation
+      required:
+        - order
+        - category
+        - title
+        - description
+      properties:
+        order:
+          type: integer
+          description: Sort priority (ascending = higher priority)
+          example: 1
+          minimum: 1
+        category:
+          type: string
+          description: Recommendation category
+          example: "Retention"
+        title:
+          type: string
+          description: Brief recommendation title
+          example: "Implement Flexible Work Arrangements"
+        description:
+          type: string
+          description: Detailed explanation
+          example: "Based on industry trends and your workforce demographics..."
+        keyFeatures:
+          oneOf:
+            - type: string
+            - type: array
+              items:
+                type: string
+          description: Primary benefits or implementation points
+          example:
+            - "Remote work options"
+            - "Flexible scheduling"
+
+    IndustryOverview:
+      type: object
+      description: Industry-wide benchmark metrics
+      properties:
+        turnoverRate:
+          type: number
+          format: float
+          nullable: true
+          description: Industry average turnover rate (percentage)
+          example: 22.5
+          minimum: 0
+          maximum: 100
+        avgTurnover:
+          type: number
+          format: float
+          nullable: true
+          description: Average turnover count
+          example: 45
+          minimum: 0
+        avgCostOfTurnover:
+          type: number
+          format: float
+          nullable: true
+          description: Average cost per turnover event in USD
+          example: 15000
+          minimum: 0
+
+    TurnoverMetrics:
+      type: object
+      description: Voluntary vs involuntary turnover breakdown
+      properties:
+        voluntary:
+          type: integer
+          nullable: true
+          description: Count of voluntary departures
+          example: 35
+          minimum: 0
+        involuntary:
+          type: integer
+          nullable: true
+          description: Count of involuntary departures
+          example: 10
+          minimum: 0
+        voluntaryPercentage:
+          type: number
+          format: float
+          nullable: true
+          description: Percentage of voluntary departures
+          example: 77.8
+          minimum: 0
+          maximum: 100
+        involuntaryPercentage:
+          type: number
+          format: float
+          nullable: true
+          description: Percentage of involuntary departures
+          example: 22.2
+          minimum: 0
+          maximum: 100
+
+    SeparationMetrics:
+      type: object
+      description: Employee separation rate metrics
+      properties:
+        rate:
+          type: number
+          format: float
+          nullable: true
+          description: Separation rate (percentage)
+          example: 18.2
+          minimum: 0
+        count:
+          type: integer
+          nullable: true
+          description: Total separation count
+          example: 42
+          minimum: 0
+        period:
+          type: string
+          nullable: true
+          description: Time period for measurements
+          enum: ["monthly", "quarterly", "annual"]
+          example: "annual"
+
+    AreaMedianWage:
+      type: object
+      description: Wage comparison across geographic levels
+      properties:
+        stateAverage:
+          type: number
+          format: float
+          nullable: true
+          description: State-level average wage in USD
+          example: 19.25
+          minimum: 0
+        yourCompany:
+          type: number
+          format: float
+          nullable: true
+          description: Company's average wage in USD
+          example: 18.50
+          minimum: 0
+        nationalAverage:
+          type: number
+          format: float
+          nullable: true
+          description: National average wage in USD
+          example: 20.10
+          minimum: 0
+        region:
+          type: string
+          nullable: true
+          description: Geographic region identifier
+          example: "California"
+
+    HousingCost:
+      type: object
+      description: Housing affordability metrics
+      properties:
+        burdenedOwnersPercentage:
+          type: number
+          format: float
+          nullable: true
+          description: Percentage of cost-burdened homeowners
+          example: 38.5
+          minimum: 0
+          maximum: 100
+        burdenedRentersPercentage:
+          type: number
+          format: float
+          nullable: true
+          description: Percentage of cost-burdened renters
+          example: 52.3
+          minimum: 0
+          maximum: 100
+        workingClassHousingCost:
+          type: number
+          format: float
+          nullable: true
+          description: Average housing cost for working class in USD
+          example: 1850
+          minimum: 0
+        workingClassHousingGraph:
+          type: array
+          nullable: true
+          description: Time-series or categorical graph data
+          items:
+            $ref: '#/components/schemas/GraphDataPoint'
+        region:
+          type: string
+          nullable: true
+          description: Geographic region identifier
+          example: "San Francisco Bay Area"
+
+    GraphDataPoint:
+      type: object
+      description: Individual data point for graph visualization
+      required:
+        - label
+        - value
+      properties:
+        label:
+          type: string
+          description: X-axis label or category
+          example: "2024"
+        value:
+          type: number
+          format: float
+          description: Y-axis value
+          example: 1850
+        timestamp:
+          type: integer
+          format: int64
+          nullable: true
+          description: Unix timestamp if time-series data
+          example: 1704067200
+        category:
+          type: string
+          nullable: true
+          description: Data category if categorical
+          example: "Housing Cost"
+
+    Error:
+      type: object
+      description: Standard error response
+      required:
+        - error
+        - message
+        - statusCode
+      properties:
+        error:
+          type: string
+          description: Error type
+          example: "Internal Server Error"
+        message:
+          type: string
+          description: Human-readable error message
+          example: "An unexpected error occurred"
+        statusCode:
+          type: integer
+          description: HTTP status code
+          example: 500
+        details:
+          type: object
+          nullable: true
+          description: Additional error context (optional)
+          additionalProperties: true

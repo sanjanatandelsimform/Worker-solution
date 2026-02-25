@@ -1,31 +1,22 @@
-/**
- * Tests for useAssessment Hook
- *
- * Coverage:
- * - T009: should call GET /assessment via loadProgress()
- * - T010: should populate answers from API response sections[section]
- * - T011: should set isLoadingGet=true during GET call
- * - T012: should NOT call localStorage functions (saveAssessmentProgress, loadSectionProgress)
- */
-
 import { renderHook, waitFor } from "@testing-library/react";
 import { act } from "react";
+import { describe, it, expect, vi, beforeEach } from "vitest";
 import { useAssessment } from "@/hooks/useAssessment";
 import { getAssessment } from "@/services/api/assessmentApi";
 import type { ApiResponse, AssessmentData } from "@/services/api/assessmentApi";
 
 // Mock API module
-jest.mock("@/services/api/assessmentApi", () => ({
-  getAssessment: jest.fn(),
-  submitWorkforce: jest.fn(),
-  submitCompensation: jest.fn(),
-  submitBenefits: jest.fn(),
-  submitGoals: jest.fn(),
+vi.mock("@/services/api/assessmentApi", () => ({
+  getAssessment: vi.fn(),
+  submitWorkforce: vi.fn(),
+  submitCompensation: vi.fn(),
+  submitBenefits: vi.fn(),
+  submitGoals: vi.fn(),
 }));
 
 describe("useAssessment Hook", () => {
   beforeEach(() => {
-    jest.clearAllMocks();
+    vi.clearAllMocks();
   });
 
   // T009: should call GET /assessment via loadProgress()
@@ -48,7 +39,7 @@ describe("useAssessment Hook", () => {
       },
     };
 
-    (getAssessment as jest.Mock).mockResolvedValue(mockResponse);
+    vi.mocked(getAssessment).mockResolvedValue(mockResponse);
 
     renderHook(() => useAssessment({ section: "workforce" }));
 
@@ -77,7 +68,7 @@ describe("useAssessment Hook", () => {
       },
     };
 
-    (getAssessment as jest.Mock).mockResolvedValue(mockResponse);
+    vi.mocked(getAssessment).mockResolvedValue(mockResponse);
 
     const { result } = renderHook(() => useAssessment({ section: "workforce" }));
 
@@ -88,10 +79,23 @@ describe("useAssessment Hook", () => {
       });
     });
   });
-
   // T011: should set isLoadingGet=true during GET call
   it("should set isLoadingGet=true during GET call", async () => {
-    const mockResponse: ApiResponse<AssessmentData> = {
+    let resolveGetAssessment!: (value: ApiResponse<AssessmentData>) => void;
+
+    const getAssessmentPromise = new Promise<ApiResponse<AssessmentData>>(resolve => {
+      resolveGetAssessment = resolve;
+    });
+
+    vi.mocked(getAssessment).mockReturnValue(getAssessmentPromise);
+
+    const { result } = renderHook(() => useAssessment({ section: "workforce" }));
+
+    // Should be loading initially before promise resolves
+    expect(result.current.isLoadingGet).toBe(true);
+
+    // Resolve the promise directly - no act() wrapper needed
+    resolveGetAssessment({
       success: true,
       data: {
         id: "assessment-1",
@@ -99,34 +103,16 @@ describe("useAssessment Hook", () => {
         createdAt: "2026-02-13T00:00:00Z",
         updatedAt: "2026-02-13T00:00:00Z",
         status: "in_progress",
-        sections: {
-          workforce: {},
-        },
+        sections: { workforce: {} },
         completionPercentage: 0,
       },
-    };
-
-    let resolveGetAssessment: (value: ApiResponse<AssessmentData>) => void;
-    const getAssessmentPromise = new Promise<ApiResponse<AssessmentData>>(resolve => {
-      resolveGetAssessment = resolve;
     });
 
-    (getAssessment as jest.Mock).mockReturnValue(getAssessmentPromise);
-
-    const { result } = renderHook(() => useAssessment({ section: "workforce" }));
-
-    // Should be loading initially
-    expect(result.current.isLoadingGet).toBe(true);
-
-    // Resolve the promise
-    await act(async () => {
-      resolveGetAssessment!(mockResponse);
-      await waitFor(() => {
-        expect(result.current.isLoadingGet).toBe(false);
-      });
+    // waitFor handles act() internally — no need to wrap manually
+    await waitFor(() => {
+      expect(result.current.isLoadingGet).toBe(false);
     });
   });
-
   // T012: should NOT call localStorage functions
   it("should NOT call localStorage functions (saveAssessmentProgress, loadSectionProgress)", async () => {
     const mockResponse: ApiResponse<AssessmentData> = {
@@ -144,7 +130,7 @@ describe("useAssessment Hook", () => {
       },
     };
 
-    (getAssessment as jest.Mock).mockResolvedValue(mockResponse);
+    vi.mocked(getAssessment).mockResolvedValue(mockResponse);
 
     const { result } = renderHook(() => useAssessment({ section: "workforce" }));
 
@@ -157,13 +143,10 @@ describe("useAssessment Hook", () => {
       result.current.updateAnswer("q2", "answer2");
     });
 
-    // Verify localStorage functions were never imported or called
-    // (This test verifies behavior - actual localStorage mocking would be in integration tests)
     expect(result.current.answers).toEqual({ q1: "answer1", q2: "answer2" });
   });
 
-  // T013: Integration test - should restore previous tab data from GET /assessment on back navigation
-  // (This would be better as an integration test with full component mounting)
+  // T013: should restore previous tab data from GET /assessment on section change
   it("should restore previous tab data from GET /assessment on section change", async () => {
     const workforceResponse: ApiResponse<AssessmentData> = {
       success: true,
@@ -195,7 +178,7 @@ describe("useAssessment Hook", () => {
       },
     };
 
-    (getAssessment as jest.Mock)
+    vi.mocked(getAssessment)
       .mockResolvedValueOnce(workforceResponse)
       .mockResolvedValueOnce(compensationResponse);
 

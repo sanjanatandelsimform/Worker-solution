@@ -5,9 +5,8 @@ import { BaseModalWithIcon } from "@/components/modals/BaseModalWithIcon";
 import { InProgressModal } from "@/components/modals/InProgressModal";
 import questionData from "@/data/assessment/questionData.json";
 import type { Question } from "@/types/questionTypes";
-import checkmarkIcon from "@/assets/checkmark-icon.svg";
-import alertIcon from "@/assets/alert-icon.svg";
 import { CircleCheckIcon } from "@/assets/icons/CircleCheckIcon";
+import { useModalConfig } from "@/hooks/useModalConfig";
 
 interface GoalsTabProps {
   onNext?: () => void;
@@ -22,6 +21,36 @@ export default function GoalsTab({ onNext, onSuccess }: GoalsTabProps) {
   const [apiErrorMessage, setApiErrorMessage] = useState<string>("");
 
   const goalsSection = questionData.sections.find(section => section.name === "Goals");
+
+  // Modal configs using the hook
+  const successModal = useModalConfig("goalsComplete", {
+    isOpen: showSuccessModal,
+    onClose: () => setShowSuccessModal(false),
+    onConfirm: () => {
+      setShowSuccessModal(false);
+      navigate("/dashboard");
+    },
+  });
+
+  const emptyWarningModal = useModalConfig("goalsEmptyWarning", {
+    isOpen: showEmptyWarning,
+    onClose: () => {
+      setIsInProgressModalOpen(false);
+      setShowEmptyWarning(false);
+    },
+    onConfirm: () => {
+      setIsInProgressModalOpen(false);
+      setShowEmptyWarning(false);
+      navigate("/assessment");
+    },
+  });
+
+  const apiErrorModal = useModalConfig("goalsApiError", {
+    isOpen: !!apiErrorMessage,
+    onClose: () => setApiErrorMessage(""),
+    onConfirm: () => setApiErrorMessage(""),
+    additionalData: { errorMessage: apiErrorMessage },
+  });
 
   if (!goalsSection) {
     return <div className="text-red-600">Goals section not found in question data</div>;
@@ -48,32 +77,6 @@ export default function GoalsTab({ onNext, onSuccess }: GoalsTabProps) {
     setApiErrorMessage(errorMessage);
   };
 
-  const handleDashboardNavigation = () => {
-    setShowSuccessModal(false);
-    navigate("/dashboard");
-  };
-
-  const handleCancelWarning = () => {
-    setIsInProgressModalOpen(false);
-    setShowEmptyWarning(false);
-  };
-
-  const handleContinueWithEmpty = () => {
-    setIsInProgressModalOpen(false);
-    setShowEmptyWarning(false);
-    // if (onNext) onNext();
-    navigate("/assessment");
-  };
-
-  const handleRetryError = () => {
-    setApiErrorMessage("");
-    // DynamicTab will handle re-triggering submission if needed
-  };
-
-  const handleCancelError = () => {
-    setApiErrorMessage("");
-  };
-
   return (
     <>
       <DynamicTab
@@ -88,76 +91,30 @@ export default function GoalsTab({ onNext, onSuccess }: GoalsTabProps) {
 
       <InProgressModal
         isOpen={isInProgressModalOpen}
-        onClose={() => setIsInProgressModalOpen(false)} // Prevent manual close during submission
+        onClose={() => setIsInProgressModalOpen(false)}
         title="Preparing..."
         subtitle="One moment while we prepare your results and recommendations."
       />
 
-      {/* Success Modal - "You're done!" */}
       <BaseModalWithIcon
         isOpen={showSuccessModal}
         onClose={() => setShowSuccessModal(false)}
-        size="sm"
-        title="You're done!"
-        subtitle="See your results and recommendations on your dashboard"
-        messageImg={checkmarkIcon}
         icon={<CircleCheckIcon />}
-        backgroundPattern="success"
-        buttons={[
-          {
-            text: "Go to Dashboard",
-            onClick: handleDashboardNavigation,
-            color: "primary",
-          },
-        ]}
+        {...successModal}
       />
 
-      {/* Empty Submission Warning Modal - "Uh-oh" */}
       <BaseModalWithIcon
         isOpen={showEmptyWarning}
-        onClose={handleCancelWarning}
-        size="sm"
-        title="Uh-oh"
-        subtitle="You have not filled anything out. Your recommendations will not be as accurate. Are you sure you want to proceed?"
-        messageImg={alertIcon}
+        onClose={() => setShowEmptyWarning(false)}
         icon={<CircleCheckIcon />}
-        backgroundPattern="unsuccess"
-        buttons={[
-          {
-            text: "Cancel",
-            onClick: handleCancelWarning,
-            color: "secondary",
-          },
-          {
-            text: "Continue",
-            onClick: handleContinueWithEmpty,
-            color: "primary",
-          },
-        ]}
+        {...emptyWarningModal}
       />
 
-      {/* API Error Modal - For general submission failures */}
       <BaseModalWithIcon
         isOpen={!!apiErrorMessage}
-        onClose={handleCancelError}
-        size="sm"
-        title="Submission Failed"
-        subtitle={apiErrorMessage || "Something went wrong. Please try again."}
-        messageImg={alertIcon}
+        onClose={() => setApiErrorMessage("")}
         icon={<CircleCheckIcon />}
-        backgroundPattern="unsuccess"
-        buttons={[
-          {
-            text: "Cancel",
-            onClick: handleCancelError,
-            color: "secondary",
-          },
-          {
-            text: "Retry",
-            onClick: handleRetryError,
-            color: "primary",
-          },
-        ]}
+        {...apiErrorModal}
       />
     </>
   );

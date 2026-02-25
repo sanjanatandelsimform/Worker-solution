@@ -3,10 +3,12 @@ import authReducer from "./slices/authSlice";
 import profileReducer from "./slices/profileSlice";
 import registrationFormReducer from "./slices/registrationFormSlice";
 import userReducer from "./slices/userSlice";
+import dashboardReducer from "./slices/dashboardSlice";
 import type { AuthState } from "./slices/authSlice";
 import type { ProfileState } from "@/types/profileTypes";
 import type { UserState } from "@/types/userTypes";
 import type { RegistrationFormState } from "./slices/registrationFormSlice";
+import type { DashboardState } from "@/types/dashboardTypes";
 
 // Use consistent localStorage key
 const STORAGE_KEY = "userDetail";
@@ -46,6 +48,7 @@ const rootReducer = combineReducers({
   profile: profileReducer,
   registrationForm: registrationFormReducer,
   user: userReducer,
+  dashboard: dashboardReducer,
 });
 
 export const store = configureStore({
@@ -89,6 +92,7 @@ export type RootState = {
   profile: ProfileState;
   registrationForm: RegistrationFormState;
   user: UserState;
+  dashboard: DashboardState;
 };
 export type AppDispatch = typeof store.dispatch;
 
