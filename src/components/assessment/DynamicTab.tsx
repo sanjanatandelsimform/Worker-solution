@@ -11,6 +11,9 @@ interface DynamicTabProps {
   onValidationChange?: (isValid: boolean) => void;
   onNext?: () => void;
   onSuccess?: () => void;
+  onSubmitStart?: () => void;
+  onEmptySubmission?: () => void;
+  onApiError?: (errorMessage: string) => void;
   hideHeader?: boolean;
   disableWindowRegistration?: boolean;
 }
@@ -36,6 +39,9 @@ export const DynamicTab = forwardRef<
       onValidationChange,
       onNext,
       onSuccess,
+      onSubmitStart,
+      onEmptySubmission,
+      onApiError,
       hideHeader = false,
       disableWindowRegistration = false,
     },
@@ -52,10 +58,8 @@ export const DynamicTab = forwardRef<
     } = useAssessment({ section });
     const [errors, setErrors] = useState<Record<string, string>>({});
     const [isSaving, setIsSaving] = useState(false);
-    // Track if we're in an explicit submit action (vs normal state update)
     const isExplicitSubmitRef = useRef(false);
 
-    // Sync hook errors to local state
     useEffect(() => {
       if (Object.keys(hookErrors).length > 0) {
         setErrors(hookErrors);
@@ -71,7 +75,6 @@ export const DynamicTab = forwardRef<
         setErrors(prev => {
           const next = { ...prev };
 
-          // Clear exact key error
           delete next[key];
 
           Object.keys(next).forEach(k => {
@@ -97,6 +100,7 @@ export const DynamicTab = forwardRef<
       },
       [updateAnswer, errors]
     );
+
     const validateAnswers = useCallback(() => {
       const newErrors: Record<string, string> = {};
       let isValid = true;
@@ -122,7 +126,6 @@ export const DynamicTab = forwardRef<
           }
         }
 
-        // Validate ARRAY type (MULTIPLE_CHOICE) - allow up to maxItems but don't block selection
         if (rules.type === "ARRAY" && Array.isArray(value)) {
           if (rules.minItems && value.length < rules.minItems) {
             newErrors[question.key] =
@@ -178,7 +181,6 @@ export const DynamicTab = forwardRef<
                     }
                   }
 
-                  // Auto-detect alphabetical pattern for text fields named "title", "occupation", etc.
                   if (
                     field.type === "text" &&
                     !field.pattern &&
@@ -188,14 +190,12 @@ export const DynamicTab = forwardRef<
                     (field.name === "title" || field.name === "occupation")
                   ) {
                     const stringValue = String(fieldValue).trim();
-                    // Check if contains non-alphabetical characters (allow spaces)
                     if (!/^[a-zA-Z\s]+$/.test(stringValue)) {
                       newErrors[fieldKey] = "Only alphabetical";
                       isValid = false;
                     }
                   }
 
-                  // Type validation (numeric)
                   if (
                     field.type === "number" &&
                     fieldValue !== null &&
@@ -215,7 +215,6 @@ export const DynamicTab = forwardRef<
           }
         }
 
-        // Validate PARTICIPATION_RATES subFields individually
         if (question.questionType === "PARTICIPATION_RATES" && rules.type === "OBJECT") {
           if (rules.required) {
             const answerObj = (value as Record<string, unknown>) || {};
@@ -228,8 +227,8 @@ export const DynamicTab = forwardRef<
             });
           }
         }
+
         if (question.conditionalQuestion) {
-          // First, determine if the conditional question is currently visible
           const isFirstLevelShown = (() => {
             const showWhen = question.conditionalQuestion.showWhen;
             if (showWhen === "yes") return value === true;
@@ -241,7 +240,6 @@ export const DynamicTab = forwardRef<
             const conditionalValue = answers[question.conditionalQuestion.question.key];
             const conditionalRules = question.conditionalQuestion.question.validationRules;
 
-            // Only enforce required validation if the first-level CQ is marked required
             if (conditionalRules.required) {
               const isConditionalEmpty =
                 conditionalRules.type === "ARRAY"
@@ -257,6 +255,7 @@ export const DynamicTab = forwardRef<
                 isValid = false;
               }
             }
+
             const firstLevelCq = question.conditionalQuestion.question;
             if (
               firstLevelCq.conditionalQuestion &&
@@ -309,13 +308,12 @@ export const DynamicTab = forwardRef<
         if (value === null || value === undefined) {
           // Skip but allow conditional child
         } else {
-          // Handle different question types and convert to correct types
           if (question.questionType === "NUMERIC" || question.questionType === "NUMBER_INPUT") {
             cleaned[question.key] = typeof value === "number" ? value : Number(value);
           } else if (question.questionType === "YES_NO") {
             cleaned[question.key] = typeof value === "boolean" ? value : value === "yes";
           } else if (question.questionType === "STRUCTURED_ARRAY" && Array.isArray(value)) {
-            cleaned[question.key] = value.map((item: Record<string, unknown>) => {
+            const mappedItems = value.map((item: Record<string, unknown>) => {
               const cleanedItem: Record<string, unknown> = { ...item };
               delete cleanedItem.id;
 
@@ -346,11 +344,22 @@ export const DynamicTab = forwardRef<
 
               return cleanedItem;
             });
+
+            const nonEmptyItems = mappedItems.filter((item: Record<string, unknown>) =>
+              Object.values(item).some(val => {
+                if (val === null || val === undefined) return false;
+                if (typeof val === "string") return val.trim() !== "";
+                return true;
+              })
+            );
+
+            if (nonEmptyItems.length > 0) {
+              cleaned[question.key] = nonEmptyItems;
+            }
           } else if (
             question.questionType === "TEXT_INPUT" &&
             question.key === "lowestHealthPlanPremium"
           ) {
-            // API expects number for this field
             const numValue = Number(String(value).replace(/[^0-9.]/g, ""));
             cleaned[question.key] = isNaN(numValue) ? value : numValue;
           } else {
@@ -369,7 +378,7 @@ export const DynamicTab = forwardRef<
             } else if (cq.questionType === "YES_NO") {
               cleaned[cKey] = typeof cValue === "boolean" ? cValue : cValue === "yes";
             } else if (cq.questionType === "STRUCTURED_ARRAY" && Array.isArray(cValue)) {
-              cleaned[cKey] = cValue.map((item: Record<string, unknown>) => {
+              const mappedItems = cValue.map((item: Record<string, unknown>) => {
                 const cleanedItem: Record<string, unknown> = { ...item };
                 delete cleanedItem.id;
 
@@ -383,7 +392,6 @@ export const DynamicTab = forwardRef<
                       errorMessage?: string;
                     }) => {
                       const fieldValue = cleanedItem[field.name];
-
                       if (
                         field.type === "number" &&
                         fieldValue !== null &&
@@ -400,9 +408,22 @@ export const DynamicTab = forwardRef<
 
                 return cleanedItem;
               });
+
+              const nonEmptyItems = mappedItems.filter((item: Record<string, unknown>) =>
+                Object.values(item).some(val => {
+                  if (val === null || val === undefined) return false;
+                  if (typeof val === "string") return val.trim() !== "";
+                  return true;
+                })
+              );
+
+              if (nonEmptyItems.length > 0) {
+                cleaned[cKey] = nonEmptyItems;
+              }
             } else {
               cleaned[cKey] = cValue;
             }
+
             if (cq.conditionalQuestion?.question) {
               const nestedCq = cq.conditionalQuestion.question;
               const nestedKey = nestedCq.key;
@@ -428,6 +449,7 @@ export const DynamicTab = forwardRef<
           }
         }
       });
+
       if (section === "goals") {
         const rankingValue = answers["workforceGoalsRanking"];
         if (Array.isArray(rankingValue)) {
@@ -455,7 +477,6 @@ export const DynamicTab = forwardRef<
                 });
               }
             }
-            // Reset flag after scroll completes
             isExplicitSubmitRef.current = false;
           }, 100);
         } else {
@@ -464,10 +485,29 @@ export const DynamicTab = forwardRef<
         return { success: false, errors };
       }
 
-      // Reset flag after successful validation
       isExplicitSubmitRef.current = false;
 
       const cleanedAnswers = cleanAnswers();
+
+      // Check if answers are empty (for goals section)
+      const hasAnyAnswers =
+        Object.keys(cleanedAnswers).length > 0 &&
+        Object.values(cleanedAnswers).some(value => {
+          if (value === null || value === undefined || value === "") return false;
+          if (Array.isArray(value)) return value.length > 0;
+          return true;
+        });
+
+      if (!hasAnyAnswers && section === "goals") {
+        if (onEmptySubmission) {
+          onEmptySubmission();
+          return { success: false, error: "No answers provided" };
+        }
+      }
+
+      // Trigger loading modal
+      if (onSubmitStart) onSubmitStart();
+
       setIsSaving(true);
 
       try {
@@ -476,6 +516,11 @@ export const DynamicTab = forwardRef<
           if (onSuccess) onSuccess();
           if (onNext) onNext();
         } else {
+          // Handle API errors
+          if (onApiError) {
+            const errorMsg = response.error || "Failed to submit assessment. Please try again.";
+            onApiError(errorMsg);
+          }
           if (response.fieldErrors) {
             setErrors(prev => ({ ...prev, ...response.fieldErrors }));
             setTimeout(() => {
@@ -497,14 +542,29 @@ export const DynamicTab = forwardRef<
         return response;
       } catch (error) {
         console.error("[DynamicTab] Submission error:", error);
+        const errorMsg = error instanceof Error ? error.message : "An unexpected error occurred";
+        if (onApiError) {
+          onApiError(errorMsg);
+        }
         return {
           success: false,
-          error: error instanceof Error ? error.message : "An error occurred",
+          error: errorMsg,
         };
       } finally {
         setIsSaving(false);
       }
-    }, [validateAnswers, errors, cleanAnswers, submitSection, onSuccess, onNext]);
+    }, [
+      validateAnswers,
+      errors,
+      cleanAnswers,
+      submitSection,
+      onSuccess,
+      onNext,
+      onSubmitStart,
+      onEmptySubmission,
+      onApiError,
+      section,
+    ]);
 
     const saveWithoutValidation = useCallback(async () => {
       const cleanedAnswers = cleanAnswers();
@@ -582,12 +642,12 @@ export const DynamicTab = forwardRef<
         workforce: {
           title: "Workforce",
           description:
-            "We’d like to get a better understanding of your workforce and how they’re structured. This will help us customize relevant solution providers.",
+            "We'd like to get a better understanding of your workforce and how they're structured. This will help us customize relevant solution providers.",
         },
         compensation: {
           title: "Compensation",
           description:
-            "Select salary that applies best to your workforce. This doesn’t have to be exact.",
+            "Select salary that applies best to your workforce. This doesn't have to be exact.",
         },
         benefits: {
           title: "Benefits",
@@ -597,13 +657,12 @@ export const DynamicTab = forwardRef<
         goals: {
           title: "Goals",
           description:
-            "Pick the goal that best reflects your company’s workforce priorities. This helps us share insights and tips that fit your team’s needs.",
+            "Pick the goal that best reflects your company's workforce priorities. This helps us share insights and tips that fit your team's needs.",
         },
       };
 
     return (
       <div className="bg-ws-white space-y-6 p-6">
-        {/* Loading State - Non-blocking */}
         {isLoadingGet && (
           <div className="flex items-center justify-center py-4">
             <div className="h-6 w-6 animate-spin rounded-full border-4 border-ws-cyan-60 border-t-transparent"></div>
@@ -611,7 +670,6 @@ export const DynamicTab = forwardRef<
           </div>
         )}
 
-        {/* GET Error Display */}
         {apiError?.type === "get" && (
           <div className="rounded-md border border-ws-red-20 bg-ws-red-40 p-4">
             <p className="text-sm text-ws-red-40">{apiError.message}</p>
@@ -624,19 +682,6 @@ export const DynamicTab = forwardRef<
           </div>
         )}
 
-        {/* POST Error Display - Show validation errors
-      {apiError?.type === "post" && Object.keys(errors).length > 0 && (
-        <div className="rounded-md border border-red-300 bg-red-50 p-4">
-          <p className="text-sm font-semibold text-red-800 mb-2">{apiError.message}</p>
-          <ul className="list-inside list-disc space-y-1 text-sm text-red-700">
-            {Object.entries(errors).map(([key, message]) => (
-              <li key={key}>{message}</li>
-            ))}
-          </ul>
-        </div>
-      )} */}
-
-        {/* POST Error Display - Show validation errors using ErrorMessage component */}
         {apiError?.type === "post" && Object.keys(errors).length > 0 && (
           <ErrorMessage
             errorType="danger"
@@ -653,7 +698,7 @@ export const DynamicTab = forwardRef<
             }
           />
         )}
-        {/* Form Content - Always visible */}
+
         {sectionContent[section] && !hideHeader && (
           <>
             <h2 className="text-3xl font-semibold mb-2">{sectionContent[section].title}</h2>
@@ -671,7 +716,6 @@ export const DynamicTab = forwardRef<
 
           return (
             <div key={question.key}>
-              {/* Visual card break for subsections — mimics separate white cards */}
               {isFirstInSubsection && currentSubsection && (
                 <div className="-mx-6 px-6 pt-8 pb-6 mt-6 border-t-25 border-gray-50">
                   <h2 className="text-2xl font-medium text-ws-black-90 pb-4 border-b border-ws-gray-40">
