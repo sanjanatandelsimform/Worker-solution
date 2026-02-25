@@ -134,7 +134,7 @@ secret_detection:
 
 # Job: SonarQube Analysis
 # Performs static code analysis for code quality, bugs, and security vulnerabilities
-# Requires: SONAR_PROJECT_KEY, SONAR_HOST_URL, SONAR_TOKEN environment variables
+# Requires: SONAR_HOST_URL, SONAR_TOKEN environment variables
 sonarqube:
   stage: sonarqube
   image: maven:3.9.9-eclipse-temurin-17 # Java-based image for SonarScanner CLI
@@ -153,7 +153,6 @@ sonarqube:
       export PATH="$PWD/sonar-scanner-5.0.1.3006-linux/bin:$PATH"
       # Run SonarQube analysis
       sonar-scanner \
-        -Dsonar.projectKey="$SONAR_PROJECT_KEY" \
         -Dsonar.host.url="$SONAR_HOST_URL" \
         -Dsonar.login="$SONAR_TOKEN" \
         -Dsonar.sources=./src \
