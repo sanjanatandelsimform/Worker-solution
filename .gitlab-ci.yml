@@ -38,6 +38,7 @@ variables:
 
   # NPM cache directory for faster dependency installation
   NPM_CACHE_FOLDER: '$CI_PROJECT_DIR/.npm'
+  NODE_IMAGE: 'node:24'
 
 # =============================================================================
 # Node.js Build, Test, and Lint Jobs
@@ -47,7 +48,7 @@ variables:
 # Installs npm packages and generates Prisma client types once for reuse in all downstream jobs
 install_dependencies:
   stage: test
-  image: node:18
+  image: node:24
   cache:
     key: 'npm-$CI_COMMIT_REF_SLUG'
     paths:
@@ -70,7 +71,7 @@ install_dependencies:
 # Runs ESLint to check code quality and style compliance
 lint:
   stage: test
-  image: node:18
+  image: node:24
   needs: ['install_dependencies']
   dependencies:
     - install_dependencies
@@ -85,7 +86,7 @@ lint:
 # Note: Tests use mocked DAL layer - DATABASE_URL is only needed for Prisma type generation
 npm-test:
   stage: test
-  image: node:18
+  image: node:24
   needs: ['install_dependencies']
   dependencies:
     - install_dependencies
@@ -107,7 +108,7 @@ npm-test:
 # Compiles TypeScript to JavaScript for production deployment
 build:
   stage: test
-  image: node:18
+  image: node:24
   needs: ['install_dependencies']
   dependencies:
     - install_dependencies
