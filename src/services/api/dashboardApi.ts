@@ -93,10 +93,6 @@ export const getDashboard = async (): Promise<DashboardResponse> => {
         totalWorkforce: "100-500",
         averageHourlyWage: "$26+",
         averageSalary: "$30,000 - $50,000",
-        // workingClassPopulation: {
-        //   count: 89,
-        //   percentage: 38,
-        // },
         industryAverageWage: 61964,
       },
       industryOverview: {
