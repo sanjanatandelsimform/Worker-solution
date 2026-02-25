@@ -11,7 +11,10 @@ type ModalType =
   | "accountDelete"
   | "resendSuccess"
   | "cooldown"
-  | "logoutConfirmation";
+  | "logoutConfirmation"
+  | "goalsComplete"
+  | "goalsEmptyWarning"
+  | "goalsApiError";
 
 interface ModalConfig {
   isOpen: boolean;
@@ -151,6 +154,61 @@ export const useModalConfig = (
             onClick: config.onConfirm || config.onClose,
             color: "primary-destructive",
             isDisabled: config.additionalData?.isDisabled as boolean,
+          },
+        ],
+      },
+      goalsComplete: {
+        size: "sm",
+        title: "You're done!",
+        subtitle: "See your results and recommendations on your dashboard",
+        messageImg: checkmarkIcon,
+        backgroundPattern: "success",
+        buttons: [
+          {
+            text: "Go to Dashboard",
+            onClick: config.onConfirm || config.onClose,
+            color: "primary",
+          },
+        ],
+      },
+      goalsEmptyWarning: {
+        size: "sm",
+        title: "Uh-oh",
+        subtitle:
+          "You have not filled anything out. Your recommendations will not be as accurate. Are you sure you want to proceed?",
+        messageImg: alertIcon,
+        backgroundPattern: "unsuccess",
+        buttons: [
+          {
+            text: "Cancel",
+            onClick: config.onClose,
+            color: "secondary",
+          },
+          {
+            text: "Continue",
+            onClick: config.onConfirm || config.onClose,
+            color: "primary",
+          },
+        ],
+      },
+      goalsApiError: {
+        size: "sm",
+        title: "Submission Failed",
+        subtitle:
+          (config.additionalData?.errorMessage as string) ||
+          "Something went wrong. Please try again.",
+        messageImg: alertIcon,
+        backgroundPattern: "unsuccess",
+        buttons: [
+          {
+            text: "Cancel",
+            onClick: config.onClose,
+            color: "secondary",
+          },
+          {
+            text: "Retry",
+            onClick: config.onConfirm || config.onClose,
+            color: "primary",
           },
         ],
       },

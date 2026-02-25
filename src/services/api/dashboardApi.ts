@@ -12,7 +12,7 @@ import axios from "axios";
 import type { DashboardResponse } from "@/types/dashboardTypes";
 
 // API base URL from environment variables
-const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || "https://dev-api.benestats.com/api/v1";
+// const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || "https://dev-api.benestats.com/api/v1";
 
 // Storage key for user authentication details
 const STORAGE_KEY = "userDetail";
