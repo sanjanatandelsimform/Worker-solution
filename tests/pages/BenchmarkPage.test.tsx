@@ -556,4 +556,23 @@ describe("BenchmarkPage", () => {
       expect(container).toBeInTheDocument();
     });
   });
+
+  it("should display fallback when housingCost is empty", () => {
+    const store = createTestStore({
+      data: {
+        housingCost: [],
+      },
+      loading: false,
+      error: null,
+    });
+
+    render(
+      <Provider store={store}>
+        <BenchmarkPage />
+      </Provider>
+    );
+
+    const fallbackElements = screen.getAllByText("N/A");
+    expect(fallbackElements.length).toBeGreaterThan(0);
+  });
 });

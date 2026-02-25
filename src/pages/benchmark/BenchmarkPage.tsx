@@ -10,7 +10,7 @@ import { Tooltip, TooltipTrigger } from "@/components/base/tooltip/tooltip";
 import { InfoCircle } from "@untitledui/icons";
 import { GetInTouchModal } from "@/components/modals/GetInTouchModal";
 import WageBarChart from "./WageBarChart";
-import type { Key } from 'react';
+import type { Key } from "react";
 import { useAppSelector } from "@/store/hooks";
 import {
   selectIndustryOverview,
@@ -220,21 +220,21 @@ export default function BenchmarkPage() {
           </div>
           <div className="w-full md:w-full md:mt-4 lg:w-auto">
             {zipCodes && zipCodes.length > 0 ? (
-                <Select
-                  className="w-full flex items-start min-w-50 md:min-w-full lg:min-w-80"
-                  isRequired
-                  size="md"
-                  placeholder="Select Zip Code"
-                  items={zipCodes.map(z => ({ label: z, id: `@${z}` }))}
-                  value={selectedZip ? `@${selectedZip}` : undefined}
-                  onSelectionChange={(key: Key | null) => {
-                    if (key !== null) {
-                      setSelectedZip(String(key).replace(/^@/, ""));
-                    }
-                  }}
-                >
-                  {item => <Select.Item id={item.id}>{item.label}</Select.Item>}
-                </Select>
+              <Select
+                className="w-full flex items-start min-w-50 md:min-w-full lg:min-w-80"
+                isRequired
+                size="md"
+                placeholder="Select Zip Code"
+                items={zipCodes.map(z => ({ label: z, id: `@${z}` }))}
+                value={selectedZip ? `@${selectedZip}` : undefined}
+                onSelectionChange={(key: Key | null) => {
+                  if (key !== null) {
+                    setSelectedZip(String(key).replace(/^@/, ""));
+                  }
+                }}
+              >
+                {item => <Select.Item id={item.id}>{item.label}</Select.Item>}
+              </Select>
             ) : (
               <div className="text-sm text-ws-black-40">No ZIP codes available</div>
             )}
@@ -398,21 +398,21 @@ export default function BenchmarkPage() {
           {/* Zip selector for the entire housing section */}
           <div className="w-full md:w-full md:mt-4 lg:w-auto">
             {zipCodes && zipCodes.length > 0 ? (
-                <Select
-                  className="w-full flex items-start min-w-50 md:min-w-full lg:min-w-80"
-                  isRequired
-                  size="md"
-                  placeholder="Select Zip Code"
-                  items={zipCodes.map(z => ({ label: z, id: `@${z}` }))}
-                  value={selectedHousingZip ? `@${selectedHousingZip}` : undefined}
-                  onSelectionChange={(key: Key | null) => {
-                    if (key !== null) {
-                      setSelectedHousingZip(String(key).replace(/^@/, ""));
-                    }
-                  }}
-                >
-                  {item => <Select.Item id={item.id}>{item.label}</Select.Item>}
-                </Select>
+              <Select
+                className="w-full flex items-start min-w-50 md:min-w-full lg:min-w-80"
+                isRequired
+                size="md"
+                placeholder="Select Zip Code"
+                items={zipCodes.map(z => ({ label: z, id: `@${z}` }))}
+                value={selectedHousingZip ? `@${selectedHousingZip}` : undefined}
+                onSelectionChange={(key: Key | null) => {
+                  if (key !== null) {
+                    setSelectedHousingZip(String(key).replace(/^@/, ""));
+                  }
+                }}
+              >
+                {item => <Select.Item id={item.id}>{item.label}</Select.Item>}
+              </Select>
             ) : null}
           </div>
         </div>

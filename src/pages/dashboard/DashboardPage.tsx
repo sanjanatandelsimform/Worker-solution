@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, useCallback } from "react";
 import { useNavigate } from "react-router-dom";
 import { DashboardSidebar } from "@/components/dashboard/DashboardSidebar";
 import emailIcon from "@/assets/mail-icon.svg";
@@ -47,7 +47,23 @@ export const DashboardPage = () => {
   const dashboardIsLoaded = useAppSelector(selectDashboardIsLoaded);
 
   // Function to refetch user data
-  const refetchUserData = async () => {
+  // const refetchUserData = async () => {
+  //   if (user?.id) {
+  //     try {
+  //       const userDetail = localStorage.getItem("userDetail");
+  //       if (userDetail) {
+  //         const parsedUserDetail = JSON.parse(userDetail);
+  //         const accessToken = parsedUserDetail?.auth?.tokens?.accessToken;
+  //         if (accessToken) {
+  //           await dispatch(fetchUserById({ userId: user.id, token: accessToken })).unwrap();
+  //         }
+  //       }
+  //     } catch (error) {
+  //       console.error("Failed to refetch user data:", error);
+  //     }
+  //   }
+  // };
+  const refetchUserData = useCallback(async () => {
     if (user?.id) {
       try {
         const userDetail = localStorage.getItem("userDetail");
@@ -62,7 +78,7 @@ export const DashboardPage = () => {
         console.error("Failed to refetch user data:", error);
       }
     }
-  };
+  }, [user, dispatch]);
 
   useEffect(() => {
     if (user?.id) {
@@ -121,7 +137,7 @@ export const DashboardPage = () => {
     }
   }, [completionCount, dashboardIsLoaded, dashboardLoading, dispatch]);
 
- const handleRetryDashboard = () => {
+  const handleRetryDashboard = () => {
     dispatch(fetchDashboard());
   };
 
