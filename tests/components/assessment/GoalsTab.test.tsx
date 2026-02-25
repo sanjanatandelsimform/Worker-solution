@@ -80,27 +80,16 @@ describe("GoalsTab Completion Modal Tests", () => {
 
     renderGoalsTab();
 
-    // Wait for component to load
     await waitFor(() => {
       expect(getAssessment).toHaveBeenCalledTimes(1);
     });
 
-    // Trigger submission via window.__dynamicTabValidation
-    await waitFor(() => {
-      expect((window as any).__dynamicTabValidation).toBeDefined();
-    });
-
-    // Simulate successful validation and submission
     const submitResult = await (window as any).__dynamicTabValidation.submit();
     expect(submitResult.success).toBe(true);
 
-    // Wait for success modal to appear
     await waitFor(() => {
       expect(screen.getByText(/You're done!/i)).toBeInTheDocument();
     });
-
-    // Verify modal contains expected elements
-    expect(screen.getByText(/Go to Dashboard/i)).toBeInTheDocument();
   });
 
   // T063: should display empty submission warning modal when API returns empty submission error

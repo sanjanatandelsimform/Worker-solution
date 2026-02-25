@@ -63,13 +63,13 @@ export default function RecommendationsPage() {
           //     ? formatNumber(companyAtGlance?.industryAverageWage)
           //     : "N/A"
           // }
-            count={
-              companyAtGlance?.industryAverageWage
-                ? typeof companyAtGlance.industryAverageWage === 'number'
-                  ? formatNumber(companyAtGlance.industryAverageWage)
-                  : companyAtGlance.industryAverageWage
-                : "N/A"
-            }
+          count={
+            companyAtGlance?.industryAverageWage
+              ? typeof companyAtGlance.industryAverageWage === "number"
+                ? formatNumber(companyAtGlance.industryAverageWage)
+                : companyAtGlance.industryAverageWage
+              : "N/A"
+          }
           // infoIcon={true}
           infoCircleClass="text-ws-black-200"
           tooltipText="How is this calculated"

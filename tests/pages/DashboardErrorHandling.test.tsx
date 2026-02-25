@@ -12,6 +12,7 @@ import { configureStore } from "@reduxjs/toolkit";
 import DashboardPage from "@/pages/dashboard/DashboardPage";
 import dashboardReducer from "@/store/slices/dashboardSlice";
 import * as dashboardApi from "@/services/api/dashboardApi";
+import type { DashboardState } from "@/types/dashboardTypes";
 
 // Mock the API module
 vi.mock("@/services/api/dashboardApi");
@@ -43,7 +44,8 @@ vi.mock("@/components/common/ErrorMessage", () => ({
 }));
 
 // Helper to create a test store
-const createTestStore = (initialState?: any) => {
+// const createTestStore = (initialState?: any) => {
+const createTestStore = (initialState?: { dashboard: DashboardState }) => {
   return configureStore({
     reducer: {
       dashboard: dashboardReducer,
@@ -152,7 +154,7 @@ describe("DashboardPage Error Handling", () => {
     expect(screen.getByTestId("error-action-button")).toBeInTheDocument();
   });
 
-  it("should retry dashboard fetch when retry button clicked", async () => {
+  it("should call getDashboard again when retry button is clicked", async () => {
     // Arrange: Mock initial error then success
     const mockData = {
       companyAtGlance: {

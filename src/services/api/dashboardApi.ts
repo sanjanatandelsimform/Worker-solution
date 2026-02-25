@@ -12,7 +12,7 @@ import axios from "axios";
 import type { DashboardResponse } from "@/types/dashboardTypes";
 
 // API base URL from environment variables
-// const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || "https://dev-api.benestats.com/api/v1";
+const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || "https://dev-api.benestats.com/api/v1";
 
 // Storage key for user authentication details
 const STORAGE_KEY = "userDetail";
@@ -85,9 +85,8 @@ export const getDashboard = async (): Promise<DashboardResponse> => {
     //   },
     // });
 
-    // console.log("response====>>>>", response);
-
     // return response.data;
+    // Right now we are using statid response api is not ready yet we will remove statis response
     const response1 = {
       zipCodes: ["94043", "94105", "95113"], //To be used for drop-down only
       companyAtGlance: {

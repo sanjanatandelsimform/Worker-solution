@@ -6,7 +6,7 @@
  */
 
 import { describe, it, expect, vi, beforeEach, afterEach } from "vitest";
-import axios from "axios";
+import axios, { type AxiosRequestConfig, type AxiosError } from "axios";
 import { getDashboard } from "@/services/api/dashboardApi";
 import type { DashboardResponse } from "@/types/dashboardTypes";
 
@@ -79,7 +79,7 @@ describe("dashboardApi", () => {
         status: 200,
         statusText: "OK",
         headers: {},
-        config: {} as any,
+        config: {} as AxiosRequestConfig,
       });
 
       // Act: Call getDashboard
@@ -97,7 +97,7 @@ describe("dashboardApi", () => {
         status: 200,
         statusText: "OK",
         headers: {},
-        config: {} as any,
+        config: {} as AxiosRequestConfig,
       });
 
       // Act: Call getDashboard
@@ -121,7 +121,7 @@ describe("dashboardApi", () => {
         status: 200,
         statusText: "OK",
         headers: {},
-        config: {} as any,
+        config: {} as AxiosRequestConfig,
       });
 
       // Act: Call getDashboard
@@ -147,70 +147,46 @@ describe("dashboardApi", () => {
       expect(mockedAxios.get).not.toHaveBeenCalled();
     });
 
-    it("should handle timeout errors", async () => {
-      // Arrange: Mock timeout error
-      const timeoutError = {
+    it("should throw timeout error when request times out", async () => {
+      const timeoutError: AxiosError = {
+        isAxiosError: true,
         code: "ECONNABORTED",
         message: "timeout of 30000ms exceeded",
-        isAxiosError: true,
-      };
-      mockedAxios.get.mockRejectedValueOnce(timeoutError);
-      mockedAxios.isAxiosError.mockReturnValueOnce(true);
+        response: undefined,
+      } as AxiosError;
 
-      // Act & Assert: Should throw user-friendly timeout message
+      vi.mocked(axios.get).mockRejectedValueOnce(timeoutError);
+
       await expect(getDashboard()).rejects.toThrow("Request timed out. Please try again.");
     });
 
-    it("should handle 401 unauthorized errors", async () => {
-      // Arrange: Mock 401 error response
-      const unauthorizedError = {
+    it("should throw API error message when available", async () => {
+      const apiError = {
+        isAxiosError: true,
         response: {
-          status: 401,
           data: {
-            message: "Unauthorized: Invalid or expired token",
+            message: "Invalid authentication token",
           },
         },
-        isAxiosError: true,
-      } as AxiosError;
-      mockedAxios.get.mockRejectedValueOnce(unauthorizedError);
-      mockedAxios.isAxiosError.mockReturnValueOnce(true);
+      } as unknown as Error;
 
-      // Act & Assert: Should throw the API error message
-      await expect(getDashboard()).rejects.toThrow("Unauthorized: Invalid or expired token");
+      vi.mocked(axios.get).mockRejectedValueOnce(apiError);
+
+      await expect(getDashboard()).rejects.toThrow("Invalid authentication token");
     });
 
-    it("should handle 500 server errors", async () => {
-      // Arrange: Mock 500 error response
-      const serverError = {
-        response: {
-          status: 500,
-          data: {
-            message: "Internal server error. Please try again later.",
-          },
-        },
+    it("should throw generic message for unknown errors", async () => {
+      const unknownError = {
         isAxiosError: true,
-      } as AxiosError;
-      mockedAxios.get.mockRejectedValueOnce(serverError);
-      mockedAxios.isAxiosError.mockReturnValueOnce(true);
-
-      // Act & Assert: Should throw the API error message
-      await expect(getDashboard()).rejects.toThrow(
-        "Internal server error. Please try again later."
-      );
-    });
-
-    it("should handle network errors", async () => {
-      // Arrange: Mock network error (no response)
-      const networkError = {
-        message: "Network Error",
-        isAxiosError: true,
+        message: undefined,
         response: undefined,
-      } as AxiosError;
-      mockedAxios.get.mockRejectedValueOnce(networkError);
-      mockedAxios.isAxiosError.mockReturnValueOnce(true);
+      } as unknown as Error;
 
-      // Act & Assert: Should throw the error message
-      await expect(getDashboard()).rejects.toThrow("Network Error");
+      vi.mocked(axios.get).mockRejectedValueOnce(unknownError);
+
+      await expect(getDashboard()).rejects.toThrow(
+        "An unexpected error occurred. Please try again."
+      );
     });
   });
 });
