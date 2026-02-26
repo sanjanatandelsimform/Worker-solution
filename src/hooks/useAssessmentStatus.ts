@@ -79,7 +79,7 @@ export const useAssessmentStatus = (): UseAssessmentStatusReturn => {
     isLoading,
     error,
     assessmentData,
-      sectionCompletion,
+    sectionCompletion,
     refetch: fetchAssessmentStatus,
   };
 };

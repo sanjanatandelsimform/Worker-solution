@@ -51,7 +51,7 @@ export function ProgressStepper({
             <Button
               onClick={() => isClickable && onStepChange?.(step.id)}
               disabled={!isClickable}
-              className={`flex h-8 flex-1 items-center justify-center rounded-md border border-gray-200 px-4 py-2 text-sm font-normal transition-colors ${bgColor} ${textColor} ${isClickable ? "cursor-pointer hover:opacity-80" : "cursor-not-allowed"}`}
+              className={`flex h-8 flex-1 items-center justify-center rounded-md border border-gray-200 px-4 py-2 text-sm font-normal transition-colors ${bgColor} ${textColor} hover:bg-${bgColor} hover:text-${textColor} ${isClickable ? "cursor-pointer hover:opacity-80" : "cursor-not-allowed"}`}
             >
               {step.label}
             </Button>

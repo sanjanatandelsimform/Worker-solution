@@ -215,5 +215,20 @@
   color: var(--color-green-500);
   fill: var(--color-green-500);
   stroke: var(--color-green-500);
-  cursor: pointer;
+  cursor: pointer
+}
+.custom-label {
+  color: var(--ws-color-black-90);
+  font-size: 16px;
+  font-weight: 400;
+}
+.custom-input .question-text {
+  color: var(--ws-color-black-20);
+  font-size: 14px;
+  font-weight: 400;
+}
+.custom-question-options .question-text {
+  color: var(--ws-color-black-20);
+  font-size: 14px;
+  font-weight: 400;
 }
