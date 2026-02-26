@@ -159,7 +159,14 @@ export const DynamicTab = forwardRef<
                     field.required &&
                     (fieldValue === null || fieldValue === undefined || fieldValue === "")
                   ) {
-                    newErrors[fieldKey] = field.errorMessage || `${field.name} is required`;
+                    const defaultMessage =
+                      field.name === "zipCode"
+                        ? "Zip code is required"
+                        : field.name === "state"
+                          ? "State is required"
+                          : `${field.name} is required`;
+
+                    newErrors[fieldKey] = field.errorMessage || defaultMessage;
                     isValid = false;
                   }
                   if (

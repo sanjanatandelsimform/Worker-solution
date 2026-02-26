@@ -8,6 +8,8 @@ import {
   type SectionType,
 } from "@/services/api/assessmentApi";
 import type { ApiResponse } from "@/services/api/assessmentApi";
+import questionData from "@/data/assessment/questionData.json";
+import type { Question } from "@/types/questionTypes";
 
 interface UseAssessmentOptions {
   section: SectionType;
@@ -33,6 +35,76 @@ interface UseAssessmentReturn {
   retryGetAssessment: () => Promise<void>;
 }
 
+// Local ID generator for normalizing STRUCTURED_ARRAY items restored from the API
+let structuredArrayIdCounter = 0;
+const generateStructuredArrayId = () => ++structuredArrayIdCounter;
+
+const sectionNameMap: Record<SectionType, string> = {
+  workforce: "Workforce",
+  compensation: "Compensation",
+  benefits: "Benefits",
+  goals: "Goals",
+};
+
+/**
+ * Ensure restored STRUCTURED_ARRAY answers have stable `id` fields
+ * so that DynamicQuestionRenderer can use them as React keys and
+ * for precise item deletion.
+ */
+const normalizeSectionAnswers = (
+  section: SectionType,
+  raw: Record<string, unknown>
+): Record<string, unknown> => {
+  const normalized: Record<string, unknown> = { ...raw };
+
+  const sectionName = sectionNameMap[section];
+  const configSection = questionData.sections.find(
+    s => s.name.toLowerCase() === sectionName.toLowerCase()
+  );
+
+  if (!configSection) {
+    return normalized;
+  }
+
+  const questions = configSection.questions as Question[];
+
+  const normalizeArrayField = (key: string) => {
+    const value = normalized[key];
+    if (!Array.isArray(value)) return;
+
+    const items = value as Array<Record<string, unknown>>;
+    let changed = false;
+
+    const withIds = items.map(item => {
+      if (typeof (item as { id?: unknown }).id !== "number") {
+        changed = true;
+        return {
+          ...item,
+          id: generateStructuredArrayId(),
+        };
+      }
+      return item;
+    });
+
+    if (changed) {
+      normalized[key] = withIds;
+    }
+  };
+
+  questions.forEach(question => {
+    if (question.questionType === "STRUCTURED_ARRAY") {
+      normalizeArrayField(question.key);
+    }
+
+    const conditional = question.conditionalQuestion?.question;
+    if (conditional && conditional.questionType === "STRUCTURED_ARRAY") {
+      normalizeArrayField(conditional.key);
+    }
+  });
+
+  return normalized;
+};
+
 /**
  * Custom hook for managing assessment form state and submission
  * Uses API (/assessment) as single source of truth - NO localStorage
@@ -55,7 +127,9 @@ export const useAssessment = ({ section }: UseAssessmentOptions): UseAssessmentR
     try {
       const response = await getAssessment();
       if (response.success && response.data?.sections?.[section]) {
-        setAnswers(response.data.sections[section] as Record<string, unknown>);
+        const sectionAnswers = response.data.sections[section] as Record<string, unknown>;
+        const normalizedAnswers = normalizeSectionAnswers(section, sectionAnswers);
+        setAnswers(normalizedAnswers);
         // Mark as completed if section exists in API response
         setIsCompleted(true);
       } else {
