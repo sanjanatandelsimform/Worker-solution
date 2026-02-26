@@ -219,6 +219,42 @@ export const DynamicTab = forwardRef<
                 }
               );
             });
+
+            const hasStateField = rules.fields.some(f => f.name === "state");
+            const hasZipField = rules.fields.some(f => f.name === "zipCode");
+
+            if (hasStateField && hasZipField) {
+              const seen = new Set<string>();
+
+              value.forEach((item: Record<string, unknown>, index: number) => {
+                const state = item.state;
+                const zip = item.zipCode;
+
+                if (
+                  state === null ||
+                  state === undefined ||
+                  state === "" ||
+                  zip === null ||
+                  zip === undefined ||
+                  zip === ""
+                ) {
+                  return;
+                }
+
+                const comboKey = `${String(state).toUpperCase()}-${String(zip)}`;
+
+                if (seen.has(comboKey)) {
+                  const duplicateKey = `${question.key}.${index}.zipCode`;
+                  if (!newErrors[duplicateKey]) {
+                    newErrors[duplicateKey] =
+                      "This state and zip code combination already exists.";
+                  }
+                  isValid = false;
+                } else {
+                  seen.add(comboKey);
+                }
+              });
+            }
           }
         }
 

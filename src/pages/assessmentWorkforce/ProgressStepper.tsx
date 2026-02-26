@@ -9,18 +9,26 @@ interface Step {
 interface ProgressStepperProps {
   steps: Step[];
   currentStep: string;
+  completedSteps?: string[];
   onStepChange?: (stepId: string) => void;
 }
 
-export function ProgressStepper({ steps, currentStep, onStepChange }: ProgressStepperProps) {
+export function ProgressStepper({
+  steps,
+  currentStep,
+  completedSteps,
+  onStepChange,
+}: ProgressStepperProps) {
   const currentIndex = steps.findIndex(step => step.id === currentStep);
 
   return (
     <div className="flex w-full items-center gap-2 rounded-xl border border-ws-gray-50 bg-ws-white p-2">
       {steps.map((step, index) => {
         const isActive = step.id === currentStep;
-        const isCompleted = index < currentIndex;
-        const isFuture = index > currentIndex;
+        const isCompleted = completedSteps
+          ? completedSteps.includes(step.id)
+          : index < currentIndex;
+        const isFuture = !isActive && !isCompleted;
         const isClickable = isCompleted || isActive;
 
         // Determine background and text color based on state

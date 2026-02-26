@@ -6,6 +6,12 @@ interface UseAssessmentStatusReturn {
   isLoading: boolean;
   error: string | null;
   assessmentData: AssessmentData | null;
+  sectionCompletion: {
+    workforce: boolean;
+    compensation: boolean;
+    benefits: boolean;
+    goals: boolean;
+  };
   refetch: () => Promise<void>;
 }
 
@@ -45,24 +51,35 @@ export const useAssessmentStatus = (): UseAssessmentStatusReturn => {
     fetchAssessmentStatus();
   }, [fetchAssessmentStatus]);
 
-  // Calculate completion count from API response sections
-  //   const completionCount = assessmentData?.sections
-  //     ? Object.keys(assessmentData.sections).filter(
-  //         (key) => assessmentData.sections[key as keyof typeof assessmentData.sections] !== undefined
-  //       ).length
-  //     : 0;
-  const completionCount = assessmentData?.sections
-    ? Object.values(assessmentData.sections).filter(
-        section =>
-          section !== null && typeof section === "object" && Object.keys(section).length > 0
-      ).length
-    : 0;
+  const sections = assessmentData?.sections;
+
+  const sectionCompletion = {
+    workforce:
+      !!sections?.workforce &&
+      typeof sections.workforce === "object" &&
+      Object.keys(sections.workforce).length > 0,
+    compensation:
+      !!sections?.compensation &&
+      typeof sections.compensation === "object" &&
+      Object.keys(sections.compensation).length > 0,
+    benefits:
+      !!sections?.benefits &&
+      typeof sections.benefits === "object" &&
+      Object.keys(sections.benefits).length > 0,
+    goals:
+      !!sections?.goals &&
+      typeof sections.goals === "object" &&
+      Object.keys(sections.goals).length > 0,
+  };
+
+  const completionCount = Object.values(sectionCompletion).filter(Boolean).length;
 
   return {
     completionCount,
     isLoading,
     error,
     assessmentData,
+      sectionCompletion,
     refetch: fetchAssessmentStatus,
   };
 };
