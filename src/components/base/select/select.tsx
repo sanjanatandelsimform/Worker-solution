@@ -108,7 +108,7 @@ const SelectValue = ({
 
               {state.selectedItem ? (
                 <section className="flex w-full gap-2 truncate">
-                  <p className="truncate text-md font-medium text-ws-black">
+                  <p className="truncate text-md font-medium text-ws-black question-text">
                     {state.selectedItem?.label}
                   </p>
                   {state.selectedItem?.supportingText && (
@@ -116,7 +116,12 @@ const SelectValue = ({
                   )}
                 </section>
               ) : (
-                <p className={cx("text-md text-placeholder", isDisabled && "text-disabled")}>
+                <p
+                  className={cx(
+                    "text-md text-placeholder question-text",
+                    isDisabled && "text-disabled"
+                  )}
+                >
                   {placeholder}
                 </p>
               )}
@@ -160,7 +165,7 @@ const Select = ({
         {...rest}
         className={state =>
           cx(
-            "flex flex-col gap-1.5",
+            "flex flex-col gap-1.5 question-text",
             typeof className === "function" ? className(state) : className
           )
         }

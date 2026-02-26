@@ -227,7 +227,7 @@ export const DynamicTab = forwardRef<
             const hasStateField = rules.fields.some(f => f.name === "state");
             const hasZipField = rules.fields.some(f => f.name === "zipCode");
 
-           if (hasStateField && hasZipField) {
+            if (hasStateField && hasZipField) {
               const seenStateZip = new Set<string>();
 
               value.forEach((item: AddressItem, index: number) => {
@@ -241,8 +241,7 @@ export const DynamicTab = forwardRef<
                 if (seenStateZip.has(comboKey)) {
                   const duplicateKey = `${question.key}.${index}.zipCode`;
                   if (!newErrors[duplicateKey]) {
-                    newErrors[duplicateKey] =
-                      "This state and zip code combination already exists.";
+                    newErrors[duplicateKey] = "This state and zip code combination already exists.";
                   }
                   isValid = false;
                 } else {
@@ -559,10 +558,35 @@ export const DynamicTab = forwardRef<
             const errorMsg = response.error || "Failed to submit assessment. Please try again.";
             onApiError(errorMsg);
           }
+          // if (response.fieldErrors) {
+          //   setErrors(prev => ({ ...prev, ...response.fieldErrors }));
+          //   setTimeout(() => {
+          //     const firstErrorKey = Object.keys(response.fieldErrors!)[0];
+          //     if (firstErrorKey) {
+          //       const errorElement = document.querySelector(
+          //         `[data-question-key="${firstErrorKey}"]`
+          //       );
+          //       if (errorElement) {
+          //         errorElement.scrollIntoView({
+          //           behavior: "smooth",
+          //           block: "center",
+          //         });
+          //       }
+          //     }
+          //   }, 100);
+          // }
           if (response.fieldErrors) {
-            setErrors(prev => ({ ...prev, ...response.fieldErrors }));
+            const normalizedFieldErrors: Record<string, string> = { ...response.fieldErrors };
+
+            Object.entries(normalizedFieldErrors).forEach(([key, message]) => {
+              if (key.endsWith(".state") && message === "Required") {
+                normalizedFieldErrors[key] = "State is required";
+              }
+            });
+
+            setErrors(prev => ({ ...prev, ...normalizedFieldErrors }));
             setTimeout(() => {
-              const firstErrorKey = Object.keys(response.fieldErrors!)[0];
+              const firstErrorKey = Object.keys(normalizedFieldErrors)[0];
               if (firstErrorKey) {
                 const errorElement = document.querySelector(
                   `[data-question-key="${firstErrorKey}"]`
