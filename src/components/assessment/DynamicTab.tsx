@@ -5,6 +5,10 @@ import { useAssessment } from "@/hooks/useAssessment";
 import ErrorMessage from "@/components/common/ErrorMessage";
 import { AlertCircle } from "@untitledui/icons";
 
+interface AddressItem {
+  state?: string;
+  zipCode?: string;
+}
 interface DynamicTabProps {
   section: "workforce" | "compensation" | "benefits" | "goals";
   questions: Question[];
@@ -223,27 +227,18 @@ export const DynamicTab = forwardRef<
             const hasStateField = rules.fields.some(f => f.name === "state");
             const hasZipField = rules.fields.some(f => f.name === "zipCode");
 
-            if (hasStateField && hasZipField) {
-              const seen = new Set<string>();
+           if (hasStateField && hasZipField) {
+              const seenStateZip = new Set<string>();
 
-              value.forEach((item: Record<string, unknown>, index: number) => {
-                const state = item.state;
-                const zip = item.zipCode;
+              value.forEach((item: AddressItem, index: number) => {
+                const state = item.state?.trim();
+                const zip = item.zipCode?.trim();
 
-                if (
-                  state === null ||
-                  state === undefined ||
-                  state === "" ||
-                  zip === null ||
-                  zip === undefined ||
-                  zip === ""
-                ) {
-                  return;
-                }
+                if (!state || !zip) return;
 
-                const comboKey = `${String(state).toUpperCase()}-${String(zip)}`;
+                const comboKey = `${state.toUpperCase()}-${zip}`;
 
-                if (seen.has(comboKey)) {
+                if (seenStateZip.has(comboKey)) {
                   const duplicateKey = `${question.key}.${index}.zipCode`;
                   if (!newErrors[duplicateKey]) {
                     newErrors[duplicateKey] =
@@ -251,7 +246,7 @@ export const DynamicTab = forwardRef<
                   }
                   isValid = false;
                 } else {
-                  seen.add(comboKey);
+                  seenStateZip.add(comboKey);
                 }
               });
             }
