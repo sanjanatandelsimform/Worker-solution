@@ -38,7 +38,7 @@ export const DynamicQuestionRenderer = ({
   const displayOrder = subsectionDisplayOrder ?? question.displayOrder;
 
   const halfWidthSelectKeys = new Set(["payrollProvider", "benefitEnrollmentMonth"]);
-  const halfWidthConditionalSelectKeys = new Set(["annualRaiseMonth", "retirementProvider"]);
+  const halfWidthConditionalSelectKeys = new Set(["retirementProvider"]);
   const halfWidthNumericKeys = new Set(["lowestHealthPlanPremium"]);
   const halfWidthConditionalNumericKeys = new Set(["retirementMatchPercentage"]);
   const halfWidthYesNoKeys = new Set(["offersAnnualRaises"]);
