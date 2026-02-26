@@ -13,7 +13,7 @@
     "preview": "vite preview",
     "prepare": "husky",
     "type-check": "tsc --noEmit",
-    "test": "vitest",
+    "test": "vitest run",
     "test:watch": "vitest --watch"
   },
   "lint-staged": {
