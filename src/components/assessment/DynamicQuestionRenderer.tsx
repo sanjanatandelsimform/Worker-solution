@@ -356,7 +356,7 @@ export const DynamicQuestionRenderer = ({
             */}
             <Select
               className={
-                halfWidthConditionalSelectKeys.has(conditionalQuestion.key) ? "w-full" : "w-full"
+                halfWidthConditionalSelectKeys.has(conditionalQuestion.key) ? "w-full md:w-1/2" : "w-full"
               }
               size="md"
               placeholder={conditionalQuestion.placeholder || "Select an option"}
