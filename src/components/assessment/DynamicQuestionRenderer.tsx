@@ -37,6 +37,12 @@ export const DynamicQuestionRenderer = ({
   const error = errors[question.key];
   const displayOrder = subsectionDisplayOrder ?? question.displayOrder;
 
+  const halfWidthSelectKeys = new Set(["payrollProvider", "benefitEnrollmentMonth"]);
+  const halfWidthConditionalSelectKeys = new Set(["annualRaiseMonth", "retirementProvider"]);
+  const halfWidthNumericKeys = new Set(["lowestHealthPlanPremium"]);
+  const halfWidthConditionalNumericKeys = new Set(["retirementMatchPercentage"]);
+  const halfWidthYesNoKeys = new Set(["offersAnnualRaises"]);
+
   // Track component mount/unmount for debugging
 
   useEffect(() => {
@@ -302,6 +308,11 @@ export const DynamicQuestionRenderer = ({
               type="number"
               placeholder={conditionalQuestion.placeholder || "Enter number"}
               value={String(answers[conditionalQuestion.key] ?? "")}
+              className={
+                halfWidthConditionalNumericKeys.has(conditionalQuestion.key)
+                  ? "w-full md:w-1/2"
+                  : "w-full"
+              }
               onChange={value => {
                 const numValue = value === "" ? null : Number(value);
                 if (numValue !== null) {
@@ -332,8 +343,17 @@ export const DynamicQuestionRenderer = ({
         {/* SINGLE_SELECT_DROPDOWN */}
         {conditionalQuestion.questionType === "SINGLE_SELECT_DROPDOWN" && (
           <>
+            {/*
+              Half-width dropdowns for specific conditional questions:
+              - annualRaiseMonth ("If yes, when?")
+              - retirementProvider ("Who is your retirement benefits record keeper or provider?")
+            */}
             <Select
-              className="w-full"
+              className={
+                halfWidthConditionalSelectKeys.has(conditionalQuestion.key)
+                  ? "w-full md:w-1/2"
+                  : "w-full"
+              }
               size="md"
               placeholder={conditionalQuestion.placeholder || "Select an option"}
               items={conditionalQuestion.options?.map(opt => ({
@@ -517,7 +537,9 @@ export const DynamicQuestionRenderer = ({
             {displayOrder}. {question.questionText}
           </Label>
           <Select
-            className="w-full"
+            className={
+              halfWidthSelectKeys.has(question.key) ? "w-full md:w-1/2" : "w-full"
+            }
             size="md"
             placeholder={question.placeholder || "Select an option"}
             items={question.options?.map(opt => ({
@@ -620,7 +642,13 @@ export const DynamicQuestionRenderer = ({
 
     case "YES_NO":
       return (
-        <div className="flex w-full flex-col gap-2" data-question-key={question.key}>
+        <div
+          className={cx(
+            "flex flex-col gap-2",
+            halfWidthYesNoKeys.has(question.key) ? "w-full md:w-1/2" : "w-full"
+          )}
+          data-question-key={question.key}
+        >
           <Label isRequired={question.isRequired} className="text-base">
             {displayOrder}. {question.questionText}
           </Label>
@@ -661,6 +689,9 @@ export const DynamicQuestionRenderer = ({
             {displayOrder}. {question.questionText}
           </Label>
           <Input
+            className={
+              halfWidthNumericKeys.has(question.key) ? "w-full md:w-1/2" : "w-full"
+            }
             type="number"
             placeholder={question.placeholder || "Enter number"}
             value={String(currentAnswer ?? "")}
