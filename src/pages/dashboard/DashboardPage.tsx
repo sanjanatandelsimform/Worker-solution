@@ -206,7 +206,7 @@ export const DashboardPage = () => {
               {completionCount !== 4 ? (
                 `Welcome!`
               ) : (
-                <span className="font-bold mb-4 flex">{`Hi ${user?.lastName}!`}</span>
+                <span className="font-bold mb-4 flex">{`Hi ${user?.firstName}!`}</span>
               )}
             </h2>
             {completionCount == 4 && (

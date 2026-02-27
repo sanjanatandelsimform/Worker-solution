@@ -87,22 +87,25 @@ export default function RecommendationsPage() {
         >
           Recommendation
         </Badge> */}
-        <h2 className="mt-6 text-2xl lg:text-4xl font-medium text-ws-black-70">
-          Core Benefits Enhancement
-        </h2>
-        <div className="flex mt-2 gap-6 flex-col xl:flex-row">
-          <div className="prose w-full xl:w-1/2">
-            <p className="text-base text-ws-black-70">
+
+        <div className="flex items-stretch gap-6 flex-col xl:flex-row">
+          <div className="w-full xl:w-1/2 flex flex-col">
+            <h2 className="text-2xl lg:text-4xl font-medium text-ws-black-70 mb-3">
+              Core Benefits Enhancement
+            </h2>
+            <p className="text-base text-ws-black-70 mb-3">
               Your comprehensive plan to enhance worker financial health and retirement.
             </p>
-            <p className="text-base text-ws-black-70">
+            <p className="text-base text-ws-black-70 mb-3">
               Here are some impactful ways to start uplifting your workforce with proven strategies.
               Consider strengthening core benefits by modifying policies to increase access and
               participation with these options:
             </p>
-            <img src={workforceImg} alt="Workforce hero" />
+            <div className="mt-6 flex-1 flex items-end">
+              <img src={workforceImg} alt="Workforce hero" className="w-full rounded-lg" />
+            </div>
           </div>
-          <div className="w-full xl:w-1/2">
+          {/* <div className="w-full xl:w-1/2">
             <h3 className="text-2xl text-ws-black-70 font-medium mb-5">Proven strategies</h3>
             <div className="mt-4 space-y-4">
               <StrategiesCard
@@ -116,6 +119,32 @@ export default function RecommendationsPage() {
                 descriptionText="80% of employees automatically enrolled in a 3% 401K match stay within the retirement plan."
               />
               <StrategiesCard
+                title="3. Ensure healthcare affordability"
+                titleIcon={<CheckIcon />}
+                descriptionText="Enrollment in a non-high deductible health insurance plan is associated with higher financial health. Consider adjusting employee premiums to income level. QSERA and ICRA plans can offer more flexibility and savings for employers and employees."
+              />
+            </div>
+          </div> */}
+          <div className="w-full xl:w-1/2 flex flex-col">
+            <h3 className="text-2xl text-ws-black-70 font-medium mb-5">Proven strategies</h3>
+
+            <div className="flex-1 flex flex-col justify-between gap-4">
+              <StrategiesCard
+                className="min-h-38!"
+                title="1. Implement a non-elective match"
+                titleIcon={<RefreshIcon />}
+                descriptionText="Employer contributions are often skewed due to high earners’s contribution capacity. Separate the employee contribution from employer contribution."
+              />
+
+              <StrategiesCard
+                className="min-h-38!"
+                title="2. Auto enrollment"
+                titleIcon={<RefreshIcon />}
+                descriptionText="80% of employees automatically enrolled in a 3% 401K match stay within the retirement plan."
+              />
+
+              <StrategiesCard
+                className="min-h-38!"
                 title="3. Ensure healthcare affordability"
                 titleIcon={<CheckIcon />}
                 descriptionText="Enrollment in a non-high deductible health insurance plan is associated with higher financial health. Consider adjusting employee premiums to income level. QSERA and ICRA plans can offer more flexibility and savings for employers and employees."
@@ -165,7 +194,7 @@ export default function RecommendationsPage() {
           </div>
         </div>
         <div className="mt-6">
-          <h3 className="text-2xl font-medium text-ws-black-60">Recommended Benefit Providers</h3>
+          <h3 className="text-2xl font-medium text-ws-black-60">Recommended Solutions</h3>
           {strategicRecommendations.length > 0 ? (
             <div className="grid xl:grid-cols-3 gap-5 w-full mt-6">
               {strategicRecommendations.map(recommendation => (
