@@ -97,7 +97,7 @@ export const getDashboard = async (): Promise<DashboardResponse> => {
         //   count: 89,
         //   percentage: 38,
         // },
-        industryAverageWage: 61964,
+        industryAverageWage: "$61964",
       },
       industryOverview: {
         turnoverRate: {
@@ -118,16 +118,16 @@ export const getDashboard = async (): Promise<DashboardResponse> => {
         quarter: 2,
         year: 2024,
         percentage: {
-          voluntary: 18,
-          involuntary: 13,
+          voluntary: 60.2,
+          involuntary: 39.8,
         },
       },
       rateOfSeparation: {
         quarter: 2,
         year: 2024,
         percentage: {
-          hiringRate: 28,
-          separationRate: 31,
+          hiringRate: 11.1,
+          separationRate: 7.7,
         },
       },
       areaMedianWage: [
@@ -216,9 +216,9 @@ export const getDashboard = async (): Promise<DashboardResponse> => {
             },
           ],
           workingClassHousingCostBurden: {
-            homeOwnershipRate: 50,
-            medianHomeValue: 200,
-            medianRent: 23,
+            homeOwnershipRate: 72,
+            medianHomeValue: 367200,
+            medianRent: 1423,
           },
           workingClassHousingGraph: [
             {
