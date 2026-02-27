@@ -723,8 +723,41 @@ export const DynamicTab = forwardRef<
         },
       };
 
+    // Split questions into: those without a subsection, and grouped by subsection
+    const noSubsectionQuestions = questions.filter(
+      q => !(q as Question & { subsection?: string }).subsection
+    );
+
+    const subsectionMap = new Map<string, Question[]>();
+    questions.forEach(q => {
+      const sub = (q as Question & { subsection?: string }).subsection;
+      if (sub) {
+        if (!subsectionMap.has(sub)) {
+          subsectionMap.set(sub, []);
+        }
+        subsectionMap.get(sub)!.push(q);
+      }
+    });
+
+    const renderQuestion = (question: Question, idx: number, subsectionQuestions?: Question[]) => {
+      const displayOrderValue = subsectionQuestions
+        ? subsectionQuestions.slice(0, idx + 1).length
+        : question.displayOrder;
+
+      return (
+        <DynamicQuestionRenderer
+          key={question.key}
+          question={question}
+          answers={answers}
+          onAnswerChange={handleAnswerChange}
+          errors={errors}
+          subsectionDisplayOrder={displayOrderValue}
+        />
+      );
+    };
+
     return (
-      <div className="bg-ws-white space-y-6 p-6 border border-ws-gray-50 rounded-xl">
+      <div className="space-y-4">
         {isLoadingGet && (
           <div className="flex items-center justify-center py-4">
             <div className="h-6 w-6 animate-spin rounded-full border-4 border-ws-cyan-60 border-t-transparent"></div>
@@ -761,50 +794,33 @@ export const DynamicTab = forwardRef<
           />
         )}
 
-        {sectionContent[section] && !hideHeader && (
-          <>
-            <h2 className="text-3xl font-semibold mb-2">{sectionContent[section].title}</h2>
-            <p className="text-base text-ws-gray-90">{sectionContent[section].description}</p>
-          </>
+        {/* Main card: section header + questions without a subsection */}
+        {(noSubsectionQuestions.length > 0 || (!hideHeader && sectionContent[section])) && (
+          <div className="bg-white rounded-lg border border-gray-200 shadow-sm p-6 space-y-6">
+            {sectionContent[section] && !hideHeader && (
+              <>
+                <h2 className="text-3xl font-semibold mb-2">{sectionContent[section].title}</h2>
+                <p className="text-base text-ws-gray-90">{sectionContent[section].description}</p>
+              </>
+            )}
+            {noSubsectionQuestions.map((question, idx) => renderQuestion(question, idx))}
+          </div>
         )}
 
-        {questions.map((question, index) => {
-          const currentSubsection = (question as Question & { subsection?: string }).subsection;
-          const prevQuestion = index > 0 ? questions[index - 1] : null;
-          const prevSubsection = prevQuestion
-            ? (prevQuestion as Question & { subsection?: string }).subsection
-            : null;
-          const isFirstInSubsection = currentSubsection && currentSubsection !== prevSubsection;
-
-          return (
-            <div key={question.key}>
-              {isFirstInSubsection && currentSubsection && (
-                <div className="-mx-6 px-6 pt-8 pb-6 mt-6 border-t-25 border-gray-50">
-                  <h2 className="text-2xl font-medium text-ws-black-90 pb-4 border-b border-ws-gray-40">
-                    {currentSubsection === "HealthCare" ? "Healthcare" : currentSubsection}
-                  </h2>
-                </div>
-              )}
-              <DynamicQuestionRenderer
-                question={question}
-                answers={answers}
-                onAnswerChange={handleAnswerChange}
-                errors={errors}
-                subsectionDisplayOrder={
-                  currentSubsection
-                    ? questions
-                        .slice(0, index + 1)
-                        .filter(
-                          q =>
-                            (q as Question & { subsection?: string }).subsection ===
-                            currentSubsection
-                        ).length
-                    : question.displayOrder
-                }
-              />
-            </div>
-          );
-        })}
+        {/* One card per subsection */}
+        {Array.from(subsectionMap.entries()).map(([subsection, subsectionQuestions]) => (
+          <div
+            key={subsection}
+            className="bg-white rounded-lg border border-gray-200 shadow-sm p-6 space-y-6"
+          >
+            <h2 className="text-2xl font-medium text-ws-black-90 pb-4 border-b border-ws-gray-40">
+              {subsection === "HealthCare" ? "Healthcare" : subsection}
+            </h2>
+            {subsectionQuestions.map((question, idx) =>
+              renderQuestion(question, idx, subsectionQuestions)
+            )}
+          </div>
+        ))}
       </div>
     );
   }
