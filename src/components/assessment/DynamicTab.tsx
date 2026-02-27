@@ -724,7 +724,7 @@ export const DynamicTab = forwardRef<
       };
 
     return (
-      <div className="bg-ws-white space-y-6 p-6">
+      <div className="bg-ws-white space-y-6 p-6 border border-ws-gray-50 rounded-xl">
         {isLoadingGet && (
           <div className="flex items-center justify-center py-4">
             <div className="h-6 w-6 animate-spin rounded-full border-4 border-ws-cyan-60 border-t-transparent"></div>

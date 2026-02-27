@@ -131,7 +131,7 @@ export default function AssessmentWorkforcePage() {
   const isLoadingGet = currentStep === null;
 
   return (
-    <div className="flex min-h-screen flex-col bg-gray-50">
+    <div className="flex min-h-screen flex-col bg-ws-color-gray-20">
       {/* Top Navigation Bar */}
       <div className="flex h-14 items-center justify-between border-b border-cyan-700 bg-cyan-500 px-6 py-4">
         {/* Back Button */}
