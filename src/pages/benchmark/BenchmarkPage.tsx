@@ -59,9 +59,9 @@ export default function BenchmarkPage() {
         <h2 className="text-2xl lg:text-4xl font-medium text-ws-black-60 leading-10">
           Current Trends for Wholesale Trade
         </h2>
-        <Button color="secondary" onClick={() => setIsGetInTouchModalOpen(true)}>
+        {/* <Button color="secondary" onClick={() => setIsGetInTouchModalOpen(true)}>
           Share feedback
-        </Button>
+        </Button> */}
       </div>
 
       {/* ── Industry Overview ── */}
@@ -70,7 +70,7 @@ export default function BenchmarkPage() {
         <div className="flex justify-between gap-10 flex-col lg:flex-row">
           <div className="space-y-5 w-full xl:w-1/3">
             <StaticCard
-              title="Turnover Rate 2024"
+              title="Turnover rate since Jan 2024"
               titleClass="text-sm font-medium text-ws-black-10"
               itemAlign="between"
               count={formatPercentage(industryOverview?.turnoverRate?.rate)}
@@ -104,8 +104,8 @@ export default function BenchmarkPage() {
               countClass="mt-2 text-3xl xl:text-5xl font-medium text-ws-black-90"
               infoIcon={true}
               infoCircleClass="text-ws-gray-70"
-              tooltipText="How is this calculated"
-              descriptionText="This is calculated based on LMI. Low-to-Moderate Income (LMI) consists of income less than 80% of the broader area's median income."
+              tooltipText="Average of 5 years"
+              // descriptionText="This is calculated based on LMI. Low-to-Moderate Income (LMI) consists of income less than 80% of the broader area's median income."
               placements="top"
             />
           </div>
@@ -114,11 +114,11 @@ export default function BenchmarkPage() {
               className={`w-full space-y-6 ${showMoreContent ? "max-h-100 overflow-y-auto pr-4" : "max-h-100 overflow-hidden pr-4"}`}
             >
               <p className="text-base text-ws-black-40">
-                The Wholesale Trade sector comprises establishments engaged in wholesaling
-                merchandise, generally without transformation, and rendering services incidental to
-                the sale of merchandise. The merchandise described in this sector includes the
-                outputs of agriculture, mining, manufacturing, and certain information industries,
-                such as publishing.
+                The Wholesale Trade sector comprises establishments engaged in wholesaling 
+                merchandise, generally without transformation, and rendering services incidental to 
+                the sale of merchandise. The merchandise described in this sector includes the 
+                outputs of agriculture, mining, manufacturing, and certain information industries, 
+                such as publishing. 
               </p>
               <p className="text-base text-ws-black-40">
                 The wholesaling process is an intermediate step in the distribution of merchandise.
@@ -146,16 +146,16 @@ export default function BenchmarkPage() {
                     the general public.
                   </p>
                   <p className="text-base text-ws-black-40">
-                    The wholesaling process is an intermediate step in the distribution of
-                    merchandise. Wholesalers are organized to sell or arrange the purchase or sale
-                    of (a) goods for resale (i.e., goods sold to other wholesalers or retailers),
-                    (b) capital or durable nonconsumer goods, and (c) raw and intermediate materials
-                    and supplies used in production. Wholesalers sell merchandise to other
-                    businesses and normally operate from a warehouse or office. These warehouses and
-                    offices are characterized by having little or no display of merchandise. In
-                    addition, neither the design nor the location of the premises is intended to
-                    solicit walk-in traffic. Wholesalers do not normally use advertising directed to
-                    the general public.
+                    The wholesaling process is an intermediate step in the distribution of 
+                    merchandise. Wholesalers are organized to sell or arrange the purchase or sale 
+                    of (a) goods for resale (i.e., goods sold to other wholesalers or retailers), 
+                    (b) capital or durable nonconsumer goods, and (c) raw and intermediate materials 
+                    and supplies used in production. Wholesalers sell merchandise to other 
+                    businesses and normally operate from a warehouse or office. These warehouses 
+                    and offices are characterized by having little or no display of merchandise. In 
+                    addition, neither the design nor the location of the premises is intended to 
+                    solicit walk-in traffic. Wholesalers do not normally use advertising directed 
+                    to the general public. 
                   </p>
                 </>
               )}
@@ -216,7 +216,7 @@ export default function BenchmarkPage() {
             <h3 className="text-2xl font-medium text-ws-black-60">
               Area Median Wage: [State Name]
             </h3>
-            <p className="text-base text-ws-black">Select an area to examine the median wage</p>
+            <p className="text-base text-ws-black">Understand how your wages compare against with industry and US wages.</p>
           </div>
           <div className="w-full md:w-full md:mt-4 lg:w-auto">
             {zipCodes && zipCodes.length > 0 ? (
@@ -352,9 +352,9 @@ export default function BenchmarkPage() {
           <div className="space-y-4">
             <h3 className="text-2xl font-medium text-ws-black">The Cost of Housing</h3>
             <p className="text-base text-ws-black-90">
-              The concept of rent (or housing cost) burden applies to both renters and homeowners,
-              but it's calculated a bit differently for each. Both renters and homeowners can
-              experience housing burdened costs; the main difference is what expenses are counted,
+              The concept of rent (or housing cost) burden applies to both renters and homeowners, 
+              but it’s calculated a bit differently for each. Both renters and homeowners can 
+              experience housing burdened costs; the main difference is what expenses are counted, 
               not the income thresholds.
             </p>
             <div className="flex items-center justify-between gap-4 flex-col lg:flex-row">
@@ -390,7 +390,7 @@ export default function BenchmarkPage() {
             {/* Dynamic quarter/year from data */}
             <p className="text-xs text-ws-black">
               {selectedHousingData?.housingCostBurdenedOwners?.[0]
-                ? `Q${selectedHousingData.housingCostBurdenedOwners[0].quarter} ${selectedHousingData.housingCostBurdenedOwners[0].year}`
+                ? `${selectedHousingData.housingCostBurdenedOwners[0].year}`
                 : "—"}
             </p>
           </div>
@@ -457,7 +457,7 @@ export default function BenchmarkPage() {
             <h3 className="text-xl font-medium">Housing Cost Burdened Renters</h3>
             <p className="text-xs">
               {selectedHousingData?.housingCostBurdenedRenters?.[0]
-                ? `Q${selectedHousingData.housingCostBurdenedRenters[0].quarter} ${selectedHousingData.housingCostBurdenedRenters[0].year}`
+                ? `${selectedHousingData.housingCostBurdenedRenters[0].year}`
                 : "—"}
             </p>
           </div>
@@ -501,8 +501,8 @@ export default function BenchmarkPage() {
         <div className="bg-ws-white border border-ws-gray-50 rounded-xl px-6 py-8 mt-6">
           <h3 className="text-2xl font-medium text-ws-black">Working Class Housing Cost Burden</h3>
           <p className="text-base text-ws-black-10 w-full xl:w-1/2 mt-2">
-            Your highest participation rate is health insurance. 89% of your employees are using
-            this benefit. Your lowest participation rate is wellness program.
+            The data below outlines the housing cost burden for your employees in [{selectedHousingZip}] 
+            across income levels for that area.
           </p>
           <div className="grid xl:grid-cols-3 gap-4 mt-6 flex-col lg:flex-row">
             <StaticCard
@@ -574,11 +574,11 @@ export default function BenchmarkPage() {
 
       <div className="w-full">
         <p className="text-xs color-base-black">
-          This product provides informational insights and recommendations based on the data you
-          share and industry benchmarks. It does not provide legal, financial, tax, or benefits
-          advice, and recommendations are not guarantees of outcomes or results. Actual results may
-          vary, and you are responsible for evaluating and implementing any recommendations based on
-          your organization's specific circumstances.
+          This product provides informational insights and recommendations based on the data you 
+          share and industry benchmarks. It does not provide legal, financial, tax, or benefits 
+          advice, and recommendations are not guarantees of outcomes or results. Actual results may 
+          vary, and you are responsible for evaluating and implementing any recommendations based on 
+          your organization’s specific circumstances.
         </p>
       </div>
 

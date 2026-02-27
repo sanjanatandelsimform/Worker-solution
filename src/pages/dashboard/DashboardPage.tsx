@@ -203,12 +203,12 @@ export const DashboardPage = () => {
           <div className="space-y-6"></div>
           <div>
             <h2 className="text-4xl font-medium text-ws-black">
-              {completionCount !== 4 ? `Welcome!` : `Hi ${user?.lastName}`}
+              {completionCount !== 4 ? `Welcome!` : `Hi ${user?.lastName}!`}
             </h2>
             {completionCount == 4 && (
               <p>
-                Here's an overview of your workforce, industry, and some recommendations with
-                partners that can add more value to your benefits packages and employee support.
+                Here's an overview of your workforce, industry, and some recommendations with partners that can add more value to your 
+                benefits packages and employee support.
               </p>
             )}
 

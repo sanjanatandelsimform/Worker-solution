@@ -63,12 +63,17 @@ export const DynamicTab = forwardRef<
     const [errors, setErrors] = useState<Record<string, string>>({});
     const [isSaving, setIsSaving] = useState(false);
     const isExplicitSubmitRef = useRef(false);
+    const [showApiError, setShowApiError] = useState(true);
 
     useEffect(() => {
       if (Object.keys(hookErrors).length > 0) {
         setErrors(hookErrors);
       }
     }, [hookErrors]);
+
+    useEffect(() => {
+      setShowApiError(true);
+    }, [apiError]);
 
     const handleAnswerChange = useCallback(
       (key: string, value: unknown) => {
@@ -776,15 +781,17 @@ export const DynamicTab = forwardRef<
             </button>
           </div>
         )}
-
-        {apiError?.type === "post" && Object.keys(errors).length > 0 && (
+        {apiError?.type === "post" && Object.keys(errors).length > 0 && showApiError && (
           <ErrorMessage
             errorType="danger"
             alertIcon={AlertCircle}
+            onClose={() => setShowApiError(false)}
+            classess="fixed top-4 right-4 z-50 w-80 shadow-lg"
+            textColor="text-red-700"
             errorMessage={
               <div>
-                <p className="font-semibold mb-2">{apiError.message}</p>
-                <ul className="list-inside list-disc space-y-1">
+                <p className="font-semibold mb-1">{apiError.message}</p>
+                <ul className="list-disc list-inside space-y-0.5 font-normal">
                   {Object.entries(errors).map(([key, message]) => (
                     <li key={key}>{message}</li>
                   ))}
@@ -793,7 +800,6 @@ export const DynamicTab = forwardRef<
             }
           />
         )}
-
         {/* Main card: section header + questions without a subsection */}
         {(noSubsectionQuestions.length > 0 || (!hideHeader && sectionContent[section])) && (
           <div className="bg-white rounded-lg border border-gray-200 shadow-sm p-6 space-y-6">
