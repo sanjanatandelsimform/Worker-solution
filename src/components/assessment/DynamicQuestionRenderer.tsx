@@ -356,7 +356,9 @@ export const DynamicQuestionRenderer = ({
             */}
             <Select
               className={
-                halfWidthConditionalSelectKeys.has(conditionalQuestion.key) ? "w-full md:w-1/2" : "w-full"
+                halfWidthConditionalSelectKeys.has(conditionalQuestion.key)
+                  ? "w-full md:w-1/2"
+                  : "w-full"
               }
               size="md"
               placeholder={conditionalQuestion.placeholder || "Select an option"}
@@ -564,7 +566,11 @@ export const DynamicQuestionRenderer = ({
             }}
             isInvalid={error ? true : false}
           >
-            {(item: SelectItemType) => <Select.Item className="text-ws-black-20" id={item.id}>{item.label || ""}</Select.Item>}
+            {(item: SelectItemType) => (
+              <Select.Item className="text-ws-black-20" id={item.id}>
+                {item.label || ""}
+              </Select.Item>
+            )}
           </Select>
           {error && (
             <div className="flex items-center gap-2">
@@ -594,7 +600,9 @@ export const DynamicQuestionRenderer = ({
             question.optionGroups
               ? question.optionGroups.map((group: OptionGroup) => (
                   <div key={group.groupName} className="flex flex-col gap-3">
-                    <h3 className="text-sm font-medium text-ws-color-black-100">{group.groupName}</h3>
+                    <h3 className="text-sm font-medium text-ws-color-black-100">
+                      {group.groupName}
+                    </h3>
                     <div className="flex flex-col gap-4 pl-2">
                       {group.options.map((option: QuestionOption) => (
                         <Checkbox
@@ -696,7 +704,9 @@ export const DynamicQuestionRenderer = ({
           </Label>
           <Input
             className={
-              halfWidthNumericKeys.has(question.key) ? "w-full md:w-1/2 custom-input" : "w-full custom-input"
+              halfWidthNumericKeys.has(question.key)
+                ? "w-full md:w-1/2 custom-input"
+                : "w-full custom-input"
             }
             type="number"
             placeholder={question.placeholder || "Enter number"}

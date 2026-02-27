@@ -1,6 +1,6 @@
 "use client";
 import { useState } from "react";
-import { Button } from "@/components/base/buttons/button";
+// import { Button } from "@/components/base/buttons/button";
 import StaticCard from "../recommendations/StaticCard";
 import insightHero from "@/assets/insight-hero.png";
 import CostCard from "./CostCard";
@@ -59,6 +59,7 @@ export default function BenchmarkPage() {
         <h2 className="text-2xl lg:text-4xl font-medium text-ws-black-60 leading-10">
           Current Trends for Wholesale Trade
         </h2>
+        {/* <Button color="secondary" onClick={() => setIsGetInTouchModalOpen(true)}>
         {/* <Button color="secondary" onClick={() => setIsGetInTouchModalOpen(true)}>
           Share feedback
         </Button> */}
@@ -216,7 +217,9 @@ export default function BenchmarkPage() {
             <h3 className="text-2xl font-medium text-ws-black-60">
               Area Median Wage: [State Name]
             </h3>
-            <p className="text-base text-ws-black">Understand how your wages compare against with industry and US wages.</p>
+            <p className="text-base text-ws-black">
+              Understand how your wages compare against with industry and US wages.
+            </p>
           </div>
           <div className="w-full md:w-full md:mt-4 lg:w-auto">
             {zipCodes && zipCodes.length > 0 ? (
@@ -352,9 +355,9 @@ export default function BenchmarkPage() {
           <div className="space-y-4">
             <h3 className="text-2xl font-medium text-ws-black">The Cost of Housing</h3>
             <p className="text-base text-ws-black-90">
-              The concept of rent (or housing cost) burden applies to both renters and homeowners, 
-              but it’s calculated a bit differently for each. Both renters and homeowners can 
-              experience housing burdened costs; the main difference is what expenses are counted, 
+              The concept of rent (or housing cost) burden applies to both renters and homeowners,
+              but it’s calculated a bit differently for each. Both renters and homeowners can
+              experience housing burdened costs; the main difference is what expenses are counted,
               not the income thresholds.
             </p>
             <div className="flex items-center justify-between gap-4 flex-col lg:flex-row">
@@ -501,8 +504,8 @@ export default function BenchmarkPage() {
         <div className="bg-ws-white border border-ws-gray-50 rounded-xl px-6 py-8 mt-6">
           <h3 className="text-2xl font-medium text-ws-black">Working Class Housing Cost Burden</h3>
           <p className="text-base text-ws-black-10 w-full xl:w-1/2 mt-2">
-            The data below outlines the housing cost burden for your employees in [{selectedHousingZip}] 
-            across income levels for that area.
+            The data below outlines the housing cost burden for your employees in [
+            {selectedHousingZip}] across income levels for that area.
           </p>
           <div className="grid xl:grid-cols-3 gap-4 mt-6 flex-col lg:flex-row">
             <StaticCard
@@ -574,10 +577,10 @@ export default function BenchmarkPage() {
 
       <div className="w-full">
         <p className="text-xs color-base-black">
-          This product provides informational insights and recommendations based on the data you 
-          share and industry benchmarks. It does not provide legal, financial, tax, or benefits 
-          advice, and recommendations are not guarantees of outcomes or results. Actual results may 
-          vary, and you are responsible for evaluating and implementing any recommendations based on 
+          This product provides informational insights and recommendations based on the data you
+          share and industry benchmarks. It does not provide legal, financial, tax, or benefits
+          advice, and recommendations are not guarantees of outcomes or results. Actual results may
+          vary, and you are responsible for evaluating and implementing any recommendations based on
           your organization’s specific circumstances.
         </p>
       </div>
