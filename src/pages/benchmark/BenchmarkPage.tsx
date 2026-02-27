@@ -2,7 +2,6 @@
 import { useState } from "react";
 // import { Button } from "@/components/base/buttons/button";
 import StaticCard from "../recommendations/StaticCard";
-import insightHero from "@/assets/insight-hero.png";
 import CostCard from "./CostCard";
 import { Select } from "@/components/base/select/select";
 import { IncomeDistributionChart } from "./CostBurdenBarChart";
@@ -23,6 +22,8 @@ import {
   selectPrimaryAreaMedianWage,
 } from "@/store/selectors/dashboardSelectors";
 import { formatCurrency, formatPercentage, formatCurrencyWithCents } from "@/utils/formatters";
+import { SmileFace } from "@/assets/icons/SmileFace";
+import { Label } from "@/components/base/input/label";
 
 export default function BenchmarkPage() {
   const [isGetInTouchModalOpen, setIsGetInTouchModalOpen] = useState(false);
@@ -115,11 +116,11 @@ export default function BenchmarkPage() {
               className={`w-full space-y-6 ${showMoreContent ? "max-h-100 overflow-y-auto pr-4" : "max-h-100 overflow-hidden pr-4"}`}
             >
               <p className="text-base text-ws-black-40">
-                The Wholesale Trade sector comprises establishments engaged in wholesaling 
-                merchandise, generally without transformation, and rendering services incidental to 
-                the sale of merchandise. The merchandise described in this sector includes the 
-                outputs of agriculture, mining, manufacturing, and certain information industries, 
-                such as publishing. 
+                The Wholesale Trade sector comprises establishments engaged in wholesaling
+                merchandise, generally without transformation, and rendering services incidental to
+                the sale of merchandise. The merchandise described in this sector includes the
+                outputs of agriculture, mining, manufacturing, and certain information industries,
+                such as publishing.
               </p>
               <p className="text-base text-ws-black-40">
                 The wholesaling process is an intermediate step in the distribution of merchandise.
@@ -147,16 +148,16 @@ export default function BenchmarkPage() {
                     the general public.
                   </p>
                   <p className="text-base text-ws-black-40">
-                    The wholesaling process is an intermediate step in the distribution of 
-                    merchandise. Wholesalers are organized to sell or arrange the purchase or sale 
-                    of (a) goods for resale (i.e., goods sold to other wholesalers or retailers), 
-                    (b) capital or durable nonconsumer goods, and (c) raw and intermediate materials 
-                    and supplies used in production. Wholesalers sell merchandise to other 
-                    businesses and normally operate from a warehouse or office. These warehouses 
-                    and offices are characterized by having little or no display of merchandise. In 
-                    addition, neither the design nor the location of the premises is intended to 
-                    solicit walk-in traffic. Wholesalers do not normally use advertising directed 
-                    to the general public. 
+                    The wholesaling process is an intermediate step in the distribution of
+                    merchandise. Wholesalers are organized to sell or arrange the purchase or sale
+                    of (a) goods for resale (i.e., goods sold to other wholesalers or retailers),
+                    (b) capital or durable nonconsumer goods, and (c) raw and intermediate materials
+                    and supplies used in production. Wholesalers sell merchandise to other
+                    businesses and normally operate from a warehouse or office. These warehouses and
+                    offices are characterized by having little or no display of merchandise. In
+                    addition, neither the design nor the location of the premises is intended to
+                    solicit walk-in traffic. Wholesalers do not normally use advertising directed to
+                    the general public.
                   </p>
                 </>
               )}
@@ -169,7 +170,37 @@ export default function BenchmarkPage() {
             </button>
           </div>
         </div>
-        <div className="bg-ws-white p-6 border border-ws-gray-50 rounded-2xl space-y-6">
+        <div className="bg-ws-purple-10 border border-ws-gray-50 rounded-xl p-4">
+          <div className="flex items-center gap-2 text-lg text-ws-black-70 font-medium mb-2">
+            <SmileFace />
+            <h3 className="text-base font-medium leading-7 text-ws-black-70">Did you know?</h3>
+          </div>
+          <p className="text-base font-normal text-ws-black leading-6">
+            The cost of replacing an individual employee can range from one-half to two times the
+            employee's annual salary.
+          </p>
+        </div>
+        {/* ── Turnover / Separation Cards ── */}
+        <div className="grid xl:grid-cols-2 gap-6">
+          <CostCard
+            classess="border-ws-gray-40!"
+            title="Turnover Voluntary vs Involuntary"
+            year={`Q${turnoverMetrics?.quarter || 2} ${turnoverMetrics?.year || 2024}`}
+            voluntaryScore={`${formatPercentage(turnoverMetrics?.percentage?.voluntary)} Voluntary`}
+            involuntaryScore={`${formatPercentage(turnoverMetrics?.percentage?.involuntary)} Involuntary`}
+            industryTradeText="Industry: Whole Trade"
+          />
+          <CostCard
+            classess="border-ws-gray-40!"
+            title="Rate of Separation"
+            year={`Q${separationMetrics?.quarter || 2} ${separationMetrics?.year || 2023}`}
+            voluntaryScore={`${formatPercentage(separationMetrics?.percentage?.separationRate)} Hiring Rate`}
+            involuntaryScore={`${formatPercentage(separationMetrics?.percentage?.hiringRate)} Separation`}
+            industryTradeText="Industry: Whole Trade"
+          />
+        </div>
+
+        {/* <div className="bg-ws-white p-6 border border-ws-gray-50 rounded-2xl space-y-6">
           <div className="flex justify-between gap-6 flex-col xl:flex-row">
             <div className="w-full xl:w-3/5 space-y-4">
               <h4 className="text-2xl text-ws-black-60 font-medium">Insight:</h4>
@@ -189,25 +220,7 @@ export default function BenchmarkPage() {
               />
             </div>
           </div>
-        </div>
-      </div>
-
-      {/* ── Turnover / Separation Cards ── */}
-      <div className="grid xl:grid-cols-2 gap-6">
-        <CostCard
-          title="Turnover Voluntary vs Involuntary"
-          year={`Q${turnoverMetrics?.quarter || 2} ${turnoverMetrics?.year || 2024}`}
-          voluntaryScore={`${formatPercentage(turnoverMetrics?.percentage?.voluntary)} Voluntary`}
-          involuntaryScore={`${formatPercentage(turnoverMetrics?.percentage?.involuntary)} Involuntary`}
-          industryTradeText="Industry: Whole Trade"
-        />
-        <CostCard
-          title="Rate of Separation"
-          year={`Q${separationMetrics?.quarter || 2} ${separationMetrics?.year || 2023}`}
-          voluntaryScore={`${formatPercentage(separationMetrics?.percentage?.separationRate)} Separation Rate`}
-          involuntaryScore={`${formatPercentage(separationMetrics?.percentage?.hiringRate)} Hiring Rate`}
-          industryTradeText="Industry: Whole Trade"
-        />
+        </div> */}
       </div>
 
       {/* ── Area Median Wage ── */}
@@ -224,7 +237,7 @@ export default function BenchmarkPage() {
           <div className="w-full md:w-full md:mt-4 lg:w-auto">
             {zipCodes && zipCodes.length > 0 ? (
               <Select
-                className="w-full flex items-start min-w-50 md:min-w-full lg:min-w-80"
+                className="w-full flex items-start min-w-50 md:min-w-full lg:min-w-70"
                 isRequired
                 size="md"
                 placeholder="Select Zip Code"
@@ -293,7 +306,7 @@ export default function BenchmarkPage() {
           <div className="space-y-4 w-full">
             <StaticCard
               title="Median Hourly Wages"
-              titleClass="text-ws-black-30 text-sm"
+              titleClass="text-ws-black-300 text-base"
               itemAlign="between"
               count={
                 selectedZip && dashboardData?.areaMedianWage
@@ -307,11 +320,11 @@ export default function BenchmarkPage() {
               }
               countClass="mt-10 text-3xl xl:text-5xl font-medium text-ws-black-90"
               infoIcon={false}
-              classess="bg-secondary w-full"
+              classess="bg-ws-gray-10! w-full"
             />
             <StaticCard
               title="Median Living Wage"
-              titleClass="text-ws-black-30 text-sm"
+              titleClass="text-ws-black-300 text-base"
               itemAlign="between"
               count={
                 selectedZip && dashboardData?.areaMedianWage
@@ -325,11 +338,11 @@ export default function BenchmarkPage() {
               }
               infoIcon={false}
               countClass="mt-10 text-3xl xl:text-5xl font-medium text-ws-black-90"
-              classess="bg-secondary w-full"
+              classess="bg-ws-gray-10! w-full"
             />
             <StaticCard
               title="National Average"
-              titleClass="text-ws-black-30 text-sm"
+              titleClass="text-ws-black-300 text-base"
               itemAlign="between"
               count={
                 selectedZip && dashboardData?.areaMedianWage
@@ -343,7 +356,7 @@ export default function BenchmarkPage() {
               }
               infoIcon={false}
               countClass="mt-10 text-3xl xl:text-5xl font-medium text-ws-black-90"
-              classess="bg-secondary w-full"
+              classess="bg-ws-gray-10! w-full"
             />
           </div>
         </div>
@@ -399,23 +412,28 @@ export default function BenchmarkPage() {
           </div>
 
           {/* Zip selector for the entire housing section */}
-          <div className="w-full md:w-full md:mt-4 lg:w-auto">
+          <div className="w-full md:w-full lg:w-auto">
             {zipCodes && zipCodes.length > 0 ? (
-              <Select
-                className="w-full flex items-start min-w-50 md:min-w-full lg:min-w-80"
-                isRequired
-                size="md"
-                placeholder="Select Zip Code"
-                items={zipCodes.map(z => ({ label: z, id: `@${z}` }))}
-                value={selectedHousingZip ? `@${selectedHousingZip}` : undefined}
-                onSelectionChange={(key: Key | null) => {
-                  if (key !== null) {
-                    setSelectedHousingZip(String(key).replace(/^@/, ""));
-                  }
-                }}
-              >
-                {item => <Select.Item id={item.id}>{item.label}</Select.Item>}
-              </Select>
+              <div className="flex flex-col items-start w-full">
+                <Label htmlFor="zip-code-select" className="text-ws-black-20 flex mb-1.5">
+                  Zip Code
+                </Label>
+                <Select
+                  className="w-full flex items-start min-w-50 md:min-w-full lg:min-w-60"
+                  isRequired
+                  size="md"
+                  placeholder="Select Zip Code"
+                  items={zipCodes.map(z => ({ label: z, id: `@${z}` }))}
+                  value={selectedHousingZip ? `@${selectedHousingZip}` : undefined}
+                  onSelectionChange={(key: Key | null) => {
+                    if (key !== null) {
+                      setSelectedHousingZip(String(key).replace(/^@/, ""));
+                    }
+                  }}
+                >
+                  {item => <Select.Item id={item.id}>{item.label}</Select.Item>}
+                </Select>
+              </div>
             ) : null}
           </div>
         </div>
@@ -457,8 +475,8 @@ export default function BenchmarkPage() {
         {/* Renters section header — dynamic quarter/year */}
         <div className="flex items-center justify-between mt-6">
           <div className="space-y-1">
-            <h3 className="text-xl font-medium">Housing Cost Burdened Renters</h3>
-            <p className="text-xs">
+            <h3 className="text-xl font-medium text-ws-black">Housing Cost Burdened Renters</h3>
+            <p className="text-xs text-ws-black">
               {selectedHousingData?.housingCostBurdenedRenters?.[0]
                 ? `${selectedHousingData.housingCostBurdenedRenters[0].year}`
                 : "—"}
@@ -531,7 +549,7 @@ export default function BenchmarkPage() {
             <StaticCard
               title="Median Home Value"
               itemAlign="between"
-              titleClass="uppercase"
+              titleClass="uppercase text-sm font-medium text-ws-black-10"
               count={
                 selectedHousingData?.workingClassHousingCostBurden
                   ? formatCurrency(
@@ -550,7 +568,7 @@ export default function BenchmarkPage() {
             <StaticCard
               title="Median Rent"
               itemAlign="between"
-              titleClass="uppercase"
+              titleClass="uppercase text-sm font-medium text-ws-black-10"
               count={
                 selectedHousingData?.workingClassHousingCostBurden
                   ? formatCurrency(selectedHousingData.workingClassHousingCostBurden.medianRent)

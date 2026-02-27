@@ -92,10 +92,10 @@ export default function RecommendationsPage() {
         </h2>
         <div className="flex mt-2 gap-6 flex-col xl:flex-row">
           <div className="prose w-full xl:w-1/2">
-            <p className="text-ws-black-70">
+            <p className="text-base text-ws-black-70">
               Your comprehensive plan to enhance worker financial health and retirement.
             </p>
-            <p className="text-ws-black-70">
+            <p className="text-base text-ws-black-70">
               Here are some impactful ways to start uplifting your workforce with proven strategies.
               Consider strengthening core benefits by modifying policies to increase access and
               participation with these options:
@@ -111,12 +111,12 @@ export default function RecommendationsPage() {
                 descriptionText="Employer contributions are often skewed due to high earners’s contribution capacity. Separate the employee contribution from employer contribution."
               />
               <StrategiesCard
-                title="Auto enrollment"
+                title="2. Auto enrollment"
                 titleIcon={<RefreshIcon />}
                 descriptionText="80% of employees automatically enrolled in a 3% 401K match stay within the retirement plan."
               />
               <StrategiesCard
-                title="Ensure healthcare affordability"
+                title="3. Ensure healthcare affordability"
                 titleIcon={<CheckIcon />}
                 descriptionText="Enrollment in a non-high deductible health insurance plan is associated with higher financial health. Consider adjusting employee premiums to income level. QSERA and ICRA plans can offer more flexibility and savings for employers and employees."
               />
@@ -137,11 +137,11 @@ export default function RecommendationsPage() {
         </Badge> */}
         <div className="flex mt-2 gap-6 flex-col xl:flex-row">
           <div className="w-full xl:w-1/2">
-            <h1 className="text-2xl lg:text-5xl text-ws-black-70 font-normal">
+            <h1 className="text-2xl lg:text-5xl text-ws-black-80 font-normal">
               Strategic Solutions
             </h1>
             <p className="text-base mt-4 text-ws-black">
-              Here are some top benefit solutions that address your company goals and employee needs 
+              Here are some top benefit solutions that address your company goals and employee needs
               based on the information provided.
             </p>
           </div>
@@ -157,22 +157,22 @@ export default function RecommendationsPage() {
               <div className="w-3/4 p-4 overflow-auto">
                 <h4 className="text-base font-medium mb-2 text-ws-black-70">Did you know?</h4>
                 <p className="text-base text-ws-black-70">
-                 The cost of replacing an individual employee can range from one-half to two times 
-                 the employee's annual salary.
+                  The cost of replacing an individual employee can range from one-half to two times
+                  the employee's annual salary.
                 </p>
               </div>
             </div>
           </div>
         </div>
         <div className="mt-6">
-          <h3 className="text-2xl font-medium text-ws-black-70">Recommended Benefit Providers</h3>
+          <h3 className="text-2xl font-medium text-ws-black-60">Recommended Benefit Providers</h3>
           {strategicRecommendations.length > 0 ? (
             <div className="grid xl:grid-cols-3 gap-5 w-full mt-6">
               {strategicRecommendations.map(recommendation => (
                 <BenefitCard
                   key={recommendation.order}
                   badgeText={recommendation.category}
-                  badgeClassess="bg-ws-cyan-20 ring-0 px-4 py-1.5 text-ws-black-20"
+                  badgeClassess="bg-ws-cyan-20 text-xs font-normal ring-0 px-4 py-1 text-ws-black-20"
                   title={recommendation.title}
                   descriptionText={recommendation.description}
                   listTitle="Key Features"

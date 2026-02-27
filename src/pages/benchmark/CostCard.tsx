@@ -31,7 +31,9 @@ export default function CostCard({
       <div className="flex items-center bg-ws-cyan-60 px-3 py-2 text-ws-white text-base mb-0">
         {voluntaryScore}
       </div>
-      <div className="bg-ws-gray-40 text-ws-black px-3 py-2 w-3/5 mb-0">{involuntaryScore}</div>
+      <div className="bg-ws-gray-600 text-ws-black px-3 py-2 w-3/5 mb-0 text-base">
+        {involuntaryScore}
+      </div>
       <div className="flex items-center justify-between mt-7">
         <div className="text-sm text-ws-black">
           {industryText}
