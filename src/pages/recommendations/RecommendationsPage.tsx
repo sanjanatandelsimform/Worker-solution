@@ -1,4 +1,4 @@
-import { Badge } from "@/components/base/badges/badges";
+// import { Badge } from "@/components/base/badges/badges";
 import CarouselSection from "./Carousel";
 import StaticCard from "./StaticCard";
 import workforceImg from "@/assets/workforce-hero.jpg";
@@ -96,9 +96,9 @@ export default function RecommendationsPage() {
               Your comprehensive plan to enhance worker financial health and retirement.
             </p>
             <p className="text-ws-black-70">
-              Here are some impactful ways to start uplifting your workforce with proven strategies. 
-              Consider strengthening core benefits by modifying policies to increase access 
-              and participation with these options:
+              Here are some impactful ways to start uplifting your workforce with proven strategies.
+              Consider strengthening core benefits by modifying policies to increase access and
+              participation with these options:
             </p>
             <img src={workforceImg} alt="Workforce hero" />
           </div>
@@ -127,6 +127,7 @@ export default function RecommendationsPage() {
 
       <div className="bg-ws-white py-8 px-6 border border-ws-gray-50 rounded-2xl">
         {/* <Badge
+        {/* <Badge
           type="pill-color"
           color="brand"
           size="lg"
@@ -136,7 +137,9 @@ export default function RecommendationsPage() {
         </Badge> */}
         <div className="flex mt-2 gap-6 flex-col xl:flex-row">
           <div className="w-full xl:w-1/2">
-            <h1 className="text-2xl lg:text-5xl text-ws-black-70 font-normal">Strategic Solutions</h1>
+            <h1 className="text-2xl lg:text-5xl text-ws-black-70 font-normal">
+              Strategic Solutions
+            </h1>
             <p className="text-base mt-4 text-ws-black">
               Here are some top benefit solutions that address your company goals and employee needs 
               based on the information provided.
