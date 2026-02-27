@@ -32,9 +32,9 @@ type TabTypeColors<T> = T extends "horizontal" ? HorizontalTypes : VerticalTypes
 // Styles for different types of tab
 const getTabStyles = ({ isFocusVisible, isSelected, isHovered }: AriaTabRenderProps) => ({
   "button-brand": cx(
-    "outline-focus-ring rounded-full bg-ws-white ring-1 ring-ws-gray-50 ring-inset text-base font-bold px-6 py-3 mr-2",
-    isFocusVisible && "outline-2 -outline-offset-2 bg-cyan-600 text-ws-white",
-    (isSelected || isHovered) && "bg-cyan-600 text-ws-white"
+    "outline-focus-ring rounded-full bg-ws-white ring-1 ring-ws-gray-50 ring-inset text-base font-bold px-6 py-3 mr-2 min-w-50",
+    isFocusVisible && "outline-2 -outline-offset-2 bg-cyan-700 text-ws-white",
+    (isSelected || isHovered) && "bg-cyan-700 text-ws-white"
   ),
   "button-gray": cx(
     "outline-focus-ring",

@@ -202,13 +202,17 @@ export const DashboardPage = () => {
         <main className="flex-1 overflow-y-auto p-5 xl:p-10 xl:pl-0">
           <div className="space-y-6"></div>
           <div>
-            <h2 className="text-4xl font-medium text-ws-black">
-              {completionCount !== 4 ? `Welcome!` : `Hi ${user?.lastName}!`}
+            <h2 className="text-4xl font-medium text-ws-black-60">
+              {completionCount !== 4 ? (
+                `Welcome!`
+              ) : (
+                <span className="font-bold mb-4 flex">{`Hi ${user?.lastName}!`}</span>
+              )}
             </h2>
             {completionCount == 4 && (
-              <p>
-                Here's an overview of your workforce, industry, and some recommendations with partners that can add more value to your 
-                benefits packages and employee support.
+              <p className="text-base font-normal text-ws-black">
+                Here's an overview of your workforce, industry, and some recommendations with
+                partners that can add more value to your benefits packages and employee support.
               </p>
             )}
 
@@ -249,7 +253,7 @@ export const DashboardPage = () => {
             {completionCount !== 4 && (
               <div className="mt-6 border border-ws-gray-50 rounded-xl p-4 bg-ws-black-80 shadow-sm flex gap-4 justify-between flex-col lg:flex-row">
                 <div className="flex-1">
-                  <h2 className="text-ws-cyan-10 text-3xl font-medium mb-2">
+                  <h2 className="text-ws-cyan-10 text-3xl font-normal mb-2">
                     Thanks for signing up.
                   </h2>
                   <p className="text-ws-white text-base pr-10">

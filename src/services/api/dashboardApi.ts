@@ -115,8 +115,8 @@ export const getDashboard = async (): Promise<DashboardResponse> => {
         },
       },
       turnoverVoluntaryVsInvoluntary: {
-        quarter: 2,
-        year: 2024,
+        quarter: 4,
+        year: 2023,
         percentage: {
           voluntary: 60.2,
           involuntary: 39.8,
@@ -124,7 +124,7 @@ export const getDashboard = async (): Promise<DashboardResponse> => {
       },
       rateOfSeparation: {
         quarter: 2,
-        year: 2024,
+        year: 2023,
         percentage: {
           hiringRate: 11.1,
           separationRate: 7.7,

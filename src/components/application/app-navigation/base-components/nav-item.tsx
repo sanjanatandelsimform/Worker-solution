@@ -68,7 +68,7 @@ export const NavItemBase = ({
   const labelElement = !isCollapsed && (
     <span
       className={cx(
-        "flex-1 text-md font-semibold text-nav-menu transition-all duration-300 group-hover:text-secondary_hover",
+        "flex-1 text-md font-medium text-nav-menu transition-all duration-300 group-hover:text-ws-color-gray-200",
         truncate && "truncate",
         current && "text-ws-white"
       )}
