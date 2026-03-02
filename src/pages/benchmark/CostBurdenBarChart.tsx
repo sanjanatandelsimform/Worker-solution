@@ -319,7 +319,7 @@ export function IncomeDistributionChart({
         },
         {
           label: "Moderate income",
-          sublabel: "$50,000 - $74,499",
+          sublabel: "$50,000 - $74,599",
           value1: 40,
           value2: 4,
         },

@@ -1,4 +1,4 @@
-import { Badge } from "@/components/base/badges/badges";
+// import { Badge } from "@/components/base/badges/badges";
 import CarouselSection from "./Carousel";
 import StaticCard from "./StaticCard";
 import workforceImg from "@/assets/workforce-hero.jpg";
@@ -56,7 +56,7 @@ export default function RecommendationsPage() {
           countClass="text-ws-black-30 text-3xl xl:text-4xl font-semibold mt-6"
         />
         <StaticCard
-          title="Industry Average Wage"
+          title="National Industry Average Wage"
           titleClass="text-ws-gray-90 text-base"
           // count={
           //   companyAtGlance?.industryAverageWage
@@ -80,45 +80,74 @@ export default function RecommendationsPage() {
       </div>
       <CarouselSection />
       <div className="bg-ws-white py-8 px-6 border border-ws-gray-50 rounded-2xl">
-        <Badge
+        {/* <Badge
           type="pill-color"
           size="lg"
           className="py-3 px-4 text-xl font-semibold bg-ws-gray-30 text-ws-black-80"
         >
           Recommendation
-        </Badge>
-        <h2 className="mt-6 text-2xl lg:text-4xl font-medium text-ws-black-70">
-          Core Benefits Enhancement
-        </h2>
-        <div className="flex mt-2 gap-6 flex-col xl:flex-row">
-          <div className="prose w-full xl:w-1/2">
-            <p className="text-ws-black-70">
+        </Badge> */}
+
+        <div className="flex items-stretch gap-6 flex-col xl:flex-row">
+          <div className="w-full xl:w-1/2 flex flex-col">
+            <h2 className="text-2xl lg:text-4xl font-medium text-ws-black-70 mb-3">
+              Core Benefits Enhancement
+            </h2>
+            <p className="text-base text-ws-black-70 mb-3">
               Your comprehensive plan to enhance worker financial health and retirement.
             </p>
-            <p className="text-ws-black-70">
-              Here are some impactful ways to start uplifting your workforce with proven strategies,
-              consider strengthening core benefits by implementing new policies that increase access
-              and participation.
+            <p className="text-base text-ws-black-70 mb-3">
+              Here are some impactful ways to start uplifting your workforce with proven strategies.
+              Consider strengthening core benefits by modifying policies to increase access and
+              participation with these options:
             </p>
-            <img src={workforceImg} alt="Workforce hero" />
+            <div className="mt-6 flex-1 flex items-end">
+              <img src={workforceImg} alt="Workforce hero" className="w-full rounded-lg" />
+            </div>
           </div>
-          <div className="w-full xl:w-1/2">
+          {/* <div className="w-full xl:w-1/2">
             <h3 className="text-2xl text-ws-black-70 font-medium mb-5">Proven strategies</h3>
             <div className="mt-4 space-y-4">
               <StrategiesCard
-                title="1. Auto enrollment"
+                title="1. Implement a non-elective match"
                 titleIcon={<RefreshIcon />}
-                descriptionText="Retirement benefits for new hires, with employee contributions at a rate of at least 3%"
+                descriptionText="Employer contributions are often skewed due to high earners’s contribution capacity. Separate the employee contribution from employer contribution."
               />
               <StrategiesCard
-                title="Up to 3% match"
+                title="2. Auto enrollment"
                 titleIcon={<RefreshIcon />}
-                descriptionText="For all retirement plan participants, with a minimum employer match of 1.5%"
+                descriptionText="80% of employees automatically enrolled in a 3% 401K match stay within the retirement plan."
               />
               <StrategiesCard
-                title="Healthcare choice plans (FPO)"
+                title="3. Ensure healthcare affordability"
                 titleIcon={<CheckIcon />}
-                descriptionText="Here a 3 medical plans with affordability"
+                descriptionText="Enrollment in a non-high deductible health insurance plan is associated with higher financial health. Consider adjusting employee premiums to income level. QSERA and ICRA plans can offer more flexibility and savings for employers and employees."
+              />
+            </div>
+          </div> */}
+          <div className="w-full xl:w-1/2 flex flex-col">
+            <h3 className="text-2xl text-ws-black-70 font-medium mb-5">Proven strategies</h3>
+
+            <div className="flex-1 flex flex-col justify-between gap-4">
+              <StrategiesCard
+                className="min-h-38!"
+                title="1. Implement a non-elective match"
+                titleIcon={<RefreshIcon />}
+                descriptionText="Employer contributions are often skewed due to high earners’s contribution capacity. Separate the employee contribution from employer contribution."
+              />
+
+              <StrategiesCard
+                className="min-h-38!"
+                title="2. Auto enrollment"
+                titleIcon={<RefreshIcon />}
+                descriptionText="80% of employees automatically enrolled in a 3% 401K match stay within the retirement plan."
+              />
+
+              <StrategiesCard
+                className="min-h-38!"
+                title="3. Ensure healthcare affordability"
+                titleIcon={<CheckIcon />}
+                descriptionText="Enrollment in a non-high deductible health insurance plan is associated with higher financial health. Consider adjusting employee premiums to income level. QSERA and ICRA plans can offer more flexibility and savings for employers and employees."
               />
             </div>
           </div>
@@ -126,17 +155,20 @@ export default function RecommendationsPage() {
       </div>
 
       <div className="bg-ws-white py-8 px-6 border border-ws-gray-50 rounded-2xl">
-        <Badge
+        {/* <Badge
+        {/* <Badge
           type="pill-color"
           color="brand"
           size="lg"
           className="mb-6 py-3 px-4 text-xl font-semibold text-ws-black-80"
         >
           Strategic Recommendations
-        </Badge>
+        </Badge> */}
         <div className="flex mt-2 gap-6 flex-col xl:flex-row">
           <div className="w-full xl:w-1/2">
-            <h1 className="text-2xl lg:text-5xl text-ws-black-70 font-normal">Benefit Solutions</h1>
+            <h1 className="text-2xl lg:text-5xl text-ws-black-80 font-normal">
+              Strategic Solutions
+            </h1>
             <p className="text-base mt-4 text-ws-black">
               Here are some top benefit solutions that address your company goals and employee needs
               based on the information provided.
@@ -162,14 +194,14 @@ export default function RecommendationsPage() {
           </div>
         </div>
         <div className="mt-6">
-          <h3 className="text-2xl font-medium text-ws-black-70">Recommended Benefit Providers</h3>
+          <h3 className="text-2xl font-medium text-ws-black-60">Recommended Solutions</h3>
           {strategicRecommendations.length > 0 ? (
             <div className="grid xl:grid-cols-3 gap-5 w-full mt-6">
               {strategicRecommendations.map(recommendation => (
                 <BenefitCard
                   key={recommendation.order}
                   badgeText={recommendation.category}
-                  badgeClassess="bg-ws-cyan-20 ring-0 px-4 py-1.5 text-ws-black-20"
+                  badgeClassess="bg-ws-cyan-20 text-xs font-normal ring-0 px-4 py-1 text-ws-black-20"
                   title={recommendation.title}
                   descriptionText={recommendation.description}
                   listTitle="Key Features"
@@ -197,7 +229,7 @@ export default function RecommendationsPage() {
           advice, and recommendations are not guarantees of outcomes or results. Actual results may
           vary, and you are responsible for evaluating and implementing any recommendations based on
           your organization’s specific circumstances.{" "}
-          <Link to="#" className="text-cyan-500 underline">
+          <Link to="/terms-page" className="text-cyan-500 underline">
             Terms & Conditions
           </Link>
         </p>

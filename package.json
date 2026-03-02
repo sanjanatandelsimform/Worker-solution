@@ -13,7 +13,11 @@
     "preview": "vite preview",
     "prepare": "husky",
     "type-check": "tsc --noEmit",
-    "test": "vitest run",
+    "test": "vitest run tests/store tests/services tests/hooks",
+    "test:all": "vitest run",
+    "test:pages": "vitest run tests/pages",
+    "test:components": "vitest run tests/components",
+    "test:ui": "vitest run tests/pages/SignInPage.test.tsx && vitest run tests/pages/RegisterPage.test.tsx && vitest run tests/pages/DashboardPage.test.tsx && vitest run tests/pages/VerifyEmailPage.test.tsx && vitest run tests/components/assessment/WorkforceTab.test.tsx && vitest run tests/components/assessment/CompensationTab.test.tsx && vitest run tests/components/assessment/BenefitsTab.test.tsx && vitest run tests/components/assessment/GoalsTab.test.tsx",
     "test:watch": "vitest --watch"
   },
   "lint-staged": {

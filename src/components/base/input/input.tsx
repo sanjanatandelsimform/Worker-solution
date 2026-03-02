@@ -138,7 +138,7 @@ export const InputBase = ({
         ref={ref}
         placeholder={placeholder}
         className={cx(
-          "m-0 w-full bg-transparent text-md text-ws-black ring-0 outline-hidden placeholder:text-ws-gray-300 autofill:rounded-lg autofill:text-ws-black",
+          "m-0 w-full bg-transparent text-md text-ws-black ring-0 outline-hidden placeholder:text-ws-gray-300 autofill:rounded-lg autofill:text-ws-black question-text",
           isDisabled && "cursor-not-allowed bg-ws-gray-10 text-disabled",
           sizes[inputSize].root,
           context?.inputClassName,
@@ -148,7 +148,7 @@ export const InputBase = ({
 
       {/* Tooltip and help icon */}
       {tooltip && !isInvalid && (
-        <Tooltip title={tooltip} placement="top">
+        <Tooltip title={tooltip} placement="top" arrow={true}>
           <TooltipTrigger
             className={cx(
               "absolute cursor-pointer text-ws-gray-60 transition duration-200 hover:text-ws-red-40 focus:text-ws-red-40",

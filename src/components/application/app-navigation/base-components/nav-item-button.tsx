@@ -46,7 +46,7 @@ export const NavItemButton = ({
   onClick,
 }: NavItemButtonProps) => {
   return (
-    <Tooltip title={label} placement={tooltipPlacement}>
+    <Tooltip title={label} placement={tooltipPlacement} arrow={true}>
       <Pressable>
         <a
           href={href}

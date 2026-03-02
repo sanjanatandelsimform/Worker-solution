@@ -14,7 +14,7 @@ import { useAssessmentStatus } from "@/hooks/useAssessmentStatus";
 const steps = [
   { id: "workforce", label: "Workforce" },
   { id: "compensation", label: "Compensation" },
-  { id: "benefits", label: "benefits" },
+  { id: "benefits", label: "Benefits" },
   { id: "goals", label: "Goals" },
 ];
 // Helper: returns first incomplete step id
@@ -24,7 +24,7 @@ const getInitialStep = (completionCount: number): string | null => {
 };
 
 export default function AssessmentWorkforcePage() {
-  const { completionCount, isLoading } = useAssessmentStatus();
+  const { completionCount, isLoading, sectionCompletion, refetch } = useAssessmentStatus();
   const [manualStep, setManualStep] = useState<string | null>(null);
   const resolvedStep = !isLoading ? getInitialStep(completionCount) : null;
   const currentStep = manualStep ?? resolvedStep;
@@ -48,6 +48,14 @@ export default function AssessmentWorkforcePage() {
   // Recalculate currentStepIndex whenever currentStep changes
   const currentStepIndex = steps.findIndex(step => step.id === currentStep);
   const isLastStep = currentStepIndex === steps.length - 1;
+
+  const completedStepIds = steps
+    .filter(step => {
+      if (!sectionCompletion) return false;
+      const key = step.id as keyof typeof sectionCompletion;
+      return sectionCompletion[key];
+    })
+    .map(step => step.id);
 
   const handleNext = async () => {
     // setManualStep(steps[currentStepIndex + 1].id);
@@ -73,6 +81,7 @@ export default function AssessmentWorkforcePage() {
     try {
       const response = await dynamicTabValidation.submit();
       if (response.success) {
+        await refetch();
         if (isLastStep) {
           // navigate("/dashboard");
         } else {
@@ -122,7 +131,7 @@ export default function AssessmentWorkforcePage() {
   const isLoadingGet = currentStep === null;
 
   return (
-    <div className="flex min-h-screen flex-col bg-gray-50">
+    <div className="flex min-h-screen flex-col bg-ws-color-gray-20">
       {/* Top Navigation Bar */}
       <div className="flex h-14 items-center justify-between border-b border-cyan-700 bg-cyan-500 px-6 py-4">
         {/* Back Button */}
@@ -158,13 +167,38 @@ export default function AssessmentWorkforcePage() {
         <ProgressStepper
           steps={steps}
           currentStep={currentStep ?? "workforce"}
+          completedSteps={completedStepIds}
           onStepChange={stepId => {
-            // Only allow navigation to completed steps or current step
-            const targetIndex = steps.findIndex(step => step.id === stepId);
-            const currentIdx = steps.findIndex(step => step.id === currentStep);
-            if (targetIndex <= currentIdx) {
+            if (stepId === currentStep) {
               setManualStep(stepId);
+              return;
             }
+
+            // Only allow navigation to steps where data exists
+            // and all previous steps are completed
+            const targetIndex = steps.findIndex(step => step.id === stepId);
+            if (targetIndex === -1) return;
+
+            const completion = sectionCompletion ?? {
+              workforce: false,
+              compensation: false,
+              benefits: false,
+              goals: false,
+            };
+
+            const targetKey = stepId as keyof typeof completion;
+            if (!completion[targetKey]) {
+              return;
+            }
+
+            for (let i = 0; i < targetIndex; i += 1) {
+              const prevKey = steps[i].id as keyof typeof completion;
+              if (!completion[prevKey]) {
+                return;
+              }
+            }
+
+            setManualStep(stepId);
           }}
         />
         {/* Content Area */}

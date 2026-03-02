@@ -37,6 +37,12 @@ export const DynamicQuestionRenderer = ({
   const error = errors[question.key];
   const displayOrder = subsectionDisplayOrder ?? question.displayOrder;
 
+  const halfWidthSelectKeys = new Set(["payrollProvider", "benefitEnrollmentMonth"]);
+  const halfWidthConditionalSelectKeys = new Set(["retirementProvider"]);
+  const halfWidthNumericKeys = new Set(["lowestHealthPlanPremium"]);
+  const halfWidthConditionalNumericKeys = new Set(["retirementMatchPercentage"]);
+  const halfWidthYesNoKeys = new Set(["offersAnnualRaises"]);
+
   // Track component mount/unmount for debugging
 
   useEffect(() => {
@@ -152,9 +158,12 @@ export const DynamicQuestionRenderer = ({
     // Check for field-level error
     const fieldErrorKey = `${keyToUse}.${index}.${field.name}`;
     const fieldError = errors[fieldErrorKey];
+    // Normalize generic "Required" message for state fields
+    const displayFieldError =
+      field.name === "state" && fieldError === "Required" ? "State is required" : fieldError;
     // Also check question-level error for backward compatibility
     const questionError = errors[keyToUse];
-    const hasError = !!fieldError || !!questionError;
+    const hasError = !!displayFieldError || !!questionError;
 
     // Debug logging
 
@@ -198,7 +207,7 @@ export const DynamicQuestionRenderer = ({
                 <Select.Item id={selectItem.id}>{selectItem.label || ""}</Select.Item>
               )}
             </Select>
-            {fieldError && <span className="text-sm text-red-600">{fieldError}</span>}
+            {displayFieldError && <span className="text-sm text-red-600">{displayFieldError}</span>}
           </>
         ) : (
           <>
@@ -213,7 +222,7 @@ export const DynamicQuestionRenderer = ({
               pattern={field.name === "zipCode" ? "\\d{5}" : field.pattern}
               maxLength={field.name === "zipCode" ? 5 : undefined}
               isInvalid={hasError}
-              tooltip={fieldError ? fieldError : undefined}
+              tooltip={displayFieldError ? displayFieldError : undefined}
               onChange={(val: string) => {
                 if (field.name !== "zipCode" || /^\d{0,5}$/.test(val)) {
                   updateArrayItemField(
@@ -226,7 +235,7 @@ export const DynamicQuestionRenderer = ({
                 }
               }}
             />
-            {fieldError && <span className="text-sm text-red-600">{fieldError}</span>}
+            {displayFieldError && <span className="text-sm text-red-600">{displayFieldError}</span>}
           </>
         )}
       </div>
@@ -271,7 +280,7 @@ export const DynamicQuestionRenderer = ({
 
     return (
       <div className="flex w-full flex-col gap-4 pl-6 mt-4">
-        <Label isRequired={conditionalQuestion.isRequired} className="text-base text-gray-900">
+        <Label isRequired={conditionalQuestion.isRequired} className="text-base custom-label">
           {conditionalQuestion.questionText}
         </Label>
 
@@ -302,6 +311,11 @@ export const DynamicQuestionRenderer = ({
               type="number"
               placeholder={conditionalQuestion.placeholder || "Enter number"}
               value={String(answers[conditionalQuestion.key] ?? "")}
+              className={
+                halfWidthConditionalNumericKeys.has(conditionalQuestion.key)
+                  ? "w-full md:w-1/2"
+                  : "w-full"
+              }
               onChange={value => {
                 const numValue = value === "" ? null : Number(value);
                 if (numValue !== null) {
@@ -322,6 +336,9 @@ export const DynamicQuestionRenderer = ({
               }}
               size="md"
               isInvalid={errors[conditionalQuestion.key] ? true : false}
+              tooltip={
+                errors[conditionalQuestion.key] ? errors[conditionalQuestion.key] : undefined
+              }
             />
             {errors[conditionalQuestion.key] && (
               <span className="text-sm text-red-600">{errors[conditionalQuestion.key]}</span>
@@ -332,8 +349,17 @@ export const DynamicQuestionRenderer = ({
         {/* SINGLE_SELECT_DROPDOWN */}
         {conditionalQuestion.questionType === "SINGLE_SELECT_DROPDOWN" && (
           <>
+            {/*
+              Half-width dropdowns for specific conditional questions:
+              - annualRaiseMonth ("If yes, when?")
+              - retirementProvider ("Who is your retirement benefits record keeper or provider?")
+            */}
             <Select
-              className="w-full"
+              className={
+                halfWidthConditionalSelectKeys.has(conditionalQuestion.key)
+                  ? "w-full md:w-1/2"
+                  : "w-full"
+              }
               size="md"
               placeholder={conditionalQuestion.placeholder || "Select an option"}
               items={conditionalQuestion.options?.map(opt => ({
@@ -446,7 +472,7 @@ export const DynamicQuestionRenderer = ({
                       size="md"
                       iconLeading={Plus}
                       onClick={() => addArrayItem(conditionalKey)}
-                      className="max-w-60"
+                      className="max-w-60 text-sm font-semibold text-ws-color-black-20"
                     >
                       Add another
                     </Button>
@@ -488,7 +514,7 @@ export const DynamicQuestionRenderer = ({
     case "SINGLE_SELECT":
       return (
         <div className="flex w-full flex-col gap-2" data-question-key={question.key}>
-          <Label isRequired={question.isRequired} className="text-base">
+          <Label isRequired={question.isRequired} className="text-base custom-label">
             {displayOrder}. {question.questionText}
           </Label>
           {error && (
@@ -502,7 +528,7 @@ export const DynamicQuestionRenderer = ({
             value={String(currentAnswer || "")}
             onChange={value => onAnswerChange(question.key, value)}
           >
-            <div className="flex w-full flex-col gap-4">
+            <div className="flex w-full flex-col gap-4 custom-question-options">
               {question.options?.map(option => (
                 <RadioButton key={option.value} label={option.label} value={option.value} />
               ))}
@@ -513,11 +539,15 @@ export const DynamicQuestionRenderer = ({
     case "SINGLE_SELECT_DROPDOWN":
       return (
         <div className="flex w-full flex-col gap-2" data-question-key={question.key}>
-          <Label isRequired={question.isRequired} className="text-base">
+          <Label isRequired={question.isRequired} className="text-base custom-label">
             {displayOrder}. {question.questionText}
           </Label>
           <Select
-            className="w-full"
+            className={
+              halfWidthSelectKeys.has(question.key)
+                ? "w-full md:w-1/2 custom-input"
+                : "w-full custom-input"
+            }
             size="md"
             placeholder={question.placeholder || "Select an option"}
             items={question.options?.map(opt => ({
@@ -536,7 +566,11 @@ export const DynamicQuestionRenderer = ({
             }}
             isInvalid={error ? true : false}
           >
-            {(item: SelectItemType) => <Select.Item id={item.id}>{item.label || ""}</Select.Item>}
+            {(item: SelectItemType) => (
+              <Select.Item className="text-ws-black-20" id={item.id}>
+                {item.label || ""}
+              </Select.Item>
+            )}
           </Select>
           {error && (
             <div className="flex items-center gap-2">
@@ -552,7 +586,7 @@ export const DynamicQuestionRenderer = ({
     case "MULTIPLE_CHOICE":
       return (
         <div className="flex w-full flex-col gap-2" data-question-key={question.key}>
-          <Label isRequired={question.isRequired} className="text-base">
+          <Label isRequired={question.isRequired} className="text-base custom-label">
             {displayOrder}. {question.questionText}
           </Label>
           {error && (
@@ -561,12 +595,14 @@ export const DynamicQuestionRenderer = ({
               <span className="text-sm text-red-600">{error}</span>
             </div>
           )}
-          <div className="flex flex-col gap-4">
+          <div className="flex flex-col gap-4 custom-question-options">
             {(question.key === "workforceGoals" || question.key === "supplementalBenefits") &&
             question.optionGroups
               ? question.optionGroups.map((group: OptionGroup) => (
                   <div key={group.groupName} className="flex flex-col gap-3">
-                    <h3 className="text-sm font-semibold text-gray-900">{group.groupName}</h3>
+                    <h3 className="text-sm font-medium text-ws-color-black-100">
+                      {group.groupName}
+                    </h3>
                     <div className="flex flex-col gap-4 pl-2">
                       {group.options.map((option: QuestionOption) => (
                         <Checkbox
@@ -620,8 +656,14 @@ export const DynamicQuestionRenderer = ({
 
     case "YES_NO":
       return (
-        <div className="flex w-full flex-col gap-2" data-question-key={question.key}>
-          <Label isRequired={question.isRequired} className="text-base">
+        <div
+          className={cx(
+            "flex flex-col gap-2",
+            halfWidthYesNoKeys.has(question.key) ? "w-full md:w-1/2" : "w-full"
+          )}
+          data-question-key={question.key}
+        >
+          <Label isRequired={question.isRequired} className="text-base custom-label">
             {displayOrder}. {question.questionText}
           </Label>
           {error && (
@@ -635,7 +677,7 @@ export const DynamicQuestionRenderer = ({
             value={currentAnswer === true ? "yes" : currentAnswer === false ? "no" : ""}
             onChange={value => onAnswerChange(question.key, value === "yes")}
           >
-            <div className="flex w-full flex-col gap-4">
+            <div className="flex w-full flex-col gap-4 custom-question-options">
               <RadioButton label="Yes" value="yes" />
 
               {currentAnswer === true &&
@@ -657,10 +699,15 @@ export const DynamicQuestionRenderer = ({
     case "NUMBER_INPUT":
       return (
         <div className="flex w-full flex-col gap-2" data-question-key={question.key}>
-          <Label isRequired={question.isRequired} className="text-base">
+          <Label isRequired={question.isRequired} className="text-base custom-label">
             {displayOrder}. {question.questionText}
           </Label>
           <Input
+            className={
+              halfWidthNumericKeys.has(question.key)
+                ? "w-full md:w-1/2 custom-input"
+                : "w-full custom-input"
+            }
             type="number"
             placeholder={question.placeholder || "Enter number"}
             value={String(currentAnswer ?? "")}
@@ -693,7 +740,7 @@ export const DynamicQuestionRenderer = ({
     case "TEXT_INPUT":
       return (
         <div className="flex w-full flex-col gap-2" data-question-key={question.key}>
-          <Label isRequired={question.isRequired} className="text-base">
+          <Label isRequired={question.isRequired} className="text-base custom-label">
             {displayOrder}. {question.questionText}
           </Label>
           <Input
@@ -725,12 +772,15 @@ export const DynamicQuestionRenderer = ({
 
       return (
         <div className="flex w-full flex-col gap-4" data-question-key={question.key}>
-          <Label isRequired={question.isRequired} className="text-base">
+          <Label isRequired={question.isRequired} className="text-base custom-label">
             {displayOrder}. {question.questionText}
           </Label>
 
           {currentItems.map((item: { id: number }, index: number) => (
-            <div key={(item as { id: number }).id} className="flex w-full gap-4 items-start">
+            <div
+              key={(item as { id: number }).id}
+              className="flex w-full gap-4 items-start custom-input"
+            >
               {question.validationRules.fields!.map(field =>
                 renderStructuredArrayField(field, index, currentItems.length > 1, () =>
                   removeArrayItem(question.key, (item as { id: number }).id)
@@ -755,7 +805,10 @@ export const DynamicQuestionRenderer = ({
               size="md"
               iconLeading={Plus}
               onClick={() => addArrayItem(question.key)}
-              className={cx("max-w-60", error && "border-red-500")}
+              className={cx(
+                "max-w-60 text-sm font-semibold text-ws-color-black-20",
+                error && "border-red-500"
+              )}
             >
               Add another
             </Button>
@@ -769,7 +822,7 @@ export const DynamicQuestionRenderer = ({
     case "PARTICIPATION_RATES":
       return (
         <div className="flex w-full flex-col gap-4" data-question-key={question.key}>
-          <Label isRequired={question.isRequired} className="text-base">
+          <Label isRequired={question.isRequired} className="text-base custom-label">
             {displayOrder}. {question.questionText}
           </Label>
 
@@ -781,9 +834,9 @@ export const DynamicQuestionRenderer = ({
             return (
               <div key={sub.key} className="flex w-full items-start gap-4">
                 <div className="flex w-84.75 items-center gap-2 px-3 py-2">
-                  <p className="overflow-hidden text-ellipsis text-base font-medium leading-6 text-gray-800 flex items-center gap-3">
+                  <p className="overflow-hidden text-ellipsis text-base font-medium leading-6 text-gray-800 flex items-center gap-3 custom-label">
                     {sub.label}
-                    <Tooltip title={sub.label}>
+                    <Tooltip title={sub.label} arrow={true}>
                       <TooltipTrigger className="group relative flex cursor-pointer">
                         <InfoCircle className="size-5 text-gray-400" />
                       </TooltipTrigger>
@@ -793,7 +846,7 @@ export const DynamicQuestionRenderer = ({
 
                 <div className="flex flex-1 flex-col gap-1.5">
                   <Select
-                    className="w-full"
+                    className="w-full custom-input"
                     size="md"
                     placeholder="Select"
                     items={sub.options?.map((opt: { value: string; label: string }) => ({

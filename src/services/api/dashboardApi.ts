@@ -93,7 +93,11 @@ export const getDashboard = async (): Promise<DashboardResponse> => {
         totalWorkforce: "100-500",
         averageHourlyWage: "$26+",
         averageSalary: "$30,000 - $50,000",
-        industryAverageWage: 61964,
+        // workingClassPopulation: {
+        //   count: 89,
+        //   percentage: 38,
+        // },
+        industryAverageWage: "$61,964",
       },
       industryOverview: {
         turnoverRate: {
@@ -111,19 +115,19 @@ export const getDashboard = async (): Promise<DashboardResponse> => {
         },
       },
       turnoverVoluntaryVsInvoluntary: {
-        quarter: 2,
-        year: 2024,
+        quarter: 4,
+        year: 2023,
         percentage: {
-          voluntary: 18,
-          involuntary: 13,
+          voluntary: 60.2,
+          involuntary: 39.8,
         },
       },
       rateOfSeparation: {
         quarter: 2,
-        year: 2024,
+        year: 2023,
         percentage: {
-          hiringRate: 28,
-          separationRate: 31,
+          hiringRate: 11.1,
+          separationRate: 7.7,
         },
       },
       areaMedianWage: [
@@ -212,9 +216,9 @@ export const getDashboard = async (): Promise<DashboardResponse> => {
             },
           ],
           workingClassHousingCostBurden: {
-            homeOwnershipRate: 50,
-            medianHomeValue: 200,
-            medianRent: 23,
+            homeOwnershipRate: 72,
+            medianHomeValue: 367200,
+            medianRent: 1423,
           },
           workingClassHousingGraph: [
             {
@@ -227,7 +231,7 @@ export const getDashboard = async (): Promise<DashboardResponse> => {
             {
               incomeCategory: "moderateIncome",
               label: "Moderate income",
-              range: "$50,000 - $74,999",
+              range: "$50,000 - $74,599",
               burdened: 40,
               severelyBurdened: 4,
             },
@@ -344,6 +348,12 @@ export const getDashboard = async (): Promise<DashboardResponse> => {
     };
     return response1;
   } catch (error) {
+    if (
+      error instanceof Error &&
+      error.message === "Authentication required. Please log in again."
+    ) {
+      throw error;
+    }
     const errorMessage = getErrorMessage(error);
     throw new Error(errorMessage);
   }

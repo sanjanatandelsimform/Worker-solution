@@ -28,7 +28,14 @@ const didYouKnowSlides = [
     icon: <ChartIcon />,
     title: "Did you know?",
     content:
-      "73% of employees agreed that a comprehensive and personalized benefits program would increase the likelihood they would stay with their  current organization. ",
+      "73% of employees agreed that a comprehensive and personalized benefits program would increase the likelihood they would stay with their  current organization.",
+  },
+  {
+    id: 4,
+    icon: <ChartIcon />,
+    title: "Did you know?",
+    content:
+      "Workers who are offered employer matching were 21% more likely to participate in their retirement plan than those who are not offered a match.",
   },
 ];
 
@@ -52,13 +59,11 @@ export default function CarouselSection() {
                     {/* Header with Icon and Title */}
                     <div className="flex items-center gap-2 text-lg text-ws-black-70 font-medium">
                       {slide.icon}
-                      <h3 className="text-lg font-medium leading-7 color-base-black">
+                      <h3 className="text-lg font-medium leading-7 text-ws-black-70">
                         {slide.title}
                       </h3>
                     </div>
-                    <p className="text-base font-normal color-base-black leading-6">
-                      {slide.content}
-                    </p>
+                    <p className="text-base font-normal text-ws-black leading-6">{slide.content}</p>
                   </div>
                 </Carousel.Item>
               ))}

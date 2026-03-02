@@ -1,8 +1,7 @@
 "use client";
 import { useState } from "react";
-import { Button } from "@/components/base/buttons/button";
+// import { Button } from "@/components/base/buttons/button";
 import StaticCard from "../recommendations/StaticCard";
-import insightHero from "@/assets/insight-hero.png";
 import CostCard from "./CostCard";
 import { Select } from "@/components/base/select/select";
 import { IncomeDistributionChart } from "./CostBurdenBarChart";
@@ -23,6 +22,8 @@ import {
   selectPrimaryAreaMedianWage,
 } from "@/store/selectors/dashboardSelectors";
 import { formatCurrency, formatPercentage, formatCurrencyWithCents } from "@/utils/formatters";
+import { SmileFace } from "@/assets/icons/SmileFace";
+import { Label } from "@/components/base/input/label";
 
 export default function BenchmarkPage() {
   const [isGetInTouchModalOpen, setIsGetInTouchModalOpen] = useState(false);
@@ -59,9 +60,10 @@ export default function BenchmarkPage() {
         <h2 className="text-2xl lg:text-4xl font-medium text-ws-black-60 leading-10">
           Current Trends for Wholesale Trade
         </h2>
-        <Button color="secondary" onClick={() => setIsGetInTouchModalOpen(true)}>
+        {/* <Button color="secondary" onClick={() => setIsGetInTouchModalOpen(true)}>
+        {/* <Button color="secondary" onClick={() => setIsGetInTouchModalOpen(true)}>
           Share feedback
-        </Button>
+        </Button> */}
       </div>
 
       {/* ── Industry Overview ── */}
@@ -70,15 +72,15 @@ export default function BenchmarkPage() {
         <div className="flex justify-between gap-10 flex-col lg:flex-row">
           <div className="space-y-5 w-full xl:w-1/3">
             <StaticCard
-              title="Turnover Rate 2024"
+              title="Turnover rate since Jan 2024"
               titleClass="text-sm font-medium text-ws-black-10"
               itemAlign="between"
               count={formatPercentage(industryOverview?.turnoverRate?.rate)}
               countClass="mt-2 text-3xl xl:text-5xl font-medium text-ws-black-90"
               infoIcon={true}
               infoCircleClass="text-ws-gray-70"
-              tooltipText="How is this calculated"
-              descriptionText="This is calculated based on LMI. Low-to-Moderate Income (LMI) consists of income less than 80% of the broader area's median income."
+              tooltipText="Turnover Rate"
+              descriptionText="Industry specific turnover metrics are calculated from US Census Bureau QWI data sources"
               placements="top"
             />
             <StaticCard
@@ -89,8 +91,8 @@ export default function BenchmarkPage() {
               countClass="mt-2 text-3xl xl:text-5xl font-medium text-ws-black-90"
               infoIcon={true}
               infoCircleClass="text-ws-gray-70"
-              tooltipText="How is this calculated"
-              descriptionText="This is calculated based on LMI. Low-to-Moderate Income (LMI) consists of income less than 80% of the broader area's median income."
+              tooltipText="Average Turnover"
+              descriptionText="Average turnover metrics are calculated from US Census Bureau QWI data sources"
               placements="top"
             />
             <StaticCard
@@ -104,8 +106,8 @@ export default function BenchmarkPage() {
               countClass="mt-2 text-3xl xl:text-5xl font-medium text-ws-black-90"
               infoIcon={true}
               infoCircleClass="text-ws-gray-70"
-              tooltipText="How is this calculated"
-              descriptionText="This is calculated based on LMI. Low-to-Moderate Income (LMI) consists of income less than 80% of the broader area's median income."
+              tooltipText="Average Cost of Turnover"
+              descriptionText="Industry specific cost of turnover is calculated from ......"
               placements="top"
             />
           </div>
@@ -168,7 +170,37 @@ export default function BenchmarkPage() {
             </button>
           </div>
         </div>
-        <div className="bg-ws-white p-6 border border-ws-gray-50 rounded-2xl space-y-6">
+        <div className="bg-ws-purple-10 border border-ws-gray-50 rounded-xl p-4">
+          <div className="flex items-center gap-2 text-lg text-ws-black-70 font-medium mb-2">
+            <SmileFace />
+            <h3 className="text-base font-medium leading-7 text-ws-black-70">Did you know?</h3>
+          </div>
+          <p className="text-base font-normal text-ws-black leading-6">
+            The cost of replacing an individual employee can range from one-half to two times the
+            employee's annual salary.
+          </p>
+        </div>
+        {/* ── Turnover / Separation Cards ── */}
+        <div className="grid xl:grid-cols-2 gap-6">
+          <CostCard
+            classess="border-ws-gray-40!"
+            title="Turnover Voluntary vs Involuntary"
+            year={`Q${turnoverMetrics?.quarter || 2} ${turnoverMetrics?.year || 2024}`}
+            voluntaryScore={`${formatPercentage(turnoverMetrics?.percentage?.voluntary)} Voluntary`}
+            involuntaryScore={`${formatPercentage(turnoverMetrics?.percentage?.involuntary)} Involuntary`}
+            industryTradeText="Industry: Whole Trade"
+          />
+          <CostCard
+            classess="border-ws-gray-40!"
+            title="Rate of Separation"
+            year={`Q${separationMetrics?.quarter || 2} ${separationMetrics?.year || 2023}`}
+            voluntaryScore={`${formatPercentage(separationMetrics?.percentage?.hiringRate)} Hiring Rate`}
+            involuntaryScore={`${formatPercentage(separationMetrics?.percentage?.separationRate)} Separation`}
+            industryTradeText="Industry: Whole Trade"
+          />
+        </div>
+
+        {/* <div className="bg-ws-white p-6 border border-ws-gray-50 rounded-2xl space-y-6">
           <div className="flex justify-between gap-6 flex-col xl:flex-row">
             <div className="w-full xl:w-3/5 space-y-4">
               <h4 className="text-2xl text-ws-black-60 font-medium">Insight:</h4>
@@ -188,25 +220,7 @@ export default function BenchmarkPage() {
               />
             </div>
           </div>
-        </div>
-      </div>
-
-      {/* ── Turnover / Separation Cards ── */}
-      <div className="grid xl:grid-cols-2 gap-6">
-        <CostCard
-          title="Turnover Voluntary vs Involuntary"
-          year={`Q${turnoverMetrics?.quarter || 2} ${turnoverMetrics?.year || 2024}`}
-          voluntaryScore={`${formatPercentage(turnoverMetrics?.percentage?.voluntary)} Voluntary`}
-          involuntaryScore={`${formatPercentage(turnoverMetrics?.percentage?.involuntary)} Involuntary`}
-          industryTradeText="Industry: Whole Trade"
-        />
-        <CostCard
-          title="Rate of Separation"
-          year={`Q${separationMetrics?.quarter || 2} ${separationMetrics?.year || 2023}`}
-          voluntaryScore={`${formatPercentage(separationMetrics?.percentage?.separationRate)} Separation Rate`}
-          involuntaryScore={`${formatPercentage(separationMetrics?.percentage?.hiringRate)} Hiring Rate`}
-          industryTradeText="Industry: Whole Trade"
-        />
+        </div> */}
       </div>
 
       {/* ── Area Median Wage ── */}
@@ -216,12 +230,14 @@ export default function BenchmarkPage() {
             <h3 className="text-2xl font-medium text-ws-black-60">
               Area Median Wage: [State Name]
             </h3>
-            <p className="text-base text-ws-black">Select an area to examine the median wage</p>
+            <p className="text-base text-ws-black">
+              Understand how your wages compare against with industry and US wages.
+            </p>
           </div>
           <div className="w-full md:w-full md:mt-4 lg:w-auto">
             {zipCodes && zipCodes.length > 0 ? (
               <Select
-                className="w-full flex items-start min-w-50 md:min-w-full lg:min-w-80"
+                className="w-full flex items-start min-w-50 md:min-w-full lg:min-w-70"
                 isRequired
                 size="md"
                 placeholder="Select Zip Code"
@@ -240,7 +256,7 @@ export default function BenchmarkPage() {
             )}
           </div>
         </div>
-        <div className="grid xl:grid-cols-[3fr_2fr] gap-6 flex-col lg:flex-row mt-6">
+        <div className="grid items-stretch xl:grid-cols-[3fr_2fr] gap-6 flex-col lg:flex-row mt-6">
           <div className="w-full overflow-x-auto">
             <div className="w-full">
               <WageBarChart
@@ -283,14 +299,14 @@ export default function BenchmarkPage() {
                     ]
                   );
                 })()}
-                height={385}
+                height={397}
               />
             </div>
           </div>
           <div className="space-y-4 w-full">
             <StaticCard
               title="Median Hourly Wages"
-              titleClass="text-ws-black-30 text-sm"
+              titleClass="text-ws-black-300 text-base"
               itemAlign="between"
               count={
                 selectedZip && dashboardData?.areaMedianWage
@@ -304,11 +320,11 @@ export default function BenchmarkPage() {
               }
               countClass="mt-10 text-3xl xl:text-5xl font-medium text-ws-black-90"
               infoIcon={false}
-              classess="bg-secondary w-full"
+              classess="bg-ws-gray-10! w-full"
             />
             <StaticCard
               title="Median Living Wage"
-              titleClass="text-ws-black-30 text-sm"
+              titleClass="text-ws-black-300 text-base"
               itemAlign="between"
               count={
                 selectedZip && dashboardData?.areaMedianWage
@@ -322,11 +338,11 @@ export default function BenchmarkPage() {
               }
               infoIcon={false}
               countClass="mt-10 text-3xl xl:text-5xl font-medium text-ws-black-90"
-              classess="bg-secondary w-full"
+              classess="bg-ws-gray-10! w-full"
             />
             <StaticCard
               title="National Average"
-              titleClass="text-ws-black-30 text-sm"
+              titleClass="text-ws-black-300 text-base"
               itemAlign="between"
               count={
                 selectedZip && dashboardData?.areaMedianWage
@@ -340,7 +356,7 @@ export default function BenchmarkPage() {
               }
               infoIcon={false}
               countClass="mt-10 text-3xl xl:text-5xl font-medium text-ws-black-90"
-              classess="bg-secondary w-full"
+              classess="bg-ws-gray-10! w-full"
             />
           </div>
         </div>
@@ -353,7 +369,7 @@ export default function BenchmarkPage() {
             <h3 className="text-2xl font-medium text-ws-black">The Cost of Housing</h3>
             <p className="text-base text-ws-black-90">
               The concept of rent (or housing cost) burden applies to both renters and homeowners,
-              but it's calculated a bit differently for each. Both renters and homeowners can
+              but it’s calculated a bit differently for each. Both renters and homeowners can
               experience housing burdened costs; the main difference is what expenses are counted,
               not the income thresholds.
             </p>
@@ -381,7 +397,7 @@ export default function BenchmarkPage() {
           <div className="space-y-1">
             <h3 className="text-xl font-medium text-ws-black flex items-center gap-2">
               Housing Cost Burdened Owners
-              <Tooltip title="This is a tooltip">
+              <Tooltip title="This is a tooltip" arrow={true}>
                 <TooltipTrigger className="group relative flex cursor-pointer flex-col items-center gap-2 text-fg-quaternary transition duration-100 ease-linear hover:text-fg-quaternary_hover focus:text-fg-quaternary_hover">
                   <InfoCircle className="size-5 text-ws-gray-70" />
                 </TooltipTrigger>
@@ -390,29 +406,34 @@ export default function BenchmarkPage() {
             {/* Dynamic quarter/year from data */}
             <p className="text-xs text-ws-black">
               {selectedHousingData?.housingCostBurdenedOwners?.[0]
-                ? `Q${selectedHousingData.housingCostBurdenedOwners[0].quarter} ${selectedHousingData.housingCostBurdenedOwners[0].year}`
+                ? `${selectedHousingData.housingCostBurdenedOwners[0].year}`
                 : "—"}
             </p>
           </div>
 
           {/* Zip selector for the entire housing section */}
-          <div className="w-full md:w-full md:mt-4 lg:w-auto">
+          <div className="w-full md:w-full lg:w-auto">
             {zipCodes && zipCodes.length > 0 ? (
-              <Select
-                className="w-full flex items-start min-w-50 md:min-w-full lg:min-w-80"
-                isRequired
-                size="md"
-                placeholder="Select Zip Code"
-                items={zipCodes.map(z => ({ label: z, id: `@${z}` }))}
-                value={selectedHousingZip ? `@${selectedHousingZip}` : undefined}
-                onSelectionChange={(key: Key | null) => {
-                  if (key !== null) {
-                    setSelectedHousingZip(String(key).replace(/^@/, ""));
-                  }
-                }}
-              >
-                {item => <Select.Item id={item.id}>{item.label}</Select.Item>}
-              </Select>
+              <div className="flex flex-col items-start w-full">
+                <Label htmlFor="zip-code-select" className="text-ws-black-20 flex mb-1.5">
+                  Zip Code
+                </Label>
+                <Select
+                  className="w-full flex items-start min-w-50 md:min-w-full lg:min-w-60"
+                  isRequired
+                  size="md"
+                  placeholder="Select Zip Code"
+                  items={zipCodes.map(z => ({ label: z, id: `@${z}` }))}
+                  value={selectedHousingZip ? `@${selectedHousingZip}` : undefined}
+                  onSelectionChange={(key: Key | null) => {
+                    if (key !== null) {
+                      setSelectedHousingZip(String(key).replace(/^@/, ""));
+                    }
+                  }}
+                >
+                  {item => <Select.Item id={item.id}>{item.label}</Select.Item>}
+                </Select>
+              </div>
             ) : null}
           </div>
         </div>
@@ -429,8 +450,8 @@ export default function BenchmarkPage() {
             countClass="text-3xl xl:text-5xl font-medium text-ws-black-90 mt-2"
             infoIcon={true}
             infoCircleClass="text-ws-gray-70"
-            tooltipText="How is this calculated"
-            descriptionText="This is calculated based on LMI. Low-to-Moderate Income (LMI) consists of income less than 80% of the broader area's median income."
+            tooltipText="Burdened Owners"
+            descriptionText="U.S. Census Bureau, 5-Year American Community Survey"
             placements="top"
             classess="flex-1 bg-ws-gray-10! ring-ws-gray-40!"
           />
@@ -444,8 +465,8 @@ export default function BenchmarkPage() {
             countClass="text-3xl xl:text-5xl font-medium text-ws-black-90 mt-2"
             infoIcon={true}
             infoCircleClass="text-ws-gray-70"
-            tooltipText="How is this calculated"
-            descriptionText="This is calculated based on LMI. Low-to-Moderate Income (LMI) consists of income less than 80% of the broader area's median income."
+            tooltipText="Severely Burdened Owners"
+            descriptionText="U.S. Census Bureau, 5-Year American Community Survey"
             placements="top"
             classess="flex-1 bg-ws-gray-10! ring-ws-gray-40!"
           />
@@ -454,10 +475,10 @@ export default function BenchmarkPage() {
         {/* Renters section header — dynamic quarter/year */}
         <div className="flex items-center justify-between mt-6">
           <div className="space-y-1">
-            <h3 className="text-xl font-medium">Housing Cost Burdened Renters</h3>
-            <p className="text-xs">
+            <h3 className="text-xl font-medium text-ws-black">Housing Cost Burdened Renters</h3>
+            <p className="text-xs text-ws-black">
               {selectedHousingData?.housingCostBurdenedRenters?.[0]
-                ? `Q${selectedHousingData.housingCostBurdenedRenters[0].quarter} ${selectedHousingData.housingCostBurdenedRenters[0].year}`
+                ? `${selectedHousingData.housingCostBurdenedRenters[0].year}`
                 : "—"}
             </p>
           </div>
@@ -475,8 +496,8 @@ export default function BenchmarkPage() {
             countClass="text-3xl xl:text-5xl font-medium text-ws-black-90 mt-2"
             infoIcon={true}
             infoCircleClass="text-ws-gray-70"
-            tooltipText="How is this calculated"
-            descriptionText="This is calculated based on LMI. Low-to-Moderate Income (LMI) consists of income less than 80% of the broader area's median income."
+            tooltipText="Burdened Renters"
+            descriptionText="U.S. Census Bureau, 5-Year American Community Survey"
             placements="top"
             classess="flex-1 bg-ws-gray-10! ring-ws-gray-40!"
           />
@@ -490,8 +511,8 @@ export default function BenchmarkPage() {
             countClass="text-3xl xl:text-5xl font-medium text-ws-black-90 mt-2"
             infoIcon={true}
             infoCircleClass="text-ws-gray-70"
-            tooltipText="How is this calculated"
-            descriptionText="This is calculated based on LMI. Low-to-Moderate Income (LMI) consists of income less than 80% of the broader area's median income."
+            tooltipText="Severely Burdened Renters"
+            descriptionText="U.S. Census Bureau, 5-Year American Community Survey"
             placements="top"
             classess="flex-1 bg-ws-gray-10! ring-ws-gray-40!"
           />
@@ -501,8 +522,8 @@ export default function BenchmarkPage() {
         <div className="bg-ws-white border border-ws-gray-50 rounded-xl px-6 py-8 mt-6">
           <h3 className="text-2xl font-medium text-ws-black">Working Class Housing Cost Burden</h3>
           <p className="text-base text-ws-black-10 w-full xl:w-1/2 mt-2">
-            Your highest participation rate is health insurance. 89% of your employees are using
-            this benefit. Your lowest participation rate is wellness program.
+            The data below outlines the housing cost burden for your employees in [
+            {selectedHousingZip}] across income levels for that area.
           </p>
           <div className="grid xl:grid-cols-3 gap-4 mt-6 flex-col lg:flex-row">
             <StaticCard
@@ -520,15 +541,15 @@ export default function BenchmarkPage() {
               countClass="text-3xl xl:text-5xl font-medium text-ws-black-90 mt-2"
               infoIcon={true}
               infoCircleClass="text-ws-gray-70"
-              tooltipText="How is this calculated"
-              descriptionText="This is calculated based on LMI. Low-to-Moderate Income (LMI) consists of income less than 80% of the broader area's median income."
+              tooltipText="Home Ownership Rate"
+              descriptionText="U.S. Census Bureau, 5-Year American Community Survey"
               placements="top"
               classess="flex-1 bg-ws-gray-10! ring-ws-gray-40!"
             />
             <StaticCard
               title="Median Home Value"
               itemAlign="between"
-              titleClass="uppercase"
+              titleClass="uppercase text-sm font-medium text-ws-black-10"
               count={
                 selectedHousingData?.workingClassHousingCostBurden
                   ? formatCurrency(
@@ -539,15 +560,15 @@ export default function BenchmarkPage() {
               countClass="text-3xl xl:text-5xl font-medium text-ws-black-90 mt-2"
               infoIcon={true}
               infoCircleClass="text-ws-gray-70"
-              tooltipText="How is this calculated"
-              descriptionText="This is calculated based on LMI. Low-to-Moderate Income (LMI) consists of income less than 80% of the broader area's median income."
+              tooltipText="Median Home Value"
+              descriptionText="U.S. Census Bureau, 5-Year American Community Survey"
               placements="top"
               classess="flex-1 bg-ws-gray-10! ring-ws-gray-40!"
             />
             <StaticCard
               title="Median Rent"
               itemAlign="between"
-              titleClass="uppercase"
+              titleClass="uppercase text-sm font-medium text-ws-black-10"
               count={
                 selectedHousingData?.workingClassHousingCostBurden
                   ? formatCurrency(selectedHousingData.workingClassHousingCostBurden.medianRent)
@@ -556,8 +577,8 @@ export default function BenchmarkPage() {
               countClass="text-3xl xl:text-5xl font-medium text-ws-black-90 mt-2"
               infoIcon={true}
               infoCircleClass="text-ws-gray-70"
-              tooltipText="How is this calculated"
-              descriptionText="This is calculated based on LMI. Low-to-Moderate Income (LMI) consists of income less than 80% of the broader area's median income."
+              tooltipText="Median Rent"
+              descriptionText="U.S. Census Bureau, 5-Year American Community Survey"
               placements="top"
               classess="flex-1 bg-ws-gray-10! ring-ws-gray-40!"
             />
@@ -578,7 +599,7 @@ export default function BenchmarkPage() {
           share and industry benchmarks. It does not provide legal, financial, tax, or benefits
           advice, and recommendations are not guarantees of outcomes or results. Actual results may
           vary, and you are responsible for evaluating and implementing any recommendations based on
-          your organization's specific circumstances.
+          your organization’s specific circumstances.
         </p>
       </div>
 

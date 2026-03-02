@@ -109,7 +109,9 @@ export const RadioButton = ({
           {(label || hint) && (
             <div className={cx("inline-flex flex-col", sizes[size].textWrapper)}>
               {label && (
-                <p className={cx("text-secondary select-none", sizes[size].label)}>{label}</p>
+                <p className={cx("text-secondary select-none question-text", sizes[size].label)}>
+                  {label}
+                </p>
               )}
               {hint && (
                 <span

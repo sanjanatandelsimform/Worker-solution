@@ -1,14 +1,14 @@
 /**
- * Goals Tab Tests
+ * Compensation Tab Tests
  *
- * Tests for GoalsTab: render, section title, DynamicTab integration.
+ * Tests for CompensationTab: render, section title, validation.
  */
 
 import React from "react";
 import { describe, it, expect, vi, beforeEach } from "vitest";
 import { render, screen, waitFor } from "@testing-library/react";
 import { BrowserRouter } from "react-router-dom";
-import GoalsTab from "@/pages/assessmentWorkforce/GoalsTab";
+import CompensationTab from "@/pages/assessmentWorkforce/CompensationTab";
 import { getAssessment } from "@/services/api/assessmentApi";
 import type { ApiResponse } from "@/services/api/assessmentApi";
 
@@ -20,7 +20,7 @@ vi.mock("@/services/api/assessmentApi", () => ({
   submitGoals: vi.fn(),
 }));
 
-const mockGetAssessment: ApiResponse<{ sections: { goals?: Record<string, unknown> } }> = {
+const mockGetAssessment: ApiResponse<{ sections: { compensation?: Record<string, unknown> } }> = {
   success: true,
   data: {
     id: "assessment-1",
@@ -28,34 +28,34 @@ const mockGetAssessment: ApiResponse<{ sections: { goals?: Record<string, unknow
     createdAt: "2026-02-13T00:00:00Z",
     updatedAt: "2026-02-13T00:00:00Z",
     status: "in_progress",
-    sections: { goals: {} },
-    completionPercentage: 75,
+    sections: { compensation: {} },
+    completionPercentage: 25,
   },
 };
 
-function renderGoalsTab() {
+function renderCompensationTab() {
   return render(
     <BrowserRouter>
-      <GoalsTab onNext={vi.fn()} onSuccess={vi.fn()} />
+      <CompensationTab onNext={vi.fn()} onSuccess={vi.fn()} />
     </BrowserRouter>
   );
 }
 
-describe("GoalsTab", () => {
+describe("CompensationTab", () => {
   beforeEach(() => {
     vi.clearAllMocks();
     vi.mocked(getAssessment).mockResolvedValue(mockGetAssessment as ApiResponse<unknown>);
   });
 
-  it("should render Goals section title after load", async () => {
-    renderGoalsTab();
+  it("should render Compensation section title after load", async () => {
+    renderCompensationTab();
 
     await waitFor(() => {
       expect(getAssessment).toHaveBeenCalledTimes(1);
     });
 
     await waitFor(() => {
-      expect(screen.getByText("Goals")).toBeInTheDocument();
+      expect(screen.getByText("Compensation")).toBeInTheDocument();
     });
   });
 });

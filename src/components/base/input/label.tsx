@@ -49,7 +49,7 @@ export const Label = ({
       </span>
 
       {tooltip && (
-        <Tooltip title={tooltip} description={tooltipDescription} placement="top">
+        <Tooltip title={tooltip} description={tooltipDescription} placement="top" arrow={true}>
           <TooltipTrigger
             // `TooltipTrigger` inherits the disabled state from the parent form field
             // but we don't that. We want the tooltip be enabled even if the parent

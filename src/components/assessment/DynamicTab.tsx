@@ -5,6 +5,10 @@ import { useAssessment } from "@/hooks/useAssessment";
 import ErrorMessage from "@/components/common/ErrorMessage";
 import { AlertCircle } from "@untitledui/icons";
 
+interface AddressItem {
+  state?: string;
+  zipCode?: string;
+}
 interface DynamicTabProps {
   section: "workforce" | "compensation" | "benefits" | "goals";
   questions: Question[];
@@ -59,12 +63,17 @@ export const DynamicTab = forwardRef<
     const [errors, setErrors] = useState<Record<string, string>>({});
     const [isSaving, setIsSaving] = useState(false);
     const isExplicitSubmitRef = useRef(false);
+    const [showApiError, setShowApiError] = useState(true);
 
     useEffect(() => {
       if (Object.keys(hookErrors).length > 0) {
         setErrors(hookErrors);
       }
     }, [hookErrors]);
+
+    useEffect(() => {
+      setShowApiError(true);
+    }, [apiError]);
 
     const handleAnswerChange = useCallback(
       (key: string, value: unknown) => {
@@ -219,6 +228,32 @@ export const DynamicTab = forwardRef<
                 }
               );
             });
+
+            const hasStateField = rules.fields.some(f => f.name === "state");
+            const hasZipField = rules.fields.some(f => f.name === "zipCode");
+
+            if (hasStateField && hasZipField) {
+              const seenStateZip = new Set<string>();
+
+              value.forEach((item: AddressItem, index: number) => {
+                const state = item.state?.trim();
+                const zip = item.zipCode?.trim();
+
+                if (!state || !zip) return;
+
+                const comboKey = `${state.toUpperCase()}-${zip}`;
+
+                if (seenStateZip.has(comboKey)) {
+                  const duplicateKey = `${question.key}.${index}.zipCode`;
+                  if (!newErrors[duplicateKey]) {
+                    newErrors[duplicateKey] = "This state and zip code combination already exists.";
+                  }
+                  isValid = false;
+                } else {
+                  seenStateZip.add(comboKey);
+                }
+              });
+            }
           }
         }
 
@@ -528,10 +563,35 @@ export const DynamicTab = forwardRef<
             const errorMsg = response.error || "Failed to submit assessment. Please try again.";
             onApiError(errorMsg);
           }
+          // if (response.fieldErrors) {
+          //   setErrors(prev => ({ ...prev, ...response.fieldErrors }));
+          //   setTimeout(() => {
+          //     const firstErrorKey = Object.keys(response.fieldErrors!)[0];
+          //     if (firstErrorKey) {
+          //       const errorElement = document.querySelector(
+          //         `[data-question-key="${firstErrorKey}"]`
+          //       );
+          //       if (errorElement) {
+          //         errorElement.scrollIntoView({
+          //           behavior: "smooth",
+          //           block: "center",
+          //         });
+          //       }
+          //     }
+          //   }, 100);
+          // }
           if (response.fieldErrors) {
-            setErrors(prev => ({ ...prev, ...response.fieldErrors }));
+            const normalizedFieldErrors: Record<string, string> = { ...response.fieldErrors };
+
+            Object.entries(normalizedFieldErrors).forEach(([key, message]) => {
+              if (key.endsWith(".state") && message === "Required") {
+                normalizedFieldErrors[key] = "State is required";
+              }
+            });
+
+            setErrors(prev => ({ ...prev, ...normalizedFieldErrors }));
             setTimeout(() => {
-              const firstErrorKey = Object.keys(response.fieldErrors!)[0];
+              const firstErrorKey = Object.keys(normalizedFieldErrors)[0];
               if (firstErrorKey) {
                 const errorElement = document.querySelector(
                   `[data-question-key="${firstErrorKey}"]`
@@ -668,8 +728,41 @@ export const DynamicTab = forwardRef<
         },
       };
 
+    // Split questions into: those without a subsection, and grouped by subsection
+    const noSubsectionQuestions = questions.filter(
+      q => !(q as Question & { subsection?: string }).subsection
+    );
+
+    const subsectionMap = new Map<string, Question[]>();
+    questions.forEach(q => {
+      const sub = (q as Question & { subsection?: string }).subsection;
+      if (sub) {
+        if (!subsectionMap.has(sub)) {
+          subsectionMap.set(sub, []);
+        }
+        subsectionMap.get(sub)!.push(q);
+      }
+    });
+
+    const renderQuestion = (question: Question, idx: number, subsectionQuestions?: Question[]) => {
+      const displayOrderValue = subsectionQuestions
+        ? subsectionQuestions.slice(0, idx + 1).length
+        : question.displayOrder;
+
+      return (
+        <DynamicQuestionRenderer
+          key={question.key}
+          question={question}
+          answers={answers}
+          onAnswerChange={handleAnswerChange}
+          errors={errors}
+          subsectionDisplayOrder={displayOrderValue}
+        />
+      );
+    };
+
     return (
-      <div className="bg-ws-white space-y-6 p-6">
+      <div className="space-y-4">
         {isLoadingGet && (
           <div className="flex items-center justify-center py-4">
             <div className="h-6 w-6 animate-spin rounded-full border-4 border-ws-cyan-60 border-t-transparent"></div>
@@ -688,15 +781,17 @@ export const DynamicTab = forwardRef<
             </button>
           </div>
         )}
-
-        {apiError?.type === "post" && Object.keys(errors).length > 0 && (
+        {apiError?.type === "post" && Object.keys(errors).length > 0 && showApiError && (
           <ErrorMessage
             errorType="danger"
             alertIcon={AlertCircle}
+            onClose={() => setShowApiError(false)}
+            classess="fixed top-4 right-4 z-50 w-80 shadow-lg"
+            textColor="text-red-700"
             errorMessage={
               <div>
-                <p className="font-semibold mb-2">{apiError.message}</p>
-                <ul className="list-inside list-disc space-y-1">
+                <p className="font-semibold mb-1">{apiError.message}</p>
+                <ul className="list-disc list-inside space-y-0.5 font-normal">
                   {Object.entries(errors).map(([key, message]) => (
                     <li key={key}>{message}</li>
                   ))}
@@ -705,51 +800,33 @@ export const DynamicTab = forwardRef<
             }
           />
         )}
-
-        {sectionContent[section] && !hideHeader && (
-          <>
-            <h2 className="text-3xl font-semibold mb-2">{sectionContent[section].title}</h2>
-            <p className="text-base text-ws-gray-90">{sectionContent[section].description}</p>
-          </>
+        {/* Main card: section header + questions without a subsection */}
+        {(noSubsectionQuestions.length > 0 || (!hideHeader && sectionContent[section])) && (
+          <div className="bg-white rounded-lg border border-gray-200 shadow-sm p-6 space-y-6">
+            {sectionContent[section] && !hideHeader && (
+              <>
+                <h2 className="text-3xl font-semibold mb-2">{sectionContent[section].title}</h2>
+                <p className="text-base text-ws-gray-90">{sectionContent[section].description}</p>
+              </>
+            )}
+            {noSubsectionQuestions.map((question, idx) => renderQuestion(question, idx))}
+          </div>
         )}
 
-        {questions.map((question, index) => {
-          const currentSubsection = (question as Question & { subsection?: string }).subsection;
-          const prevQuestion = index > 0 ? questions[index - 1] : null;
-          const prevSubsection = prevQuestion
-            ? (prevQuestion as Question & { subsection?: string }).subsection
-            : null;
-          const isFirstInSubsection = currentSubsection && currentSubsection !== prevSubsection;
-
-          return (
-            <div key={question.key}>
-              {isFirstInSubsection && currentSubsection && (
-                <div className="-mx-6 px-6 pt-8 pb-6 mt-6 border-t-25 border-gray-50">
-                  <h2 className="text-2xl font-medium text-ws-black-90 pb-4 border-b border-ws-gray-40">
-                    {currentSubsection === "HealthCare" ? "Healthcare" : currentSubsection}
-                  </h2>
-                </div>
-              )}
-              <DynamicQuestionRenderer
-                question={question}
-                answers={answers}
-                onAnswerChange={handleAnswerChange}
-                errors={errors}
-                subsectionDisplayOrder={
-                  currentSubsection
-                    ? questions
-                        .slice(0, index + 1)
-                        .filter(
-                          q =>
-                            (q as Question & { subsection?: string }).subsection ===
-                            currentSubsection
-                        ).length
-                    : question.displayOrder
-                }
-              />
-            </div>
-          );
-        })}
+        {/* One card per subsection */}
+        {Array.from(subsectionMap.entries()).map(([subsection, subsectionQuestions]) => (
+          <div
+            key={subsection}
+            className="bg-white rounded-lg border border-gray-200 shadow-sm p-6 space-y-6"
+          >
+            <h2 className="text-2xl font-medium text-ws-black-90 pb-4 border-b border-ws-gray-40">
+              {subsection === "HealthCare" ? "Healthcare" : subsection}
+            </h2>
+            {subsectionQuestions.map((question, idx) =>
+              renderQuestion(question, idx, subsectionQuestions)
+            )}
+          </div>
+        ))}
       </div>
     );
   }
