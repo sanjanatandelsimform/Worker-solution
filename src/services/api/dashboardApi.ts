@@ -348,6 +348,12 @@ export const getDashboard = async (): Promise<DashboardResponse> => {
     };
     return response1;
   } catch (error) {
+    if (
+      error instanceof Error &&
+      error.message === "Authentication required. Please log in again."
+    ) {
+      throw error;
+    }
     const errorMessage = getErrorMessage(error);
     throw new Error(errorMessage);
   }
