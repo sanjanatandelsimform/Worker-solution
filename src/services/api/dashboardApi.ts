@@ -231,7 +231,7 @@ export const getDashboard = async (): Promise<DashboardResponse> => {
             {
               incomeCategory: "moderateIncome",
               label: "Moderate income",
-              range: "$50,000 - $74,999",
+              range: "$50,000 - $74,599",
               burdened: 40,
               severelyBurdened: 4,
             },
