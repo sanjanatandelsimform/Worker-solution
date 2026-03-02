@@ -38,11 +38,7 @@ variables:
 
   # NPM cache directory for faster dependency installation
   NPM_CACHE_FOLDER: '$CI_PROJECT_DIR/.npm'
-
-  # Dummy DATABASE_URL for Prisma client type generation
-  # Note: This is NOT used for actual database connections - all tests use mocked dependencies
-  # Required by Prisma CLI during 'prisma generate' to create TypeScript types
-  DATABASE_URL: 'postgresql://dummy:dummy@localhost:5432/dummy_db'
+  NODE_IMAGE: 'node:24'
 
 # =============================================================================
 # Node.js Build, Test, and Lint Jobs
@@ -52,7 +48,7 @@ variables:
 # Installs npm packages and generates Prisma client types once for reuse in all downstream jobs
 install_dependencies:
   stage: test
-  image: node:18
+  image: node:24
   cache:
     key: 'npm-$CI_COMMIT_REF_SLUG'
     paths:
@@ -63,29 +59,26 @@ install_dependencies:
     - npm config set cache $NPM_CACHE_FOLDER --global
     # Install dependencies (prefer ci for deterministic installs)
     - npm ci || npm install
-    # Generate Prisma client types once - all jobs reuse this artifact
-    # This creates TypeScript type definitions in node_modules/.prisma/client
-    - npx prisma generate
   artifacts:
     paths:
       - node_modules/ # Share node_modules with downstream jobs
     expire_in: 1h
   rules:
-    - if: $CI_MERGE_REQUEST_TARGET_BRANCH_NAME == "develop" || $CI_MERGE_REQUEST_TARGET_BRANCH_NAME == "qa"
+    - if: $CI_MERGE_REQUEST_TARGET_BRANCH_NAME == "develop1" || $CI_MERGE_REQUEST_TARGET_BRANCH_NAME == "qa"
       when: always
 
 # Job: Lint
 # Runs ESLint to check code quality and style compliance
 lint:
   stage: test
-  image: node:18
+  image: node:24
   needs: ['install_dependencies']
   dependencies:
     - install_dependencies
   script:
     - npm run lint
   rules:
-    - if: $CI_MERGE_REQUEST_TARGET_BRANCH_NAME == "develop" || $CI_MERGE_REQUEST_TARGET_BRANCH_NAME == "qa"
+    - if: $CI_MERGE_REQUEST_TARGET_BRANCH_NAME == "develop1" || $CI_MERGE_REQUEST_TARGET_BRANCH_NAME == "qa"
       when: always
 
 # Job: Unit Tests
@@ -93,7 +86,7 @@ lint:
 # Note: Tests use mocked DAL layer - DATABASE_URL is only needed for Prisma type generation
 npm-test:
   stage: test
-  image: node:18
+  image: node:24
   needs: ['install_dependencies']
   dependencies:
     - install_dependencies
@@ -108,14 +101,14 @@ npm-test:
         path: coverage/cobertura-coverage.xml
     expire_in: 1 week
   rules:
-    - if: $CI_MERGE_REQUEST_TARGET_BRANCH_NAME == "develop" || $CI_MERGE_REQUEST_TARGET_BRANCH_NAME == "qa"
+    - if: $CI_MERGE_REQUEST_TARGET_BRANCH_NAME == "develop1" || $CI_MERGE_REQUEST_TARGET_BRANCH_NAME == "qa"
       when: always
 
 # Job: Build
 # Compiles TypeScript to JavaScript for production deployment
 build:
   stage: test
-  image: node:18
+  image: node:24
   needs: ['install_dependencies']
   dependencies:
     - install_dependencies
@@ -126,7 +119,7 @@ build:
       - dist/ # Compiled JavaScript output
     expire_in: 1 week
   rules:
-    - if: $CI_MERGE_REQUEST_TARGET_BRANCH_NAME == "develop" || $CI_MERGE_REQUEST_TARGET_BRANCH_NAME == "qa"
+    - if: $CI_MERGE_REQUEST_TARGET_BRANCH_NAME == "develop1" || $CI_MERGE_REQUEST_TARGET_BRANCH_NAME == "qa"
       when: always
 
 # =============================================================================
@@ -142,7 +135,7 @@ secret_detection:
 
 # Job: SonarQube Analysis
 # Performs static code analysis for code quality, bugs, and security vulnerabilities
-# Requires: SONAR_PROJECT_KEY, SONAR_HOST_URL, SONAR_TOKEN environment variables
+# Requires: SONAR_HOST_URL, SONAR_TOKEN environment variables
 sonarqube:
   stage: sonarqube
   image: maven:3.9.9-eclipse-temurin-17 # Java-based image for SonarScanner CLI
@@ -161,11 +154,10 @@ sonarqube:
       export PATH="$PWD/sonar-scanner-5.0.1.3006-linux/bin:$PATH"
       # Run SonarQube analysis
       sonar-scanner \
-        -Dsonar.projectKey="$SONAR_PROJECT_KEY" \
         -Dsonar.host.url="$SONAR_HOST_URL" \
         -Dsonar.login="$SONAR_TOKEN" \
         -Dsonar.sources=./src \
         -Dsonar.javascript.lcov.reportPaths=coverage/lcov.info
   rules:
-    - if: $CI_MERGE_REQUEST_TARGET_BRANCH_NAME == "develop" || $CI_MERGE_REQUEST_TARGET_BRANCH_NAME == "qa"
+    - if: $CI_MERGE_REQUEST_TARGET_BRANCH_NAME == "develop1" || $CI_MERGE_REQUEST_TARGET_BRANCH_NAME == "qa"
       when: always
