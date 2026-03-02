@@ -836,7 +836,7 @@ export const DynamicQuestionRenderer = ({
                 <div className="flex w-84.75 items-center gap-2 px-3 py-2">
                   <p className="overflow-hidden text-ellipsis text-base font-medium leading-6 text-gray-800 flex items-center gap-3 custom-label">
                     {sub.label}
-                    <Tooltip title={sub.label}>
+                    <Tooltip title={sub.label} arrow={true}>
                       <TooltipTrigger className="group relative flex cursor-pointer">
                         <InfoCircle className="size-5 text-gray-400" />
                       </TooltipTrigger>

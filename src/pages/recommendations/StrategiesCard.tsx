@@ -2,16 +2,16 @@ export interface StrategiesCardProps {
   title: string;
   descriptionText?: string;
   titleIcon?: React.ReactNode;
-  classess?: string;
+  className?: string;
 }
 export default function StrategiesCard({
   title,
   descriptionText,
   titleIcon,
-  classess,
+  className,
 }: Readonly<StrategiesCardProps>) {
   return (
-    <div className={`bg-ws-gray-20 ring ring-ws-gray-50 rounded-xl p-4 min-h-38 ${classess}`}>
+    <div className={`bg-ws-gray-20 ring ring-ws-gray-50 rounded-xl p-4 min-h-33 ${className}`}>
       <h2 className="flex items-center text-xl text-ws-cyan-60 font-bold gap-2">
         {titleIcon} {title}
       </h2>

@@ -194,8 +194,8 @@ export default function BenchmarkPage() {
             classess="border-ws-gray-40!"
             title="Rate of Separation"
             year={`Q${separationMetrics?.quarter || 2} ${separationMetrics?.year || 2023}`}
-            voluntaryScore={`${formatPercentage(separationMetrics?.percentage?.separationRate)} Hiring Rate`}
-            involuntaryScore={`${formatPercentage(separationMetrics?.percentage?.hiringRate)} Separation`}
+            voluntaryScore={`${formatPercentage(separationMetrics?.percentage?.hiringRate)} Hiring Rate`}
+            involuntaryScore={`${formatPercentage(separationMetrics?.percentage?.separationRate)} Separation`}
             industryTradeText="Industry: Whole Trade"
           />
         </div>
@@ -256,7 +256,7 @@ export default function BenchmarkPage() {
             )}
           </div>
         </div>
-        <div className="grid xl:grid-cols-[3fr_2fr] gap-6 flex-col lg:flex-row mt-6">
+        <div className="grid items-stretch xl:grid-cols-[3fr_2fr] gap-6 flex-col lg:flex-row mt-6">
           <div className="w-full overflow-x-auto">
             <div className="w-full">
               <WageBarChart
@@ -299,7 +299,7 @@ export default function BenchmarkPage() {
                     ]
                   );
                 })()}
-                height={385}
+                height={397}
               />
             </div>
           </div>
@@ -397,7 +397,7 @@ export default function BenchmarkPage() {
           <div className="space-y-1">
             <h3 className="text-xl font-medium text-ws-black flex items-center gap-2">
               Housing Cost Burdened Owners
-              <Tooltip title="This is a tooltip">
+              <Tooltip title="This is a tooltip" arrow={true}>
                 <TooltipTrigger className="group relative flex cursor-pointer flex-col items-center gap-2 text-fg-quaternary transition duration-100 ease-linear hover:text-fg-quaternary_hover focus:text-fg-quaternary_hover">
                   <InfoCircle className="size-5 text-ws-gray-70" />
                 </TooltipTrigger>

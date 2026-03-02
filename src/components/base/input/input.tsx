@@ -148,7 +148,7 @@ export const InputBase = ({
 
       {/* Tooltip and help icon */}
       {tooltip && !isInvalid && (
-        <Tooltip title={tooltip} placement="top">
+        <Tooltip title={tooltip} placement="top" arrow={true}>
           <TooltipTrigger
             className={cx(
               "absolute cursor-pointer text-ws-gray-60 transition duration-200 hover:text-ws-red-40 focus:text-ws-red-40",

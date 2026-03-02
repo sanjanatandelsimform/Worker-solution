@@ -39,6 +39,7 @@ export default function StaticCard({
               title={tooltipText || ""}
               description={descriptionText || ""}
               placement={placements || "top"}
+              arrow={true}
             >
               <TooltipTrigger className="group relative flex cursor-pointer flex-col items-center gap-2 text-fg-quaternary transition duration-100 ease-linear hover:text-fg-quaternary_hover focus:text-fg-quaternary_hover">
                 <InfoCircle className={`size-5 ${infoCircleClass}`} />

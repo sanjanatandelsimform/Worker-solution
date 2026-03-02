@@ -97,7 +97,7 @@ export const getDashboard = async (): Promise<DashboardResponse> => {
         //   count: 89,
         //   percentage: 38,
         // },
-        industryAverageWage: "$61964",
+        industryAverageWage: "$61,964",
       },
       industryOverview: {
         turnoverRate: {
