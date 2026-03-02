@@ -79,8 +79,8 @@ export default function BenchmarkPage() {
               countClass="mt-2 text-3xl xl:text-5xl font-medium text-ws-black-90"
               infoIcon={true}
               infoCircleClass="text-ws-gray-70"
-              tooltipText="How is this calculated"
-              descriptionText="This is calculated based on LMI. Low-to-Moderate Income (LMI) consists of income less than 80% of the broader area's median income."
+              tooltipText="Turnover Rate"
+              descriptionText="Industry specific turnover metrics are calculated from US Census Bureau QWI data sources"
               placements="top"
             />
             <StaticCard
@@ -91,8 +91,8 @@ export default function BenchmarkPage() {
               countClass="mt-2 text-3xl xl:text-5xl font-medium text-ws-black-90"
               infoIcon={true}
               infoCircleClass="text-ws-gray-70"
-              tooltipText="How is this calculated"
-              descriptionText="This is calculated based on LMI. Low-to-Moderate Income (LMI) consists of income less than 80% of the broader area's median income."
+              tooltipText="Average Turnover"
+              descriptionText="Average turnover metrics are calculated from US Census Bureau QWI data sources"
               placements="top"
             />
             <StaticCard
@@ -106,8 +106,8 @@ export default function BenchmarkPage() {
               countClass="mt-2 text-3xl xl:text-5xl font-medium text-ws-black-90"
               infoIcon={true}
               infoCircleClass="text-ws-gray-70"
-              tooltipText="Average of 5 years"
-              // descriptionText="This is calculated based on LMI. Low-to-Moderate Income (LMI) consists of income less than 80% of the broader area's median income."
+              tooltipText="Average Cost of Turnover"
+              descriptionText="Industry specific cost of turnover is calculated from ......"
               placements="top"
             />
           </div>
@@ -450,8 +450,8 @@ export default function BenchmarkPage() {
             countClass="text-3xl xl:text-5xl font-medium text-ws-black-90 mt-2"
             infoIcon={true}
             infoCircleClass="text-ws-gray-70"
-            tooltipText="How is this calculated"
-            descriptionText="This is calculated based on LMI. Low-to-Moderate Income (LMI) consists of income less than 80% of the broader area's median income."
+            tooltipText="Burdened Owners"
+            descriptionText="U.S. Census Bureau, 5-Year American Community Survey"
             placements="top"
             classess="flex-1 bg-ws-gray-10! ring-ws-gray-40!"
           />
@@ -465,8 +465,8 @@ export default function BenchmarkPage() {
             countClass="text-3xl xl:text-5xl font-medium text-ws-black-90 mt-2"
             infoIcon={true}
             infoCircleClass="text-ws-gray-70"
-            tooltipText="How is this calculated"
-            descriptionText="This is calculated based on LMI. Low-to-Moderate Income (LMI) consists of income less than 80% of the broader area's median income."
+            tooltipText="Severely Burdened Owners"
+            descriptionText="U.S. Census Bureau, 5-Year American Community Survey"
             placements="top"
             classess="flex-1 bg-ws-gray-10! ring-ws-gray-40!"
           />
@@ -496,8 +496,8 @@ export default function BenchmarkPage() {
             countClass="text-3xl xl:text-5xl font-medium text-ws-black-90 mt-2"
             infoIcon={true}
             infoCircleClass="text-ws-gray-70"
-            tooltipText="How is this calculated"
-            descriptionText="This is calculated based on LMI. Low-to-Moderate Income (LMI) consists of income less than 80% of the broader area's median income."
+            tooltipText="Burdened Renters"
+            descriptionText="U.S. Census Bureau, 5-Year American Community Survey"
             placements="top"
             classess="flex-1 bg-ws-gray-10! ring-ws-gray-40!"
           />
@@ -511,8 +511,8 @@ export default function BenchmarkPage() {
             countClass="text-3xl xl:text-5xl font-medium text-ws-black-90 mt-2"
             infoIcon={true}
             infoCircleClass="text-ws-gray-70"
-            tooltipText="How is this calculated"
-            descriptionText="This is calculated based on LMI. Low-to-Moderate Income (LMI) consists of income less than 80% of the broader area's median income."
+            tooltipText="Severely Burdened Renters"
+            descriptionText="U.S. Census Bureau, 5-Year American Community Survey"
             placements="top"
             classess="flex-1 bg-ws-gray-10! ring-ws-gray-40!"
           />
@@ -541,8 +541,8 @@ export default function BenchmarkPage() {
               countClass="text-3xl xl:text-5xl font-medium text-ws-black-90 mt-2"
               infoIcon={true}
               infoCircleClass="text-ws-gray-70"
-              tooltipText="How is this calculated"
-              descriptionText="This is calculated based on LMI. Low-to-Moderate Income (LMI) consists of income less than 80% of the broader area's median income."
+              tooltipText="Home Ownership Rate"
+              descriptionText="U.S. Census Bureau, 5-Year American Community Survey"
               placements="top"
               classess="flex-1 bg-ws-gray-10! ring-ws-gray-40!"
             />
@@ -560,8 +560,8 @@ export default function BenchmarkPage() {
               countClass="text-3xl xl:text-5xl font-medium text-ws-black-90 mt-2"
               infoIcon={true}
               infoCircleClass="text-ws-gray-70"
-              tooltipText="How is this calculated"
-              descriptionText="This is calculated based on LMI. Low-to-Moderate Income (LMI) consists of income less than 80% of the broader area's median income."
+              tooltipText="Median Home Value"
+              descriptionText="U.S. Census Bureau, 5-Year American Community Survey"
               placements="top"
               classess="flex-1 bg-ws-gray-10! ring-ws-gray-40!"
             />
@@ -577,8 +577,8 @@ export default function BenchmarkPage() {
               countClass="text-3xl xl:text-5xl font-medium text-ws-black-90 mt-2"
               infoIcon={true}
               infoCircleClass="text-ws-gray-70"
-              tooltipText="How is this calculated"
-              descriptionText="This is calculated based on LMI. Low-to-Moderate Income (LMI) consists of income less than 80% of the broader area's median income."
+              tooltipText="Median Rent"
+              descriptionText="U.S. Census Bureau, 5-Year American Community Survey"
               placements="top"
               classess="flex-1 bg-ws-gray-10! ring-ws-gray-40!"
             />
