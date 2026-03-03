@@ -150,14 +150,13 @@ export const selectDashboardHasError = createSelector([selectDashboardError], (e
 export const selectBurdenedOwnersPercentage = createSelector(
   [selectPrimaryHousingCost],
   (housingCost): { burdened: number; severelyBurdened: number } | null => {
-    if (
-      !housingCost ||
-      !housingCost.housingCostBurdenedOwners ||
-      housingCost.housingCostBurdenedOwners.length === 0
-    ) {
+    if (!housingCost || !housingCost.housingCostBurdenedOwners) {
       return null;
     }
-    return housingCost.housingCostBurdenedOwners[0].percentage;
+    return {
+      burdened: housingCost.housingCostBurdenedOwners.burdened,
+      severelyBurdened: housingCost.housingCostBurdenedOwners.severelyBurdened,
+    };
   }
 );
 
@@ -167,14 +166,13 @@ export const selectBurdenedOwnersPercentage = createSelector(
 export const selectBurdenedRentersPercentage = createSelector(
   [selectPrimaryHousingCost],
   (housingCost): { burdened: number; severelyBurdened: number } | null => {
-    if (
-      !housingCost ||
-      !housingCost.housingCostBurdenedRenters ||
-      housingCost.housingCostBurdenedRenters.length === 0
-    ) {
+    if (!housingCost || !housingCost.housingCostBurdenedRenters) {
       return null;
     }
-    return housingCost.housingCostBurdenedRenters[0].percentage;
+    return {
+      burdened: housingCost.housingCostBurdenedRenters.burdened,
+      severelyBurdened: housingCost.housingCostBurdenedRenters.severelyBurdened,
+    };
   }
 );
 
@@ -198,19 +196,26 @@ export const selectWorkingClassHousingCostBurden = createSelector(
 );
 
 /**
- * Select working class housing graph data
+ * Select working class housing graph data (returns nested object structure)
  */
 export const selectWorkingClassHousingGraph = createSelector(
   [selectPrimaryHousingCost],
   (
     housingCost
-  ): Array<{
-    incomeCategory: string;
-    label: string;
-    range: string;
-    burdened: number;
-    severelyBurdened: number;
-  }> | null => {
+  ): {
+    owners: {
+      lowIncome: { burdened: number; severelyBurdened: number };
+      moderateIncome: { burdened: number; severelyBurdened: number };
+      medianIncome: { burdened: number; severelyBurdened: number };
+      upperIncome: { burdened: number; severelyBurdened: number };
+    };
+    renters: {
+      lowIncome: { burdened: number; severelyBurdened: number };
+      moderateIncome: { burdened: number; severelyBurdened: number };
+      medianIncome: { burdened: number; severelyBurdened: number };
+      upperIncome: { burdened: number; severelyBurdened: number };
+    };
+  } | null => {
     if (!housingCost || !housingCost.workingClassHousingGraph) {
       return null;
     }

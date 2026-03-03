@@ -87,7 +87,7 @@ export const SuccessPage: React.FC<SuccessCardProps> = ({
           <div className="flex w-full flex-col items-center gap-6">
             {/* Logo */}
             <div className="flex items-center justify-center px-2 py-1">
-              <h1 className="text-5xl font-bold leading-15 text-ws-black">BeneStats</h1>
+              <h1 className="text-5xl font-bold leading-15 text-ws-black">WS</h1>
             </div>
             <div>
               <img

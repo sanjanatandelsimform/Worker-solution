@@ -18,6 +18,10 @@ export interface DashboardResponse {
   rateOfSeparation: SeparationMetrics | null;
   areaMedianWage: AreaMedianWage[];
   housingCost: HousingCost[];
+  industry: {
+    code: string;
+    name: string;
+  };
 }
 
 /**
@@ -51,6 +55,7 @@ export interface StrategicRecommendation {
 export interface IndustryOverview {
   turnoverRate: {
     rate: number;
+    month: string;
     year: number;
   } | null;
   avgTurnover: {
@@ -70,10 +75,8 @@ export interface IndustryOverview {
 export interface TurnoverMetrics {
   quarter: number;
   year: number;
-  percentage: {
-    voluntary: number;
-    involuntary: number;
-  };
+  voluntary: number;
+  involuntary: number;
 }
 
 /**
@@ -82,10 +85,8 @@ export interface TurnoverMetrics {
 export interface SeparationMetrics {
   quarter: number;
   year: number;
-  percentage: {
-    hiringRate: number;
-    separationRate: number;
-  };
+  hiringRate: number;
+  separationRate: number;
 }
 
 /**
@@ -125,34 +126,35 @@ export interface GraphDataPoint {
  */
 export interface HousingCost {
   zipcode: string;
-  housingCostBurdenedOwners: Array<{
-    quarter: number;
+  housingCostBurdenedOwners: {
     year: number;
-    percentage: {
-      burdened: number;
-      severelyBurdened: number;
-    };
-  }>;
-  housingCostBurdenedRenters: Array<{
-    quarter: number;
+    burdened: number;
+    severelyBurdened: number;
+  };
+  housingCostBurdenedRenters: {
     year: number;
-    percentage: {
-      burdened: number;
-      severelyBurdened: number;
-    };
-  }>;
+    burdened: number;
+    severelyBurdened: number;
+  };
   workingClassHousingCostBurden?: {
     homeOwnershipRate: number;
     medianHomeValue: number;
     medianRent: number;
   };
-  workingClassHousingGraph?: Array<{
-    incomeCategory: string;
-    label: string;
-    range: string;
-    burdened: number;
-    severelyBurdened: number;
-  }>;
+  workingClassHousingGraph?: {
+    owners: {
+      lowIncome: { burdened: number; severelyBurdened: number };
+      moderateIncome: { burdened: number; severelyBurdened: number };
+      medianIncome: { burdened: number; severelyBurdened: number };
+      upperIncome: { burdened: number; severelyBurdened: number };
+    };
+    renters: {
+      lowIncome: { burdened: number; severelyBurdened: number };
+      moderateIncome: { burdened: number; severelyBurdened: number };
+      medianIncome: { burdened: number; severelyBurdened: number };
+      upperIncome: { burdened: number; severelyBurdened: number };
+    };
+  };
 }
 
 /**

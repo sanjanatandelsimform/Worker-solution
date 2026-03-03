@@ -156,8 +156,14 @@ export const RegistrationForm = () => {
       try {
         setIsLoadingIndustries(true);
         const data = await getIndustries();
-        // console.log("Fetched industries:", data.data.industries);
-        setIndustries(data.data.industries || []);
+        console.log("Fetched industries:", data.data.industries);
+
+        // Sort industries alphabetically by name
+        const sortedIndustries = (data.data.industries || []).sort((a, b) =>
+          a.industry_name.localeCompare(b.industry_name)
+        );
+
+        setIndustries(sortedIndustries);
         setIndustryError(null);
       } catch (error) {
         console.error("Failed to load industries:", error);
