@@ -76,32 +76,18 @@ export const getDashboard = async (): Promise<DashboardResponse> => {
     if (!token) {
       throw new Error("Authentication required. Please log in again.");
     }
-
-    // const response = await axios.get<DashboardResponse>(`${API_BASE_URL}/dashboard`, {
-    //   timeout: 30000, // 30-second timeout per spec clarification #1
-    //   headers: {
-    //     Authorization: `Bearer ${token}`,
-    //     "Content-Type": "application/json",
-    //   },
-    // });
-
-    // return response.data;
-    // Right now we are using statid response api is not ready yet we will remove statis response
     const response1 = {
-      zipCodes: ["94043", "94105", "95113"], //To be used for drop-down only
+      zipCodes: ["94043", "94105", "95113"],
       companyAtGlance: {
         totalWorkforce: "100-500",
         averageHourlyWage: "$26+",
         averageSalary: "$30,000 - $50,000",
-        // workingClassPopulation: {
-        //   count: 89,
-        //   percentage: 38,
-        // },
-        industryAverageWage: "$61,964",
+        industryAverageWage: 61964,
       },
       industryOverview: {
         turnoverRate: {
           rate: 31,
+          month: "m12",
           year: 2024,
         },
         avgTurnover: {
@@ -115,24 +101,21 @@ export const getDashboard = async (): Promise<DashboardResponse> => {
         },
       },
       turnoverVoluntaryVsInvoluntary: {
-        quarter: 4,
-        year: 2023,
-        percentage: {
-          voluntary: 60.2,
-          involuntary: 39.8,
-        },
+        quarter: 2,
+        year: 2024,
+        voluntary: 18,
+        involuntary: 13,
       },
       rateOfSeparation: {
         quarter: 2,
-        year: 2023,
-        percentage: {
-          hiringRate: 11.1,
-          separationRate: 7.7,
-        },
+        year: 2024,
+        hiringRate: 28,
+        separationRate: 31,
       },
       areaMedianWage: [
         {
-          zipcode: "94043",
+          zipcode: "94105",
+          state: "Oklahoma",
           medianHourlyWages: 14.03,
           medianLivingWage: 24.03,
           nationalAverage: 83245,
@@ -151,165 +134,69 @@ export const getDashboard = async (): Promise<DashboardResponse> => {
             },
           },
         },
-        {
-          zipcode: "94105",
-          medianHourlyWages: 17.03,
-          medianLivingWage: 50.03,
-          nationalAverage: 5565,
-          graph: {
-            stateAverage: {
-              salary: 50000,
-              hourly: 22.63,
-            },
-            yourCompany: {
-              salary: 80000,
-              hourly: 27.0,
-            },
-            nationalAverage: {
-              salary: 90245,
-              hourly: 30.76,
-            },
-          },
-        },
-        {
-          zipcode: "95113",
-          medianHourlyWages: 20.03,
-          medianLivingWage: 70.03,
-          nationalAverage: 83245,
-          graph: {
-            stateAverage: {
-              salary: 6000,
-              hourly: 72.63,
-            },
-            yourCompany: {
-              salary: 90000,
-              hourly: 66.0,
-            },
-            nationalAverage: {
-              salary: 80245,
-              hourly: 20.76,
-            },
-          },
-        },
       ],
       housingCost: [
         {
-          zipcode: "94043",
-          housingCostBurdenedOwners: [
-            {
-              quarter: 4,
-              year: 2023,
-              percentage: {
-                burdened: 51.8,
-                severelyBurdened: 39.8,
-              },
-            },
-          ],
-          housingCostBurdenedRenters: [
-            {
-              quarter: 2,
-              year: 2023,
-              percentage: {
-                burdened: 11.1,
-                severelyBurdened: 7.7,
-              },
-            },
-          ],
-          workingClassHousingCostBurden: {
-            homeOwnershipRate: 72,
-            medianHomeValue: 367200,
-            medianRent: 1423,
-          },
-          workingClassHousingGraph: [
-            {
-              incomeCategory: "lowIncome",
-              label: "Low income",
-              range: "$50,000 or less",
-              burdened: 74,
-              severelyBurdened: 44,
-            },
-            {
-              incomeCategory: "moderateIncome",
-              label: "Moderate income",
-              range: "$50,000 - $74,599",
-              burdened: 40,
-              severelyBurdened: 4,
-            },
-            {
-              incomeCategory: "medianIncome",
-              label: "Median income",
-              range: "$75,000 - $99,999",
-              burdened: 10,
-              severelyBurdened: 1,
-            },
-            {
-              incomeCategory: "upperIncome",
-              label: "Upper income",
-              range: "$100,000 or more",
-              burdened: 1,
-              severelyBurdened: 0,
-            },
-          ],
-        },
-        {
           zipcode: "94105",
-          housingCostBurdenedOwners: [
-            {
-              quarter: 4,
-              year: 2024,
-              percentage: {
-                burdened: 57.8,
-                severelyBurdened: 39.8,
-              },
-            },
-          ],
-          housingCostBurdenedRenters: [
-            {
-              quarter: 2,
-              year: 2024,
-              percentage: {
-                burdened: 15.1,
-                severelyBurdened: 7.7,
-              },
-            },
-          ],
+          housingCostBurdenedOwners: {
+            year: 2023,
+            burdened: 51.8,
+            severelyBurdened: 39.8,
+          },
+          housingCostBurdenedRenters: {
+            year: 2023,
+            burdened: 11.1,
+            severelyBurdened: 7.7,
+          },
           workingClassHousingCostBurden: {
             homeOwnershipRate: 72,
             medianHomeValue: 367200,
             medianRent: 1423,
           },
-          workingClassHousingGraph: [
-            {
-              incomeCategory: "lowIncome",
-              label: "Low income",
-              range: "$50,000 or less",
-              burdened: 80,
-              severelyBurdened: 44,
+          workingClassHousingGraph: {
+            renters: {
+              lowIncome: {
+                burdened: 1175,
+                severelyBurdened: 45,
+              },
+              moderateIncome: {
+                burdened: 551,
+                severelyBurdened: 22,
+              },
+              medianIncome: {
+                burdened: 495,
+                severelyBurdened: 11,
+              },
+              upperIncome: {
+                burdened: 1326,
+                severelyBurdened: 19,
+              },
             },
-            {
-              incomeCategory: "moderateIncome",
-              label: "Moderate income",
-              range: "$50,000 - $74,999",
-              burdened: 100,
-              severelyBurdened: 4,
+            owners: {
+              lowIncome: {
+                burdened: 1175,
+                severelyBurdened: 45,
+              },
+              moderateIncome: {
+                burdened: 551,
+                severelyBurdened: 22,
+              },
+              medianIncome: {
+                burdened: 495,
+                severelyBurdened: 11,
+              },
+              upperIncome: {
+                burdened: 1326,
+                severelyBurdened: 19,
+              },
             },
-            {
-              incomeCategory: "medianIncome",
-              label: "Median income",
-              range: "$75,000 - $99,999",
-              burdened: 20,
-              severelyBurdened: 1,
-            },
-            {
-              incomeCategory: "upperIncome",
-              label: "Upper income",
-              range: "$100,000 or more",
-              burdened: 80,
-              severelyBurdened: 0,
-            },
-          ],
+          },
         },
       ],
+      industry: {
+        code: "42",
+        name: "Wholesale Trade",
+      },
       strategicRecommendations: [
         {
           category: "Healthcare",
@@ -346,6 +233,7 @@ export const getDashboard = async (): Promise<DashboardResponse> => {
         },
       ],
     };
+
     return response1;
   } catch (error) {
     if (

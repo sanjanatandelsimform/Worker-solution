@@ -83,7 +83,7 @@ export default function AssessmentWorkforcePage() {
       if (response.success) {
         await refetch();
         if (isLastStep) {
-          // navigate("/dashboard");
+          navigate("/dashboard");
         } else {
           setManualStep(steps[currentStepIndex + 1].id);
         }

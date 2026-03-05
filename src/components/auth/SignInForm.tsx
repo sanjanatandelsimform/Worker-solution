@@ -74,7 +74,7 @@ export const SignInForm = () => {
         state: {
           messageImg: checkmarkIcon,
           title: "Sign In Successful!",
-          subtitle: "Welcome back! Continue your success journey with Worker Solutions®",
+          subtitle: "Welcome back! Continue your success journey with BeneStats®",
           buttonText: "Go to Dashboard",
           buttonPath: "/dashboard",
           user: user,

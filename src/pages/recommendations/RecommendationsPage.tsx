@@ -66,7 +66,7 @@ export default function RecommendationsPage() {
           count={
             companyAtGlance?.industryAverageWage
               ? typeof companyAtGlance.industryAverageWage === "number"
-                ? formatNumber(companyAtGlance.industryAverageWage)
+                ? `$${formatNumber(companyAtGlance.industryAverageWage)}`
                 : companyAtGlance.industryAverageWage
               : "N/A"
           }

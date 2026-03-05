@@ -17,6 +17,7 @@ const initialState: DashboardState = {
   loading: false,
   error: null,
   lastFetched: null,
+  isLoaded: false,
 };
 
 /**
@@ -32,7 +33,6 @@ export const fetchDashboard = createAsyncThunk<DashboardResponse, void, { reject
   async (_, { rejectWithValue }) => {
     try {
       const response = await getDashboard();
-      console.log("response-----", response);
       return response;
     } catch (error) {
       const errorMessage =
@@ -41,54 +41,49 @@ export const fetchDashboard = createAsyncThunk<DashboardResponse, void, { reject
     }
   }
 );
-
-/**
- * Dashboard slice with reducers and async thunk handling
- */
 const dashboardSlice = createSlice({
   name: "dashboard",
   initialState,
   reducers: {
-    /**
-     * Clear dashboard data and errors
-     */
     clearDashboard: state => {
       state.data = null;
       state.error = null;
       state.lastFetched = null;
+      state.isLoaded = false;
     },
-
-    /**
-     * Clear only error state (useful for retry flows)
-     */
     clearDashboardError: state => {
       state.error = null;
     },
+
+    resetDashboard: () => initialState,
   },
   extraReducers: builder => {
     builder
-      // Handle fetchDashboard pending state
       .addCase(fetchDashboard.pending, state => {
         state.loading = true;
         state.error = null;
       })
-      // Handle fetchDashboard success
       .addCase(fetchDashboard.fulfilled, (state, action: PayloadAction<DashboardResponse>) => {
         state.loading = false;
         state.data = action.payload;
         state.error = null;
         state.lastFetched = Date.now();
+        state.isLoaded = true;
       })
-      // Handle fetchDashboard failure
       .addCase(fetchDashboard.rejected, (state, action) => {
         state.loading = false;
         state.error = action.payload || "An unexpected error occurred";
-      });
+        state.isLoaded = false;
+      })
+      .addMatcher(
+        action => action.type === "auth/logout/fulfilled" || action.type === "auth/logout",
+        () => initialState
+      );
   },
 });
 
 // Export actions
-export const { clearDashboard, clearDashboardError } = dashboardSlice.actions;
+export const { clearDashboard, clearDashboardError, resetDashboard } = dashboardSlice.actions;
 
 // Export reducer
 export default dashboardSlice.reducer;
