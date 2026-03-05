@@ -22,6 +22,7 @@ describe("dashboardSlice", () => {
     loading: false,
     error: null,
     lastFetched: null,
+    isLoaded: false,
   };
 
   describe("reducers", () => {
