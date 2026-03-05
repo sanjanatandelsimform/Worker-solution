@@ -85,7 +85,7 @@ export const VerifyEmailPage: React.FC = () => {
           state: {
             messageImg: checkmarkIcon,
             title: "Your email has been verified!",
-            subtitle: "Welcome aboard! Start your success journey with Worker Solutions®",
+            subtitle: "Welcome aboard! Start your success journey with BeneStats®",
             buttonText: "Take the Assessment",
             buttonPath: "/assessment",
             user: response.user ?? undefined,

@@ -94,6 +94,7 @@ export interface SeparationMetrics {
  */
 export interface AreaMedianWage {
   zipcode: string;
+  state?: string;
   medianHourlyWages: number;
   medianLivingWage: number;
   nationalAverage: number;
@@ -165,4 +166,5 @@ export interface DashboardState {
   loading: boolean;
   error: string | null;
   lastFetched: number | null;
+  isLoaded: boolean;
 }

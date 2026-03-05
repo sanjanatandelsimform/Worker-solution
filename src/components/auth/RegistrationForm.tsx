@@ -206,7 +206,7 @@ export const RegistrationForm = () => {
         state: {
           messageImg: checkmarkIcon,
           title: "Account created successfully!",
-          subtitle: "Welcome aboard! Start your success journey with Worker Solutions®",
+          subtitle: "Welcome aboard! Start your success journey with BeneStats®",
           buttonText: "Let's Get Started",
           buttonPath: "/sign-in",
         },
@@ -236,8 +236,8 @@ export const RegistrationForm = () => {
           <div className="flex w-full flex-col items-start gap-2">
             <h2 className="w-full text-4xl font-semibold leading-9.5 text-ws-black">Sign up</h2>
             <p className="w-full text-medium font-normal leading-6 text-ws-black-10">
-              We're excited that you've decided to try our Worker Solutions® platform. Before we
-              begin we'll need to collect some information about your business.
+              We're excited that you've decided to try our BeneStats® platform. Before we begin
+              we'll need to collect some information about your business.
             </p>
           </div>
 
@@ -513,7 +513,7 @@ export const RegistrationForm = () => {
                   aria-label="I agree to the Terms and Privacy Policies"
                 />
                 <p className="text-sm font-normal leading-5 text-ws-black">
-                  I've read and agree to the Worker Solutions®{" "}
+                  I've read and agree to the BeneStats®{" "}
                   <Link to="/terms-page" className="cursor-pointer text-cyan-500">
                     Terms
                   </Link>{" "}

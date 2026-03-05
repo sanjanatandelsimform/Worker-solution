@@ -66,6 +66,7 @@ export const selectCompanyAtGlance = (state: RootState): CompanyAtGlance | null 
  * Select strategic recommendations sorted by order (ascending)
  * Returns empty array if no recommendations available
  */
+// In dashboardSelectors.ts
 export const selectStrategicRecommendations = createSelector(
   [selectDashboardData],
   (data): StrategicRecommendation[] => {
@@ -125,12 +126,14 @@ export const selectPrimaryHousingCost = createSelector(
 /**
  * Select whether dashboard has been successfully loaded
  */
-export const selectDashboardIsLoaded = createSelector(
-  [selectDashboardData, selectDashboardLoading],
-  (data, loading): boolean => {
-    return !loading && data !== null;
-  }
-);
+// export const selectDashboardIsLoaded = createSelector(
+//   [selectDashboardData, selectDashboardLoading],
+//   (data, loading): boolean => {
+//     return !loading && data !== null;
+//   }
+// );
+
+export const selectDashboardIsLoaded = (state: RootState) => state.dashboard.isLoaded;
 
 /**
  * Select whether dashboard is in error state

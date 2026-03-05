@@ -76,18 +76,7 @@ export const getDashboard = async (): Promise<DashboardResponse> => {
     if (!token) {
       throw new Error("Authentication required. Please log in again.");
     }
-
-    // const response = await axios.get<DashboardResponse>(`${API_BASE_URL}/dashboard`, {
-    //   timeout: 30000, // 30-second timeout per spec clarification #1
-    //   headers: {
-    //     Authorization: `Bearer ${token}`,
-    //     "Content-Type": "application/json",
-    //   },
-    // });
-
-    // return response.data;
-    // Right now we are using static response api is not ready yet we will remove static response
-    const response1: DashboardResponse = {
+    const response1 = {
       zipCodes: ["94043", "94105", "95113"],
       companyAtGlance: {
         totalWorkforce: "100-500",
@@ -125,7 +114,8 @@ export const getDashboard = async (): Promise<DashboardResponse> => {
       },
       areaMedianWage: [
         {
-          zipcode: "94043",
+          zipcode: "94105",
+          state: "Oklahoma",
           medianHourlyWages: 14.03,
           medianLivingWage: 24.03,
           nationalAverage: 83245,
@@ -147,7 +137,7 @@ export const getDashboard = async (): Promise<DashboardResponse> => {
       ],
       housingCost: [
         {
-          zipcode: "94043",
+          zipcode: "94105",
           housingCostBurdenedOwners: {
             year: 2023,
             burdened: 51.8,

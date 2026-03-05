@@ -22,6 +22,7 @@ import {
 } from "@/store/selectors/dashboardSelectors";
 import { formatCurrency, formatPercentage, formatCurrencyWithCents } from "@/utils/formatters";
 import { SmileFace } from "@/assets/icons/SmileFace";
+import { Label } from "@/components/base/input/label";
 
 export default function BenchmarkPage() {
   const [isGetInTouchModalOpen, setIsGetInTouchModalOpen] = useState(false);
@@ -37,6 +38,7 @@ export default function BenchmarkPage() {
   const zipCodes = useAppSelector(selectZipCodes);
   const dashboardData = useAppSelector(selectDashboardData);
 
+  console.log("dashboardData------", dashboardData?.areaMedianWage);
   // Initialize selected ZIP from available data without using an effect to avoid cascading renders
   const initialZip =
     (zipCodes && zipCodes.length > 0 && zipCodes[0]) ||
@@ -45,62 +47,69 @@ export default function BenchmarkPage() {
     null;
 
   const [selectedZip, setSelectedZip] = useState<string | null>(initialZip);
+  const [selectedHousingZip, setSelectedHousingZip] = useState<string | null>(initialZip);
 
-  // Derive housing data for selected zip (kept in sync with selectedZip)
-  const selectedHousingData = selectedZip
-    ? dashboardData?.housingCost?.find(h => h.zipcode === selectedZip)
+  // Derive housing data for selected housing zip
+  const selectedHousingData = selectedHousingZip
+    ? dashboardData?.housingCost?.find(h => h.zipcode === selectedHousingZip)
     : dashboardData?.housingCost?.[0];
 
-  // Transform graph data based on selected type (Owners/Renters)
+  // Transform graph data based on selected zip + household type (Owners/Renters)
+  // Always returns a valid array — never throws on zip change or missing data
   const workingClassHousingGraph = (() => {
-    const graphData = selectedHousingData?.workingClassHousingGraph;
-    if (!graphData) return [];
+    try {
+      const graphData = selectedHousingData?.workingClassHousingGraph;
+      if (!graphData) return [];
 
-    const selectedData = selectedGraphType === "owners" ? graphData.owners : graphData.renters;
+      const selectedData = selectedGraphType === "owners" ? graphData?.owners : graphData?.renters;
 
-    // Sum all burdened values to calculate percentages from raw counts
-    const allValues = [
-      selectedData.lowIncome,
-      selectedData.moderateIncome,
-      selectedData.medianIncome,
-      selectedData.upperIncome,
-    ];
-    const totalBurdened = allValues.reduce((sum, d) => sum + (d.burdened ?? 0), 0);
-    const totalSeverely = allValues.reduce((sum, d) => sum + (d.severelyBurdened ?? 0), 0);
+      if (!selectedData) return [];
 
-    const toPercent = (value: number, total: number) =>
-      total > 0 ? parseFloat(((value / total) * 100).toFixed(1)) : 0;
+      const safeNum = (v: unknown): number => (typeof v === "number" && isFinite(v) ? v : 0);
 
-    return [
-      {
-        incomeCategory: "lowIncome",
-        label: "Low income",
-        range: "$50,000 or less",
-        burdened: toPercent(selectedData.lowIncome.burdened, totalBurdened),
-        severelyBurdened: toPercent(selectedData.lowIncome.severelyBurdened, totalSeverely),
-      },
-      {
-        incomeCategory: "moderateIncome",
-        label: "Moderate income",
-        range: "$50,000 - $74,999",
-        burdened: toPercent(selectedData.moderateIncome.burdened, totalBurdened),
-        severelyBurdened: toPercent(selectedData.moderateIncome.severelyBurdened, totalSeverely),
-      },
-      {
-        incomeCategory: "medianIncome",
-        label: "Median income",
-        range: "$75,000 - $99,999",
-        burdened: toPercent(selectedData.medianIncome.burdened, totalBurdened),
-        severelyBurdened: toPercent(selectedData.medianIncome.severelyBurdened, totalSeverely),
-      },
-      {
-        incomeCategory: "upperIncome",
-        label: "Upper income",
-        range: "$100,000 or more",
-        burdened: toPercent(selectedData.upperIncome.burdened, totalBurdened),
-        severelyBurdened: toPercent(selectedData.upperIncome.severelyBurdened, totalSeverely),
-      },
-    ];
+      const entries = [
+        {
+          incomeCategory: "lowIncome",
+          label: "Low income",
+          range: "$50,000 or less",
+          data: selectedData.lowIncome,
+        },
+        {
+          incomeCategory: "moderateIncome",
+          label: "Moderate income",
+          range: "$50,000 - $74,999",
+          data: selectedData.moderateIncome,
+        },
+        {
+          incomeCategory: "medianIncome",
+          label: "Median income",
+          range: "$75,000 - $99,999",
+          data: selectedData.medianIncome,
+        },
+        {
+          incomeCategory: "upperIncome",
+          label: "Upper income",
+          range: "$100,000 or more",
+          data: selectedData.upperIncome,
+        },
+      ];
+
+      const totalBurdened = entries.reduce((sum, e) => sum + safeNum(e.data?.burdened), 0);
+      const totalSeverely = entries.reduce((sum, e) => sum + safeNum(e.data?.severelyBurdened), 0);
+
+      const toPercent = (value: number, total: number) =>
+        total > 0 ? parseFloat(((value / total) * 100).toFixed(1)) : 0;
+
+      return entries.map(e => ({
+        incomeCategory: e.incomeCategory,
+        label: e.label,
+        range: e.range,
+        burdened: toPercent(safeNum(e.data?.burdened), totalBurdened),
+        severelyBurdened: toPercent(safeNum(e.data?.severelyBurdened), totalSeverely),
+      }));
+    } catch {
+      return [];
+    }
   })();
 
   return (
@@ -254,7 +263,7 @@ export default function BenchmarkPage() {
           <div className="flex items-center justify-between md:items-start flex-col xl:flex-row">
             <div className="space-y-1">
               <h3 className="text-2xl font-medium text-ws-black-60">
-                Area Median Wage: [State Name]
+                Area Median Wage: {dashboardData?.areaMedianWage[0]?.state}
               </h3>
               <p className="text-base text-ws-black">
                 Understand how your wages compare against with industry and US wages.
@@ -422,8 +431,8 @@ export default function BenchmarkPage() {
 
           <hr className="border-t border-gray-200 mt-5 mb-6" />
 
-          {/* Housing Cost Burdened Owners header + graph type selector */}
-          <div className="flex items-center justify-between md:items-start flex-col lg:flex-row mb-6">
+          {/* ── Housing Cost Burdened Owners ── */}
+          <div className="flex items-center justify-between md:items-start flex-col lg:flex-row mb-4">
             <div className="space-y-1">
               <h3 className="text-xl font-medium text-ws-black flex items-center gap-2">
                 Housing Cost Burdened Owners
@@ -434,37 +443,39 @@ export default function BenchmarkPage() {
                 </Tooltip>
               </h3>
               <p className="text-xs text-ws-black">
-                {selectedHousingData?.housingCostBurdenedOwners
+                {selectedHousingData?.housingCostBurdenedOwners?.year
                   ? `${selectedHousingData.housingCostBurdenedOwners.year}`
                   : "—"}
               </p>
             </div>
 
-            {/* Graph Type Selector (Owners/Renters) */}
-            <div className="w-full md:w-full lg:w-auto">
-              <Select
-                className="w-full flex items-start min-w-50 md:min-w-full lg:min-w-60"
-                isRequired
-                size="md"
-                placeholder="Select Graph Type"
-                items={[
-                  { label: "Owners", id: "owners" },
-                  { label: "Renters", id: "renters" },
-                ]}
-                value={selectedGraphType}
-                onSelectionChange={key => {
-                  if (key) {
-                    setSelectedGraphType(key as "owners" | "renters");
-                  }
-                }}
-              >
-                {item => <Select.Item id={item.id}>{item.label}</Select.Item>}
-              </Select>
-            </div>
+            {/* Zip Code selector — shown once on the Owners row, controls both sections */}
+            {zipCodes && zipCodes.length > 0 ? (
+              <div className="flex flex-col items-start w-full lg:w-auto">
+                <Label htmlFor="housing-zip-select" className="text-ws-black-20 flex mb-1.5">
+                  Zip Code
+                </Label>
+                <Select
+                  className="w-full flex items-start min-w-50 md:min-w-full lg:min-w-60"
+                  isRequired
+                  size="md"
+                  placeholder="Select Zip Code"
+                  items={zipCodes.map(z => ({ label: z, id: `@${z}` }))}
+                  value={selectedHousingZip ? `@${selectedHousingZip}` : undefined}
+                  onSelectionChange={(key: Key | null) => {
+                    if (key !== null) {
+                      setSelectedHousingZip(String(key).replace(/^@/, ""));
+                    }
+                  }}
+                >
+                  {item => <Select.Item id={item.id}>{item.label}</Select.Item>}
+                </Select>
+              </div>
+            ) : null}
           </div>
 
-          {/* Burdened Owners cards */}
-          <div className="grid xl:grid-cols-2 gap-4 flex-col lg:flex-row">
+          {/* Owners stat cards */}
+          <div className="grid xl:grid-cols-2 gap-4 mb-6">
             <StaticCard
               title="Burdened Owners"
               titleClass="text-sm font-medium text-ws-black-10 uppercase"
@@ -495,20 +506,27 @@ export default function BenchmarkPage() {
             />
           </div>
 
-          {/* Renters section header */}
-          <div className="flex items-center justify-between mt-6">
+          {/* ── Housing Cost Burdened Renters ── */}
+          <div className="flex items-center justify-between md:items-start flex-col lg:flex-row mb-4">
             <div className="space-y-1">
-              <h3 className="text-xl font-medium text-ws-black">Housing Cost Burdened Renters</h3>
+              <h3 className="text-xl font-medium text-ws-black flex items-center gap-2">
+                Housing Cost Burdened Renters
+                <Tooltip title="This is a tooltip" arrow={true}>
+                  <TooltipTrigger className="group relative flex cursor-pointer flex-col items-center gap-2 text-fg-quaternary transition duration-100 ease-linear hover:text-fg-quaternary_hover focus:text-fg-quaternary_hover">
+                    <InfoCircle className="size-5 text-ws-gray-70" />
+                  </TooltipTrigger>
+                </Tooltip>
+              </h3>
               <p className="text-xs text-ws-black">
-                {selectedHousingData?.housingCostBurdenedRenters
+                {selectedHousingData?.housingCostBurdenedRenters?.year
                   ? `${selectedHousingData.housingCostBurdenedRenters.year}`
                   : "—"}
               </p>
             </div>
           </div>
 
-          {/* Burdened Renters cards */}
-          <div className="grid xl:grid-cols-2 gap-4 flex-col lg:flex-row mt-4">
+          {/* Renters stat cards */}
+          <div className="grid xl:grid-cols-2 gap-4 flex-col lg:flex-row">
             <StaticCard
               title="Burdened Renters"
               titleClass="text-sm font-medium text-ws-black-10 uppercase"
@@ -539,15 +557,45 @@ export default function BenchmarkPage() {
             />
           </div>
 
-          {/* Working Class Housing Cost Burden */}
+          {/* ── Working Class Housing Cost Burden ── */}
           <div className="bg-ws-white border border-ws-gray-50 rounded-xl px-6 py-8 mt-6">
-            <h3 className="text-2xl font-medium text-ws-black">
-              Working Class Housing Cost Burden
-            </h3>
-            <p className="text-base text-ws-black-10 w-full xl:w-1/2 mt-2">
-              The data below outlines the housing cost burden for your employees in [{selectedZip}]
-              across income levels for that area.
-            </p>
+            {/* Header row: title + Household type selector only */}
+            <div className="flex items-start justify-between flex-col lg:flex-row gap-4 mb-6">
+              <div className="space-y-1">
+                <h3 className="text-2xl font-medium text-ws-black">
+                  Working Class Housing Cost Burden
+                </h3>
+                <p className="text-base text-ws-black-10 w-full xl:w-3/4 mt-2">
+                  The data below outlines the housing cost burden for your employees in [
+                  {selectedHousingZip}] across income levels for that area.
+                </p>
+              </div>
+
+              {/* Household type selector only */}
+              <div className="flex flex-col items-start w-full lg:w-auto shrink-0">
+                <Label className="text-ws-black-20 flex mb-1.5">Household type</Label>
+                <Select
+                  className="w-full flex items-start min-w-50 md:min-w-full lg:min-w-50"
+                  isRequired
+                  size="md"
+                  placeholder="Select Household Type"
+                  items={[
+                    { label: "Owners", id: "owners" },
+                    { label: "Renters", id: "renters" },
+                  ]}
+                  value={selectedGraphType}
+                  onSelectionChange={key => {
+                    if (key) {
+                      setSelectedGraphType(key as "owners" | "renters");
+                    }
+                  }}
+                >
+                  {item => <Select.Item id={item.id}>{item.label}</Select.Item>}
+                </Select>
+              </div>
+            </div>
+
+            {/* Stat cards */}
             <div className="grid xl:grid-cols-3 gap-4 mt-6 flex-col lg:flex-row">
               <StaticCard
                 title="Home Ownership Rate"
@@ -606,9 +654,13 @@ export default function BenchmarkPage() {
                 classess="flex-1 bg-ws-gray-10! ring-ws-gray-40!"
               />
             </div>
-            <div className="flex-1 w-full overflow-x-auto">
+
+            {/* Chart */}
+            <div className="flex-1 w-full overflow-x-auto mt-6">
               <div className="min-w-[700px]">
-                <IncomeDistributionChart data={workingClassHousingGraph} />
+                <IncomeDistributionChart
+                  data={Array.isArray(workingClassHousingGraph) ? workingClassHousingGraph : []}
+                />
               </div>
             </div>
           </div>

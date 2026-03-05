@@ -1,4 +1,4 @@
-import { useEffect, useState, useCallback } from "react";
+import { useEffect, useState, useCallback, useRef } from "react";
 import { useNavigate } from "react-router-dom";
 import { DashboardSidebar } from "@/components/dashboard/DashboardSidebar";
 import emailIcon from "@/assets/mail-icon.svg";
@@ -7,6 +7,7 @@ import DashboardCard from "./DashboardCard";
 import { Link } from "react-router-dom";
 import { useAppSelector, useAppDispatch } from "@/store/hooks";
 import { selectUser } from "@/store/selectors/authSelectors";
+import { InProgressModal } from "@/components/modals/InProgressModal";
 import { BaseModalWithIcon } from "@/components/modals/BaseModalWithIcon";
 import ErrorMessage from "@/components/common/ErrorMessage";
 import { AlertCircle } from "@untitledui/icons";
@@ -20,10 +21,11 @@ import { Tabs } from "@/components/base/tabs/tabs";
 import RecommendationsPage from "../recommendations/RecommendationsPage";
 import BenchmarkPage from "../benchmark/BenchmarkPage";
 import { fetchDashboard } from "@/store/slices/dashboardSlice";
+import { CircleCheckIcon } from "@/assets/icons/CircleCheckIcon";
 import {
   selectDashboardLoading,
   selectDashboardError,
-  selectDashboardIsLoaded,
+  // selectDashboardIsLoaded,
 } from "@/store/selectors/dashboardSelectors";
 
 export const DashboardPage = () => {
@@ -37,32 +39,21 @@ export const DashboardPage = () => {
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
   const [showResendSuccess, setShowResendSuccess] = useState(false);
   const [showCooldownModal, setShowCooldownModal] = useState(false);
-  const [cooldown, setCooldown] = useState<number>(0); // Cooldown in seconds
+  const [cooldown, setCooldown] = useState<number>(0);
 
   const { completionCount, isLoading: _isLoadingAssessment } = useAssessmentStatus();
 
   // Dashboard data state
   const dashboardLoading = useAppSelector(selectDashboardLoading);
   const dashboardError = useAppSelector(selectDashboardError);
-  const dashboardIsLoaded = useAppSelector(selectDashboardIsLoaded);
+  // const dashboardIsLoaded = useAppSelector(selectDashboardIsLoaded);
 
-  // Function to refetch user data
-  // const refetchUserData = async () => {
-  //   if (user?.id) {
-  //     try {
-  //       const userDetail = localStorage.getItem("userDetail");
-  //       if (userDetail) {
-  //         const parsedUserDetail = JSON.parse(userDetail);
-  //         const accessToken = parsedUserDetail?.auth?.tokens?.accessToken;
-  //         if (accessToken) {
-  //           await dispatch(fetchUserById({ userId: user.id, token: accessToken })).unwrap();
-  //         }
-  //       }
-  //     } catch (error) {
-  //       console.error("Failed to refetch user data:", error);
-  //     }
-  //   }
-  // };
+  // New modal states for Goals completion flow
+  const [showInProgressModal, setShowInProgressModal] = useState(false);
+  const [showGoalsSuccessModal, setShowGoalsSuccessModal] = useState(false);
+  const [showGoalsEmptyWarning, setShowGoalsEmptyWarning] = useState(false);
+  const hasRunDashboardFetchRef = useRef(false);
+
   const refetchUserData = useCallback(async () => {
     if (user?.id) {
       try {
@@ -132,13 +123,79 @@ export const DashboardPage = () => {
   }, [cooldown]);
 
   useEffect(() => {
-    if (completionCount === 4 && !dashboardIsLoaded && !dashboardLoading) {
-      dispatch(fetchDashboard());
+    // Guard: only run if completionCount is 4, not already loading, and hasn't run this session
+    if (completionCount === 4 && !dashboardLoading && !hasRunDashboardFetchRef.current) {
+      hasRunDashboardFetchRef.current = true;
+
+      const fetchWithModal = async () => {
+        setShowInProgressModal(true);
+
+        try {
+          const resultAction = await dispatch(fetchDashboard());
+          setShowInProgressModal(false);
+
+          if (fetchDashboard.fulfilled.match(resultAction)) {
+            setShowGoalsSuccessModal(true);
+          } else if (fetchDashboard.rejected.match(resultAction)) {
+            const errorMessage = resultAction.payload as string;
+            if (
+              errorMessage?.toLowerCase().includes("empty") ||
+              errorMessage?.toLowerCase().includes("incomplete") ||
+              errorMessage?.toLowerCase().includes("no data")
+            ) {
+              setShowGoalsEmptyWarning(true);
+            } else {
+              setErrorMessage(errorMessage || "Failed to load dashboard data");
+            }
+          }
+        } catch (error) {
+          console.error("error:", error);
+          setShowInProgressModal(false);
+          setShowGoalsEmptyWarning(true);
+        }
+      };
+
+      fetchWithModal();
     }
-  }, [completionCount, dashboardIsLoaded, dashboardLoading, dispatch]);
+  }, [completionCount, dashboardLoading, dispatch]); // ← removed dashboardIsLoaded from deps
+
+  // Centralized function to handle fetchDashboard with modal flow
+  const handleFetchDashboardWithModals = useCallback(async () => {
+    setErrorMessage(null);
+    setShowInProgressModal(true);
+
+    try {
+      const resultAction = await dispatch(fetchDashboard());
+
+      setShowInProgressModal(false);
+
+      if (fetchDashboard.fulfilled.match(resultAction)) {
+        // Success - show success modal
+        setShowGoalsSuccessModal(true);
+      } else if (fetchDashboard.rejected.match(resultAction)) {
+        // Error or empty data - show warning modal
+        const errorMessage = resultAction.payload as string;
+
+        // Check if error indicates empty submission
+        if (
+          errorMessage?.toLowerCase().includes("empty") ||
+          errorMessage?.toLowerCase().includes("incomplete") ||
+          errorMessage?.toLowerCase().includes("no data")
+        ) {
+          setShowGoalsEmptyWarning(true);
+        } else {
+          // For other errors, show the existing error message system
+          setErrorMessage(errorMessage || "Failed to load dashboard data");
+        }
+      }
+    } catch (_error) {
+      setShowInProgressModal(false);
+      setShowGoalsEmptyWarning(true);
+    }
+  }, [dispatch]);
 
   const handleRetryDashboard = () => {
-    dispatch(fetchDashboard());
+    handleFetchDashboardWithModals();
   };
 
   const handleVerifyEmail = async () => {
@@ -191,6 +248,25 @@ export const DashboardPage = () => {
     additionalData: { cooldown },
   });
 
+  // Modal configs for Goals completion
+  const goalsSuccessModal = useModalConfig("goalsComplete", {
+    isOpen: showGoalsSuccessModal,
+    onClose: () => setShowGoalsSuccessModal(false),
+    onConfirm: () => {
+      setShowGoalsSuccessModal(false);
+      // Stay on dashboard - data is already displayed
+    },
+  });
+
+  const goalsEmptyWarningModal = useModalConfig("goalsEmptyWarning", {
+    isOpen: showGoalsEmptyWarning,
+    onClose: () => setShowGoalsEmptyWarning(false),
+    onConfirm: () => {
+      setShowGoalsEmptyWarning(false);
+      navigate("/assessment");
+    },
+  });
+
   return (
     <div className="flex h-screen overflow-hidden bg-ws-gray-500">
       {/* Sidebar */}
@@ -209,7 +285,7 @@ export const DashboardPage = () => {
                 <span className="font-bold mb-4 flex">{`Hi ${user?.firstName}!`}</span>
               )}
             </h2>
-            {completionCount == 4 && (
+            {completionCount === 4 && (
               <p className="text-base font-normal text-ws-black">
                 Here's an overview of your workforce, industry, and some recommendations with
                 partners that can add more value to your benefits packages and employee support.
@@ -230,7 +306,7 @@ export const DashboardPage = () => {
             )}
 
             {/* Dashboard Error with Retry */}
-            {completionCount === 4 && dashboardError && (
+            {completionCount === 4 && dashboardError && !showInProgressModal && (
               <div className="mt-6">
                 <ErrorMessage
                   errorType="danger"
@@ -248,6 +324,7 @@ export const DashboardPage = () => {
                 </button>
               </div>
             )}
+
             {/* Currently using `completionCount` to control visibility. */}
             {/* This logic will be replaced once the backend API provides the required flag */}
             {completionCount !== 4 && (
@@ -266,6 +343,7 @@ export const DashboardPage = () => {
                 </div>
               </div>
             )}
+
             {!emailVerify && (
               <DashboardCard
                 title="Verify your email"
@@ -293,6 +371,7 @@ export const DashboardPage = () => {
                 onClick={handleVerifyEmail}
               />
             )}
+
             {completionCount !== 4 ? (
               <DashboardCard
                 title={`${completionCount > 0 ? `${completionCount} ` : ""}Take the Assessment`}
@@ -307,8 +386,9 @@ export const DashboardPage = () => {
               ""
             )}
           </div>
+
           {/* This will be conditionally rendered; uncomment when this feature is implemented. */}
-          {emailVerify && completionCount == 4 && (
+          {emailVerify && completionCount === 4 && (
             <div className="mt-10">
               {dashboardLoading ? (
                 <div className="flex justify-center items-center py-12">
@@ -350,6 +430,28 @@ export const DashboardPage = () => {
         isOpen={showCooldownModal}
         onClose={() => setShowCooldownModal(false)}
         {...cooldownModal}
+      />
+
+      {/* New Goals Completion Modals */}
+      <InProgressModal
+        isOpen={showInProgressModal}
+        onClose={() => {}} // Non-dismissible during API call
+        title="Preparing..."
+        subtitle="One moment while we prepare your results and recommendations."
+      />
+
+      <BaseModalWithIcon
+        isOpen={showGoalsSuccessModal}
+        onClose={() => setShowGoalsSuccessModal(false)}
+        icon={<CircleCheckIcon />}
+        {...goalsSuccessModal}
+      />
+
+      <BaseModalWithIcon
+        isOpen={showGoalsEmptyWarning}
+        onClose={() => setShowGoalsEmptyWarning(false)}
+        icon={<CircleCheckIcon />}
+        {...goalsEmptyWarningModal}
       />
     </div>
   );
