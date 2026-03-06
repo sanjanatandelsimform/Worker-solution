@@ -40,15 +40,10 @@ export const DashboardPage = () => {
   const [showResendSuccess, setShowResendSuccess] = useState(false);
   const [showCooldownModal, setShowCooldownModal] = useState(false);
   const [cooldown, setCooldown] = useState<number>(0);
-
   const { completionCount, isLoading: _isLoadingAssessment } = useAssessmentStatus();
-
-  // Dashboard data state
   const dashboardLoading = useAppSelector(selectDashboardLoading);
   const dashboardError = useAppSelector(selectDashboardError);
   // const dashboardIsLoaded = useAppSelector(selectDashboardIsLoaded);
-
-  // New modal states for Goals completion flow
   const [showInProgressModal, setShowInProgressModal] = useState(false);
   const [showGoalsSuccessModal, setShowGoalsSuccessModal] = useState(false);
   const [showGoalsEmptyWarning, setShowGoalsEmptyWarning] = useState(false);
@@ -157,7 +152,7 @@ export const DashboardPage = () => {
 
       fetchWithModal();
     }
-  }, [completionCount, dashboardLoading, dispatch]); // ← removed dashboardIsLoaded from deps
+  }, [completionCount, dashboardLoading, dispatch]);
 
   // Centralized function to handle fetchDashboard with modal flow
   const handleFetchDashboardWithModals = useCallback(async () => {
@@ -386,8 +381,6 @@ export const DashboardPage = () => {
               ""
             )}
           </div>
-
-          {/* This will be conditionally rendered; uncomment when this feature is implemented. */}
           {emailVerify && completionCount === 4 && (
             <div className="mt-10">
               {dashboardLoading ? (

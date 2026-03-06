@@ -58,11 +58,6 @@ export default function RecommendationsPage() {
         <StaticCard
           title="National Industry Average Wage"
           titleClass="text-ws-gray-90 text-base"
-          // count={
-          //   companyAtGlance?.industryAverageWage
-          //     ? formatNumber(companyAtGlance?.industryAverageWage)
-          //     : "N/A"
-          // }
           count={
             companyAtGlance?.industryAverageWage
               ? typeof companyAtGlance.industryAverageWage === "number"

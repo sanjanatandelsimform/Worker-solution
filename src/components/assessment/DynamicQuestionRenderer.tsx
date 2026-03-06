@@ -248,7 +248,6 @@ export const DynamicQuestionRenderer = ({
     onAnswerChange(parentKey, { ...current, [fieldKey]: value });
   };
 
-  // ✅ NEW: Recursive helper to render nested conditional questions
   const renderConditionalQuestion = (
     conditionalConfig: Question["conditionalQuestion"],
     parentKey: string
@@ -266,7 +265,6 @@ export const DynamicQuestionRenderer = ({
     } else if (showWhen === "no") {
       shouldShow = parentValue === false;
     } else {
-      // ✅ FIX: Case-insensitive comparison for string values
       const showWhenNormalized = String(showWhen).toLowerCase();
       const parentValueNormalized = String(parentValue || "").toLowerCase();
       shouldShow = parentValueNormalized === showWhenNormalized;
@@ -378,7 +376,6 @@ export const DynamicQuestionRenderer = ({
               <span className="text-sm text-red-600">{errors[conditionalQuestion.key]}</span>
             )}
 
-            {/* ✅ RECURSIVELY RENDER NESTED CONDITIONAL */}
             {conditionalQuestion.conditionalQuestion &&
               renderConditionalQuestion(
                 conditionalQuestion.conditionalQuestion,
@@ -578,7 +575,6 @@ export const DynamicQuestionRenderer = ({
               <span className="text-sm text-red-600">{error}</span>
             </div>
           )}
-          {/* {error && <span className="text-sm text-red-600"><InputInfo/>{error}</span>} */}
           {question.conditionalQuestion &&
             renderConditionalQuestion(question.conditionalQuestion, question.key)}
         </div>

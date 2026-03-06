@@ -563,23 +563,6 @@ export const DynamicTab = forwardRef<
             const errorMsg = response.error || "Failed to submit assessment. Please try again.";
             onApiError(errorMsg);
           }
-          // if (response.fieldErrors) {
-          //   setErrors(prev => ({ ...prev, ...response.fieldErrors }));
-          //   setTimeout(() => {
-          //     const firstErrorKey = Object.keys(response.fieldErrors!)[0];
-          //     if (firstErrorKey) {
-          //       const errorElement = document.querySelector(
-          //         `[data-question-key="${firstErrorKey}"]`
-          //       );
-          //       if (errorElement) {
-          //         errorElement.scrollIntoView({
-          //           behavior: "smooth",
-          //           block: "center",
-          //         });
-          //       }
-          //     }
-          //   }, 100);
-          // }
           if (response.fieldErrors) {
             const normalizedFieldErrors: Record<string, string> = { ...response.fieldErrors };
 

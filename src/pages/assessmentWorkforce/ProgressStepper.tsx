@@ -21,6 +21,7 @@ export function ProgressStepper({
 }: ProgressStepperProps) {
   const currentIndex = steps.findIndex(step => step.id === currentStep);
 
+  console.log("currentIndex", currentIndex);
   return (
     <div className="flex w-full items-center gap-2 rounded-xl border border-ws-gray-50 bg-ws-white p-2">
       {steps.map((step, index) => {
@@ -37,8 +38,8 @@ export function ProgressStepper({
 
         if (isCompleted) {
           // Previous/completed steps: green
-          bgColor = "bg-green-50";
-          textColor = "text-green-600";
+          bgColor = "bg-ws-blue-300";
+          textColor = "text-ws-white";
         } else if (isFuture) {
           // Future/next steps: gray
           bgColor = "bg-gray-100";
@@ -51,7 +52,7 @@ export function ProgressStepper({
             <Button
               onClick={() => isClickable && onStepChange?.(step.id)}
               disabled={!isClickable}
-              className={`flex h-8 flex-1 items-center justify-center rounded-md border border-gray-200 px-4 py-2 text-sm font-normal transition-colors ${bgColor} ${textColor} hover:bg-${bgColor} hover:text-${textColor} ${isClickable ? "cursor-pointer hover:opacity-80" : "cursor-not-allowed"}`}
+              className={`flex h-8 flex-1 items-center justify-center rounded-md border px-4 py-2 text-sm font-normal transition-colors ${bgColor} ${textColor} hover:bg-${bgColor} hover:text-${textColor} ${isClickable ? "cursor-pointer hover:opacity-80" : "cursor-not-allowed"} ${isActive ? "border-ws-cyan-70 hover:bg-ws-cyan-70 hover:text-ws-white text-ws-blue-300" : "border-gray-200"}`}
             >
               {step.label}
             </Button>

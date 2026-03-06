@@ -38,8 +38,6 @@ export default function BenchmarkPage() {
   const zipCodes = useAppSelector(selectZipCodes);
   const dashboardData = useAppSelector(selectDashboardData);
 
-  console.log("dashboardData------", dashboardData?.areaMedianWage);
-  // Initialize selected ZIP from available data without using an effect to avoid cascading renders
   const initialZip =
     (zipCodes && zipCodes.length > 0 && zipCodes[0]) ||
     dashboardData?.areaMedianWage?.[0]?.zipcode ||

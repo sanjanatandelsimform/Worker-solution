@@ -400,5 +400,3 @@ export const ChangePasswordModal = ({ isOpen, onClose }: ChangePasswordModalProp
     </>
   );
 };
-
-// React Hook Form's `useForm()` API returns a `watch()` function which cannot be memoized safely. Ensure proper usage to avoid stale UI.
