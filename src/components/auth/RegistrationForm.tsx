@@ -21,46 +21,6 @@ import { useAppDispatch, useAppSelector } from "@/store/hooks";
 import { saveFormData, clearFormData } from "@/store/slices/registrationFormSlice";
 import { selectRegistrationFormData } from "@/store/selectors/registrationFormSelectors";
 
-// // Load saved form data OUTSIDE the component (synchronous)
-// const loadSavedFormData = () => {
-//   try {
-//     const savedFormData = sessionStorage.getItem("registrationFormData");
-//     if (savedFormData) {
-//       const parsedData = JSON.parse(savedFormData);
-//       return {
-//         firstName: parsedData.firstName || "",
-//         lastName: parsedData.lastName || "",
-//         legalBusinessName: parsedData.legalBusinessName || "",
-//         industry: parsedData.industry || "",
-//         zipCode: parsedData.zipCode || "",
-//         businessEmail: parsedData.businessEmail || "",
-//         businessPhone: parsedData.businessPhone || "",
-//         password: parsedData.password || "",
-//         confirmPassword: parsedData.confirmPassword || "",
-//         agreeToTerms: parsedData.agreeToTerms || false,
-//         countryCode: parsedData.countryCode || "US",
-//         phoneNumber: parsedData.businessPhone || "",
-//       };
-//     }
-//   } catch (error) {
-//     console.error("Error loading saved form data:", error);
-//   }
-//   return {
-//     firstName: "",
-//     lastName: "",
-//     legalBusinessName: "",
-//     industry: "",
-//     zipCode: "",
-//     businessEmail: "",
-//     businessPhone: "",
-//     password: "",
-//     confirmPassword: "",
-//     agreeToTerms: false,
-//     countryCode: "US",
-//     phoneNumber: "",
-//   };
-// };
-
 export const RegistrationForm = () => {
   const dispatch = useAppDispatch();
   const navigate = useNavigate();

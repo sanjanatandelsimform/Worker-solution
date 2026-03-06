@@ -32,13 +32,7 @@ export default function AssessmentWorkforcePage() {
   const navigate = useNavigate();
   const user = useAppSelector(selectUser);
 
-  // useEffect(() => {
-  //   if (!isLoading && completionCount >= steps.length) {
-  //     navigate("/dashboard");
-  //   }
-  // }, [isLoading, completionCount, navigate]);
-
-  // // Check if email is verified before allowing access
+  //Check if email is verified before allowing access
   useEffect(() => {
     if (!user?.emailVerify) {
       navigate("/dashboard");
@@ -58,8 +52,6 @@ export default function AssessmentWorkforcePage() {
     .map(step => step.id);
 
   const handleNext = async () => {
-    // setManualStep(steps[currentStepIndex + 1].id);
-    // This code is required; I will uncomment it.
     const dynamicTabValidation = (
       window as {
         __dynamicTabValidation?: {
@@ -241,7 +233,7 @@ export default function AssessmentWorkforcePage() {
           size="md"
           onClick={handleNext}
           className="min-w-30"
-          // isDisabled={isSaving} // Only disable during save, NOT during restore
+          // isDisabled={isSaving}
           // isLoading={isSaving}
         >
           {isLastStep ? "Submit" : "Next"}
