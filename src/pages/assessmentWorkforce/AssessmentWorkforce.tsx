@@ -159,6 +159,7 @@ export default function AssessmentWorkforcePage() {
         <ProgressStepper
           steps={steps}
           currentStep={currentStep ?? "workforce"}
+          resolvedStep={resolvedStep}
           completedSteps={completedStepIds}
           onStepChange={stepId => {
             if (stepId === currentStep) {
