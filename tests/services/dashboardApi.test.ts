@@ -7,11 +7,42 @@
 
 import { describe, it, expect, vi, beforeEach, afterEach } from "vitest";
 import axios from "axios";
-import { getDashboard } from "@/services/api/dashboardApi";
 import type { DashboardResponse } from "@/types/dashboardTypes";
 
-// Mock axios
+// Mock axios FIRST
 vi.mock("axios");
+
+// Mock authApi to prevent apiClient initialization errors
+vi.mock("@/services/api/authApi", () => {
+  const mockApiClient = {
+    get: vi.fn(),
+    post: vi.fn(),
+    put: vi.fn(),
+    delete: vi.fn(),
+    defaults: { headers: { common: {} } },
+    interceptors: {
+      request: { use: vi.fn(), eject: vi.fn() },
+      response: { use: vi.fn(), eject: vi.fn() },
+    },
+  };
+  return {
+    default: mockApiClient,
+    refreshAccessToken: vi.fn(),
+    signout: vi.fn(),
+    signin: vi.fn(),
+    signup: vi.fn(),
+    forgotPassword: vi.fn(),
+    resetPassword: vi.fn(),
+    verifyEmail: vi.fn(),
+    checkEmailAvailability: vi.fn(),
+    getIndustries: vi.fn(),
+    setTokens: vi.fn(),
+  };
+});
+
+// NOW import getDashboard after mocks are set up
+const { getDashboard } = await import("@/services/api/dashboardApi");
+const authApi = await import("@/services/api/authApi");
 
 // Mock localStorage
 const mockLocalStorage = (() => {
@@ -37,6 +68,7 @@ const mockLocalStorage = (() => {
 beforeEach(() => {
   vi.stubGlobal("localStorage", mockLocalStorage);
   mockLocalStorage.clear();
+  vi.clearAllMocks();
 });
 
 afterEach(() => {
@@ -59,6 +91,10 @@ describe("dashboardApi", () => {
       zipCodes: ["12345"],
       areaMedianWage: [],
       housingCost: [],
+      industry: {
+        code: "42",
+        name: "Wholesale Trade",
+      },
     };
 
     beforeEach(() => {
@@ -75,8 +111,9 @@ describe("dashboardApi", () => {
     });
 
     it("should successfully fetch dashboard data", async () => {
-      // Mock axios.get to return mock data
-      vi.mocked(axios.get).mockResolvedValue({
+      // Mock apiClient.get to return mock data
+      const mockApiClient = authApi.default;
+      vi.mocked(mockApiClient.get).mockResolvedValue({
         data: mockDashboardData,
         status: 200,
         statusText: "OK",
@@ -93,11 +130,10 @@ describe("dashboardApi", () => {
       expect(result).toHaveProperty("zipCodes");
       expect(Array.isArray(result.zipCodes)).toBe(true);
 
-      // Verify axios.get was called with correct parameters
-      expect(axios.get).toHaveBeenCalledWith(
-        expect.stringContaining("/dashboard"),
+      // Verify apiClient.get was called with correct parameters
+      expect(mockApiClient.get).toHaveBeenCalledWith(
+        "/dashboard",
         expect.objectContaining({
-          timeout: 30000,
           headers: expect.objectContaining({
             Authorization: `Bearer ${mockToken}`,
           }),
@@ -118,7 +154,8 @@ describe("dashboardApi", () => {
     });
 
     it("should include Authorization header with token", async () => {
-      vi.mocked(axios.get).mockResolvedValue({
+      const mockApiClient = authApi.default;
+      vi.mocked(mockApiClient.get).mockResolvedValue({
         data: mockDashboardData,
         status: 200,
         statusText: "OK",
@@ -128,8 +165,8 @@ describe("dashboardApi", () => {
 
       await getDashboard();
 
-      expect(axios.get).toHaveBeenCalledWith(
-        expect.any(String),
+      expect(mockApiClient.get).toHaveBeenCalledWith(
+        "/dashboard",
         expect.objectContaining({
           headers: expect.objectContaining({
             Authorization: `Bearer ${mockToken}`,
@@ -138,39 +175,23 @@ describe("dashboardApi", () => {
       );
     });
 
-    it("should use 30-second timeout", async () => {
-      vi.mocked(axios.get).mockResolvedValue({
-        data: mockDashboardData,
-        status: 200,
-        statusText: "OK",
-        headers: {},
-        config: {},
-      });
-
-      await getDashboard();
-
-      expect(axios.get).toHaveBeenCalledWith(
-        expect.any(String),
-        expect.objectContaining({
-          timeout: 30000,
-        })
-      );
-    });
 
     it("should throw timeout error when request times out", async () => {
+      const mockApiClient = authApi.default;
       const timeoutError = {
         code: "ECONNABORTED",
-        message: "timeout of 30000ms exceeded",
+        message: "timeout of 10000ms exceeded",
         isAxiosError: true,
       };
 
-      vi.mocked(axios.get).mockRejectedValue(timeoutError);
+      vi.mocked(mockApiClient.get).mockRejectedValue(timeoutError);
       vi.mocked(axios.isAxiosError).mockReturnValue(true);
 
       await expect(getDashboard()).rejects.toThrow("Request timed out. Please try again.");
     });
 
     it("should throw API error message when available", async () => {
+      const mockApiClient = authApi.default;
       const apiError = {
         response: {
           data: {
@@ -181,16 +202,17 @@ describe("dashboardApi", () => {
         isAxiosError: true,
       };
 
-      vi.mocked(axios.get).mockRejectedValue(apiError);
+      vi.mocked(mockApiClient.get).mockRejectedValue(apiError);
       vi.mocked(axios.isAxiosError).mockReturnValue(true);
 
       await expect(getDashboard()).rejects.toThrow("Dashboard data not available for this user");
     });
 
     it("should throw generic message for unknown errors", async () => {
+      const mockApiClient = authApi.default;
       const unknownError = new Error("Something went wrong");
 
-      vi.mocked(axios.get).mockRejectedValue(unknownError);
+      vi.mocked(mockApiClient.get).mockRejectedValue(unknownError);
       vi.mocked(axios.isAxiosError).mockReturnValue(false);
 
       await expect(getDashboard()).rejects.toThrow(

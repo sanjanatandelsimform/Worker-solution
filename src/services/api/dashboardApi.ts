@@ -10,11 +10,9 @@
 
 import axios from "axios";
 import type { DashboardResponse } from "@/types/dashboardTypes";
-
-// API base URL from environment variables
-const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || "https://dev-api.benestats.com/api/v1";
-
+import apiClient from "@/services/api/authApi";
 // Storage key for user authentication details
+
 const STORAGE_KEY = "userDetail";
 
 /**
@@ -76,14 +74,14 @@ export const getDashboard = async (): Promise<DashboardResponse> => {
     if (!token) {
       throw new Error("Authentication required. Please log in again.");
     }
-    const response = await axios.get<DashboardResponse>(`${API_BASE_URL}/dashboard`, {
-      timeout: 30000,
+
+    const response = await apiClient.get<DashboardResponse>("/dashboard", {
       headers: {
         Authorization: `Bearer ${token}`,
-        "Content-Type": "application/json",
       },
     });
 
+    // Return only the data property from the Axios response
     return response.data;
   } catch (error) {
     if (
