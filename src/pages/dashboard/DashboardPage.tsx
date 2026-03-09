@@ -428,7 +428,9 @@ export const DashboardPage = () => {
       {/* New Goals Completion Modals */}
       <InProgressModal
         isOpen={showInProgressModal}
-        onClose={() => {}} // Non-dismissible during API call
+        onClose={() => {
+          setShowInProgressModal(false);
+        }} // Non-dismissible during API call
         title="Preparing..."
         subtitle="One moment while we prepare your results and recommendations."
       />

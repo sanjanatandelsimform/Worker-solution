@@ -153,12 +153,16 @@ export const selectDashboardHasError = createSelector([selectDashboardError], (e
 export const selectBurdenedOwnersPercentage = createSelector(
   [selectPrimaryHousingCost],
   (housingCost): { burdened: number; severelyBurdened: number } | null => {
-    if (!housingCost || !housingCost.housingCostBurdenedOwners) {
+    if (
+      !housingCost ||
+      !housingCost.housingCostBurdenedOwners ||
+      housingCost.housingCostBurdenedOwners.length === 0
+    ) {
       return null;
     }
     return {
-      burdened: housingCost.housingCostBurdenedOwners.burdened,
-      severelyBurdened: housingCost.housingCostBurdenedOwners.severelyBurdened,
+      burdened: housingCost.housingCostBurdenedOwners[0].burdened,
+      severelyBurdened: housingCost.housingCostBurdenedOwners[0].severelyBurdened,
     };
   }
 );
@@ -169,12 +173,16 @@ export const selectBurdenedOwnersPercentage = createSelector(
 export const selectBurdenedRentersPercentage = createSelector(
   [selectPrimaryHousingCost],
   (housingCost): { burdened: number; severelyBurdened: number } | null => {
-    if (!housingCost || !housingCost.housingCostBurdenedRenters) {
+    if (
+      !housingCost ||
+      !housingCost.housingCostBurdenedRenters ||
+      housingCost.housingCostBurdenedRenters.length === 0
+    ) {
       return null;
     }
     return {
-      burdened: housingCost.housingCostBurdenedRenters.burdened,
-      severelyBurdened: housingCost.housingCostBurdenedRenters.severelyBurdened,
+      burdened: housingCost.housingCostBurdenedRenters[0].burdened,
+      severelyBurdened: housingCost.housingCostBurdenedRenters[0].severelyBurdened,
     };
   }
 );
@@ -286,3 +294,10 @@ export const makeSelectHousingCostByZip = (zipcode?: string) =>
     }
     return data.housingCost.find(h => h.zipcode === zipcode) || null;
   });
+
+/**
+ * Select industry object from dashboard response
+ * Returns null if industry is not available
+ */
+export const selectIndustry = (state: RootState): { code: string; name: string } | null =>
+  state.dashboard.data?.industry || null;

@@ -127,16 +127,16 @@ export interface GraphDataPoint {
  */
 export interface HousingCost {
   zipcode: string;
-  housingCostBurdenedOwners: {
+  housingCostBurdenedOwners: Array<{
     year: number;
     burdened: number;
     severelyBurdened: number;
-  };
-  housingCostBurdenedRenters: {
+  }>;
+  housingCostBurdenedRenters: Array<{
     year: number;
     burdened: number;
     severelyBurdened: number;
-  };
+  }>;
   workingClassHousingCostBurden?: {
     homeOwnershipRate: number;
     medianHomeValue: number;
