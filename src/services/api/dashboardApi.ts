@@ -79,6 +79,7 @@ export const getDashboard = async (): Promise<DashboardResponse> => {
       headers: {
         Authorization: `Bearer ${token}`,
       },
+      timeout: 30000,
     });
 
     // Return only the data property from the Axios response
