@@ -48,7 +48,6 @@
   --color-ws-cyan-50: var(--ws-color-cyan-50);
   --color-ws-cyan-60: var(--ws-color-cyan-60);
   --color-ws-cyan-70: var(--ws-color-cyan-70);
-  
 
   /* WS Purple Colors */
   --color-ws-purple-10: var(--ws-color-purple-10);
@@ -75,7 +74,6 @@
   --color-ws-blue-100: var(--ws-color-blue-100);
 
   --color-ws-blue-300: var(--ws-color-blue-300);
-
 }
 
 :root {
@@ -161,8 +159,7 @@
   /* Single Use Colors */
   --ws-color-blue-100: oklch(0.915 0.055 260); /* #D4DFFC */
 
-  --ws-color-blue-300: oklch(0.53 0.10 217.7); /* #E7090 */
-
+  --ws-color-blue-300: oklch(0.53 0.1 217.7); /* #E7090 */
 }
 
 .h-110 {

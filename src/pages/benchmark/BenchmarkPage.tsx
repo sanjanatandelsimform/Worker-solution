@@ -17,6 +17,7 @@ import {
   selectSeparationMetrics,
   selectAreaMedianWageChartData,
   selectZipCodes,
+  selectIndustry,
   selectDashboardData,
   selectPrimaryAreaMedianWage,
 } from "@/store/selectors/dashboardSelectors";
@@ -36,6 +37,7 @@ export default function BenchmarkPage() {
   const areaMedianWage = useAppSelector(selectPrimaryAreaMedianWage);
   const wageChartData = useAppSelector(selectAreaMedianWageChartData);
   const zipCodes = useAppSelector(selectZipCodes);
+  const industry = useAppSelector(selectIndustry);
   const dashboardData = useAppSelector(selectDashboardData);
 
   const initialZip =
@@ -127,7 +129,7 @@ export default function BenchmarkPage() {
         <div className="flex justify-between gap-10 flex-col lg:flex-row">
           <div className="space-y-5 w-full xl:w-1/3">
             <StaticCard
-              title="Turnover rate since Jan 2024"
+              title={`Turnover rate since ${industryOverview?.turnoverRate?.month} ${industryOverview?.turnoverRate?.year}`}
               titleClass="text-sm font-medium text-ws-black-10"
               itemAlign="between"
               count={formatPercentage(industryOverview?.turnoverRate?.rate)}
@@ -139,7 +141,7 @@ export default function BenchmarkPage() {
               placements="top"
             />
             <StaticCard
-              title="Avg Turnover since 2020"
+              title={`Avg Turnover since  ${industryOverview?.avgTurnover?.sinceYear}`}
               titleClass="text-sm font-medium text-ws-black-10"
               itemAlign="between"
               count={formatPercentage(industryOverview?.avgTurnover?.rate)}
@@ -241,18 +243,18 @@ export default function BenchmarkPage() {
           <CostCard
             classess="border-ws-gray-40!"
             title="Turnover Voluntary vs Involuntary"
-            year={`Q${turnoverMetrics?.quarter || 2} ${turnoverMetrics?.year || 2024}`}
+            year={`${turnoverMetrics?.quarter || 2} ${turnoverMetrics?.year || 2024}`}
             voluntaryScore={`${formatPercentage(turnoverMetrics?.voluntary)} Voluntary`}
             involuntaryScore={`${formatPercentage(turnoverMetrics?.involuntary)} Involuntary`}
-            industryTradeText="Industry: Whole Trade"
+            industryTradeText={`Industry: ${industry?.name}`}
           />
           <CostCard
             classess="border-ws-gray-40!"
             title="Rate of Separation"
-            year={`Q${separationMetrics?.quarter || 2} ${separationMetrics?.year || 2023}`}
+            year={`${separationMetrics?.quarter || 2} ${separationMetrics?.year || 2023}`}
             voluntaryScore={`${formatPercentage(separationMetrics?.hiringRate)} Hiring Rate`}
             involuntaryScore={`${formatPercentage(separationMetrics?.separationRate)} Separation`}
-            industryTradeText="Industry: Whole Trade"
+            industryTradeText={`Industry: ${industry?.name}`}
           />
         </div>
 
@@ -428,7 +430,6 @@ export default function BenchmarkPage() {
           </div>
 
           <hr className="border-t border-gray-200 mt-5 mb-6" />
-
           {/* ── Housing Cost Burdened Owners ── */}
           <div className="flex items-center justify-between md:items-start flex-col lg:flex-row mb-4">
             <div className="space-y-1">
@@ -441,8 +442,8 @@ export default function BenchmarkPage() {
                 </Tooltip>
               </h3>
               <p className="text-xs text-ws-black">
-                {selectedHousingData?.housingCostBurdenedOwners?.year
-                  ? `${selectedHousingData.housingCostBurdenedOwners.year}`
+                {selectedHousingData?.housingCostBurdenedOwners?.[0]?.year
+                  ? `${selectedHousingData.housingCostBurdenedOwners[0].year}`
                   : "—"}
               </p>
             </div>
@@ -478,7 +479,9 @@ export default function BenchmarkPage() {
               title="Burdened Owners"
               titleClass="text-sm font-medium text-ws-black-10 uppercase"
               itemAlign="between"
-              count={formatPercentage(selectedHousingData?.housingCostBurdenedOwners?.burdened)}
+              count={formatPercentage(
+                selectedHousingData?.housingCostBurdenedOwners?.[0]?.burdened
+              )}
               countClass="text-3xl xl:text-5xl font-medium text-ws-black-90 mt-2"
               infoIcon={true}
               infoCircleClass="text-ws-gray-70"
@@ -492,7 +495,7 @@ export default function BenchmarkPage() {
               titleClass="text-sm font-medium text-ws-black-10 uppercase"
               itemAlign="between"
               count={formatPercentage(
-                selectedHousingData?.housingCostBurdenedOwners?.severelyBurdened
+                selectedHousingData?.housingCostBurdenedOwners?.[0]?.severelyBurdened
               )}
               countClass="text-3xl xl:text-5xl font-medium text-ws-black-90 mt-2"
               infoIcon={true}
@@ -516,8 +519,8 @@ export default function BenchmarkPage() {
                 </Tooltip>
               </h3>
               <p className="text-xs text-ws-black">
-                {selectedHousingData?.housingCostBurdenedRenters?.year
-                  ? `${selectedHousingData.housingCostBurdenedRenters.year}`
+                {selectedHousingData?.housingCostBurdenedRenters?.[0]?.year
+                  ? `${selectedHousingData.housingCostBurdenedRenters[0].year}`
                   : "—"}
               </p>
             </div>
@@ -529,7 +532,9 @@ export default function BenchmarkPage() {
               title="Burdened Renters"
               titleClass="text-sm font-medium text-ws-black-10 uppercase"
               itemAlign="between"
-              count={formatPercentage(selectedHousingData?.housingCostBurdenedRenters?.burdened)}
+              count={formatPercentage(
+                selectedHousingData?.housingCostBurdenedRenters?.[0]?.burdened
+              )}
               countClass="text-3xl xl:text-5xl font-medium text-ws-black-90 mt-2"
               infoIcon={true}
               infoCircleClass="text-ws-gray-70"
@@ -543,7 +548,7 @@ export default function BenchmarkPage() {
               titleClass="text-sm font-medium text-ws-black-10 uppercase"
               itemAlign="between"
               count={formatPercentage(
-                selectedHousingData?.housingCostBurdenedRenters?.severelyBurdened
+                selectedHousingData?.housingCostBurdenedRenters?.[0]?.severelyBurdened
               )}
               countClass="text-3xl xl:text-5xl font-medium text-ws-black-90 mt-2"
               infoIcon={true}
