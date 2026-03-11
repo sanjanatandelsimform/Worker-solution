@@ -218,12 +218,16 @@ export const DynamicQuestionRenderer = ({
             <ZipCodeAutocomplete
               value={(item as unknown as Record<string, string>)[field.name] ?? ""}
               onChange={(val: string) => {
-                updateArrayItemField(
+                // Typed input: only update zipCode, clear stateAbbreviation
+                const currentItems = answers[keyToUse] as Array<Record<string, unknown>>;
+                if (!currentItems || !Array.isArray(currentItems)) return;
+                onAnswerChange(
                   keyToUse,
-                  (item as { id: number }).id,
-                  field.name,
-                  val,
-                  field.type
+                  currentItems.map(i =>
+                    i.id === (item as { id: number }).id
+                      ? { ...i, [field.name]: val, __zipStateAbbreviation: null }
+                      : i
+                  )
                 );
               }}
               placeholder={field.placeholder}
@@ -235,13 +239,19 @@ export const DynamicQuestionRenderer = ({
                 (item as unknown as Record<string, string>)["state"] ?? undefined
               }
               onSuggestionSelect={suggestion => {
-                // Store the zip code's stateAbbreviation for cross-validation in DynamicTab
-                updateArrayItemField(
+                const currentItems = answers[keyToUse] as Array<Record<string, unknown>>;
+                if (!currentItems || !Array.isArray(currentItems)) return;
+                onAnswerChange(
                   keyToUse,
-                  (item as { id: number }).id,
-                  "__zipStateAbbreviation",
-                  suggestion.stateAbbreviation,
-                  "text"
+                  currentItems.map(i =>
+                    i.id === (item as { id: number }).id
+                      ? {
+                          ...i,
+                          [field.name]: suggestion.zip,
+                          __zipStateAbbreviation: suggestion.stateAbbreviation,
+                        }
+                      : i
+                  )
                 );
               }}
             />
