@@ -175,7 +175,6 @@ describe("dashboardApi", () => {
       );
     });
 
-
     it("should throw timeout error when request times out", async () => {
       const mockApiClient = authApi.default;
       const timeoutError = {

@@ -1,5 +1,6 @@
 import axios, { AxiosError, AxiosRequestConfig } from "axios";
 import { mapMonthToApiValue } from "@/utils/monthUtils";
+import type { ZipCodeLookupResponse } from "@/types/lookupTypes";
 
 /**
  * Assessment API Service
@@ -391,6 +392,34 @@ export const getAssessment = async (): Promise<ApiResponse<AssessmentData>> => {
     };
   } catch (error) {
     return handleApiError<AssessmentData>(error);
+  }
+};
+
+/**
+ * Lookup zip codes by prefix.
+ *
+ * Calls `GET /lookup/zip-codes?search={query}&limit=5` and returns the typed response.
+ * On any error the function returns a safe empty-result object instead of
+ * throwing, so callers can always destructure `data.zipCodes`.
+ *
+ * @param query - Partial zip code (2-5 digits)
+ * @returns Typed lookup response (or empty result on error)
+ */
+export const lookupZipCodes = async (query: string): Promise<ZipCodeLookupResponse> => {
+  try {
+    const response = await api.get<ZipCodeLookupResponse>("/lookup/zip-codes", {
+      params: { search: query, limit: 5 },
+    });
+    return response.data;
+  } catch {
+    return {
+      success: false,
+      data: {
+        zipCodes: [],
+        pagination: { page: 1, limit: 5, totalRecords: 0, totalPages: 0 },
+      },
+      message: "Failed to fetch zip codes",
+    };
   }
 };
 

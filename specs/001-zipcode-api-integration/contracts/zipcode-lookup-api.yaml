@@ -1,0 +1,223 @@
+openapi: 3.0.3
+info:
+  title: Zip Code Lookup API
+  description: >
+    API contract for the zip code autocomplete feature. This documents the
+    single endpoint consumed by the ZipCodeAutocomplete component.
+  version: 1.0.0
+
+servers:
+  - url: https://dev-api.benestats.com/api/v1
+    description: Development
+  - url: http://localhost:3000/api/v1
+    description: Local development
+
+paths:
+  /lookup/zip-codes:
+    get:
+      operationId: lookupZipCodes
+      summary: Search zip codes by prefix
+      description: >
+        Returns a list of US zip codes matching the query string. Used by the
+        ZipCodeAutocomplete component to provide typeahead suggestions.
+        Triggered when the user has typed 2 or more characters.
+      tags:
+        - Lookup
+      security:
+        - BearerAuth: []
+      parameters:
+        - name: search
+          in: query
+          required: true
+          description: >
+            Partial zip code input (minimum 2 characters). The API matches
+            zip codes that start with or contain this value.
+          schema:
+            type: string
+            minLength: 2
+            maxLength: 5
+            pattern: '^\d{2,5}$'
+          example: "394"
+        - name: limit
+          in: query
+          required: false
+          description: >
+            Maximum number of results to return. Defaults to 5.
+          schema:
+            type: integer
+            minimum: 1
+            maximum: 50
+            default: 5
+          example: 5
+      responses:
+        '200':
+          description: Successful lookup — returns matching zip codes
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ZipCodeLookupResponse'
+              example:
+                success: true
+                data:
+                  zipCodes:
+                    - zip: "39401"
+                      stateName: "Mississippi"
+                      stateAbbreviation: "MS"
+                      stateFips: "28"
+                    - zip: "39402"
+                      stateName: "Mississippi"
+                      stateAbbreviation: "MS"
+                      stateFips: "28"
+                    - zip: "39406"
+                      stateName: "Mississippi"
+                      stateAbbreviation: "MS"
+                      stateFips: "28"
+                  pagination:
+                    page: 1
+                    limit: 5
+                    totalRecords: 3
+                    totalPages: 1
+                message: "ZIP codes retrieved successfully"
+        '200_empty':
+          description: No matching zip codes found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ZipCodeLookupResponse'
+              example:
+                success: true
+                data:
+                  zipCodes: []
+                  pagination:
+                    page: 1
+                    limit: 5
+                    totalRecords: 0
+                    totalPages: 0
+                message: "ZIP codes retrieved successfully"
+        '400':
+          description: Invalid query parameter (e.g., non-numeric, too short)
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+              example:
+                success: false
+                message: "Query parameter 'search' must be at least 2 numeric characters"
+        '401':
+          description: Unauthorized — missing or invalid auth token
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+              example:
+                success: false
+                message: "Authentication required"
+        '500':
+          description: Internal server error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+              example:
+                success: false
+                message: "An unexpected error occurred"
+
+components:
+  securitySchemes:
+    BearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+
+  schemas:
+    ZipCodeSuggestion:
+      type: object
+      required:
+        - zip
+        - stateName
+        - stateAbbreviation
+        - stateFips
+      properties:
+        zip:
+          type: string
+          description: 5-digit US zip code
+          pattern: '^\d{5}$'
+          example: "39401"
+        stateName:
+          type: string
+          description: Full state name
+          example: "Mississippi"
+        stateAbbreviation:
+          type: string
+          description: 2-letter state abbreviation
+          minLength: 2
+          maxLength: 2
+          example: "MS"
+        stateFips:
+          type: string
+          description: State FIPS code
+          example: "28"
+
+    Pagination:
+      type: object
+      required:
+        - page
+        - limit
+        - totalRecords
+        - totalPages
+      properties:
+        page:
+          type: integer
+          minimum: 1
+          example: 1
+        limit:
+          type: integer
+          minimum: 1
+          example: 20
+        totalRecords:
+          type: integer
+          minimum: 0
+          example: 15
+        totalPages:
+          type: integer
+          minimum: 0
+          example: 1
+
+    ZipCodeLookupResponse:
+      type: object
+      required:
+        - success
+        - data
+        - message
+      properties:
+        success:
+          type: boolean
+          example: true
+        data:
+          type: object
+          required:
+            - zipCodes
+            - pagination
+          properties:
+            zipCodes:
+              type: array
+              items:
+                $ref: '#/components/schemas/ZipCodeSuggestion'
+            pagination:
+              $ref: '#/components/schemas/Pagination'
+        message:
+          type: string
+          example: "ZIP codes retrieved successfully"
+
+    ErrorResponse:
+      type: object
+      required:
+        - success
+        - message
+      properties:
+        success:
+          type: boolean
+          example: false
+        message:
+          type: string
+          example: "An error occurred"
