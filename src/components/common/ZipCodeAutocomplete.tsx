@@ -76,7 +76,10 @@ export const ZipCodeAutocomplete: React.FC<ZipCodeAutocompleteProps> = ({
   const [stateMismatchError, setStateMismatchError] = useState<string | null>(null);
 
   const containerRef = useRef<HTMLDivElement>(null);
+  const hasMountedRef = useRef(false);
   const abortRef = useRef(false);
+  const isInitialValueRef = useRef(true);
+
   const lastSelectedValueRef = useRef<string | null>(null);
   /** Stores the stateAbbreviation of the last selected/matched suggestion */
   const lastSelectedSuggestionRef = useRef<ZipCodeSuggestion | null>(null);
@@ -85,9 +88,14 @@ export const ZipCodeAutocomplete: React.FC<ZipCodeAutocompleteProps> = ({
 
   // Sync controlled value → internal value when the parent changes it
   useEffect(() => {
-    setInputValue(value);
+    setTimeout(() => setInputValue(value), 0);
+    if (isInitialValueRef.current) {
+      isInitialValueRef.current = false;
+      if (value) {
+        lastSelectedValueRef.current = value;
+      }
+    }
   }, [value]);
-
   // -----------------------------------------------------------------------
   // Re-validate state match when selectedStateAbbreviation changes
   // -----------------------------------------------------------------------
@@ -98,13 +106,15 @@ export const ZipCodeAutocomplete: React.FC<ZipCodeAutocompleteProps> = ({
       inputValue === lastSelectedSuggestionRef.current.zip
     ) {
       const apiState = lastSelectedSuggestionRef.current.stateAbbreviation;
-      if (apiState.toUpperCase() !== selectedStateAbbreviation.toUpperCase()) {
-        setStateMismatchError("Zipcode does not match the selected state.");
-      } else {
-        setStateMismatchError(null);
-      }
+      setTimeout(() => {
+        setStateMismatchError(
+          apiState.toUpperCase() !== selectedStateAbbreviation.toUpperCase()
+            ? "Zipcode does not match the selected state."
+            : null
+        );
+      }, 0);
     } else if (!selectedStateAbbreviation) {
-      setStateMismatchError(null);
+      setTimeout(() => setStateMismatchError(null), 0);
     }
   }, [selectedStateAbbreviation, inputValue]);
 
@@ -112,10 +122,17 @@ export const ZipCodeAutocomplete: React.FC<ZipCodeAutocompleteProps> = ({
   // Fetch suggestions when debounced input changes
   // -----------------------------------------------------------------------
   useEffect(() => {
+    if (!hasMountedRef.current) {
+      hasMountedRef.current = true;
+      return;
+    }
+
     if (debouncedInput.length < MIN_QUERY_LENGTH) {
-      setSuggestions([]);
-      setIsOpen(false);
-      setHasSearched(false);
+      setTimeout(() => {
+        setSuggestions([]);
+        setIsOpen(false);
+        setHasSearched(false);
+      }, 0);
       return;
     }
 
@@ -193,26 +210,17 @@ export const ZipCodeAutocomplete: React.FC<ZipCodeAutocompleteProps> = ({
       lastSelectedValueRef.current = suggestion.zip;
       lastSelectedSuggestionRef.current = suggestion;
       setInputValue(suggestion.zip);
-      onChange(suggestion.zip);
+      abortRef.current = true;
       setSuggestions([]);
       setIsOpen(false);
-      abortRef.current = true;
-
-      // Notify parent of selected suggestion (for cross-field validation)
       onSuggestionSelect?.(suggestion);
-
-      // Validate state match immediately upon selection
       if (selectedStateAbbreviation) {
-        if (
-          suggestion.stateAbbreviation.toUpperCase() !== selectedStateAbbreviation.toUpperCase()
-        ) {
-          setStateMismatchError("Zipcode does not match the selected state.");
-        } else {
-          setStateMismatchError(null);
-        }
+        const mismatch =
+          suggestion.stateAbbreviation.toUpperCase() !== selectedStateAbbreviation.toUpperCase();
+        setStateMismatchError(mismatch ? "Zip code does not match the selected state." : null);
       }
     },
-    [onChange, onSuggestionSelect, selectedStateAbbreviation]
+    [onSuggestionSelect, selectedStateAbbreviation]
   );
 
   const handleKeyDown = useCallback((e: React.KeyboardEvent<HTMLInputElement>): void => {
