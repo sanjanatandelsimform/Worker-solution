@@ -10,6 +10,7 @@ import { Tooltip, TooltipTrigger } from "@/components/base/tooltip/tooltip";
 import type { Question, OptionGroup, QuestionOption } from "@/types/questionTypes";
 import { cx } from "@/utils/cx";
 import { RankingList } from "../common/RankList";
+import { ZipCodeAutocomplete } from "../common/ZipCodeAutocomplete";
 import React, { useEffect } from "react";
 import questionData from "@/data/assessment/questionData.json";
 import { InputInfo } from "@/assets/icons/inputInfo";
@@ -209,6 +210,43 @@ export const DynamicQuestionRenderer = ({
             </Select>
             {displayFieldError && <span className="text-sm text-red-600">{displayFieldError}</span>}
           </>
+        ) : field.name === "zipCode" ? (
+          <>
+            <label className="block text-sm font-normal text-foreground mb-0.2">
+              {field.label}
+            </label>
+            <ZipCodeAutocomplete
+              value={(item as unknown as Record<string, string>)[field.name] ?? ""}
+              onChange={(val: string) => {
+                updateArrayItemField(
+                  keyToUse,
+                  (item as { id: number }).id,
+                  field.name,
+                  val,
+                  field.type
+                );
+              }}
+              placeholder={field.placeholder}
+              isInvalid={hasError}
+              className={
+                hasError ? "border border-red-500 rounded-md" : "border border-gray-300 rounded-md"
+              }
+              selectedStateAbbreviation={
+                (item as unknown as Record<string, string>)["state"] ?? undefined
+              }
+              onSuggestionSelect={suggestion => {
+                // Store the zip code's stateAbbreviation for cross-validation in DynamicTab
+                updateArrayItemField(
+                  keyToUse,
+                  (item as { id: number }).id,
+                  "__zipStateAbbreviation",
+                  suggestion.stateAbbreviation,
+                  "text"
+                );
+              }}
+            />
+            {displayFieldError && <span className="text-sm text-red-600">{displayFieldError}</span>}
+          </>
         ) : (
           <>
             <Input
@@ -216,23 +254,19 @@ export const DynamicQuestionRenderer = ({
               size="md"
               label={field.label}
               placeholder={field.placeholder}
-              type={field.name === "zipCode" ? "text" : "text"}
-              inputMode={field.name === "zipCode" ? "numeric" : undefined}
+              type="text"
               value={(item as unknown as Record<string, string>)[field.name] ?? ""}
-              pattern={field.name === "zipCode" ? "\\d{5}" : field.pattern}
-              maxLength={field.name === "zipCode" ? 5 : undefined}
+              pattern={field.pattern}
               isInvalid={hasError}
               tooltip={displayFieldError ? displayFieldError : undefined}
               onChange={(val: string) => {
-                if (field.name !== "zipCode" || /^\d{0,5}$/.test(val)) {
-                  updateArrayItemField(
-                    keyToUse,
-                    (item as { id: number }).id,
-                    field.name,
-                    val,
-                    field.type
-                  );
-                }
+                updateArrayItemField(
+                  keyToUse,
+                  (item as { id: number }).id,
+                  field.name,
+                  val,
+                  field.type
+                );
               }}
             />
             {displayFieldError && <span className="text-sm text-red-600">{displayFieldError}</span>}
@@ -430,7 +464,7 @@ export const DynamicQuestionRenderer = ({
               return (
                 <>
                   {currentItems.map((item, index) => (
-                    <div key={item.id} className="flex w-full gap-4 items-start">
+                    <div key={item.id} className="flex w-full gap-4">
                       {conditionalQuestion.validationRules.fields?.map(
                         (field: {
                           name: string;
@@ -469,7 +503,10 @@ export const DynamicQuestionRenderer = ({
                       size="md"
                       iconLeading={Plus}
                       onClick={() => addArrayItem(conditionalKey)}
-                      className="max-w-60 text-sm font-semibold text-ws-color-black-20"
+                      className={cx(
+                        "max-w-60 text-sm font-semibold text-ws-color-black-20",
+                        error && "border-red-500"
+                      )}
                     >
                       Add another
                     </Button>
@@ -773,10 +810,7 @@ export const DynamicQuestionRenderer = ({
           </Label>
 
           {currentItems.map((item: { id: number }, index: number) => (
-            <div
-              key={(item as { id: number }).id}
-              className="flex w-full gap-4 items-start custom-input"
-            >
+            <div key={(item as { id: number }).id} className="flex w-full gap-4 custom-input">
               {question.validationRules.fields!.map(field =>
                 renderStructuredArrayField(field, index, currentItems.length > 1, () =>
                   removeArrayItem(question.key, (item as { id: number }).id)

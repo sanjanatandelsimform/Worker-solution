@@ -252,6 +252,19 @@ export const DynamicTab = forwardRef<
                 } else {
                   seenStateZip.add(comboKey);
                 }
+
+                // Cross-validate state vs ZIP code stateAbbreviation from API
+                const zipStateAbbreviation = (item as unknown as Record<string, string>)
+                  .__zipStateAbbreviation;
+                if (zipStateAbbreviation && state) {
+                  if (zipStateAbbreviation.toUpperCase() !== state.toUpperCase()) {
+                    const mismatchKey = `${question.key}.${index}.zipCode`;
+                    if (!newErrors[mismatchKey]) {
+                      newErrors[mismatchKey] = "Zipcode does not match the selected state.";
+                    }
+                    isValid = false;
+                  }
+                }
               });
             }
           }
@@ -552,8 +565,22 @@ export const DynamicTab = forwardRef<
 
       setIsSaving(true);
 
+      // Strip internal __zipStateAbbreviation metadata from STRUCTURED_ARRAY items
+      const cleanedForSubmission = { ...cleanedAnswers };
+      Object.entries(cleanedForSubmission).forEach(([key, val]) => {
+        if (Array.isArray(val)) {
+          cleanedForSubmission[key] = val.map((item: Record<string, unknown>) => {
+            if (item && typeof item === "object" && "__zipStateAbbreviation" in item) {
+              const { __zipStateAbbreviation: _, ...rest } = item;
+              return rest;
+            }
+            return item;
+          });
+        }
+      });
+
       try {
-        const response = await submitSection(cleanedAnswers);
+        const response = await submitSection(cleanedForSubmission);
         if (response.success) {
           if (onSuccess) onSuccess();
           if (onNext) onNext();
