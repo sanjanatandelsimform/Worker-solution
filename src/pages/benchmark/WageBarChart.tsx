@@ -67,10 +67,6 @@ export default function WageBarChart({ data, width, height = 350 }: CanvasChartP
     const chartHeight = height - padding.top - padding.bottom;
 
     // Calculate max value for scaling
-    const maxValue = Math.max(
-      ...data.flatMap(item => [item.industryAverage, item.yourCompany, item.nationalAverage])
-    );
-    const yScale = chartHeight / maxValue;
 
     // Bar configuration
     const barWidth = 58;
@@ -89,6 +85,8 @@ export default function WageBarChart({ data, width, height = 350 }: CanvasChartP
 
     // Draw bars and labels
     data.forEach((item, index) => {
+      const groupMax = Math.max(item.industryAverage, item.yourCompany, item.nationalAverage);
+      const yScale = chartHeight / groupMax;
       const groupX =
         data.length > 1
           ? padding.left + groupSpacing + index * (groupWidth + groupSpacing)
@@ -96,6 +94,7 @@ export default function WageBarChart({ data, width, height = 350 }: CanvasChartP
       const baseY = padding.top + chartHeight;
 
       // Calculate bar heights
+
       const bar1Height = item.industryAverage * yScale;
       const bar2Height = item.yourCompany * yScale;
       const bar3Height = item.nationalAverage * yScale;
@@ -137,7 +136,6 @@ export default function WageBarChart({ data, width, height = 350 }: CanvasChartP
     });
   }, [data, canvasWidth, height]);
 
-  // Mouse move handler for tooltips
   const handleMouseMove = (e: React.MouseEvent<HTMLDivElement>) => {
     const canvas = canvasRef.current;
     if (!canvas) return;
@@ -146,24 +144,24 @@ export default function WageBarChart({ data, width, height = 350 }: CanvasChartP
     const mouseX = e.clientX - rect.left;
     const mouseY = e.clientY - rect.top;
 
-    // Chart configuration (same as in useEffect)
-    const padding = { top: 40, right: 60, bottom: 80, left: 60 };
+    // Must match useEffect padding exactly
+    const padding = { top: 10, right: 30, bottom: 60, left: 30 };
     const chartWidth = canvasWidth - padding.left - padding.right;
     const chartHeight = height - padding.top - padding.bottom;
-    const maxValue = Math.max(
-      ...data.flatMap(item => [item.industryAverage, item.yourCompany, item.nationalAverage])
-    );
-    const yScale = chartHeight / maxValue;
+
     const barWidth = 58;
     const groupWidth = barWidth * 3;
     const totalGroupsWidth = groupWidth * data.length;
     const availableSpaceForGaps = chartWidth - totalGroupsWidth;
     const groupSpacing = data.length > 1 ? availableSpaceForGaps / (data.length + 1) : 0;
 
-    // Check each bar group
     let foundTooltip: TooltipData | null = null;
 
     data.forEach((item, index) => {
+      // Per-group scale — must match useEffect
+      const groupMax = Math.max(item.industryAverage, item.yourCompany, item.nationalAverage);
+      const yScale = chartHeight / groupMax;
+
       const groupX =
         data.length > 1
           ? padding.left + groupSpacing + index * (groupWidth + groupSpacing)
@@ -174,7 +172,6 @@ export default function WageBarChart({ data, width, height = 350 }: CanvasChartP
       const bar2Height = item.yourCompany * yScale;
       const bar3Height = item.nationalAverage * yScale;
 
-      // Check bars from front to back (industry -> your company -> national)
       // Industry average bar (front)
       if (
         mouseX >= groupX &&
@@ -188,7 +185,7 @@ export default function WageBarChart({ data, width, height = 350 }: CanvasChartP
           label: item.name,
           value: item.industryAverage,
           color: "#00C4C7",
-          barName: "Industry average",
+          barName: "State average",
         };
       }
       // Your company bar (middle)
