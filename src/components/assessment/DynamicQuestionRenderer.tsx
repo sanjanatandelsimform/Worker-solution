@@ -5,8 +5,9 @@ import { Checkbox } from "@/components/base/checkbox/checkbox";
 import { Select } from "@/components/base/select/select";
 import type { SelectItemType } from "@/components/base/select/select";
 import { Button } from "@/components/base/buttons/button";
-import { Plus, Trash01, InfoCircle } from "@untitledui/icons";
-import { Tooltip, TooltipTrigger } from "@/components/base/tooltip/tooltip";
+import { Plus, Trash01 } from "@untitledui/icons";
+// import { Plus, Trash01, InfoCircle } from "@untitledui/icons";
+// import { Tooltip, TooltipTrigger } from "@/components/base/tooltip/tooltip";
 import type { Question, OptionGroup, QuestionOption } from "@/types/questionTypes";
 import { cx } from "@/utils/cx";
 import { RankingList } from "../common/RankList";
@@ -876,11 +877,11 @@ export const DynamicQuestionRenderer = ({
                 <div className="flex w-84.75 items-center gap-2 px-3 py-2">
                   <p className="overflow-hidden text-ellipsis text-base font-medium leading-6 text-gray-800 flex items-center gap-3 custom-label">
                     {sub.label}
-                    <Tooltip title={sub.label} arrow={true}>
+                    {/* <Tooltip title={sub.label} arrow={true}>
                       <TooltipTrigger className="group relative flex cursor-pointer">
                         <InfoCircle className="size-5 text-gray-400" />
                       </TooltipTrigger>
-                    </Tooltip>
+                    </Tooltip> */}
                   </p>
                 </div>
 
