@@ -98,6 +98,32 @@ export interface AssessmentData {
 export type SectionType = "workforce" | "compensation" | "benefits" | "goals";
 
 /**
+ * State option as returned by the lookup API
+ */
+export interface StateOptionApi {
+  stateAbbreviation: string;
+  stateName: string;
+}
+
+/**
+ * Response envelope for GET /lookup/states
+ */
+export interface StatesLookupResponse {
+  data: {
+    states: StateOptionApi[];
+  };
+}
+
+/**
+ * Fetch the list of US states from the lookup API.
+ * Reuses the existing `api` axios instance with auth interceptors.
+ */
+export const getStates = async (): Promise<StatesLookupResponse> => {
+  const response = await api.get("/lookup/states");
+  return response.data;
+};
+
+/**
  * Submit Workforce assessment
  */
 export const submitWorkforce = async (responses: Record<string, unknown>): Promise<ApiResponse> => {

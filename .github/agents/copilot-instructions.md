@@ -14,6 +14,11 @@ Auto-generated from all feature plans. Last updated: 2026-01-16
 - TypeScript ~5.9.3, React 19.2, JSX transform `react-jsx` + Vite (rolldown-vite 7.2.5), Axios 1.13.2, Redux Toolkit 2.11.2, react-hook-form 7.71.1, Zod 4.3.5, React Router 7.12.0 (001-zipcode-api-integration)
 - N/A — form state managed in-memory by component state + Redux store (001-zipcode-api-integration)
 
+- TypeScript (strict mode) + React 19.2 + axios 1.13.2, react-hook-form 7.71, zod 4.3, Redux Toolkit 2.11 (not used for assessment state) (001-states-api-integration)
+- N/A — assessment state is local React state in `useAssessment` hook; no localStorage or Redux for assessment (001-states-api-integration)
+- TypeScript (strict mode) + React 19.2.0 + axios 1.13.2 (HTTP), Vite/rolldown-vite (build), Tailwind CSS 4 (styling) (001-states-api-integration)
+- N/A (no client-side persistence for state options) (001-states-api-integration)
+
 - TypeScript with React 19+, strict mode enabled + React Hook Form (form management), Zod (validation), Axios (HTTP client), React Router v6 (navigation), Untitled UI components, Tailwind CSS 4+ (001-auth-business-onboarding)
 
 ## Project Structure
