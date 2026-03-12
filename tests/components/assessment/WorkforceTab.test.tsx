@@ -14,6 +14,7 @@ import type { ApiResponse } from "@/services/api/assessmentApi";
 
 vi.mock("@/services/api/assessmentApi", () => ({
   getAssessment: vi.fn(),
+  getStates: vi.fn().mockResolvedValue({ states: [] }),
   submitWorkforce: vi.fn(),
   submitCompensation: vi.fn(),
   submitBenefits: vi.fn(),
