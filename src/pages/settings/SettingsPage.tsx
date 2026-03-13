@@ -16,12 +16,14 @@ import {
   deleteUserAccount,
   // clearProfileData,
   resendVerificationEmail,
+  retakeAssessmentAction,
 } from "@/store/slices/profileSlice";
 import { clearUser, updateUser } from "@/store/slices/authSlice";
 import { selectProfileLoading, selectProfileError } from "@/store/selectors/profileSelectors";
 import { selectUser } from "@/store/selectors/authSelectors";
 import { validateName } from "@/utils/validation";
 import { useModalConfig } from "@/hooks/useModalConfig";
+import { useAssessmentStatus } from "@/hooks/useAssessmentStatus";
 
 export const SettingsPage = () => {
   const dispatch = useAppDispatch();
@@ -49,6 +51,9 @@ export const SettingsPage = () => {
   const [showError, setShowError] = useState(false);
   const [resendVerification, setResendVerification] = useState(false);
   const [resendError, setResendError] = useState<string | null>(null);
+  const [retakeLoading, setRetakeLoading] = useState(false);
+  const [retakeError, setRetakeError] = useState<string | null>(null);
+  const { completionCount } = useAssessmentStatus();
 
   // Modal configurations using the hook
   const updateCompleteModal = useModalConfig("updateComplete", {
@@ -66,6 +71,7 @@ export const SettingsPage = () => {
     isOpen: isRetakeAssessmentModalOpen,
     onClose: () => setIsRetakeAssessmentModalOpen(false),
     onConfirm: handleRetakeAssessment,
+    additionalData: { loading: retakeLoading },
   });
 
   const accountDeleteModal = useModalConfig("accountDelete", {
@@ -159,9 +165,20 @@ export const SettingsPage = () => {
     }
   };
 
-  function handleRetakeAssessment() {
-    setIsRetakeAssessmentModalOpen(false);
-    navigate("/assessment");
+  async function handleRetakeAssessment() {
+    setRetakeLoading(true);
+    setRetakeError(null);
+    try {
+      await dispatch(retakeAssessmentAction()).unwrap();
+      setIsRetakeAssessmentModalOpen(false);
+      navigate("/assessment");
+    } catch (error) {
+      setIsRetakeAssessmentModalOpen(false);
+      setRetakeError(typeof error === "string" ? error : "Failed to retake assessment");
+      setShowError(true);
+    } finally {
+      setRetakeLoading(false);
+    }
   }
 
   async function handleDeleteAccount() {
@@ -291,6 +308,18 @@ export const SettingsPage = () => {
                 alertIcon={AlertCircle}
                 errorMessage={resendError}
                 onClose={() => setResendError(null)}
+              />
+            </div>
+          )}
+
+          {retakeError && (
+            <div className="mt-6">
+              <ErrorMessage
+                errorType="danger"
+                textColor="text-red-700"
+                alertIcon={AlertCircle}
+                errorMessage={retakeError}
+                onClose={() => setRetakeError(null)}
               />
             </div>
           )}
@@ -443,6 +472,7 @@ export const SettingsPage = () => {
                       size="md"
                       className="w-full"
                       onClick={() => setIsRetakeAssessmentModalOpen(true)}
+                      isDisabled={completionCount === 0}
                     >
                       Retake Assessment
                     </Button>
