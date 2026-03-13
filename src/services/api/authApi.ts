@@ -62,15 +62,21 @@ export const refreshAccessToken = async (
 ): Promise<{ accessToken: string; refreshToken: string }> => {
   try {
     const response = await apiClient.post<{
-      tokens: {
-        accessToken: string;
-        refreshToken: string;
+      status: boolean;
+      message: string;
+      data: {
+        tokens: {
+          accessToken: string;
+          refreshToken: string;
+        };
       };
-    }>("/auth/refresh-token", {
-      refreshToken,
-    });
+    }>("/auth/refresh-token", { refreshToken });
 
-    const newTokens = response.data.tokens;
+    const newTokens = response.data.data.tokens;
+
+    if (!newTokens?.accessToken || !newTokens?.refreshToken) {
+      throw new Error("Invalid token response from server");
+    }
 
     // CRITICAL: Update localStorage IMMEDIATELY after successful refresh
     try {
@@ -195,19 +201,47 @@ apiClient.interceptors.response.use(
     isRefreshing = true;
 
     try {
-      // Call refreshAccessToken which now handles storage update internally
+      // Call refreshAccessToken which handles storage update internally
       const { accessToken: newAccessToken, refreshToken: newRefreshToken } =
         await refreshAccessToken(refreshToken);
 
+      // CRITICAL: Re-read and update localStorage to ensure tokens are persisted
+      // refreshAccessToken already updates, but we do a defensive re-write here
+      try {
+        const rawAfterRefresh = localStorage.getItem(STORAGE_KEY);
+        const parsedAfterRefresh = rawAfterRefresh ? JSON.parse(rawAfterRefresh) : {};
+        const updatedState = {
+          ...parsedAfterRefresh,
+          auth: {
+            ...(parsedAfterRefresh.auth || {}),
+            tokens: {
+              accessToken: newAccessToken,
+              refreshToken: newRefreshToken,
+            },
+            isAuthenticated: true,
+          },
+        };
+        localStorage.setItem(STORAGE_KEY, JSON.stringify(updatedState));
+      } catch (storageError) {
+        console.error("[authApi] Failed to persist refreshed tokens:", storageError);
+      }
+
+      // Update axios default header for all future requests
+      apiClient.defaults.headers.common.Authorization = `Bearer ${newAccessToken}`;
+
       // Sync Redux store if available
       if (typeof window !== "undefined" && (window as { store?: unknown }).store) {
-        const { setTokens } = await import("@/store/slices/authSlice");
-        (window as { store: { dispatch: (action: unknown) => void } }).store.dispatch(
-          setTokens({
-            accessToken: newAccessToken,
-            refreshToken: newRefreshToken,
-          })
-        );
+        try {
+          const { setTokens } = await import("@/store/slices/authSlice");
+          (window as { store: { dispatch: (action: unknown) => void } }).store.dispatch(
+            setTokens({
+              accessToken: newAccessToken,
+              refreshToken: newRefreshToken,
+            })
+          );
+        } catch (reduxError) {
+          console.error("[authApi] Failed to sync tokens to Redux:", reduxError);
+        }
       }
 
       // Update original request header

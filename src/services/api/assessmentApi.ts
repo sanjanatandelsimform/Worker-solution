@@ -312,46 +312,6 @@ export const getAssessmentStatus = async (): Promise<ApiResponse> => {
 /**
  * Handle API errors uniformly
  */
-// const handleApiError = <T = unknown>(error: unknown): ApiResponse<T> => {
-//   if (axios.isAxiosError(error)) {
-//     const axiosError = error as AxiosError<{ message?: string; error?: string }>;
-
-//     if (axiosError.response) {
-//       return {
-//         success: false,
-//         error:
-//           axiosError.response.data?.message ||
-//           axiosError.response.data?.error ||
-//           "Server error occurred",
-//         message: axiosError.response.data?.message || "Request failed",
-//       };
-//     } else if (axiosError.request) {
-//       return {
-//         success: false,
-//         error: "No response from server. Please check your connection.",
-//         message: "Network error",
-//       };
-//     } else if (axiosError.code === "ECONNABORTED") {
-//       return {
-//         success: false,
-//         error: "Request timed out after 10 seconds. Please try again.",
-//         message: "Timeout error",
-//       };
-//     }
-//   }
-
-//   return {
-//     success: false,
-//     error: error instanceof Error ? error.message : "An unexpected error occurred",
-//     message: "Unknown error",
-//   };
-// };
-
-// ...existing code...
-
-/**
- * Handle API errors uniformly
- */
 const handleApiError = <T = unknown>(error: unknown): ApiResponse<T> => {
   if (axios.isAxiosError(error)) {
     const axiosError = error as AxiosError<{
@@ -404,7 +364,6 @@ const handleApiError = <T = unknown>(error: unknown): ApiResponse<T> => {
   };
 };
 
-// ...existing code...
 /**
  * Get Assessment Data
  * Retrieves previously submitted assessment data for all sections
@@ -503,30 +462,64 @@ api.interceptors.response.use(
         });
 
         const refreshResp = await refreshClient.post<{
-          tokens: { accessToken: string; refreshToken: string };
+          status: boolean;
+          message: string;
+          data: {
+            tokens: { accessToken: string; refreshToken: string };
+          };
         }>("/auth/refresh-token", { refreshToken });
-        const tokens = refreshResp.data?.tokens;
 
-        if (parsed) {
-          parsed.auth = parsed.auth || {};
-          parsed.auth.tokens = {
+        const tokens = refreshResp.data?.data?.tokens;
+
+        if (!tokens?.accessToken || !tokens?.refreshToken) {
+          localStorage.removeItem("userDetail");
+          processQueue(new Error("Invalid refresh response"), null);
+          return Promise.reject(error);
+        }
+
+        // CRITICAL: Re-read localStorage to avoid overwriting concurrent changes,
+        // then write the new tokens
+        try {
+          const freshStored = localStorage.getItem("userDetail");
+          const freshParsed = freshStored ? JSON.parse(freshStored) : {};
+          freshParsed.auth = freshParsed.auth || {};
+          freshParsed.auth.tokens = {
             accessToken: tokens.accessToken,
             refreshToken: tokens.refreshToken,
           };
-          localStorage.setItem("userDetail", JSON.stringify(parsed));
+          freshParsed.auth.isAuthenticated = true;
+          localStorage.setItem("userDetail", JSON.stringify(freshParsed));
+        } catch (storageError) {
+          console.error("[assessmentApi] Failed to persist refreshed tokens:", storageError);
         }
 
+        // Update axios default header for future requests on this instance
         api.defaults.headers.common["Authorization"] = `Bearer ${tokens.accessToken}`;
+
+        // Update original request header
         if (originalRequest.headers) {
           originalRequest.headers.Authorization = `Bearer ${tokens.accessToken}`;
+        }
+
+        // Sync Redux store if available
+        if (typeof window !== "undefined" && (window as { store?: unknown }).store) {
+          try {
+            const { setTokens } = await import("@/store/slices/authSlice");
+            (window as { store: { dispatch: (action: unknown) => void } }).store.dispatch(
+              setTokens({
+                accessToken: tokens.accessToken,
+                refreshToken: tokens.refreshToken,
+              })
+            );
+          } catch (reduxError) {
+            console.error("[assessmentApi] Failed to sync tokens to Redux:", reduxError);
+          }
         }
 
         processQueue(null, tokens.accessToken);
         return api(originalRequest);
       } catch (refreshError) {
         processQueue(refreshError as Error, null);
-        // localStorage.removeItem("userDetail");
-        // window.location.href = "/login";
         return Promise.reject(refreshError);
       } finally {
         isRefreshing = false;
