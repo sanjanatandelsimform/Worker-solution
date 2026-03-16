@@ -63,17 +63,20 @@ A user wants to update their password for security reasons or because they've fo
 
 ### User Story 4 - Retake Assessment (Priority: P3)
 
-A user wants to retake their workforce assessment to update their profile results or skills evaluation. Before proceeding, they should be warned that this action may affect their existing results.
+A user wants to retake their workforce assessment to update their profile results or skills evaluation. Before proceeding, they should be warned that this action may affect their existing results. Upon confirmation, the system calls the assessment API to initiate the retake, and on success redirects the user to the assessment page.
 
 **Why this priority**: Feature-specific functionality that enhances user experience but is not core to profile management. Users who need to retake assessments represent a subset of use cases.
 
-**Independent Test**: Can be fully tested by clicking "Retake the Assessment" button, confirming the warning modal appears with appropriate buttons, clicking "Yes, Retake Assessment", and verifying redirection to the dashboard.
+**Independent Test**: Can be fully tested by clicking "Retake the Assessment" button, confirming the warning modal appears with appropriate buttons, clicking "Yes, Retake Assessment", verifying the API is called, and verifying redirection to the assessment page on success or an error message on failure.
 
 **Acceptance Scenarios**:
 
 1. **Given** a user is on the settings page, **When** they click the "Retake the Assessment" button, **Then** a confirmation modal appears with warning styling and "Yes, Retake Assessment" and "Cancel" buttons
-2. **Given** the retake confirmation modal is open, **When** the user clicks "Yes, Retake Assessment", **Then** they are redirected to the dashboard to begin the assessment
-3. **Given** the retake confirmation modal is open, **When** the user clicks "Cancel", **Then** the modal closes and they remain on the settings page
+2. **Given** the retake confirmation modal is open, **When** the user clicks "Yes, Retake Assessment", **Then** the system shows a loading spinner on the confirm button, disables both "Yes, Retake Assessment" and "Cancel" buttons, and calls the retake assessment API (`/api/v1/assessment`)
+3. **Given** the retake assessment API returns a successful response, **When** the response is received, **Then** the confirmation modal closes and the user is redirected to the assessment page
+4. **Given** the retake assessment API returns an error, **When** the error response is received, **Then** the confirmation modal closes, buttons are re-enabled, and an error message is displayed using the existing ErrorMessage component
+5. **Given** the retake assessment API call is in progress, **When** the user attempts to click "Yes, Retake Assessment" or "Cancel", **Then** neither button responds because both are disabled during the API call
+6. **Given** the retake confirmation modal is open and no API call is in progress, **When** the user clicks "Cancel", **Then** the modal closes and they remain on the settings page
 
 ---
 
@@ -115,6 +118,10 @@ A user who has updated their email but hasn't received the verification email ne
 
 ## Clarifications
 
+### Session 2026-03-13
+
+- Q: When the user clicks "Yes, Retake Assessment" and the API call is in progress, what should the modal display to prevent duplicate submissions? → A: Show loading spinner on confirm button + disable both buttons while API is in progress
+
 ### Session 2026-02-12
 
 - Q: When should validation errors be displayed to the user - as they type in real-time, only when they try to submit, or hybrid approach? → A: Real-time validation - show validation errors as the user types, immediately clearing errors when the input is corrected
@@ -143,6 +150,8 @@ A user who has updated their email but hasn't received the verification email ne
 - **Incorrect Current Password & Rate Limiting**: When a user enters an incorrect current password in the Change Password modal, the system allows up to 5 attempts. After 5 failed attempts, the account is locked for 15 minutes and requires verification to unlock. Each failed attempt displays an error message with remaining attempts count.
 - **Account Deletion Flow**: After successful account deletion, the system: (1) clears all user data from Redux store, (2) clears authentication tokens, (3) redirects to `/account-deleted-success` page, (4) displays "Your account has been successfully deleted" message, (5) prevents user from logging back in with deleted credentials. The success page displays confirmation message with link to homepage or sign-up page, and no navigation back to authenticated pages.
 - **Password Field Display**: The Settings page does NOT show an actual password input field. Instead, it displays a masked placeholder "••••••••" (read-only, disabled) with a "Change Password" link next to it. Clicking the link opens the ChangePasswordModal.
+- **Retake Assessment API Failure**: When the retake assessment API call fails (network error, server error, or any non-success response), the system closes the confirmation modal and displays an error message using the existing ErrorMessage component. The user remains on the settings page and can retry by clicking "Retake the Assessment" again.
+- **Retake Assessment Duplicate Click Prevention**: While the retake assessment API call is in progress, both modal buttons ("Yes, Retake Assessment" and "Cancel") are disabled and the confirm button displays a loading spinner, preventing duplicate API calls.
 
 ## Requirements *(mandatory)*
 
@@ -180,7 +189,11 @@ A user who has updated their email but hasn't received the verification email ne
 - **FR-020**: System MUST send password update to backend via PATCH request when user submits valid password change
 - **FR-021**: Users MUST be able to trigger retake assessment by clicking "Retake the Assessment" button
 - **FR-022**: System MUST display a confirmation modal (BaseModalWithIcon) with warning styling, explanatory message, and "Yes, Retake Assessment" and "Cancel" buttons before allowing retake
-- **FR-023**: System MUST redirect user to dashboard when they confirm retake assessment
+- **FR-023**: When the user clicks "Yes, Retake Assessment", the system MUST call the retake assessment API (`/api/v1/assessment`) using the existing API service pattern
+- **FR-023a**: On successful API response, system MUST close the confirmation modal and redirect the user to the assessment page
+- **FR-023b**: On API error response, system MUST close the confirmation modal and display the error using the existing ErrorMessage component with error details
+- **FR-023c**: System MUST NOT change any existing functionality related to modal display, cancel behavior, or other settings page operations when integrating the retake assessment API
+- **FR-023d**: While the retake assessment API call is in progress, the system MUST show a loading spinner on the "Yes, Retake Assessment" button and disable both the confirm and cancel buttons to prevent duplicate submissions
 - **FR-024**: Users MUST be able to trigger account deletion by clicking "Delete my Account" button
 - **FR-025**: System MUST display a confirmation modal (BaseModalWithIcon) with warning styling, explanatory message, and "Yes, Delete my account" and "Cancel" buttons before allowing deletion
 - **FR-026**: System MUST send account deletion request to backend via DELETE request when user confirms deletion
@@ -235,6 +248,14 @@ A user who has updated their email but hasn't received the verification email ne
   - **Response**: Success confirmation object
   - **Error Response (401 Unauthorized)**: `{ "error": "Incorrect current password", "attemptsRemaining": number }` - when current password is wrong
   - **Error Response (429 Too Many Requests)**: `{ "error": "Account locked due to too many failed attempts", "lockoutDuration": 900 }` - when 5 attempts exceeded (900 seconds = 15 minutes)
+
+### Assessment Management
+
+- **POST** `{{baseUrl}}/api/v1/assessment` - Retake assessment
+  - **Headers**: `Authorization: Bearer {{accessToken}}`
+  - **Response**: Success confirmation object (assessment initiated)
+  - **Error Response (401 Unauthorized)**: Token expired or invalid
+  - **Error Response (500 Server Error)**: Server-side failure
 
 ### Account Management
 
@@ -433,7 +454,7 @@ All files must use `profile.` prefix:
 - **After Profile Update Success**: Redirect to `/settings`
 - **After Email Update Success**: Redirect to `/settings` (link changes to "Resend Verification Email")
 - **After Password Change Success**: Redirect to `/settings`
-- **After Retake Assessment Confirmation**: Redirect to `/dashboard`
+- **After Retake Assessment Confirmation (API Success)**: Redirect to `/assessment`
 - **After Account Deletion Success**: Redirect to `/account-deleted-success` page with confirmation message "Your account has been successfully deleted" and links to homepage or sign-up page
 
 ### Modal Close Behavior

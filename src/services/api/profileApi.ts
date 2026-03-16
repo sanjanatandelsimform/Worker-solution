@@ -258,4 +258,29 @@ export const resendEmailVerification = async (): Promise<ProfileApiResponse> => 
   }
 };
 
+/**
+ * Retake assessment — resets and initiates a new assessment
+ * @returns Promise resolving to ProfileApiResponse
+ */
+export const retakeAssessment = async (): Promise<ProfileApiResponse> => {
+  const accessToken = getAccessToken();
+  if (!accessToken) {
+    throw new Error("Not authenticated");
+  }
+
+  return retryRequest(async () => {
+    try {
+      const response = await apiClient.delete<ProfileApiResponse>("/assessment", {
+        headers: {
+          Authorization: `Bearer ${accessToken}`,
+        },
+      });
+      return response.data;
+    } catch (error) {
+      const profileError = getErrorMessage(error);
+      throw new Error(profileError.message);
+    }
+  });
+};
+
 export default apiClient;

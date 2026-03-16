@@ -130,22 +130,38 @@
 
 ## Phase 6: User Story 4 - Retake Assessment (Priority: P3)
 
-**Goal**: Enable users to retake their workforce assessment with confirmation
+**Goal**: Enable users to retake their workforce assessment with confirmation and API integration
 
-**Independent Test**: Click "Retake the Assessment" button, confirm warning modal appears, click "Yes, Retake Assessment", verify redirect to dashboard
+**Independent Test**: Click "Retake the Assessment" button, confirm warning modal appears, click "Yes, Retake Assessment", verify loading spinner on button + both buttons disabled, verify API is called, verify redirect to `/assessment` on success or ErrorMessage on failure
 
 ### Tests for User Story 4
 
 - [ ] T038 [P] [US4] Integration test for retake assessment flow in tests/integration/retake-assessment-flow.test.tsx (test button click, modal display, confirm redirect, cancel behavior)
 
-### Implementation for User Story 4
+### Implementation for User Story 4 (Completed — UI Only)
 
 - [x] T039 [P] [US4] b"Retake the Assessment" button already there when user click on it open modal
 - [x] T040 [US4] open retake confirmation modal in src/pages/settings/settingPage.tsx using BaseModalWithIcon (title: "Retake Assessment?", subtitle: "Your current results will be replaced", warning styling, "Yes, Retake Assessment" and "Cancel" buttons)
 - [x] T041 [US4] Implement dashboard redirect in src/pages/settings/index.tsx (on "Yes" click, navigate to /dashboard)
 - [x] T042 [US4] Implement cancel behavior in src/pages/settings/index.tsx (close modal, remain on settings page)
 
-**Checkpoint**: User Story 4 functional and testable independently
+### Retake Assessment API Integration (New — FR-023 to FR-023d)
+
+> **Context**: The above tasks created the modal and basic redirect. The tasks below integrate the
+> actual `POST /api/v1/assessment` API call so the retake is persisted server-side before redirect.
+> See: [profile.plan.md](./profile.plan.md), [contracts/assessment-api.md](./contracts/assessment-api.md)
+
+- [X] T042a [P] [US4] Add `retakeAssessment()` API function in src/services/api/profileApi.ts — POST /api/v1/assessment with empty body, using existing apiClient + getAccessToken() + retryRequest() + getErrorMessage() pattern, returning ProfileApiResponse
+- [X] T042b [P] [US4] Add `retakeAssessmentAction` async thunk in src/store/slices/profileSlice.ts — createAsyncThunk<void, void, { rejectValue: string }> calling profileService.retakeAssessment(), with pending/fulfilled/rejected extra reducers following existing pattern
+- [X] T042c [US4] Add `retakeLoading` and `retakeError` local state in src/pages/settings/SettingsPage.tsx — useState<boolean>(false) and useState<string | null>(null) respectively
+- [X] T042d [US4] Convert `handleRetakeAssessment` to async in src/pages/settings/SettingsPage.tsx — dispatch(retakeAssessmentAction()).unwrap(), on success: close modal + navigate("/assessment"), on error: close modal + set retakeError + setShowError(true), finally: setRetakeLoading(false)
+- [X] T042e [US4] Pass loading state to useModalConfig in src/pages/settings/SettingsPage.tsx — add additionalData: { loading: retakeLoading } to retakeAssessmentModal config
+- [X] T042f [US4] Update retakeAssessment config in src/hooks/useModalConfig.tsx — add isDisabled: !!config.additionalData?.loading to both Cancel and confirm buttons, change confirm text to "Retaking..." when loading
+- [X] T042g [US4] Add retakeError display in src/pages/settings/SettingsPage.tsx — render ErrorMessage component for retakeError alongside existing profileError/resendError blocks
+- [X] T042h [P] [US4] Unit test for retakeAssessment API function in tests/services/profileApi.retake.test.ts — test success response, 401 error, 500 error, no-token error, retry on network failure
+- [X] T042i [P] [US4] Integration test for retake assessment API flow in tests/pages/SettingsPage.retake.test.tsx — test loading state on buttons, success redirect to /assessment, error display with ErrorMessage, duplicate click prevention
+
+**Checkpoint**: User Story 4 functional with API integration and testable independently
 
 ---
 
@@ -253,7 +269,7 @@ All user stories can proceed in parallel after Foundational phase (Phase 2) comp
 - **User Story 1 (P1)**: Independent - View/update profile names
 - **User Story 2 (P2)**: Independent - Update email address
 - **User Story 3 (P2)**: Independent - Change password
-- **User Story 4 (P3)**: Independent - Retake assessment
+- **User Story 4 (P3)**: Independent - Retake assessment with API integration (T042a-T042i)
 - **User Story 5 (P3)**: Independent - Delete account
 
 Each story should be tested independently before moving to the next priority.
@@ -277,7 +293,7 @@ Each story should be tested independently before moving to the next priority.
 
 **Phase 5 (User Story 3)**: T028 and T029 can run in parallel, T030 and T031 can run in parallel
 
-**Phase 6 (User Story 4)**: T038 and T039 can run in parallel
+**Phase 6 (User Story 4)**: T038 and T039 can run in parallel. For API integration: T042a and T042b can run in parallel (different files), T042h and T042i can run in parallel (test files)
 
 **Phase 7 (User Story 5)**: T043 and T044 can run in parallel
 
@@ -347,14 +363,14 @@ All stories integrate seamlessly as they use the same foundation (Redux slice, A
 - **Phase 3 (User Story 1)**: 9 tasks
 - **Phase 4 (User Story 2)**: 9 tasks
 - **Phase 5 (User Story 3)**: 10 tasks
-- **Phase 6 (User Story 4)**: 5 tasks
+- **Phase 6 (User Story 4)**: 14 tasks (5 original + 9 API integration: T042a-T042i)
 - **Phase 7 (User Story 5)**: 7 tasks
 - **Phase 8 (Edge Cases)**: 9 tasks
 - **Phase 9 (Polish)**: 14 tasks
 
-**Total**: 73 tasks
+**Total**: 82 tasks (73 original + 9 retake assessment API integration)
 
-**Estimated Time**: 24-32 hours (based on profile.plan.md)
+**Estimated Time**: 26-34 hours (based on profile.plan.md, +2 hours for API integration)
 
 ---
 

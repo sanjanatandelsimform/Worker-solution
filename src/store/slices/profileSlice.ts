@@ -90,6 +90,19 @@ export const resendVerificationEmail = createAsyncThunk<void, void, { rejectValu
   }
 );
 
+export const retakeAssessmentAction = createAsyncThunk<void, void, { rejectValue: string }>(
+  "profile/retakeAssessment",
+  async (_, { rejectWithValue }) => {
+    try {
+      await profileService.retakeAssessment();
+    } catch (error) {
+      return rejectWithValue(
+        error instanceof Error ? error.message : "Failed to retake assessment"
+      );
+    }
+  }
+);
+
 // Slice
 const profileSlice = createSlice({
   name: "profile",
@@ -199,6 +212,21 @@ const profileSlice = createSlice({
       .addCase(resendVerificationEmail.rejected, (state, action) => {
         state.loading = false;
         state.error = action.payload || "Failed to resend verification email";
+      });
+
+    // Retake Assessment
+    builder
+      .addCase(retakeAssessmentAction.pending, state => {
+        state.loading = true;
+        state.error = null;
+      })
+      .addCase(retakeAssessmentAction.fulfilled, state => {
+        state.loading = false;
+        state.error = null;
+      })
+      .addCase(retakeAssessmentAction.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.payload || "Failed to retake assessment";
       });
 
     // Sync emailVerify when user data is fetched
