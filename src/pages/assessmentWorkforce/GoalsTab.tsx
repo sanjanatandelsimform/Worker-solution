@@ -14,6 +14,9 @@ export default function GoalsTab({ onNext, onSuccess }: GoalsTabProps) {
     return <div className="text-red-600">Goals section not found in question data</div>;
   }
 
+  // Only signal success to the parent (AssessmentWorkforce).
+  // Navigation and sessionStorage are handled exclusively by AssessmentWorkforce
+  // to prevent double-navigation / double key-setting.
   const handleSuccess = () => {
     if (onSuccess) onSuccess();
   };

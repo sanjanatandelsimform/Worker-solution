@@ -75,6 +75,7 @@ export default function AssessmentWorkforcePage() {
       if (response.success) {
         await refetch();
         if (isLastStep) {
+          sessionStorage.setItem("goalsCompletionPending", "true");
           navigate("/dashboard");
         } else {
           setManualStep(steps[currentStepIndex + 1].id);

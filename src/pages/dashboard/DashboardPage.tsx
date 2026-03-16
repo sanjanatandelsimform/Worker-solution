@@ -22,6 +22,7 @@ import RecommendationsPage from "../recommendations/RecommendationsPage";
 import BenchmarkPage from "../benchmark/BenchmarkPage";
 import { fetchDashboard } from "@/store/slices/dashboardSlice";
 import { CircleCheckIcon } from "@/assets/icons/CircleCheckIcon";
+import { Oval } from "react-loader-spinner";
 import {
   selectDashboardLoading,
   selectDashboardError,
@@ -40,7 +41,7 @@ export const DashboardPage = () => {
   const [showResendSuccess, setShowResendSuccess] = useState(false);
   const [showCooldownModal, setShowCooldownModal] = useState(false);
   const [cooldown, setCooldown] = useState<number>(0);
-  const { completionCount, isLoading: _isLoadingAssessment } = useAssessmentStatus();
+  const { completionCount, assessmentData, isLoading: isLoadingAssessment } = useAssessmentStatus();
   const dashboardLoading = useAppSelector(selectDashboardLoading);
   const dashboardError = useAppSelector(selectDashboardError);
   // const dashboardIsLoaded = useAppSelector(selectDashboardIsLoaded);
@@ -48,6 +49,7 @@ export const DashboardPage = () => {
   const [showGoalsSuccessModal, setShowGoalsSuccessModal] = useState(false);
   const [showGoalsEmptyWarning, setShowGoalsEmptyWarning] = useState(false);
   const hasRunDashboardFetchRef = useRef(false);
+  const fromGoalsCompletionRef = useRef(false);
 
   const refetchUserData = useCallback(async () => {
     if (user?.id) {
@@ -100,6 +102,15 @@ export const DashboardPage = () => {
     };
   }, [user?.id, refetchUserData]);
 
+  // Check sessionStorage once on mount for Goals completion flag.
+  // The flag is deleted immediately so a page refresh never sees it again.
+  useEffect(() => {
+    if (sessionStorage.getItem("goalsCompletionPending") === "true") {
+      sessionStorage.removeItem("goalsCompletionPending");
+      fromGoalsCompletionRef.current = true;
+    }
+  }, []);
+
   // Cooldown timer effect
   useEffect(() => {
     if (cooldown > 0) {
@@ -119,7 +130,11 @@ export const DashboardPage = () => {
 
   useEffect(() => {
     // Guard: only run if completionCount is 4, not already loading, and hasn't run this session
-    if (completionCount === 4 && !dashboardLoading && !hasRunDashboardFetchRef.current) {
+    if (
+      assessmentData?.status === "completed" &&
+      !dashboardLoading &&
+      !hasRunDashboardFetchRef.current
+    ) {
       hasRunDashboardFetchRef.current = true;
 
       const fetchWithModal = async () => {
@@ -130,17 +145,20 @@ export const DashboardPage = () => {
           setShowInProgressModal(false);
 
           if (fetchDashboard.fulfilled.match(resultAction)) {
-            setShowGoalsSuccessModal(true);
+            if (fromGoalsCompletionRef.current) {
+              setShowGoalsSuccessModal(true);
+              fromGoalsCompletionRef.current = false;
+            }
           } else if (fetchDashboard.rejected.match(resultAction)) {
-            const errorMessage = resultAction.payload as string;
+            const errorMsg = resultAction.payload as string;
             if (
-              errorMessage?.toLowerCase().includes("empty") ||
-              errorMessage?.toLowerCase().includes("incomplete") ||
-              errorMessage?.toLowerCase().includes("no data")
+              errorMsg?.toLowerCase().includes("empty") ||
+              errorMsg?.toLowerCase().includes("incomplete") ||
+              errorMsg?.toLowerCase().includes("no data")
             ) {
               setShowGoalsEmptyWarning(true);
             } else {
-              setErrorMessage(errorMessage || "Failed to load dashboard data");
+              setErrorMessage(errorMsg || "Failed to load dashboard data");
             }
           }
         } catch (error) {
@@ -152,7 +170,7 @@ export const DashboardPage = () => {
 
       fetchWithModal();
     }
-  }, [completionCount, dashboardLoading, dispatch]);
+  }, [assessmentData?.status, dashboardLoading, dispatch]);
 
   // Centralized function to handle fetchDashboard with modal flow
   const handleFetchDashboardWithModals = useCallback(async () => {
@@ -262,6 +280,24 @@ export const DashboardPage = () => {
     },
   });
 
+  if (isLoadingAssessment) {
+    return (
+      <div className="flex min-h-screen items-center justify-center bg-secondary">
+        <Oval
+          height={80}
+          width={80}
+          color="#06b6d4"
+          wrapperClass="flex items-center justify-center"
+          visible
+          ariaLabel="oval-loading"
+          secondaryColor="#0891b2"
+          strokeWidth={2}
+          strokeWidthSecondary={2}
+        />
+      </div>
+    );
+  }
+
   return (
     <div className="flex h-screen overflow-hidden bg-ws-gray-500">
       {/* Sidebar */}
@@ -274,13 +310,13 @@ export const DashboardPage = () => {
           <div className="space-y-6"></div>
           <div>
             <h2 className="text-4xl font-medium text-ws-black-60">
-              {completionCount !== 4 ? (
+              {assessmentData?.status !== "completed" ? (
                 `Welcome!`
               ) : (
                 <span className="font-bold mb-4 flex">{`Hi ${user?.firstName}!`}</span>
               )}
             </h2>
-            {completionCount === 4 && (
+            {assessmentData?.status === "completed" && (
               <p className="text-base font-normal text-ws-black">
                 Here's an overview of your workforce, industry, and some recommendations with
                 partners that can add more value to your benefits packages and employee support.
@@ -301,7 +337,7 @@ export const DashboardPage = () => {
             )}
 
             {/* Dashboard Error with Retry */}
-            {completionCount === 4 && dashboardError && !showInProgressModal && (
+            {assessmentData?.status === "completed" && dashboardError && !showInProgressModal && (
               <div className="mt-6">
                 <ErrorMessage
                   errorType="danger"
@@ -322,7 +358,7 @@ export const DashboardPage = () => {
 
             {/* Currently using `completionCount` to control visibility. */}
             {/* This logic will be replaced once the backend API provides the required flag */}
-            {completionCount !== 4 && (
+            {assessmentData?.status !== "completed" && (
               <div className="mt-6 border border-ws-gray-50 rounded-xl p-4 bg-ws-black-80 shadow-sm flex gap-4 justify-between flex-col lg:flex-row">
                 <div className="flex-1">
                   <h2 className="text-ws-cyan-10 text-3xl font-normal mb-2">
@@ -367,7 +403,7 @@ export const DashboardPage = () => {
               />
             )}
 
-            {completionCount !== 4 ? (
+            {assessmentData?.status !== "completed" ? (
               <DashboardCard
                 title={`${completionCount > 0 ? `${completionCount} ` : ""}Take the Assessment`}
                 description="Take our 15 minute assessment for specific recommendations to improve your business"
@@ -381,14 +417,15 @@ export const DashboardPage = () => {
               ""
             )}
           </div>
-          {emailVerify && completionCount === 4 && (
+          {emailVerify && assessmentData?.status === "completed" && (
             <div className="mt-10">
               {dashboardLoading ? (
-                <div className="flex justify-center items-center py-12">
-                  <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-ws-primary"></div>
-                  <p className="ml-4 text-ws-gray-300">Loading dashboard data...</p>
-                </div>
+                <></>
               ) : (
+                // <div className="flex justify-center items-center py-12">
+                //   <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-ws-primary"></div>
+                //   <p className="ml-4 text-ws-gray-300">Loading dashboard data...</p>
+                // </div>
                 <Tabs>
                   <Tabs.List
                     size="md"
