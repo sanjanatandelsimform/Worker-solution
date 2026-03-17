@@ -10,6 +10,7 @@ import GoalsTab from "./GoalsTab";
 import { useAppSelector } from "@/store/hooks";
 import { selectUser } from "@/store/selectors/authSelectors";
 import { useAssessmentStatus } from "@/hooks/useAssessmentStatus";
+import { Oval } from "react-loader-spinner";
 
 const steps = [
   { id: "workforce", label: "Workforce" },
@@ -24,7 +25,8 @@ const getInitialStep = (completionCount: number): string | null => {
 };
 
 export default function AssessmentWorkforcePage() {
-  const { completionCount, isLoading, sectionCompletion, refetch } = useAssessmentStatus();
+  const { completionCount, assessmentData, isLoading, sectionCompletion, refetch } =
+    useAssessmentStatus();
   const [manualStep, setManualStep] = useState<string | null>(null);
   const resolvedStep = !isLoading ? getInitialStep(completionCount) : null;
   const currentStep = manualStep ?? resolvedStep;
@@ -34,10 +36,10 @@ export default function AssessmentWorkforcePage() {
 
   //Check if email is verified before allowing access
   useEffect(() => {
-    if (!user?.emailVerify) {
+    if (!user?.emailVerify || assessmentData?.status === "completed") {
       navigate("/dashboard");
     }
-  }, [user?.emailVerify, navigate]);
+  }, [user?.emailVerify, assessmentData, navigate]);
 
   // Recalculate currentStepIndex whenever currentStep changes
   const currentStepIndex = steps.findIndex(step => step.id === currentStep);
@@ -122,6 +124,29 @@ export default function AssessmentWorkforcePage() {
   };
 
   const isLoadingGet = currentStep === null;
+  // Add a derived "ready to render" flag
+  const shouldRedirect =
+    !isLoading && (!user?.emailVerify || assessmentData?.status === "completed");
+
+  const isReadyToRender = !isLoading && !shouldRedirect;
+
+  if (isLoading || !isReadyToRender) {
+    return (
+      <div className="flex min-h-screen items-center justify-center bg-secondary">
+        <Oval
+          height={80}
+          width={80}
+          color="#06b6d4"
+          wrapperClass="flex items-center justify-center"
+          visible
+          ariaLabel="oval-loading"
+          secondaryColor="#0891b2"
+          strokeWidth={2}
+          strokeWidthSecondary={2}
+        />
+      </div>
+    );
+  }
 
   return (
     <div className="flex min-h-screen flex-col bg-ws-color-gray-20">
