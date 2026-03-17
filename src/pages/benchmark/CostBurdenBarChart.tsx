@@ -3,8 +3,8 @@ import { useEffect, useRef, useState } from "react";
 interface ChartDataItem {
   label: string;
   sublabel: string;
-  value1: number; // Darker cyan bar
-  value2: number; // Lighter cyan bar
+  value1: number;
+  value2: number;
 }
 
 interface CanvasChartProps {
@@ -21,13 +21,19 @@ interface TooltipData {
   color: string;
 }
 
+const PLACEHOLDER_CHART_DATA: ChartDataItem[] = [
+  { label: "Low income", sublabel: "--", value1: 0, value2: 0 },
+  { label: "Moderate income", sublabel: "--", value1: 0, value2: 0 },
+  { label: "Median income", sublabel: "--", value1: 0, value2: 0 },
+  { label: "Upper income", sublabel: "--", value1: 0, value2: 0 },
+];
+
 export default function CostBurdenBarChart({ data, width, height = 400 }: CanvasChartProps) {
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const containerRef = useRef<HTMLDivElement>(null);
   const [tooltip, setTooltip] = useState<TooltipData | null>(null);
   const [canvasWidth, setCanvasWidth] = useState(width || 800);
 
-  // Update canvas width based on container
   useEffect(() => {
     if (!width && containerRef.current) {
       const updateWidth = () => {
@@ -35,7 +41,6 @@ export default function CostBurdenBarChart({ data, width, height = 400 }: Canvas
           setCanvasWidth(containerRef.current.offsetWidth);
         }
       };
-
       updateWidth();
       window.addEventListener("resize", updateWidth);
       return () => window.removeEventListener("resize", updateWidth);
@@ -49,7 +54,6 @@ export default function CostBurdenBarChart({ data, width, height = 400 }: Canvas
     const ctx = canvas.getContext("2d");
     if (!ctx) return;
 
-    // Set canvas resolution for sharp rendering
     const dpr = window.devicePixelRatio || 1;
     canvas.width = canvasWidth * dpr;
     canvas.height = height * dpr;
@@ -57,32 +61,40 @@ export default function CostBurdenBarChart({ data, width, height = 400 }: Canvas
     canvas.style.height = `${height}px`;
     ctx.scale(dpr, dpr);
 
-    // Clear canvas
     ctx.clearRect(0, 0, canvasWidth, height);
 
-    // Chart configuration
     const padding = { top: 50, right: 30, bottom: 80, left: 60 };
     const chartWidth = canvasWidth - padding.left - padding.right;
     const chartHeight = height - padding.top - padding.bottom;
 
-    // Calculate max value for scaling
-    const maxValue = Math.max(...data.map(item => item.value1 + item.value2));
+    const hasData = data.length > 0 && data.some(item => item.value1 > 0 || item.value2 > 0);
+
+    const renderData = hasData ? data : PLACEHOLDER_CHART_DATA;
+    const numGroups = renderData.length;
+
+    const maxValue = hasData ? Math.max(...data.map(item => item.value1 + item.value2)) : 100;
     const yScale = chartHeight / maxValue;
 
-    // Bar configuration
-    const barWidth = 128;
-    const totalBarsWidth = barWidth * data.length;
-    const availableSpaceForGaps = chartWidth - totalBarsWidth;
-    const barSpacing = data.length > 1 ? availableSpaceForGaps / (data.length + 1) : 0;
-    const barGap = 18; // Gap between stacked bars
+    // ── Bar dimensions ────────────────────────────────────────────────
+    // Real data: fixed 128px width
+    // Placeholder: Figma spec — 70px wide, 280px tall
+    const realBarWidth = 128;
+    const placeholderBarWidth = 70; // ← Figma: width: 70px
+    const PLACEHOLDER_BAR_HEIGHT = Math.min(280, chartHeight); // ← Figma: height: 280px
 
-    // Colors from Figma
-    const color1 = "#6dc5d3"; // Darker cyan
-    const color2 = "#a5f0fc"; // Lighter cyan
+    const barWidth = hasData ? realBarWidth : placeholderBarWidth;
+
+    const totalBarsWidth = barWidth * numGroups;
+    const availableSpaceForGaps = chartWidth - totalBarsWidth;
+    const barSpacing = numGroups > 1 ? availableSpaceForGaps / (numGroups + 1) : 0;
+    const barGap = 18;
+
+    const color1 = "#6dc5d3";
+    const color2 = "#a5f0fc";
     const textColor = "#000000";
     const gridLineColor = "#ccc";
 
-    // Draw horizontal grid lines and Y-axis labels
+    // ── Grid lines + Y-axis labels (always rendered) ──────────────────
     ctx.strokeStyle = gridLineColor;
     ctx.lineWidth = 1;
     ctx.font = "400 14px Inter, sans-serif";
@@ -94,104 +106,102 @@ export default function CostBurdenBarChart({ data, width, height = 400 }: Canvas
     for (let i = 0; i <= gridSteps; i++) {
       const y = padding.top + (chartHeight * i) / gridSteps;
       const value = Math.round(maxValue * (1 - i / gridSteps));
-
-      // Draw grid line
       ctx.beginPath();
       ctx.moveTo(padding.left, y);
       ctx.lineTo(canvasWidth - padding.right, y);
       ctx.stroke();
-
-      // Draw Y-axis label
       ctx.fillText(`${value}%`, padding.left - 10, y);
     }
 
-    // Draw bars and labels
-    data.forEach((item, index) => {
+    // ── Bars + labels ─────────────────────────────────────────────────
+    renderData.forEach((item, index) => {
       const x =
-        data.length > 1
+        numGroups > 1
           ? padding.left + barSpacing + index * (barWidth + barSpacing)
-          : padding.left + (chartWidth - barWidth) / 2; // Center single bar
+          : padding.left + (chartWidth - barWidth) / 2;
       const baseY = padding.top + chartHeight;
 
-      // Calculate bar heights
-      // Darker bar goes from bottom to value1 height
-      // Lighter bar ALSO starts from bottom, goes to value2 height (inside darker bar)
-      const bar1Height = item.value1 * yScale;
-      const bar2Height = item.value2 * yScale;
-
-      // Draw darker cyan bar (full width, goes up to value1)
-      ctx.fillStyle = color1;
-      ctx.fillRect(x, baseY - bar1Height, barWidth, bar1Height);
-
-      // Draw lighter cyan bar (narrower, ALSO starts from bottom, nested inside)
-      if (item.value2 > 0) {
-        ctx.fillStyle = color2;
-        const bar2Width = barWidth - barGap * 2;
-        ctx.fillRect(x + barGap, baseY - bar2Height, bar2Width, bar2Height);
-      }
-
-      // Draw value1 label (above the darker cyan bar)
-      ctx.fillStyle = textColor;
-      ctx.font = "500 14px Inter, sans-serif";
-      ctx.textAlign = "center";
-
-      // Position value1 label - if bar is too small or would go outside chart, place inside
-      const minLabelSpace = 25; // Minimum space needed above bar for label
-      const value1Y = baseY - bar1Height - 8;
-      const chartTop = padding.top;
-
-      if (value1Y < chartTop + minLabelSpace) {
-        // Place label inside the bar
-        ctx.textBaseline = "top";
-        ctx.fillText(`${item.value1}%`, x + barWidth / 2, baseY - bar1Height + 8);
+      if (!hasData) {
+        // ── Figma placeholder: 70×280px grey bar ──────────────────────
+        ctx.fillStyle = "#F5F5F5";
+        ctx.globalAlpha = 1;
+        ctx.fillRect(x, baseY - PLACEHOLDER_BAR_HEIGHT, barWidth, PLACEHOLDER_BAR_HEIGHT);
+        ctx.strokeStyle = "#F5F5F5";
+        ctx.lineWidth = 1;
+        ctx.strokeRect(x, baseY - PLACEHOLDER_BAR_HEIGHT, barWidth, PLACEHOLDER_BAR_HEIGHT);
       } else {
-        // Place label above the bar
-        ctx.textBaseline = "bottom";
-        ctx.fillText(`${item.value1}%`, x + barWidth / 2, value1Y);
-      }
+        // ── Real data bars (unchanged) ────────────────────────────────
+        const bar1Height = item.value1 * yScale;
+        const bar2Height = item.value2 * yScale;
 
-      // Draw value2 label (above or inside the lighter cyan bar)
-      if (item.value2 > 0) {
-        const value2Y = baseY - bar2Height - 8;
+        ctx.fillStyle = color1;
+        ctx.globalAlpha = 1;
+        ctx.fillRect(x, baseY - bar1Height, barWidth, bar1Height);
 
-        if (value2Y < chartTop + minLabelSpace) {
-          // Place label inside the bar
+        if (item.value2 > 0) {
+          ctx.fillStyle = color2;
+          const bar2Width = barWidth - barGap * 2;
+          ctx.fillRect(x + barGap, baseY - bar2Height, bar2Width, bar2Height);
+        }
+
+        ctx.fillStyle = textColor;
+        ctx.font = "500 14px Inter, sans-serif";
+        ctx.textAlign = "center";
+
+        const minLabelSpace = 25;
+        const value1Y = baseY - bar1Height - 8;
+        const chartTop = padding.top;
+
+        if (value1Y < chartTop + minLabelSpace) {
           ctx.textBaseline = "top";
-          ctx.fillText(`${item.value2}%`, x + barWidth / 2, baseY - bar2Height + 8);
+          ctx.fillText(`${item.value1}%`, x + barWidth / 2, baseY - bar1Height + 8);
         } else {
-          // Place label above the bar
           ctx.textBaseline = "bottom";
-          ctx.fillText(`${item.value2}%`, x + barWidth / 2, value2Y);
+          ctx.fillText(`${item.value1}%`, x + barWidth / 2, value1Y);
+        }
+
+        if (item.value2 > 0) {
+          const value2Y = baseY - bar2Height - 8;
+          if (value2Y < chartTop + minLabelSpace) {
+            ctx.textBaseline = "top";
+            ctx.fillText(`${item.value2}%`, x + barWidth / 2, baseY - bar2Height + 8);
+          } else {
+            ctx.textBaseline = "bottom";
+            ctx.fillText(`${item.value2}%`, x + barWidth / 2, value2Y);
+          }
         }
       }
 
-      // Draw main label
+      // ── Category label + sublabel (always rendered) ───────────────
+      ctx.globalAlpha = 1;
       ctx.font = "500 14px Inter, sans-serif";
       ctx.fillStyle = textColor;
+      ctx.textAlign = "center";
       ctx.textBaseline = "top";
 
       const labelY = baseY + 12;
       ctx.fillText(item.label, x + barWidth / 2, labelY);
 
-      // Draw sublabel
       ctx.font = "400 14px Inter, sans-serif";
       ctx.fillStyle = textColor;
-
-      const sublabelY = labelY + 24;
-      ctx.fillText(item.sublabel, x + barWidth / 2, sublabelY);
+      ctx.fillText(item.sublabel, x + barWidth / 2, labelY + 24);
     });
   }, [data, canvasWidth, height]);
 
-  // Mouse move handler for tooltips
   const handleMouseMove = (e: React.MouseEvent<HTMLDivElement>) => {
     const canvas = canvasRef.current;
     if (!canvas) return;
+
+    const hasData = data.length > 0 && data.some(item => item.value1 > 0 || item.value2 > 0);
+    if (!hasData) {
+      setTooltip(null);
+      return;
+    }
 
     const rect = canvas.getBoundingClientRect();
     const mouseX = e.clientX - rect.left;
     const mouseY = e.clientY - rect.top;
 
-    // Chart configuration (same as in useEffect)
     const padding = { top: 60, right: 100, bottom: 80, left: 60 };
     const chartWidth = canvasWidth - padding.left - padding.right;
     const chartHeight = height - padding.top - padding.bottom;
@@ -203,7 +213,6 @@ export default function CostBurdenBarChart({ data, width, height = 400 }: Canvas
     const barSpacing = data.length > 1 ? availableSpaceForGaps / (data.length + 1) : 0;
     const barGap = 18;
 
-    // Check each bar
     let foundTooltip: TooltipData | null = null;
 
     data.forEach((item, index) => {
@@ -215,14 +224,12 @@ export default function CostBurdenBarChart({ data, width, height = 400 }: Canvas
       const bar1Height = item.value1 * yScale;
       const bar2Height = item.value2 * yScale;
 
-      // Check if mouse is over darker bar (wider bar)
       if (
         mouseX >= x &&
         mouseX <= x + barWidth &&
         mouseY >= baseY - bar1Height &&
         mouseY <= baseY
       ) {
-        // Check if mouse is specifically over lighter bar (narrower, nested)
         const isOverLighterBar =
           item.value2 > 0 &&
           mouseX >= x + barGap &&
@@ -230,32 +237,20 @@ export default function CostBurdenBarChart({ data, width, height = 400 }: Canvas
           mouseY >= baseY - bar2Height &&
           mouseY <= baseY;
 
-        if (isOverLighterBar) {
-          foundTooltip = {
-            x: mouseX,
-            y: mouseY,
-            label: item.sublabel,
-            value: item.value2,
-            color: "#a5f0fc",
-          };
-        } else {
-          foundTooltip = {
-            x: mouseX,
-            y: mouseY,
-            label: item.sublabel,
-            value: item.value1,
-            color: "#6dc5d3",
-          };
-        }
+        foundTooltip = {
+          x: mouseX,
+          y: mouseY,
+          label: item.sublabel,
+          value: isOverLighterBar ? item.value2 : item.value1,
+          color: isOverLighterBar ? "#a5f0fc" : "#6dc5d3",
+        };
       }
     });
 
     setTooltip(foundTooltip);
   };
 
-  const handleMouseLeave = () => {
-    setTooltip(null);
-  };
+  const handleMouseLeave = () => setTooltip(null);
 
   return (
     <div
@@ -291,7 +286,6 @@ export default function CostBurdenBarChart({ data, width, height = 400 }: Canvas
   );
 }
 
-// Example usage with the Figma data
 export function IncomeDistributionChart({
   data,
 }: {
@@ -311,36 +305,15 @@ export function IncomeDistributionChart({
         value2: item.severelyBurdened,
       }))
     : [
-        {
-          label: "Low income",
-          sublabel: "$50,000 or less",
-          value1: 74,
-          value2: 44,
-        },
-        {
-          label: "Moderate income",
-          sublabel: "$50,000 - $74,599",
-          value1: 40,
-          value2: 4,
-        },
-        {
-          label: "Median income",
-          sublabel: "$75,000 - $99,499",
-          value1: 10,
-          value2: 1,
-        },
-        {
-          label: "Upper income",
-          sublabel: "$100,000 or more",
-          value1: 1,
-          value2: 0,
-        },
+        { label: "Low income", sublabel: "$50,000 or less", value1: 74, value2: 44 },
+        { label: "Moderate income", sublabel: "$50,000 - $74,599", value1: 40, value2: 4 },
+        { label: "Median income", sublabel: "$75,000 - $99,499", value1: 10, value2: 1 },
+        { label: "Upper income", sublabel: "$100,000 or more", value1: 1, value2: 0 },
       ];
 
   return (
     <div className="w-full">
       <CostBurdenBarChart data={chartData} height={400} />
-      {/* Legend */}
       <div className="flex gap-6 items-center justify-center">
         <div className="flex gap-4 items-center">
           <div className="size-4.5 rounded-xs bg-cyan-400" />
