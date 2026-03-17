@@ -23,11 +23,7 @@ import BenchmarkPage from "../benchmark/BenchmarkPage";
 import { fetchDashboard } from "@/store/slices/dashboardSlice";
 import { CircleCheckIcon } from "@/assets/icons/CircleCheckIcon";
 import { Oval } from "react-loader-spinner";
-import {
-  selectDashboardLoading,
-  selectDashboardError,
-  // selectDashboardIsLoaded,
-} from "@/store/selectors/dashboardSelectors";
+import { selectDashboardLoading, selectDashboardError } from "@/store/selectors/dashboardSelectors";
 
 export const DashboardPage = () => {
   const navigate = useNavigate();
@@ -44,10 +40,10 @@ export const DashboardPage = () => {
   const { completionCount, assessmentData, isLoading: isLoadingAssessment } = useAssessmentStatus();
   const dashboardLoading = useAppSelector(selectDashboardLoading);
   const dashboardError = useAppSelector(selectDashboardError);
-  // const dashboardIsLoaded = useAppSelector(selectDashboardIsLoaded);
   const [showInProgressModal, setShowInProgressModal] = useState(false);
   const [showGoalsSuccessModal, setShowGoalsSuccessModal] = useState(false);
   const [showGoalsEmptyWarning, setShowGoalsEmptyWarning] = useState(false);
+  const [isDashboardReady, setIsDashboardReady] = useState(false); // ← NEW
   const hasRunDashboardFetchRef = useRef(false);
   const fromGoalsCompletionRef = useRef(false);
 
@@ -103,7 +99,6 @@ export const DashboardPage = () => {
   }, [user?.id, refetchUserData]);
 
   // Check sessionStorage once on mount for Goals completion flag.
-  // The flag is deleted immediately so a page refresh never sees it again.
   useEffect(() => {
     if (sessionStorage.getItem("goalsCompletionPending") === "true") {
       sessionStorage.removeItem("goalsCompletionPending");
@@ -129,7 +124,6 @@ export const DashboardPage = () => {
   }, [cooldown]);
 
   useEffect(() => {
-    // Guard: only run if completionCount is 4, not already loading, and hasn't run this session
     if (
       assessmentData?.status === "completed" &&
       !dashboardLoading &&
@@ -145,6 +139,7 @@ export const DashboardPage = () => {
           setShowInProgressModal(false);
 
           if (fetchDashboard.fulfilled.match(resultAction)) {
+            setIsDashboardReady(true);
             if (fromGoalsCompletionRef.current) {
               setShowGoalsSuccessModal(true);
               fromGoalsCompletionRef.current = false;
@@ -172,33 +167,27 @@ export const DashboardPage = () => {
     }
   }, [assessmentData?.status, dashboardLoading, dispatch]);
 
-  // Centralized function to handle fetchDashboard with modal flow
   const handleFetchDashboardWithModals = useCallback(async () => {
     setErrorMessage(null);
     setShowInProgressModal(true);
 
     try {
       const resultAction = await dispatch(fetchDashboard());
-
       setShowInProgressModal(false);
 
       if (fetchDashboard.fulfilled.match(resultAction)) {
-        // Success - show success modal
+        setIsDashboardReady(true); // ← Mark ready on retry success too
         setShowGoalsSuccessModal(true);
       } else if (fetchDashboard.rejected.match(resultAction)) {
-        // Error or empty data - show warning modal
-        const errorMessage = resultAction.payload as string;
-
-        // Check if error indicates empty submission
+        const errorMsg = resultAction.payload as string;
         if (
-          errorMessage?.toLowerCase().includes("empty") ||
-          errorMessage?.toLowerCase().includes("incomplete") ||
-          errorMessage?.toLowerCase().includes("no data")
+          errorMsg?.toLowerCase().includes("empty") ||
+          errorMsg?.toLowerCase().includes("incomplete") ||
+          errorMsg?.toLowerCase().includes("no data")
         ) {
           setShowGoalsEmptyWarning(true);
         } else {
-          // For other errors, show the existing error message system
-          setErrorMessage(errorMessage || "Failed to load dashboard data");
+          setErrorMessage(errorMsg || "Failed to load dashboard data");
         }
       }
     } catch (_error) {
@@ -212,9 +201,7 @@ export const DashboardPage = () => {
   };
 
   const handleVerifyEmail = async () => {
-    if (emailVerify) {
-      return;
-    }
+    if (emailVerify) return;
 
     if (cooldown > 0) {
       setShowCooldownModal(true);
@@ -233,7 +220,6 @@ export const DashboardPage = () => {
           ? error.message
           : profileError || "Failed to resend verification email. Please try again.";
 
-      // If email is already verified, refetch user data to update UI
       if (
         errorMsg.includes("Email address is already verified") ||
         errorMsg.toLowerCase().includes("already verified")
@@ -261,14 +247,10 @@ export const DashboardPage = () => {
     additionalData: { cooldown },
   });
 
-  // Modal configs for Goals completion
   const goalsSuccessModal = useModalConfig("goalsComplete", {
     isOpen: showGoalsSuccessModal,
     onClose: () => setShowGoalsSuccessModal(false),
-    onConfirm: () => {
-      setShowGoalsSuccessModal(false);
-      // Stay on dashboard - data is already displayed
-    },
+    onConfirm: () => setShowGoalsSuccessModal(false),
   });
 
   const goalsEmptyWarningModal = useModalConfig("goalsEmptyWarning", {
@@ -344,7 +326,7 @@ export const DashboardPage = () => {
                   textColor="text-red-700"
                   alertIcon={AlertCircle}
                   errorMessage={dashboardError}
-                  onClose={() => {}} // Keep error visible until retry succeeds
+                  onClose={() => {}}
                 />
                 <button
                   onClick={handleRetryDashboard}
@@ -356,8 +338,6 @@ export const DashboardPage = () => {
               </div>
             )}
 
-            {/* Currently using `completionCount` to control visibility. */}
-            {/* This logic will be replaced once the backend API provides the required flag */}
             {assessmentData?.status !== "completed" && (
               <div className="mt-6 border border-ws-gray-50 rounded-xl p-4 bg-ws-black-80 shadow-sm flex gap-4 justify-between flex-col lg:flex-row">
                 <div className="flex-1">
@@ -385,9 +365,7 @@ export const DashboardPage = () => {
                       to="#"
                       onClick={e => {
                         e.preventDefault();
-                        if (!emailVerify) {
-                          handleVerifyEmail();
-                        }
+                        if (!emailVerify) handleVerifyEmail();
                       }}
                       className="underline"
                     >
@@ -403,7 +381,7 @@ export const DashboardPage = () => {
               />
             )}
 
-            {assessmentData?.status !== "completed" ? (
+            {assessmentData?.status !== "completed" && (
               <DashboardCard
                 title={`${completionCount > 0 ? `${completionCount} ` : ""}Take the Assessment`}
                 description="Take our 15 minute assessment for specific recommendations to improve your business"
@@ -413,61 +391,49 @@ export const DashboardPage = () => {
                 buttonIsDisabled={!emailVerify}
                 onClick={() => navigate("/assessment")}
               />
-            ) : (
-              ""
             )}
           </div>
-          {emailVerify && assessmentData?.status === "completed" && (
+
+          {/* Tabs — only render after dashboard data is confirmed ready */}
+          {emailVerify && assessmentData?.status === "completed" && isDashboardReady && (
             <div className="mt-10">
-              {dashboardLoading ? (
-                <></>
-              ) : (
-                // <div className="flex justify-center items-center py-12">
-                //   <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-ws-primary"></div>
-                //   <p className="ml-4 text-ws-gray-300">Loading dashboard data...</p>
-                // </div>
-                <Tabs>
-                  <Tabs.List
-                    size="md"
-                    type="button-brand"
-                    items={[
-                      { id: "recommendations", label: "Recommendations" },
-                      { id: "benchmark", label: "Benchmark" },
-                    ]}
-                  />
-                  <Tabs.Panel id="recommendations" className="pt-12">
-                    <RecommendationsPage />
-                  </Tabs.Panel>
-                  <Tabs.Panel id="benchmark" className="pt-12">
-                    <BenchmarkPage />
-                  </Tabs.Panel>
-                </Tabs>
-              )}
+              <Tabs>
+                <Tabs.List
+                  size="md"
+                  type="button-brand"
+                  items={[
+                    { id: "recommendations", label: "Recommendations" },
+                    { id: "benchmark", label: "Benchmark" },
+                  ]}
+                />
+                <Tabs.Panel id="recommendations" className="pt-12">
+                  <RecommendationsPage />
+                </Tabs.Panel>
+                <Tabs.Panel id="benchmark" className="pt-12">
+                  <BenchmarkPage />
+                </Tabs.Panel>
+              </Tabs>
             </div>
           )}
         </main>
       </div>
 
-      {/* Success Modal for Resend Verification */}
+      {/* Modals */}
       <BaseModalWithIcon
         isOpen={showResendSuccess}
         onClose={() => setShowResendSuccess(false)}
         {...resendSuccessModal}
       />
 
-      {/* Cooldown Modal */}
       <BaseModalWithIcon
         isOpen={showCooldownModal}
         onClose={() => setShowCooldownModal(false)}
         {...cooldownModal}
       />
 
-      {/* New Goals Completion Modals */}
       <InProgressModal
         isOpen={showInProgressModal}
-        onClose={() => {
-          setShowInProgressModal(false);
-        }} // Non-dismissible during API call
+        onClose={() => setShowInProgressModal(false)}
         title="Preparing..."
         subtitle="One moment while we prepare your results and recommendations."
       />
