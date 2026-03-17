@@ -110,7 +110,7 @@ export const useModalConfig = (
         size: "sm",
         title: "Email sent",
         subtitle: `We've sent a verification link to ${
-          "[" + (config.additionalData?.email as string) + "]" || "your email"
+          (config.additionalData?.email as string) || "your email"
         }. Verify your email to continue.`,
         icon: <CheckCircle className="size-6" />,
         messageImg: checkmarkIcon,
