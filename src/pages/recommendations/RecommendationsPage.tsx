@@ -29,72 +29,45 @@ export default function RecommendationsPage() {
           title="Total Workforce"
           titleClass="text-ws-gray-90 text-base"
           count={
-            companyAtGlance?.totalWorkforce == null
-              ? "No data available"
-              : typeof companyAtGlance.totalWorkforce === "string"
-                ? companyAtGlance.totalWorkforce
-                : formatNumber(companyAtGlance.totalWorkforce)
+            typeof companyAtGlance?.totalWorkforce === "number"
+              ? formatNumber(companyAtGlance.totalWorkforce)
+              : (companyAtGlance?.totalWorkforce ?? "N/A")
           }
-          countClass={
-            companyAtGlance?.totalWorkforce == null
-              ? "text-ws-gray-90 text-base mt-6"
-              : "text-ws-black-30 text-3xl xl:text-4xl font-semibold mt-6"
-          }
+          countClass="text-ws-black-30 text-3xl xl:text-4xl font-semibold mt-6"
         />
         <StaticCard
           title="Average Hourly Wage"
           titleClass="text-ws-gray-90 text-base"
           count={
-            companyAtGlance?.averageHourlyWage == null
-              ? "No data available"
-              : typeof companyAtGlance?.averageHourlyWage === "string"
-                ? companyAtGlance.averageHourlyWage
-                : formatCurrencyWithCents(companyAtGlance?.averageHourlyWage)
+            typeof companyAtGlance?.averageHourlyWage === "number"
+              ? formatCurrencyWithCents(companyAtGlance.averageHourlyWage)
+              : (companyAtGlance?.averageHourlyWage ?? "N/A")
           }
-          countClass={
-            companyAtGlance?.averageHourlyWage == null
-              ? "text-ws-gray-90 text-base mt-6"
-              : "text-ws-black-30 text-3xl xl:text-4xl font-semibold mt-6"
-          }
+          countClass="text-ws-black-30 text-3xl xl:text-4xl font-semibold mt-6"
         />
         <StaticCard
           title="Average Salary"
           titleClass="text-ws-gray-90 text-base"
           count={
-            companyAtGlance?.averageSalary == null
-              ? "No data available"
-              : typeof companyAtGlance?.averageSalary === "string"
-                ? companyAtGlance.averageSalary
-                : formatCurrency(companyAtGlance?.averageSalary)
+            typeof companyAtGlance?.averageSalary === "number"
+              ? formatCurrency(companyAtGlance.averageSalary)
+              : (companyAtGlance?.averageSalary ?? "N/A")
           }
-          countClass={
-            companyAtGlance?.averageSalary == null
-              ? "text-ws-gray-90 text-base mt-6"
-              : "text-ws-black-30 text-3xl xl:text-4xl font-semibold mt-6"
-          }
+          countClass="text-ws-black-30 text-3xl xl:text-4xl font-semibold mt-6"
         />
         <StaticCard
           title="National Industry Average Wage"
           titleClass="text-ws-gray-90 text-base"
           count={
-            companyAtGlance?.industryAverageWage == null
-              ? "No data available"
-              : companyAtGlance?.industryAverageWage
-                ? typeof companyAtGlance.industryAverageWage === "number"
-                  ? `$${formatNumber(companyAtGlance.industryAverageWage)}`
-                  : companyAtGlance.industryAverageWage
-                : "N/A"
+            companyAtGlance?.industryAverageWage != null
+              ? formatCurrency(Number(companyAtGlance.industryAverageWage))
+              : "N/A"
           }
-          // infoIcon={true}
           infoCircleClass="text-ws-black-200"
           tooltipText="How is this calculated"
-          descriptionText="This is calculated based on LMI. Low-to-Moderate Income (LMI) consists of income less than 80% of the broader area's median income. "
+          descriptionText="This is calculated based on LMI. Low-to-Moderate Income (LMI) consists of income less than 80% of the broader area's median income."
           placements="top"
-          countClass={
-            companyAtGlance?.industryAverageWage == null
-              ? "text-ws-gray-90 text-base mt-6"
-              : "text-ws-black-30 text-3xl xl:text-4xl font-semibold mt-6"
-          }
+          countClass="text-ws-black-30 text-3xl xl:text-4xl font-semibold mt-6"
         />
       </div>
       <CarouselSection />
