@@ -19,9 +19,16 @@ const steps = [
   { id: "goals", label: "Goals" },
 ];
 // Helper: returns first incomplete step id
-const getInitialStep = (completionCount: number): string | null => {
-  if (completionCount >= steps.length) return null;
-  return steps[completionCount].id;
+// const getInitialStep = (completionCount: number): string | null => {
+//   if (completionCount >= steps.length) return null;
+//   return steps[completionCount].id;
+// };
+const getInitialStep = (completionCount: number): string => {
+  if (completionCount >= steps.length) {
+    return steps[steps.length - 1].id;
+  } else {
+    return steps[completionCount].id;
+  }
 };
 
 export default function AssessmentWorkforcePage() {

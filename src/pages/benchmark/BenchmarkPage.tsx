@@ -125,11 +125,7 @@ export default function BenchmarkPage() {
               }
               titleClass="text-sm font-medium text-ws-black-10"
               itemAlign="between"
-              count={
-                industryOverview?.turnoverRate?.rate == null
-                  ? "No data available"
-                  : formatPercentage(industryOverview.turnoverRate.rate)
-              }
+              count={formatPercentage(industryOverview?.turnoverRate?.rate)}
               countClass={
                 industryOverview?.turnoverRate?.rate == null
                   ? "mt-2 text-sm font-medium text-ws-black-10"
@@ -150,11 +146,7 @@ export default function BenchmarkPage() {
               }
               titleClass="text-sm font-medium text-ws-black-10"
               itemAlign="between"
-              count={
-                industryOverview?.avgTurnover?.rate == null
-                  ? "No data available"
-                  : formatPercentage(industryOverview?.avgTurnover?.rate)
-              }
+              count={formatPercentage(industryOverview?.avgTurnover?.rate)}
               countClass={
                 industryOverview?.avgTurnover?.rate == null
                   ? "mt-2 text-sm font-medium text-ws-black-10"
@@ -171,10 +163,8 @@ export default function BenchmarkPage() {
               titleClass="text-sm font-medium text-ws-black-10"
               itemAlign="between"
               count={
-                industryOverview?.avgCostOfTurnover?.amount == null
-                  ? "No data available"
-                  : industryOverview?.avgCostOfTurnover?.formatted ||
-                    formatCurrency(industryOverview?.avgCostOfTurnover?.amount)
+                industryOverview?.avgCostOfTurnover?.formatted ||
+                formatCurrency(industryOverview?.avgCostOfTurnover?.amount)
               }
               countClass={
                 industryOverview?.avgCostOfTurnover?.amount == null
@@ -268,16 +258,8 @@ export default function BenchmarkPage() {
                 ? "No data available"
                 : `${turnoverMetrics?.quarter} ${turnoverMetrics?.year}`
             }
-            voluntaryScore={
-              turnoverMetrics?.voluntary == null
-                ? "No data available"
-                : `${formatPercentage(turnoverMetrics?.voluntary)} Voluntary`
-            }
-            involuntaryScore={
-              turnoverMetrics?.involuntary == null
-                ? "No data available"
-                : `${formatPercentage(turnoverMetrics?.involuntary)} Involuntary`
-            }
+            voluntaryScore={`${formatPercentage(turnoverMetrics?.voluntary)} Voluntary`}
+            involuntaryScore={`${formatPercentage(turnoverMetrics?.involuntary)} Involuntary`}
             industryTradeText={
               industry?.name ? `Industry: ${industry?.name}` : "Industry: No data available"
             }
@@ -290,16 +272,8 @@ export default function BenchmarkPage() {
                 ? "No data available"
                 : `${separationMetrics?.quarter} ${separationMetrics?.year}`
             }
-            voluntaryScore={
-              separationMetrics?.hiringRate == null
-                ? "No data available"
-                : `${formatPercentage(separationMetrics?.hiringRate)} Hiring Rate`
-            }
-            involuntaryScore={
-              separationMetrics?.separationRate == null
-                ? "No data available"
-                : `${formatPercentage(separationMetrics?.separationRate)} Separation`
-            }
+            voluntaryScore={`${formatPercentage(separationMetrics?.hiringRate)} Hiring Rate`}
+            involuntaryScore={`${formatPercentage(separationMetrics?.separationRate)} Separation`}
             industryTradeText={
               industry?.name ? `Industry: ${industry?.name}` : "Industry: No data available"
             }
@@ -372,6 +346,28 @@ export default function BenchmarkPage() {
                   })()}
                   height={397}
                 />
+                {/* <WageBarChart
+               data={(() => {
+                if (selectedZip && dashboardData?.areaMedianWage) {
+                  const found = dashboardData.areaMedianWage.find(
+                    a => a.zipcode === selectedZip
+                  );
+                  if (found && found.graph) {
+                    return [
+              
+                      {
+                        name: "Hourly",
+                        industryAverage: found.graph.stateAverage.hourly,
+                        yourCompany: found.graph.yourCompany.hourly,
+                        nationalAverage: found.graph.nationalAverage.hourly,
+                      },
+                    ];
+                  }
+                }
+                return wageChartData || [];
+              })()}
+                  height={397}
+                /> */}
               </div>
             </div>
             <div className="space-y-4 w-full">
@@ -385,9 +381,7 @@ export default function BenchmarkPage() {
                         dashboardData.areaMedianWage.find(a => a.zipcode === selectedZip)
                           ?.medianHourlyWages
                       )
-                    : areaMedianWage
-                      ? formatCurrencyWithCents(areaMedianWage.medianHourlyWages)
-                      : "No data available"
+                    : formatCurrencyWithCents(areaMedianWage?.medianHourlyWages)
                 }
                 countClass="mt-10 text-3xl xl:text-5xl font-medium text-ws-black-90"
                 infoIcon={false}
@@ -403,9 +397,7 @@ export default function BenchmarkPage() {
                         dashboardData.areaMedianWage.find(a => a.zipcode === selectedZip)
                           ?.medianLivingWage
                       )
-                    : areaMedianWage
-                      ? formatCurrencyWithCents(areaMedianWage.medianLivingWage)
-                      : "No data available"
+                    : formatCurrencyWithCents(areaMedianWage?.medianLivingWage)
                 }
                 infoIcon={false}
                 countClass="mt-10 text-3xl xl:text-5xl font-medium text-ws-black-90"
@@ -421,9 +413,7 @@ export default function BenchmarkPage() {
                         dashboardData.areaMedianWage.find(a => a.zipcode === selectedZip)
                           ?.nationalAverage
                       )
-                    : areaMedianWage
-                      ? formatCurrency(areaMedianWage.nationalAverage)
-                      : "No data available"
+                    : formatCurrency(areaMedianWage?.nationalAverage)
                 }
                 infoIcon={false}
                 countClass="mt-10 text-3xl xl:text-5xl font-medium text-ws-black-90"
@@ -511,11 +501,9 @@ export default function BenchmarkPage() {
               title="Burdened Owners"
               titleClass="text-sm font-medium text-ws-black-10 uppercase"
               itemAlign="between"
-              count={
-                selectedHousingData?.housingCostBurdenedOwners?.[0]?.burdened == null
-                  ? "No data available"
-                  : formatPercentage(selectedHousingData?.housingCostBurdenedOwners?.[0]?.burdened)
-              }
+              count={formatPercentage(
+                selectedHousingData?.housingCostBurdenedOwners?.[0]?.burdened
+              )}
               countClass={
                 selectedHousingData?.housingCostBurdenedOwners?.[0]?.burdened == null
                   ? "mt-2 text-sm font-medium text-ws-black-10"
@@ -532,13 +520,9 @@ export default function BenchmarkPage() {
               title="Severely Burdened Owners"
               titleClass="text-sm font-medium text-ws-black-10 uppercase"
               itemAlign="between"
-              count={
-                selectedHousingData?.housingCostBurdenedOwners?.[0]?.severelyBurdened == null
-                  ? "No data available"
-                  : formatPercentage(
-                      selectedHousingData?.housingCostBurdenedOwners?.[0]?.severelyBurdened
-                    )
-              }
+              count={formatPercentage(
+                selectedHousingData?.housingCostBurdenedOwners?.[0]?.severelyBurdened
+              )}
               countClass={
                 selectedHousingData?.housingCostBurdenedOwners?.[0]?.severelyBurdened == null
                   ? "mt-2 text-sm font-medium text-ws-black-10"
@@ -578,11 +562,9 @@ export default function BenchmarkPage() {
               title="Burdened Renters"
               titleClass="text-sm font-medium text-ws-black-10 uppercase"
               itemAlign="between"
-              count={
-                selectedHousingData?.housingCostBurdenedRenters?.[0]?.burdened == null
-                  ? "No data available"
-                  : formatPercentage(selectedHousingData?.housingCostBurdenedRenters?.[0]?.burdened)
-              }
+              count={formatPercentage(
+                selectedHousingData?.housingCostBurdenedRenters?.[0]?.burdened
+              )}
               countClass={
                 selectedHousingData?.housingCostBurdenedRenters?.[0]?.burdened == null
                   ? "mt-2 text-sm font-medium text-ws-black-10"
@@ -599,13 +581,9 @@ export default function BenchmarkPage() {
               title="Severely Burdened Renters"
               titleClass="text-sm font-medium text-ws-black-10 uppercase"
               itemAlign="between"
-              count={
-                selectedHousingData?.housingCostBurdenedRenters?.[0]?.severelyBurdened == null
-                  ? "No data available"
-                  : formatPercentage(
-                      selectedHousingData?.housingCostBurdenedRenters?.[0]?.severelyBurdened
-                    )
-              }
+              count={formatPercentage(
+                selectedHousingData?.housingCostBurdenedRenters?.[0]?.severelyBurdened
+              )}
               countClass={
                 selectedHousingData?.housingCostBurdenedRenters?.[0]?.severelyBurdened == null
                   ? "mt-2 text-sm font-medium text-ws-black-10"
@@ -629,8 +607,8 @@ export default function BenchmarkPage() {
                   Working Class Housing Cost Burden
                 </h3>
                 <p className="text-base text-ws-black-10 w-full xl:w-3/4 mt-2">
-                  The data below outlines the housing cost burden for your employees in{" "}
-                  {selectedHousingZip} across income levels for that area.
+                  The data below outlines the housing cost burden for your employees in [
+                  {selectedHousingZip}] across income levels for that area.
                 </p>
               </div>
 
@@ -664,14 +642,10 @@ export default function BenchmarkPage() {
                 title="Home Ownership Rate"
                 titleClass="uppercase text-sm font-medium text-ws-black-10"
                 itemAlign="between"
-                count={
-                  selectedHousingData?.workingClassHousingCostBurden?.homeOwnershipRate == null
-                    ? "No data available"
-                    : formatPercentage(
-                        selectedHousingData.workingClassHousingCostBurden.homeOwnershipRate,
-                        0
-                      )
-                }
+                count={formatPercentage(
+                  selectedHousingData?.workingClassHousingCostBurden?.homeOwnershipRate,
+                  0
+                )}
                 countClass={
                   selectedHousingData?.workingClassHousingCostBurden?.homeOwnershipRate == null
                     ? "mt-2 text-sm font-medium text-ws-black-10"
@@ -688,13 +662,9 @@ export default function BenchmarkPage() {
                 title="Median Home Value"
                 itemAlign="between"
                 titleClass="uppercase text-sm font-medium text-ws-black-10"
-                count={
-                  selectedHousingData?.workingClassHousingCostBurden?.medianHomeValue == null
-                    ? "No data available"
-                    : formatCurrency(
-                        selectedHousingData.workingClassHousingCostBurden.medianHomeValue
-                      )
-                }
+                count={formatCurrency(
+                  selectedHousingData?.workingClassHousingCostBurden?.medianHomeValue
+                )}
                 countClass={
                   selectedHousingData?.workingClassHousingCostBurden?.medianHomeValue == null
                     ? "mt-2 text-sm font-medium text-ws-black-10"
@@ -711,11 +681,9 @@ export default function BenchmarkPage() {
                 title="Median Rent"
                 itemAlign="between"
                 titleClass="uppercase text-sm font-medium text-ws-black-10"
-                count={
-                  selectedHousingData?.workingClassHousingCostBurden?.medianRent == null
-                    ? "No data available"
-                    : formatCurrency(selectedHousingData.workingClassHousingCostBurden.medianRent)
-                }
+                count={formatCurrency(
+                  selectedHousingData?.workingClassHousingCostBurden?.medianRent
+                )}
                 countClass={
                   selectedHousingData?.workingClassHousingCostBurden?.medianRent == null
                     ? "mt-2 text-sm font-medium text-ws-black-10"

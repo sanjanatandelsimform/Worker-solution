@@ -142,10 +142,9 @@ describe("profileApi - retakeAssessment", () => {
 
       const result = await retakeAssessment();
 
-      expect(mockApiClient.delete).toHaveBeenCalledWith(
-        "/assessment",
-        { headers: { Authorization: `Bearer ${mockToken}` } }
-      );
+      expect(mockApiClient.delete).toHaveBeenCalledWith("/assessment", {
+        headers: { Authorization: `Bearer ${mockToken}` },
+      });
       expect(result).toEqual({ success: true, message: "Assessment reset" });
     });
   });

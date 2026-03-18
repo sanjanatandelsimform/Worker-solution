@@ -30,7 +30,7 @@ export default function StaticCard({
   return (
     <div className={`bg-ws-white w-full ring ring-ws-gray-50 rounded-xl py-5 px-6 ${classess}`}>
       <p
-        className={`flex items-center text-base gap-2 justify-${itemAlign || "start"} ${titleClass}`}
+        className={`flex items-center, text-base gap-2 justify-${itemAlign || "start"} ${titleClass}`}
       >
         {title}
         <span>
@@ -50,7 +50,13 @@ export default function StaticCard({
           )}
         </span>
       </p>
-      <h2 className={`w-full ${countClass}`}>{count}</h2>
+      <h2 className={`w-full ${countClass}`}>
+        {count === "N/A" ? (
+          <span className="mt-4 text-sm font-medium text-ws-black-10">No data available</span>
+        ) : (
+          count
+        )}
+      </h2>
     </div>
   );
 }
