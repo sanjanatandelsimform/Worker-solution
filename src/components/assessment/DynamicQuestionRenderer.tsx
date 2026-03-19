@@ -155,15 +155,17 @@ export const DynamicQuestionRenderer = ({
 
     // Get the actual item from state, not from getArrayItems
     const item = currentItems[index] || { id: generateId() };
+
+    // Extract itemId here so it's stable and available in all callbacks below
+    const itemId = (item as { id: number }).id;
+
     const widthClass = field.width || "flex-1";
 
     // Check for field-level error
     const fieldErrorKey = `${keyToUse}.${index}.${field.name}`;
     const fieldError = errors[fieldErrorKey];
-    // Normalize generic "Required" message for state fields
     const displayFieldError =
       field.name === "state" && fieldError === "Required" ? "State is required" : fieldError;
-    // Also check question-level error for backward compatibility
     const questionError = errors[keyToUse];
     const hasError = !!displayFieldError || !!questionError;
 
@@ -195,13 +197,7 @@ export const DynamicQuestionRenderer = ({
               }))}
               selectedKey={(item as unknown as Record<string, string>)[field.name] || ""}
               onSelectionChange={key =>
-                updateArrayItemField(
-                  keyToUse,
-                  (item as { id: number }).id,
-                  field.name,
-                  key as string,
-                  "text"
-                )
+                updateArrayItemField(keyToUse, itemId, field.name, key as string, "text")
               }
               isInvalid={hasError}
             >
@@ -219,44 +215,81 @@ export const DynamicQuestionRenderer = ({
             <ZipCodeAutocomplete
               value={(item as unknown as Record<string, string>)[field.name] ?? ""}
               onChange={(val: string) => {
-                // Typed input: only update zipCode, clear stateAbbreviation
-                const currentItems = answers[keyToUse] as Array<Record<string, unknown>>;
-                if (!currentItems || !Array.isArray(currentItems)) return;
+                const latestItems = answers[keyToUse] as Array<Record<string, unknown>>;
+                if (!latestItems || !Array.isArray(latestItems)) return;
                 onAnswerChange(
                   keyToUse,
-                  currentItems.map(i =>
-                    i.id === (item as { id: number }).id
-                      ? { ...i, [field.name]: val, __zipStateAbbreviation: null }
+                  latestItems.map(i =>
+                    i.id === itemId
+                      ? {
+                          ...i,
+                          [field.name]: val,
+                          __zipStateAbbreviation: null,
+                          __zipIsValid: false,
+                        }
                       : i
                   )
                 );
               }}
               placeholder={field.placeholder}
-              isInvalid={hasError}
+              isInvalid={
+                // Only pass isInvalid for errors that ZipCodeAutocomplete doesn't
+                // show itself — e.g. "required" or "must be 5 digits" from validateForm.
+                // Do NOT pass isInvalid for the messages the component already renders
+                // internally ("Invalid ZIP code", "does not match state"), otherwise
+                // the error appears twice.
+                !!displayFieldError &&
+                displayFieldError !== "Invalid ZIP code. Please enter a valid ZIP code." &&
+                displayFieldError !== "Zip code does not match the selected state." &&
+                displayFieldError !== "Zipcode does not match the selected state."
+              }
               className={
                 hasError ? "border border-red-500 rounded-md" : "border border-gray-300 rounded-md"
               }
               selectedStateAbbreviation={
                 (item as unknown as Record<string, string>)["state"] ?? undefined
               }
-              onSuggestionSelect={suggestion => {
-                const currentItems = answers[keyToUse] as Array<Record<string, unknown>>;
-                if (!currentItems || !Array.isArray(currentItems)) return;
+              onValidityChange={(isValid: boolean) => {
+                const latestItems = answers[keyToUse] as Array<Record<string, unknown>>;
+                if (!latestItems || !Array.isArray(latestItems)) return;
+                const current = latestItems.find(i => i.id === itemId);
+                if (!current || current.__zipIsValid === isValid) return;
                 onAnswerChange(
                   keyToUse,
-                  currentItems.map(i =>
-                    i.id === (item as { id: number }).id
+                  latestItems.map(i => (i.id === itemId ? { ...i, __zipIsValid: isValid } : i))
+                );
+              }}
+              onSuggestionSelect={suggestion => {
+                const latestItems = answers[keyToUse] as Array<Record<string, unknown>>;
+                if (!latestItems || !Array.isArray(latestItems)) return;
+                onAnswerChange(
+                  keyToUse,
+                  latestItems.map(i =>
+                    i.id === itemId
                       ? {
                           ...i,
                           [field.name]: suggestion.zip,
                           __zipStateAbbreviation: suggestion.stateAbbreviation,
+                          __zipIsValid: true,
                         }
                       : i
                   )
                 );
               }}
             />
-            {displayFieldError && <span className="text-sm text-red-600">{displayFieldError}</span>}
+            {/*
+              Only show the external error span for messages that ZipCodeAutocomplete
+              does NOT render internally. The component already shows:
+                - "Invalid ZIP code. Please enter a valid ZIP code."  (noResultsError)
+                - "Zip code does not match the selected state."        (stateMismatchError)
+              So we suppress those here to prevent the message appearing twice.
+            */}
+            {displayFieldError &&
+              displayFieldError !== "Invalid ZIP code. Please enter a valid ZIP code." &&
+              displayFieldError !== "Zip code does not match the selected state." &&
+              displayFieldError !== "Zipcode does not match the selected state." && (
+                <span className="text-sm text-red-600">{displayFieldError}</span>
+              )}
           </>
         ) : (
           <>
@@ -271,13 +304,7 @@ export const DynamicQuestionRenderer = ({
               isInvalid={hasError}
               tooltip={displayFieldError ? displayFieldError : undefined}
               onChange={(val: string) => {
-                updateArrayItemField(
-                  keyToUse,
-                  (item as { id: number }).id,
-                  field.name,
-                  val,
-                  field.type
-                );
+                updateArrayItemField(keyToUse, itemId, field.name, val, field.type);
               }}
             />
             {displayFieldError && <span className="text-sm text-red-600">{displayFieldError}</span>}

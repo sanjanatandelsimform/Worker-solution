@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef, useCallback } from "react";
+import React, { useState, useEffect, useLayoutEffect, useRef, useCallback } from "react";
 import { useDebounce } from "@/hooks/useDebounce";
 import { lookupZipCodes } from "@/services/api/assessmentApi";
 import type { ZipCodeSuggestion } from "@/types/lookupTypes";
@@ -11,6 +11,7 @@ export interface ZipCodeAutocompleteProps {
   className?: string;
   onSuggestionSelect?: (suggestion: ZipCodeSuggestion) => void;
   selectedStateAbbreviation?: string;
+  onValidityChange?: (isValid: boolean) => void;
 }
 
 const ZIP_REGEX = /^\d{0,5}$/;
@@ -25,6 +26,7 @@ export const ZipCodeAutocomplete: React.FC<ZipCodeAutocompleteProps> = ({
   className,
   onSuggestionSelect,
   selectedStateAbbreviation,
+  onValidityChange,
 }) => {
   const [inputValue, setInputValue] = useState(value);
   const [suggestions, setSuggestions] = useState<ZipCodeSuggestion[]>([]);
@@ -34,26 +36,62 @@ export const ZipCodeAutocomplete: React.FC<ZipCodeAutocompleteProps> = ({
   const [stateMismatchError, setStateMismatchError] = useState<string | null>(null);
   const [noResultsError, setNoResultsError] = useState<string | null>(null);
 
+  // Initialize directly from value prop — avoids calling setState inside an effect
+  const [isValidSelection, setIsValidSelection] = useState(() => !!value);
+
   const containerRef = useRef<HTMLDivElement>(null);
   const hasMountedRef = useRef(false);
   const abortRef = useRef(false);
+
+  // Tracks whether the first value-sync effect has run
   const isInitialValueRef = useRef(true);
 
   const lastSelectedValueRef = useRef<string | null>(null);
   const lastSelectedSuggestionRef = useRef<ZipCodeSuggestion | null>(null);
+  const lastReportedValidityRef = useRef<boolean | null>(null);
+
+  // Keep a stable ref to onValidityChange so validity effect doesn't re-run
+  // when parent re-renders and passes a new function reference
+  const onValidityChangeRef = useRef(onValidityChange);
+  useEffect(() => {
+    onValidityChangeRef.current = onValidityChange;
+  }, [onValidityChange]);
+
+  // Initialize lastSelectedValueRef from the initial value so the debounce
+  // effect doesn't fire a lookup for the pre-populated value on mount.
+  // useLayoutEffect runs once before paint — safe place to write refs.
+  useLayoutEffect(() => {
+    if (value) {
+      lastSelectedValueRef.current = value;
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []); // intentionally empty — only runs once on mount
 
   const debouncedInput = useDebounce(inputValue, DEBOUNCE_MS);
 
-  // Sync controlled value → internal value when the parent changes it
+  // Sync controlled value → internal value when parent changes it
   useEffect(() => {
-    setTimeout(() => setInputValue(value), 0);
     if (isInitialValueRef.current) {
+      // Skip the first run — initial value already handled via useState(() => !!value)
+      // and the useLayoutEffect above
       isInitialValueRef.current = false;
-      if (value) {
-        lastSelectedValueRef.current = value;
-      }
+      return;
     }
+    // Subsequent parent-driven changes (e.g. form reset)
+    setTimeout(() => setInputValue(value), 0);
   }, [value]);
+
+  // Notify parent of validity changes — only when validity actually changes
+  useEffect(() => {
+    if (!onValidityChangeRef.current) return;
+    const valid = !stateMismatchError && !noResultsError && (!hasSearched || isValidSelection);
+    // only fire if validity actually changed — prevents infinite update loop
+    if (lastReportedValidityRef.current !== valid) {
+      lastReportedValidityRef.current = valid;
+      onValidityChangeRef.current(valid);
+    }
+  }, [stateMismatchError, noResultsError, hasSearched, isValidSelection]);
+
   useEffect(() => {
     if (
       selectedStateAbbreviation &&
@@ -90,7 +128,6 @@ export const ZipCodeAutocomplete: React.FC<ZipCodeAutocompleteProps> = ({
       return;
     }
 
-    // Skip fetch when the debounced value came from a programmatic selection
     if (debouncedInput === lastSelectedValueRef.current) return;
 
     let cancelled = false;
@@ -109,16 +146,18 @@ export const ZipCodeAutocomplete: React.FC<ZipCodeAutocompleteProps> = ({
           setSuggestions(zips);
           setIsLoading(false);
           if (zips.length === 0) {
-            setNoResultsError("No zip codes found. Please enter a valid zip code.");
+            setNoResultsError("Invalid ZIP code. Please enter a valid ZIP code.");
             setIsOpen(false);
+            setIsValidSelection(false);
           }
         }
       } catch {
         if (!cancelled && !abortRef.current) {
           setSuggestions([]);
           setIsLoading(false);
-          setNoResultsError("No zip codes found. Please enter a valid zip code.");
+          setNoResultsError("Invalid ZIP code. Please enter a valid ZIP code.");
           setIsOpen(false);
+          setIsValidSelection(false);
         }
       }
     };
@@ -146,7 +185,6 @@ export const ZipCodeAutocomplete: React.FC<ZipCodeAutocompleteProps> = ({
     };
   }, [isOpen]);
 
-  // Handlers
   const handleInputChange = useCallback(
     (e: React.ChangeEvent<HTMLInputElement>): void => {
       const raw = e.target.value;
@@ -155,6 +193,7 @@ export const ZipCodeAutocomplete: React.FC<ZipCodeAutocompleteProps> = ({
       lastSelectedSuggestionRef.current = null;
       setStateMismatchError(null);
       setNoResultsError(null);
+      setIsValidSelection(false);
       setInputValue(raw);
       onChange(raw);
       if (raw.length >= MIN_QUERY_LENGTH) setIsOpen(true);
@@ -171,11 +210,13 @@ export const ZipCodeAutocomplete: React.FC<ZipCodeAutocompleteProps> = ({
       setSuggestions([]);
       setIsOpen(false);
       setNoResultsError(null);
+      setIsValidSelection(true);
       onSuggestionSelect?.(suggestion);
       if (selectedStateAbbreviation) {
         const mismatch =
           suggestion.stateAbbreviation.toUpperCase() !== selectedStateAbbreviation.toUpperCase();
         setStateMismatchError(mismatch ? "Zip code does not match the selected state." : null);
+        if (mismatch) setIsValidSelection(false);
       }
     },
     [onSuggestionSelect, selectedStateAbbreviation]
@@ -188,7 +229,7 @@ export const ZipCodeAutocomplete: React.FC<ZipCodeAutocompleteProps> = ({
   }, []);
 
   const hasError = isInvalid || !!stateMismatchError || !!noResultsError;
-  const errorMessage = stateMismatchError ?? noResultsError ?? null;
+  const errorMessage: string | null = stateMismatchError ?? noResultsError ?? null;
 
   return (
     <div ref={containerRef} className="relative w-full">

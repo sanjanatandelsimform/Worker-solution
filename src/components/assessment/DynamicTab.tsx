@@ -54,6 +54,7 @@ export const DynamicTab = forwardRef<
     const {
       answers,
       updateAnswer,
+      updateAnswers,
       errors: hookErrors,
       submitSection,
       isLoadingGet,
@@ -77,37 +78,68 @@ export const DynamicTab = forwardRef<
 
     const handleAnswerChange = useCallback(
       (key: string, value: unknown) => {
-        updateAnswer(key, value);
+        // Check whether changing this key should also clear a conditional child
+        const question = questions.find(q => q.key === key);
+        const conditionalQ = question?.conditionalQuestion?.question;
+        const showWhen = question?.conditionalQuestion?.showWhen;
 
-        if (Object.keys(errors).length === 0) return;
+        let conditionMet = true;
+        if (showWhen === "yes") {
+          conditionMet = value === true;
+        } else if (showWhen === "no") {
+          conditionMet = value === false;
+        } else if (showWhen !== undefined) {
+          conditionMet = String(value || "").toLowerCase() === String(showWhen).toLowerCase();
+        }
 
+        if (!conditionMet && conditionalQ?.key) {
+          // Batch-update both the parent value AND clear the now-hidden child
+          // using updateAnswers so both land in one setState call.
+          updateAnswers({ [key]: value, [conditionalQ.key]: undefined });
+        } else {
+          updateAnswer(key, value);
+        }
+
+        // Clear form errors for the changed field and, if the condition is no
+        // longer met, also clear all errors belonging to the conditional child.
         setErrors(prev => {
           const next = { ...prev };
-
           delete next[key];
 
-          Object.keys(next).forEach(k => {
-            if (k.startsWith(`${key}.`)) {
-              const remainder = k.slice(key.length + 1);
-              if (/^\d+\./.test(remainder)) {
-                delete next[k];
-              } else if (!remainder.includes(".")) {
-                const incomingObj = value as Record<string, unknown>;
-                if (
-                  incomingObj &&
-                  incomingObj[remainder] !== undefined &&
-                  incomingObj[remainder] !== ""
-                ) {
+          if (!conditionMet && conditionalQ?.key) {
+            const conditionalKey = conditionalQ.key;
+            Object.keys(next).forEach(errorKey => {
+              if (errorKey === conditionalKey || errorKey.startsWith(`${conditionalKey}.`)) {
+                delete next[errorKey];
+              }
+            });
+          } else if (Object.keys(next).length === 0) {
+            return next;
+          } else {
+            // Original narrow-error-clear logic for non-conditional changes
+            Object.keys(next).forEach(k => {
+              if (k.startsWith(`${key}.`)) {
+                const remainder = k.slice(key.length + 1);
+                if (/^\d+\./.test(remainder)) {
                   delete next[k];
+                } else if (!remainder.includes(".")) {
+                  const incomingObj = value as Record<string, unknown>;
+                  if (
+                    incomingObj &&
+                    incomingObj[remainder] !== undefined &&
+                    incomingObj[remainder] !== ""
+                  ) {
+                    delete next[k];
+                  }
                 }
               }
-            }
-          });
+            });
+          }
 
           return next;
         });
       },
-      [updateAnswer, errors]
+      [questions, updateAnswer, updateAnswers]
     );
 
     const validateAnswers = useCallback(() => {
@@ -222,6 +254,25 @@ export const DynamicTab = forwardRef<
                       typeof fieldValue === "number" ? fieldValue : Number(fieldValue);
                     if (isNaN(numValue)) {
                       newErrors[fieldKey] = "Must be numeric digit";
+                      isValid = false;
+                    }
+                  }
+
+                  // ZIP code specific validation: must be selected from suggestions
+                  if (
+                    field.name === "zipCode" &&
+                    fieldValue !== null &&
+                    fieldValue !== undefined &&
+                    fieldValue !== ""
+                  ) {
+                    const zipIsValid = (item as Record<string, unknown>).__zipIsValid;
+                    if (zipIsValid === false) {
+                      if (!newErrors[fieldKey]) {
+                        // Use the same string the ZipCodeAutocomplete component
+                        // renders internally — the renderer suppresses this specific
+                        // string so it won't be double-rendered.
+                        newErrors[fieldKey] = "Invalid ZIP code. Please enter a valid ZIP code.";
+                      }
                       isValid = false;
                     }
                   }
@@ -426,8 +477,22 @@ export const DynamicTab = forwardRef<
           const cq = question.conditionalQuestion.question;
           const cKey = cq.key;
           const cValue = answers[cKey];
+          const parentValue = answers[question.key];
+          const showWhen = question.conditionalQuestion.showWhen;
 
-          if (cValue !== null && cValue !== undefined && cValue !== "") {
+          // Only include the conditional field when its parent condition is met.
+          // If user switched away (e.g. YES_NO toggled), skip the stale data.
+          let conditionMet = false;
+          if (showWhen === "yes") {
+            conditionMet = parentValue === true;
+          } else if (showWhen === "no") {
+            conditionMet = parentValue === false;
+          } else {
+            conditionMet =
+              String(parentValue || "").toLowerCase() === String(showWhen).toLowerCase();
+          }
+
+          if (conditionMet && cValue !== null && cValue !== undefined && cValue !== "") {
             if (cq.questionType === "NUMERIC" || cq.questionType === "NUMBER_INPUT") {
               cleaned[cKey] = typeof cValue === "number" ? cValue : Number(cValue);
             } else if (cq.questionType === "YES_NO") {
@@ -515,6 +580,37 @@ export const DynamicTab = forwardRef<
       return cleaned;
     }, [answers, questions, section]);
 
+    const stripHiddenConditionalData = useCallback(
+      (rawAnswers: Record<string, unknown>): Record<string, unknown> => {
+        const cleaned = { ...rawAnswers };
+
+        for (const question of questions) {
+          if (!question.conditionalQuestion) continue;
+
+          const { showWhen, question: conditionalQ } = question.conditionalQuestion;
+          const parentValue = cleaned[question.key];
+
+          let conditionMet = false;
+          if (showWhen === "yes") {
+            conditionMet = parentValue === true;
+          } else if (showWhen === "no") {
+            conditionMet = parentValue === false;
+          } else {
+            conditionMet =
+              String(parentValue || "").toLowerCase() === String(showWhen).toLowerCase();
+          }
+
+          // If condition is not met, remove the conditional field from payload
+          if (!conditionMet && conditionalQ?.key && conditionalQ.key in cleaned) {
+            delete cleaned[conditionalQ.key];
+          }
+        }
+
+        return cleaned;
+      },
+      [questions]
+    );
+
     const handleSubmit = useCallback(async () => {
       isExplicitSubmitRef.current = true;
       const isValid = validateAnswers();
@@ -560,18 +656,28 @@ export const DynamicTab = forwardRef<
         }
       }
 
-      // Trigger loading modal
       if (onSubmitStart) onSubmitStart();
 
       setIsSaving(true);
 
-      // Strip internal __zipStateAbbreviation metadata from STRUCTURED_ARRAY items
+      // Strip internal __zipStateAbbreviation and __zipIsValid metadata
       const cleanedForSubmission = { ...cleanedAnswers };
       Object.entries(cleanedForSubmission).forEach(([key, val]) => {
         if (Array.isArray(val)) {
           cleanedForSubmission[key] = val.map((item: Record<string, unknown>) => {
-            if (item && typeof item === "object" && "__zipStateAbbreviation" in item) {
-              const { __zipStateAbbreviation: _, ...rest } = item;
+            if (
+              item &&
+              typeof item === "object" &&
+              ("__zipStateAbbreviation" in item || "__zipIsValid" in item)
+            ) {
+              const {
+                __zipStateAbbreviation: _sa,
+                __zipIsValid: _iv,
+                ...rest
+              } = item as Record<string, unknown> & {
+                __zipStateAbbreviation?: unknown;
+                __zipIsValid?: unknown;
+              };
               return rest;
             }
             return item;
@@ -579,26 +685,30 @@ export const DynamicTab = forwardRef<
         }
       });
 
+      // Call stripHiddenConditionalData (now a stable useCallback, NOT defined inline here)
+      const preparedPayload = stripHiddenConditionalData(cleanedForSubmission);
+
       try {
-        const response = await submitSection(cleanedForSubmission);
+        const response = await submitSection(preparedPayload);
         if (response.success) {
           if (onSuccess) onSuccess();
           if (onNext) onNext();
         } else {
-          // Handle API errors
           if (onApiError) {
-            const errorMsg = response.error || "Failed to submit assessment. Please try again.";
+            const rawError = response.error;
+            const errorMsg =
+              typeof rawError === "string" && rawError
+                ? rawError
+                : "Failed to submit assessment. Please try again.";
             onApiError(errorMsg);
           }
           if (response.fieldErrors) {
             const normalizedFieldErrors: Record<string, string> = { ...response.fieldErrors };
-
             Object.entries(normalizedFieldErrors).forEach(([key, message]) => {
               if (key.endsWith(".state") && message === "Required") {
                 normalizedFieldErrors[key] = "State is required";
               }
             });
-
             setErrors(prev => ({ ...prev, ...normalizedFieldErrors }));
             setTimeout(() => {
               const firstErrorKey = Object.keys(normalizedFieldErrors)[0];
@@ -635,6 +745,7 @@ export const DynamicTab = forwardRef<
       errors,
       cleanAnswers,
       submitSection,
+      stripHiddenConditionalData,
       onSuccess,
       onNext,
       onSubmitStart,
