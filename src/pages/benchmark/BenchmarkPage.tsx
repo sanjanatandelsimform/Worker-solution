@@ -3,6 +3,7 @@ import { useState } from "react";
 // import { Button } from "@/components/base/buttons/button";
 import StaticCard from "../recommendations/StaticCard";
 import CostCard from "./CostCard";
+import RateOfSeparation from "./RateOfSeparation";
 import { Select } from "@/components/base/select/select";
 import { IncomeDistributionChart } from "./CostBurdenBarChart";
 // import { Tooltip, TooltipTrigger } from "@/components/base/tooltip/tooltip";
@@ -260,11 +261,13 @@ export default function BenchmarkPage() {
             }
             voluntaryScore={`${formatPercentage(turnoverMetrics?.voluntary)} Voluntary`}
             involuntaryScore={`${formatPercentage(turnoverMetrics?.involuntary)} Involuntary`}
+            voluntaryValue={turnoverMetrics?.voluntary} // ← ADD THIS
+            involuntaryValue={turnoverMetrics?.involuntary} // ← ADD THIS
             industryTradeText={
               industry?.name ? `Industry: ${industry?.name}` : "Industry: No data available"
             }
           />
-          <CostCard
+          <RateOfSeparation
             classess="border-ws-gray-40!"
             title="Rate of Separation"
             year={

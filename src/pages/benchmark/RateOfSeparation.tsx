@@ -10,8 +10,6 @@ type CostCardProps = {
   industryCostText?: string;
   industryTradeText?: string;
   classess?: string;
-  voluntaryValue?: number | null;
-  involuntaryValue?: number | null;
 };
 
 export default function CostCard({
@@ -23,23 +21,12 @@ export default function CostCard({
   industryCostText,
   industryTradeText,
   classess,
-  voluntaryValue,
-  involuntaryValue,
 }: Readonly<CostCardProps>) {
   const isNoData =
     !voluntaryScore ||
     !involuntaryScore ||
     voluntaryScore.startsWith("N/A") ||
     involuntaryScore.startsWith("N/A");
-
-  const toWidth = (val: number | null | undefined): string => {
-    if (val == null || !isFinite(val)) return "0%";
-    const clamped = Math.min(100, Math.max(0, val));
-    return `${clamped}%`;
-  };
-
-  const voluntaryWidth = toWidth(voluntaryValue);
-  const involuntaryWidth = toWidth(involuntaryValue);
 
   return (
     <div
@@ -48,8 +35,8 @@ export default function CostCard({
       {/* Tooltip icon — top-right corner */}
       <div className="absolute top-4 right-4">
         <Tooltip
-          title="Turnover data"
-          description="Turnover metrics are calculated from Bureau of Labor Statistics Job Openings and Labor Turnover Survey"
+          title="Rate of Separation"
+          description="Once we get value replace here"
           placement="top"
           arrow={true}
         >
@@ -59,7 +46,6 @@ export default function CostCard({
         </Tooltip>
       </div>
 
-      {/* Title */}
       <h3 className="text-lg font-medium text-ws-black">{title}</h3>
 
       {/* Middle content */}
@@ -70,22 +56,16 @@ export default function CostCard({
           </div>
         ) : (
           <>
-            {/* Year */}
+            {/* Year — spaced from title */}
             <p className="text-sm text-ws-black mb-4">{year}</p>
 
-            {/* Cyan bar — dynamic width */}
-            <div
-              className="flex items-center bg-ws-cyan-60 px-3 py-2 text-ws-white text-base transition-all duration-500 whitespace-nowrap"
-              style={{ width: voluntaryWidth }}
-            >
+            {/* Cyan bar */}
+            <div className="flex items-center bg-ws-cyan-60 px-3 py-2 text-ws-white text-base">
               {voluntaryScore}
             </div>
 
-            {/* Gray bar — dynamic width, no gap */}
-            <div
-              className="bg-ws-gray-600 text-ws-black px-3 py-2 text-base transition-all duration-500 whitespace-nowrap"
-              style={{ width: involuntaryWidth }}
-            >
+            {/* Gray bar — small gap below cyan */}
+            <div className="bg-ws-gray-600 text-ws-black px-3 py-2 w-3/5 text-base">
               {involuntaryScore}
             </div>
           </>
