@@ -391,10 +391,10 @@
           "questionText": "What range best describes your HOURLY employees' median annual earnings?",
           "questionType": "SINGLE_SELECT",
           "displayOrder": 2,
-          "isRequired": false,
+          "isRequired": true,
           "validationRules": {
             "type": "SINGLE_SELECT",
-            "required": false,
+            "required": true,
             "errorMessage": "Select an option"
           },
           "options": [
@@ -402,7 +402,12 @@
             { "id": "12_15", "label": "$12–$15", "value": "$12-$15" },
             { "id": "16_20", "label": "$16–$20", "value": "$16-$20" },
             { "id": "21_25", "label": "$21–$25", "value": "$21-$25" },
-            { "id": "more_25", "label": "More than $25", "value": ">$25" }
+            { "id": "more_25", "label": "More than $25", "value": ">$25" },
+            {
+              "id": "salaried",
+              "label": "Our workforce is salaried only",
+              "value": "salaried"
+            }
           ]
         },
         {
@@ -411,10 +416,10 @@
           "questionText": "What range best describes your SALARIED employees' median annual earnings?",
           "questionType": "SINGLE_SELECT",
           "displayOrder": 3,
-          "isRequired": false,
+          "isRequired": true,
           "validationRules": {
             "type": "SINGLE_SELECT",
-            "required": false,
+            "required": true,
             "errorMessage": "Select an option"
           },
           "options": [
