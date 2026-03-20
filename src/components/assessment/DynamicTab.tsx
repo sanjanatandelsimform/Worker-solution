@@ -73,74 +73,52 @@ export const DynamicTab = forwardRef<
     }, [hookErrors]);
 
     useEffect(() => {
-      setShowApiError(true);
-    }, [apiError]);
+      if (!answers || Object.keys(answers).length === 0) return;
 
-    const handleAnswerChange = useCallback(
-      (key: string, value: unknown) => {
-        // Check whether changing this key should also clear a conditional child
-        const question = questions.find(q => q.key === key);
-        const conditionalQ = question?.conditionalQuestion?.question;
-        const showWhen = question?.conditionalQuestion?.showWhen;
+      let needsUpdate = false;
+      const updatedAnswers: Record<string, unknown> = {};
 
-        let conditionMet = true;
-        if (showWhen === "yes") {
-          conditionMet = value === true;
-        } else if (showWhen === "no") {
-          conditionMet = value === false;
-        } else if (showWhen !== undefined) {
-          conditionMet = String(value || "").toLowerCase() === String(showWhen).toLowerCase();
-        }
+      Object.entries(answers).forEach(([key, value]) => {
+        if (!Array.isArray(value)) return;
 
-        if (!conditionMet && conditionalQ?.key) {
-          // Batch-update both the parent value AND clear the now-hidden child
-          // using updateAnswers so both land in one setState call.
-          updateAnswers({ [key]: value, [conditionalQ.key]: undefined });
-        } else {
-          updateAnswer(key, value);
-        }
-
-        // Clear form errors for the changed field and, if the condition is no
-        // longer met, also clear all errors belonging to the conditional child.
-        setErrors(prev => {
-          const next = { ...prev };
-          delete next[key];
-
-          if (!conditionMet && conditionalQ?.key) {
-            const conditionalKey = conditionalQ.key;
-            Object.keys(next).forEach(errorKey => {
-              if (errorKey === conditionalKey || errorKey.startsWith(`${conditionalKey}.`)) {
-                delete next[errorKey];
-              }
-            });
-          } else if (Object.keys(next).length === 0) {
-            return next;
-          } else {
-            // Original narrow-error-clear logic for non-conditional changes
-            Object.keys(next).forEach(k => {
-              if (k.startsWith(`${key}.`)) {
-                const remainder = k.slice(key.length + 1);
-                if (/^\d+\./.test(remainder)) {
-                  delete next[k];
-                } else if (!remainder.includes(".")) {
-                  const incomingObj = value as Record<string, unknown>;
-                  if (
-                    incomingObj &&
-                    incomingObj[remainder] !== undefined &&
-                    incomingObj[remainder] !== ""
-                  ) {
-                    delete next[k];
-                  }
-                }
-              }
-            });
+        const updatedArray = value.map((item: Record<string, unknown>) => {
+          // Only normalize items that have a zipCode but NO __zipValidityState yet
+          if (
+            item &&
+            typeof item === "object" &&
+            item.zipCode &&
+            typeof item.zipCode === "string" &&
+            item.zipCode.trim() !== "" &&
+            item.__zipValidityState === undefined
+          ) {
+            needsUpdate = true;
+            return {
+              ...item,
+              __zipValidityState: "valid" as const,
+              __zipIsValid: true,
+              // __zipStateAbbreviation intentionally NOT set here —
+              // we don't know it from prefilled data; state mismatch
+              // check in onSelectionChange requires user to re-select state
+              // to trigger real-time validation, which is correct UX.
+            };
           }
-
-          return next;
+          return item;
         });
-      },
-      [questions, updateAnswer, updateAnswers]
-    );
+
+        if (needsUpdate) {
+          updatedAnswers[key] = updatedArray;
+        }
+      });
+
+      if (needsUpdate) {
+        // Merge only the normalized arrays — do not replace the whole answers object
+        Object.entries(updatedAnswers).forEach(([key, val]) => {
+          updateAnswer(key, val);
+        });
+      }
+      // Run only when answers reference changes (i.e., after API load)
+      // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [answers]);
 
     const validateAnswers = useCallback(() => {
       const newErrors: Record<string, string> = {};
@@ -258,22 +236,48 @@ export const DynamicTab = forwardRef<
                     }
                   }
 
-                  // ZIP code specific validation: must be selected from suggestions
+                  // ZIP code validation — uses __zipValidityState set by ZipCodeAutocomplete
                   if (
                     field.name === "zipCode" &&
                     fieldValue !== null &&
                     fieldValue !== undefined &&
                     fieldValue !== ""
                   ) {
-                    const zipIsValid = (item as Record<string, unknown>).__zipIsValid;
-                    if (zipIsValid === false) {
+                    const zipValidityState = (item as Record<string, unknown>)
+                      .__zipValidityState as string | undefined;
+
+                    const stateFieldKey = `${question.key}.${index}.state`;
+
+                    if (zipValidityState === "state_mismatch") {
+                      if (!newErrors[stateFieldKey]) {
+                        newErrors[stateFieldKey] = "State does not match zipcode";
+                      }
+                      newErrors[fieldKey] = "";
+                      isValid = false;
+                    } else if (zipValidityState === "invalid_zip") {
+                      if (!newErrors[stateFieldKey]) {
+                        newErrors[stateFieldKey] = "State does not match zipcode";
+                      }
                       if (!newErrors[fieldKey]) {
-                        // Use the same string the ZipCodeAutocomplete component
-                        // renders internally — the renderer suppresses this specific
-                        // string so it won't be double-rendered.
-                        newErrors[fieldKey] = "Invalid ZIP code. Please enter a valid ZIP code.";
+                        newErrors[fieldKey] = "Incorrect zip code";
                       }
                       isValid = false;
+                    } else if (zipValidityState === "valid") {
+                      // Explicitly valid — no error
+                    } else if (zipValidityState === "pending" || zipValidityState === undefined) {
+                      // Only flag as invalid if __zipIsValid is explicitly false
+                      // (meaning ZipCodeAutocomplete has evaluated it and rejected it)
+                      const zipIsValid = (item as Record<string, unknown>).__zipIsValid as
+                        | boolean
+                        | undefined;
+
+                      if (zipIsValid === false) {
+                        // Component evaluated it and found it invalid
+                        if (!newErrors[fieldKey]) {
+                          newErrors[fieldKey] = "Please enter a valid ZIP code";
+                        }
+                        isValid = false;
+                      }
                     }
                   }
                 }
@@ -287,34 +291,25 @@ export const DynamicTab = forwardRef<
               const seenStateZip = new Set<string>();
 
               value.forEach((item: AddressItem, index: number) => {
-                const state = item.state?.trim();
+                const state = item.state?.trim().toUpperCase();
                 const zip = item.zipCode?.trim();
 
                 if (!state || !zip) return;
 
-                const comboKey = `${state.toUpperCase()}-${zip}`;
+                const comboKey = `${state}-${zip}`;
 
                 if (seenStateZip.has(comboKey)) {
-                  const duplicateKey = `${question.key}.${index}.zipCode`;
-                  if (!newErrors[duplicateKey]) {
-                    newErrors[duplicateKey] = "This state and zip code combination already exists.";
+                  const duplicateStateKey = `${question.key}.${index}.state`;
+                  const duplicateZipKey = `${question.key}.${index}.zipCode`;
+                  if (!newErrors[duplicateStateKey]) {
+                    newErrors[duplicateStateKey] = "This location is already added";
+                  }
+                  if (!newErrors[duplicateZipKey]) {
+                    newErrors[duplicateZipKey] = "This location is already added";
                   }
                   isValid = false;
                 } else {
                   seenStateZip.add(comboKey);
-                }
-
-                // Cross-validate state vs ZIP code stateAbbreviation from API
-                const zipStateAbbreviation = (item as unknown as Record<string, string>)
-                  .__zipStateAbbreviation;
-                if (zipStateAbbreviation && state) {
-                  if (zipStateAbbreviation.toUpperCase() !== state.toUpperCase()) {
-                    const mismatchKey = `${question.key}.${index}.zipCode`;
-                    if (!newErrors[mismatchKey]) {
-                      newErrors[mismatchKey] = "Zipcode does not match the selected state.";
-                    }
-                    isValid = false;
-                  }
                 }
               });
             }
@@ -408,6 +403,22 @@ export const DynamicTab = forwardRef<
     const cleanAnswers = useCallback(() => {
       const cleaned: Record<string, unknown> = {};
 
+      const INTERNAL_FIELDS = new Set([
+        "id",
+        "__zipStateAbbreviation",
+        "__zipIsValid",
+        "__zipValidityState",
+      ]);
+
+      // Helper: returns true only if item has at least one real non-empty field
+      const hasRealData = (item: Record<string, unknown>): boolean =>
+        Object.entries(item).some(([key, val]) => {
+          if (INTERNAL_FIELDS.has(key)) return false;
+          if (val === null || val === undefined) return false;
+          if (typeof val === "string") return val.trim() !== "";
+          return true;
+        });
+
       questions.forEach(question => {
         const value = answers[question.key];
 
@@ -433,7 +444,6 @@ export const DynamicTab = forwardRef<
                     errorMessage?: string;
                   }) => {
                     const fieldValue = cleanedItem[field.name];
-
                     if (
                       field.type === "number" &&
                       fieldValue !== null &&
@@ -451,13 +461,7 @@ export const DynamicTab = forwardRef<
               return cleanedItem;
             });
 
-            const nonEmptyItems = mappedItems.filter((item: Record<string, unknown>) =>
-              Object.values(item).some(val => {
-                if (val === null || val === undefined) return false;
-                if (typeof val === "string") return val.trim() !== "";
-                return true;
-              })
-            );
+            const nonEmptyItems = mappedItems.filter(hasRealData);
 
             if (nonEmptyItems.length > 0) {
               cleaned[question.key] = nonEmptyItems;
@@ -480,8 +484,6 @@ export const DynamicTab = forwardRef<
           const parentValue = answers[question.key];
           const showWhen = question.conditionalQuestion.showWhen;
 
-          // Only include the conditional field when its parent condition is met.
-          // If user switched away (e.g. YES_NO toggled), skip the stale data.
           let conditionMet = false;
           if (showWhen === "yes") {
             conditionMet = parentValue === true;
@@ -529,13 +531,7 @@ export const DynamicTab = forwardRef<
                 return cleanedItem;
               });
 
-              const nonEmptyItems = mappedItems.filter((item: Record<string, unknown>) =>
-                Object.values(item).some(val => {
-                  if (val === null || val === undefined) return false;
-                  if (typeof val === "string") return val.trim() !== "";
-                  return true;
-                })
-              );
+              const nonEmptyItems = mappedItems.filter(hasRealData);
 
               if (nonEmptyItems.length > 0) {
                 cleaned[cKey] = nonEmptyItems;
@@ -668,16 +664,16 @@ export const DynamicTab = forwardRef<
             if (
               item &&
               typeof item === "object" &&
-              ("__zipStateAbbreviation" in item || "__zipIsValid" in item)
+              ("__zipStateAbbreviation" in item ||
+                "__zipIsValid" in item ||
+                "__zipValidityState" in item)
             ) {
               const {
                 __zipStateAbbreviation: _sa,
                 __zipIsValid: _iv,
+                __zipValidityState: _vs,
                 ...rest
-              } = item as Record<string, unknown> & {
-                __zipStateAbbreviation?: unknown;
-                __zipIsValid?: unknown;
-              };
+              } = item as Record<string, unknown>;
               return rest;
             }
             return item;
@@ -687,7 +683,6 @@ export const DynamicTab = forwardRef<
 
       // Call stripHiddenConditionalData (now a stable useCallback, NOT defined inline here)
       const preparedPayload = stripHiddenConditionalData(cleanedForSubmission);
-
       try {
         const response = await submitSection(preparedPayload);
         if (response.success) {
@@ -770,6 +765,150 @@ export const DynamicTab = forwardRef<
     const clearErrors = useCallback(() => {
       setErrors({});
     }, []);
+
+    const handleErrorChange = useCallback((updates: Record<string, string>) => {
+      setErrors(prev => {
+        const next = { ...prev };
+        Object.entries(updates).forEach(([key, msg]) => {
+          if (msg === "") {
+            if (next[key] !== undefined) {
+              delete next[key];
+            }
+          } else {
+            next[key] = msg;
+          }
+        });
+        return next;
+      });
+    }, []);
+
+    const handleAnswerChange = useCallback(
+      (key: string, value: unknown) => {
+        updateAnswer(key, value);
+        updateAnswers({ [key]: value });
+
+        setErrors(prev => {
+          if (Object.keys(prev).length === 0) return prev;
+
+          const next = { ...prev };
+          const question = questions.find(q => q.key === key);
+
+          // ── Conditional child: clear child errors when parent hides it ────────
+          const conditionalQ = question?.conditionalQuestion?.question;
+          const conditionalKey = conditionalQ?.key;
+          if (conditionalKey) {
+            const showWhen = question?.conditionalQuestion?.showWhen;
+            let conditionMet = false;
+            if (showWhen === "yes") conditionMet = value === true;
+            else if (showWhen === "no") conditionMet = value === false;
+            else
+              conditionMet = String(value || "").toLowerCase() === String(showWhen).toLowerCase();
+
+            if (!conditionMet) {
+              Object.keys(next).forEach(errorKey => {
+                if (errorKey === conditionalKey || errorKey.startsWith(`${conditionalKey}.`)) {
+                  delete next[errorKey];
+                }
+              });
+              if (next[key]) delete next[key];
+              return next;
+            }
+          }
+
+          // ── STRUCTURED_ARRAY / plain array ───────────────────────────────────
+          if (Array.isArray(value)) {
+            const previousArray = (answers[key] as Array<Record<string, unknown>>) ?? [];
+            const newArray = value as Array<Record<string, unknown>>;
+
+            const isStructuredArray =
+              newArray.length > 0 &&
+              typeof newArray[0] === "object" &&
+              newArray[0] !== null &&
+              "id" in (newArray[0] as object);
+
+            if (isStructuredArray) {
+              if (newArray.length > previousArray.length) return next;
+
+              if (previousArray.length > newArray.length) {
+                const reIndexed: Record<string, string> = {};
+                Object.keys(next).forEach(errorKey => {
+                  if (!errorKey.startsWith(`${key}.`)) {
+                    reIndexed[errorKey] = next[errorKey];
+                    return;
+                  }
+                  const remainder = errorKey.slice(key.length + 1);
+                  const match = remainder.match(/^(\d+)\.(.+)$/);
+                  if (!match) {
+                    reIndexed[errorKey] = next[errorKey];
+                    return;
+                  }
+                  const oldIndex = parseInt(match[1], 10);
+                  const fieldName = match[2];
+                  const oldId = (previousArray[oldIndex] as Record<string, unknown>)?.id;
+                  if (!oldId) return;
+                  const newIndex = (newArray as Array<Record<string, unknown>>).findIndex(
+                    i => i.id === oldId
+                  );
+                  if (newIndex === -1) return;
+                  reIndexed[`${key}.${newIndex}.${fieldName}`] = next[errorKey];
+                });
+                return reIndexed;
+              }
+
+              previousArray.forEach((prevItem, idx) => {
+                const newItem = (newArray as Array<Record<string, unknown>>).find(
+                  i => i.id === (prevItem as Record<string, unknown>).id
+                );
+                if (!newItem) return;
+                Object.keys(newItem).forEach(fieldName => {
+                  if (fieldName.startsWith("__") || fieldName === "id") return;
+                  if (
+                    (prevItem as Record<string, unknown>)[fieldName] !== newItem[fieldName] &&
+                    newItem[fieldName] !== ""
+                  ) {
+                    delete next[`${key}.${idx}.${fieldName}`];
+                  }
+                });
+              });
+              return next;
+            }
+
+            // Plain array (MULTIPLE_CHOICE) — clear error when at least one selected
+            if (newArray.length > 0) {
+              delete next[key];
+            }
+            return next;
+          }
+          if (
+            value !== null &&
+            value !== undefined &&
+            typeof value === "object" &&
+            !Array.isArray(value)
+          ) {
+            const valueObj = value as Record<string, unknown>;
+
+            delete next[key];
+
+            Object.entries(valueObj).forEach(([subKey, subVal]) => {
+              if (subVal !== null && subVal !== undefined && subVal !== "") {
+                const subFieldErrorKey = `${key}.${subKey}`;
+                if (next[subFieldErrorKey] !== undefined) {
+                  delete next[subFieldErrorKey];
+                }
+              }
+            });
+
+            return next;
+          }
+          if (value !== null && value !== undefined && value !== "") {
+            delete next[key];
+          }
+
+          return next;
+        });
+      },
+      [questions, updateAnswer, updateAnswers, answers]
+    );
 
     useImperativeHandle(
       ref,
@@ -878,6 +1017,7 @@ export const DynamicTab = forwardRef<
           onAnswerChange={handleAnswerChange}
           errors={errors}
           subsectionDisplayOrder={displayOrderValue}
+          onErrorChange={handleErrorChange}
         />
       );
     };

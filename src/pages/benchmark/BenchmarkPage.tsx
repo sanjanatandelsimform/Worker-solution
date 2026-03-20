@@ -174,7 +174,7 @@ export default function BenchmarkPage() {
               infoIcon={true}
               infoCircleClass="text-ws-gray-70"
               tooltipText="Average Cost of Turnover"
-              descriptionText="Industry specific cost of turnover is calculated from ......"
+              descriptionText={`Industry specific cost of turnover is calculated from ${industryOverview?.avgCostOfTurnover?.year || " "}`}
               placements="top"
             />
           </div>

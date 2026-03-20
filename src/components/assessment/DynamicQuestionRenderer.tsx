@@ -1,3 +1,4 @@
+import { useCallback } from "react";
 import { Input } from "@/components/base/input/input";
 import { Label } from "@/components/base/input/label";
 import { RadioButton, RadioGroup } from "@/components/base/radio-buttons/radio-buttons";
@@ -6,8 +7,6 @@ import { Select } from "@/components/base/select/select";
 import type { SelectItemType } from "@/components/base/select/select";
 import { Button } from "@/components/base/buttons/button";
 import { Plus, Trash01 } from "@untitledui/icons";
-// import { Plus, Trash01, InfoCircle } from "@untitledui/icons";
-// import { Tooltip, TooltipTrigger } from "@/components/base/tooltip/tooltip";
 import type { Question, OptionGroup, QuestionOption } from "@/types/questionTypes";
 import { cx } from "@/utils/cx";
 import { RankingList } from "../common/RankList";
@@ -15,6 +14,7 @@ import { ZipCodeAutocomplete } from "../common/ZipCodeAutocomplete";
 import React, { useEffect } from "react";
 import questionData from "@/data/assessment/questionData.json";
 import { InputInfo } from "@/assets/icons/inputInfo";
+import type { ZipValidityState } from "@/components/common/ZipCodeAutocomplete";
 
 // Helper to generate unique IDs
 let idCounter = 0;
@@ -26,6 +26,8 @@ interface DynamicQuestionRendererProps {
   onAnswerChange: (key: string, value: unknown) => void;
   errors: Record<string, string>;
   subsectionDisplayOrder?: number;
+  /** Called to push real-time field-level errors up to the parent (DynamicTab) */
+  onErrorChange?: (updates: Record<string, string>) => void;
 }
 
 export const DynamicQuestionRenderer = ({
@@ -34,6 +36,7 @@ export const DynamicQuestionRenderer = ({
   onAnswerChange,
   errors,
   subsectionDisplayOrder,
+  onErrorChange,
 }: DynamicQuestionRendererProps) => {
   const currentAnswer = answers[question.key];
   const error = errors[question.key];
@@ -44,8 +47,6 @@ export const DynamicQuestionRenderer = ({
   const halfWidthNumericKeys = new Set(["lowestHealthPlanPremium"]);
   const halfWidthConditionalNumericKeys = new Set(["retirementMatchPercentage"]);
   const halfWidthYesNoKeys = new Set(["offersAnnualRaises"]);
-
-  // Track component mount/unmount for debugging
 
   useEffect(() => {
     console.debug(`[DynamicQuestionRenderer] Mounted: ${question.key}`, {
@@ -61,13 +62,11 @@ export const DynamicQuestionRenderer = ({
       });
     };
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []); // Empty deps - only run on mount/unmount
+  }, []);
 
-  // Helper to manage STRUCTURED_ARRAY items
   const getArrayItems = (key: string) => {
     const items = answers[key];
     if (!items || !Array.isArray(items) || items.length === 0) {
-      // Initialize the array in state immediately if it doesn't exist
       const newArray = [{ id: generateId() }];
       onAnswerChange(key, newArray);
       return newArray;
@@ -75,20 +74,19 @@ export const DynamicQuestionRenderer = ({
     return items;
   };
 
-  const addArrayItem = (key: string) => {
-    const currentItems = answers[key];
+  const addArrayItem = useCallback(
+    (key: string) => {
+      const currentItems = answers[key];
 
-    // Explicitly initialize array if undefined/null/empty
-    if (!currentItems || !Array.isArray(currentItems) || currentItems.length === 0) {
-      const newArray = [{ id: generateId() }];
-      onAnswerChange(key, newArray); // Initialize array with first item
-      return;
-    }
+      if (!currentItems || !Array.isArray(currentItems) || currentItems.length === 0) {
+        onAnswerChange(key, [{ id: generateId() }]);
+        return;
+      }
 
-    // Add new item to existing array
-    const updatedArray = [...currentItems, { id: generateId() }];
-    onAnswerChange(key, updatedArray);
-  };
+      onAnswerChange(key, [...currentItems, { id: generateId() }]);
+    },
+    [answers, onAnswerChange]
+  );
 
   const removeArrayItem = (key: string, itemId: number) => {
     const currentItems = getArrayItems(key);
@@ -98,43 +96,32 @@ export const DynamicQuestionRenderer = ({
     );
   };
 
-  const updateArrayItemField = (
-    key: string,
-    itemId: number,
-    field: string,
-    value: unknown,
-    fieldType?: string
-  ) => {
-    const currentItems = answers[key];
+  const updateArrayItemField = useCallback(
+    (key: string, itemId: number, fieldName: string, value: string, _type: string) => {
+      const current = (answers[key] as Array<Record<string, unknown>>) ?? [];
+      const updated = current.map(i => (i.id === itemId ? { ...i, [fieldName]: value } : i));
+      onAnswerChange(key, updated);
 
-    // If array doesn't exist yet, initialize it first
-    if (!currentItems || !Array.isArray(currentItems) || currentItems.length === 0) {
-      const newArray = [
-        {
-          id: itemId,
-          [field]: fieldType === "number" && value !== "" && value !== null ? Number(value) : value,
-        },
-      ];
-      onAnswerChange(key, newArray);
-      return;
-    }
+      if (value !== "" && value !== null && value !== undefined) {
+        const currentIndex = current.findIndex(i => i.id === itemId);
+        if (currentIndex !== -1) {
+          const fieldErrorKey = `${key}.${currentIndex}.${fieldName}`;
+          const pairedKey =
+            fieldName === "zipCode"
+              ? `${key}.${currentIndex}.state`
+              : fieldName === "state"
+                ? `${key}.${currentIndex}.zipCode`
+                : null;
 
-    // Convert value to correct type based on field type
-    let convertedValue = value;
-    if (fieldType === "number") {
-      convertedValue = value === "" || value === null ? null : Number(value);
-    } else if (fieldType === "text") {
-      convertedValue = String(value || "");
-    }
+          onErrorChange?.(
+            pairedKey ? { [fieldErrorKey]: "", [pairedKey]: "" } : { [fieldErrorKey]: "" }
+          );
+        }
+      }
+    },
+    [answers, onAnswerChange, onErrorChange]
+  );
 
-    onAnswerChange(
-      key,
-      currentItems.map((item: { id: number }) =>
-        item.id === itemId ? { ...item, [field]: convertedValue } : item
-      )
-    );
-  };
-  // Render field for STRUCTURED_ARRAY
   const renderStructuredArrayField = (
     field: {
       name: string;
@@ -152,24 +139,28 @@ export const DynamicQuestionRenderer = ({
   ) => {
     const keyToUse = arrayKey || question.key;
     const currentItems = (answers[keyToUse] as Array<{ id: number }>) || [];
-
-    // Get the actual item from state, not from getArrayItems
     const item = currentItems[index] || { id: generateId() };
-
-    // Extract itemId here so it's stable and available in all callbacks below
     const itemId = (item as { id: number }).id;
-
     const widthClass = field.width || "flex-1";
 
-    // Check for field-level error
     const fieldErrorKey = `${keyToUse}.${index}.${field.name}`;
     const fieldError = errors[fieldErrorKey];
-    const displayFieldError =
-      field.name === "state" && fieldError === "Required" ? "State is required" : fieldError;
+
+    const displayFieldError = (() => {
+      if (!fieldError) return undefined;
+      if (field.name === "state") {
+        if (fieldError === "Required") return "State is required";
+        return fieldError;
+      }
+      if (field.name === "zipCode") {
+        if (fieldError === "") return undefined;
+        return fieldError;
+      }
+      return fieldError;
+    })();
+
     const questionError = errors[keyToUse];
     const hasError = !!displayFieldError || !!questionError;
-
-    // Debug logging
 
     console.debug(`[renderStructuredArrayField] ${fieldErrorKey}:`, {
       fieldError,
@@ -207,6 +198,94 @@ export const DynamicQuestionRenderer = ({
             </Select>
             {displayFieldError && <span className="text-sm text-red-600">{displayFieldError}</span>}
           </>
+        ) : field.name === "state" ? (
+          <>
+            <Select
+              className="w-full flex items-start"
+              key={field.name}
+              size="md"
+              label={field.label}
+              placeholder={field.placeholder}
+              items={field.options?.map(opt => ({
+                id: opt.id,
+                label: opt.label,
+              }))}
+              selectedKey={(item as unknown as Record<string, string>)[field.name] || ""}
+              onSelectionChange={key => {
+                const selectedState = key as string;
+                updateArrayItemField(keyToUse, itemId, field.name, selectedState, "text");
+
+                const latestItems = (answers[keyToUse] as Array<Record<string, unknown>>) ?? [];
+                const currentItem = latestItems.find(i => i.id === itemId);
+                const currentIndex = latestItems.findIndex(i => i.id === itemId);
+                if (currentIndex === -1) return;
+
+                const currentZipValue = (currentItem?.zipCode as string) ?? "";
+                const currentZipValidityState = currentItem?.__zipValidityState as
+                  | ZipValidityState
+                  | undefined;
+                const currentZipStateAbbreviation = currentItem?.__zipStateAbbreviation as
+                  | string
+                  | undefined;
+
+                if (
+                  currentZipValue &&
+                  currentZipStateAbbreviation &&
+                  (currentZipValidityState === "valid" ||
+                    currentZipValidityState === "state_mismatch")
+                ) {
+                  const stateFieldKey = `${keyToUse}.${currentIndex}.state`;
+                  const zipFieldKey = `${keyToUse}.${currentIndex}.zipCode`;
+                  const isMismatch =
+                    currentZipStateAbbreviation.toUpperCase() !== selectedState.toUpperCase();
+
+                  if (isMismatch) {
+                    onAnswerChange(
+                      keyToUse,
+                      latestItems.map(i =>
+                        i.id === itemId
+                          ? {
+                              ...i,
+                              [field.name]: selectedState,
+                              __zipValidityState: "state_mismatch" as ZipValidityState,
+                              __zipIsValid: false,
+                            }
+                          : i
+                      )
+                    );
+                    onErrorChange?.({
+                      [stateFieldKey]: "State does not match zipcode",
+                      [zipFieldKey]: "",
+                    });
+                  } else {
+                    onAnswerChange(
+                      keyToUse,
+                      latestItems.map(i =>
+                        i.id === itemId
+                          ? {
+                              ...i,
+                              [field.name]: selectedState,
+                              __zipValidityState: "valid" as ZipValidityState,
+                              __zipIsValid: true,
+                            }
+                          : i
+                      )
+                    );
+                    onErrorChange?.({
+                      [stateFieldKey]: "",
+                      [zipFieldKey]: "",
+                    });
+                  }
+                }
+              }}
+              isInvalid={hasError}
+            >
+              {(selectItem: SelectItemType) => (
+                <Select.Item id={selectItem.id}>{selectItem.label || ""}</Select.Item>
+              )}
+            </Select>
+            {displayFieldError && <span className="text-sm text-red-600">{displayFieldError}</span>}
+          </>
         ) : field.name === "zipCode" ? (
           <>
             <label className="block text-sm font-normal text-foreground mb-0.2">
@@ -214,6 +293,8 @@ export const DynamicQuestionRenderer = ({
             </label>
             <ZipCodeAutocomplete
               value={(item as unknown as Record<string, string>)[field.name] ?? ""}
+              // Only fires for keystrokes — never for suggestion selections.
+              // Always resets validity so the next API call re-evaluates.
               onChange={(val: string) => {
                 const latestItems = answers[keyToUse] as Array<Record<string, unknown>>;
                 if (!latestItems || !Array.isArray(latestItems)) return;
@@ -226,6 +307,7 @@ export const DynamicQuestionRenderer = ({
                           [field.name]: val,
                           __zipStateAbbreviation: null,
                           __zipIsValid: false,
+                          __zipValidityState: "pending" as const,
                         }
                       : i
                   )
@@ -233,35 +315,20 @@ export const DynamicQuestionRenderer = ({
               }}
               placeholder={field.placeholder}
               isInvalid={
-                // Only pass isInvalid for errors that ZipCodeAutocomplete doesn't
-                // show itself — e.g. "required" or "must be 5 digits" from validateForm.
-                // Do NOT pass isInvalid for the messages the component already renders
-                // internally ("Invalid ZIP code", "does not match state"), otherwise
-                // the error appears twice.
-                !!displayFieldError &&
-                displayFieldError !== "Invalid ZIP code. Please enter a valid ZIP code." &&
-                displayFieldError !== "Zip code does not match the selected state." &&
-                displayFieldError !== "Zipcode does not match the selected state."
-              }
-              className={
-                hasError ? "border border-red-500 rounded-md" : "border border-gray-300 rounded-md"
+                !!displayFieldError && displayFieldError !== "State does not match zipcode"
               }
               selectedStateAbbreviation={
                 (item as unknown as Record<string, string>)["state"] ?? undefined
               }
-              onValidityChange={(isValid: boolean) => {
-                const latestItems = answers[keyToUse] as Array<Record<string, unknown>>;
-                if (!latestItems || !Array.isArray(latestItems)) return;
-                const current = latestItems.find(i => i.id === itemId);
-                if (!current || current.__zipIsValid === isValid) return;
-                onAnswerChange(
-                  keyToUse,
-                  latestItems.map(i => (i.id === itemId ? { ...i, __zipIsValid: isValid } : i))
-                );
-              }}
               onSuggestionSelect={suggestion => {
                 const latestItems = answers[keyToUse] as Array<Record<string, unknown>>;
                 if (!latestItems || !Array.isArray(latestItems)) return;
+
+                const selectedState = (item as unknown as Record<string, string>)["state"] ?? "";
+                const mismatch =
+                  selectedState !== "" &&
+                  suggestion.stateAbbreviation.toUpperCase() !== selectedState.toUpperCase();
+
                 onAnswerChange(
                   keyToUse,
                   latestItems.map(i =>
@@ -270,26 +337,66 @@ export const DynamicQuestionRenderer = ({
                           ...i,
                           [field.name]: suggestion.zip,
                           __zipStateAbbreviation: suggestion.stateAbbreviation,
-                          __zipIsValid: true,
+                          __zipIsValid: !mismatch,
+                          __zipValidityState: (mismatch
+                            ? "state_mismatch"
+                            : "valid") as ZipValidityState,
                         }
                       : i
                   )
                 );
               }}
+              onValidityChange={(isValid: boolean, zipValidityState) => {
+                const latestItems = answers[keyToUse] as Array<Record<string, unknown>>;
+                if (!latestItems || !Array.isArray(latestItems)) return;
+                const current = latestItems.find(i => i.id === itemId);
+                if (
+                  !current ||
+                  (current.__zipIsValid === isValid &&
+                    current.__zipValidityState === zipValidityState)
+                )
+                  return;
+
+                onAnswerChange(
+                  keyToUse,
+                  latestItems.map(i =>
+                    i.id === itemId
+                      ? { ...i, __zipIsValid: isValid, __zipValidityState: zipValidityState }
+                      : i
+                  )
+                );
+                const currentIndex = latestItems.findIndex(i => i.id === itemId);
+                if (currentIndex === -1) return;
+
+                const stateFieldKey = `${keyToUse}.${currentIndex}.state`;
+                const zipFieldKey = `${keyToUse}.${currentIndex}.zipCode`;
+
+                if (zipValidityState === "state_mismatch") {
+                  onErrorChange?.({
+                    [stateFieldKey]: "State does not match zipcode",
+                    [zipFieldKey]: "",
+                  });
+                } else if (zipValidityState === "invalid_zip") {
+                  onErrorChange?.({
+                    [stateFieldKey]: "State does not match zipcode",
+                    [zipFieldKey]: "Incorrect zip code",
+                  });
+                } else if (zipValidityState === "valid") {
+                  onErrorChange?.({
+                    [stateFieldKey]: "",
+                    [zipFieldKey]: "",
+                  });
+                } else if (zipValidityState === "pending" || zipValidityState === "empty") {
+                  onErrorChange?.({
+                    [stateFieldKey]: "",
+                    [zipFieldKey]: "",
+                  });
+                }
+              }}
             />
-            {/*
-              Only show the external error span for messages that ZipCodeAutocomplete
-              does NOT render internally. The component already shows:
-                - "Invalid ZIP code. Please enter a valid ZIP code."  (noResultsError)
-                - "Zip code does not match the selected state."        (stateMismatchError)
-              So we suppress those here to prevent the message appearing twice.
-            */}
-            {displayFieldError &&
-              displayFieldError !== "Invalid ZIP code. Please enter a valid ZIP code." &&
-              displayFieldError !== "Zip code does not match the selected state." &&
-              displayFieldError !== "Zipcode does not match the selected state." && (
-                <span className="text-sm text-red-600">{displayFieldError}</span>
-              )}
+            {displayFieldError && displayFieldError !== "State does not match zipcode" && (
+              <span className="text-sm text-red-600">{displayFieldError}</span>
+            )}
           </>
         ) : (
           <>
@@ -314,7 +421,6 @@ export const DynamicQuestionRenderer = ({
     );
   };
 
-  // Helper to update object-valued question (PARTICIPATION_RATES)
   const updateObjectField = (parentKey: string, fieldKey: string, value: unknown) => {
     const current = (answers[parentKey] as Record<string, unknown>) || {};
     onAnswerChange(parentKey, { ...current, [fieldKey]: value });
@@ -329,7 +435,6 @@ export const DynamicQuestionRenderer = ({
     const { showWhen, question: conditionalQuestion } = conditionalConfig;
     const parentValue = answers[parentKey];
 
-    // Determine if the condition is met
     let shouldShow = false;
 
     if (showWhen === "yes") {
@@ -344,7 +449,6 @@ export const DynamicQuestionRenderer = ({
 
     if (!shouldShow) return null;
 
-    // Safe typed helpers for array-based answers
     const isArrayAnswer = Array.isArray(answers[conditionalQuestion.key]);
     const arrayAnswer = isArrayAnswer ? (answers[conditionalQuestion.key] as string[]) : [];
 
@@ -354,7 +458,6 @@ export const DynamicQuestionRenderer = ({
           {conditionalQuestion.questionText}
         </Label>
 
-        {/* TEXT_INPUT */}
         {conditionalQuestion.questionType === "TEXT_INPUT" && (
           <>
             <Input
@@ -416,14 +519,8 @@ export const DynamicQuestionRenderer = ({
           </>
         )}
 
-        {/* SINGLE_SELECT_DROPDOWN */}
         {conditionalQuestion.questionType === "SINGLE_SELECT_DROPDOWN" && (
           <>
-            {/*
-              Half-width dropdowns for specific conditional questions:
-              - annualRaiseMonth ("If yes, when?")
-              - retirementProvider ("Who is your retirement benefits record keeper or provider?")
-            */}
             <Select
               className={
                 halfWidthConditionalSelectKeys.has(conditionalQuestion.key)
@@ -447,7 +544,6 @@ export const DynamicQuestionRenderer = ({
             {errors[conditionalQuestion.key] && (
               <span className="text-sm text-red-600">{errors[conditionalQuestion.key]}</span>
             )}
-
             {conditionalQuestion.conditionalQuestion &&
               renderConditionalQuestion(
                 conditionalQuestion.conditionalQuestion,
@@ -456,10 +552,9 @@ export const DynamicQuestionRenderer = ({
           </>
         )}
 
-        {/* MULTIPLE_CHOICE */}
         {conditionalQuestion.questionType === "MULTIPLE_CHOICE" && (
           <>
-            <div className="flex flex-col gap-4">
+            <div className="flex flex-col gap-4 custom-question-options">
               {conditionalQuestion.options?.map((option: QuestionOption) => (
                 <Checkbox
                   key={option.value}
@@ -483,7 +578,6 @@ export const DynamicQuestionRenderer = ({
           </>
         )}
 
-        {/* STRUCTURED_ARRAY */}
         {conditionalQuestion.questionType === "STRUCTURED_ARRAY" && (
           <div className="flex flex-col gap-4">
             {(() => {
@@ -492,7 +586,6 @@ export const DynamicQuestionRenderer = ({
               const maxItems = conditionalQuestion.validationRules?.maxItems || 5;
               const canAddMore = currentItems.length < maxItems;
 
-              // Initialize if empty
               if (currentItems.length === 0) {
                 const newArray = [{ id: generateId() }];
                 onAnswerChange(conditionalKey, newArray);
@@ -558,7 +651,6 @@ export const DynamicQuestionRenderer = ({
     );
   };
 
-  // Handle RANKING question type - auto-populate from workforceGoals
   useEffect(() => {
     if (question.questionType === "RANKING" && question.dynamicOptions?.sourceField) {
       const sourceField = question.dynamicOptions.sourceField;
@@ -581,7 +673,6 @@ export const DynamicQuestionRenderer = ({
     onAnswerChange,
   ]);
 
-  // Main render switch
   switch (question.questionType) {
     case "SINGLE_SELECT":
       return (
@@ -725,7 +816,8 @@ export const DynamicQuestionRenderer = ({
         </div>
       );
 
-    case "YES_NO":
+    case "YES_NO": {
+      const boolValue = answers[question.key];
       return (
         <div
           className={cx(
@@ -737,35 +829,24 @@ export const DynamicQuestionRenderer = ({
           <Label isRequired={question.isRequired} className="text-base custom-label">
             {displayOrder}. {question.questionText}
           </Label>
-          {error && (
-            <div className="flex items-center gap-2">
-              <InputInfo className="text-red-600" />
-              <span className="text-sm text-red-600">{error}</span>
-            </div>
-          )}
-          <RadioGroup
-            aria-label={question.questionText}
-            value={currentAnswer === true ? "yes" : currentAnswer === false ? "no" : ""}
-            onChange={value => onAnswerChange(question.key, value === "yes")}
-          >
-            <div className="flex w-full flex-col gap-4 custom-question-options">
-              <RadioButton label="Yes" value="yes" />
-
-              {currentAnswer === true &&
-                question.conditionalQuestion &&
-                renderConditionalQuestion(question.conditionalQuestion, question.key)}
-
-              <RadioButton label="No" value="no" />
-
-              {/* ✅ RENDER CONDITIONAL FOR NO */}
-              {currentAnswer === false &&
-                question.conditionalQuestion &&
-                renderConditionalQuestion(question.conditionalQuestion, question.key)}
-            </div>
-          </RadioGroup>
+          {error && <span className="text-sm text-red-600">{error}</span>}
+          <div className="flex w-full flex-col gap-4 custom-question-options">
+            <RadioGroup
+              value={boolValue === true ? "true" : boolValue === false ? "false" : ""}
+              onChange={val => {
+                const booleanValue = val === "true" ? true : val === "false" ? false : null;
+                onAnswerChange(question.key, booleanValue);
+              }}
+            >
+              <RadioButton value="true" label="Yes" />
+              <RadioButton value="false" label="No" />
+            </RadioGroup>
+          </div>
+          {question.conditionalQuestion &&
+            renderConditionalQuestion(question.conditionalQuestion, question.key)}
         </div>
       );
-
+    }
     case "NUMERIC":
     case "NUMBER_INPUT":
       return (
@@ -834,7 +915,6 @@ export const DynamicQuestionRenderer = ({
 
       if (!question.validationRules?.fields) return null;
 
-      // Initialize array if empty
       if (currentItems.length === 0) {
         const newArray = [{ id: generateId() }];
         onAnswerChange(question.key, newArray);
@@ -897,21 +977,14 @@ export const DynamicQuestionRenderer = ({
           {question.subFields?.map(sub => {
             const answerObj = (answers[question.key] as Record<string, unknown>) || {};
             const currentVal = String(answerObj[sub.key] || "");
-            // Check for field-specific error
             const fieldError = errors[`${question.key}.${sub.key}`];
             return (
               <div key={sub.key} className="flex w-full items-start gap-4">
                 <div className="flex w-84.75 items-center gap-2 px-3 py-2">
                   <p className="overflow-hidden text-ellipsis text-base font-medium leading-6 text-gray-800 flex items-center gap-3 custom-label">
                     {sub.label}
-                    {/* <Tooltip title={sub.label} arrow={true}>
-                      <TooltipTrigger className="group relative flex cursor-pointer">
-                        <InfoCircle className="size-5 text-gray-400" />
-                      </TooltipTrigger>
-                    </Tooltip> */}
                   </p>
                 </div>
-
                 <div className="flex flex-1 flex-col gap-1.5">
                   <Select
                     className="w-full custom-input"
@@ -931,7 +1004,6 @@ export const DynamicQuestionRenderer = ({
                       <Select.Item id={item.id}>{item.label || ""}</Select.Item>
                     )}
                   </Select>
-                  {/* Show validation error BELOW the input box */}
                   {fieldError && <span className="text-sm text-red-600 mt-1">{fieldError}</span>}
                 </div>
               </div>
