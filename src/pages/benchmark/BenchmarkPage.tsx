@@ -610,8 +610,8 @@ export default function BenchmarkPage() {
                   Working Class Housing Cost Burden
                 </h3>
                 <p className="text-base text-ws-black-10 w-full xl:w-3/4 mt-2">
-                  The data below outlines the housing cost burden for your employees in [
-                  {selectedHousingZip}] across income levels for that area.
+                  The data below outlines the housing cost burden for your employees in
+                  {" "} {selectedHousingZip} across income levels for that area.
                 </p>
               </div>
 
