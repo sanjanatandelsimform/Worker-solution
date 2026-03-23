@@ -281,54 +281,10 @@
           }
         },
         {
-          "key": "educationLevel",
-          "questionText": "What level of education do majority of your workers have?",
-          "questionType": "SINGLE_SELECT",
-          "displayOrder": 12,
-          "validationRules": {
-            "type": "SINGLE_SELECT",
-            "required": false
-          },
-          "schemaVersion": 1,
-          "isRequired": false,
-          "options": [
-            {
-              "label": "Less than high school",
-              "value": "<HS",
-              "displayOrder": 1
-            },
-            {
-              "label": "High school diploma/GED",
-              "value": "HS/GED",
-              "displayOrder": 2
-            },
-            {
-              "label": "Associates Degree",
-              "value": "Associates",
-              "displayOrder": 3
-            },
-            {
-              "label": "Bachelors Degree",
-              "value": "Bachelors",
-              "displayOrder": 4
-            },
-            {
-              "label": "Masters Degree",
-              "value": "Masters",
-              "displayOrder": 5
-            },
-            {
-              "label": "Ph.D and above",
-              "value": "PhD+",
-              "displayOrder": 6
-            }
-          ]
-        },
-        {
           "key": "involuntaryTurnoverRate",
           "questionText": "What is your involuntary turnover rate?",
           "questionType": "NUMERIC",
-          "displayOrder": 13,
+          "displayOrder": 12,
           "validationRules": {
             "type": "NUMERIC",
             "required": false,
@@ -344,7 +300,7 @@
           "key": "voluntaryTurnoverRate",
           "questionText": "What is your voluntary turnover rate?",
           "questionType": "NUMERIC",
-          "displayOrder": 14,
+          "displayOrder": 13,
           "validationRules": {
             "type": "NUMERIC",
             "required": false,
