@@ -214,7 +214,7 @@ export function RankingList({
         </Label>
         {/* Drag hint */}
         <div className="flex items-center gap-1.5 text-sm text-gray-500">
-          <span>[ You can drag and drop to reorder your selections.]</span>
+          <span>[You can drag and drop to reorder your selections.]</span>
         </div>
         <div className="rounded-lg border border-gray-200 bg-gray-50 px-4 py-6 text-center">
           <p className="text-sm text-gray-500">
