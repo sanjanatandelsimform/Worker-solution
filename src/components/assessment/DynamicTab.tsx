@@ -862,6 +862,12 @@ export const DynamicTab = forwardRef<
                 if (!newItem) return;
                 Object.keys(newItem).forEach(fieldName => {
                   if (fieldName.startsWith("__") || fieldName === "id") return;
+                  if (fieldName === "state") {
+                    const zipValidityState = newItem.__zipValidityState as string | undefined;
+                    if (zipValidityState === "state_mismatch") {
+                      return;
+                    }
+                  }
                   if (
                     (prevItem as Record<string, unknown>)[fieldName] !== newItem[fieldName] &&
                     newItem[fieldName] !== ""

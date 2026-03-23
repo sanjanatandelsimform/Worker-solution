@@ -113,6 +113,10 @@ export const DynamicQuestionRenderer = ({
                 ? `${key}.${currentIndex}.zipCode`
                 : null;
 
+          if (fieldName === "state") {
+            return;
+          }
+
           onErrorChange?.(
             pairedKey ? { [fieldErrorKey]: "", [pairedKey]: "" } : { [fieldErrorKey]: "" }
           );
@@ -213,11 +217,9 @@ export const DynamicQuestionRenderer = ({
               selectedKey={(item as unknown as Record<string, string>)[field.name] || ""}
               onSelectionChange={key => {
                 const selectedState = key as string;
-                updateArrayItemField(keyToUse, itemId, field.name, selectedState, "text");
-
-                const latestItems = (answers[keyToUse] as Array<Record<string, unknown>>) ?? [];
-                const currentItem = latestItems.find(i => i.id === itemId);
-                const currentIndex = latestItems.findIndex(i => i.id === itemId);
+                const currentItems = (answers[keyToUse] as Array<Record<string, unknown>>) ?? [];
+                const currentItem = currentItems.find(i => i.id === itemId);
+                const currentIndex = currentItems.findIndex(i => i.id === itemId);
                 if (currentIndex === -1) return;
 
                 const currentZipValue = (currentItem?.zipCode as string) ?? "";
@@ -228,21 +230,23 @@ export const DynamicQuestionRenderer = ({
                   | string
                   | undefined;
 
+                const stateFieldKey = `${keyToUse}.${currentIndex}.state`;
+                const zipFieldKey = `${keyToUse}.${currentIndex}.zipCode`;
+
                 if (
                   currentZipValue &&
                   currentZipStateAbbreviation &&
                   (currentZipValidityState === "valid" ||
                     currentZipValidityState === "state_mismatch")
                 ) {
-                  const stateFieldKey = `${keyToUse}.${currentIndex}.state`;
-                  const zipFieldKey = `${keyToUse}.${currentIndex}.zipCode`;
                   const isMismatch =
                     currentZipStateAbbreviation.toUpperCase() !== selectedState.toUpperCase();
 
                   if (isMismatch) {
+                    // Update answer with new state + mark mismatch
                     onAnswerChange(
                       keyToUse,
-                      latestItems.map(i =>
+                      currentItems.map(i =>
                         i.id === itemId
                           ? {
                               ...i,
@@ -260,7 +264,7 @@ export const DynamicQuestionRenderer = ({
                   } else {
                     onAnswerChange(
                       keyToUse,
-                      latestItems.map(i =>
+                      currentItems.map(i =>
                         i.id === itemId
                           ? {
                               ...i,
@@ -276,6 +280,21 @@ export const DynamicQuestionRenderer = ({
                       [zipFieldKey]: "",
                     });
                   }
+                } else {
+                  onAnswerChange(
+                    keyToUse,
+                    currentItems.map(i =>
+                      i.id === itemId
+                        ? {
+                            ...i,
+                            [field.name]: selectedState,
+                          }
+                        : i
+                    )
+                  );
+                  onErrorChange?.({
+                    [stateFieldKey]: "",
+                  });
                 }
               }}
               isInvalid={hasError}
