@@ -3,7 +3,6 @@ import { useState } from "react";
 // import { Button } from "@/components/base/buttons/button";
 import StaticCard from "../recommendations/StaticCard";
 import CostCard from "./CostCard";
-import RateOfSeparation from "./RateOfSeparation";
 import { Select } from "@/components/base/select/select";
 import { IncomeDistributionChart } from "./CostBurdenBarChart";
 // import { Tooltip, TooltipTrigger } from "@/components/base/tooltip/tooltip";
@@ -248,8 +247,6 @@ export default function BenchmarkPage() {
             employee's annual salary.
           </p>
         </div>
-
-        {/* ── Turnover / Separation Cards ── */}
         <div className="grid xl:grid-cols-2 gap-6">
           <CostCard
             classess="border-ws-gray-40!"
@@ -259,15 +256,15 @@ export default function BenchmarkPage() {
                 ? "No data available"
                 : `${turnoverMetrics?.quarter} ${turnoverMetrics?.year}`
             }
-            voluntaryScore={`${formatPercentage(turnoverMetrics?.voluntary)} Voluntary`}
-            involuntaryScore={`${formatPercentage(turnoverMetrics?.involuntary)} Involuntary`}
-            voluntaryValue={turnoverMetrics?.voluntary}
-            involuntaryValue={turnoverMetrics?.involuntary}
+            primaryScore={`${formatPercentage(turnoverMetrics?.voluntary)} Voluntary`}
+            secondaryScore={`${formatPercentage(turnoverMetrics?.involuntary)} Involuntary`}
+            primaryValue={turnoverMetrics?.voluntary}
+            secondaryValue={turnoverMetrics?.involuntary}
             industryTradeText={
               industry?.name ? `Industry: ${industry?.name}` : "Industry: No data available"
             }
           />
-          <RateOfSeparation
+          <CostCard
             classess="border-ws-gray-40!"
             title="Rate of Separation"
             year={
@@ -275,10 +272,10 @@ export default function BenchmarkPage() {
                 ? "No data available"
                 : `${separationMetrics?.quarter} ${separationMetrics?.year}`
             }
-            voluntaryScore={`${formatPercentage(separationMetrics?.hiringRate)} Hiring Rate`}
-            involuntaryScore={`${formatPercentage(separationMetrics?.separationRate)} Separation`}
-            voluntaryValue={separationMetrics?.hiringRate}
-            involuntaryValue={separationMetrics?.separationRate}
+            primaryScore={`${formatPercentage(separationMetrics?.hiringRate)} Hiring Rate`}
+            secondaryScore={`${formatPercentage(separationMetrics?.separationRate)} Separation`}
+            primaryValue={separationMetrics?.hiringRate}
+            secondaryValue={separationMetrics?.separationRate}
             industryTradeText={
               industry?.name ? `Industry: ${industry?.name}` : "Industry: No data available"
             }
