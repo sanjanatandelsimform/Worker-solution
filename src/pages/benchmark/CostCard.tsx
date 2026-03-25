@@ -4,42 +4,45 @@ import { InfoCircle } from "@untitledui/icons";
 type CostCardProps = {
   title: string;
   year?: string;
-  voluntaryScore?: string;
-  involuntaryScore?: string;
+  primaryScore?: string;
+  secondaryScore?: string;
   industryText?: string;
   industryCostText?: string;
   industryTradeText?: string;
   classess?: string;
-  voluntaryValue?: number | null;
-  involuntaryValue?: number | null;
+  primaryValue?: number | null;
+  secondaryValue?: number | null;
 };
 
 export default function CostCard({
   title,
   year,
-  voluntaryScore,
-  involuntaryScore,
+  primaryScore,
+  secondaryScore,
   industryText,
   industryCostText,
   industryTradeText,
   classess,
-  voluntaryValue,
-  involuntaryValue,
+  primaryValue,
+  secondaryValue,
 }: Readonly<CostCardProps>) {
   const isNoData =
-    !voluntaryScore ||
-    !involuntaryScore ||
-    voluntaryScore.startsWith("N/A") ||
-    involuntaryScore.startsWith("N/A");
+    !primaryScore ||
+    !secondaryScore ||
+    primaryScore.startsWith("N/A") ||
+    secondaryScore.startsWith("N/A");
 
+  const totalWidth = primaryValue && secondaryValue ? primaryValue + secondaryValue : 100;
   const toWidth = (val: number | null | undefined): string => {
-    if (val == null || !isFinite(val)) return "0%";
-    const clamped = Math.min(100, Math.max(0, val));
+    if (val == null || !isFinite(val) || totalWidth === 0) return "0%";
+    // Calculate percentage relative to the total width
+    const percentage = (val / totalWidth) * 100;
+    const clamped = Math.min(100, Math.max(0, percentage));
     return `${clamped}%`;
   };
-
-  const voluntaryWidth = toWidth(voluntaryValue);
-  const involuntaryWidth = toWidth(involuntaryValue);
+  const primaryWidth = toWidth(primaryValue);
+  const secondaryWidth = toWidth(secondaryValue);
+  
 
   return (
     <div
@@ -76,17 +79,17 @@ export default function CostCard({
             {/* Cyan bar — dynamic width */}
             <div
               className="flex items-center bg-ws-cyan-60 px-3 py-2 text-ws-white text-base transition-all duration-500 whitespace-nowrap"
-              style={{ width: voluntaryWidth }}
+              style={{ width: primaryWidth }}
             >
-              {voluntaryScore}
+              {primaryScore}
             </div>
 
             {/* Gray bar — dynamic width, no gap */}
             <div
               className="bg-ws-gray-600 text-ws-black px-3 py-2 text-base transition-all duration-500 whitespace-nowrap"
-              style={{ width: involuntaryWidth }}
+              style={{ width: secondaryWidth }}
             >
-              {involuntaryScore}
+              {secondaryScore}
             </div>
           </>
         )}
