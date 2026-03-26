@@ -42,7 +42,6 @@ export default function CostCard({
   };
   const primaryWidth = toWidth(primaryValue);
   const secondaryWidth = toWidth(secondaryValue);
-  
 
   return (
     <div

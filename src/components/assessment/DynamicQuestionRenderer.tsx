@@ -500,8 +500,9 @@ export const DynamicQuestionRenderer = ({
         {conditionalQuestion.questionType === "NUMBER_INPUT" && (
           <>
             <Input
-              type="number"
+              type="text"
               placeholder={conditionalQuestion.placeholder || "Enter number"}
+              inputMode="numeric"
               value={String(answers[conditionalQuestion.key] ?? "")}
               className={
                 halfWidthConditionalNumericKeys.has(conditionalQuestion.key)
@@ -509,7 +510,8 @@ export const DynamicQuestionRenderer = ({
                   : "w-full"
               }
               onChange={value => {
-                const numValue = value === "" ? null : Number(value);
+                const filtered = value.replace(/[^0-9]/g, "");
+                const numValue = filtered === "" ? null : Number(filtered);
                 if (numValue !== null) {
                   if (
                     conditionalQuestion.validationRules?.min !== undefined &&
@@ -879,25 +881,27 @@ export const DynamicQuestionRenderer = ({
                 ? "w-full md:w-1/2 custom-input"
                 : "w-full custom-input"
             }
-            type="number"
+            type="text"
+            inputMode="numeric"
             placeholder={question.placeholder || "Enter number"}
             value={String(currentAnswer ?? "")}
             onChange={value => {
-              const numValue = value === "" ? null : Number(value);
-              if (numValue !== null) {
-                if (
-                  question.validationRules?.min !== undefined &&
-                  numValue < question.validationRules.min
-                ) {
-                  return;
-                }
-                if (
-                  question.validationRules?.max !== undefined &&
-                  numValue > question.validationRules.max
-                ) {
-                  return;
-                }
+              const filtered = value.replace(/[^0-9]/g, "");
+              if (filtered === "") {
+                onAnswerChange(question.key, null);
+                return;
               }
+              const numValue = Number(filtered);
+              if (
+                question.validationRules?.min !== undefined &&
+                numValue < question.validationRules.min
+              )
+                return;
+              if (
+                question.validationRules?.max !== undefined &&
+                numValue > question.validationRules.max
+              )
+                return;
               onAnswerChange(question.key, numValue);
             }}
             size="md"
