@@ -32,18 +32,21 @@ export const DashboardPage = () => {
   const profileError = useAppSelector(selectProfileError);
 
   const emailVerify = user?.emailVerify || false;
-
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
   const [showResendSuccess, setShowResendSuccess] = useState(false);
   const [showCooldownModal, setShowCooldownModal] = useState(false);
   const [cooldown, setCooldown] = useState<number>(0);
-  const { completionCount, assessmentData, isLoading: isLoadingAssessment } = useAssessmentStatus();
+  const {
+    completionCount,
+    assessmentData,
+    isLoading: isLoadingAssessment,
+  } = useAssessmentStatus({ enabled: emailVerify });
   const dashboardLoading = useAppSelector(selectDashboardLoading);
   const dashboardError = useAppSelector(selectDashboardError);
   const [showInProgressModal, setShowInProgressModal] = useState(false);
   const [showGoalsSuccessModal, setShowGoalsSuccessModal] = useState(false);
   const [showGoalsEmptyWarning, setShowGoalsEmptyWarning] = useState(false);
-  const [isDashboardReady, setIsDashboardReady] = useState(false); // ← NEW
+  const [isDashboardReady, setIsDashboardReady] = useState(false);
   const hasRunDashboardFetchRef = useRef(false);
   const fromGoalsCompletionRef = useRef(false);
 
@@ -133,7 +136,6 @@ export const DashboardPage = () => {
 
       const fetchWithModal = async () => {
         setShowInProgressModal(true);
-
         try {
           const resultAction = await dispatch(fetchDashboard());
           setShowInProgressModal(false);
@@ -176,7 +178,7 @@ export const DashboardPage = () => {
       setShowInProgressModal(false);
 
       if (fetchDashboard.fulfilled.match(resultAction)) {
-        setIsDashboardReady(true); // ← Mark ready on retry success too
+        setIsDashboardReady(true);
         setShowGoalsSuccessModal(true);
       } else if (fetchDashboard.rejected.match(resultAction)) {
         const errorMsg = resultAction.payload as string;
@@ -345,8 +347,8 @@ export const DashboardPage = () => {
                     Thanks for signing up.
                   </h2>
                   <p className="text-ws-white text-base pr-10">
-                    Pick up where you left off and complete your company assessment for results and
-                    recommendations.
+                    Welcome to BeneStats, your partner in analyzing company <br></br>
+                    benefits and delivering personalized recommendations.
                   </p>
                 </div>
                 <div className="flex-1 rounded-lg">
@@ -383,10 +385,14 @@ export const DashboardPage = () => {
 
             {assessmentData?.status !== "completed" && (
               <DashboardCard
-                title={`${completionCount > 0 ? `${completionCount} ` : ""}Take the Assessment`}
-                description="Take our 15 minute assessment for specific recommendations to improve your business"
+                title="Take the assessment"
+                description={
+                  !emailVerify
+                    ? "Take our 15 minute assessment for specific recommendations to improve your business"
+                    : "Complete our quick assessment for customized recommendations and insights."
+                }
                 avatarIconSrc={checkIcon}
-                buttonLabel={completionCount > 0 ? "Continue" : "Take Assessment"}
+                buttonLabel={completionCount > 0 ? "Continue" : "Start assessment"}
                 buttonType={emailVerify ? "primary" : "secondary"}
                 buttonIsDisabled={!emailVerify}
                 onClick={() => navigate("/assessment")}
