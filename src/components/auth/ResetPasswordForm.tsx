@@ -75,12 +75,12 @@ export default function ResetPasswordForm() {
             </div>
 
             {/* Title and Description */}
-            <div className="flex w-full flex-col items-start gap-3 text-center">
+            <div className="flex w-full flex-col items-start gap-3">
               <h2 className="w-full text-4xl font-semibold leading-9.5 text-ws-black">
-                Reset Password
+                Reset password
               </h2>
               <p className="w-full text-medium font-normal leading-6 text-ws-black-10">
-                Enter your new password below. Make sure it meets all security requirements.
+                Please enter a new password below.
               </p>
             </div>
           </div>
@@ -93,10 +93,13 @@ export default function ResetPasswordForm() {
             >
               {/* New Password Input Field */}
               <InputGroup className="relative">
+                   <div className="flex flex-col gap-1.5 w-full">
+                  <label className="text-sm font-medium text-ws-black-20">
+                    Password <span className="text-red-500">*</span>
+                  </label>
                 <Input
                   name="newPassword"
-                  label="New Password"
-                  placeholder="New Password"
+                  placeholder="Password"
                   size="md"
                   type={showPassword ? "text" : "password"}
                   hint={errors.newPassword?.message}
@@ -127,13 +130,17 @@ export default function ResetPasswordForm() {
                     </>
                   )}
                 </Button>
+                </div>
               </InputGroup>
 
               {/* Confirm Password Input Field */}
               <InputGroup className="relative">
+                 <div className="flex flex-col gap-1.5 w-full">
+                  <label className="text-sm font-medium text-ws-black-20">
+                    Confirm Password <span className="text-red-500">*</span>
+                  </label>
                 <Input
                   name="confirmPassword"
-                  label="Confirm Password"
                   placeholder="Confirm Password"
                   size="md"
                   type={showConfirmPassword ? "text" : "password"}
@@ -165,6 +172,7 @@ export default function ResetPasswordForm() {
                     </>
                   )}
                 </Button>
+                </div>
               </InputGroup>
 
               {/* Error and Success Messages */}
@@ -178,14 +186,13 @@ export default function ResetPasswordForm() {
               )}
 
               {/* Actions */}
-              <div className="flex w-full flex-col items-start gap-4">
-                {/* Submit Button */}
+              <div className="flex w-full flex-col items-center gap-4">
                 <Button
                   type="submit"
                   color="primary"
                   size="lg"
                   isDisabled={isSubmitting || !resetToken}
-                  className="w-full"
+                  className="w-auto"
                 >
                   {isSubmitting ? "Resetting..." : "Save password"}
                 </Button>

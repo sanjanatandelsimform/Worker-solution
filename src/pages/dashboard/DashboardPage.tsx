@@ -385,7 +385,7 @@ export const DashboardPage = () => {
 
             {assessmentData?.status !== "completed" && (
               <DashboardCard
-                title="Take the assessment"
+                title={completionCount > 0 ? "Complete your assessment" : "Take the assessment"}
                 description={
                   !emailVerify
                     ? "Take our 15 minute assessment for specific recommendations to improve your business"
