@@ -433,6 +433,8 @@ export const RegistrationForm = () => {
                       setValue("password", sanitized);
                       trigger("password");
                     }}
+                    onCopy={(e: React.ClipboardEvent<HTMLInputElement>) => e.preventDefault()}
+                    onContextMenu={(e: React.MouseEvent<HTMLInputElement>) => e.preventDefault()}
                   />
                 </div>
                 <Button
@@ -475,6 +477,8 @@ export const RegistrationForm = () => {
                       setValue("confirmPassword", sanitized);
                       trigger("confirmPassword");
                     }}
+                    onPaste={(e: React.ClipboardEvent<HTMLInputElement>) => e.preventDefault()}
+                    onContextMenu={(e: React.MouseEvent<HTMLInputElement>) => e.preventDefault()}
                   />
                 </div>
                 <Button
