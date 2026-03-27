@@ -389,7 +389,7 @@ export const DashboardPage = () => {
                 description={
                   !emailVerify
                     ? "Take our 15 minute assessment for specific recommendations to improve your business"
-                    : "Complete our quick assessment for customized recommendations and insights."
+                    : completionCount > 0 ? "Pick up where you left off and complete your company assessment for results and recommendations." : "Complete our quick assessment for customized recommendations and insights."
                 }
                 avatarIconSrc={checkIcon}
                 buttonLabel={completionCount > 0 ? "Continue" : "Start assessment"}
