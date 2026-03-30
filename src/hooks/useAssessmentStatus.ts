@@ -1,6 +1,10 @@
 import { useState, useEffect, useCallback } from "react";
 import { getAssessment, type AssessmentData } from "@/services/api/assessmentApi";
 
+interface UseAssessmentStatusOptions {
+  enabled?: boolean;
+}
+
 interface UseAssessmentStatusReturn {
   completionCount: number;
   isLoading: boolean;
@@ -15,16 +19,16 @@ interface UseAssessmentStatusReturn {
   refetch: () => Promise<void>;
 }
 
-/**
- * Hook to fetch and track assessment completion status from API
- * Replaces localStorage-based completion tracking
- */
-export const useAssessmentStatus = (): UseAssessmentStatusReturn => {
+export const useAssessmentStatus = ({
+  enabled = true,
+}: UseAssessmentStatusOptions = {}): UseAssessmentStatusReturn => {
   const [assessmentData, setAssessmentData] = useState<AssessmentData | null>(null);
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
   const fetchAssessmentStatus = useCallback(async () => {
+    if (!enabled) return;
+
     setIsLoading(true);
     setError(null);
 
@@ -34,7 +38,6 @@ export const useAssessmentStatus = (): UseAssessmentStatusReturn => {
       if (response.success && response.data) {
         setAssessmentData(response.data);
       } else {
-        // If assessment doesn't exist yet, treat as 0 completions
         setAssessmentData(null);
         setError(null);
       }
@@ -45,7 +48,7 @@ export const useAssessmentStatus = (): UseAssessmentStatusReturn => {
     } finally {
       setIsLoading(false);
     }
-  }, []);
+  }, [enabled]);
 
   useEffect(() => {
     fetchAssessmentStatus();

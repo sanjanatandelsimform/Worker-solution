@@ -118,45 +118,53 @@ export const SignInForm = () => {
             >
               {/* Email Input Field */}
               <InputGroup>
-                <Input
-                  name="email"
-                  size="md"
-                  label="Email"
-                  hint={errors.email?.message}
-                  placeholder="Enter your email"
-                  isInvalid={!!errors.email}
-                  value={email}
-                  tooltip={errors.email ? errors.email.message : undefined}
-                  onChange={value => {
-                    const sanitized = value.replace(/^\s+/, "");
-                    setValue("email", sanitized);
-                    if (errors.email) trigger("email");
-                  }}
-                  onBlur={() => trigger("email")}
-                />
+                <div className="flex flex-col gap-1.5 w-full">
+                  <label className="text-sm font-medium text-ws-black-20">
+                    Email <span className="text-red-500">*</span>
+                  </label>
+                  <Input
+                    name="email"
+                    size="md"
+                    hint={errors.email?.message}
+                    placeholder="Enter your email"
+                    isInvalid={!!errors.email}
+                    value={email}
+                    tooltip={errors.email ? errors.email.message : undefined}
+                    onChange={value => {
+                      const sanitized = value.replace(/^\s+/, "");
+                      setValue("email", sanitized);
+                      if (errors.email) trigger("email");
+                    }}
+                    onBlur={() => trigger("email")}
+                  />
+                </div>
               </InputGroup>
 
               {/* Password Input Field */}
               <InputGroup className="relative">
-                <Input
-                  name="password"
-                  label="Password"
-                  hint={errors.password?.message}
-                  placeholder="Password"
-                  size="md"
-                  type={showPassword ? "text" : "password"}
-                  isInvalid={!!errors.password}
-                  value={password}
-                  minLength={8}
-                  maxLength={20}
-                  tooltip={errors.password ? errors.password.message : undefined}
-                  onChange={value => {
-                    const sanitized = value.replace(/^\s+/, "");
-                    setValue("password", sanitized);
-                    if (errors.password) trigger("password");
-                  }}
-                  onBlur={() => trigger("password")}
-                />
+                <div className="flex flex-col gap-1.5 w-full">
+                  <label className="text-sm font-medium text-ws-black-20">
+                    Password <span className="text-red-500">*</span>
+                  </label>
+                  <Input
+                    name="password"
+                    hint={errors.password?.message}
+                    placeholder="Password"
+                    size="md"
+                    type={showPassword ? "text" : "password"}
+                    isInvalid={!!errors.password}
+                    value={password}
+                    minLength={8}
+                    maxLength={20}
+                    tooltip={errors.password ? errors.password.message : undefined}
+                    onChange={value => {
+                      const sanitized = value.replace(/^\s+/, "");
+                      setValue("password", sanitized);
+                      if (errors.password) trigger("password");
+                    }}
+                    onBlur={() => trigger("password")}
+                  />
+                </div>
                 <Button
                   color="tertiary"
                   size="sm"

@@ -32,18 +32,21 @@ export const DashboardPage = () => {
   const profileError = useAppSelector(selectProfileError);
 
   const emailVerify = user?.emailVerify || false;
-
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
   const [showResendSuccess, setShowResendSuccess] = useState(false);
   const [showCooldownModal, setShowCooldownModal] = useState(false);
   const [cooldown, setCooldown] = useState<number>(0);
-  const { completionCount, assessmentData, isLoading: isLoadingAssessment } = useAssessmentStatus();
+  const {
+    completionCount,
+    assessmentData,
+    isLoading: isLoadingAssessment,
+  } = useAssessmentStatus({ enabled: emailVerify });
   const dashboardLoading = useAppSelector(selectDashboardLoading);
   const dashboardError = useAppSelector(selectDashboardError);
   const [showInProgressModal, setShowInProgressModal] = useState(false);
   const [showGoalsSuccessModal, setShowGoalsSuccessModal] = useState(false);
   const [showGoalsEmptyWarning, setShowGoalsEmptyWarning] = useState(false);
-  const [isDashboardReady, setIsDashboardReady] = useState(false); // ← NEW
+  const [isDashboardReady, setIsDashboardReady] = useState(false);
   const hasRunDashboardFetchRef = useRef(false);
   const fromGoalsCompletionRef = useRef(false);
 
@@ -133,7 +136,6 @@ export const DashboardPage = () => {
 
       const fetchWithModal = async () => {
         setShowInProgressModal(true);
-
         try {
           const resultAction = await dispatch(fetchDashboard());
           setShowInProgressModal(false);
@@ -176,7 +178,7 @@ export const DashboardPage = () => {
       setShowInProgressModal(false);
 
       if (fetchDashboard.fulfilled.match(resultAction)) {
-        setIsDashboardReady(true); // ← Mark ready on retry success too
+        setIsDashboardReady(true);
         setShowGoalsSuccessModal(true);
       } else if (fetchDashboard.rejected.match(resultAction)) {
         const errorMsg = resultAction.payload as string;
@@ -398,7 +400,7 @@ export const DashboardPage = () => {
                   </div>
                 }
                 avatarIconSrc={checkIcon}
-                buttonLabel={completionCount > 0 ? "Continue" : "Take Assessment"}
+                buttonLabel={completionCount > 0 ? "Continue" : "Start assessment"}
                 buttonType={emailVerify ? "primary" : "secondary"}
                 buttonIsDisabled={!emailVerify}
                 //onClick={() => navigate("/assessment")}

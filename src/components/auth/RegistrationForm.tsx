@@ -202,42 +202,50 @@ export function RegistrationForm() {
             <div className="grid w-full grid-cols-2 gap-x-4 gap-y-4">
               {/* Row 1 - First Name & Last Name */}
               <InputGroup>
-                <Input
-                  name="firstName"
-                  size="md"
-                  label="First Name"
-                  hint={errors.firstName?.message}
-                  placeholder="First Name"
-                  isInvalid={!!errors.firstName}
-                  value={firstName}
-                  maxLength={20}
-                  className={errors.firstName ? "error-ring" : ""}
-                  tooltip={errors.firstName ? errors.firstName.message : undefined}
-                  onChange={value => {
-                    const sanitized = value.replace(/^\s+/, "");
-                    setValue("firstName", sanitized);
-                    trigger("firstName");
-                  }}
-                />
+                <div className="flex flex-col gap-1.5 w-full">
+                  <label className="text-sm font-medium text-ws-black-20">
+                    First Name <span className="text-red-500">*</span>
+                  </label>
+                  <Input
+                    name="firstName"
+                    size="md"
+                    hint={errors.firstName?.message}
+                    placeholder="First Name"
+                    isInvalid={!!errors.firstName}
+                    value={firstName}
+                    maxLength={20}
+                    className={errors.firstName ? "error-ring" : ""}
+                    tooltip={errors.firstName ? errors.firstName.message : undefined}
+                    onChange={value => {
+                      const sanitized = value.replace(/^\s+/, "");
+                      setValue("firstName", sanitized);
+                      trigger("firstName");
+                    }}
+                  />
+                </div>
               </InputGroup>
               <InputGroup>
-                <Input
-                  name="lastName"
-                  size="md"
-                  label="Last Name"
-                  hint={errors.lastName?.message}
-                  placeholder="Last Name"
-                  value={lastName}
-                  isInvalid={!!errors.lastName}
-                  maxLength={20}
-                  className={errors.lastName ? "error-ring" : ""}
-                  tooltip={errors.lastName ? errors.lastName.message : undefined}
-                  onChange={value => {
-                    const sanitized = value.replace(/^\s+/, "");
-                    setValue("lastName", sanitized);
-                    trigger("lastName");
-                  }}
-                />
+                <div className="flex flex-col gap-1.5 w-full">
+                  <label className="text-sm font-medium text-ws-black-20">
+                    Last Name <span className="text-red-500">*</span>
+                  </label>
+                  <Input
+                    name="lastName"
+                    size="md"
+                    hint={errors.lastName?.message}
+                    placeholder="Last Name"
+                    value={lastName}
+                    isInvalid={!!errors.lastName}
+                    maxLength={20}
+                    className={errors.lastName ? "error-ring" : ""}
+                    tooltip={errors.lastName ? errors.lastName.message : undefined}
+                    onChange={value => {
+                      const sanitized = value.replace(/^\s+/, "");
+                      setValue("lastName", sanitized);
+                      trigger("lastName");
+                    }}
+                  />
+                </div>
               </InputGroup>
 
               {/* Row 3 - Zip Code & (empty space for layout) */}
@@ -298,59 +306,69 @@ export function RegistrationForm() {
 
               {/* Row 2 - Legal Business Name & Industry */}
               <InputGroup>
-                <Input
-                  name="legalBusinessName"
-                  size="md"
-                  label="Legal Business Name"
-                  hint={errors.legalBusinessName?.message}
-                  placeholder="Legal Business Name"
-                  isInvalid={!!errors.legalBusinessName}
-                  value={legalBusinessName}
-                  maxLength={50}
-                  className={errors.legalBusinessName ? "error-ring" : ""}
-                  tooltip={errors.legalBusinessName ? errors.legalBusinessName.message : undefined}
-                  onChange={value => {
-                    const sanitized = value.replace(/^\s+/, "");
-                    setValue("legalBusinessName", sanitized);
-                    trigger("legalBusinessName");
-                  }}
-                />
+                <div className="flex flex-col gap-1.5 w-full">
+                  <label className="text-sm font-medium text-ws-black-20">
+                    Legal Business Name <span className="text-red-500">*</span>
+                  </label>
+                  <Input
+                    name="legalBusinessName"
+                    size="md"
+                    hint={errors.legalBusinessName?.message}
+                    placeholder="Legal Business Name"
+                    isInvalid={!!errors.legalBusinessName}
+                    value={legalBusinessName}
+                    maxLength={50}
+                    className={errors.legalBusinessName ? "error-ring" : ""}
+                    tooltip={
+                      errors.legalBusinessName ? errors.legalBusinessName.message : undefined
+                    }
+                    onChange={value => {
+                      const sanitized = value.replace(/^\s+/, "");
+                      setValue("legalBusinessName", sanitized);
+                      trigger("legalBusinessName");
+                    }}
+                  />
+                </div>
               </InputGroup>
               <InputGroup isRequired>
-                <Select
-                  className="w-full flex items-start"
-                  size="md"
-                  label="Select Your Industry"
-                  placeholder="Select Option"
-                  items={industries.map(i => ({
-                    id: i.industry_code, // Changed from i.id.toString()
-                    label: i.industry_name,
-                  }))}
-                  selectedKey={industry || null}
-                  onSelectionChange={key => {
-                    const stringKey = key ? String(key) : "";
-                    setValue("industry", stringKey);
-                    // This prevents popover positioning from resetting
-                    // setTimeout(() => {
-                    trigger("industry");
-                    // }, 0);
-                  }}
-                  isDisabled={isLoadingIndustries || !!industryError}
-                  isInvalid={!!errors.industry || !!industryError}
-                  hint={industryError || errors.industry?.message}
-                >
-                  {item => (
-                    <Select.Item
-                      id={item.id}
-                      supportingText={item.supportingText}
-                      isDisabled={item.isDisabled}
-                      icon={item.icon}
-                      avatarUrl={item.avatarUrl}
-                    >
-                      {item.label}
-                    </Select.Item>
-                  )}
-                </Select>
+                <div className="flex flex-col gap-1.5 w-full">
+                  <label className="text-sm font-medium text-ws-black-20">
+                    Select Your Industry <span className="text-red-500">*</span>
+                  </label>
+                  <Select
+                    className="w-full flex items-start"
+                    size="md"
+                    placeholder="Select Option"
+                    items={industries.map(i => ({
+                      id: i.industry_code, // Changed from i.id.toString()
+                      label: i.industry_name,
+                    }))}
+                    selectedKey={industry || null}
+                    onSelectionChange={key => {
+                      const stringKey = key ? String(key) : "";
+                      setValue("industry", stringKey);
+                      // This prevents popover positioning from resetting
+                      // setTimeout(() => {
+                      trigger("industry");
+                      // }, 0);
+                    }}
+                    isDisabled={isLoadingIndustries || !!industryError}
+                    isInvalid={!!errors.industry || !!industryError}
+                    hint={industryError || errors.industry?.message}
+                  >
+                    {item => (
+                      <Select.Item
+                        id={item.id}
+                        supportingText={item.supportingText}
+                        isDisabled={item.isDisabled}
+                        icon={item.icon}
+                        avatarUrl={item.avatarUrl}
+                      >
+                        {item.label}
+                      </Select.Item>
+                    )}
+                  </Select>
+                </div>
               </InputGroup>
               {isLoadingIndustries && (
                 <p className="text-sm text-gray-600 mt-1.5">Loading industries...</p>
@@ -384,23 +402,29 @@ export function RegistrationForm() {
             <div className="grid w-full grid-cols-2 gap-x-4 gap-y-4">
               {/* Row 5 - Password & Confirm Password */}
               <InputGroup className="relative">
-                <Input
-                  name="password"
-                  label="Password"
-                  hint={errors.password?.message}
-                  placeholder="Password"
-                  size="md"
-                  type={showPassword ? "text" : "password"}
-                  tooltip={errors.password ? errors.password.message : undefined}
-                  isInvalid={!!errors.password}
-                  value={password}
-                  className="relative"
-                  onChange={value => {
-                    const sanitized = value.replace(/^\s+/, "");
-                    setValue("password", sanitized);
-                    trigger("password");
-                  }}
-                />
+                <div className="flex flex-col gap-1.5 w-full">
+                  <label className="text-sm font-medium text-ws-black-20">
+                    Password <span className="text-red-500">*</span>
+                  </label>
+                  <Input
+                    name="password"
+                    hint={errors.password?.message}
+                    placeholder="Password"
+                    size="md"
+                    type={showPassword ? "text" : "password"}
+                    tooltip={errors.password ? errors.password.message : undefined}
+                    isInvalid={!!errors.password}
+                    value={password}
+                    className="relative"
+                    onChange={value => {
+                      const sanitized = value.replace(/^\s+/, "");
+                      setValue("password", sanitized);
+                      trigger("password");
+                    }}
+                    onCopy={(e: React.ClipboardEvent<HTMLInputElement>) => e.preventDefault()}
+                    onContextMenu={(e: React.MouseEvent<HTMLInputElement>) => e.preventDefault()}
+                  />
+                </div>
                 <Button
                   color="tertiary"
                   size="sm"
@@ -422,23 +446,29 @@ export function RegistrationForm() {
               </InputGroup>
 
               <InputGroup className="relative">
-                <Input
-                  name="confirmPassword"
-                  label="Confirm Password"
-                  hint={errors.confirmPassword?.message}
-                  placeholder="Confirm Password"
-                  size="md"
-                  type={showConfirmPassword ? "text" : "password"}
-                  isInvalid={!!errors.confirmPassword}
-                  tooltip={errors.confirmPassword ? errors.confirmPassword.message : undefined}
-                  value={confirmPassword}
-                  className="relative"
-                  onChange={value => {
-                    const sanitized = value.replace(/^\s+/, "");
-                    setValue("confirmPassword", sanitized);
-                    trigger("confirmPassword");
-                  }}
-                />
+                <div className="flex flex-col gap-1.5 w-full">
+                  <label className="text-sm font-medium text-ws-black-20">
+                    Confirm Password <span className="text-red-500">*</span>
+                  </label>
+                  <Input
+                    name="confirmPassword"
+                    hint={errors.confirmPassword?.message}
+                    placeholder="Confirm Password"
+                    size="md"
+                    type={showConfirmPassword ? "text" : "password"}
+                    isInvalid={!!errors.confirmPassword}
+                    tooltip={errors.confirmPassword ? errors.confirmPassword.message : undefined}
+                    value={confirmPassword}
+                    className="relative"
+                    onChange={value => {
+                      const sanitized = value.replace(/^\s+/, "");
+                      setValue("confirmPassword", sanitized);
+                      trigger("confirmPassword");
+                    }}
+                    onPaste={(e: React.ClipboardEvent<HTMLInputElement>) => e.preventDefault()}
+                    onContextMenu={(e: React.MouseEvent<HTMLInputElement>) => e.preventDefault()}
+                  />
+                </div>
                 <Button
                   color="tertiary"
                   size="sm"

@@ -88,22 +88,26 @@ export default function ForgotPasswordForm() {
             >
               {/* Email Input Field */}
               <InputGroup>
-                <Input
-                  name="email"
-                  icon={Mail01}
-                  size="md"
-                  label="Business Email Address"
-                  placeholder="olivia@untitledui.com"
-                  hint={errors.email?.message}
-                  isInvalid={!!errors.email}
-                  value={getValues("email")}
-                  tooltip={errors.email ? errors.email.message : undefined}
-                  onChange={value => {
-                    const sanitized = value.replace(/^\s+/, "");
-                    setValue("email", sanitized);
-                    trigger("email");
-                  }}
-                />
+                <div className="flex flex-col gap-1.5 w-full">
+                  <label className="text-sm font-medium text-ws-black-20">
+                    Business Email Address <span className="text-red-500">*</span>
+                  </label>
+                  <Input
+                    name="email"
+                    icon={Mail01}
+                    size="md"
+                    placeholder="olivia@untitledui.com"
+                    hint={errors.email?.message}
+                    isInvalid={!!errors.email}
+                    value={getValues("email")}
+                    tooltip={errors.email ? errors.email.message : undefined}
+                    onChange={value => {
+                      const sanitized = value.replace(/^\s+/, "");
+                      setValue("email", sanitized);
+                      trigger("email");
+                    }}
+                  />
+                </div>
               </InputGroup>
 
               {/* Error Messages */}
@@ -126,7 +130,7 @@ export default function ForgotPasswordForm() {
                   isDisabled={isSubmitting}
                   className="w-auto bg-ws-primary-900 text-ws-white hover:bg-ws-primary-900-hover focus:bg-ws-primary-900-hover active:bg-ws-primary-900-hover"
                 >
-                  {isSubmitting ? "Sending..." : "Send Link"}
+                  {isSubmitting ? "Sending..." : "Reset Password"}
                 </Button>
               </div>
             </form>

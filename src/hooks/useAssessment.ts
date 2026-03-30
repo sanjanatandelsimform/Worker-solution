@@ -57,6 +57,17 @@ const normalizeSectionAnswers = (
 ): Record<string, unknown> => {
   const normalized: Record<string, unknown> = { ...raw };
 
+  if (section === "workforce") {
+    if (normalized.commuteMethod !== undefined) {
+      normalized.employeeCommuteMethod = normalized.commuteMethod;
+      delete normalized.commuteMethod;
+    }
+    if (normalized.commuteTime !== undefined) {
+      normalized.averageCommuteTime = normalized.commuteTime;
+      delete normalized.commuteTime;
+    }
+  }
+  
   const sectionName = sectionNameMap[section];
   const configSection = questionData.sections.find(
     s => s.name.toLowerCase() === sectionName.toLowerCase()
