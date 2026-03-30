@@ -3,6 +3,7 @@ import { useNavigate } from "react-router-dom";
 import { DashboardSidebar } from "@/components/dashboard/DashboardSidebar";
 import emailIcon from "@/assets/mail-icon.svg";
 import checkIcon from "@/assets/file-check.svg";
+import finchLogo from "@/assets/finch-logo.svg";
 import DashboardCard from "./DashboardCard";
 import { Link } from "react-router-dom";
 import { useAppSelector, useAppDispatch } from "@/store/hooks";
@@ -10,7 +11,7 @@ import { selectUser } from "@/store/selectors/authSelectors";
 import { InProgressModal } from "@/components/modals/InProgressModal";
 import { BaseModalWithIcon } from "@/components/modals/BaseModalWithIcon";
 import ErrorMessage from "@/components/common/ErrorMessage";
-import { AlertCircle } from "@untitledui/icons";
+import { AlertCircle, ChevronRight } from "@untitledui/icons";
 import { fetchUserById } from "@/store/slices/userSlice";
 import { resendVerificationEmail } from "@/store/slices/profileSlice";
 import { selectProfileError } from "@/store/selectors/profileSelectors";
@@ -23,6 +24,7 @@ import { fetchDashboard } from "@/store/slices/dashboardSlice";
 import { CircleCheckIcon } from "@/assets/icons/CircleCheckIcon";
 import { Oval } from "react-loader-spinner";
 import { selectDashboardLoading, selectDashboardError } from "@/store/selectors/dashboardSelectors";
+import { Button } from "@/components/base/buttons/button";
 
 export const DashboardPage = () => {
   const navigate = useNavigate();
@@ -281,6 +283,14 @@ export const DashboardPage = () => {
     );
   }
 
+    const handleGetStarted = () => {
+      navigate("/assessment");
+    };
+
+  const handleFinchStarted = () => {
+    navigate("/additional-questions");
+  }
+
   return (
     <div className="flex h-screen overflow-hidden bg-ws-white">
       {/* Sidebar */}
@@ -374,7 +384,7 @@ export const DashboardPage = () => {
                         e.preventDefault();
                         if (!emailVerify) handleVerifyEmail();
                       }}
-                      className="underline ml-2 text-sm text-ws-primary-400"
+                      className="underline ml-2 text-sm text-ws-primary-500"
                     >
                       Resend verification
                     </Link>
@@ -403,10 +413,64 @@ export const DashboardPage = () => {
                 buttonType={emailVerify ? "primary" : "secondary"}
                 buttonIsDisabled={!emailVerify}
                 //onClick={() => navigate("/assessment")}
-                onClick={() => navigate("/get-more")}
+                //onClick={() => navigate("/get-more")}
                 toggleButton={false}
               />
             )}
+          </div>
+
+          <div className="flex items-center justify-between gap-4 mt-6">
+            <div className="flex-1 py-6 px-7 border border-ws-primary-100 rounded-xl min-h-109 relative">
+              <div className="flex items-center justify-between border-b border-ws-primary-100 pb-4 mb-4">
+                <h2 className="text-ws-black-10 text-2xl font-medium">Basic Plan</h2>
+                <p className="text-ws-black-10 text-base">Free</p>
+              </div>
+              <p className="text-ws-black-10 text-base">
+                Fill out a simple assessment form and get high level recommendations to enhance your
+                benefits program.
+              </p>
+              <ul className="text-ws-black-10 text-base list-disc list-inside my-4">
+                <li>Results in 10 min</li>
+                <li>Industry benchmarks</li>
+                <li>Placed-based insights</li>
+                <li>Annual data updates</li>
+              </ul>
+              <Button
+                iconTrailing={<ChevronRight />}
+                size="sm"
+                color="primary"
+                className="min-w-30 absolute bottom-6 left-7"
+                onClick={handleGetStarted}
+              >
+                Let’s Get Started
+              </Button>
+            </div>
+            <div className="flex-1 py-6 px-7 border border-ws-primary-100 rounded-xl min-h-109 relative">
+              <div className="flex items-center justify-between border-b border-ws-primary-100 pb-4 mb-4">
+                <h2 className="flex items-center text-ws-black-10 text-2xl font-medium">Connect with <img src={finchLogo} alt="Finch Logo" className="ml-2" /></h2>
+                <p className="text-ws-black-10 text-base">Free</p>
+              </div>
+              <p className="text-ws-black-10 text-base">
+                Finch handles the connection for you, syncing all your data automatically so you get richer insights and expanded dashboard views — without any extra work on your end.
+              </p>
+              <ul className="text-ws-black-10 text-base list-disc list-inside my-4">
+                <li>Results in 3-5 min</li>
+                <li>Custom workforce data and insights</li>
+                <li>Additional dashboard views plus everything you get in the basic plan</li>
+              </ul>
+              <p className="text-ws-black-10 text-base">
+                By connecting with Finch, you'll be redirected to their site to complete the setup. Please note that data shared is secure and protected by Finch’s thorough data privacy policies.
+              </p>
+              <Button
+                iconTrailing={<ChevronRight />}
+                size="sm"
+                color="primary"
+                className="min-w-30 absolute bottom-6 left-7"
+                onClick={handleFinchStarted}
+              >
+                Start with Finch
+              </Button>
+            </div>
           </div>
 
           {/* Tabs — only render after dashboard data is confirmed ready */}
@@ -452,11 +516,16 @@ export const DashboardPage = () => {
         </main>
         <div className="w-full relative lg:-top-8">
           <p className="text-xs color-base-black">
-            This product provides informational insights and recommendations based on the data you share and industry benchmarks. It does not provide legal, financial, tax, or benefits advice, and recommendations are not guarantees of outcomes or results. Actual results may vary, and you are responsible for evaluating and implementing any recommendations based on your organization’s specific circumstances. Read our  <Link to="/terms-page" className="text-cyan-500 underline">
+            This product provides informational insights and recommendations based on the data you
+            share and industry benchmarks. It does not provide legal, financial, tax, or benefits
+            advice, and recommendations are not guarantees of outcomes or results. Actual results
+            may vary, and you are responsible for evaluating and implementing any recommendations
+            based on your organization’s specific circumstances. Read our{" "}
+            <Link to="/terms-page" className="text-ws-primary-500 underline">
               Terms & Conditions
             </Link>{" "}
             and{" "}
-            <Link to="/privacy-policy" className="text-cyan-500 underline">
+            <Link to="/privacy-policy" className="text-ws-primary-500 underline">
               Privacy Policy
             </Link>
           </p>
