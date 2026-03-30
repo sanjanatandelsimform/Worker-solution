@@ -103,7 +103,7 @@ export default function BenchmarkPage() {
   })();
 
   return (
-    <div className="bg-ws-gray-20 border border-ws-gray-50 rounded-xl p-6 space-y-6">
+    <div className="bg-ws-gray-20 border border-ws-primary-100 rounded-xl p-6 space-y-6">
       <div className="w-full flex items-center justify-between">
         <h2 className="text-2xl lg:text-4xl font-medium text-ws-black-60 leading-10">
           {`Current Trends for  ${industry?.name}`}
@@ -114,7 +114,7 @@ export default function BenchmarkPage() {
       </div>
 
       {/* ── Industry Overview ── */}
-      <div className="bg-ws-white py-8 px-6 border border-ws-gray-50 rounded-xl space-y-6">
+      <div className="bg-ws-white py-8 px-6 border border-ws-primary-100 rounded-xl space-y-6">
         <h3 className="text-3xl font-medium text-ws-black">Industry Overview</h3>
         <div className="flex justify-between gap-10 flex-col lg:flex-row">
           <div className="space-y-5 w-full xl:w-1/3">
@@ -238,7 +238,7 @@ export default function BenchmarkPage() {
             </button>
           </div>
         </div>
-        <div className="bg-ws-purple-10 border border-ws-gray-50 rounded-xl p-4">
+        <div className="bg-ws-purple-10 border border-ws-primary-100 rounded-xl p-4">
           <div className="flex items-center gap-2 text-lg text-ws-black-70 font-medium mb-2">
             <SmileFace />
             <h3 className="text-base font-medium leading-7 text-ws-black-70">Did you know?</h3>
@@ -284,7 +284,7 @@ export default function BenchmarkPage() {
         </div>
 
         {/* ── Area Median Wage ── */}
-        <div className="bg-ws-white border border-ws-gray-50 rounded-xl px-6 py-8">
+        <div className="bg-ws-white border border-ws-primary-100 rounded-xl px-6 py-8">
           <div className="flex items-center justify-between md:items-start flex-col xl:flex-row">
             <div className="space-y-1">
               <h3 className="text-2xl font-medium text-ws-black-60">
@@ -427,7 +427,7 @@ export default function BenchmarkPage() {
         </div>
 
         {/* ── The Cost of Housing ── */}
-        <div className="bg-ws-white border border-ws-gray-50 rounded-xl px-6 py-8">
+        <div className="bg-ws-white border border-ws-primary-100 rounded-xl px-6 py-8">
           <div className="flex items-center">
             <div className="space-y-4">
               <h3 className="text-2xl font-medium text-ws-black">The Cost of Housing</h3>
@@ -602,7 +602,7 @@ export default function BenchmarkPage() {
           </div>
 
           {/* ── Working Class Housing Cost Burden ── */}
-          <div className="bg-ws-white border border-ws-gray-50 rounded-xl px-6 py-8 mt-6">
+          <div className="bg-ws-white border border-ws-primary-100 rounded-xl px-6 py-8 mt-6">
             {/* Header row: title + Household type selector only */}
             <div className="flex items-start justify-between flex-col lg:flex-row gap-4 mb-6">
               <div className="space-y-1">

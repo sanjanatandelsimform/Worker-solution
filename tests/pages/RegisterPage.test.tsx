@@ -23,7 +23,7 @@ vi.mock("@/services/api/authApi", () => ({
   getIndustries: vi.fn(),
 }));
 
-vi.mock("@/assets/checkmark-icon.svg", () => ({ default: "checkmark-icon.svg" }));
+vi.mock("@/assets/finch-checkmark.svg", () => ({ default: "finch-checkmark.svg" }));
 
 const mockSignup = vi.mocked(signup);
 const mockGetIndustries = vi.mocked(getIndustries);

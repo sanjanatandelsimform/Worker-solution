@@ -281,7 +281,7 @@ export const DashboardPage = () => {
   }
 
   return (
-    <div className="flex h-screen overflow-hidden bg-ws-gray-500">
+    <div className="flex h-screen overflow-hidden bg-ws-white">
       {/* Sidebar */}
       <DashboardSidebar activeUrl="/dashboard" />
 
@@ -291,13 +291,17 @@ export const DashboardPage = () => {
         <main className="flex-1 overflow-y-auto p-5 xl:p-10 xl:pl-0">
           <div className="space-y-6"></div>
           <div>
-            <h2 className="text-4xl font-medium text-ws-black-60">
+            <h2 className="text-4xl font-bold text-ws-black-60">
               {assessmentData?.status !== "completed" ? (
-                `Welcome!`
+                `Welcome, ${user?.firstName ? `${user.firstName}!` : ""}`
               ) : (
                 <span className="font-bold mb-4 flex">{`Hi ${user?.firstName}!`}</span>
               )}
             </h2>
+            <p className="text-base font-normal text-ws-black mt-4">
+              BeneStats provides an overview of your workforce, industry, and some recommended
+              solutions that can add more value to your benefits packages and employee support.
+            </p>
             {assessmentData?.status === "completed" && (
               <p className="text-base font-normal text-ws-black">
                 Here's an overview of your workforce, industry, and some recommendations with
@@ -338,13 +342,13 @@ export const DashboardPage = () => {
               </div>
             )}
 
-            {assessmentData?.status !== "completed" && (
-              <div className="mt-6 border border-ws-gray-50 rounded-xl p-4 bg-ws-black-80 shadow-sm flex gap-4 justify-between flex-col lg:flex-row">
+            {/* {assessmentData?.status !== "completed" && (
+              <div className="mt-6 border border-ws-primary-100 rounded-xl p-4 bg-ws-primary-50 shadow-sm flex gap-4 justify-between flex-col lg:flex-row">
                 <div className="flex-1">
-                  <h2 className="text-ws-cyan-10 text-3xl font-normal mb-2">
+                  <h2 className="text-ws-primary-900 text-3xl font-normal mb-2">
                     Thanks for signing up.
                   </h2>
-                  <p className="text-ws-white text-base pr-10">
+                  <p className="text-ws-primary-900 text-base pr-10">
                     Pick up where you left off and complete your company assessment for results and
                     recommendations.
                   </p>
@@ -353,28 +357,30 @@ export const DashboardPage = () => {
                   <img src={fpoHero} alt="Insight hero" className="w-full" />
                 </div>
               </div>
-            )}
+            )} */}
 
             {!emailVerify && (
               <DashboardCard
+                classes="bg-ws-primary-50 border-ws-primary-100" // Custom styles for email verification card
                 title="Verify your email"
                 description={
-                  <>
-                    One quick step to secure your account. Didn't get the email?{" "}
+                  <div className="max-w-2xl text-ws-primary-900">
+                    Verify your email to unlock all BeneStats features and secure your account.
+                    Didn’t recieve an email? Click the button to resend
                     <Link
                       to="#"
                       onClick={e => {
                         e.preventDefault();
                         if (!emailVerify) handleVerifyEmail();
                       }}
-                      className="underline"
+                      className="underline ml-2 text-sm text-ws-primary-400"
                     >
                       Resend verification
                     </Link>
-                  </>
+                  </div>
                 }
                 avatarIconSrc={emailIcon}
-                buttonLabel="Verify email"
+                buttonLabel="Verify"
                 buttonType="primary"
                 buttonIsDisabled={emailVerify}
                 onClick={handleVerifyEmail}
@@ -383,13 +389,21 @@ export const DashboardPage = () => {
 
             {assessmentData?.status !== "completed" && (
               <DashboardCard
+                classes="bg-ws-primary-50 border-ws-primary-100"
                 title={`${completionCount > 0 ? `${completionCount} ` : ""}Take the Assessment`}
-                description="Take our 15 minute assessment for specific recommendations to improve your business"
+                description={
+                  <div className="max-w-2xl text-ws-primary-900">
+                    Take our 15 minute assessment for specific recommendations to improve your
+                    business
+                  </div>
+                }
                 avatarIconSrc={checkIcon}
                 buttonLabel={completionCount > 0 ? "Continue" : "Take Assessment"}
                 buttonType={emailVerify ? "primary" : "secondary"}
                 buttonIsDisabled={!emailVerify}
-                onClick={() => navigate("/assessment")}
+                //onClick={() => navigate("/assessment")}
+                onClick={() => navigate("/get-more")}
+                toggleButton={false}
               />
             )}
           </div>
@@ -397,7 +411,7 @@ export const DashboardPage = () => {
           {/* Tabs — only render after dashboard data is confirmed ready */}
           {emailVerify && assessmentData?.status === "completed" && isDashboardReady && (
             <div className="mt-10">
-              <Tabs>
+              {/* <Tabs>
                 <Tabs.List
                   size="md"
                   type="button-brand"
@@ -412,10 +426,40 @@ export const DashboardPage = () => {
                 <Tabs.Panel id="benchmark" className="pt-12">
                   <BenchmarkPage />
                 </Tabs.Panel>
+              </Tabs> */}
+              <Tabs>
+                <Tabs.List
+                  type="underline"
+                  items={[
+                    { id: "recommendations", label: "Recommendations" },
+                    { id: "workforce", label: "Workforce" },
+                    { id: "industry", label: "Industry" },
+                  ]}
+                />
+                <Tabs.Panel id="recommendations" className="pt-12">
+                  <RecommendationsPage />
+                </Tabs.Panel>
+                <Tabs.Panel id="workforce" className="pt-12">
+                  <BenchmarkPage />
+                </Tabs.Panel>
+                <Tabs.Panel id="industry" className="pt-12">
+                  Industry
+                </Tabs.Panel>
               </Tabs>
             </div>
           )}
         </main>
+        <div className="w-full relative lg:-top-8">
+          <p className="text-xs color-base-black">
+            This product provides informational insights and recommendations based on the data you share and industry benchmarks. It does not provide legal, financial, tax, or benefits advice, and recommendations are not guarantees of outcomes or results. Actual results may vary, and you are responsible for evaluating and implementing any recommendations based on your organization’s specific circumstances. Read our  <Link to="/terms-page" className="text-cyan-500 underline">
+              Terms & Conditions
+            </Link>{" "}
+            and{" "}
+            <Link to="/privacy-policy" className="text-cyan-500 underline">
+              Privacy Policy
+            </Link>
+          </p>
+        </div>
       </div>
 
       {/* Modals */}

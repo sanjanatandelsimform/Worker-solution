@@ -31,7 +31,7 @@ export const RadioButtonBase = ({
   return (
     <div
       className={cx(
-        "flex size-4 min-h-4 min-w-4 cursor-pointer appearance-none items-center justify-center rounded-full bg-ws-white ring-1 ring-ws-gray-50 ring-inset",
+        "flex size-4 min-h-4 min-w-4 cursor-pointer appearance-none items-center justify-center rounded-full bg-ws-white ring-1 ring-ws-primary-100 ring-inset",
         size === "md" && "size-5 min-h-5 min-w-5",
         isSelected && !isDisabled && "bg-blue-700 ring-blue-700",
         isDisabled && "cursor-not-allowed border-disabled bg-disabled_subtle",

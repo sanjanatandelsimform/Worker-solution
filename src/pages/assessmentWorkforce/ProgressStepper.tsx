@@ -26,7 +26,7 @@ export function ProgressStepper({
   const resolvedIndex = steps.findIndex(step => step.id === resolvedStep);
 
   return (
-    <div className="flex w-full items-center gap-2 rounded-xl border border-ws-gray-50 bg-ws-white p-2">
+    <div className="flex w-full items-center gap-2 rounded-xl border border-ws-primary-100 bg-ws-white p-2">
       {steps.map((step, index) => {
         const isCompleted = completedSteps.includes(step.id);
         const isCurrent = step.id === resolvedStep; // actual progress position
@@ -40,29 +40,29 @@ export function ProgressStepper({
 
         if (isHovered) {
           // Hover: teal bg + white text + teal border (same look as Active Focus but filled)
-          bgColor = "bg-cyan-500";
-          textColor = "text-white";
-          borderClass = "border-2 border-cyan-500";
+          bgColor = "bg-ws-tab-bg";
+          textColor = "text-ws-primary-800";
+          borderClass = "border-1 border-ws-gray-40";
         } else if (isActiveFocus) {
           // Active Focus: white bg + teal text + teal border
-          bgColor = "bg-cyan-50";
-          textColor = "text-cyan-500";
-          borderClass = "border-2 border-cyan-500";
+          bgColor = "bg-ws-tab-bg";
+          textColor = "text-ws-primary-800";
+          borderClass = "border-1 border-ws-gray-40";
         } else if (isCompleted) {
           // Completed: dark teal solid bg + white text
-          bgColor = "bg-ws-blue-300";
-          textColor = "text-white";
-          borderClass = "border border-ws-blue-300";
+          bgColor = "bg-ws-tab-active";
+          textColor = "text-ws-primary-800";
+          borderClass = "border-1 border-ws-gray-40";
         } else if (isCurrent) {
           // Current: white bg + mid gray text + gray border
-          bgColor = "bg-cyan-50";
-          textColor = "text-cyan-500";
-          borderClass = "border border-gray-300";
+          bgColor = "bg-ws-tab-bg";
+          textColor = "text-ws-primary-800";
+          borderClass = "border-1 border-ws-gray-40";
         } else {
           // Disabled / Future: light gray bg + light text
-          bgColor = "bg-gray-100";
-          textColor = "text-gray-400";
-          borderClass = "border border-gray-200";
+          bgColor = "bg-ws-gray-30";
+          textColor = "text-black/50";
+          borderClass = "border border-ws-gray-40";
         }
 
         return (

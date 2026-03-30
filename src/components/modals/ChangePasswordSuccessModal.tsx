@@ -1,6 +1,6 @@
 import { CheckCircle } from "@untitledui/icons";
 import { BaseModalWithIcon } from "./BaseModalWithIcon";
-import checkmarkIcon from "@/assets/checkmark-icon.svg";
+import checkmarkIcon from "@/assets/finch-checkmark.svg";
 import { useNavigate } from "react-router-dom";
 import { useAppDispatch } from "@/store/hooks";
 import { logoutThunk } from "@/store/slices/authSlice";

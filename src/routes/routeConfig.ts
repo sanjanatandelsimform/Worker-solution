@@ -10,6 +10,9 @@ import TermsPage from "@/pages/termsPolicy/TermsPage";
 import ForgotPasswordForm from "@/components/auth/ForgotPasswordForm";
 import ResetPasswordForm from "@/components/auth/ResetPasswordForm";
 import AssessmentWorkforcePage from "@/pages/assessmentWorkforce/AssessmentWorkforce";
+import GetMorePage from "@/pages/getMore/GetMore";
+import AdditionalQuestions from "@/pages/additionalQuestions/AdditionalQuestions";
+import AboutUs from "@/pages/aboutUs/AboutUs";
 
 export const routes: RouteConfig[] = [
   // Public routes - accessible only when NOT authenticated
@@ -77,6 +80,24 @@ export const routes: RouteConfig[] = [
     path: "/assessment",
     access: RouteAccess.PROTECTED,
     element: AssessmentWorkforcePage,
+    redirectWhenUnauthenticated: "/sign-in",
+  },
+  {
+    path: "/get-more",
+    access: RouteAccess.PROTECTED,
+    element: GetMorePage,
+    redirectWhenUnauthenticated: "/sign-in",
+  },
+  {
+    path: "/additional-questions",
+    access: RouteAccess.PROTECTED,
+    element: AdditionalQuestions,
+    redirectWhenUnauthenticated: "/sign-in",
+  },
+  {
+    path: "/about-us",
+    access: RouteAccess.PROTECTED,
+    element: AboutUs,
     redirectWhenUnauthenticated: "/sign-in",
   },
 ];

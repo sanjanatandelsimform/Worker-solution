@@ -3,8 +3,9 @@ import { useLocation, useNavigate } from "react-router-dom";
 import { useAppDispatch } from "@/store/hooks";
 import { logout, setTokens, setUser } from "@/store/slices/authSlice";
 import { Button } from "@/components/base/buttons/button";
-import insightHero from "@/assets/checkmark-icon.svg";
+import insightHero from "@/assets/finch-checkmark.svg";
 import type { UserAccount } from "@/types/auth";
+import siteLogo from "@/assets/logo.svg";
 
 export interface SuccessCardProps {
   successImageSrc?: string;
@@ -80,14 +81,14 @@ export const SuccessPage: React.FC<SuccessCardProps> = ({
   };
 
   return (
-    <div className={`flex min-h-screen items-center justify-center bg-secondary ${classess}`}>
-      <div className="flex w-2xl items-center justify-center rounded-xl border border-ws-gray-50 bg-ws-white py-22">
+    <div className={`flex min-h-screen items-center justify-center bg-ws-primary-200 ${classess}`}>
+      <div className="flex w-2xl items-center justify-center rounded-xl border border-ws-primary-100 bg-ws-white py-22">
         <div className="flex w-full max-w-lg flex-col items-center gap-8">
           {/* Header */}
           <div className="flex w-full flex-col items-center gap-6">
             {/* Logo */}
-            <div className="flex items-center justify-center px-2 py-1">
-              <h1 className="text-5xl font-bold leading-15 text-ws-black">BeneStats</h1>
+            <div className="flex items-center justify-center">
+              <img src={siteLogo} alt="Logo" className="max-w-80" />
             </div>
             <div>
               <img
@@ -100,7 +101,7 @@ export const SuccessPage: React.FC<SuccessCardProps> = ({
             {/* Title and Description */}
             <div className="flex flex-col w-full items-center justify-center text-center">
               <h2 className="w-full text-ws-black-50 text-4xl font-medium">
-                {title || state.title || "Thanks for signing up!"}
+                {title || state.title || "Account created successfully!"}
               </h2>
               <p className="max-w-md text-2xl font-normal leading-8 text-ws-gray-80 mt-2">
                 {descriptionText ||
@@ -108,7 +109,7 @@ export const SuccessPage: React.FC<SuccessCardProps> = ({
                   "Welcome aboard! Start your success journey with BeneStats"}
               </p>
             </div>
-            <Button color="primary" size="lg" className="mt-4" onClick={handleButtonClick}>
+            <Button color="primary" size="lg" className="mt-4 bg-ws-primary-900 text-ws-white hover:bg-ws-primary-900-hover focus:bg-ws-primary-900-hover active:bg-ws-primary-900-hover" onClick={handleButtonClick}>
               {buttonLabel || state.buttonText || "Let's Get Started"}
             </Button>
           </div>

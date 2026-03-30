@@ -10,11 +10,13 @@ import { Checkbox } from "@/components/base/checkbox/checkbox";
 import { Eye, EyeOff, AlertCircle } from "@untitledui/icons";
 import type { SignInData } from "@/types/auth";
 import { signin } from "@/services/api/authApi";
-import { ChangePasswordModal } from "../modals/ChangePasswordModal";
-import checkmarkIcon from "@/assets/checkmark-icon.svg";
+import checkmarkIcon from "@/assets/finch-checkmark.svg";
+import siteLogo from "@/assets/logo.svg";
 import { signInSchema, type SignInFormData } from "@/services/validation/authSchemas";
-import ErrorMessage from "../common/ErrorMessage";
 import { getErrorState, type ErrorState } from "@/utils/errorHandler";
+import ErrorMessage from "@/components/common/ErrorMessage";
+import { ChangePasswordModal } from "@/components/modals";
+import { GoogleSSOButton } from "@/components/auth/GoogleSSOButton";
 
 export const SignInForm = () => {
   const [showPassword, setShowPassword] = useState(false);
@@ -87,14 +89,14 @@ export const SignInForm = () => {
   };
 
   return (
-    <div className="flex min-h-screen items-center justify-center bg-ws-gray-20">
-      <div className="flex w-2xl items-center justify-center rounded-xl border border-ws-gray-50 bg-ws-white py-22">
-        <div className="flex w-full max-w-md flex-col items-center gap-8">
+    <div className="flex min-h-screen items-center justify-center bg-ws-primary-200">
+      <div className="flex w-2xl items-center justify-center rounded-xl border border-ws-primary-100 bg-ws-white py-15">
+        <div className="flex w-sm max-w-sm flex-col items-center gap-8">
           {/* Header */}
           <div className="flex w-full flex-col items-center gap-6">
             {/* Logo */}
             <div className="flex items-center justify-center">
-              <h1 className="text-5xl font-bold leading-15 text-ws-black">BeneStats</h1>
+              <img src={siteLogo} alt="Logo" className="max-w-80" />
             </div>
 
             {/* Title and Description */}
@@ -197,7 +199,7 @@ export const SignInForm = () => {
                   />
                 </div>
 
-                <Button type="button" color="link-color" href="/forgot-password" size="md">
+                <Button type="button" color="link-color" className="text-ws-primary-500" href="/forgot-password" size="md">
                   Forgot password?
                 </Button>
               </div>
@@ -210,15 +212,15 @@ export const SignInForm = () => {
                   color="primary"
                   size="lg"
                   isDisabled={isSubmitting}
-                  className="w-full"
+                  className="w-full bg-ws-primary-900 text-ws-white hover:bg-ws-primary-900-hover focus:bg-ws-primary-900-hover active:bg-ws-primary-900-hover"
                 >
                   {isSubmitting ? "Signing in..." : "Sign in"}
                 </Button>
 
                 {/* Social button groups */}
-                {/* <div className="flex w-full flex-col items-center justify-center gap-3">
+                <div className="flex w-full flex-col items-center justify-center gap-3">
                   <GoogleSSOButton />
-                </div> */}
+                </div>
               </div>
             </form>
           </div>
@@ -226,7 +228,7 @@ export const SignInForm = () => {
           {/* Sign up link */}
           <div className="flex w-full items-baseline justify-center gap-1">
             <p className="text-sm font-normal leading-5 text-ws-black-10">Don't have an account?</p>
-            <Button href="/sign-up" color="link-color" size="md">
+            <Button href="/sign-up" color="link-color" className="text-ws-primary-500 font-bold" size="md">
               Sign up
             </Button>
           </div>

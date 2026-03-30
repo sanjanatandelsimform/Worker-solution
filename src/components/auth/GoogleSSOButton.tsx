@@ -16,7 +16,7 @@ export const GoogleSSOButton: React.FC<GoogleSSOButtonProps> = () => {
 
   return (
     <SocialButton social="google" size="md" onClick={handleClick} className="w-full">
-      Continue with Google
+      Sign in with Google
     </SocialButton>
   );
 };

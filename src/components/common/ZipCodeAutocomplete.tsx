@@ -272,7 +272,7 @@ export const ZipCodeAutocomplete: React.FC<ZipCodeAutocompleteProps> = ({
       />
 
       {isOpen && (
-        <ul className="bg-white absolute left-0 right-0 top-full z-50 mt-1 max-h-60 overflow-auto rounded-lg border border-ws-gray-50 shadow-sm">
+        <ul className="bg-white absolute left-0 right-0 top-full z-50 mt-1 max-h-60 overflow-auto rounded-lg border border-ws-primary-100 shadow-sm">
           {isLoading && <li className="px-3.5 py-2.5 text-sm text-muted-foreground">Loading...</li>}
           {!isLoading && hasSearched && suggestions.length === 0 && (
             <li className="px-3.5 py-2.5 text-sm text-muted-foreground">No results found</li>

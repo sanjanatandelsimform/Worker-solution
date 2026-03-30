@@ -15,7 +15,7 @@ vi.mock("@/services/api/authApi", () => ({
   signin: vi.fn(),
 }));
 
-vi.mock("@/assets/checkmark-icon.svg", () => ({ default: "checkmark-icon.svg" }));
+vi.mock("@/assets/finch-checkmark.svg", () => ({ default: "finch-checkmark.svg" }));
 
 const mockSignin = vi.mocked(signin);
 

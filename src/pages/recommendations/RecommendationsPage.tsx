@@ -20,7 +20,7 @@ export default function RecommendationsPage() {
   const companyAtGlance = useAppSelector(selectCompanyAtGlance);
   const strategicRecommendations = useAppSelector(selectStrategicRecommendations);
   return (
-    <div className="bg-ws-gray-20 border border-ws-gray-50 rounded-xl p-6 space-y-6">
+    <div className="bg-ws-gray-20 border border-ws-primary-100 rounded-xl p-6 space-y-6">
       <h2 className="text-2xl lg:text-4xl font-medium text-ws-black-60 leading-10">
         Your Company at a Glance
       </h2>
@@ -71,7 +71,7 @@ export default function RecommendationsPage() {
         />
       </div>
       <CarouselSection />
-      <div className="bg-ws-white py-8 px-6 border border-ws-gray-50 rounded-2xl">
+      <div className="bg-ws-white py-8 px-6 border border-ws-primary-100 rounded-2xl">
         {/* <Badge
           type="pill-color"
           size="lg"
@@ -146,7 +146,7 @@ export default function RecommendationsPage() {
         </div>
       </div>
 
-      <div className="bg-ws-white py-8 px-6 border border-ws-gray-50 rounded-2xl">
+      <div className="bg-ws-white py-8 px-6 border border-ws-primary-100 rounded-2xl">
         {/* <Badge
         {/* <Badge
           type="pill-color"

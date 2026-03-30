@@ -3,9 +3,10 @@ import { useNavigate, useSearchParams } from "react-router-dom";
 import { verifyEmail } from "@/services/api/authApi";
 import { useAppDispatch } from "@/store/hooks";
 import { updateUser, setTokens } from "@/store/slices/authSlice";
-import checkmarkIcon from "@/assets/checkmark-icon.svg";
+import checkmarkIcon from "@/assets/finch-checkmark.svg";
 import { Oval } from "react-loader-spinner";
 import type { UserAccount } from "@/types/auth";
+import siteLogo from "@/assets/logo.svg";
 
 const STORAGE_KEY = "userDetail";
 
@@ -109,10 +110,10 @@ export const VerifyEmailPage: React.FC = () => {
   if (!isVerifying && errorMessage) {
     return (
       <div className="flex min-h-screen items-center justify-center bg-secondary">
-        <div className="flex w-2xl items-center justify-center rounded-xl border border-solid border-ws-gray-50 bg-ws-white py-22">
+        <div className="flex w-2xl items-center justify-center rounded-xl border border-solid border-ws-primary-100 bg-ws-white py-22">
           <div className="flex w-full max-w-md flex-col items-center gap-8">
             <div className="flex items-center justify-center px-2 py-1">
-              <h1 className="text-5xl font-bold leading-15 text-ws-black">BeneStats</h1>
+              <img src={siteLogo} alt="Logo" className="max-w-80" />
             </div>
             <div className="flex w-full flex-col items-center gap-6 text-center">
               <h2 className="w-full text-4xl font-semibold leading-9.5 text-ws-black">

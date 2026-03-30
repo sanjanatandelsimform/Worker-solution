@@ -301,7 +301,7 @@ const InnerMultiSelect = ({
         comboBoxContext?.selectedItems?.items?.map(value => (
           <span
             key={value.id}
-            className="flex items-center rounded-md bg-primary py-0.5 pr-1 pl-1.25 ring-1 ring-ws-gray-50 ring-inset"
+            className="flex items-center rounded-md bg-primary py-0.5 pr-1 pl-1.25 ring-1 ring-ws-primary-100 ring-inset"
           >
             {value?.avatarUrl && <Avatar size="xxs" alt={value?.label} src={value?.avatarUrl} />}
 
@@ -349,7 +349,7 @@ const InnerMultiSelect = ({
           >
             <span
               className={cx(
-                "pointer-events-none rounded px-1 py-px text-xs font-medium text-quaternary ring-1 ring-ws-gray-50 select-none ring-inset",
+                "pointer-events-none rounded px-1 py-px text-xs font-medium text-quaternary ring-1 ring-ws-primary-100 select-none ring-inset",
                 isDisabled && "bg-transparent text-disabled"
               )}
             >
@@ -377,7 +377,7 @@ export const MultiSelectTagsValue = ({
       {...otherProps}
       className={({ isFocusWithin, isDisabled }) =>
         cx(
-          "relative flex w-full items-center gap-2 rounded-lg bg-primary shadow-xs ring-1 ring-ws-gray-50 outline-hidden transition duration-100 ease-linear ring-inset pr-10!",
+          "relative flex w-full items-center gap-2 rounded-lg bg-primary shadow-xs ring-1 ring-ws-primary-100 outline-hidden transition duration-100 ease-linear ring-inset pr-10!",
           isDisabled && "cursor-not-allowed bg-disabled_subtle",
           isFocusWithin && "ring-2 ring-brand",
           sizes[size].root
