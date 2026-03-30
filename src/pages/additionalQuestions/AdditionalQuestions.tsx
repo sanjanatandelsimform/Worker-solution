@@ -238,19 +238,19 @@ export default function AdditionalQuestions() {
     }));
   };
 
-  const handleTopThreeGoalChange = (position: number, goalId: string) => {
-    const newTopThree = [...goalsAnswers.topThreeGoals];
-    newTopThree[position] = goalId;
-    setGoalsAnswers(prev => ({
-      ...prev,
-      topThreeGoals: newTopThree,
-    }));
-  };
+  // const handleTopThreeGoalChange = (position: number, goalId: string) => {
+  //   const newTopThree = [...goalsAnswers.topThreeGoals];
+  //   newTopThree[position] = goalId;
+  //   setGoalsAnswers(prev => ({
+  //     ...prev,
+  //     topThreeGoals: newTopThree,
+  //   }));
+  // };
 
   // Get selected goal labels for ranking
-  const selectedGoalOptions = goalsData
-    .flatMap(category => category.goals)
-    .filter(goal => goalsAnswers.selectedGoals.includes(goal.id));
+  // const selectedGoalOptions = goalsData
+  //   .flatMap(category => category.goals)
+  //   .filter(goal => goalsAnswers.selectedGoals.includes(goal.id));
 
   return (
     <div className="flex min-h-screen flex-col bg-ws-gray-50">

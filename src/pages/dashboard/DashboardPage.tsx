@@ -15,7 +15,6 @@ import { fetchUserById } from "@/store/slices/userSlice";
 import { resendVerificationEmail } from "@/store/slices/profileSlice";
 import { selectProfileError } from "@/store/selectors/profileSelectors";
 import { useModalConfig } from "@/hooks/useModalConfig";
-import fpoHero from "@/assets/fpo-hero-image.png";
 import { useAssessmentStatus } from "@/hooks/useAssessmentStatus";
 import { Tabs } from "@/components/base/tabs/tabs";
 import RecommendationsPage from "../recommendations/RecommendationsPage";

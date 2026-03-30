@@ -1,4 +1,3 @@
-import { Avatar } from "@/components/base/avatar/avatar";
 import { Button } from "@/components/base/buttons/button";
 
 export interface DashboardCardProps {
@@ -16,7 +15,6 @@ export interface DashboardCardProps {
 export default function DashboardCard({
   title,
   description,
-  avatarIconSrc,
   buttonLabel,
   buttonType = "primary",
   buttonIsDisabled = false,
