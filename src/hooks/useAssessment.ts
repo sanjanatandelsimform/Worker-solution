@@ -67,7 +67,7 @@ const normalizeSectionAnswers = (
       delete normalized.commuteTime;
     }
   }
-  
+
   const sectionName = sectionNameMap[section];
   const configSection = questionData.sections.find(
     s => s.name.toLowerCase() === sectionName.toLowerCase()

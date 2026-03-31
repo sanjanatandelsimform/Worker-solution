@@ -9,7 +9,13 @@ interface AccordionItemProps {
   children: React.ReactNode;
 }
 
-function AccordionItem({ value, isOpen = false, onToggle = () => {}, header, children }: AccordionItemProps) {
+function AccordionItem({
+  value,
+  isOpen = false,
+  onToggle = () => {},
+  header,
+  children,
+}: AccordionItemProps) {
   return (
     <div className="w-full">
       <button
@@ -60,7 +66,7 @@ export function Accordion({ children, defaultValue, value, onChange }: Accordion
 
   return (
     <div className="space-y-0 rounded-lg border border-gray-200 bg-white shadow-sm overflow-hidden">
-      {React.Children.map(children, (child) => {
+      {React.Children.map(children, child => {
         if (React.isValidElement<AccordionItemProps>(child)) {
           const typedChild = child as ReactElement<AccordionItemProps>;
           return React.cloneElement(typedChild, {

@@ -8,7 +8,7 @@ export interface RegistrationFormData {
   zipCode?: string;
   businessEmail?: string;
   businessPhone?: string;
-  agreeToTerms?: boolean;
+  // agreeToTerms?: boolean;
 }
 
 export interface RegistrationFormState {

@@ -42,7 +42,7 @@ export interface RegistrationData {
   zipCode: number;
   password: string;
   confirmPassword: string;
-  acceptTerms: boolean;
+  // acceptTerms: boolean;
 }
 
 export interface SignInData {
