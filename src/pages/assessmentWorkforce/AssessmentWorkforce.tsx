@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-import { ChevronLeft, XClose } from "@untitledui/icons";
+import { ChevronLeft, ChevronRight, XClose } from "@untitledui/icons";
 import { Button } from "@/components/base/buttons/button";
 import { ProgressStepper } from "./ProgressStepper";
 import WorkforceTab from "./WorkforceTab";
@@ -257,11 +257,37 @@ export default function AssessmentWorkforcePage() {
               {currentStep === "goals" && <GoalsTab onNext={() => {}} onSuccess={() => {}} />}
             </>
           )}
+          <div className="flex gap-8 my-6 justify-end">
+            <Button
+              color="tertiary"
+              size="md"
+              iconLeading={<ChevronLeft data-icon />}
+              onClick={handleBack}
+              isDisabled={isLoadingGet}
+              className={`flex items-center gap-1 text-lg font-semibold text-ws-primary-800 transition-opacity ${
+                isLoadingGet ? "cursor-not-allowed opacity-40" : "hover:opacity-80"
+              }`}
+            >
+              Back
+            </Button>
+            <Button
+            color="primary"
+            size="md"
+            iconTrailing={<ChevronRight data-icon />}
+            onClick={handleNext}
+            className="min-w-30 bg-ws-primary-900 text-ws-white hover:bg-ws-primary-900-hover focus:bg-ws-primary-900-hover active:bg-ws-primary-900-hover"
+            // isDisabled={isSaving}
+            // isLoading={isSaving}
+          >
+            {isLastStep ? "Submit" : "Next"}
+          </Button>
+          </div>
         </div>
+        
       </div>
 
       {/* Bottom Navigation Bar */}
-      <div className="flex items-center justify-end border-t border-gray-300 bg-white px-6 py-2.5">
+      {/* <div className="flex items-center justify-end border-t border-gray-300 bg-white px-6 py-2.5">
         <Button
           color="primary"
           size="md"
@@ -272,7 +298,7 @@ export default function AssessmentWorkforcePage() {
         >
           {isLastStep ? "Submit" : "Next"}
         </Button>
-      </div>
+      </div> */}
     </div>
   );
 }

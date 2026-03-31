@@ -40,28 +40,28 @@ export function ProgressStepper({
 
         if (isHovered) {
           // Hover: teal bg + white text + teal border (same look as Active Focus but filled)
-          bgColor = "bg-ws-tab-bg";
-          textColor = "text-ws-primary-800";
+          bgColor = "bg-ws-tab-active";
+          textColor = "text-ws-tab-active-text";
           borderClass = "border-1 border-ws-gray-40";
         } else if (isActiveFocus) {
           // Active Focus: white bg + teal text + teal border
           bgColor = "bg-ws-tab-bg";
-          textColor = "text-ws-primary-800";
+          textColor = "text-ws-tab-active-text";
           borderClass = "border-1 border-ws-gray-40";
         } else if (isCompleted) {
           // Completed: dark teal solid bg + white text
           bgColor = "bg-ws-tab-active";
-          textColor = "text-ws-primary-800";
+          textColor = "text-ws-tab-active-text";
           borderClass = "border-1 border-ws-gray-40";
         } else if (isCurrent) {
           // Current: white bg + mid gray text + gray border
           bgColor = "bg-ws-tab-bg";
-          textColor = "text-ws-primary-800";
+          textColor = "text-ws-tab-active-text";
           borderClass = "border-1 border-ws-gray-40";
         } else {
           // Disabled / Future: light gray bg + light text
           bgColor = "bg-ws-gray-30";
-          textColor = "text-black/50";
+          textColor = "text-ws-black-10";
           borderClass = "border border-ws-gray-40";
         }
 

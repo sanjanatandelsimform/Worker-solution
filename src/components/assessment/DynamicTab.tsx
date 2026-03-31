@@ -1072,8 +1072,8 @@ export const DynamicTab = forwardRef<
           <div className="bg-white rounded-lg border border-gray-200 shadow-sm p-6 space-y-6">
             {sectionContent[section] && !hideHeader && (
               <>
-                <h2 className="text-3xl font-semibold mb-2">{sectionContent[section].title}</h2>
-                <p className="text-base text-ws-gray-90">{sectionContent[section].description}</p>
+                <h2 className="text-ws-black-90 text-3xl font-semibold mb-2">{sectionContent[section].title}</h2>
+                <p className="text-base text-ws-black-20">{sectionContent[section].description}</p>
               </>
             )}
             {noSubsectionQuestions.map((question, idx) => renderQuestion(question, idx))}

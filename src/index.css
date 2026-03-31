@@ -92,6 +92,7 @@
   --color-ws-gray-700: var(--ws-color-gray-700);
   --color-ws-tab-bg: var(--ws-color-tab-bg);
   --color-ws-tab-active: var(--ws-color-tab-active);
+  --color-ws-tab-active-text: var(--ws-color-tab-active-text);
  
 }
 
@@ -194,8 +195,10 @@
   --ws-color-gray-50: #FDFDFD;
   --ws-color-gray-100: #575757;
   --ws-color-gray-700: #343E3E;
-  --ws-color-tab-bg: #EDFCF2;
-  --ws-color-tab-active: #CDE5E3;
+  --ws-color-tab-bg: #D2F1EF;
+  --ws-color-tab-active: #B6D3D0;
+  --ws-color-tab-active-text: #2E5450;
+
 
 }
 
