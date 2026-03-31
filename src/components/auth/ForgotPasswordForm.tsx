@@ -7,11 +7,12 @@ import { Input } from "../base/input/input";
 import { InputGroup } from "../base/input/input-group";
 import { Mail01, AlertCircle } from "@untitledui/icons";
 import { forgotPassword } from "@/services/api/authApi";
+import siteLogo from "@/assets/logo.svg";
 import {
   forgotPasswordSchema,
   type ForgotPasswordFormData,
 } from "@/services/validation/authSchemas";
-import checkmarkIcon from "@/assets/checkmark-icon.svg";
+import checkmarkIcon from "@/assets/finch-checkmark.svg";
 import ErrorMessage from "../common/ErrorMessage";
 import { getErrorState, type ErrorState } from "@/utils/errorHandler";
 
@@ -57,19 +58,19 @@ export default function ForgotPasswordForm() {
   };
 
   return (
-    <div className="flex min-h-screen items-center justify-center bg-ws-gray-20">
-      <div className="flex w-2xl items-center justify-center rounded-xl border border-ws-gray-50 bg-ws-white py-22">
+    <div className="flex min-h-screen items-center justify-center bg-ws-primary-200">
+      <div className="flex w-2xl items-center justify-center rounded-xl border border-ws-primary-100 bg-ws-white py-22">
         <div className="flex w-full max-w-md flex-col items-center gap-8">
           {/* Header */}
           <div className="flex w-full flex-col items-center gap-6">
             {/* Logo */}
-            <div className="flex items-center justify-center px-2 py-1">
-              <h1 className="text-5xl font-bold leading-15 text-ws-black">BeneStats</h1>
+            <div className="flex items-center justify-center">
+              <img src={siteLogo} alt="Logo" className="max-w-80" />
             </div>
 
             {/* Title and Description */}
-            <div className="flex w-full flex-col items-start gap-3">
-              <h2 className="w-full text-4xl font-semibold leading-9.5 text-ws-black">
+            <div className="flex w-full flex-col items-center gap-3 text-center">
+              <h2 className="w-full text-3xl font-semibold leading-9.5 text-ws-black">
                 Forgot your password?
               </h2>
               <p className="w-full text-medium font-normal leading-6 text-ws-black-10">
@@ -127,7 +128,7 @@ export default function ForgotPasswordForm() {
                   color="primary"
                   size="lg"
                   isDisabled={isSubmitting}
-                  className="w-auto"
+                  className="w-auto bg-ws-primary-900 text-ws-white hover:bg-ws-primary-900-hover focus:bg-ws-primary-900-hover active:bg-ws-primary-900-hover"
                 >
                   {isSubmitting ? "Sending..." : "Reset Password"}
                 </Button>
@@ -140,7 +141,7 @@ export default function ForgotPasswordForm() {
             <p className="text-sm font-normal leading-5 text-ws-black-10">
               Already have an account?
             </p>
-            <Button href="/sign-in" color="link-color" size="md">
+            <Button href="/sign-in" color="link-color" size="md" className="text-ws-primary-500 font-bold">
               Sign in
             </Button>
           </div>

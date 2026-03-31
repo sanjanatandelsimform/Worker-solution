@@ -1,6 +1,6 @@
 import { useMemo } from "react";
 import { CheckCircle, AlertOctagon } from "@untitledui/icons";
-import checkmarkIcon from "@/assets/checkmark-icon.svg";
+import checkmarkIcon from "@/assets/finch-checkmark.svg";
 import alertIcon from "@/assets/alert-icon.svg";
 import type { BaseModalWithIconProps } from "@/components/modals/BaseModalWithIcon";
 

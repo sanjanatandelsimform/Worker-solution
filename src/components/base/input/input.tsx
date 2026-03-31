@@ -98,13 +98,13 @@ export const InputBase = ({
       ref={groupRef}
       className={({ isFocusWithin, isDisabled, isInvalid }) =>
         cx(
-          "relative flex w-full flex-row place-content-center place-items-center rounded-lg bg-ws-white shadow-xs ring-1 ring-ws-gray-50 transition-shadow duration-100 ease-linear ring-inset border-0",
+          "relative flex w-full flex-row place-content-center place-items-center rounded-lg bg-ws-white shadow-xs ring-1 ring-ws-primary-100 transition-shadow duration-100 ease-linear ring-inset border-0",
 
           isFocusWithin && !isDisabled && isInvalid && "ring-2 ring-ws-red-10",
 
           // Disabled state styles
-          isDisabled && "cursor-not-allowed bg-ws-gray-10 ring-ws-gray-50",
-          "group-disabled:cursor-not-allowed group-disabled:bg-ws-gray-10 group-disabled:ring-ws-gray-50",
+          isDisabled && "cursor-not-allowed bg-ws-gray-10 ring-ws-primary-100",
+          "group-disabled:cursor-not-allowed group-disabled:bg-ws-gray-10 group-disabled:ring-ws-primary-100",
 
           // Invalid state styles
           isInvalid && "ring-1 ring-ws-red-20",

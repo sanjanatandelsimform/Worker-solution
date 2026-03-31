@@ -16,6 +16,9 @@ import ForgotPasswordForm from "./components/auth/ForgotPasswordForm";
 import ResetPasswordForm from "./components/auth/ResetPasswordForm";
 import AssessmentWorkforcePage from "./pages/assessmentWorkforce/AssessmentWorkforce";
 import { VerifyEmailPage } from "./pages/auth/VerifyEmailPage";
+import GetMore from "./pages/getMore/GetMore";
+import AdditionalQuestions from "./pages/additionalQuestions/AdditionalQuestions";
+import AboutUs from "./pages/aboutUs/AboutUs";
 
 function App() {
   const { isAuthReady } = useAuthInit();
@@ -140,6 +143,30 @@ function App() {
             element={
               <ProtectedRoute>
                 <AssessmentWorkforcePage />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/get-more"
+            element={
+              <ProtectedRoute>
+                <GetMore />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/additional-questions"
+            element={
+              <ProtectedRoute>
+                <AdditionalQuestions />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/about-us"
+            element={
+              <ProtectedRoute>
+                <AboutUs />
               </ProtectedRoute>
             }
           />

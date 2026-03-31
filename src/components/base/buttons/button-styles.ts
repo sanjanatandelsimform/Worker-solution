@@ -39,7 +39,7 @@ export const styles = sortCx({
   colors: {
     primary: {
       root: [
-        "bg-cyan-500 text-ws-white shadow-xs-skeumorphic ring-1 ring-transparent ring-inset hover:bg-cyan-600 data-loading:bg-cyan-600",
+        "bg-ws-primary-800 text-ws-white shadow-xs-skeumorphic ring-1 ring-transparent ring-inset hover:bg-ws-primary-800 data-loading:bg-ws-primary-700",
         "before:absolute before:inset-px before:border before:border-white/12 before:mask-b-from-0%",
         "disabled:bg-disabled disabled:shadow-xs disabled:ring-disabled_subtle",
         "*:data-icon:text-button-primary-icon hover:*:data-icon:text-button-primary-icon_hover",
@@ -47,7 +47,7 @@ export const styles = sortCx({
     },
     secondary: {
       root: [
-        "bg-ws-white text-secondary shadow-xs-skeumorphic ring-1 ring-ws-gray-50 ring-inset hover:bg-primary_hover hover:text-secondary_hover data-loading:bg-primary_hover",
+        "bg-ws-white text-secondary shadow-xs-skeumorphic ring-1 ring-ws-primary-100 ring-inset hover:bg-primary_hover hover:text-secondary_hover data-loading:bg-primary_hover",
         "disabled:shadow-xs disabled:ring-disabled_subtle",
         "*:data-icon:text-fg-quaternary hover:*:data-icon:text-fg-quaternary_hover",
       ].join(" "),

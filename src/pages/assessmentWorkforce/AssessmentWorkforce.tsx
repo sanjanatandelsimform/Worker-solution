@@ -158,7 +158,7 @@ export default function AssessmentWorkforcePage() {
   return (
     <div className="flex min-h-screen flex-col bg-ws-color-gray-20">
       {/* Top Navigation Bar */}
-      <div className="flex h-14 items-center justify-between border-b border-cyan-700 bg-cyan-500 px-6 py-4">
+      <div className="flex h-14 items-center justify-between border-b border-ws-primary-600 px-6 py-4">
         {/* Back Button */}
         <Button
           color="tertiary"
@@ -166,7 +166,7 @@ export default function AssessmentWorkforcePage() {
           iconLeading={<ChevronLeft data-icon />}
           onClick={handleBack}
           isDisabled={isLoadingGet}
-          className={`flex items-center gap-1 text-lg font-normal text-white transition-opacity ${
+          className={`flex items-center gap-1 text-lg font-normal text-ws-primary-800 transition-opacity ${
             isLoadingGet ? "cursor-not-allowed opacity-40" : "hover:opacity-80"
           }`}
         >
@@ -174,7 +174,7 @@ export default function AssessmentWorkforcePage() {
         </Button>
 
         {/* Title */}
-        <h1 className="text-lg font-medium text-ws-white">Assessment</h1>
+        <h1 className="text-lg font-medium text-ws-primary-800">Assessment</h1>
 
         {/* Close Button */}
         <Button
@@ -182,7 +182,7 @@ export default function AssessmentWorkforcePage() {
           size="md"
           iconLeading={<XClose data-icon />}
           onClick={handleClose}
-          className="text-ws-white transition-opacity hover:opacity-80"
+          className="text-ws-primary-800 transition-opacity hover:opacity-80"
         />
       </div>
 
@@ -266,7 +266,7 @@ export default function AssessmentWorkforcePage() {
           color="primary"
           size="md"
           onClick={handleNext}
-          className="min-w-30"
+          className="min-w-30 bg-ws-primary-900 text-ws-white hover:bg-ws-primary-900-hover focus:bg-ws-primary-900-hover active:bg-ws-primary-900-hover"
           // isDisabled={isSaving}
           // isLoading={isSaving}
         >

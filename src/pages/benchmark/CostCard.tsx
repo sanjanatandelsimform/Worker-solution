@@ -45,7 +45,7 @@ export default function CostCard({
 
   return (
     <div
-      className={`bg-ws-white p-5 border border-ws-gray-50 rounded-lg w-full flex flex-col relative ${classess}`}
+      className={`bg-ws-white p-5 border border-ws-primary-100 rounded-lg w-full flex flex-col relative ${classess}`}
     >
       {/* Tooltip icon — top-right corner */}
       <div className="absolute top-4 right-4">

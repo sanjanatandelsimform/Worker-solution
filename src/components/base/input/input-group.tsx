@@ -18,7 +18,7 @@ export const InputPrefix = ({ isDisabled, children, ...props }: InputPrefixProps
   <span
     {...props}
     className={cx(
-      "flex text-md text-ws-black-10 shadow-xs ring-1 ring-ws-gray-50 ring-inset",
+      "flex text-md text-ws-black-10 shadow-xs ring-1 ring-ws-primary-100 ring-inset",
       // Styles when the prefix is within an `InputGroup`
       "in-data-input-wrapper:in-data-leading:-mr-px in-data-input-wrapper:in-data-leading:rounded-l-lg",
       "in-data-input-wrapper:in-data-trailing:-ml-px in-data-input-wrapper:in-data-trailing:rounded-r-lg",
@@ -118,7 +118,7 @@ export const InputGroup = ({
               "group relative flex h-max w-full flex-row justify-center rounded-lg bg-ws-white transition-all duration-100 ease-linear",
 
               // Only apply focus ring when child is select and input is focused
-              "has-[&>select]:shadow-0 has-[&>select]:ring-0 has-[&>select]:ring-ws-gray-50 has-[&>select]:has-[input:focus]:ring-1 has-[&>select]:has-[input:focus]:ring-ws-gray-50",
+              "has-[&>select]:shadow-0 has-[&>select]:ring-0 has-[&>select]:ring-ws-primary-100 has-[&>select]:has-[input:focus]:ring-1 has-[&>select]:has-[input:focus]:ring-ws-primary-100",
 
               isDisabled &&
                 "cursor-not-allowed has-[&>select]:bg-disabled_subtle has-[&>select]:ring-border-disabled",

@@ -1,6 +1,6 @@
 import { CheckCircle } from "@untitledui/icons";
 import { BaseModalWithIcon } from "./BaseModalWithIcon";
-import checkmarkIcon from "@/assets/checkmark-icon.svg";
+import checkmarkIcon from "@/assets/finch-checkmark.svg";
 
 interface UpdateCompletedModalProps {
   isOpen: boolean;

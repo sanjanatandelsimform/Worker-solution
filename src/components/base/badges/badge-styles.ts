@@ -11,7 +11,7 @@ export const filledColors: Record<
     addonButton: "hover:bg-gray-100 text-ws-gray-70 hover:text-ws-gray-100",
   },
   brand: {
-    root: "bg-ws-white text-ws-black ring-ws-gray-50",
+    root: "bg-ws-white text-ws-black ring-ws-primary-100",
     addon: "text-utility-brand-500",
     addonButton: "hover:bg-utility-brand-100 text-utility-brand-400 hover:text-utility-brand-500",
   },

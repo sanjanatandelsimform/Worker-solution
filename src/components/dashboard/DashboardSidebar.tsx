@@ -10,6 +10,7 @@ import { useBreakpoint } from "@/hooks/use-breakpoint";
 import { Button } from "../base/buttons/button";
 import { useModalConfig } from "@/hooks/useModalConfig";
 import logoutIcon from "@/assets/logout-Icon.svg";
+import siteLogo from "@/assets/logo.svg";
 
 interface DashboardSidebarProps {
   activeUrl?: string;
@@ -138,7 +139,7 @@ export const DashboardSidebar = ({ activeUrl = "/" }: DashboardSidebarProps) => 
 
   return (
     <div
-      className={`flex h-[calc(100vh-40px)] xl:h-[calc(100vh-80px)] flex-col border-0 border-ws-gray-50 bg-ws-white py-6 lg:py-10 m-5 xl:m-10 rounded-xl shadow-xs transition-all duration-300 ease-in-out ${
+      className={`flex h-[calc(100vh-40px)] xl:h-[calc(100vh-80px)] flex-col border-0 border-ws-primary-100 bg-ws-white py-6 lg:py-10 m-5 xl:m-10 rounded-lg inset-shadow-sm shadow-md transition-all duration-300 ease-in-out ${
         isTabletRange ? (isCollapsed ? "w-20 px-3" : "w-66 px-6") : "w-66 px-6"
       }`}
     >
@@ -147,10 +148,15 @@ export const DashboardSidebar = ({ activeUrl = "/" }: DashboardSidebarProps) => 
         {/* Logo - Hidden when collapsed on tablet */}
         {(!isTabletRange || !isCollapsed) && (
           <div className="flex items-center justify-start overflow-hidden flex-1">
-            <div className="flex items-center justify-center rounded-xl bg-ws-gray-30 px-3 py-1 transition-all duration-300">
-              <h1 className="font-display text-2xl font-bold leading-8 text-black whitespace-nowrap transition-all duration-300">
+            <div className="flex items-center justify-center transition-all duration-300">
+              {/* <h1 className="font-display text-2xl font-bold leading-8 text-black whitespace-nowrap transition-all duration-300">
                 BeneStats
-              </h1>
+              </h1> */}
+              <img
+                src={siteLogo}
+                alt="BeneStats Logo"
+                className="w-full"
+              />
             </div>
           </div>
         )}
@@ -178,7 +184,7 @@ export const DashboardSidebar = ({ activeUrl = "/" }: DashboardSidebarProps) => 
         <NavList
           items={settingsItems}
           activeUrl={activeUrl}
-          className="mt-4 border-t border-ws-gray-50"
+          className="mt-4 border-t border-ws-primary-100"
           isCollapsed={shouldBeCollapsed}
         />
       </nav>
