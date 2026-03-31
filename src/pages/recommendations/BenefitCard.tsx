@@ -22,7 +22,9 @@ export default function BenefitCard({
   badgeClassess,
 }: Readonly<BenefitCardProps>) {
   return (
-    <div className={`p-6 bg-ws-white border border-ws-primary-100 rounded-xl shadow-sm ${classess}`}>
+    <div
+      className={`p-6 bg-ws-white border border-ws-primary-100 rounded-xl shadow-sm ${classess}`}
+    >
       <Badge type="pill-color" color="success" size="sm" className={badgeClassess}>
         {badgeText}
       </Badge>

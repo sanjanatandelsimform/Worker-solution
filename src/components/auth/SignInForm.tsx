@@ -207,7 +207,13 @@ export const SignInForm = () => {
                   />
                 </div>
 
-                <Button type="button" color="link-color" className="text-ws-primary-500" href="/forgot-password" size="md">
+                <Button
+                  type="button"
+                  color="link-color"
+                  className="text-ws-primary-500"
+                  href="/forgot-password"
+                  size="md"
+                >
                   Forgot password?
                 </Button>
               </div>
@@ -236,7 +242,12 @@ export const SignInForm = () => {
           {/* Sign up link */}
           <div className="flex w-full items-baseline justify-center gap-1">
             <p className="text-sm font-normal leading-5 text-ws-black-10">Don't have an account?</p>
-            <Button href="/sign-up" color="link-color" className="text-ws-primary-500 font-bold" size="md">
+            <Button
+              href="/sign-up"
+              color="link-color"
+              className="text-ws-primary-500 font-bold"
+              size="md"
+            >
               Sign up
             </Button>
           </div>

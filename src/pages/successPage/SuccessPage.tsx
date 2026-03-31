@@ -109,7 +109,12 @@ export const SuccessPage: React.FC<SuccessCardProps> = ({
                   "Welcome aboard! Start your success journey with BeneStats"}
               </p>
             </div>
-            <Button color="primary" size="lg" className="mt-4 bg-ws-primary-900 text-ws-white hover:bg-ws-primary-900-hover focus:bg-ws-primary-900-hover active:bg-ws-primary-900-hover" onClick={handleButtonClick}>
+            <Button
+              color="primary"
+              size="lg"
+              className="mt-4 bg-ws-primary-900 text-ws-white hover:bg-ws-primary-900-hover focus:bg-ws-primary-900-hover active:bg-ws-primary-900-hover"
+              onClick={handleButtonClick}
+            >
               {buttonLabel || state.buttonText || "Let's Get Started"}
             </Button>
           </div>

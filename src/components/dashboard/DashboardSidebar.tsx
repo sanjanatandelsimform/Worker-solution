@@ -152,11 +152,7 @@ export const DashboardSidebar = ({ activeUrl = "/" }: DashboardSidebarProps) => 
               {/* <h1 className="font-display text-2xl font-bold leading-8 text-black whitespace-nowrap transition-all duration-300">
                 BeneStats
               </h1> */}
-              <img
-                src={siteLogo}
-                alt="BeneStats Logo"
-                className="w-full"
-              />
+              <img src={siteLogo} alt="BeneStats Logo" className="w-full" />
             </div>
           </div>
         )}

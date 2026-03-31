@@ -128,7 +128,9 @@ export const getStates = async (): Promise<StatesLookupResponse> => {
  */
 export const submitWorkforce = async (responses: Record<string, unknown>): Promise<ApiResponse> => {
   try {
-    const transformWorkforceResponses = (input: Record<string, unknown>): Record<string, unknown> => {
+    const transformWorkforceResponses = (
+      input: Record<string, unknown>
+    ): Record<string, unknown> => {
       const out = { ...input };
       if (out.employeeCommuteMethod !== undefined) {
         out.commuteMethod = out.employeeCommuteMethod;

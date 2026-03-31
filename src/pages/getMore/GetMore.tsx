@@ -53,11 +53,15 @@ export default function GetMore() {
       onClick={e => {
         e.stopPropagation();
         setSelectedPlan(planId);
-      }}  
+      }}
       className="flex w-full cursor-pointer items-center gap-3"
     >
       {/* Radio Button */}
-      <RadioGroup value={selectedPlan} onChange={setSelectedPlan} className="flex gap-0 border border-gray-300 rounded-full">
+      <RadioGroup
+        value={selectedPlan}
+        onChange={setSelectedPlan}
+        className="flex gap-0 border border-gray-300 rounded-full"
+      >
         <RadioButton value={planId} />
       </RadioGroup>
 
@@ -98,7 +102,7 @@ export default function GetMore() {
   );
 
   const handleBack = async () => {
-   navigate("/dashboard");
+    navigate("/dashboard");
   };
 
   const handleClose = () => {
