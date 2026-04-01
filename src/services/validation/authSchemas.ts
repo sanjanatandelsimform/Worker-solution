@@ -56,9 +56,9 @@ export const registrationSchema = z
       .regex(/[0-9]/, "Password must contain at least one number")
       .regex(/[!@#$%^&*(),.?":{}|<>]/, "Password must contain at least one special character"),
     confirmPassword: z.string().min(1, "Confirm password is required"),
-    agreeToTerms: z.boolean().refine(val => val === true, {
-      message: "You must agree to the terms and privacy policies",
-    }),
+    // agreeToTerms: z.boolean().refine(val => val === true, {
+    //   message: "You must agree to the terms and privacy policies",
+    // }),
   })
   .refine(data => data.password === data.confirmPassword, {
     message: "Passwords do not match",

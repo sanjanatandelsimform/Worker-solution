@@ -52,7 +52,7 @@ export function RegistrationForm() {
       businessPhone: savedFormData?.businessPhone || "",
       password: "", // Never persist passwords
       confirmPassword: "", // Never persist passwords
-      agreeToTerms: savedFormData?.agreeToTerms || false,
+      // agreeToTerms: savedFormData?.agreeToTerms || false,
     },
   });
 
@@ -67,7 +67,7 @@ export function RegistrationForm() {
       "businessEmail",
       "password",
       "confirmPassword",
-      "agreeToTerms",
+      // "agreeToTerms",
     ],
   });
 
@@ -80,7 +80,7 @@ export function RegistrationForm() {
     businessEmail,
     password,
     confirmPassword,
-    agreeToTerms,
+    // agreeToTerms,
   ] = watchedFields;
 
   // Auto-save form data on change (except passwords)
@@ -93,7 +93,7 @@ export function RegistrationForm() {
       zipCode,
       businessEmail,
       businessPhone: phoneNumber,
-      agreeToTerms,
+      // agreeToTerms,
       // Do NOT persist passwords
     };
     dispatch(saveFormData(formData));
@@ -105,7 +105,7 @@ export function RegistrationForm() {
     zipCode,
     businessEmail,
     phoneNumber,
-    agreeToTerms,
+    // agreeToTerms,
     dispatch,
   ]);
   // Fetch industries on component mount
@@ -152,7 +152,7 @@ export function RegistrationForm() {
         businessPhone: data.businessPhone,
         password: data.password,
         confirmPassword: data.confirmPassword,
-        acceptTerms: data.agreeToTerms,
+        // acceptTerms: data.agreeToTerms,
       };
 
       await signup(registrationData);
@@ -164,7 +164,7 @@ export function RegistrationForm() {
         state: {
           messageImg: checkmarkIcon,
           title: "Account created successfully!",
-          subtitle: "Welcome aboard! Start your success journey with BeneStats®",
+          subtitle: "Welcome aboard! Start your success journey with BeneStats",
           buttonText: "Let's Get Started",
           buttonPath: "/sign-in",
         },
@@ -331,6 +331,70 @@ export function RegistrationForm() {
                   />
                 </div>
               </InputGroup>
+              <div className="flex flex-col gap-1.5 w-full">
+                <label className="text-sm font-medium text-ws-black-20">
+                  Business Phone Number <span className="text-red-500">*</span>
+                </label>
+                <InputGroup
+                  className={errors.businessPhone ? "error-ring" : "col-start-2"}
+                  // label="Business Phone Number"
+                  hint={errors.businessPhone?.message}
+                  isInvalid={!!errors.businessPhone}
+                  leadingAddon={
+                    <NativeSelect
+                      value={countryCode}
+                      onChange={e => setCountryCode(e.target.value)}
+                      options={COUNTRY_CODES}
+                    />
+                  }
+                >
+                  <InputBase
+                    placeholder="(555) 000-0000"
+                    type="tel"
+                    size="sm"
+                    value={phoneNumber}
+                    maxLength={10}
+                    onChange={(e: React.ChangeEvent<HTMLInputElement> | string) => {
+                      const inputValue = typeof e === "string" ? e : e?.target?.value || "";
+                      // Only allow numeric input and limit to 10 digits
+                      const numericValue = inputValue.replace(/\D/g, "").slice(0, 10);
+                      setPhoneNumber(numericValue);
+                      setValue("businessPhone", numericValue);
+                      trigger("businessPhone");
+                    }}
+                    tooltip={errors.businessPhone ? errors.businessPhone.message : undefined}
+                  />
+                </InputGroup>
+              </div>
+
+              {/* Row 3 - Zip Code & (empty space for layout) */}
+              <InputGroup>
+                <div className="flex flex-col gap-1.5 w-full">
+                  <label className="text-sm font-medium text-ws-black-20">
+                    Zip Code <span className="text-red-500">*</span>
+                  </label>
+                  <Input
+                    name="zipCode"
+                    size="md"
+                    hint={errors.zipCode?.message}
+                    placeholder=""
+                    isInvalid={!!errors.zipCode}
+                    value={zipCode}
+                    maxLength={5}
+                    type="text"
+                    inputMode="numeric"
+                    pattern="[0-9]*"
+                    className={errors.zipCode ? "error-ring" : ""}
+                    tooltip={errors.zipCode ? errors.zipCode.message : undefined}
+                    onChange={value => {
+                      // Only allow numeric input
+                      const numericValue = value.replace(/\D/g, "");
+                      setValue("zipCode", numericValue);
+                      trigger("zipCode");
+                    }}
+                  />
+                </div>
+              </InputGroup>
               <InputGroup isRequired>
                 <div className="flex flex-col gap-1.5 w-full">
                   <label className="text-sm font-medium text-ws-black-20">
@@ -379,23 +443,27 @@ export function RegistrationForm() {
             <div className="grid w-full grid-cols-1 my-4">
               {/* Row 4 - Business Email & Business Phone */}
               <InputGroup className="col-start-1 w-full block">
-                <Input
-                  name="businessEmail"
-                  size="md"
-                  label="Business Email Address"
-                  hint={errors.businessEmail?.message}
-                  placeholder="olivia@untitledui.com"
-                  icon={Mail01}
-                  isInvalid={!!errors.businessEmail}
-                  value={businessEmail}
-                  className={errors.businessEmail ? "error-ring" : ""}
-                  tooltip={errors.businessEmail ? errors.businessEmail.message : undefined}
-                  onChange={value => {
-                    const sanitized = value.replace(/^\s+/, "");
-                    setValue("businessEmail", sanitized);
-                    trigger("businessEmail");
-                  }}
-                />
+                <div className="flex flex-col gap-1.5 w-full">
+                  <label className="text-sm font-medium text-ws-black-20">
+                    Business Email Address <span className="text-red-500">*</span>
+                  </label>
+                  <Input
+                    name="businessEmail"
+                    size="md"
+                    hint={errors.businessEmail?.message}
+                    placeholder="olivia@untitledui.com"
+                    icon={Mail01}
+                    isInvalid={!!errors.businessEmail}
+                    value={businessEmail}
+                    className={errors.businessEmail ? "error-ring" : ""}
+                    tooltip={errors.businessEmail ? errors.businessEmail.message : undefined}
+                    onChange={value => {
+                      const sanitized = value.replace(/^\s+/, "");
+                      setValue("businessEmail", sanitized);
+                      trigger("businessEmail");
+                    }}
+                  />
+                </div>
               </InputGroup>
             </div>
 
@@ -505,9 +573,9 @@ export function RegistrationForm() {
                   </Link>
                 </p>
               </div>
-              {errors.agreeToTerms && (
+              {/* {errors.agreeToTerms && (
                 <p className="mt-1 text-sm text-ws-red-30">{errors.agreeToTerms.message}</p>
-              )}
+              )} */}
             </div>
 
             {/* Submit Error Display */}
