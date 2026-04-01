@@ -6,7 +6,7 @@
 
 import React from "react";
 import { describe, it, expect, vi, beforeEach } from "vitest";
-import { render, screen, waitFor } from "@testing-library/react";
+import { render, screen, waitFor, fireEvent } from "@testing-library/react";
 import { Provider } from "react-redux";
 import { configureStore } from "@reduxjs/toolkit";
 import { MemoryRouter } from "react-router-dom";
@@ -22,6 +22,15 @@ vi.mock("@/hooks/useAssessmentStatus", () => ({
   useAssessmentStatus: () => ({ completionCount: 0, isLoading: false }),
 }));
 
+const mockConnectWithFinch = vi.fn();
+const mockUseFinchConnect = vi.fn(() => ({
+  connectWithFinch: mockConnectWithFinch,
+  isLoading: false,
+}));
+vi.mock("@/hooks/useFinchConnect", () => ({
+  useFinchConnect: (...args: unknown[]) => mockUseFinchConnect(...args),
+}));
+
 vi.mock("@/components/common/ErrorMessage", () => ({
   default: ({ errorMessage }: { errorMessage: string }) => (
     <div data-testid="error-message">{errorMessage}</div>
@@ -31,6 +40,23 @@ vi.mock("@/components/common/ErrorMessage", () => ({
 vi.mock("@/assets/mail-icon.svg", () => ({ default: "mail-icon.svg" }));
 vi.mock("@/assets/file-check.svg", () => ({ default: "file-check.svg" }));
 vi.mock("@/assets/fpo-hero-image.png", () => ({ default: "fpo-hero-image.png" }));
+vi.mock("@/assets/finch-logo.svg", () => ({ default: "finch-logo.svg" }));
+
+vi.mock("react-loader-spinner", () => ({
+  Oval: () => null,
+}));
+
+vi.mock("@/components/dashboard/DashboardSidebar", () => ({
+  DashboardSidebar: () => null,
+}));
+
+vi.mock("@/pages/recommendations/RecommendationsPage", () => ({
+  default: () => null,
+}));
+
+vi.mock("@/pages/benchmark/BenchmarkPage", () => ({
+  default: () => null,
+}));
 
 const mockUser: UserAccount = {
   id: "user-1",
@@ -87,6 +113,10 @@ function renderDashboardPage(store = createTestStore()) {
 describe("DashboardPage", () => {
   beforeEach(() => {
     vi.clearAllMocks();
+    mockUseFinchConnect.mockReturnValue({
+      connectWithFinch: mockConnectWithFinch,
+      isLoading: false,
+    });
     Object.defineProperty(window, "localStorage", {
       value: {
         getItem: vi.fn(() =>
@@ -123,5 +153,35 @@ describe("DashboardPage", () => {
     await waitFor(() => {
       expect(screen.getByText("Verify your email")).toBeInTheDocument();
     });
+  });
+
+  // T018 — clicking "Start with Finch" calls connectWithFinch
+  it("clicking 'Start with Finch' button calls connectWithFinch", async () => {
+    renderDashboardPage();
+
+    await waitFor(() => {
+      expect(screen.getByText("Start with Finch")).toBeInTheDocument();
+    });
+
+    fireEvent.click(screen.getByText("Start with Finch"));
+
+    expect(mockConnectWithFinch).toHaveBeenCalledTimes(1);
+  });
+
+  // T017 — "Start with Finch" button is disabled when isLoading is true
+  it("'Start with Finch' button is disabled when isFinchLoading is true", async () => {
+    mockUseFinchConnect.mockReturnValue({
+      connectWithFinch: mockConnectWithFinch,
+      isLoading: true,
+    });
+    renderDashboardPage();
+
+    await waitFor(() => {
+      expect(screen.getByText("Start with Finch")).toBeInTheDocument();
+    });
+
+    // React Aria Button with isDisabled sets data-disabled attribute
+    const btn = screen.getByRole("button", { name: /Start with Finch/i });
+    expect(btn).toHaveAttribute("data-disabled");
   });
 });

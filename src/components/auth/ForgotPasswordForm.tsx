@@ -141,7 +141,12 @@ export default function ForgotPasswordForm() {
             <p className="text-sm font-normal leading-5 text-ws-black-10">
               Already have an account?
             </p>
-            <Button href="/sign-in" color="link-color" size="md" className="text-ws-primary-500 font-bold">
+            <Button
+              href="/sign-in"
+              color="link-color"
+              size="md"
+              className="text-ws-primary-500 font-bold"
+            >
               Sign in
             </Button>
           </div>

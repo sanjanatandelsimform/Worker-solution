@@ -215,7 +215,7 @@ export default function AdditionalQuestions() {
   });
 
   const handleBack = () => {
-    navigate("/get-more");
+    navigate("/dashboard");
   };
 
   const handleClose = () => {
@@ -362,7 +362,9 @@ export default function AdditionalQuestions() {
                         {/* Conditional Month Dropdown for Annual Raises Question */}
                         {question.hasConditional && answers[question.id] === "yes-raises" && (
                           <div className="ml-6 space-y-2 pt-2">
-                            <Label className="text-sm font-normal text-ws-black-20">If yes, when?</Label>
+                            <Label className="text-sm font-normal text-ws-black-20">
+                              If yes, when?
+                            </Label>
                             <Select
                               items={monthOptions}
                               placeholder="Select Month"
@@ -539,7 +541,6 @@ export default function AdditionalQuestions() {
                 </div>
               </div>
             </div>
-
           </div>
         </div>
       </div>

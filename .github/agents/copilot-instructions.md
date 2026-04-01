@@ -1,8 +1,11 @@
 # untitledui-project Development Guidelines
 
-Auto-generated from all feature plans. Last updated: 2026-01-16
+Auto-generated from all feature plans. Last updated: 2026-04-01
 
 ## Active Technologies
+
+- TypeScript (strict mode) + React 19.2.0 + @tryfinch/react-connect (Finch Connect SDK), sonner (toast via shadcn/ui), axios 1.13.2 via shared apiClient (from authApi.ts), react-router-dom 7 (005-finch-integration)
+- N/A — authorization code and session ID are in-flight only; no client-side persistence. Auth token via existing apiClient interceptor in authApi.ts. (005-finch-integration)
 - TypeScript 5.x with React 19.2.0 + React Hook Form 7.71+, Axios 1.13+, Zod 4.3+, Redux Toolkit 2.11+ (002-industry-api-integration)
 - N/A (API-driven dropdown, no local persistence) (002-industry-api-integration)
 - TypeScript 5.9.3, React 19.2.0 + React Router v7, Redux Toolkit 2.11.2, Axios 1.13.2, React Hook Form 7.71.1, Zod 4.3.5, Tailwind CSS 4.1.18 (004-assessment-api-persistence)
@@ -40,10 +43,12 @@ npm test && npm run lint
 TypeScript with React 19+, strict mode enabled: Follow standard conventions
 
 ## Recent Changes
+
+- 005-finch-integration (update 2026-04-01): Replaced stub finchApi service functions with real apiClient calls (POST /api/v1/finch/connect-session + POST /api/v1/finch/callback). Removed Finch flow from GetMore.tsx. Updated FinchSessionResponse and FinchConnectResponse types. Dashboard-only Finch entry point enforced.
+- 005-finch-integration: Added @tryfinch/react-connect (Finch Connect SDK), sonner (toast notifications via shadcn/ui), custom useFinchConnect hook, stub finchApi service (getFinchSessionId, exchangeFinchCode)
 - 002-profile-settings: Added TypeScript 5.9.3, React 19.2.0 + React Router v7, Redux Toolkit 2.11.2, Axios (via `profileApi.ts` apiClient), @untitledui/icons
 - 001-zipcode-api-integration: Added TypeScript ~5.9.3, React 19.2, JSX transform `react-jsx` + Vite (rolldown-vite 7.2.5), Axios 1.13.2, Redux Toolkit 2.11.2, react-hook-form 7.71.1, Zod 4.3.5, React Router 7.12.0
 - 001-zipcode-api-integration: Added TypeScript 5.x, React 19.2 + Axios 1.13 (HTTP), React Router 7.12, Redux Toolkit, React Aria Components, Tailwind CSS 4.1
-
 
 <!-- MANUAL ADDITIONS START -->
 <!-- MANUAL ADDITIONS END -->

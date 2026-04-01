@@ -27,7 +27,9 @@ export default function DashboardCard({
   const backgroundColor = hasBgClass ? "" : "bg-ws-white";
 
   return (
-    <div className={`mt-6 border border-ws-primary-100 rounded-xl p-4 ${backgroundColor} shadow-sm flex gap-4 justify-between items-center flex-col lg:flex-row ${classes}`}>
+    <div
+      className={`mt-6 border border-ws-primary-100 rounded-xl p-4 ${backgroundColor} shadow-sm flex gap-4 justify-between items-center flex-col lg:flex-row ${classes}`}
+    >
       <div className="flex items-center gap-4 xl:flex-row">
         {/* <Avatar
           size="xl"
@@ -42,7 +44,13 @@ export default function DashboardCard({
       </div>
       {toggleButton && (
         <div className="flex-col lg:flex-row justify-end items-end flex gap-3 w-full lg:w-auto">
-          <Button color={buttonType} size="sm" isDisabled={buttonIsDisabled} onClick={onClick} className="bg-ws-primary-900 text-ws-white hover:bg-ws-primary-900-hover focus:bg-ws-primary-900-hover active:bg-ws-primary-900-hover min-w-30">
+          <Button
+            color={buttonType}
+            size="sm"
+            isDisabled={buttonIsDisabled}
+            onClick={onClick}
+            className="bg-ws-primary-900 text-ws-white hover:bg-ws-primary-900-hover focus:bg-ws-primary-900-hover active:bg-ws-primary-900-hover min-w-30"
+          >
             {buttonLabel}
           </Button>
         </div>

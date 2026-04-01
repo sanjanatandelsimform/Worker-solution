@@ -94,85 +94,85 @@ export default function ResetPasswordForm() {
             >
               {/* New Password Input Field */}
               <InputGroup className="relative">
-                   <div className="flex flex-col gap-1.5 w-full">
+                <div className="flex flex-col gap-1.5 w-full">
                   <label className="text-sm font-medium text-ws-black-20">
                     Password <span className="text-red-500">*</span>
                   </label>
-                <Input
-                  name="newPassword"
-                  placeholder="Password"
-                  size="md"
-                  type={showPassword ? "text" : "password"}
-                  hint={errors.newPassword?.message}
-                  isInvalid={!!errors.newPassword}
-                  value={getValues("newPassword")}
-                  tooltip={errors.newPassword ? errors.newPassword.message : undefined}
-                  onChange={value => {
-                    const sanitized = value.replace(/^\s+/, "");
-                    setValue("newPassword", sanitized);
-                    trigger("newPassword");
-                  }}
-                />
-                <Button
-                  color="tertiary"
-                  size="sm"
-                  type="button"
-                  onClick={() => setShowPassword(!showPassword)}
-                  aria-label={showPassword ? "Hide password" : "Show password"}
-                  className="absolute right-0 top-7"
-                >
-                  {!errors.newPassword && (
-                    <>
-                      {showPassword ? (
-                        <Eye className="size-5 text-ws-gray-70" />
-                      ) : (
-                        <EyeOff className="size-5 text-ws-gray-70" />
-                      )}
-                    </>
-                  )}
-                </Button>
+                  <Input
+                    name="newPassword"
+                    placeholder="Password"
+                    size="md"
+                    type={showPassword ? "text" : "password"}
+                    hint={errors.newPassword?.message}
+                    isInvalid={!!errors.newPassword}
+                    value={getValues("newPassword")}
+                    tooltip={errors.newPassword ? errors.newPassword.message : undefined}
+                    onChange={value => {
+                      const sanitized = value.replace(/^\s+/, "");
+                      setValue("newPassword", sanitized);
+                      trigger("newPassword");
+                    }}
+                  />
+                  <Button
+                    color="tertiary"
+                    size="sm"
+                    type="button"
+                    onClick={() => setShowPassword(!showPassword)}
+                    aria-label={showPassword ? "Hide password" : "Show password"}
+                    className="absolute right-0 top-7"
+                  >
+                    {!errors.newPassword && (
+                      <>
+                        {showPassword ? (
+                          <Eye className="size-5 text-ws-gray-70" />
+                        ) : (
+                          <EyeOff className="size-5 text-ws-gray-70" />
+                        )}
+                      </>
+                    )}
+                  </Button>
                 </div>
               </InputGroup>
 
               {/* Confirm Password Input Field */}
               <InputGroup className="relative">
-                 <div className="flex flex-col gap-1.5 w-full">
+                <div className="flex flex-col gap-1.5 w-full">
                   <label className="text-sm font-medium text-ws-black-20">
                     Confirm Password <span className="text-red-500">*</span>
                   </label>
-                <Input
-                  name="confirmPassword"
-                  placeholder="Confirm Password"
-                  size="md"
-                  type={showConfirmPassword ? "text" : "password"}
-                  hint={errors.confirmPassword?.message}
-                  isInvalid={!!errors.confirmPassword}
-                  value={getValues("confirmPassword")}
-                  tooltip={errors.confirmPassword ? errors.confirmPassword.message : undefined}
-                  onChange={value => {
-                    const sanitized = value.replace(/^\s+/, "");
-                    setValue("confirmPassword", sanitized);
-                    trigger("confirmPassword");
-                  }}
-                />
-                <Button
-                  color="tertiary"
-                  size="sm"
-                  type="button"
-                  onClick={() => setShowConfirmPassword(!showConfirmPassword)}
-                  aria-label={showConfirmPassword ? "Hide password" : "Show password"}
-                  className="absolute right-0 top-7"
-                >
-                  {!errors.confirmPassword && (
-                    <>
-                      {showConfirmPassword ? (
-                        <Eye className="size-5 text-ws-gray-70" />
-                      ) : (
-                        <EyeOff className="size-5 text-ws-gray-70" />
-                      )}
-                    </>
-                  )}
-                </Button>
+                  <Input
+                    name="confirmPassword"
+                    placeholder="Confirm Password"
+                    size="md"
+                    type={showConfirmPassword ? "text" : "password"}
+                    hint={errors.confirmPassword?.message}
+                    isInvalid={!!errors.confirmPassword}
+                    value={getValues("confirmPassword")}
+                    tooltip={errors.confirmPassword ? errors.confirmPassword.message : undefined}
+                    onChange={value => {
+                      const sanitized = value.replace(/^\s+/, "");
+                      setValue("confirmPassword", sanitized);
+                      trigger("confirmPassword");
+                    }}
+                  />
+                  <Button
+                    color="tertiary"
+                    size="sm"
+                    type="button"
+                    onClick={() => setShowConfirmPassword(!showConfirmPassword)}
+                    aria-label={showConfirmPassword ? "Hide password" : "Show password"}
+                    className="absolute right-0 top-7"
+                  >
+                    {!errors.confirmPassword && (
+                      <>
+                        {showConfirmPassword ? (
+                          <Eye className="size-5 text-ws-gray-70" />
+                        ) : (
+                          <EyeOff className="size-5 text-ws-gray-70" />
+                        )}
+                      </>
+                    )}
+                  </Button>
                 </div>
               </InputGroup>
 
@@ -206,7 +206,12 @@ export default function ResetPasswordForm() {
             <p className="text-sm font-normal leading-5 text-ws-black-10">
               Remember your password?
             </p>
-            <Button href="/sign-in" color="link-color" size="md" className="text-ws-primary-500 font-bold">
+            <Button
+              href="/sign-in"
+              color="link-color"
+              size="md"
+              className="text-ws-primary-500 font-bold"
+            >
               Sign in
             </Button>
           </div>

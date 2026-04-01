@@ -20,18 +20,18 @@ import { Button } from "@/components/base/buttons/button";
 import ErrorMessage from "@/components/common/ErrorMessage";
 
 export function RegistrationForm() {
-      const dispatch = useAppDispatch();
+  const dispatch = useAppDispatch();
   const navigate = useNavigate();
-    const savedFormData = useAppSelector(selectRegistrationFormData);
-    
-      const [showPassword, setShowPassword] = useState(false);
-      const [showConfirmPassword, setShowConfirmPassword] = useState(false);
-      const [phoneNumber, setPhoneNumber] = useState(savedFormData?.businessPhone || "");
-      const [countryCode, setCountryCode] = useState("US");
-      const [submitError, setSubmitError] = useState<ErrorState | null>(null);
-      const [industries, setIndustries] = useState<Industry[]>([]);
-      const [isLoadingIndustries, setIsLoadingIndustries] = useState(true);
-      const [industryError, setIndustryError] = useState<string | null>(null);
+  const savedFormData = useAppSelector(selectRegistrationFormData);
+
+  const [showPassword, setShowPassword] = useState(false);
+  const [showConfirmPassword, setShowConfirmPassword] = useState(false);
+  const [phoneNumber, setPhoneNumber] = useState(savedFormData?.businessPhone || "");
+  const [countryCode, setCountryCode] = useState("US");
+  const [submitError, setSubmitError] = useState<ErrorState | null>(null);
+  const [industries, setIndustries] = useState<Industry[]>([]);
+  const [isLoadingIndustries, setIsLoadingIndustries] = useState(true);
+  const [industryError, setIndustryError] = useState<string | null>(null);
 
   const {
     handleSubmit,
@@ -179,7 +179,7 @@ export function RegistrationForm() {
     }
   };
   return (
-     <div className="flex min-h-screen items-center justify-center md:p-8 bg-ws-primary-200">
+    <div className="flex min-h-screen items-center justify-center md:p-8 bg-ws-primary-200">
       {/* Container */}
       <div className="flex w-3xl items-center justify-center rounded-xl border border-ws-primary-100 bg-ws-white p-10">
         {/* Content */}
@@ -192,7 +192,8 @@ export function RegistrationForm() {
           {/* Header */}
           <div className="flex w-full flex-col items-start gap-2">
             <p className="w-full flex items-center justify-center text-center font-normal text-lg/7 leading-6 text-ws-black-10">
-              We’re excited that you’ve decided to try our BeneStats platform. Before we begin we’ll need to collect some information about your business. 
+              We’re excited that you’ve decided to try our BeneStats platform. Before we begin we’ll
+              need to collect some information about your business.
             </p>
           </div>
 
@@ -273,7 +274,7 @@ export function RegistrationForm() {
                 />
               </InputGroup>
 
-               <InputGroup
+              <InputGroup
                 className={errors.businessPhone ? "error-ring" : "col-start-2"}
                 label="Business Phone Number"
                 hint={errors.businessPhone?.message}
@@ -373,9 +374,8 @@ export function RegistrationForm() {
               {isLoadingIndustries && (
                 <p className="text-sm text-gray-600 mt-1.5">Loading industries...</p>
               )}
-            
             </div>
-            
+
             <div className="grid w-full grid-cols-1 my-4">
               {/* Row 4 - Business Email & Business Phone */}
               <InputGroup className="col-start-1 w-full block">
@@ -493,7 +493,17 @@ export function RegistrationForm() {
             {/* Agreement Section */}
             <div className="col-span-2 mt-6 flex items-center flex-col justify-center gap-2">
               <div className="flex gap-2 items-start">
-                <p className="text-sm font-normal leading-5 text-ws-black">By clicking Create Account, you are confirming that you have read and agree to the BeneStats <Link to="/terms-page" className="cursor-pointer text-ws-primary-500">Terms</Link> and <Link to="/privacy-policy" className="cursor-pointer text-ws-primary-500">Privacy Policies</Link></p>
+                <p className="text-sm font-normal leading-5 text-ws-black">
+                  By clicking Create Account, you are confirming that you have read and agree to the
+                  BeneStats{" "}
+                  <Link to="/terms-page" className="cursor-pointer text-ws-primary-500">
+                    Terms
+                  </Link>{" "}
+                  and{" "}
+                  <Link to="/privacy-policy" className="cursor-pointer text-ws-primary-500">
+                    Privacy Policies
+                  </Link>
+                </p>
               </div>
               {errors.agreeToTerms && (
                 <p className="mt-1 text-sm text-ws-red-30">{errors.agreeToTerms.message}</p>
@@ -535,5 +545,5 @@ export function RegistrationForm() {
         </div>
       </div>
     </div>
-  )
+  );
 }

@@ -17,6 +17,7 @@ import { resendVerificationEmail } from "@/store/slices/profileSlice";
 import { selectProfileError } from "@/store/selectors/profileSelectors";
 import { useModalConfig } from "@/hooks/useModalConfig";
 import { useAssessmentStatus } from "@/hooks/useAssessmentStatus";
+import { useFinchConnect } from "@/hooks/useFinchConnect";
 import { Tabs } from "@/components/base/tabs/tabs";
 import RecommendationsPage from "../recommendations/RecommendationsPage";
 import BenchmarkPage from "../benchmark/BenchmarkPage";
@@ -31,6 +32,7 @@ export const DashboardPage = () => {
   const user = useAppSelector(selectUser);
   const dispatch = useAppDispatch();
   const profileError = useAppSelector(selectProfileError);
+  const { connectWithFinch, isLoading: isFinchLoading } = useFinchConnect();
 
   const emailVerify = user?.emailVerify || false;
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
@@ -283,13 +285,9 @@ export const DashboardPage = () => {
     );
   }
 
-    const handleGetStarted = () => {
-      navigate("/assessment");
-    };
-
-  const handleFinchStarted = () => {
-    navigate("/additional-questions");
-  }
+  const handleGetStarted = () => {
+    navigate("/assessment");
+  };
 
   return (
     <div className="flex h-screen overflow-hidden bg-ws-white">
@@ -447,11 +445,14 @@ export const DashboardPage = () => {
             </div>
             <div className="flex-1 py-6 px-7 border border-ws-primary-100 rounded-xl min-h-109 relative">
               <div className="flex items-center justify-between border-b border-ws-primary-100 pb-4 mb-4">
-                <h2 className="flex items-center text-ws-black-10 text-2xl font-medium">Connect with <img src={finchLogo} alt="Finch Logo" className="ml-2" /></h2>
+                <h2 className="flex items-center text-ws-black-10 text-2xl font-medium">
+                  Connect with <img src={finchLogo} alt="Finch Logo" className="ml-2" />
+                </h2>
                 <p className="text-ws-black-10 text-base">Free</p>
               </div>
               <p className="text-ws-black-10 text-base">
-                Finch handles the connection for you, syncing all your data automatically so you get richer insights and expanded dashboard views — without any extra work on your end.
+                Finch handles the connection for you, syncing all your data automatically so you get
+                richer insights and expanded dashboard views — without any extra work on your end.
               </p>
               <ul className="text-ws-black-10 text-base list-disc list-inside my-4">
                 <li>Results in 3-5 min</li>
@@ -459,14 +460,17 @@ export const DashboardPage = () => {
                 <li>Additional dashboard views plus everything you get in the basic plan</li>
               </ul>
               <p className="text-ws-black-10 text-base">
-                By connecting with Finch, you'll be redirected to their site to complete the setup. Please note that data shared is secure and protected by Finch’s thorough data privacy policies.
+                By connecting with Finch, you'll be redirected to their site to complete the setup.
+                Please note that data shared is secure and protected by Finch’s thorough data
+                privacy policies.
               </p>
               <Button
                 iconTrailing={<ChevronRight />}
                 size="sm"
                 color="primary"
                 className="min-w-30 absolute bottom-6 left-7"
-                onClick={handleFinchStarted}
+                onClick={() => void connectWithFinch()}
+                isDisabled={isFinchLoading}
               >
                 Start with Finch
               </Button>
