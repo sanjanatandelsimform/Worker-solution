@@ -250,6 +250,15 @@ export const ZipCodeAutocomplete: React.FC<ZipCodeAutocompleteProps> = ({
     if (e.key === "Escape") setIsOpen(false);
   }, []);
 
+  // Prevent clipboard actions (paste, copy, cut) — zip code must be typed or selected from dropdown
+  const preventClipboard = useCallback((e: React.ClipboardEvent<HTMLInputElement>): void => {
+    e.preventDefault();
+  }, []);
+
+  const preventContextMenu = useCallback((e: React.MouseEvent<HTMLInputElement>): void => {
+    e.preventDefault();
+  }, []);
+
   const hasZipError =
     isInvalid || validityState === "invalid_zip" || validityState === "state_mismatch";
 
@@ -263,6 +272,10 @@ export const ZipCodeAutocomplete: React.FC<ZipCodeAutocompleteProps> = ({
         value={inputValue}
         onChange={handleInputChange}
         onKeyDown={handleKeyDown}
+        onPaste={preventClipboard}
+        onCopy={preventClipboard}
+        onCut={preventClipboard}
+        onContextMenu={preventContextMenu}
         placeholder={placeholder}
         className={`h-10 w-full rounded-lg border px-3.5 py-2.5 text-base shadow-xs outline-none transition-colors ${
           hasZipError
@@ -272,7 +285,7 @@ export const ZipCodeAutocomplete: React.FC<ZipCodeAutocompleteProps> = ({
       />
 
       {isOpen && (
-        <ul className="bg-white absolute left-0 right-0 top-full z-50 mt-1 max-h-60 overflow-auto rounded-lg border border-ws-primary-100 shadow-sm">
+        <ul className="bg-white absolute left-0 right-0 top-full z-50 mt-1 max-h-60 overflow-auto rounded-lg border border-ws-gray-50 shadow-sm">
           {isLoading && <li className="px-3.5 py-2.5 text-sm text-muted-foreground">Loading...</li>}
           {!isLoading && hasSearched && suggestions.length === 0 && (
             <li className="px-3.5 py-2.5 text-sm text-muted-foreground">No results found</li>
