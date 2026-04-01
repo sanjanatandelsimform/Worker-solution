@@ -450,32 +450,11 @@ export const DashboardPage = () => {
           </div>
 
           {emailVerify && assessmentData?.status !== "completed" && (
-            <>
-              <div className="flex items-center justify-between gap-4 mt-6">
-                <div className="flex-1 py-6 px-7 border border-ws-primary-100 rounded-xl min-h-109 relative">
-                  <div className="flex items-center justify-between border-b border-ws-primary-100 pb-4 mb-4">
-                    <h2 className="text-ws-black-10 text-2xl font-medium">Basic Plan</h2>
-                    <p className="text-ws-black-10 text-base">Free</p>
-                  </div>
-                  <p className="text-ws-black-10 text-base">
-                    Fill out a simple assessment form and get high level recommendations to enhance
-                    your benefits program.
-                  </p>
-                  <ul className="text-ws-black-10 text-base list-disc list-inside my-4">
-                    <li>Results in 10 min</li>
-                    <li>Industry benchmarks</li>
-                    <li>Placed-based insights</li>
-                    <li>Annual data updates</li>
-                  </ul>
-                  <Button
-                    iconTrailing={<ChevronRight />}
-                    size="sm"
-                    color="primary"
-                    className="min-w-30 absolute bottom-6 left-7"
-                    onClick={handleGetStarted}
-                  >
-                    Let’s Get Started
-                  </Button>
+            <div className="flex items-center justify-between gap-4 mt-6">
+              <div className="flex-1 py-6 px-7 border border-ws-primary-100 rounded-xl min-h-109 relative">
+                <div className="flex items-center justify-between border-b border-ws-primary-100 pb-4 mb-4">
+                  <h2 className="text-ws-black-10 text-2xl font-medium">Basic Plan</h2>
+                  <p className="text-ws-black-10 text-base">Free</p>
                 </div>
                 <p className="text-ws-black-10 text-base">
                   Fill out a simple assessment form and get high level recommendations to enhance
@@ -530,7 +509,7 @@ export const DashboardPage = () => {
                   Start with Finch
                 </Button>
               </div>
-            </>
+            </div>
           )}
 
           {/* Tabs — only render after dashboard data is confirmed ready */}
