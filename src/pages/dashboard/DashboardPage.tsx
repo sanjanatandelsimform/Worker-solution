@@ -48,6 +48,7 @@ export const DashboardPage = () => {
   const [showGoalsSuccessModal, setShowGoalsSuccessModal] = useState(false);
   const [showGoalsEmptyWarning, setShowGoalsEmptyWarning] = useState(false);
   const [isDashboardReady, setIsDashboardReady] = useState(false);
+  const [showLoadingModal, setShowLoadingModal] = useState(false);
   const hasRunDashboardFetchRef = useRef(false);
   const fromGoalsCompletionRef = useRef(false);
 
@@ -134,16 +135,25 @@ export const DashboardPage = () => {
       !hasRunDashboardFetchRef.current
     ) {
       hasRunDashboardFetchRef.current = true;
+      const isFromAssessment = fromGoalsCompletionRef.current;
 
       const fetchWithModal = async () => {
-        setShowInProgressModal(true);
+        setErrorMessage(null);
+        if (isFromAssessment) {
+          setShowInProgressModal(true);
+          setShowLoadingModal(false);
+        } else {
+          setShowLoadingModal(true);
+          setShowInProgressModal(false);
+        }
         try {
           const resultAction = await dispatch(fetchDashboard());
           setShowInProgressModal(false);
+          setShowLoadingModal(false);
 
           if (fetchDashboard.fulfilled.match(resultAction)) {
             setIsDashboardReady(true);
-            if (fromGoalsCompletionRef.current) {
+            if (isFromAssessment) {
               setShowGoalsSuccessModal(true);
               fromGoalsCompletionRef.current = false;
             }
@@ -154,7 +164,12 @@ export const DashboardPage = () => {
               errorMsg?.toLowerCase().includes("incomplete") ||
               errorMsg?.toLowerCase().includes("no data")
             ) {
-              setShowGoalsEmptyWarning(true);
+              if (isFromAssessment) {
+                setShowGoalsEmptyWarning(true);
+                fromGoalsCompletionRef.current = false;
+              } else {
+                setErrorMessage(errorMsg || "Failed to load dashboard data");
+              }
             } else {
               setErrorMessage(errorMsg || "Failed to load dashboard data");
             }
@@ -162,7 +177,13 @@ export const DashboardPage = () => {
         } catch (error) {
           console.error("error:", error);
           setShowInProgressModal(false);
-          setShowGoalsEmptyWarning(true);
+          setShowLoadingModal(false);
+          if (isFromAssessment) {
+            setShowGoalsEmptyWarning(true);
+            fromGoalsCompletionRef.current = false;
+          } else {
+            setErrorMessage("Failed to load dashboard data");
+          }
         }
       };
 
@@ -172,7 +193,16 @@ export const DashboardPage = () => {
 
   const handleFetchDashboardWithModals = useCallback(async () => {
     setErrorMessage(null);
-    setShowInProgressModal(true);
+
+    const isFromAssessment = fromGoalsCompletionRef.current;
+
+    if (isFromAssessment) {
+      setShowInProgressModal(true);
+      setShowLoadingModal(false);
+    } else {
+      setShowLoadingModal(true);
+      setShowInProgressModal(false);
+    }
 
     try {
       const resultAction = await dispatch(fetchDashboard());
@@ -309,10 +339,12 @@ export const DashboardPage = () => {
                 <span className="font-bold mb-4 flex">{`Hi ${user?.firstName}!`}</span>
               )}
             </h2>
-            <p className="text-base font-normal text-ws-black mt-4">
-              BeneStats provides an overview of your workforce, industry, and some recommended
-              solutions that can add more value to your benefits packages and employee support.
-            </p>
+            {!emailVerify && (
+              <p className="text-base font-normal text-ws-black mt-4">
+                BeneStats provides an overview of your workforce, industry, and some recommended
+                solutions that can add more value to your benefits packages and employee support.
+              </p>
+            )}
             {assessmentData?.status === "completed" && (
               <p className="text-base font-normal text-ws-black">
                 Here's an overview of your workforce, industry, and some recommendations with
@@ -398,7 +430,7 @@ export const DashboardPage = () => {
               />
             )}
 
-            {assessmentData?.status !== "completed" && (
+            {emailVerify && assessmentData?.status !== "completed" && (
               <DashboardCard
                 classes="bg-ws-primary-50 border-ws-primary-100"
                 title={`${completionCount > 0 ? `${completionCount} ` : ""}Take the Assessment`}
@@ -419,64 +451,67 @@ export const DashboardPage = () => {
             )}
           </div>
 
-          <div className="flex items-center justify-between gap-4 mt-6">
-            <div className="flex-1 py-6 px-7 border border-ws-primary-100 rounded-xl min-h-109 relative">
-              <div className="flex items-center justify-between border-b border-ws-primary-100 pb-4 mb-4">
-                <h2 className="text-ws-black-10 text-2xl font-medium">Basic Plan</h2>
-                <p className="text-ws-black-10 text-base">Free</p>
+          {emailVerify && assessmentData?.status !== "completed" && (
+            <div className="flex items-center justify-between gap-4 mt-6">
+              <div className="flex-1 py-6 px-7 border border-ws-primary-100 rounded-xl min-h-109 relative">
+                <div className="flex items-center justify-between border-b border-ws-primary-100 pb-4 mb-4">
+                  <h2 className="text-ws-black-10 text-2xl font-medium">Basic Plan</h2>
+                  <p className="text-ws-black-10 text-base">Free</p>
+                </div>
+                <p className="text-ws-black-10 text-base">
+                  Fill out a simple assessment form and get high level recommendations to enhance
+                  your benefits program.
+                </p>
+                <ul className="text-ws-black-10 text-base list-disc list-inside my-4">
+                  <li>Results in 10 min</li>
+                  <li>Industry benchmarks</li>
+                  <li>Placed-based insights</li>
+                  <li>Annual data updates</li>
+                </ul>
+                <Button
+                  iconTrailing={<ChevronRight />}
+                  size="sm"
+                  color="primary"
+                  className="min-w-30 absolute bottom-6 left-7"
+                  onClick={handleGetStarted}
+                >
+                  Let’s Get Started
+                </Button>
               </div>
-              <p className="text-ws-black-10 text-base">
-                Fill out a simple assessment form and get high level recommendations to enhance your
-                benefits program.
-              </p>
-              <ul className="text-ws-black-10 text-base list-disc list-inside my-4">
-                <li>Results in 10 min</li>
-                <li>Industry benchmarks</li>
-                <li>Placed-based insights</li>
-                <li>Annual data updates</li>
-              </ul>
-              <Button
-                iconTrailing={<ChevronRight />}
-                size="sm"
-                color="primary"
-                className="min-w-30 absolute bottom-6 left-7"
-                onClick={handleGetStarted}
-              >
-                Let’s Get Started
-              </Button>
-            </div>
-            <div className="flex-1 py-6 px-7 border border-ws-primary-100 rounded-xl min-h-109 relative">
-              <div className="flex items-center justify-between border-b border-ws-primary-100 pb-4 mb-4">
-                <h2 className="flex items-center text-ws-black-10 text-2xl font-medium">
-                  Connect with <img src={finchLogo} alt="Finch Logo" className="ml-2" />
-                </h2>
-                <p className="text-ws-black-10 text-base">Free</p>
+              <div className="flex-1 py-6 px-7 border border-ws-primary-100 rounded-xl min-h-109 relative">
+                <div className="flex items-center justify-between border-b border-ws-primary-100 pb-4 mb-4">
+                  <h2 className="flex items-center text-ws-black-10 text-2xl font-medium">
+                    Connect with <img src={finchLogo} alt="Finch Logo" className="ml-2" />
+                  </h2>
+                  <p className="text-ws-black-10 text-base">Free</p>
+                </div>
+                <p className="text-ws-black-10 text-base">
+                  Finch handles the connection for you, syncing all your data automatically so you
+                  get richer insights and expanded dashboard views — without any extra work on your
+                  end.
+                </p>
+                <ul className="text-ws-black-10 text-base list-disc list-inside my-4">
+                  <li>Results in 3-5 min</li>
+                  <li>Custom workforce data and insights</li>
+                  <li>Additional dashboard views plus everything you get in the basic plan</li>
+                </ul>
+                <p className="text-ws-black-10 text-base">
+                  By connecting with Finch, you'll be redirected to their site to complete the
+                  setup. Please note that data shared is secure and protected by Finch’s thorough
+                  data privacy policies.
+                </p>
+                <Button
+                  iconTrailing={<ChevronRight />}
+                  size="sm"
+                  color="primary"
+                  className="min-w-30 absolute bottom-6 left-7"
+                  onClick={handleFinchStarted}
+                >
+                  Start with Finch
+                </Button>
               </div>
-              <p className="text-ws-black-10 text-base">
-                Finch handles the connection for you, syncing all your data automatically so you get
-                richer insights and expanded dashboard views — without any extra work on your end.
-              </p>
-              <ul className="text-ws-black-10 text-base list-disc list-inside my-4">
-                <li>Results in 3-5 min</li>
-                <li>Custom workforce data and insights</li>
-                <li>Additional dashboard views plus everything you get in the basic plan</li>
-              </ul>
-              <p className="text-ws-black-10 text-base">
-                By connecting with Finch, you'll be redirected to their site to complete the setup.
-                Please note that data shared is secure and protected by Finch’s thorough data
-                privacy policies.
-              </p>
-              <Button
-                iconTrailing={<ChevronRight />}
-                size="sm"
-                color="primary"
-                className="min-w-30 absolute bottom-6 left-7"
-                onClick={handleFinchStarted}
-              >
-                Start with Finch
-              </Button>
             </div>
-          </div>
+          )}
 
           {/* Tabs — only render after dashboard data is confirmed ready */}
           {emailVerify && assessmentData?.status === "completed" && isDashboardReady && (
@@ -555,6 +590,13 @@ export const DashboardPage = () => {
         onClose={() => setShowInProgressModal(false)}
         title="Preparing..."
         subtitle="One moment while we prepare your results and recommendations."
+      />
+
+      <InProgressModal
+        isOpen={showLoadingModal}
+        onClose={() => setShowLoadingModal(false)}
+        title="Loading..."
+        subtitle="This won't take long."
       />
 
       <BaseModalWithIcon
