@@ -249,62 +249,6 @@ export function RegistrationForm() {
                 </div>
               </InputGroup>
 
-              {/* Row 3 - Zip Code & (empty space for layout) */}
-              <InputGroup>
-                <Input
-                  name="zipCode"
-                  size="md"
-                  label="Zip Code"
-                  hint={errors.zipCode?.message}
-                  placeholder=""
-                  isInvalid={!!errors.zipCode}
-                  value={zipCode}
-                  maxLength={5}
-                  type="text"
-                  inputMode="numeric"
-                  pattern="[0-9]*"
-                  className={errors.zipCode ? "error-ring" : ""}
-                  tooltip={errors.zipCode ? errors.zipCode.message : undefined}
-                  onChange={value => {
-                    // Only allow numeric input
-                    const numericValue = value.replace(/\D/g, "");
-                    setValue("zipCode", numericValue);
-                    trigger("zipCode");
-                  }}
-                />
-              </InputGroup>
-
-              <InputGroup
-                className={errors.businessPhone ? "error-ring" : "col-start-2"}
-                label="Business Phone Number"
-                hint={errors.businessPhone?.message}
-                isInvalid={!!errors.businessPhone}
-                leadingAddon={
-                  <NativeSelect
-                    value={countryCode}
-                    onChange={e => setCountryCode(e.target.value)}
-                    options={COUNTRY_CODES}
-                  />
-                }
-              >
-                <InputBase
-                  placeholder="(555) 000-0000"
-                  type="tel"
-                  size="sm"
-                  value={phoneNumber}
-                  maxLength={10}
-                  onChange={(e: React.ChangeEvent<HTMLInputElement> | string) => {
-                    const inputValue = typeof e === "string" ? e : e?.target?.value || "";
-                    // Only allow numeric input and limit to 10 digits
-                    const numericValue = inputValue.replace(/\D/g, "").slice(0, 10);
-                    setPhoneNumber(numericValue);
-                    setValue("businessPhone", numericValue);
-                    trigger("businessPhone");
-                  }}
-                  tooltip={errors.businessPhone ? errors.businessPhone.message : undefined}
-                />
-              </InputGroup>
-
               {/* Row 2 - Legal Business Name & Industry */}
               <InputGroup>
                 <div className="flex flex-col gap-1.5 w-full">
