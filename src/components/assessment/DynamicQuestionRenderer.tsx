@@ -839,6 +839,14 @@ export const DynamicQuestionRenderer = ({
 
     case "YES_NO": {
       const boolValue = answers[question.key];
+      const showWhen = question.conditionalQuestion?.showWhen;
+      // Determine if conditional should show after "Yes" or after "No"
+      const showAfterYes = showWhen === "yes" && boolValue === true && question.conditionalQuestion;
+      const showAfterNo = showWhen === "no" && boolValue === false && question.conditionalQuestion;
+      // For non-yes/no showWhen values, fall back to showing after the radio group
+      const showAfterGroup =
+        question.conditionalQuestion && showWhen !== "yes" && showWhen !== "no";
+
       return (
         <div
           className={cx(
@@ -853,6 +861,7 @@ export const DynamicQuestionRenderer = ({
           {error && <span className="text-sm text-ws-red-40">{error}</span>}
           <div className="flex w-full flex-col gap-4 custom-question-options">
             <RadioGroup
+              aria-label={question.questionText}
               value={boolValue === true ? "true" : boolValue === false ? "false" : ""}
               onChange={val => {
                 const booleanValue = val === "true" ? true : val === "false" ? false : null;
@@ -860,11 +869,13 @@ export const DynamicQuestionRenderer = ({
               }}
             >
               <RadioButton value="true" label="Yes" />
+              {showAfterYes &&
+                renderConditionalQuestion(question.conditionalQuestion, question.key)}
               <RadioButton value="false" label="No" />
+              {showAfterNo && renderConditionalQuestion(question.conditionalQuestion, question.key)}
             </RadioGroup>
           </div>
-          {question.conditionalQuestion &&
-            renderConditionalQuestion(question.conditionalQuestion, question.key)}
+          {showAfterGroup && renderConditionalQuestion(question.conditionalQuestion, question.key)}
         </div>
       );
     }
