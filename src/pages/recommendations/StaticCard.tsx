@@ -9,6 +9,7 @@ export interface StaticCardProps {
   titleClass?: string;
   infoCircleClass?: string;
   countClass?: string;
+  countIcon?: React.ReactNode;
   tooltipText?: string;
   descriptionText?: string;
   itemAlign?: "start" | "between" | "end";
@@ -26,6 +27,7 @@ export default function StaticCard({
   descriptionText,
   itemAlign,
   placements,
+  countIcon
 }: Readonly<StaticCardProps>) {
   return (
     <div className={`bg-ws-white w-full ring ring-ws-primary-100 rounded-xl py-5 px-6 ${classess}`}>
@@ -50,13 +52,20 @@ export default function StaticCard({
           )}
         </span>
       </p>
-      <h2 className={`w-full ${countClass}`}>
-        {count === "N/A" ? (
-          <span className="mt-4 text-sm font-medium text-ws-black-10">No data available</span>
-        ) : (
-          count
+      <div className="flex items-end gap-2 justify-between">
+        <h2 className={`w-full ${countClass}`}>
+          {count === "N/A" ? (
+            <span className="mt-4 text-sm font-medium text-ws-black-10">No data available</span>
+          ) : (
+            count
+          )}
+        </h2>
+        {countIcon && (
+          <div className="mb-1">
+            {countIcon}
+          </div>
         )}
-      </h2>
+      </div>
     </div>
   );
 }

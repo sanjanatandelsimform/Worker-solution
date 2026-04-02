@@ -16,31 +16,30 @@ export default function BenefitCard({
   title,
   descriptionText,
   listTitle,
-  listIcon,
   listTexts,
   classess,
   badgeClassess,
 }: Readonly<BenefitCardProps>) {
   return (
     <div
-      className={`p-6 bg-ws-white border border-ws-primary-100 rounded-xl shadow-sm ${classess}`}
+      className={`p-6 bg-ws-white border border-ws-primary-100 rounded-xl ${classess}`}
     >
       <Badge type="pill-color" color="success" size="sm" className={badgeClassess}>
         {badgeText}
       </Badge>
       <div className="mt-6 w-full flex items-end">
-        <h2 className="text-2xl font-medium text-ws-black">{title}</h2>
+        <h2 className="text-2xl font-medium text-ws-black-90">{title}</h2>
       </div>
-      <p className="mt-2 min-h-auto w-full xl:min-h-18 overflow-hidden text-ws-gray-100 text-base">
+      <p className="mt-2 min-h-auto w-full xl:min-h-18 overflow-hidden text-ws-black-10 text-base">
         {descriptionText}
       </p>
-      <div className="text-base font-medium mt-4 text-ws-black-50">{listTitle}</div>
-      <ul className="flex flex-col mt-4 space-y-2 text-ws-gray-100 text-base">
-        <li className="flex items-center gap-2">
-          {listIcon} {listTexts?.[0]}
+      <div className="text-2xl font-medium mt-4 text-ws-black-90">{listTitle}</div>
+      <ul className="flex flex-col mt-4 space-y-2 text-ws-gray-800 text-base list-disc pl-3">
+        <li className="items-center">
+          {listTexts?.[0]}
         </li>
-        <li className="flex items-center gap-2">
-          {listIcon} {listTexts?.[1]}
+        <li className="items-center">
+          {listTexts?.[1]}
         </li>
       </ul>
     </div>

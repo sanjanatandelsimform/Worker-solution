@@ -26,6 +26,7 @@ import { CircleCheckIcon } from "@/assets/icons/CircleCheckIcon";
 import { Oval } from "react-loader-spinner";
 import { selectDashboardLoading, selectDashboardError } from "@/store/selectors/dashboardSelectors";
 import { Button } from "@/components/base/buttons/button";
+import { ConnectIcon } from "@/assets/icons/ConnectIcon";
 
 export const DashboardPage = () => {
   const navigate = useNavigate();
@@ -327,7 +328,7 @@ export const DashboardPage = () => {
       {/* Main Content Area */}
       <div className="flex flex-1 flex-col overflow-hidden">
         {/* Main Content */}
-        <main className="flex-1 overflow-y-auto p-5 xl:p-10 xl:pl-0">
+        <main className="flex-1 overflow-y-auto p-5 xl:p-10 xl:pl-2">
           <div className="space-y-6"></div>
           <div>
             <h2 className="text-4xl font-bold text-ws-black-60">
@@ -513,6 +514,19 @@ export const DashboardPage = () => {
           )}
 
           {/* Tabs — only render after dashboard data is confirmed ready */}
+          {emailVerify && assessmentData?.status === "completed" && (
+            <DashboardCard
+              classes="bg-ws-white border-ws-primary-100 mt-10 shadow-none"
+              toggleAvatar={true}
+              title="Connect to Finch"
+              titleClass="text-ws-black-90"
+              avatarIconSrc={<ConnectIcon className="text-ws-primary-900" />}
+              description="Get a more detailed assessment by connecting your HR provider to Finch"
+              descriptionClass="text-ws-gray-800"
+              toggleButton={true}
+              buttonLabel="Connect"
+            />
+          )}
           {emailVerify && assessmentData?.status === "completed" && isDashboardReady && (
             <div className="mt-10">
               {/* <Tabs>
@@ -533,27 +547,24 @@ export const DashboardPage = () => {
               </Tabs> */}
               <Tabs>
                 <Tabs.List
+                  className="bg-ws-primary-50 pt-9 pl-6 pr-6 rounded-t-lg text-ws-primary-700"
                   type="underline"
                   items={[
                     { id: "recommendations", label: "Recommendations" },
-                    { id: "workforce", label: "Workforce" },
                     { id: "industry", label: "Industry" },
                   ]}
                 />
-                <Tabs.Panel id="recommendations" className="pt-12">
+                <Tabs.Panel id="recommendations" className="pt-0">
                   <RecommendationsPage />
                 </Tabs.Panel>
-                <Tabs.Panel id="workforce" className="pt-12">
+                <Tabs.Panel id="industry" className="pt-0">
                   <BenchmarkPage />
-                </Tabs.Panel>
-                <Tabs.Panel id="industry" className="pt-12">
-                  Industry
                 </Tabs.Panel>
               </Tabs>
             </div>
           )}
         </main>
-        <div className="w-full relative lg:-top-8">
+        {/* <div className="w-full relative lg:-top-8">
           <p className="text-xs color-base-black">
             This product provides informational insights and recommendations based on the data you
             share and industry benchmarks. It does not provide legal, financial, tax, or benefits
@@ -568,7 +579,7 @@ export const DashboardPage = () => {
               Privacy Policy
             </Link>
           </p>
-        </div>
+        </div> */}
       </div>
 
       {/* Modals */}

@@ -1,25 +1,33 @@
+import { Avatar } from "@/components/base/avatar/avatar";
 import { Button } from "@/components/base/buttons/button";
 
 export interface DashboardCardProps {
   title: string;
   description?: React.ReactNode;
-  avatarIconSrc?: string;
+  avatarIconSrc?: string | React.ReactNode;
   buttonLabel?: string;
   buttonType?: "primary" | "secondary" | "tertiary";
   buttonIsDisabled?: boolean;
   classes?: string;
+  titleClass?: string;
+  descriptionClass?: string;
   toggleButton?: boolean;
+  toggleAvatar?: boolean;
   onClick?: () => void;
 }
 
 export default function DashboardCard({
   title,
   description,
+  avatarIconSrc,
   buttonLabel,
   buttonType = "primary",
   buttonIsDisabled = false,
   classes = "",
+  titleClass = "",
+  descriptionClass = "",
   toggleButton = true,
+  toggleAvatar = false,
   onClick,
 }: Readonly<DashboardCardProps>) {
   // Only apply default bg-ws-white if classes don't provide a background color
@@ -28,18 +36,26 @@ export default function DashboardCard({
 
   return (
     <div
-      className={`mt-6 border border-ws-primary-100 rounded-xl p-4 ${backgroundColor} shadow-sm flex gap-4 justify-between items-center flex-col lg:flex-row ${classes}`}
+      className={`mt-6 border border-ws-primary-100 rounded-xl p-4 ${backgroundColor} flex gap-4 justify-between items-center flex-col lg:flex-row ${classes}`}
     >
       <div className="flex items-center gap-4 xl:flex-row">
-        {/* <Avatar
-          size="xl"
-          alt="email"
-          src={avatarIconSrc}
-          className="p-4 bg-ws-navy-50 outline-0"
-        /> */}
+        {toggleAvatar && (
+          typeof avatarIconSrc === "string" ? (
+            <Avatar
+              size="xl"
+              alt="email"
+              src={avatarIconSrc}
+              className="w-15 h-15 bg-ws-green-30 outline-0 flex items-center justify-center"
+            />
+          ) : (
+            <div className="w-15 h-15 bg-ws-green-30 rounded-full flex items-center justify-center">
+              {avatarIconSrc}
+            </div>
+          )
+        )}
         <div>
-          <h2 className="text-ws-black-30 text-xl font-medium">{title}</h2>
-          <p className="text-ws-gray-90 text-base mt-1">{description}</p>
+          <h2 className={`text-ws-black-30 text-xl font-medium ${titleClass}`}>{title}</h2>
+          <p className={`text-ws-gray-90 text-base mt-1 ${descriptionClass}`}>{description}</p>
         </div>
       </div>
       {toggleButton && (
