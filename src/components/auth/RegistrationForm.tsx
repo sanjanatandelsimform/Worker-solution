@@ -155,7 +155,7 @@ export function RegistrationForm() {
         // acceptTerms: data.agreeToTerms,
       };
 
-      await signup(registrationData);
+      const { user, tokens } = await signup(registrationData);
 
       // Clear form data after successful registration
       dispatch(clearFormData());
@@ -166,7 +166,9 @@ export function RegistrationForm() {
           title: "Account created successfully!",
           subtitle: "Welcome aboard! Start your success journey with BeneStats",
           buttonText: "Let's Get Started",
-          buttonPath: "/sign-in",
+          buttonPath: "/dashboard",
+          user,
+          tokens,
         },
       });
 

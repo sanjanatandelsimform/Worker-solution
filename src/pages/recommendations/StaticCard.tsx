@@ -27,7 +27,7 @@ export default function StaticCard({
   descriptionText,
   itemAlign,
   placements,
-  countIcon
+  countIcon,
 }: Readonly<StaticCardProps>) {
   return (
     <div className={`bg-ws-white w-full ring ring-ws-primary-100 rounded-xl py-5 px-6 ${classess}`}>
@@ -60,11 +60,7 @@ export default function StaticCard({
             count
           )}
         </h2>
-        {countIcon && (
-          <div className="mb-1">
-            {countIcon}
-          </div>
-        )}
+        {countIcon && <div className="mb-1">{countIcon}</div>}
       </div>
     </div>
   );

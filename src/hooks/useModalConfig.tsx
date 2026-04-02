@@ -14,7 +14,8 @@ type ModalType =
   | "logoutConfirmation"
   | "goalsComplete"
   | "goalsEmptyWarning"
-  | "goalsApiError";
+  | "goalsApiError"
+  | "emailVerified";
 
 interface ModalConfig {
   isOpen: boolean;
@@ -210,6 +211,21 @@ export const useModalConfig = (
           {
             text: "Retry",
             onClick: config.onConfirm || config.onClose,
+            color: "primary",
+          },
+        ],
+      },
+      emailVerified: {
+        size: "sm",
+        title: "Your email has been verified!",
+        subtitle: "Welcome aboard! Start your success journey with BeneStats.",
+        icon: <CheckCircle className="size-6" />,
+        messageImg: checkmarkIcon,
+        backgroundPattern: "success",
+        buttons: [
+          {
+            text: "Return to dashboard",
+            onClick: config.onClose,
             color: "primary",
           },
         ],

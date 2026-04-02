@@ -1,5 +1,5 @@
 import { useEffect, useState, useCallback, useRef } from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useLocation } from "react-router-dom";
 import { DashboardSidebar } from "@/components/dashboard/DashboardSidebar";
 import emailIcon from "@/assets/mail-icon.svg";
 import checkIcon from "@/assets/file-check.svg";
@@ -29,6 +29,7 @@ import { ConnectIcon } from "@/assets/icons/ConnectIcon";
 
 export const DashboardPage = () => {
   const navigate = useNavigate();
+  const location = useLocation();
   const user = useAppSelector(selectUser);
   const dispatch = useAppDispatch();
   const profileError = useAppSelector(selectProfileError);
@@ -38,6 +39,15 @@ export const DashboardPage = () => {
   const [showResendSuccess, setShowResendSuccess] = useState(false);
   const [showCooldownModal, setShowCooldownModal] = useState(false);
   const [cooldown, setCooldown] = useState<number>(0);
+  const [isEmailVerifiedModalOpen, setIsEmailVerifiedModalOpen] = useState(() => {
+    const state = location.state as { emailVerified?: boolean } | null;
+    if (state?.emailVerified) {
+      // Clear navigation state to prevent re-trigger on refresh
+      window.history.replaceState({}, document.title);
+      return true;
+    }
+    return false;
+  });
   const {
     completionCount,
     assessmentData,
@@ -128,6 +138,10 @@ export const DashboardPage = () => {
       return () => clearInterval(timer);
     }
   }, [cooldown]);
+
+  const handleCloseEmailVerifiedModal = () => {
+    setIsEmailVerifiedModalOpen(false);
+  };
 
   useEffect(() => {
     if (
@@ -279,6 +293,11 @@ export const DashboardPage = () => {
     isOpen: showCooldownModal,
     onClose: () => setShowCooldownModal(false),
     additionalData: { cooldown },
+  });
+
+  const emailVerifiedModal = useModalConfig("emailVerified", {
+    isOpen: isEmailVerifiedModalOpen,
+    onClose: handleCloseEmailVerifiedModal,
   });
 
   const goalsSuccessModal = useModalConfig("goalsComplete", {
@@ -622,6 +641,12 @@ export const DashboardPage = () => {
         onClose={() => setShowGoalsEmptyWarning(false)}
         icon={<CircleCheckIcon />}
         {...goalsEmptyWarningModal}
+      />
+
+      <BaseModalWithIcon
+        isOpen={isEmailVerifiedModalOpen}
+        onClose={handleCloseEmailVerifiedModal}
+        {...emailVerifiedModal}
       />
     </div>
   );

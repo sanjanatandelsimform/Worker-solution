@@ -39,8 +39,8 @@ export default function DashboardCard({
       className={`mt-6 border border-ws-primary-100 rounded-xl p-4 ${backgroundColor} flex gap-4 justify-between items-center flex-col lg:flex-row ${classes}`}
     >
       <div className="flex items-center gap-4 xl:flex-row">
-        {toggleAvatar && (
-          typeof avatarIconSrc === "string" ? (
+        {toggleAvatar &&
+          (typeof avatarIconSrc === "string" ? (
             <Avatar
               size="xl"
               alt="email"
@@ -51,8 +51,7 @@ export default function DashboardCard({
             <div className="w-15 h-15 bg-ws-green-30 rounded-full flex items-center justify-center">
               {avatarIconSrc}
             </div>
-          )
-        )}
+          ))}
         <div>
           <h2 className={`text-ws-black-30 text-xl font-medium ${titleClass}`}>{title}</h2>
           <p className={`text-ws-gray-90 text-base mt-1 ${descriptionClass}`}>{description}</p>

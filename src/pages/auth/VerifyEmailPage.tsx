@@ -3,7 +3,6 @@ import { useNavigate, useSearchParams } from "react-router-dom";
 import { verifyEmail } from "@/services/api/authApi";
 import { useAppDispatch } from "@/store/hooks";
 import { updateUser, setTokens } from "@/store/slices/authSlice";
-import checkmarkIcon from "@/assets/finch-checkmark.svg";
 import { Oval } from "react-loader-spinner";
 import type { UserAccount } from "@/types/auth";
 import siteLogo from "@/assets/logo.svg";
@@ -82,16 +81,9 @@ export const VerifyEmailPage: React.FC = () => {
           }
         }
 
-        navigate("/success", {
-          state: {
-            messageImg: checkmarkIcon,
-            title: "Your email has been verified!",
-            subtitle: "Welcome aboard! Start your success journey with BeneStats®",
-            buttonText: "Take the Assessment",
-            buttonPath: "/assessment",
-            user: response.user ?? undefined,
-            tokens: response.tokens ?? undefined,
-          },
+        navigate("/dashboard", {
+          state: { emailVerified: true },
+          replace: true,
         });
       } catch (error) {
         console.error("Email verification error:", error);

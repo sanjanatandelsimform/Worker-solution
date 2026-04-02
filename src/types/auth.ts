@@ -78,6 +78,14 @@ export interface SignInResponse {
   };
 }
 
+export interface SignupResponse {
+  user: UserAccount;
+  tokens: {
+    accessToken: string;
+    refreshToken: string;
+  };
+}
+
 export interface EmailCheckResponse {
   available: boolean;
 }
