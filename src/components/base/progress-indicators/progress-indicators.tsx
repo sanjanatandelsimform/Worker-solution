@@ -48,13 +48,13 @@ export const ProgressBarBase = ({
       aria-valuenow={value}
       aria-valuemin={min}
       aria-valuemax={max}
-      className={cx("h-2 w-full overflow-hidden rounded-md bg-quaternary", className)}
+      className={cx("h-2 w-full overflow-hidden rounded-md bg-ws-gray-30", className)}
     >
       <div
         // Use transform instead of width to avoid layout thrashing (and for smoother animation)
         style={{ transform: `translateX(-${100 - percentage}%)` }}
         className={cx(
-          "size-full rounded-md bg-fg-brand-primary transition duration-75 ease-linear",
+          "size-full rounded-md bg-ws-primary-700 transition duration-75 ease-linear",
           progressClassName
         )}
       />
@@ -62,7 +62,7 @@ export const ProgressBarBase = ({
   );
 };
 
-type ProgressBarLabelPosition = "right" | "bottom" | "top-floating" | "bottom-floating";
+type ProgressBarLabelPosition = "right" | "bottom" | "top-floating" | "bottom-floating" | "none";
 
 export interface ProgressIndicatorWithTextProps extends ProgressBarProps {
   /**
@@ -71,6 +71,7 @@ export interface ProgressIndicatorWithTextProps extends ProgressBarProps {
    * - `bottom`: Text is displayed below the progress bar, aligned to the right.
    * - `top-floating`: Text is displayed in a floating tooltip above the progress indicator.
    * - `bottom-floating`: Text is displayed in a floating tooltip below the progress indicator.
+   * - `none`: No text is displayed.
    */
   labelPosition?: ProgressBarLabelPosition;
 }
@@ -145,6 +146,8 @@ export const ProgressBar = ({
           </div>
         </div>
       );
+    case "none":
+      return baseProgressBar;
     default:
       // Fallback or default case, could render the basic progress bar or throw an error
       return baseProgressBar;

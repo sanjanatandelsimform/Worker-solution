@@ -102,7 +102,7 @@ export default function BenchmarkPage() {
   })();
 
   return (
-    <div className="bg-ws-gray-20 border border-ws-primary-100 rounded-xl p-6 space-y-6">
+    <div className="bg-ws-white py-10 px-6 space-y-6 shadow-xl rounded-b-xl">
       <div className="w-full flex items-center justify-between">
         <h2 className="text-2xl lg:text-4xl font-medium text-ws-black-60 leading-10">
           {`Current Trends for  ${industry?.name}`}

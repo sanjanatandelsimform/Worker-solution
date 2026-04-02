@@ -39,6 +39,8 @@
   --color-ws-gray-400: var(--ws-color-gray-400);
   --color-ws-gray-500: var(--ws-color-gray-500);
   --color-ws-gray-600: var(--ws-color-gray-600);
+  --color-ws-gray-700: var(--ws-color-gray-700);
+  --color-ws-gray-800: var(--ws-color-gray-800);
 
   /* WS Cyan Colors */
   --color-ws-cyan-10: var(--ws-color-cyan-10);
@@ -69,11 +71,14 @@
 
   /* WS Green Colors */
   --color-ws-green-10: var(--ws-color-green-10);
+  --color-ws-green-20: var(--ws-color-green-20);
+  --color-ws-green-30: var(--ws-color-green-30);
 
   /* Single Use Colors */
   --color-ws-blue-100: var(--ws-color-blue-100);
-
   --color-ws-blue-300: var(--ws-color-blue-300);
+
+  --color-ws-yellow-50: var(--ws-color-yellow-50);
 
   /* Finch Colors */
   --color-ws-primary-50: var(--ws-color-primary-50);
@@ -92,6 +97,7 @@
   --color-ws-gray-700: var(--ws-color-gray-700);
   --color-ws-tab-bg: var(--ws-color-tab-bg);
   --color-ws-tab-active: var(--ws-color-tab-active);
+  --color-ws-tab-active-text: var(--ws-color-tab-active-text);
  
 }
 
@@ -144,6 +150,8 @@
   --ws-color-gray-400: oklch(0.58 0 0); /* #6C6C6C */
   --ws-color-gray-500: oklch(0.949 0 0); /* #EEEEEE */
   --ws-color-gray-600: oklch(0.942 0.005 258.3); /* #EAECEF */
+  --ws-color-gray-700: oklch(0.267 0.041 232); /* #0E2936 */
+  --ws-color-gray-800: oklch(0.455 0.022 262); /* #535862 */
 
   /* Cyan Colors */
   --ws-color-cyan-10: oklch(0.955 0.05 200); /* #CDF2FF */
@@ -174,11 +182,15 @@
 
   /* Green Colors */
   --ws-color-green-10: oklch(0.7 0.14 150); /* #34A853 */
+  --ws-color-green-20: oklch(0.989 0.011 160); /* #F6FEF9 */
+  --ws-color-green-30: oklch(0.90 0.03 225); /* #CBDFE8 */
 
   /* Single Use Colors */
   --ws-color-blue-100: oklch(0.915 0.055 260); /* #D4DFFC */
 
   --ws-color-blue-300: oklch(0.53 0.1 217.7); /* #E7090 */
+
+  --ws-color-yellow-50: oklch(0.988 0.037 92); /* #FEF3C7 */
 
   /* Finch Colors */
   --ws-color-primary-50: #E6EDED;
@@ -188,14 +200,17 @@
   --ws-color-primary-400: #3B8383;
   --ws-color-primary-500: #007D7E;
   --ws-color-primary-600: #0E7090;
+  --ws-color-primary-700: #006C68;
   --ws-color-primary-800: #366176;
   --ws-color-primary-900: #1F4151;
   --ws-color-navy-50: #E4F3FA;
   --ws-color-gray-50: #FDFDFD;
   --ws-color-gray-100: #575757;
   --ws-color-gray-700: #343E3E;
-  --ws-color-tab-bg: #EDFCF2;
-  --ws-color-tab-active: #CDE5E3;
+  --ws-color-tab-bg: #D2F1EF;
+  --ws-color-tab-active: #B6D3D0;
+  --ws-color-tab-active-text: #2E5450;
+
 
 }
 

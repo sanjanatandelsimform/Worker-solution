@@ -69,7 +69,7 @@ export default function WorkforceTab({ onNext, onSuccess }: WorkforceTabProps) {
   }, [stateOptions, isLoading, error, workforceSection]);
 
   if (!workforceSection) {
-    return <div className="text-red-600">Workforce section not found in question data</div>;
+    return <div className="text-ws-red-40">Workforce section not found in question data</div>;
   }
 
   return (

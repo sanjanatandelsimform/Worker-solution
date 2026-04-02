@@ -54,7 +54,7 @@ const getTabStyles = ({ isFocusVisible, isSelected, isHovered }: AriaTabRenderPr
     isSelected && "bg-primary_alt text-secondary shadow-xs ring-1 ring-ws-primary-100 ring-inset"
   ),
   underline: cx(
-    "rounded-none border-b-2 border-transparent outline-focus-ring",
+    "rounded-none border-b-2 border-transparent outline-focus-ring px-26",
     (isSelected || isHovered) && "border-fg-brand-primary_alt text-brand-secondary",
     isFocusVisible && "outline-2 -outline-offset-2"
   ),
@@ -204,8 +204,8 @@ export const Tab = (props: TabComponentProps) => {
       {...otherProps}
       className={prop =>
         cx(
-          "z-10 flex h-max cursor-pointer items-center justify-center gap-2 rounded-md whitespace-nowrap text-ws-purple-60 transition duration-100 ease-linear font-bold",
-          "group-orientation-vertical:justify-start bg-ws-gray-30 ring-1 ring-border-secondary ring-inset",
+          "z-10 flex h-max cursor-pointer items-center justify-center gap-2 rounded-md whitespace-nowrap text-ws-black-20 transition duration-100 ease-linear font-bold",
+          "group-orientation-vertical:justify-start text-base",
           fullWidth && "w-full flex-1",
           sizes[size][type],
           getTabStyles(prop)[type],
