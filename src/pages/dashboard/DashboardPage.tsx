@@ -515,17 +515,19 @@ export const DashboardPage = () => {
           )}
 
           {/* Tabs — only render after dashboard data is confirmed ready */}
-          <DashboardCard 
-            classes="bg-ws-white border-ws-primary-100 mt-10 shadow-none"
-            toggleAvatar={true}
-            title="Connect to Finch"
-            titleClass="text-ws-black-90"
-            avatarIconSrc={<ConnectIcon className="text-ws-primary-900"  />}
-            description="Get a more detailed assessment by connecting your HR provider to Finch"
-            descriptionClass="text-ws-gray-800"
-            toggleButton={true}
-            buttonLabel="Connect"
-          />
+          {emailVerify && assessmentData?.status === "completed" && (
+            <DashboardCard
+              classes="bg-ws-white border-ws-primary-100 mt-10 shadow-none"
+              toggleAvatar={true}
+              title="Connect to Finch"
+              titleClass="text-ws-black-90"
+              avatarIconSrc={<ConnectIcon className="text-ws-primary-900" />}
+              description="Get a more detailed assessment by connecting your HR provider to Finch"
+              descriptionClass="text-ws-gray-800"
+              toggleButton={true}
+              buttonLabel="Connect"
+            />
+          )}
           {emailVerify && assessmentData?.status === "completed" && isDashboardReady && (
             <div className="mt-10">
               {/* <Tabs>
