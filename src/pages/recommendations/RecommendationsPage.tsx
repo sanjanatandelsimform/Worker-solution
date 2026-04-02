@@ -16,7 +16,7 @@ import { ClockIcon } from "@/assets/icons/ClockIcon";
 import { BriefcaseIcon } from "@/assets/icons/BriefcaseIcon";
 import { DollarIcon } from "@/assets/icons/DollarIcon";
 import { ProgressBar } from "@/components/base/progress-indicators/progress-indicators";
-import ProvenStrategiesCard from "./ProvenStrategiesCard";  
+import ProvenStrategiesCard from "./ProvenStrategiesCard";
 import { LikeIcon } from "@/assets/icons/likeIcon";
 import { UserGroupIcon } from "@/assets/icons/UserGroupIcon";
 
@@ -258,7 +258,9 @@ export default function RecommendationsPage() {
               />
             </div>
             <div className="p-4 overflow-auto">
-              <h4 className="text-base font-semibold mb-2 text-ws-tab-active-text">Did you know?</h4>
+              <h4 className="text-base font-semibold mb-2 text-ws-tab-active-text">
+                Did you know?
+              </h4>
               <p className="text-lg text-ws-tab-active-text ">
                 The cost of replacing an individual employee can range from one-half to two times
                 the employee's annual salary.
@@ -270,7 +272,19 @@ export default function RecommendationsPage() {
 
       <div className="w-full">
         <p className="text-xs color-base-black">
-          This product provides informational insights and recommendations based on the data you share and industry benchmarks. It does not provide legal, financial, tax, or benefits advice, and recommendations are not guarantees of outcomes or results. Actual results may vary, and you are responsible for evaluating and implementing any recommendations based on your organization’s specific circumstances. Read our  <Link to="/terms-page" className="text-ws-primary-500 underline">Terms & Conditions </Link>and <Link to="/privacy-policy" className="text-ws-primary-500 underline">Privacy Policy</Link>.
+          This product provides informational insights and recommendations based on the data you
+          share and industry benchmarks. It does not provide legal, financial, tax, or benefits
+          advice, and recommendations are not guarantees of outcomes or results. Actual results may
+          vary, and you are responsible for evaluating and implementing any recommendations based on
+          your organization’s specific circumstances. Read our{" "}
+          <Link to="/terms-page" className="text-ws-primary-500 underline">
+            Terms & Conditions{" "}
+          </Link>
+          and{" "}
+          <Link to="/privacy-policy" className="text-ws-primary-500 underline">
+            Privacy Policy
+          </Link>
+          .
         </p>
       </div>
     </div>

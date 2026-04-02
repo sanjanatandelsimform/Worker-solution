@@ -200,7 +200,9 @@ export const DynamicQuestionRenderer = ({
                 <Select.Item id={selectItem.id}>{selectItem.label || ""}</Select.Item>
               )}
             </Select>
-            {displayFieldError && <span className="text-sm text-ws-red-40">{displayFieldError}</span>}
+            {displayFieldError && (
+              <span className="text-sm text-ws-red-40">{displayFieldError}</span>
+            )}
           </>
         ) : field.name === "state" ? (
           <>
@@ -303,7 +305,9 @@ export const DynamicQuestionRenderer = ({
                 <Select.Item id={selectItem.id}>{selectItem.label || ""}</Select.Item>
               )}
             </Select>
-            {displayFieldError && <span className="text-sm text-ws-red-40">{displayFieldError}</span>}
+            {displayFieldError && (
+              <span className="text-sm text-ws-red-40">{displayFieldError}</span>
+            )}
           </>
         ) : field.name === "zipCode" ? (
           <>
@@ -433,7 +437,9 @@ export const DynamicQuestionRenderer = ({
                 updateArrayItemField(keyToUse, itemId, field.name, val, field.type);
               }}
             />
-            {displayFieldError && <span className="text-sm text-ws-red-40">{displayFieldError}</span>}
+            {displayFieldError && (
+              <span className="text-sm text-ws-red-40">{displayFieldError}</span>
+            )}
           </>
         )}
       </div>
@@ -946,7 +952,7 @@ export const DynamicQuestionRenderer = ({
       const currentItems = (answers[question.key] as Array<{ id: number }>) || [];
       const maxItems = question.validationRules?.maxItems || 5;
       const canAddMore = currentItems.length < maxItems;
-
+      console.log("question====", question.key);
       if (!question.validationRules?.fields) return null;
 
       if (currentItems.length === 0) {
@@ -992,7 +998,9 @@ export const DynamicQuestionRenderer = ({
                 error && "border-ws-red-40"
               )}
             >
-              Add another
+              {question.key === "topWorkLocations"
+                ? "Add another location"
+                : "Add another occupation"}
             </Button>
           )}
 
@@ -1093,6 +1101,8 @@ export const DynamicQuestionRenderer = ({
     }
 
     default:
-      return <div className="text-ws-red-40">Unsupported question type: {question.questionType}</div>;
+      return (
+        <div className="text-ws-red-40">Unsupported question type: {question.questionType}</div>
+      );
   }
 };

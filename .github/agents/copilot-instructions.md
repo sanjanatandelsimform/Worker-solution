@@ -15,6 +15,8 @@ Auto-generated from all feature plans. Last updated: 2026-01-16
 - N/A — form state managed in-memory by component state + Redux store (001-zipcode-api-integration)
 - TypeScript 5.9.3, React 19.2.0 + React Router v7, Redux Toolkit 2.11.2, Axios (via `profileApi.ts` apiClient), @untitledui/icons (002-profile-settings)
 - N/A (no client-side storage changes — assessment reset is server-side) (002-profile-settings)
+- TypeScript 5.x / React 19 + React Router v7, Redux Toolkit, Tailwind CSS v4, Vite, shadcn/ui primitives (006-signup-flow-enhancements)
+- localStorage (key: `"userDetail"`) — existing persistence via `persistAuth()` helper and `store.subscribe()` (006-signup-flow-enhancements)
 
 - TypeScript (strict mode) + React 19.2 + axios 1.13.2, react-hook-form 7.71, zod 4.3, Redux Toolkit 2.11 (not used for assessment state) (001-states-api-integration)
 - N/A — assessment state is local React state in `useAssessment` hook; no localStorage or Redux for assessment (001-states-api-integration)
@@ -40,9 +42,9 @@ npm test && npm run lint
 TypeScript with React 19+, strict mode enabled: Follow standard conventions
 
 ## Recent Changes
+- 006-signup-flow-enhancements: Added TypeScript 5.x / React 19 + React Router v7, Redux Toolkit, Tailwind CSS v4, Vite, shadcn/ui primitives
 - 002-profile-settings: Added TypeScript 5.9.3, React 19.2.0 + React Router v7, Redux Toolkit 2.11.2, Axios (via `profileApi.ts` apiClient), @untitledui/icons
 - 001-zipcode-api-integration: Added TypeScript ~5.9.3, React 19.2, JSX transform `react-jsx` + Vite (rolldown-vite 7.2.5), Axios 1.13.2, Redux Toolkit 2.11.2, react-hook-form 7.71.1, Zod 4.3.5, React Router 7.12.0
-- 001-zipcode-api-integration: Added TypeScript 5.x, React 19.2 + Axios 1.13 (HTTP), React Router 7.12, Redux Toolkit, React Aria Components, Tailwind CSS 4.1
 
 
 <!-- MANUAL ADDITIONS START -->

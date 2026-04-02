@@ -2,6 +2,7 @@ import axios, { AxiosError } from "axios";
 import type {
   RegistrationData,
   SignInData,
+  SignupResponse,
   UserAccount,
   EmailCheckResponse,
   ApiError,
@@ -269,9 +270,16 @@ apiClient.interceptors.response.use(
 /**
  * Register a new user account with business information
  */
-export const signup = async (data: RegistrationData): Promise<UserAccount> => {
+export const signup = async (data: RegistrationData): Promise<SignupResponse> => {
   try {
-    const response = await apiClient.post<UserAccount>("/users/create", {
+    const response = await apiClient.post<{
+      status: boolean;
+      message: string;
+      data: {
+        user: UserAccount;
+        tokens: { accessToken: string; refreshToken: string };
+      };
+    }>("/users/create", {
       firstName: data.firstName,
       lastName: data.lastName,
       businessName: data.businessName,
@@ -282,7 +290,10 @@ export const signup = async (data: RegistrationData): Promise<UserAccount> => {
       password: data.password,
       confirmPassword: data.confirmPassword,
     });
-    return response.data;
+    return {
+      user: response.data.data.user,
+      tokens: response.data.data.tokens,
+    };
   } catch (error) {
     throw new Error(getErrorMessage(error));
   }

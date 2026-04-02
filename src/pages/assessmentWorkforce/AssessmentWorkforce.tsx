@@ -271,19 +271,18 @@ export default function AssessmentWorkforcePage() {
               Back
             </Button>
             <Button
-            color="primary"
-            size="md"
-            iconTrailing={<ChevronRight data-icon />}
-            onClick={handleNext}
-            className="min-w-30 bg-ws-primary-900 text-ws-white hover:bg-ws-primary-900-hover focus:bg-ws-primary-900-hover active:bg-ws-primary-900-hover"
-            // isDisabled={isSaving}
-            // isLoading={isSaving}
-          >
-            {isLastStep ? "Submit" : "Next"}
-          </Button>
+              color="primary"
+              size="md"
+              iconTrailing={<ChevronRight data-icon />}
+              onClick={handleNext}
+              className="min-w-30 bg-ws-primary-900 text-ws-white hover:bg-ws-primary-900-hover focus:bg-ws-primary-900-hover active:bg-ws-primary-900-hover"
+              // isDisabled={isSaving}
+              // isLoading={isSaving}
+            >
+              {isLastStep ? "Submit" : "Next"}
+            </Button>
           </div>
         </div>
-        
       </div>
 
       {/* Bottom Navigation Bar */}
