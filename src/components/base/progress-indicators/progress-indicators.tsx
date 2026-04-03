@@ -24,6 +24,12 @@ export interface ProgressBarProps {
    */
   progressClassName?: string;
   /**
+   * Optional custom color for the progress bar fill.
+   * If not provided, defaults to 'bg-ws-primary-700'.
+   * @example "bg-utility-success-500" | "bg-utility-error-500" | "bg-utility-warning-500"
+   */
+  customColor?: string;
+  /**
    * Optional function to format the displayed value.
    * It receives the raw value and the calculated percentage.
    */
@@ -39,8 +45,11 @@ export const ProgressBarBase = ({
   max = 100,
   className,
   progressClassName,
+  customColor,
 }: ProgressBarProps) => {
   const percentage = ((value - min) * 100) / (max - min);
+  // Use customColor if provided, otherwise default to bg-ws-primary-700
+  const barColor = customColor || "bg-ws-primary-700";
 
   return (
     <div
@@ -54,8 +63,8 @@ export const ProgressBarBase = ({
         // Use transform instead of width to avoid layout thrashing (and for smoother animation)
         style={{ transform: `translateX(-${100 - percentage}%)` }}
         className={cx(
-          "size-full rounded-md bg-ws-primary-700 transition duration-75 ease-linear",
-          progressClassName
+          `size-full rounded-md ${barColor} transition duration-75 ease-linear`,
+          progressClassName,
         )}
       />
     </div>
@@ -87,6 +96,7 @@ export const ProgressBar = ({
   labelPosition,
   className,
   progressClassName,
+  customColor,
 }: ProgressIndicatorWithTextProps) => {
   const percentage = ((value - min) * 100) / (max - min);
   const formattedValue = valueFormatter
@@ -100,6 +110,7 @@ export const ProgressBar = ({
       value={value}
       className={className}
       progressClassName={progressClassName}
+      customColor={customColor}
     />
   );
 

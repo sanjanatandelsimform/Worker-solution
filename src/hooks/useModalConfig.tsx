@@ -3,6 +3,7 @@ import { CheckCircle, AlertOctagon } from "@untitledui/icons";
 import checkmarkIcon from "@/assets/finch-checkmark.svg";
 import alertIcon from "@/assets/alert-icon.svg";
 import type { BaseModalWithIconProps } from "@/components/modals/BaseModalWithIcon";
+import { CheckLineIcon } from "@/assets/icons/CheckLineIcon";
 
 type ModalType =
   | "updateComplete"
@@ -113,7 +114,7 @@ export const useModalConfig = (
         subtitle: `We've sent a verification link to ${
           (config.additionalData?.email as string) || "your email"
         }. Verify your email to continue.`,
-        icon: <CheckCircle className="size-6" />,
+        icon: <CheckLineIcon className="size-6" />,
         messageImg: checkmarkIcon,
         backgroundPattern: "success",
         buttons: [
