@@ -36,7 +36,7 @@ export const useModalConfig = (
         title: "Update Complete",
         subtitle: "All set! Your changes have been saved.",
         icon: <CheckCircle className="size-6" />,
-        messageImg: checkmarkIcon,
+        //messageImg: checkmarkIcon,
         backgroundPattern: "success",
         buttons: [
           {
@@ -52,7 +52,7 @@ export const useModalConfig = (
         subtitle:
           "All set! Your email has been updated. We've sent a verification link to your new address. Please verify your email.",
         icon: <CheckCircle className="size-6" />,
-        messageImg: checkmarkIcon,
+        //messageImg: checkmarkIcon,
         backgroundPattern: "success",
         buttons: [
           {
@@ -165,7 +165,7 @@ export const useModalConfig = (
         size: "sm",
         title: "You're done!",
         subtitle: "See your results and recommendations on your dashboard",
-        messageImg: checkmarkIcon,
+        //messageImg: checkmarkIcon,
         backgroundPattern: "success",
         buttons: [
           {
@@ -221,7 +221,7 @@ export const useModalConfig = (
         title: "Your email has been verified!",
         subtitle: "Welcome aboard! Start your success journey with BeneStats.",
         icon: <CheckCircle className="size-6" />,
-        messageImg: checkmarkIcon,
+        //messageImg: checkmarkIcon,
         backgroundPattern: "success",
         buttons: [
           {
