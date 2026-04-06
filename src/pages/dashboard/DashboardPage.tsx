@@ -18,6 +18,7 @@ import { selectProfileError } from "@/store/selectors/profileSelectors";
 import { useModalConfig } from "@/hooks/useModalConfig";
 import { useAssessmentStatus } from "@/hooks/useAssessmentStatus";
 import { useFinchConnect } from "@/hooks/useFinchConnect";
+import { useFinchStatus } from "@/hooks/useFinchStatus";
 import { Tabs } from "@/components/base/tabs/tabs";
 import RecommendationsPage from "../recommendations/RecommendationsPage";
 import BenchmarkPage from "../benchmark/BenchmarkPage";
@@ -34,6 +35,7 @@ export const DashboardPage = () => {
   const dispatch = useAppDispatch();
   const profileError = useAppSelector(selectProfileError);
   const { connectWithFinch, isLoading: isFinchLoading } = useFinchConnect();
+  const { isConnected } = useFinchStatus();
 
   const emailVerify = user?.emailVerify || false;
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
@@ -429,7 +431,7 @@ export const DashboardPage = () => {
               />
             )}
 
-            {emailVerify && assessmentData?.status !== "completed" && (
+            {emailVerify && assessmentData?.status !== "completed" && !isConnected && (
               <DashboardCard
                 classes="bg-ws-primary-50 border-ws-primary-100"
                 title={`${completionCount > 0 ? `${completionCount} ` : ""}Take the Assessment`}
@@ -450,7 +452,7 @@ export const DashboardPage = () => {
             )}
           </div>
 
-          {emailVerify && assessmentData?.status !== "completed" && (
+          {emailVerify && assessmentData?.status !== "completed" && !isConnected && (
             <div className="flex items-center justify-between gap-4 mt-6">
               <div className="flex-1 py-6 px-7 border border-ws-primary-100 rounded-xl min-h-109 relative">
                 <div className="flex items-center justify-between border-b border-ws-primary-100 pb-4 mb-4">
@@ -514,7 +516,7 @@ export const DashboardPage = () => {
           )}
 
           {/* Tabs — only render after dashboard data is confirmed ready */}
-          {emailVerify && assessmentData?.status === "completed" && (
+          {emailVerify && assessmentData?.status === "completed" && !isConnected && (
             <DashboardCard
               classes="bg-ws-white border-ws-primary-100 mt-10 shadow-none"
               toggleAvatar={true}
@@ -525,6 +527,8 @@ export const DashboardPage = () => {
               descriptionClass="text-ws-gray-800"
               toggleButton={true}
               buttonLabel="Connect"
+              onClick={() => void connectWithFinch()}
+              buttonIsDisabled={isFinchLoading}
             />
           )}
           {emailVerify && assessmentData?.status === "completed" && isDashboardReady && (

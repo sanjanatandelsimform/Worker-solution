@@ -16,10 +16,12 @@ import profileReducer from "@/store/slices/profileSlice";
 import registrationFormReducer from "@/store/slices/registrationFormSlice";
 import userReducer from "@/store/slices/userSlice";
 import dashboardReducer from "@/store/slices/dashboardSlice";
+import finchStatusReducer from "@/store/slices/finchStatusSlice";
 import type { UserAccount } from "@/types/auth";
+import { useAssessmentStatus } from "@/hooks/useAssessmentStatus";
 
 vi.mock("@/hooks/useAssessmentStatus", () => ({
-  useAssessmentStatus: () => ({ completionCount: 0, isLoading: false }),
+  useAssessmentStatus: vi.fn(() => ({ completionCount: 0, isLoading: false })),
 }));
 
 const mockConnectWithFinch = vi.fn();
@@ -31,10 +33,29 @@ vi.mock("@/hooks/useFinchConnect", () => ({
   useFinchConnect: (...args: unknown[]) => mockUseFinchConnect(...args),
 }));
 
+const mockUseFinchStatus = vi.fn(() => ({
+  isConnected: false,
+  connectionStatus: null,
+  syncJobStatus: null,
+  isLoading: false,
+  error: null,
+}));
+vi.mock("@/hooks/useFinchStatus", () => ({
+  useFinchStatus: () => mockUseFinchStatus(),
+}));
+
 vi.mock("@/components/common/ErrorMessage", () => ({
   default: ({ errorMessage }: { errorMessage: string }) => (
     <div data-testid="error-message">{errorMessage}</div>
   ),
+}));
+
+vi.mock("@/components/modals/InProgressModal", () => ({
+  InProgressModal: () => null,
+}));
+
+vi.mock("@/components/modals/BaseModalWithIcon", () => ({
+  BaseModalWithIcon: () => null,
 }));
 
 vi.mock("@/assets/mail-icon.svg", () => ({ default: "mail-icon.svg" }));
@@ -79,6 +100,7 @@ const createTestStore = (overrides?: { auth?: { user: UserAccount | null } }) =>
       registrationForm: registrationFormReducer,
       user: userReducer,
       dashboard: dashboardReducer,
+      finchStatus: finchStatusReducer,
     },
     preloadedState: {
       auth: {
@@ -113,9 +135,20 @@ function renderDashboardPage(store = createTestStore()) {
 describe("DashboardPage", () => {
   beforeEach(() => {
     vi.clearAllMocks();
+    vi.mocked(useAssessmentStatus).mockReturnValue({
+      completionCount: 0,
+      isLoading: false,
+    } as ReturnType<typeof useAssessmentStatus>);
     mockUseFinchConnect.mockReturnValue({
       connectWithFinch: mockConnectWithFinch,
       isLoading: false,
+    });
+    mockUseFinchStatus.mockReturnValue({
+      isConnected: false,
+      connectionStatus: null,
+      syncJobStatus: null,
+      isLoading: false,
+      error: null,
     });
     Object.defineProperty(window, "localStorage", {
       value: {
@@ -135,12 +168,12 @@ describe("DashboardPage", () => {
     renderDashboardPage();
 
     await waitFor(() => {
-      expect(screen.getByText("Welcome!")).toBeInTheDocument();
+      expect(screen.getByText(/Welcome,/)).toBeInTheDocument();
     });
   });
 
   it("should render assessment CTA when completionCount is not 4", async () => {
-    renderDashboardPage();
+    renderDashboardPage(createTestStore({ auth: { user: { ...mockUser, emailVerify: true } } }));
 
     await waitFor(() => {
       expect(screen.getByText(/Take the Assessment/i)).toBeInTheDocument();
@@ -157,7 +190,7 @@ describe("DashboardPage", () => {
 
   // T018 — clicking "Start with Finch" calls connectWithFinch
   it("clicking 'Start with Finch' button calls connectWithFinch", async () => {
-    renderDashboardPage();
+    renderDashboardPage(createTestStore({ auth: { user: { ...mockUser, emailVerify: true } } }));
 
     await waitFor(() => {
       expect(screen.getByText("Start with Finch")).toBeInTheDocument();
@@ -174,7 +207,7 @@ describe("DashboardPage", () => {
       connectWithFinch: mockConnectWithFinch,
       isLoading: true,
     });
-    renderDashboardPage();
+    renderDashboardPage(createTestStore({ auth: { user: { ...mockUser, emailVerify: true } } }));
 
     await waitFor(() => {
       expect(screen.getByText("Start with Finch")).toBeInTheDocument();
@@ -182,6 +215,221 @@ describe("DashboardPage", () => {
 
     // React Aria Button with isDisabled sets data-disabled attribute
     const btn = screen.getByRole("button", { name: /Start with Finch/i });
+    expect(btn).toHaveAttribute("data-disabled");
+  });
+});
+
+// ── T011/T014/T015: Finch status visibility & Connect button ──────────────
+
+/**
+ * Helper to render with a verified email user so we can reach the cards.
+ * useAssessmentStatus is globally mocked to return { completionCount: 0, isLoading: false }.
+ */
+const mockVerifiedUser: UserAccount = {
+  id: "user-2",
+  firstName: "Jane",
+  lastName: "Doe",
+  businessName: "Acme",
+  phoneNumber: "+15551234567",
+  industry: { id: 1, industry_name: "Tech", industry_code: "TECH" },
+  zipCode: 94102,
+  emailVerify: true,
+  createdAt: "2026-01-01T00:00:00Z",
+  updatedAt: "2026-01-01T00:00:00Z",
+};
+
+function renderVerifiedDashboard() {
+  const store = createTestStore({ auth: { user: mockVerifiedUser } });
+  return render(
+    <Provider store={store}>
+      <MemoryRouter>
+        <DashboardPage />
+      </MemoryRouter>
+    </Provider>
+  );
+}
+
+describe("DashboardPage — Finch status card visibility (T011/T014)", () => {
+  beforeEach(() => {
+    vi.clearAllMocks();
+    mockUseFinchConnect.mockReturnValue({
+      connectWithFinch: mockConnectWithFinch,
+      isLoading: false,
+    });
+    Object.defineProperty(window, "localStorage", {
+      value: {
+        getItem: vi.fn(() =>
+          JSON.stringify({
+            auth: { user: mockVerifiedUser, tokens: { accessToken: "at", refreshToken: "rt" } },
+          })
+        ),
+        setItem: vi.fn(),
+        removeItem: vi.fn(),
+      },
+      writable: true,
+    });
+  });
+
+  // T011 — connected state hides cards
+  it("hides Basic Plan and Connect with Finch choice cards when isConnected is true", async () => {
+    mockUseFinchStatus.mockReturnValue({
+      isConnected: true,
+      connectionStatus: "connected",
+      syncJobStatus: null,
+      isLoading: false,
+      error: null,
+    });
+    renderVerifiedDashboard();
+    await waitFor(() => {
+      expect(screen.queryByText("Basic Plan")).not.toBeInTheDocument();
+    });
+    expect(screen.queryByText(/Start with Finch/i)).not.toBeInTheDocument();
+  });
+
+  it("hides Take the Assessment card when isConnected is true", async () => {
+    mockUseFinchStatus.mockReturnValue({
+      isConnected: true,
+      connectionStatus: "connected",
+      syncJobStatus: null,
+      isLoading: false,
+      error: null,
+    });
+    renderVerifiedDashboard();
+    await waitFor(() => {
+      expect(screen.queryByText(/Take the Assessment/i)).not.toBeInTheDocument();
+    });
+  });
+
+  // T014 — non-connected states show cards (backward compat)
+  it("shows choice cards when connection status is disconnected", async () => {
+    mockUseFinchStatus.mockReturnValue({
+      isConnected: false,
+      connectionStatus: "disconnected",
+      syncJobStatus: null,
+      isLoading: false,
+      error: null,
+    });
+    renderVerifiedDashboard();
+    await waitFor(() => {
+      expect(screen.getByText(/Take the Assessment/i)).toBeInTheDocument();
+    });
+    expect(screen.getByText("Basic Plan")).toBeInTheDocument();
+  });
+
+  it("shows choice cards when connection status is reauth_required", async () => {
+    mockUseFinchStatus.mockReturnValue({
+      isConnected: false,
+      connectionStatus: "reauth_required",
+      syncJobStatus: null,
+      isLoading: false,
+      error: null,
+    });
+    renderVerifiedDashboard();
+    await waitFor(() => {
+      expect(screen.getByText("Basic Plan")).toBeInTheDocument();
+    });
+  });
+
+  it("shows choice cards when connection is null (initial state)", async () => {
+    mockUseFinchStatus.mockReturnValue({
+      isConnected: false,
+      connectionStatus: null,
+      syncJobStatus: null,
+      isLoading: false,
+      error: null,
+    });
+    renderVerifiedDashboard();
+    await waitFor(() => {
+      expect(screen.getByText("Basic Plan")).toBeInTheDocument();
+    });
+  });
+
+  it("shows choice cards when Finch status returns an error", async () => {
+    mockUseFinchStatus.mockReturnValue({
+      isConnected: false,
+      connectionStatus: null,
+      syncJobStatus: null,
+      isLoading: false,
+      error: "Network error",
+    });
+    renderVerifiedDashboard();
+    await waitFor(() => {
+      expect(screen.getByText("Basic Plan")).toBeInTheDocument();
+    });
+  });
+
+  // does not crash when status API errors
+  it("does not crash when Finch status returns an error", async () => {
+    mockUseFinchStatus.mockReturnValue({
+      isConnected: false,
+      connectionStatus: null,
+      syncJobStatus: null,
+      isLoading: false,
+      error: "Timeout",
+    });
+    expect(() => renderVerifiedDashboard()).not.toThrow();
+  });
+});
+
+describe("DashboardPage — Connect to Finch button wiring (T015)", () => {
+  const completedAssessmentMock = {
+    completionCount: 4,
+    assessmentData: { status: "completed", sections: {} } as ReturnType<
+      typeof useAssessmentStatus
+    >["assessmentData"],
+    isLoading: false,
+    error: null,
+    sectionCompletion: { workforce: true, compensation: true, benefits: true, goals: true },
+    refetch: vi.fn(),
+  } as ReturnType<typeof useAssessmentStatus>;
+
+  beforeEach(() => {
+    vi.clearAllMocks();
+    vi.mocked(useAssessmentStatus).mockReturnValue(completedAssessmentMock);
+    mockUseFinchConnect.mockReturnValue({
+      connectWithFinch: mockConnectWithFinch,
+      isLoading: false,
+    });
+    mockUseFinchStatus.mockReturnValue({
+      isConnected: false,
+      connectionStatus: null,
+      syncJobStatus: null,
+      isLoading: false,
+      error: null,
+    });
+    Object.defineProperty(window, "localStorage", {
+      value: {
+        getItem: vi.fn(() =>
+          JSON.stringify({
+            auth: { user: mockVerifiedUser, tokens: { accessToken: "at", refreshToken: "rt" } },
+          })
+        ),
+        setItem: vi.fn(),
+        removeItem: vi.fn(),
+      },
+      writable: true,
+    });
+  });
+
+  it("Connect button on the 'Connect to Finch' banner calls connectWithFinch when assessment is completed", async () => {
+    renderVerifiedDashboard();
+    await waitFor(() => {
+      expect(screen.getByText("Connect to Finch")).toBeInTheDocument();
+    });
+    fireEvent.click(screen.getByRole("button", { name: /Connect/i }));
+    expect(mockConnectWithFinch).toHaveBeenCalledTimes(1);
+  });
+
+  it("Connect button on the banner is disabled when isFinchLoading is true", async () => {
+    mockUseFinchConnect.mockReturnValue({
+      connectWithFinch: mockConnectWithFinch,
+      isLoading: true,
+    });
+    renderVerifiedDashboard();
+    await waitFor(() => {
+      expect(screen.getByText("Connect to Finch")).toBeInTheDocument();
+    });
+    const btn = screen.getByRole("button", { name: /Connect/i });
     expect(btn).toHaveAttribute("data-disabled");
   });
 });

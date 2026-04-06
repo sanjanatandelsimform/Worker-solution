@@ -63,7 +63,9 @@ export default function CarouselSection() {
                         {slide.title}
                       </h3>
                     </div>
-                    <p className="text-base font-normal text-ws-primary-900 leading-6">{slide.content}</p>
+                    <p className="text-base font-normal text-ws-primary-900 leading-6">
+                      {slide.content}
+                    </p>
                   </div>
                 </Carousel.Item>
               ))}

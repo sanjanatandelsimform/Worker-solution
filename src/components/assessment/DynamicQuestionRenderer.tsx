@@ -200,7 +200,9 @@ export const DynamicQuestionRenderer = ({
                 <Select.Item id={selectItem.id}>{selectItem.label || ""}</Select.Item>
               )}
             </Select>
-            {displayFieldError && <span className="text-sm text-ws-red-40">{displayFieldError}</span>}
+            {displayFieldError && (
+              <span className="text-sm text-ws-red-40">{displayFieldError}</span>
+            )}
           </>
         ) : field.name === "state" ? (
           <>
@@ -303,7 +305,9 @@ export const DynamicQuestionRenderer = ({
                 <Select.Item id={selectItem.id}>{selectItem.label || ""}</Select.Item>
               )}
             </Select>
-            {displayFieldError && <span className="text-sm text-ws-red-40">{displayFieldError}</span>}
+            {displayFieldError && (
+              <span className="text-sm text-ws-red-40">{displayFieldError}</span>
+            )}
           </>
         ) : field.name === "zipCode" ? (
           <>
@@ -433,7 +437,9 @@ export const DynamicQuestionRenderer = ({
                 updateArrayItemField(keyToUse, itemId, field.name, val, field.type);
               }}
             />
-            {displayFieldError && <span className="text-sm text-ws-red-40">{displayFieldError}</span>}
+            {displayFieldError && (
+              <span className="text-sm text-ws-red-40">{displayFieldError}</span>
+            )}
           </>
         )}
       </div>
@@ -1093,6 +1099,8 @@ export const DynamicQuestionRenderer = ({
     }
 
     default:
-      return <div className="text-ws-red-40">Unsupported question type: {question.questionType}</div>;
+      return (
+        <div className="text-ws-red-40">Unsupported question type: {question.questionType}</div>
+      );
   }
 };

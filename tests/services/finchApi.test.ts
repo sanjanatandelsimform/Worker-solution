@@ -6,16 +6,19 @@
  */
 
 import { describe, it, expect, vi, beforeEach } from "vitest";
-import { getFinchSessionId, exchangeFinchCode } from "@/services/api/finchApi";
+import { getFinchSessionId, exchangeFinchCode, getFinchStatus } from "@/services/api/finchApi";
 import type { FinchSessionResponse, FinchConnectResponse } from "@/services/api/finchApi";
+import type { FinchStatusData } from "@/types/finchStatusTypes";
 
 // ── Mock apiClient ─────────────────────────────────────────────────────────
 
 const mockPost = vi.fn();
+const mockGet = vi.fn();
 
 vi.mock("@/services/api/authApi", () => ({
   default: {
     post: (...args: unknown[]) => mockPost(...args),
+    get: (...args: unknown[]) => mockGet(...args),
   },
 }));
 
@@ -149,5 +152,67 @@ describe("exchangeFinchCode", () => {
     const authCode = "finch-auth-code-xyz-12345";
     await exchangeFinchCode(authCode);
     expect(mockPost).toHaveBeenCalledWith("/finch/callback", { code: authCode });
+  });
+});
+
+// ── getFinchStatus ─────────────────────────────────────────────────────────
+
+const mockConnection = {
+  id: "conn-uuid",
+  status: "connected" as const,
+  providerId: "gusto",
+  lastSyncedAt: null,
+  createdAt: "2026-04-01T10:00:00Z",
+};
+
+const mockSyncJob = {
+  id: "sync-uuid",
+  status: "pending" as const,
+  errorMessage: null,
+  startedAt: null,
+  completedAt: null,
+  createdAt: "2026-04-01T10:00:00Z",
+};
+
+describe("getFinchStatus", () => {
+  beforeEach(() => {
+    vi.clearAllMocks();
+  });
+
+  it("calls GET /finch/status with no body", async () => {
+    mockGet.mockResolvedValue({
+      data: { status: true, data: { connection: mockConnection, latestSyncJob: mockSyncJob } },
+    });
+    await getFinchStatus();
+    expect(mockGet).toHaveBeenCalledWith("/finch/status");
+    expect(mockGet).toHaveBeenCalledTimes(1);
+  });
+
+  it("returns connection and latestSyncJob on success", async () => {
+    mockGet.mockResolvedValue({
+      data: { status: true, data: { connection: mockConnection, latestSyncJob: mockSyncJob } },
+    });
+    const result: FinchStatusData = await getFinchStatus();
+    expect(result.connection).toEqual(mockConnection);
+    expect(result.latestSyncJob).toEqual(mockSyncJob);
+  });
+
+  it("handles null connection and null latestSyncJob", async () => {
+    mockGet.mockResolvedValue({
+      data: { status: true, data: { connection: null, latestSyncJob: null } },
+    });
+    const result: FinchStatusData = await getFinchStatus();
+    expect(result.connection).toBeNull();
+    expect(result.latestSyncJob).toBeNull();
+  });
+
+  it("throws when status is false", async () => {
+    mockGet.mockResolvedValue({ data: { status: false } });
+    await expect(getFinchStatus()).rejects.toThrow("Failed to fetch Finch status");
+  });
+
+  it("throws when apiClient.get rejects (network error)", async () => {
+    mockGet.mockRejectedValue(new Error("Network error"));
+    await expect(getFinchStatus()).rejects.toThrow("Network error");
   });
 });
