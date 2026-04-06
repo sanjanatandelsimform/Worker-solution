@@ -3,6 +3,7 @@ export * from "./ArrowRight";
 export * from "./BriefcaseIcon";
 export * from "./ChartIcon";
 export * from "./CheckIcon";
+export * from "./CheckLineIcon";
 export * from "./CircleCheckIcon";
 export * from "./ClockIcon";
 export * from "./CarouselRightArrow";

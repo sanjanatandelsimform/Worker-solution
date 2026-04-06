@@ -10,7 +10,9 @@ import { Checkbox } from "@/components/base/checkbox/checkbox";
 import { Eye, EyeOff, AlertCircle } from "@untitledui/icons";
 import type { SignInData } from "@/types/auth";
 import { signin } from "@/services/api/authApi";
-import checkmarkIcon from "@/assets/finch-checkmark.svg";
+// import checkmarkIcon from "@/assets/finch-checkmark.svg";
+import { useAppDispatch } from "@/store/hooks";
+import { setUser } from "@/store/slices/authSlice";
 import siteLogo from "@/assets/logo.svg";
 import { signInSchema, type SignInFormData } from "@/services/validation/authSchemas";
 import { getErrorState, type ErrorState } from "@/utils/errorHandler";
@@ -44,6 +46,7 @@ export const SignInForm = () => {
   const rememberMe = watch("rememberMe");
   const email = watch("email");
   const password = watch("password");
+  const dispatch = useAppDispatch();
 
   const onSubmit = async (data: SignInFormData) => {
     try {
@@ -68,21 +71,42 @@ export const SignInForm = () => {
       }
 
       const { user, tokens } = response.data;
-
+      if (user && tokens) {
+        dispatch(
+          setUser({
+            user: {
+              id: user.id,
+              businessEmail: user.businessEmail || "",
+              firstName: user.firstName,
+              lastName: user.lastName,
+              businessName: user.businessName,
+              phoneNumber: user.businessPhone || user.phoneNumber,
+              industry: user.industry,
+              zipCode: typeof user.zipCode === "string" ? parseInt(user.zipCode) : user.zipCode,
+              authMethod: user.googleId ? "google" : "email",
+              emailVerify: user.emailVerify ?? false,
+              createdAt: user.createdAt,
+              updatedAt: user.updatedAt,
+            },
+            tokens,
+          })
+        );
+      }
       // Clear password field
       setValue("password", "");
-      // Navigate to success page
-      navigate("/success", {
-        state: {
-          messageImg: checkmarkIcon,
-          title: "Sign In Successful!",
-          subtitle: "Welcome back! Continue your success journey with BeneStats®",
-          buttonText: "Go to Dashboard",
-          buttonPath: "/dashboard",
-          user: user,
-          tokens: tokens,
-        },
-      });
+      // Navigate to dashboard page
+      navigate("/dashboard");
+      // navigate("/success", {
+      //   state: {
+      //     messageImg: checkmarkIcon,
+      //     title: "Sign In Successful!",
+      //     subtitle: "Welcome back! Continue your success journey with BeneStats®",
+      //     buttonText: "Go to Dashboard",
+      //     buttonPath: "/dashboard",
+      //     user: user,
+      //     tokens: tokens,
+      //   },
+      // });
     } catch (error) {
       setErrorMessage(getErrorState(error));
     }

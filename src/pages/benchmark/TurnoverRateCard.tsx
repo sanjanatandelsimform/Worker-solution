@@ -1,0 +1,111 @@
+import AverageCard from "./AverageCard";
+
+export interface AverageCardData {
+  title: string;
+  statics: string;
+  staticsPoints?: string;
+  progressValue?: number | null;
+  customBarColor?: string;
+  staticsPointsState?: boolean; // New prop to control badge visibility
+}
+
+export interface CardSection {
+  /**
+   * Section title (e.g., "Industry Average", "Your Company")
+   */
+  sectionTitle: string;
+  /**
+   * Cards to display in this section
+   */
+  cardsData: AverageCardData[];
+  /**
+   * Number of columns for this section
+   * @default 2
+   */
+  columnsCount?: 1 | 2 | 3 | 4;
+}
+
+export interface TurnoverRateCardProps {
+  title: string;
+  titleQatar?: string;
+  /**
+   * Array of sections with their own titles and cards
+   */
+  sections?: CardSection[];
+  industryText?: string;
+  industryBoldText?: string;
+  sourceText?: string;
+  className?: string;
+}
+
+export default function TurnoverRateCard({
+  title,
+  titleQatar,
+  sections,
+  industryText,
+  industryBoldText,
+  sourceText,
+  className,
+}: Readonly<TurnoverRateCardProps>) {
+  // Map column count to grid class
+  const gridClassMap = {
+    1: "lg:grid-cols-1",
+    2: "lg:grid-cols-2",
+    3: "lg:grid-cols-3",
+    4: "lg:grid-cols-4",
+  };
+
+  const getGridColsClass = (columnsCount: number | undefined) => {
+    return gridClassMap[columnsCount as keyof typeof gridClassMap] || "lg:grid-cols-2";
+  };
+
+  return (
+    <div className={`bg-ws-white ring ring-ws-primary-100 rounded-xl p-5 ${className}`}>
+      <h2 className="flex items-center justify-between text-lg text-ws-black font-medium gap-2">
+        {title}
+        <span className="text-xs text-ws-gray-900 uppercase">{titleQatar}</span>
+      </h2>
+
+      {/* Render Multiple Sections */}
+      {sections && sections.length > 0 && (
+        <div className="mt-6 space-y-6">
+          {sections.map((section, sectionIndex) => (
+            <div key={`section-${sectionIndex}`}>
+              {/* Section Title */}
+              <h3 className="text-sm font-semibold text-ws-gray-350 uppercase mb-3">
+                {section.sectionTitle}
+              </h3>
+
+              {/* Cards Grid */}
+              {section.cardsData && section.cardsData.length > 0 && (
+                <div className={`grid grid-cols-1 ${getGridColsClass(section.columnsCount)} gap-4`}>
+                  {section.cardsData.map((card, cardIndex) => (
+                    <AverageCard
+                      key={`${section.sectionTitle}-${card.title}-${cardIndex}`}
+                      title={card.title}
+                      cardStatics={card.statics}
+                      staticsPoints={card.staticsPoints}
+                      staticsPointsState={card.staticsPointsState}
+                      progressValue={card.progressValue}
+                      className="bg-ws-white"
+                      customBarColor={card.customBarColor}
+                    />
+                  ))}
+                </div>
+              )}
+            </div>
+          ))}
+        </div>
+      )}
+
+      {/* Footer Text */}
+      {industryText && (
+        <p className="text-xs text-ws-black-90 mt-4">
+          {industryText}
+          <span className="text-xs font-medium">{industryBoldText}</span>
+        </p>
+      )}
+      {sourceText && <p className="text-xs text-ws-black-90 mt-2">{sourceText}</p>}
+    </div>
+  );
+}

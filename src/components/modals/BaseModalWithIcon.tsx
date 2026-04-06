@@ -52,7 +52,7 @@ export const BaseModalWithIcon = ({
     <Modal isOpen={isOpen} onOpenChange={onClose} size={size}>
       <ModalContent className={backgroundClass}>
         {/* Modal Header with Featured Icon and Close Button */}
-        <ModalHeader className="relative flex flex-col items-start gap-4 border-0 pb-0 pt-6 px-6">
+        <ModalHeader className="relative flex flex-col items-start border-0 pb-0 pt-6 px-6">
           {/* Featured Icon */}
           {icon && (
             <img
@@ -71,13 +71,13 @@ export const BaseModalWithIcon = ({
               aria-label="Close modal"
               className="absolute right-3 top-3 flex size-11 items-center justify-center overflow-clip p-2 rounded-lg"
             >
-              <X className="size-6 text-quaternary" />
+              <X className="size-6 text-quaternary text-ws-gray-60" />
             </Button>
           )}
 
           {/* Text and Supporting Text */}
           <div className="flex w-full flex-col gap-2">
-            <ModalTitle className="font-display text-[36px] font-medium leading-11 tracking-[-0.72px] text-ws-black">
+            <ModalTitle className="font-display text-2xl font-semibold leading-11 tracking-[-0.72px] text-ws-black mb-0 mt-4">
               {title}
             </ModalTitle>
             {subtitle && (

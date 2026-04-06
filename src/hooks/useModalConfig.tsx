@@ -3,6 +3,7 @@ import { CheckCircle, AlertOctagon } from "@untitledui/icons";
 import checkmarkIcon from "@/assets/finch-checkmark.svg";
 import alertIcon from "@/assets/alert-icon.svg";
 import type { BaseModalWithIconProps } from "@/components/modals/BaseModalWithIcon";
+import { CheckLineIcon } from "@/assets/icons/CheckLineIcon";
 
 type ModalType =
   | "updateComplete"
@@ -14,7 +15,8 @@ type ModalType =
   | "logoutConfirmation"
   | "goalsComplete"
   | "goalsEmptyWarning"
-  | "goalsApiError";
+  | "goalsApiError"
+  | "emailVerified";
 
 interface ModalConfig {
   isOpen: boolean;
@@ -34,7 +36,7 @@ export const useModalConfig = (
         title: "Update Complete",
         subtitle: "All set! Your changes have been saved.",
         icon: <CheckCircle className="size-6" />,
-        messageImg: checkmarkIcon,
+        //messageImg: checkmarkIcon,
         backgroundPattern: "success",
         buttons: [
           {
@@ -50,7 +52,7 @@ export const useModalConfig = (
         subtitle:
           "All set! Your email has been updated. We've sent a verification link to your new address. Please verify your email.",
         icon: <CheckCircle className="size-6" />,
-        messageImg: checkmarkIcon,
+        //messageImg: checkmarkIcon,
         backgroundPattern: "success",
         buttons: [
           {
@@ -112,7 +114,7 @@ export const useModalConfig = (
         subtitle: `We've sent a verification link to ${
           (config.additionalData?.email as string) || "your email"
         }. Verify your email to continue.`,
-        icon: <CheckCircle className="size-6" />,
+        icon: <CheckLineIcon className="size-6" />,
         messageImg: checkmarkIcon,
         backgroundPattern: "success",
         buttons: [
@@ -163,7 +165,7 @@ export const useModalConfig = (
         size: "sm",
         title: "You're done!",
         subtitle: "See your results and recommendations on your dashboard",
-        messageImg: checkmarkIcon,
+        //messageImg: checkmarkIcon,
         backgroundPattern: "success",
         buttons: [
           {
@@ -210,6 +212,21 @@ export const useModalConfig = (
           {
             text: "Retry",
             onClick: config.onConfirm || config.onClose,
+            color: "primary",
+          },
+        ],
+      },
+      emailVerified: {
+        size: "sm",
+        title: "Your email has been verified!",
+        subtitle: "Welcome aboard! Start your success journey with BeneStats.",
+        icon: <CheckCircle className="size-6" />,
+        //messageImg: checkmarkIcon,
+        backgroundPattern: "success",
+        buttons: [
+          {
+            text: "Return to dashboard",
+            onClick: config.onClose,
             color: "primary",
           },
         ],
