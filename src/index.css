@@ -36,11 +36,13 @@
   --color-ws-gray-100: var(--ws-color-gray-100);
   --color-ws-gray-200: var(--ws-color-gray-200);
   --color-ws-gray-300: var(--ws-color-gray-300);
+  --color-ws-gray-350: var(--ws-color-gray-350);
   --color-ws-gray-400: var(--ws-color-gray-400);
   --color-ws-gray-500: var(--ws-color-gray-500);
   --color-ws-gray-600: var(--ws-color-gray-600);
   --color-ws-gray-700: var(--ws-color-gray-700);
   --color-ws-gray-800: var(--ws-color-gray-800);
+  --color-ws-gray-900: var(--ws-color-gray-900);
 
   /* WS Cyan Colors */
   --color-ws-cyan-10: var(--ws-color-cyan-10);
@@ -98,6 +100,12 @@
   --color-ws-tab-bg: var(--ws-color-tab-bg);
   --color-ws-tab-active: var(--ws-color-tab-active);
   --color-ws-tab-active-text: var(--ws-color-tab-active-text);
+  --color-ws-success-bg: var(--ws-color-success-bg);
+  --color-ws-success-text: var(--ws-color-success-text);
+  --color-ws-warning-bg: var(--ws-color-warning-bg);
+  --color-ws-warning-text: var(--ws-color-warning-text);
+  --color-ws-progress-primary: var(--ws-color-progress-primary);
+  --color-ws-progress-secondary: var(--ws-color-progress-secondary);
 }
 
 :root {
@@ -133,6 +141,7 @@
   --ws-color-black-200: oklch(0.279 0.03 257); /* #1F2937 */
   --ws-color-black-300: oklch(0.2445 0.0437 255.37); /* #0D223A */
 
+
   /* Gray Colors */
   --ws-color-gray-10: oklch(0.985 0 0); /* #FAFAFA */
   --ws-color-gray-20: oklch(0.975 0 0); /* #F8F8F8 */
@@ -146,11 +155,13 @@
   --ws-color-gray-100: oklch(0.64 0 0); /* #8B8B8B */
   --ws-color-gray-200: oklch(0.63 0.06 265); /* #7D89B0 */
   --ws-color-gray-300: oklch(0.6 0.012 260); /* #717680 */
+  --ws-color-gray-350: oklch(0.56 0.01 92); /* #73726C */
   --ws-color-gray-400: oklch(0.58 0 0); /* #6C6C6C */
   --ws-color-gray-500: oklch(0.949 0 0); /* #EEEEEE */
   --ws-color-gray-600: oklch(0.942 0.005 258.3); /* #EAECEF */
   --ws-color-gray-700: oklch(0.267 0.041 232); /* #0E2936 */
   --ws-color-gray-800: oklch(0.455 0.022 262); /* #535862 */
+  --ws-color-gray-900: oklch(0.556 0.009 92); /* #73726C */
 
   /* Cyan Colors */
   --ws-color-cyan-10: oklch(0.955 0.05 200); /* #CDF2FF */
@@ -205,10 +216,18 @@
   --ws-color-navy-50: #e4f3fa;
   --ws-color-gray-50: #fdfdfd;
   --ws-color-gray-100: #575757;
-  --ws-color-gray-700: #343e3e;
-  --ws-color-tab-bg: #d2f1ef;
-  --ws-color-tab-active: #b6d3d0;
-  --ws-color-tab-active-text: #2e5450;
+  --ws-color-gray-700: #343E3E;
+  --ws-color-tab-bg: #D2F1EF;
+  --ws-color-tab-active: #B6D3D0;
+  --ws-color-tab-active-text: #2E5450;
+  --ws-color-success-bg: #E1F6EF;
+  --ws-color-success-text: #0F6F57;
+  --ws-color-warning-bg: #FAEDE7;
+  --ws-color-warning-text: #993C1E;
+  --ws-color-progress-primary: #89D4CC;
+  --ws-color-progress-secondary: #5792AD; 
+
+
 }
 
 .h-110 {

@@ -9,7 +9,7 @@ import { BaseModalWithIcon } from "../modals/BaseModalWithIcon";
 import { useBreakpoint } from "@/hooks/use-breakpoint";
 import { Button } from "../base/buttons/button";
 import { useModalConfig } from "@/hooks/useModalConfig";
-import logoutIcon from "@/assets/logout-Icon.svg";
+import signoutIcon from "@/assets/signout-icon.svg";
 import siteLogo from "@/assets/logo.svg";
 
 interface DashboardSidebarProps {
@@ -49,7 +49,7 @@ export const DashboardSidebar = ({ activeUrl = "/" }: DashboardSidebarProps) => 
 
       navigate("/success", {
         state: {
-          messageImg: logoutIcon,
+          messageImg: signoutIcon,
           title: "You've been logged out",
           subtitle: "You've been logged out of your account. Log back in anytime to continue.",
           buttonText: "Log back in",
@@ -63,7 +63,7 @@ export const DashboardSidebar = ({ activeUrl = "/" }: DashboardSidebarProps) => 
 
       navigate("/success", {
         state: {
-          messageImg: logoutIcon,
+          messageImg: signoutIcon,
           title: "You've been logged out",
           subtitle: "You've been logged out of your account. Log back in anytime to continue.",
           buttonText: "Log back in",
