@@ -23,7 +23,6 @@ export function useFinchConnect(): UseFinchConnectReturn {
         setStatus("idle");
         return;
       }
-      console.log(code, " authorization code received from Finch SDK");
 
       setStatus("exchanging-code");
       try {
