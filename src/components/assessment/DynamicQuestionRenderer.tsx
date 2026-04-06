@@ -15,6 +15,7 @@ import React, { useEffect } from "react";
 import questionData from "@/data/assessment/questionData.json";
 import { InputInfo } from "@/assets/icons/inputInfo";
 import type { ZipValidityState } from "@/components/common/ZipCodeAutocomplete";
+import type { StateOption } from "@/hooks/useStatesLookup";
 
 // Helper to generate unique IDs
 let idCounter = 0;
@@ -28,6 +29,7 @@ interface DynamicQuestionRendererProps {
   subsectionDisplayOrder?: number;
   /** Called to push real-time field-level errors up to the parent (DynamicTab) */
   onErrorChange?: (updates: Record<string, string>) => void;
+  stateOptions?: StateOption[];
 }
 
 export const DynamicQuestionRenderer = ({
@@ -37,6 +39,7 @@ export const DynamicQuestionRenderer = ({
   errors,
   subsectionDisplayOrder,
   onErrorChange,
+  stateOptions,
 }: DynamicQuestionRendererProps) => {
   const currentAnswer = answers[question.key];
   const error = errors[question.key];
@@ -235,6 +238,11 @@ export const DynamicQuestionRenderer = ({
                 const stateFieldKey = `${keyToUse}.${currentIndex}.state`;
                 const zipFieldKey = `${keyToUse}.${currentIndex}.zipCode`;
 
+                // Look up stateFips for the selected state from stateOptions
+                const selectedStateFips =
+                  stateOptions?.find(s => s.id.toUpperCase() === selectedState.toUpperCase())
+                    ?.stateFips ?? "";
+
                 if (
                   currentZipValue &&
                   currentZipStateAbbreviation &&
@@ -245,7 +253,6 @@ export const DynamicQuestionRenderer = ({
                     currentZipStateAbbreviation.toUpperCase() !== selectedState.toUpperCase();
 
                   if (isMismatch) {
-                    // Update answer with new state + mark mismatch
                     onAnswerChange(
                       keyToUse,
                       currentItems.map(i =>
@@ -253,6 +260,7 @@ export const DynamicQuestionRenderer = ({
                           ? {
                               ...i,
                               [field.name]: selectedState,
+                              stateFips: selectedStateFips,
                               __zipValidityState: "state_mismatch" as ZipValidityState,
                               __zipIsValid: false,
                             }
@@ -271,6 +279,7 @@ export const DynamicQuestionRenderer = ({
                           ? {
                               ...i,
                               [field.name]: selectedState,
+                              stateFips: selectedStateFips,
                               __zipValidityState: "valid" as ZipValidityState,
                               __zipIsValid: true,
                             }
@@ -290,6 +299,7 @@ export const DynamicQuestionRenderer = ({
                         ? {
                             ...i,
                             [field.name]: selectedState,
+                            stateFips: selectedStateFips,
                           }
                         : i
                     )
@@ -347,10 +357,28 @@ export const DynamicQuestionRenderer = ({
                 const latestItems = answers[keyToUse] as Array<Record<string, unknown>>;
                 if (!latestItems || !Array.isArray(latestItems)) return;
 
-                const selectedState = (item as unknown as Record<string, string>)["state"] ?? "";
+                const currentItem = latestItems.find(i => i.id === itemId);
+                const currentState = (currentItem?.state as string) ?? "";
+
+                const selectedState = currentState;
                 const mismatch =
                   selectedState !== "" &&
                   suggestion.stateAbbreviation.toUpperCase() !== selectedState.toUpperCase();
+
+                // Resolve stateFips: prefer suggestion's fips if state matches, else look up from stateOptions
+                const resolvedStateFips = (() => {
+                  if (
+                    suggestion.stateAbbreviation &&
+                    currentState &&
+                    suggestion.stateAbbreviation.toUpperCase() === currentState.toUpperCase()
+                  ) {
+                    return suggestion.stateFips ?? "";
+                  }
+                  return (
+                    stateOptions?.find(s => s.id.toUpperCase() === currentState.toUpperCase())
+                      ?.stateFips ?? ""
+                  );
+                })();
 
                 onAnswerChange(
                   keyToUse,
@@ -359,7 +387,9 @@ export const DynamicQuestionRenderer = ({
                       ? {
                           ...i,
                           [field.name]: suggestion.zip,
+                          stateFips: resolvedStateFips,
                           __zipStateAbbreviation: suggestion.stateAbbreviation,
+                          __zipStateFips: suggestion.stateFips ?? "",
                           __zipIsValid: !mismatch,
                           __zipValidityState: (mismatch
                             ? "state_mismatch"

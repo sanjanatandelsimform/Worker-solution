@@ -31,6 +31,7 @@ export const workforceSchema = z
         z.object({
           state: requiredString,
           zipCode: zipCodeSchema,
+          stateFips: z.string().optional(),
         })
       )
       .max(5, "Maximum 5 work locations allowed")
@@ -41,6 +42,7 @@ export const workforceSchema = z
         z.object({
           state: requiredString,
           zipCode: zipCodeSchema,
+          stateFips: z.string().optional(),
         })
       )
       .max(5, "Maximum 5 locations allowed")

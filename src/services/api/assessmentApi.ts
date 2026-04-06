@@ -103,6 +103,7 @@ export type SectionType = "workforce" | "compensation" | "benefits" | "goals";
 export interface StateOptionApi {
   stateAbbreviation: string;
   stateName: string;
+  stateFips?: string;
 }
 
 /**

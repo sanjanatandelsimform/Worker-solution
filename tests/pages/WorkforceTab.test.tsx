@@ -57,9 +57,9 @@ const mockStatesResponse = {
 };
 
 const expectedTransformedOptions = [
-  { id: "NY", label: "New York" },
-  { id: "CA", label: "California" },
-  { id: "TX", label: "Texas" },
+  { id: "NY", label: "New York", stateFips: "" },
+  { id: "CA", label: "California", stateFips: "" },
+  { id: "TX", label: "Texas", stateFips: "" },
 ];
 
 function renderWorkforceTab() {

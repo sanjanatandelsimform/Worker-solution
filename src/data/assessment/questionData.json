@@ -349,25 +349,25 @@
         {
           "key": "hourlyMedianAnnualEarnings",
           "questionNumber": 2,
-          "questionText": "What range best describes your HOURLY employees' median annual earnings?",
+          "questionText": "Which range best describes your HOURLY employees' earnings rate?",
           "questionType": "SINGLE_SELECT",
           "displayOrder": 2,
-          "isRequired": true,
+          "isRequired": false,
           "validationRules": {
             "type": "SINGLE_SELECT",
-            "required": true,
+            "required": false,
             "errorMessage": "Select an option"
           },
           "options": [
-            { "id": "less_12", "label": "Less than $12", "value": "<$12" },
-            { "id": "12_15", "label": "$12–$15", "value": "$12-$15" },
-            { "id": "16_20", "label": "$16–$20", "value": "$16-$20" },
-            { "id": "21_25", "label": "$21–$25", "value": "$21-$25" },
-            { "id": "more_25", "label": "More than $25", "value": ">$25" },
+            { "label": "Less than $15/hour", "value": "<$15", "displayOrder": 1 },
+            { "label": "$15–$20/hour", "value": "$15-$20", "displayOrder": 2 },
+            { "label": "$20–$35/hour", "value": "$20-$35", "displayOrder": 3 },
+            { "label": "$35–$50/hour", "value": "$35-$50", "displayOrder": 4 },
+            { "label": "$50/hour+", "value": ">$50", "displayOrder": 5 },
             {
-              "id": "salaried",
-              "label": "Our workforce is salaried only",
-              "value": "salaried"
+              "label": "Our workforce is salaried only.",
+              "value": "salaried",
+              "displayOrder": 6
             }
           ]
         },
@@ -484,6 +484,60 @@
               "options": []
             }
           }
+        },
+        {
+          "key": "employeesEligibleForShift",
+          "questionText": "Are your hourly employees eligible for shift differentials e.g. extra pay for nights/weekends/holidays?",
+          "questionType": "YES_NO",
+          "displayOrder": 6,
+          "validationRules": {
+            "type": "BOOLEAN",
+            "required": false,
+            "errorMessage": "Select an option"
+          },
+          "schemaVersion": 1,
+          "isRequired": false,
+          "options": []
+        },
+        {
+          "key": "employeeEligibleShortTermIncentives",
+          "questionText": "Are most of your employees eligible for short-term incentives such as spot, quarterly or annual bonuses, commissions, profit sharing?",
+          "questionType": "MULTIPLE_CHOICE",
+          "displayOrder": 7,
+          "validationRules": {
+            "type": "MULTIPLE_CHOICE",
+            "required": false,
+            "minSelections": 1,
+            "errorMessage": "Select an option"
+          },
+          "schemaVersion": 1,
+          "isRequired": false,
+          "options": [
+            { "label": "Cash bonuses", "value": "Cash bonuses", "displayOrder": 1 },
+            { "label": "Profit sharing", "value": "Profit sharing", "displayOrder": 2 },
+            { "label": "Comissions", "value": "Comissions", "displayOrder": 3 }
+          ]
+        },
+        {
+          "key": "employeeEligibleLongTermIncentives",
+          "questionText": "Are most of your employees eligible for long-term incentives such as stock plans, pension plan, deferred compensation?",
+          "questionType": "MULTIPLE_CHOICE",
+          "displayOrder": 8,
+          "validationRules": {
+            "type": "MULTIPLE_CHOICE",
+            "required": false,
+            "minSelections": 1,
+            "errorMessage": "Select an option"
+          },
+          "schemaVersion": 1,
+          "isRequired": false,
+          "options": [
+            { "label": "Stock options", "value": "Stock options", "displayOrder": 1 },
+            { "label": "Restricted Stock Units (RSUs)", "value": "Restricted Stock Units (RSUs)", "displayOrder": 2 },
+            { "label": "Employee Stock Purchase Plans (ESPPs)", "value": "Employee Stock Purchase Plans (ESPPs)", "displayOrder": 3 },
+            { "label": "Deferred compensation", "value": "Deferred compensation", "displayOrder": 4 },
+            { "label": "Pension plans", "value": "Pension plans", "displayOrder": 5 }
+          ]
         }
       ]
     },
@@ -545,142 +599,117 @@
             {
               "groupName": "Health and Wellness",
               "options": [
-                { "label": "Mental health support", "value": "Mental Health", "displayOrder": 9 },
                 {
-                  "label": "Medical expense assistance",
-                  "value": "Medical Expense Help",
+                  "label": "Healthcare",
+                  "value": "Healthcare",
+                  "displayOrder": 9
+                },
+                {
+                  "label": "Dental",
+                  "value": "Dental",
                   "displayOrder": 10
                 },
                 {
-                  "label": "Care navigation services",
-                  "value": "Care Navigation",
+                  "label": "Vision",
+                  "value": "Vision",
                   "displayOrder": 11
+                },
+                {
+                  "label": "Medical Flexible Spending Account (FSA)",
+                  "value": "Medical FSA",
+                  "displayOrder": 12
+                },
+                {
+                  "label": "Healthcare Savings Account (HSA)",
+                  "value": "HSA",
+                  "displayOrder": 13
+                },
+                {
+                  "label": "Limited purpose FSA",
+                  "value": "Limited Purpose FSA",
+                  "displayOrder": 14
+                },
+                {
+                  "label": "Dependent care FSA",
+                  "value": "Dependent Care FSA",
+                  "displayOrder": 15
+                },
+                {
+                  "label": "Medical expense assistance",
+                  "value": "Medical Expense Help",
+                  "displayOrder": 16
+                },
+                {
+                  "label": "Mental health support",
+                  "value": "Mental Health",
+                  "displayOrder": 17
                 }
               ]
             },
             {
               "groupName": "Other Supplemental Benefits",
               "options": [
-                {
-                  "label": "Workplace benefits navigation",
-                  "value": "Benefits Navigation",
-                  "displayOrder": 12
-                },
-                {
-                  "label": "Education support (e.g. tuition reimbursement)",
-                  "value": "Education Support",
-                  "displayOrder": 13
-                },
-                {
-                  "label": "Other (option for written answer if this is selected)",
-                  "value": "Other",
-                  "displayOrder": 14
-                },
-                { "label": "Unsure", "value": "Unsure", "displayOrder": 15 },
-                {
-                  "label": "My company does not offer any supplemental benefits",
-                  "value": "None",
-                  "displayOrder": 16
-                }
-              ]
-            }
-          ],
-          "options": [
-            {
-              "label": "Earned Wage Access",
-              "value": "Earned Wage Access",
-              "displayOrder": 1,
-              "group": "Retirement and Savings"
-            },
-            {
-              "label": "Loans for employees",
-              "value": "Employee Loans",
-              "displayOrder": 2,
-              "group": "Retirement and Savings"
-            },
-            {
-              "label": "Employee hardship grants",
-              "value": "Hardship Grants",
-              "displayOrder": 3,
-              "group": "Retirement and Savings"
-            },
-            {
-              "label": "Financial coaching and/or education",
-              "value": "Financial Coaching",
-              "displayOrder": 4,
-              "group": "Retirement and Savings"
-            },
-            {
-              "label": "Emergency savings benefits",
-              "value": "Emergency Savings",
-              "displayOrder": 5,
-              "group": "Retirement and Savings"
-            },
-            {
-              "label": "Student loan support",
-              "value": "Student Loan Support",
-              "displayOrder": 6,
-              "group": "Retirement and Savings"
-            },
-            {
-              "label": "Credit building services",
-              "value": "Credit Building",
-              "displayOrder": 7,
-              "group": "Retirement and Savings"
-            },
-            {
-              "label": "Retirement account migration and consolidation",
-              "value": "Retirement Migration",
-              "displayOrder": 8,
-              "group": "Retirement and Savings"
-            },
-            {
-              "label": "Mental health support",
-              "value": "Mental Health",
-              "displayOrder": 9,
-              "group": "Health and Wellness"
-            },
-            {
-              "label": "Medical expense assistance",
-              "value": "Medical Expense Help",
-              "displayOrder": 10,
-              "group": "Health and Wellness"
-            },
-            {
-              "label": "Care navigation services",
-              "value": "Care Navigation",
-              "displayOrder": 11,
-              "group": "Health and Wellness"
-            },
-            {
-              "label": "Workplace benefits navigation",
-              "value": "Benefits Navigation",
-              "displayOrder": 12,
-              "group": "Other Supplemental Benefits"
-            },
-            {
-              "label": "Education support (e.g. tuition reimbursement)",
-              "value": "Education Support",
-              "displayOrder": 13,
-              "group": "Other Supplemental Benefits"
-            },
-            {
-              "label": "Other",
-              "value": "Other",
-              "displayOrder": 14,
-              "group": "Other Supplemental Benefits"
-            },
-            {
-              "label": "Unsure",
-              "value": "Unsure",
-              "displayOrder": 15,
-              "group": "Other Supplemental Benefits"
-            },
-            {
-              "label": "My company does not offer any supplemental benefits",
-              "value": "None",
-              "displayOrder": 16,
-              "group": "Other Supplemental Benefits"
+                  {
+                    "label": "Employer assistance program (EAP)",
+                    "value": "EAP",
+                    "displayOrder": 18
+                  },
+                  {
+                    "label": "Life Insurance",
+                    "value": "Life Insurance",
+                    "displayOrder": 19
+                  },
+                  {
+                    "label": "Supplemental life insurance",
+                    "value": "Supplemental Life Insurance",
+                    "displayOrder": 20
+                  },
+                  {
+                    "label": "AD&D insurance",
+                    "value": "AD&D Insurance",
+                    "displayOrder": 21
+                  },
+                  {
+                    "label": "Short term disability",
+                    "value": "Short Term Disability",
+                    "displayOrder": 22
+                  },
+                  {
+                    "label": "Long term disability",
+                    "value": "Long Term Disability",
+                    "displayOrder": 23
+                  },
+                  {
+                    "label": "Transportation/commuter benefits",
+                    "value": "Transportation Benefits",
+                    "displayOrder": 24
+                  },
+                  {
+                    "label": "Free meals or food discounts",
+                    "value": "Meals or Food Discounts",
+                    "displayOrder": 25
+                  },
+                  {
+                    "label": "Childcare assistance",
+                    "value": "Childcare Assistance",
+                    "displayOrder": 26
+                  },
+                  {
+                    "label": "Care navigation services",
+                    "value": "Care Navigation",
+                    "displayOrder": 27
+                  },
+                  {
+                    "label": "Unsure",
+                    "value": "Unsure",
+                    "displayOrder": 28
+                  },
+                  {
+                    "label": "My company does not offer any supplemental benefits",
+                    "value": "None",
+                    "displayOrder": 29
+                  }
+                ]
             }
           ]
         },
@@ -1057,10 +1086,25 @@
           "options": []
         },
         {
+          "key": "retirementNonElectiveMatch",
+          "questionText": "Does your company offer a non-elective match?",
+          "questionType": "YES_NO",
+          "displayOrder": 10,
+          "subsection": "Retirement",
+          "validationRules": {
+            "type": "BOOLEAN",
+            "required": true,
+            "errorMessage": "Please indicate if your company offers a non-elective match"
+          },
+          "schemaVersion": 1,
+          "isRequired": true,
+          "options": []
+        },
+        {
           "key": "lowestHealthPlanPremium",
           "questionText": "What is the employee-only monthly premium for the lowest-cost health plan your company offers?",
           "questionType": "NUMBER_INPUT",
-          "displayOrder": 10,
+          "displayOrder": 11,
           "subsection": "HealthCare",
           "validationRules": {
             "type": "NUMBER",
@@ -1077,7 +1121,7 @@
           "key": "offersHealthInsurance",
           "questionText": "Does your offer a company-sponsored healthcare insurance benefit to your workers?",
           "questionType": "YES_NO",
-          "displayOrder": 11,
+          "displayOrder": 12,
           "subsection": "HealthCare",
           "validationRules": {
             "type": "BOOLEAN",
@@ -1130,7 +1174,7 @@
           "key": "healthPlanInsuranceType",
           "questionText": "Are your healthcare benefit plans fully insured or self-insured?",
           "questionType": "SINGLE_SELECT",
-          "displayOrder": 12,
+          "displayOrder": 13,
           "subsection": "HealthCare",
           "validationRules": {
             "type": "SINGLE_SELECT",
@@ -1158,7 +1202,7 @@
           "key": "reimbursementArrangements",
           "questionText": "Please select any of the following reimbursement arrangements you utilize:",
           "questionType": "MULTIPLE_CHOICE",
-          "displayOrder": 13,
+          "displayOrder": 14,
           "subsection": "HealthCare",
           "validationRules": {
             "type": "ARRAY",
@@ -1185,7 +1229,7 @@
           "key": "healthPlanParticipationRates",
           "questionText": "What percentage of employees participate in the following:",
           "questionType": "PARTICIPATION_RATES",
-          "displayOrder": 14,
+          "displayOrder": 15,
           "subsection": "HealthCare",
           "validationRules": {
             "type": "OBJECT",

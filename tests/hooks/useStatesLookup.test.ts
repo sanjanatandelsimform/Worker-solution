@@ -26,8 +26,8 @@ describe("transformStates", () => {
     ];
     const result = transformStates(input);
     expect(result).toEqual([
-      { id: "NY", label: "New York" },
-      { id: "CA", label: "California" },
+      { id: "NY", label: "New York", stateFips: "" },
+      { id: "CA", label: "California", stateFips: "" },
     ]);
   });
 
@@ -37,7 +37,7 @@ describe("transformStates", () => {
       { stateName: "California" } as { stateAbbreviation: string; stateName: string },
     ];
     const result = transformStates(input);
-    expect(result).toEqual([{ id: "NY", label: "New York" }]);
+    expect(result).toEqual([{ id: "NY", label: "New York", stateFips: "" }]);
   });
 
   it("should skip entries missing stateName", () => {
@@ -46,7 +46,7 @@ describe("transformStates", () => {
       { stateAbbreviation: "CA" } as { stateAbbreviation: string; stateName: string },
     ];
     const result = transformStates(input);
-    expect(result).toEqual([{ id: "NY", label: "New York" }]);
+    expect(result).toEqual([{ id: "NY", label: "New York", stateFips: "" }]);
   });
 
   it("should return empty array when all entries are malformed", () => {
@@ -96,8 +96,8 @@ describe("useStatesLookup", () => {
     });
 
     expect(result.current.stateOptions).toEqual([
-      { id: "NY", label: "New York" },
-      { id: "CA", label: "California" },
+      { id: "NY", label: "New York", stateFips: "" },
+      { id: "CA", label: "California", stateFips: "" },
     ]);
     expect(result.current.error).toBeNull();
   });
