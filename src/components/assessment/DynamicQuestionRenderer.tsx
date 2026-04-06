@@ -463,9 +463,9 @@ export const DynamicQuestionRenderer = ({
     let shouldShow = false;
 
     if (showWhen === "yes") {
-      shouldShow = parentValue === true;
+      shouldShow = parentValue === true || String(parentValue).toLowerCase() === "yes";
     } else if (showWhen === "no") {
-      shouldShow = parentValue === false;
+      shouldShow = parentValue === false || String(parentValue).toLowerCase() === "no";
     } else {
       const showWhenNormalized = String(showWhen).toLowerCase();
       const parentValueNormalized = String(parentValue || "").toLowerCase();
@@ -718,11 +718,23 @@ export const DynamicQuestionRenderer = ({
             value={String(currentAnswer || "")}
             onChange={value => onAnswerChange(question.key, value)}
           >
-            <div className="flex w-full flex-col gap-4 custom-question-options">
+            {/* <div className="flex w-full flex-col gap-4 custom-question-options">
               {question.options?.map(option => (
                 <RadioButton key={option.value} label={option.label} value={option.value} />
               ))}
-            </div>
+            </div> */}
+          <div className="flex w-full flex-col gap-4 custom-question-options">
+          {question.options?.map(option => (
+            <React.Fragment key={option.value}>
+              <RadioButton label={option.label} value={option.value} />
+              {/* Render conditional inline after the matching option */}
+              {question.conditionalQuestion &&
+                String(question.conditionalQuestion.showWhen).toLowerCase() ===
+                  option.value.toLowerCase() &&
+                renderConditionalQuestion(question.conditionalQuestion, question.key)}
+            </React.Fragment>
+          ))}
+        </div>
           </RadioGroup>
         </div>
       );

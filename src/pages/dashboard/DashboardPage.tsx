@@ -453,7 +453,8 @@ export const DashboardPage = () => {
             {emailVerify && assessmentData?.status !== "completed" && (
               <DashboardCard
                 classes="bg-ws-primary-50 border-ws-primary-100"
-                title={`${completionCount > 0 ? `${completionCount} ` : ""}Take the Assessment`}
+                // title={`${completionCount > 0 ? `${completionCount} ` : ""}Take the Assessment`}
+                title="Take the Assessment"
                 description={
                   <div className="max-w-2xl text-ws-primary-900">
                     Take our 15 minute assessment for specific recommendations to improve your

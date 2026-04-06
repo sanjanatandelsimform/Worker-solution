@@ -29,7 +29,7 @@
         },
         {
           "key": "benefitsUpdates",
-          "questionText": "How do they get their benefits updates?",
+          "questionText": "Where are employees most likely to receive benefits updates?",
           "questionType": "MULTIPLE_CHOICE",
           "displayOrder": 2,
           "validationRules": {
@@ -41,8 +41,8 @@
           "schemaVersion": 1,
           "isRequired": true,
           "options": [
-            { "label": "Email", "value": "Email", "displayOrder": 1 },
-            { "label": "Text, SMS", "value": "Text/SMS", "displayOrder": 2 },
+            { "label": "Work (email , and/or text)", "value": "Email", "displayOrder": 1 },
+            { "label": "Personal (email , and/or text)", "value": "Personal", "displayOrder": 2 },
             {
               "label": "In-office (flyer, in person-announcements etc.)",
               "value": "In-office",
@@ -66,7 +66,7 @@
         },
         {
           "key": "employeeCommuteMethod",
-          "questionText": "How are your employees commuting to work?",
+          "questionText": "What is the most common commute method among your employees?",
           "questionType": "MULTIPLE_CHOICE",
           "displayOrder": 4,
           "validationRules": {
@@ -82,7 +82,8 @@
             { "label": "Bus", "value": "Bus", "displayOrder": 2 },
             { "label": "Car", "value": "Car", "displayOrder": 3 },
             { "label": "Bike", "value": "Bike", "displayOrder": 4 },
-            { "label": "Walking", "value": "Walking", "displayOrder": 5 }
+            { "label": "Walking", "value": "Walking", "displayOrder": 5 },
+            { "label": "Group Transportation (i.e. Carpooling, Company bus)", "value": "Group Transportation", "displayOrder": 6 }
           ]
         },
         {
@@ -231,16 +232,20 @@
         {
           "key": "employeesResideInSameZipCodes",
           "questionText": "Do the majority of employees reside in the same zip codes above?",
-          "questionType": "YES_NO",
+          "questionType": "SINGLE_SELECT",
           "displayOrder": 11,
           "validationRules": {
-            "type": "BOOLEAN",
+            "type": "SINGLE_SELECT",
             "required": true,
             "errorMessage": "Select an option"
           },
           "schemaVersion": 1,
           "isRequired": true,
-          "options": [],
+          "options": [
+            { "label": "Yes", "value": "Yes", "displayOrder": 1 },
+            { "label": "No", "value": "No", "displayOrder": 2 },
+            { "label": "Unsure", "value": "Unsure", "displayOrder": 3 }
+          ],
           "conditionalQuestion": {
             "showWhen": "no",
             "question": {
