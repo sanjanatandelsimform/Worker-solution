@@ -295,7 +295,7 @@ export default function BenchmarkPage() {
                 //       title: "Voluntary",
                 //       statics: formatPercentage(60.1),
                 //       staticsPoints: "-23pts",
-                        //staticsPointsState: true,
+                //staticsPointsState: true,
                 //       progressValue: 60.1,
                 //       customBarColor: "bg-utility-success-500",
                 //     },
@@ -310,9 +310,7 @@ export default function BenchmarkPage() {
                 // },
               ]}
               industryText={
-                industryOverview?.turnoverRate?.rate
-                  ? "Industry-wide cost of turnover:"
-                  : undefined
+                industryOverview?.turnoverRate?.rate ? "Industry-wide cost of turnover:" : undefined
               }
               industryBoldText="$4,149.2M"
               sourceText="Source: Lorem ipsum sit amet dolor"
@@ -348,7 +346,7 @@ export default function BenchmarkPage() {
                 //       title: "Voluntary",
                 //       statics: formatPercentage(60.1),
                 //       staticsPoints: "-23pts",
-                        //staticsPointsState: true,
+                //staticsPointsState: true,
                 //       progressValue: 60.1,
                 //       customBarColor: "bg-utility-success-500",
                 //     },
@@ -363,9 +361,7 @@ export default function BenchmarkPage() {
                 // },
               ]}
               industryText={
-                industryOverview?.turnoverRate?.rate
-                  ? "Industry-wide cost of turnover:"
-                  : undefined
+                industryOverview?.turnoverRate?.rate ? "Industry-wide cost of turnover:" : undefined
               }
               industryBoldText="$4,149.2M"
               sourceText="Source: Lorem ipsum sit amet dolor"
@@ -376,11 +372,15 @@ export default function BenchmarkPage() {
         <div className="w-full flex items-start mt-8">Source: Lorem Ipsum dolor</div>
       </div>
 
-       <div className="w-full flex flex-col items-center bg-ws-gray-30 border border-ws-primary-100 rounded-xl py-8 px-6">
+      <div className="w-full flex flex-col items-center bg-ws-gray-30 border border-ws-primary-100 rounded-xl py-8 px-6">
         <div className="w-full flex items-center justify-between">
           <div className="space-y-1">
-            <h3 className="text-4xl font-medium text-ws-black-90">Area Median Wage: Manchester, NH</h3>
-            <p className="text-base text-ws-black-90 w-full  mt-2">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Fusce quis felis venenatis.</p>
+            <h3 className="text-4xl font-medium text-ws-black-90">
+              Area Median Wage: Manchester, NH
+            </h3>
+            <p className="text-base text-ws-black-90 w-full  mt-2">
+              Lorem ipsum dolor sit amet, consectetur adipiscing elit. Fusce quis felis venenatis.
+            </p>
           </div>
           <div className="flex flex-col items-start w-full lg:w-auto shrink-0">
             <Label className="text-sm font-medium text-ws-black-20 flex mb-1.5">
@@ -519,7 +519,7 @@ export default function BenchmarkPage() {
               /> */}
               <SalaryHourlyComparisonChart
                 salaryData={{ industryAverage: 31000, nationalAverage: 78000 }}
-                hourlyData={{ industryAverage: 13.50, nationalAverage: 24.00 }}
+                hourlyData={{ industryAverage: 13.5, nationalAverage: 24.0 }}
                 sourceAttribution="Source: BLS, 2023"
               />
             </div>

@@ -25,9 +25,12 @@ vi.mock("@/hooks/useAssessmentStatus", () => ({
 }));
 
 const mockConnectWithFinch = vi.fn();
+const mockClearFinchError = vi.fn();
 const mockUseFinchConnect = vi.fn(() => ({
   connectWithFinch: mockConnectWithFinch,
   isLoading: false,
+  error: null,
+  clearError: mockClearFinchError,
 }));
 vi.mock("@/hooks/useFinchConnect", () => ({
   useFinchConnect: (...args: unknown[]) => mockUseFinchConnect(...args),
@@ -142,6 +145,8 @@ describe("DashboardPage", () => {
     mockUseFinchConnect.mockReturnValue({
       connectWithFinch: mockConnectWithFinch,
       isLoading: false,
+      error: null,
+      clearError: mockClearFinchError,
     });
     mockUseFinchStatus.mockReturnValue({
       isConnected: false,
@@ -206,6 +211,8 @@ describe("DashboardPage", () => {
     mockUseFinchConnect.mockReturnValue({
       connectWithFinch: mockConnectWithFinch,
       isLoading: true,
+      error: null,
+      clearError: mockClearFinchError,
     });
     renderDashboardPage(createTestStore({ auth: { user: { ...mockUser, emailVerify: true } } }));
 
@@ -255,6 +262,8 @@ describe("DashboardPage — Finch status card visibility (T011/T014)", () => {
     mockUseFinchConnect.mockReturnValue({
       connectWithFinch: mockConnectWithFinch,
       isLoading: false,
+      error: null,
+      clearError: mockClearFinchError,
     });
     Object.defineProperty(window, "localStorage", {
       value: {
@@ -389,6 +398,8 @@ describe("DashboardPage — Connect to Finch button wiring (T015)", () => {
     mockUseFinchConnect.mockReturnValue({
       connectWithFinch: mockConnectWithFinch,
       isLoading: false,
+      error: null,
+      clearError: mockClearFinchError,
     });
     mockUseFinchStatus.mockReturnValue({
       isConnected: false,
@@ -424,6 +435,8 @@ describe("DashboardPage — Connect to Finch button wiring (T015)", () => {
     mockUseFinchConnect.mockReturnValue({
       connectWithFinch: mockConnectWithFinch,
       isLoading: true,
+      error: null,
+      clearError: mockClearFinchError,
     });
     renderVerifiedDashboard();
     await waitFor(() => {
@@ -431,5 +444,79 @@ describe("DashboardPage — Connect to Finch button wiring (T015)", () => {
     });
     const btn = screen.getByRole("button", { name: /Connect/i });
     expect(btn).toHaveAttribute("data-disabled");
+  });
+});
+
+// ── Finch error inline display ────────────────────────────────────────────
+
+describe("DashboardPage — Finch error display", () => {
+  beforeEach(() => {
+    vi.clearAllMocks();
+    vi.mocked(useAssessmentStatus).mockReturnValue({
+      completionCount: 0,
+      isLoading: false,
+    } as ReturnType<typeof useAssessmentStatus>);
+    mockUseFinchStatus.mockReturnValue({
+      isConnected: false,
+      connectionStatus: null,
+      syncJobStatus: null,
+      isLoading: false,
+      error: null,
+    });
+    Object.defineProperty(window, "localStorage", {
+      value: {
+        getItem: vi.fn(() =>
+          JSON.stringify({
+            auth: { user: mockVerifiedUser, tokens: { accessToken: "at", refreshToken: "rt" } },
+          })
+        ),
+        setItem: vi.fn(),
+        removeItem: vi.fn(),
+      },
+      writable: true,
+    });
+  });
+
+  it("shows inline ErrorMessage when finchError is set (choice section)", async () => {
+    mockUseFinchConnect.mockReturnValue({
+      connectWithFinch: mockConnectWithFinch,
+      isLoading: false,
+      error: "Failed to start Finch Connect. Please try again.",
+      clearError: mockClearFinchError,
+    });
+    render(
+      <Provider store={createTestStore({ auth: { user: mockVerifiedUser } })}>
+        <MemoryRouter>
+          <DashboardPage />
+        </MemoryRouter>
+      </Provider>
+    );
+
+    await waitFor(() => {
+      expect(screen.getByTestId("error-message")).toBeInTheDocument();
+    });
+    expect(screen.getByTestId("error-message")).toHaveTextContent(
+      "Failed to start Finch Connect. Please try again."
+    );
+  });
+
+  it("does not show ErrorMessage when finchError is null", async () => {
+    mockUseFinchConnect.mockReturnValue({
+      connectWithFinch: mockConnectWithFinch,
+      isLoading: false,
+      error: null,
+      clearError: mockClearFinchError,
+    });
+    render(
+      <Provider store={createTestStore({ auth: { user: mockVerifiedUser } })}>
+        <MemoryRouter>
+          <DashboardPage />
+        </MemoryRouter>
+      </Provider>
+    );
+
+    await waitFor(() => {
+      expect(screen.queryByTestId("error-message")).not.toBeInTheDocument();
+    });
   });
 });
