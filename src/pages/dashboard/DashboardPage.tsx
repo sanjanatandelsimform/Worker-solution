@@ -16,6 +16,7 @@ import { fetchUserById } from "@/store/slices/userSlice";
 import { resendVerificationEmail } from "@/store/slices/profileSlice";
 import { selectProfileError } from "@/store/selectors/profileSelectors";
 import { useModalConfig } from "@/hooks/useModalConfig";
+import fpoHero from "@/assets/fpo-hero-image.png";
 import { useAssessmentStatus } from "@/hooks/useAssessmentStatus";
 import { Tabs } from "@/components/base/tabs/tabs";
 import RecommendationsPage from "../recommendations/RecommendationsPage";
@@ -405,22 +406,22 @@ export const DashboardPage = () => {
               </div>
             )}
 
-            {/* {assessmentData?.status !== "completed" && (
+            {completionCount > 0 && emailVerify  && assessmentData?.status !== "completed" && (
               <div className="mt-6 border border-ws-primary-100 rounded-xl p-4 bg-ws-primary-50 shadow-sm flex gap-4 justify-between flex-col lg:flex-row">
                 <div className="flex-1">
                   <h2 className="text-ws-primary-900 text-3xl font-normal mb-2">
-                    Thanks for signing up.
+                    Complete your assessment
                   </h2>
                   <p className="text-ws-primary-900 text-base pr-10">
-                    Pick up where you left off and complete your company assessment for results and
-                    recommendations.
+                    Pick up where you left off and complete your company assessment for results 
+                    and recommendations.
                   </p>
                 </div>
                 <div className="flex-1 rounded-lg">
                   <img src={fpoHero} alt="Insight hero" className="w-full" />
                 </div>
               </div>
-            )} */}
+            )}
 
             {!emailVerify && (
               <DashboardCard
@@ -453,25 +454,31 @@ export const DashboardPage = () => {
             {emailVerify && assessmentData?.status !== "completed" && (
               <DashboardCard
                 classes="bg-ws-primary-50 border-ws-primary-100"
-                title={`${completionCount > 0 ? `${completionCount} ` : ""}Take the Assessment`}
-                description={
+                // title={`${completionCount > 0 ? `${completionCount} ` : ""}Take the Assessment`}
+                // title={completionCount > 0 ? "Continue" : "Take the Assessment"}
+                title="Take the Assessment"
+                description=
+                {completionCount > 0 ? 
                   <div className="max-w-2xl text-ws-primary-900">
-                    Take our 15 minute assessment for specific recommendations to improve your
-                    business
+                   Complete our quick assessment for customized recommendations and insights.
+                  </div>
+                  :
+                  <div className="max-w-2xl text-ws-primary-900">
+                   Get started on your assessment. Choose the best plan to achieve your workforce goal at no cost to you. 
                   </div>
                 }
                 avatarIconSrc={checkIcon}
                 buttonLabel={completionCount > 0 ? "Continue" : "Start assessment"}
                 buttonType={emailVerify ? "primary" : "secondary"}
                 buttonIsDisabled={!emailVerify}
-                //onClick={() => navigate("/assessment")}
+                onClick={() => navigate("/assessment")}
                 //onClick={() => navigate("/get-more")}
-                toggleButton={false}
+                toggleButton={completionCount > 0 ?true :false}
               />
             )}
           </div>
 
-          {emailVerify && assessmentData?.status !== "completed" && (
+          {completionCount === 0 && emailVerify && assessmentData?.status !== "completed" && (
             <div className="flex items-center justify-between gap-4 mt-6">
               <div className="flex-1 py-6 px-7 border border-ws-primary-100 rounded-xl min-h-109 relative">
                 <div className="flex items-center justify-between border-b border-ws-primary-100 pb-4 mb-4">
