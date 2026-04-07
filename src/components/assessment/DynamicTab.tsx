@@ -1072,7 +1072,7 @@ export const DynamicTab = forwardRef<
           <div className="bg-white rounded-lg border border-gray-200 shadow-sm p-6 space-y-6">
             {sectionContent[section] && !hideHeader && (
               <>
-                <h2 className="text-ws-black-90 text-3xl font-semibold mb-2">
+                <h2 className="text-ws-text-primary text-3xl font-semibold mb-2">
                   {sectionContent[section].title}
                 </h2>
                 <p className="text-base text-ws-black-20">{sectionContent[section].description}</p>
@@ -1088,7 +1088,7 @@ export const DynamicTab = forwardRef<
             key={subsection}
             className="bg-white rounded-lg border border-gray-200 shadow-sm p-6 space-y-6"
           >
-            <h2 className="text-2xl font-medium text-ws-black-90 pb-4 border-b border-ws-gray-40">
+            <h2 className="text-2xl font-medium text-ws-text-primary pb-4 border-b border-ws-gray-40">
               {subsection === "HealthCare" ? "Healthcare" : subsection}
             </h2>
             {subsectionQuestions.map((question, idx) =>

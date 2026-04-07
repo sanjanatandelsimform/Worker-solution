@@ -145,7 +145,7 @@ export default function WorkforcePage() {
         <h2 className="text-2xl lg:text-4xl font-medium text-ws-black-60 leading-10">
           Workforce Information{" "}
         </h2>
-        <p className="text-2xl text-ws-black-90">Breakdown Overview</p>
+        <p className="text-2xl text-ws-text-primary">Breakdown Overview</p>
       </div>
 
       {/* ── Industry Overview ── */}
@@ -158,7 +158,7 @@ export default function WorkforcePage() {
           countClass={
             industryOverview?.turnoverRate?.rate == null
               ? "mt-2 text-sm font-medium text-ws-black-10"
-              : "mt-2 text-3xl font-semibold text-ws-black-90"
+              : "mt-2 text-3xl font-semibold text-ws-text-primary"
           }
           infoIcon={true}
           infoCircleClass="text-ws-gray-70 size-5"
@@ -174,7 +174,7 @@ export default function WorkforcePage() {
           countClass={
             industryOverview?.avgTurnover?.rate == null
               ? "mt-2 text-sm font-medium text-ws-black-10"
-              : "mt-2 text-3xl font-semibold text-ws-black-90"
+              : "mt-2 text-3xl font-semibold text-ws-text-primary"
           }
           infoIcon={true}
           infoCircleClass="text-ws-gray-70 size-5"
@@ -190,7 +190,7 @@ export default function WorkforcePage() {
           countClass={
             industryOverview?.avgCostOfTurnover?.amount == null
               ? "mt-2 text-sm font-medium text-ws-black-10"
-              : "mt-2 text-3xl font-semibold text-ws-black-90"
+              : "mt-2 text-3xl font-semibold text-ws-text-primary"
           }
           infoIcon={true}
           infoCircleClass="text-ws-gray-70 size-5"
@@ -208,7 +208,7 @@ export default function WorkforcePage() {
           countClass={
             industryOverview?.turnoverRate?.rate == null
               ? "mt-2 text-sm font-medium text-ws-black-10"
-              : "mt-2 text-3xl font-semibold text-ws-black-90"
+              : "mt-2 text-3xl font-semibold text-ws-text-primary"
           }
           infoIcon={true}
           infoCircleClass="text-ws-gray-70 size-5"
@@ -225,7 +225,7 @@ export default function WorkforcePage() {
           countClass={
             industryOverview?.avgTurnover?.rate == null
               ? "mt-2 text-sm font-medium text-ws-black-10"
-              : "mt-2 text-3xl font-semibold text-ws-black-90"
+              : "mt-2 text-3xl font-semibold text-ws-text-primary"
           }
           infoIcon={true}
           infoCircleClass="text-ws-gray-70 size-5"
@@ -241,7 +241,7 @@ export default function WorkforcePage() {
           countClass={
             industryOverview?.avgCostOfTurnover?.amount == null
               ? "mt-2 text-sm font-medium text-ws-black-10"
-              : "mt-2 text-3xl font-semibold text-ws-black-90"
+              : "mt-2 text-3xl font-semibold text-ws-text-primary"
           }
           infoIcon={true}
           infoCircleClass="text-ws-gray-70 size-5"
@@ -271,11 +271,11 @@ export default function WorkforcePage() {
       </div>
 
       {/* ── Industry Turnover ── */}
-      <div className="w-full flex flex-col items-center bg-ws-gray-30 border border-ws-border-primary rounded-xl py-8 px-6">
+      <div className="w-full flex flex-col items-center bg-ws-light-teal-25 border border-ws-border-primary rounded-xl py-8 px-6">
         <div className="w-full flex items-center justify-between">
           <div className="space-y-1">
-            <h3 className="text-4xl font-medium text-ws-black-90">Participation Breakdown</h3>
-            <p className="text-base text-ws-black-90 w-full mt-2">
+            <h3 className="text-4xl font-medium text-ws-text-primary">Participation Breakdown</h3>
+            <p className="text-base text-ws-text-primary w-full mt-2">
               Your highest participation rate is health insurance. 89% of your employees are using
               this benefit. Your lowest partitication rate is wellness program.{" "}
             </p>
@@ -401,8 +401,8 @@ export default function WorkforcePage() {
           </div>
           <div className="bg-ws-base-white p-5 border border-ws-border-primary rounded-xl w-full flex flex-col relative">
             <div className="flex items-center justify-between">
-              <h2 className="text-lg font-medium text-ws-black-90">Employees with dependents</h2>
-              <p className="text-sm text-ws-black-90 flex items-center gap-3">
+              <h2 className="text-lg font-medium text-ws-text-primary">Employees with dependents</h2>
+              <p className="text-sm text-ws-text-primary flex items-center gap-3">
                 <span className="flex w-4 h-4 bg-ws-primary-300"></span>With dependents 68%
               </p>
             </div>
@@ -416,11 +416,11 @@ export default function WorkforcePage() {
         </div>
       </div>
 
-      <div className="w-full flex flex-col bg-ws-gray-30 border border-ws-border-primary rounded-xl py-8 px-6 space-y-4">
+      <div className="w-full flex flex-col bg-ws-light-teal-25 border border-ws-border-primary rounded-xl py-8 px-6 space-y-4">
         <div className="w-full flex items-center justify-between">
           <div className="space-y-1">
-            <h3 className="text-4xl font-medium text-ws-black-90">Demographics</h3>
-            <p className="text-base text-ws-black-90 max-w-2xl mt-4">
+            <h3 className="text-4xl font-medium text-ws-text-primary">Demographics</h3>
+            <p className="text-base text-ws-text-primary max-w-2xl mt-4">
               Demographics lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod
               tempor incididunt ut labore et dolore magna aliqua.
             </p>
@@ -459,7 +459,7 @@ export default function WorkforcePage() {
               countClass={
                 industryOverview?.turnoverRate?.rate == null
                   ? "mt-2 text-sm font-medium text-ws-black-10"
-                  : "mt-2 text-3xl font-semibold text-ws-black-90"
+                  : "mt-2 text-3xl font-semibold text-ws-text-primary"
               }
               infoIcon={true}
               infoCircleClass="text-ws-gray-70 size-5"
@@ -475,7 +475,7 @@ export default function WorkforcePage() {
               countClass={
                 industryOverview?.avgTurnover?.rate == null
                   ? "mt-2 text-sm font-medium text-ws-black-10"
-                  : "mt-2 text-3xl font-semibold text-ws-black-90"
+                  : "mt-2 text-3xl font-semibold text-ws-text-primary"
               }
               infoIcon={true}
               infoCircleClass="text-ws-gray-70 size-5"
@@ -486,7 +486,7 @@ export default function WorkforcePage() {
           </div>
         </div>
         <div className="bg-ws-base-white p-5 border border-ws-border-primary rounded-xl w-full flex flex-col relative">
-          <h2 className="text-2xl font-medium text-ws-black-90">Employment type</h2>
+          <h2 className="text-2xl font-medium text-ws-text-primary">Employment type</h2>
           <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 w-full my-6">
             <DonutChart
               percentage={60}
@@ -517,7 +517,7 @@ export default function WorkforcePage() {
         <div className="bg-ws-base-white p-5 border border-ws-border-primary rounded-xl w-full flex flex-col relative">
           <div className="w-full flex items-center justify-between">
             <div className="space-y-1">
-              <h3 className="text-2xl font-medium text-ws-black-90">Employment Breakdown by Age</h3>
+              <h3 className="text-2xl font-medium text-ws-text-primary">Employment Breakdown by Age</h3>
             </div>
             <div className="flex flex-col items-start w-full lg:w-auto shrink-0">
               <Label className="text-sm font-medium text-ws-black-20 flex mb-1.5 mt-6">
@@ -598,10 +598,10 @@ export default function WorkforcePage() {
         </div>
       </div>
 
-      <div className="w-full flex flex-col bg-ws-gray-30 border border-ws-border-primary rounded-xl py-8 px-6">
+      <div className="w-full flex flex-col bg-ws-light-teal-25 border border-ws-border-primary rounded-xl py-8 px-6">
         <div className="w-full flex items-center justify-between">
           <div className="space-y-1">
-            <h3 className="text-4xl font-medium text-ws-black-90">Compensation</h3>
+            <h3 className="text-4xl font-medium text-ws-text-primary">Compensation</h3>
             <p>
               Compensation lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod
               tempor incididunt ut labore et dolore magna aliqua.
@@ -617,7 +617,7 @@ export default function WorkforcePage() {
             countClass={
               selectedHousingData?.workingClassHousingCostBurden?.homeOwnershipRate == null
                 ? "mt-2 text-sm font-medium text-ws-black-10"
-                : "mt-2 text-3xl font-semibold text-ws-black-90"
+                : "mt-2 text-3xl font-semibold text-ws-text-primary"
             }
             infoIcon={true}
             infoCircleClass="text-ws-gray-70"
@@ -634,7 +634,7 @@ export default function WorkforcePage() {
             countClass={
               selectedHousingData?.workingClassHousingCostBurden?.medianHomeValue == null
                 ? "mt-2 text-sm font-medium text-ws-black-10"
-                : "mt-2 text-3xl font-semibold text-ws-black-90"
+                : "mt-2 text-3xl font-semibold text-ws-text-primary"
             }
             infoIcon={true}
             infoCircleClass="text-ws-gray-70"
@@ -651,7 +651,7 @@ export default function WorkforcePage() {
             countClass={
               selectedHousingData?.workingClassHousingCostBurden?.medianRent == null
                 ? "mt-2 text-sm font-medium text-ws-black-10"
-                : "mt-2 text-3xl font-semibold text-ws-black-90"
+                : "mt-2 text-3xl font-semibold text-ws-text-primary"
             }
             infoIcon={true}
             infoCircleClass="text-ws-gray-70"
@@ -665,7 +665,7 @@ export default function WorkforcePage() {
         <div className="w-full border-t border-ws-border-primary mt-8">
           <div className="w-full flex items-center justify-between mt-8">
             <div className="space-y-1 w-full">
-              <h3 className="text-2xl font-medium text-ws-black-90">Workforce Breakdown</h3>
+              <h3 className="text-2xl font-medium text-ws-text-primary">Workforce Breakdown</h3>
               <p className="max-w-3xl text-base text-ws-black-20">
                 Here you can find how your workforce is broken down by job types.{" "}
               </p>
@@ -701,7 +701,7 @@ export default function WorkforcePage() {
           <div className="w-full border-t border-ws-border-primary mt-8">
           <div className="w-full flex items-center justify-between mt-8">
             <div className="space-y-1 w-full">
-              <h3 className="text-2xl font-medium text-ws-black-90">Salary Breakdown</h3>
+              <h3 className="text-2xl font-medium text-ws-text-primary">Salary Breakdown</h3>
               <p className="max-w-3xl text-base text-ws-black-20">
                 Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
               </p>
@@ -717,7 +717,7 @@ export default function WorkforcePage() {
               countClass={
                 selectedHousingData?.workingClassHousingCostBurden?.homeOwnershipRate == null
                   ? "mt-2 text-sm font-medium text-ws-black-10"
-                  : "mt-2 text-3xl font-semibold text-ws-black-90"
+                  : "mt-2 text-3xl font-semibold text-ws-text-primary"
               }
               infoIcon={true}
               infoCircleClass="text-ws-gray-70"
@@ -734,7 +734,7 @@ export default function WorkforcePage() {
               countClass={
                 selectedHousingData?.workingClassHousingCostBurden?.medianHomeValue == null
                   ? "mt-2 text-sm font-medium text-ws-black-10"
-                  : "mt-2 text-3xl font-semibold text-ws-black-90"
+                  : "mt-2 text-3xl font-semibold text-ws-text-primary"
               }
               infoIcon={true}
               infoCircleClass="text-ws-gray-70"

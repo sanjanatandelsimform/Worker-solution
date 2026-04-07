@@ -5,8 +5,8 @@ import { Badge } from "@/components/base/badges/badges";
 import { cx, sortCx } from "@/utils/cx";
 
 const styles = sortCx({
-  root: "group relative flex w-full cursor-pointer items-center rounded-md bg-ws-base-white outline-focus-ring transition duration-100 ease-linear select-none hover:bg-ws-primary-400 select-none hover:text-ws-white focus-visible:z-10 focus-visible:outline-2 focus-visible:outline-offset-2",
-  rootSelected: "bg-ws-primary-400 hover:bg-ws-primary-400",
+  root: "group relative flex w-full cursor-pointer items-center rounded-md bg-ws-base-white outline-focus-ring transition duration-100 ease-linear select-none hover:bg-ws-light-teal-800 select-none hover:text-ws-base-white focus-visible:z-10 focus-visible:outline-2 focus-visible:outline-offset-2",
+  rootSelected: "bg-ws-light-teal-800 hover:bg-ws-light-teal-800 text-ws-base-white",
 });
 
 interface NavItemBaseProps {
@@ -49,8 +49,8 @@ export const NavItemBase = ({
     <Icon
       aria-hidden="true"
       className={cx(
-        "size-5 shrink-0 text-ws-primary-300 transition-all duration-300 group-hover:text-ws-white hover:text-ws-white",
-        current && "text-ws-white"
+        "size-5 shrink-0 text-ws-light-teal-800 transition-all duration-300 group-hover:text-ws-base-white hover:text-ws-base-white",
+        current && "text-ws-base-white"
       )}
       style={{
         marginRight: isCollapsed ? 0 : "0.5rem",
@@ -68,9 +68,9 @@ export const NavItemBase = ({
   const labelElement = !isCollapsed && (
     <span
       className={cx(
-        "flex-1 text-md font-medium text-ws-primary-300 transition-all duration-300 group-hover:text-ws-white hover:text-ws-white",
+        "flex-1 text-md font-medium text-ws-light-teal-800 transition-all duration-300 group-hover:text-ws-base-white hover:text-ws-base-white",
         truncate && "truncate",
-        current && "text-ws-white"
+        current && "text-ws-base-white"
       )}
     >
       {children}

@@ -103,12 +103,12 @@ export default function TurnoverRateCard({
 
       {/* Footer Text */}
       {industryText && (
-        <p className="text-xs text-ws-black-90 mt-4">
+        <p className="text-xs text-ws-text-primary mt-4">
           {industryText}
           <span className="text-xs font-medium">{industryBoldText}</span>
         </p>
       )}
-      {sourceText && <p className={cx("text-xs text-ws-black-90 mt-2", sourceClass)}>{sourceText}</p>}
+      {sourceText && <p className={cx("text-xs text-ws-text-primary mt-2", sourceClass)}>{sourceText}</p>}
     </div>
   );
 }

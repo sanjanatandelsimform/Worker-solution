@@ -57,7 +57,7 @@ export class AuthErrorBoundary extends Component<ErrorBoundaryProps, ErrorBounda
               </div>
 
               {/* Heading */}
-              <h1 className="mb-4 text-2xl font-bold text-ws-black-90">Something went wrong</h1>
+              <h1 className="mb-4 text-2xl font-bold text-ws-text-primary">Something went wrong</h1>
 
               {/* Description */}
               <p className="mb-6 text-sm text-ws-black-10">

@@ -38,9 +38,9 @@ export default function AverageCard({
 
   return (
     <div className={`bg-ws-base-white ring ring-ws-border-primary rounded-lg p-3 ${className}`}>
-      <h2 className="text-xs text-ws-black-90 mb-2">{title}</h2>
+      <h2 className="text-xs text-ws-text-primary mb-2">{title}</h2>
       <div className="flex items-center justify-between">
-        <h3 className="text-2xl font-semibold text-ws-black-90">{cardStatics}</h3>
+        <h3 className="text-2xl font-semibold text-ws-text-primary">{cardStatics}</h3>
         {staticsPointsState && badgeColor && (
           <Badge
             type="pill-color"

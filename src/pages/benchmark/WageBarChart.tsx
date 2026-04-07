@@ -278,10 +278,10 @@ export default function WageBarChart({ data, width, height = 350 }: CanvasChartP
               transform: "translateY(-100%)",
             }}
           >
-            <p className="mb-1 text-sm font-medium text-ws-black-90">{tooltip.label}</p>
+            <p className="mb-1 text-sm font-medium text-ws-text-primary">{tooltip.label}</p>
             <div className="flex items-center gap-2">
               <div className="h-3 w-3 rounded" style={{ backgroundColor: tooltip.color }} />
-              <span className="text-sm text-ws-black-90">
+              <span className="text-sm text-ws-text-primary">
                 {tooltip.barName}: ${tooltip.value.toFixed(2)}
               </span>
             </div>

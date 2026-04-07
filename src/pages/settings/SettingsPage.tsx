@@ -263,7 +263,7 @@ export const SettingsPage = () => {
 
   if (!userData) {
     return (
-      <div className="flex h-screen overflow-hidden bg-ws-gray-500">
+      <div className="flex h-screen overflow-hidden bg-ws-navy-250">
         <DashboardSidebar activeUrl={activeUrl} />
         <div className="flex flex-1 flex-col overflow-hidden">
           <main className="flex-1 overflow-y-auto p-6">
@@ -277,7 +277,7 @@ export const SettingsPage = () => {
   }
 
   return (
-    <div className="flex h-screen overflow-hidden bg-ws-gray-500">
+    <div className="flex h-screen overflow-hidden bg-ws-navy-250">
       <DashboardSidebar activeUrl={activeUrl} />
 
       <div className="flex flex-1 flex-col overflow-hidden">
@@ -329,7 +329,7 @@ export const SettingsPage = () => {
               {/* Personal Info Section */}
               <div className="flex items-center justify-between gap-2">
                 <div className="flex flex-col">
-                  <h2 className="text-lg font-semibold text-ws-black-90">Personal info</h2>
+                  <h2 className="text-lg font-semibold text-ws-text-primary">Personal info</h2>
                   <p className="text-sm text-ws-black-10">
                     Update your photo and personal details here.
                   </p>
@@ -447,7 +447,7 @@ export const SettingsPage = () => {
               {/* Account Management Section */}
               <div className="flex items-center justify-between gap-2">
                 <div className="flex flex-col">
-                  <h2 className="text-lg font-semibold text-ws-black-90">Account Management</h2>
+                  <h2 className="text-lg font-semibold text-ws-text-primary">Account Management</h2>
                   <p className="text-sm text-ws-black-10">
                     Update your photo and personal details here.
                   </p>

@@ -11,6 +11,7 @@
 
   /* Border Colors */
   --color-ws-border-primary: var(--ws-color-border-primary);
+  --color-ws-border-secondary: var(--ws-color-border-secondary);
 
   /* Text Colors */
   --color-ws-text-primary: var(--ws-color-text-primary);
@@ -19,6 +20,7 @@
   --color-ws-text-disabled: var(--ws-color-text-disabled);
 
   /* Gray Colors */
+  --color-ws-gray-200: var(--ws-color-gray-200);
   --color-ws-gray-400: var(--ws-color-gray-400);
   --color-ws-gray-500: var(--ws-color-gray-500);
 
@@ -54,7 +56,9 @@
   --color-ws-teal: var(--ws-color-teal);
   --color-ws-teal-lite: var(--ws-color-teal-lite);
   --color-ws-blue: var(--ws-color-ws-blue);
-  --color-ws-error-600: var(--color-red-600);
+  --color-ws-error-600: var(--ws-color-red-600);
+  --color-ws-success-25: var(--ws-color-success-25);
+  --color-ws-warning-50: var(--ws-color-warning-50);
 
 }
 
@@ -79,7 +83,8 @@
 
   /* Border Colors */
   --ws-color-border-primary: #D5D7DA;
-
+  --ws-color-border-secondary: #E9EAEB;
+  
   /* Text Colors */
   --ws-color-text-primary: #181D27;
   --ws-color-text-secondary: #414651;
@@ -87,6 +92,7 @@
   --ws-color-text-disabled: #B3B3B3;
 
   /* Gray Colors from Figma */
+  --ws-color-gray-200: #E9EAEB;
   --ws-color-gray-400: #A4A7AE;
   --ws-color-gray-500: #717680;
 
@@ -122,10 +128,9 @@
   --ws-color-teal: #00c4c7;
   --ws-color-teal-lite: #dbebeb;
   --ws-color-ws-blue: #0611f6;
-  --color-red-600: #D92D20;
-
-
-
+  --ws-color-error-600: #D92D20;
+  --ws-color-success-25: #F6FEF9;
+  --ws-color-warning-50: #FFFAEB;
 }
 
 .h-110 {

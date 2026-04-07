@@ -119,7 +119,7 @@ export default function BenchmarkFinchPage() {
           countClass={
             industryOverview?.turnoverRate?.rate == null
               ? "mt-2 text-sm font-medium text-ws-black-10"
-              : "mt-2 text-3xl font-semibold text-ws-black-90"
+              : "mt-2 text-3xl font-semibold text-ws-text-primary"
           }
           infoIcon={true}
           infoCircleClass="text-ws-gray-70 size-4"
@@ -136,7 +136,7 @@ export default function BenchmarkFinchPage() {
           countClass={
             industryOverview?.avgTurnover?.rate == null
               ? "mt-2 text-sm font-medium text-ws-black-10"
-              : "mt-2 text-3xl font-semibold text-ws-black-90"
+              : "mt-2 text-3xl font-semibold text-ws-text-primary"
           }
           infoIcon={true}
           infoCircleClass="text-ws-gray-70 size-4"
@@ -152,7 +152,7 @@ export default function BenchmarkFinchPage() {
           countClass={
             industryOverview?.avgCostOfTurnover?.amount == null
               ? "mt-2 text-sm font-medium text-ws-black-10"
-              : "mt-2 text-3xl font-semibold text-ws-black-90"
+              : "mt-2 text-3xl font-semibold text-ws-text-primary"
           }
           infoIcon={true}
           infoCircleClass="text-ws-gray-70 size-4"
@@ -170,7 +170,7 @@ export default function BenchmarkFinchPage() {
           countClass={
             industryOverview?.turnoverRate?.rate == null
               ? "mt-2 text-sm font-medium text-ws-black-10"
-              : "mt-2 text-3xl font-semibold text-ws-black-90"
+              : "mt-2 text-3xl font-semibold text-ws-text-primary"
           }
           infoIcon={true}
           infoCircleClass="text-ws-gray-70 size-4"
@@ -186,7 +186,7 @@ export default function BenchmarkFinchPage() {
           countClass={
             industryOverview?.turnoverRate?.rate == null
               ? "mt-2 text-sm font-medium text-ws-black-10"
-              : "mt-2 text-3xl font-semibold text-ws-black-90"
+              : "mt-2 text-3xl font-semibold text-ws-text-primary"
           }
           infoIcon={true}
           infoCircleClass="text-ws-gray-70 size-4"
@@ -196,11 +196,11 @@ export default function BenchmarkFinchPage() {
         />
       </div>
       {/* ── Industry Turnover ── */}
-      <div className="w-full flex flex-col items-center bg-ws-gray-30 border border-ws-border-primary rounded-xl py-8 px-6">
+      <div className="w-full flex flex-col items-center bg-ws-light-teal-25 border border-ws-border-primary rounded-xl py-8 px-6">
         <div className="w-full flex items-center justify-between">
           <div className="space-y-1">
-            <h3 className="text-4xl font-medium text-ws-black-90">Industry Turnover</h3>
-            <p className="text-base text-ws-black-90 w-full xl:w-3/4 mt-2">Lorem Ipsum</p>
+            <h3 className="text-4xl font-medium text-ws-text-primary">Industry Turnover</h3>
+            <p className="text-base text-ws-text-primary w-full xl:w-3/4 mt-2">Lorem Ipsum</p>
           </div>
           <div className="flex flex-col items-start w-full lg:w-auto shrink-0">
             <Label className="text-sm font-medium text-ws-black-20 flex mb-1.5">
@@ -341,13 +341,13 @@ export default function BenchmarkFinchPage() {
         </div>
       </div>
 
-      <div className="w-full flex flex-col bg-ws-gray-30 border border-ws-border-primary rounded-xl py-8 px-6">
+      <div className="w-full flex flex-col bg-ws-light-teal-25 border border-ws-border-primary rounded-xl py-8 px-6">
         <div className="w-full flex items-center justify-between">
           <div className="space-y-1">
-            <h3 className="text-4xl font-medium text-ws-black-90">
+            <h3 className="text-4xl font-medium text-ws-text-primary">
               Area Median Wage: Manchester, NH
             </h3>
-            <p className="text-base text-ws-black-90 w-full  mt-2">
+            <p className="text-base text-ws-text-primary w-full  mt-2">
               Lorem ipsum dolor sit amet, consectetur adipiscing elit. Fusce quis felis venenatis.
             </p>
           </div>
@@ -414,10 +414,10 @@ export default function BenchmarkFinchPage() {
         </div>
       </div>
 
-      <div className="w-full flex flex-col bg-ws-gray-30 border border-ws-border-primary rounded-xl py-8 px-6">
+      <div className="w-full flex flex-col bg-ws-light-teal-25 border border-ws-border-primary rounded-xl py-8 px-6">
         <div className="w-full flex items-center justify-between">
           <div className="space-y-1">
-            <h3 className="text-4xl font-medium text-ws-black-90">Housing Burden</h3>
+            <h3 className="text-4xl font-medium text-ws-text-primary">Housing Burden</h3>
           </div>
           <div className="flex flex-col items-start w-full lg:w-auto shrink-0">
             <Label className="text-sm font-medium text-ws-black-20 flex mb-1.5">
@@ -457,10 +457,10 @@ export default function BenchmarkFinchPage() {
           </p>
         </div>
         <div className="my-4">
-          <h2 className="text-xl font-semibold text-ws-black-90 mb-1">
+          <h2 className="text-xl font-semibold text-ws-text-primary mb-1">
             Housing Cost Burdened Owners
           </h2>
-          <p className="text-sm font-medium text-ws-black-90">Q4 2023</p>
+          <p className="text-sm font-medium text-ws-text-primary">Q4 2023</p>
         </div>
         <div className="flex items-center justify-between gap-4">
           <ProgressCard
@@ -509,10 +509,10 @@ export default function BenchmarkFinchPage() {
           />
         </div>
         <div className="my-4">
-          <h2 className="text-xl font-semibold text-ws-black-90 mb-1">
+          <h2 className="text-xl font-semibold text-ws-text-primary mb-1">
             Housing Cost Burdened Renters
           </h2>
-          <p className="text-sm font-medium text-ws-black-90">Q4 2023</p>
+          <p className="text-sm font-medium text-ws-text-primary">Q4 2023</p>
         </div>
         <div className="flex items-center justify-between gap-4">
           <ProgressCard
@@ -566,7 +566,7 @@ export default function BenchmarkFinchPage() {
           </p>
           <div className="w-full flex items-center justify-between mt-8">
             <div className="space-y-1 w-full">
-              <h3 className="text-2xl font-medium text-ws-black-90">
+              <h3 className="text-2xl font-medium text-ws-text-primary">
                 Working Class Housing Cost Burden
               </h3>
               <p className="max-w-3xl text-base text-ws-black-20">
@@ -608,7 +608,7 @@ export default function BenchmarkFinchPage() {
               countClass={
                 selectedHousingData?.workingClassHousingCostBurden?.homeOwnershipRate == null
                   ? "mt-2 text-sm font-medium text-ws-black-10"
-                  : "mt-2 text-3xl font-semibold text-ws-black-90"
+                  : "mt-2 text-3xl font-semibold text-ws-text-primary"
               }
               infoIcon={true}
               infoCircleClass="text-ws-gray-70"
@@ -625,7 +625,7 @@ export default function BenchmarkFinchPage() {
               countClass={
                 selectedHousingData?.workingClassHousingCostBurden?.medianHomeValue == null
                   ? "mt-2 text-sm font-medium text-ws-black-10"
-                  : "mt-2 text-3xl font-semibold text-ws-black-90"
+                  : "mt-2 text-3xl font-semibold text-ws-text-primary"
               }
               infoIcon={true}
               infoCircleClass="text-ws-gray-70"
@@ -642,7 +642,7 @@ export default function BenchmarkFinchPage() {
               countClass={
                 selectedHousingData?.workingClassHousingCostBurden?.medianRent == null
                   ? "mt-2 text-sm font-medium text-ws-black-10"
-                  : "mt-2 text-3xl font-semibold text-ws-black-90"
+                  : "mt-2 text-3xl font-semibold text-ws-text-primary"
               }
               infoIcon={true}
               infoCircleClass="text-ws-gray-70"

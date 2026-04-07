@@ -215,7 +215,7 @@ export default function AdditionalQuestions() {
   });
 
   const handleBack = () => {
-    navigate("/get-more");
+    navigate("/dashboard");
   };
 
   const handleClose = () => {
@@ -253,7 +253,7 @@ export default function AdditionalQuestions() {
   //   .filter(goal => goalsAnswers.selectedGoals.includes(goal.id));
 
   return (
-    <div className="flex min-h-screen flex-col bg-ws-gray-50">
+    <div className="flex min-h-screen flex-col bg-ws-navy-25">
       {/* Top Navigation Bar */}
       <div className="flex h-14 items-center justify-between border-b border-ws-primary-600 px-6 py-4">
         {/* Back Button */}
@@ -296,7 +296,7 @@ export default function AdditionalQuestions() {
               <div className="space-y-8 pt-4">
                 {questions.map((question, index) => (
                   <div key={question.id} className="space-y-3">
-                    <Label isRequired={question.required} className="text-base text-ws-black-90">
+                    <Label isRequired={question.required} className="text-base text-ws-text-primary">
                       {index + 1}. {question.question}
                     </Label>
                     <RadioGroup
@@ -332,7 +332,7 @@ export default function AdditionalQuestions() {
               <div className="space-y-8 pt-4">
                 {compensationQuestions.map((question, index) => (
                   <div key={question.id} className="space-y-3">
-                    <Label isRequired={question.required} className="text-base text-ws-black-90">
+                    <Label isRequired={question.required} className="text-base text-ws-text-primary">
                       {index + 1}. {question.question}
                     </Label>
 
@@ -403,7 +403,7 @@ export default function AdditionalQuestions() {
               <div className="space-y-8 pt-4">
                 {benefitsQuestions.map((question, index) => (
                   <div key={question.id} className="space-y-3">
-                    <Label isRequired={question.required} className="text-base text-ws-black-90">
+                    <Label isRequired={question.required} className="text-base text-ws-text-primary">
                       {index + 1}. {question.question}
                     </Label>
 

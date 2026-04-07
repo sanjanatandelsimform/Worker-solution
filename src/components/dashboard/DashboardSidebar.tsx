@@ -186,11 +186,11 @@ export const DashboardSidebar = ({ activeUrl = "/" }: DashboardSidebarProps) => 
       </nav>
 
       {/* User Account Card at Bottom - Dynamic User Info */}
-      <div className="border border-ws-gray-40 rounded-xl p-2 lg:p-3 mt-6 overflow-hidden ">
+      <div className="border border-ws-border-secondary rounded-xl p-2 lg:p-3 mt-6 overflow-hidden ">
         {isTabletRange && isCollapsed ? (
           // Show initials when collapsed
           <div className="flex items-center justify-center">
-            <div className="flex items-center justify-center w-10 h-10 rounded-full bg-cyan-500 text-ws-white font-semibold text-sm">
+            <div className="flex items-center justify-center w-10 h-10 rounded-full bg-ws-light-teal-900 text-ws-base-white font-semibold text-sm">
               {getUserInitials()}
             </div>
           </div>
@@ -198,10 +198,10 @@ export const DashboardSidebar = ({ activeUrl = "/" }: DashboardSidebarProps) => 
           // Show full info when expanded
           <div className="flex items-start gap-3">
             <div className="flex-1 min-w-0">
-              <p className="text-sm font-semibold text-ws-black-90 truncate transition-opacity duration-300">
+              <p className="text-sm font-semibold text-ws-text-primary truncate transition-opacity duration-300">
                 {displayName}
               </p>
-              <p className="text-sm text-ws-black-10 mt-1 truncate transition-opacity duration-300">
+              <p className="text-sm text-ws-text-tertiary mt-1 truncate transition-opacity duration-300">
                 {displayEmail}
               </p>
             </div>

@@ -13,5 +13,10 @@ export default defineConfig({
     globals: true,
     environment: "jsdom",
     setupFiles: "./tests/setup.ts",
+    server: {
+      deps: {
+        inline: ["@asamuzakjp/css-color", "cssstyle"],
+      },
+    },
   },
 });

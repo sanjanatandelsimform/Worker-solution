@@ -110,15 +110,13 @@ export default function GetMore() {
   };
 
   const handleGetStarted = () => {
-    if (selectedPlan === "finch") {
-      navigate("/additional-questions");
-    } else if (selectedPlan === "manual") {
+    if (selectedPlan === "manual") {
       navigate("/assessment");
     }
   };
 
   return (
-    <div className="flex min-h-screen flex-col bg-ws-gray-50">
+    <div className="flex min-h-screen flex-col bg-ws-navy-25">
       {/* Top Navigation Bar */}
       <div className="flex h-14 items-center justify-between border-b border-ws-primary-600 px-6 py-4">
         {/* Back Button */}
@@ -146,7 +144,7 @@ export default function GetMore() {
       <div className="mx-auto w-full flex-1 py-8 px-4">
         {/* Header Section */}
         <div className="mx-auto w-full max-w-2xl text-center mt-25">
-          <h1 className="text-4xl font-semibold tracking-tight text-ws-black-90">
+          <h1 className="text-4xl font-semibold tracking-tight text-ws-text-primary">
             Get more from BeneStats
           </h1>
           <p className="text-lg font-normal text-ws-black mt-2">

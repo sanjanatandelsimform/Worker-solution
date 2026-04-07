@@ -288,7 +288,7 @@ export default function CostBurdenBarChart({ data, width, height = 400 }: Canvas
           <div className="flex items-center gap-2">
             <div className="h-3 w-3 rounded" style={{ backgroundColor: tooltip.color }} />
             <div className="text-sm">
-              <div className="font-medium text-ws-black-90">{tooltip.value.toFixed(2)}%</div>
+              <div className="font-medium text-ws-text-primary">{tooltip.value.toFixed(2)}%</div>
               <div className="text-xs text-ws-gray-100">{tooltip.label}</div>
             </div>
           </div>

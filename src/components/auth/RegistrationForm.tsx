@@ -251,6 +251,7 @@ export function RegistrationForm() {
                   />
                 </div>
               </InputGroup>
+
               {/* Row 2 - Legal Business Name & Industry */}
               <InputGroup>
                 <div className="flex flex-col gap-1.5 w-full">

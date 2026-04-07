@@ -45,24 +45,24 @@ export function ProgressStepper({
           borderClass = "border-1 border-ws-gray-40";
         } else if (isActiveFocus) {
           // Active Focus: white bg + teal text + teal border
-          bgColor = "bg-ws-tab-bg";
-          textColor = "text-ws-tab-active-text";
-          borderClass = "border-1 border-ws-gray-40";
+          bgColor = "bg-ws-light-teal-100";
+          textColor = "text-ws-light-teal-950";
+          borderClass = "border-1 border-ws-border-secondary";
         } else if (isCompleted) {
           // Completed: dark teal solid bg + white text
-          bgColor = "bg-ws-tab-active";
-          textColor = "text-ws-tab-active-text";
-          borderClass = "border-1 border-ws-gray-40";
+          bgColor = "bg-ws-light-teal-300";
+          textColor = "text-ws-light-teal-950";
+          borderClass = "border-1 border-ws-border-secondary";
         } else if (isCurrent) {
           // Current: white bg + mid gray text + gray border
-          bgColor = "bg-ws-tab-bg";
-          textColor = "text-ws-tab-active-text";
-          borderClass = "border-1 border-ws-gray-40";
+          bgColor = "bg-ws-light-teal-100";
+          textColor = "text-ws-light-teal-950";
+          borderClass = "border-1 border-ws-border-secondary";
         } else {
           // Disabled / Future: light gray bg + light text
-          bgColor = "bg-ws-gray-30";
-          textColor = "text-ws-black-10";
-          borderClass = "border border-ws-gray-40";
+          bgColor = "bg-ws-light-teal-25";
+          textColor = "text-ws-text-tertiary";
+          borderClass = "border border-ws-border-secondary";
         }
 
         return (

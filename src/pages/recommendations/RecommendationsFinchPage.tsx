@@ -29,7 +29,7 @@ export default function RecommendationsFinchPage() {
       <h2 className="text-2xl lg:text-4xl font-medium text-ws-black-60 leading-10">
         Your Company at a Glance
       </h2>
-      <h4 className="text-2xl font-medium text-ws-black-90">Company Overview</h4>
+      <h4 className="text-2xl font-medium text-ws-text-primary">Company Overview</h4>
       <div className="grid grid-cols-1 lg:grid-cols-4 gap-6 w-full">
         <StaticCard
           classess="border-ws-gray-40"
@@ -69,7 +69,7 @@ export default function RecommendationsFinchPage() {
           countClass="text-ws-primary-700 text-3xl xl:text-4xl font-medium mt-2"
         />
       </div>
-      <p className="text-base text-ws-black-90 inline-block">
+      <p className="text-base text-ws-text-primary inline-block">
         Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut
         labore et dolore.{" "}
         <Link to="#" className="underline">
@@ -77,7 +77,7 @@ export default function RecommendationsFinchPage() {
         </Link>
       </p>
 
-      <h4 className="text-2xl font-medium text-ws-black-90">Benefits Overview</h4>
+      <h4 className="text-2xl font-medium text-ws-text-primary">Benefits Overview</h4>
       <div className="grid grid-cols-1 lg:grid-cols-4 gap-6 w-full">
         <StaticCard
           classess="border-ws-gray-40"
@@ -121,24 +121,24 @@ export default function RecommendationsFinchPage() {
       {/* Carousel Section */}
       <CarouselSection />
 
-      <div className="bg-ws-gray-30 py-8 px-6 border border-ws-border-primary rounded-2xl">
+      <div className="bg-ws-light-teal-25 py-8 px-6 border border-ws-border-primary rounded-2xl">
         <div className="flex items-stretch gap-6 flex-col xl:flex-row">
           <div className="w-full flex flex-col">
-            <h2 className="text-2xl lg:text-4xl font-medium text-ws-black-90 mb-3">
+            <h2 className="text-2xl lg:text-4xl font-medium text-ws-text-primary mb-3">
               Core Benefits Enhancement
             </h2>
-            <p className="text-base text-ws-black-90 mb-3">
+            <p className="text-base text-ws-text-primary mb-3">
               Your comprehensive plan to enhance worker financial health and retirement.
             </p>
-            <p className="text-base text-ws-black-90 mb-3">
+            <p className="text-base text-ws-text-primary mb-3">
               Here are some impactful ways to start uplifting your workforce with proven strategies.
               Consider strengthening core benefits by modifying policies to increase access and
               participation with these options:
             </p>
-            <h4 className="text-2xl font-medium text-ws-black-90 my-6">Proven strategies</h4>
-            <div className="bg-ws-gray-50 border border-ws-border-primary rounded-lg p-3.5">
-              <h4 className="text-lg font-medium text-ws-black-90">Strategies Impemented: 2/3</h4>
-              <p className="my-4 text-base text-ws-black-90">
+            <h4 className="text-2xl font-medium text-ws-text-primary my-6">Proven strategies</h4>
+            <div className="bg-ws-navy-25 border border-ws-border-primary rounded-lg p-3.5">
+              <h4 className="text-lg font-medium text-ws-text-primary">Strategies Impemented: 2/3</h4>
+              <p className="my-4 text-base text-ws-text-primary">
                 You have already implemented 2 of 3 proven strategies! Keep going to see lorem ipsum
                 dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut
                 labore et dolore magna aliqua.{" "}
@@ -172,13 +172,13 @@ export default function RecommendationsFinchPage() {
         </div>
       </div>
 
-      <div className="bg-ws-gray-30 py-8 px-6 border border-ws-border-primary rounded-2xl">
+      <div className="bg-ws-light-teal-25 py-8 px-6 border border-ws-border-primary rounded-2xl">
         <div className="flex mt-2 gap-6 flex-col xl:flex-row">
           <div className="w-full">
-            <h1 className="text-2xl lg:text-4xl text-ws-black-90 font-medium">
+            <h1 className="text-2xl lg:text-4xl text-ws-text-primary font-medium">
               Strategic Solutions
             </h1>
-            <p className="text-base mt-4 text-ws-black-90">
+            <p className="text-base mt-4 text-ws-text-primary">
               Here are some top benefit solutions that address your company goals and employee needs
               based on the information provided.
             </p>
@@ -191,7 +191,7 @@ export default function RecommendationsFinchPage() {
                 <BenefitCard
                   key={recommendation.order}
                   badgeText="Recommendation"
-                  badgeClassess="bg-ws-gray-30 text-xs font-normal ring-1 ring-ws-primary-700 px-4 py-1.5 text-ws-primary-700"
+                  badgeClassess="bg-ws-light-teal-25 text-xs font-normal ring-1 ring-ws-primary-700 px-4 py-1.5 text-ws-primary-700"
                   title={recommendation.title}
                   descriptionText={recommendation.description}
                   listTitle="Key Features"
@@ -205,7 +205,7 @@ export default function RecommendationsFinchPage() {
               ))}
             </div>
           ) : (
-            <div className="mt-6 p-6 bg-ws-gray-30 rounded-lg text-center">
+            <div className="mt-6 p-6 bg-ws-light-teal-25 rounded-lg text-center">
               <p className="text-ws-gray-300">No recommendations available at this time.</p>
             </div>
           )}

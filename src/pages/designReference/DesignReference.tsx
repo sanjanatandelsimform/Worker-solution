@@ -641,12 +641,12 @@ function DesignReference() {
                         <div className="flex flex-col gap-2">
                           {/* Header with Icon and Title */}
                           <div className="flex items-center gap-2">
-                            <Lightbulb02 className="size-6 text-ws-black-90" />
-                            <h3 className="text-lg font-medium leading-7 text-ws-black-90">
+                            <Lightbulb02 className="size-6 text-ws-text-primary" />
+                            <h3 className="text-lg font-medium leading-7 text-ws-text-primary">
                               Did you know?
                             </h3>
                           </div>
-                          <p className="text-base font-normal text-ws-black-90 leading-6">
+                          <p className="text-base font-normal text-ws-text-primary leading-6">
                             {slide.content}
                           </p>
                         </div>

@@ -22,7 +22,7 @@ interface DonutChartProps {
   progressColor: string;
   
   /**
-   * Color of the background portion (e.g., "bg-ws-gray-30" or hex color)
+   * Color of the background portion (e.g., "bg-ws-light-teal-25" or hex color)
    */
   backgroundColor?: string;
   
@@ -61,9 +61,9 @@ const getColorFromClass = (colorClass: string): string => {
     'bg-ws-progress-turnery': '#E6EDED',
     // 'bg-ws-primary-100': '#A8D5E2',
     // 'bg-ws-primary-300': '#5B8FA3',
-    // 'bg-ws-gray-30': '#E8E8E8',
+    // 'bg-ws-light-teal-25': '#E8E8E8',
     // 'bg-ws-gray-40': '#D8D8D8',
-    // 'bg-ws-gray-50': '#C8C8C8',
+    // 'bg-ws-navy-25': '#C8C8C8',
   };
   return colorMap[colorClass] || colorClass;
 };
@@ -72,7 +72,7 @@ export default function DonutChart({
   percentage,
   label,
   progressColor,
-  backgroundColor = 'bg-ws-gray-30',
+  backgroundColor = 'bg-ws-light-teal-25',
   width = 200,
   height = 200,
   strokeWidth = 30,

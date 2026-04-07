@@ -122,7 +122,7 @@ export default function BenchmarkPage() {
           countClass={
             industryOverview?.turnoverRate?.rate == null
               ? "mt-2 text-sm font-medium text-ws-black-10"
-              : "mt-2 text-3xl font-semibold text-ws-black-90"
+              : "mt-2 text-3xl font-semibold text-ws-text-primary"
           }
           infoIcon={true}
           infoCircleClass="text-ws-gray-70 size-4"
@@ -143,7 +143,7 @@ export default function BenchmarkPage() {
           countClass={
             industryOverview?.avgTurnover?.rate == null
               ? "mt-2 text-sm font-medium text-ws-black-10"
-              : "mt-2 text-3xl font-semibold text-ws-black-90"
+              : "mt-2 text-3xl font-semibold text-ws-text-primary"
           }
           infoIcon={true}
           infoCircleClass="text-ws-gray-70 size-4"
@@ -162,7 +162,7 @@ export default function BenchmarkPage() {
           countClass={
             industryOverview?.avgCostOfTurnover?.amount == null
               ? "mt-2 text-sm font-medium text-ws-black-10"
-              : "mt-2 text-3xl font-semibold text-ws-black-90"
+              : "mt-2 text-3xl font-semibold text-ws-text-primary"
           }
           infoIcon={true}
           infoCircleClass="text-ws-gray-70 size-4"
@@ -231,11 +231,11 @@ export default function BenchmarkPage() {
           </div> */}
 
       {/* ── Industry Turnover ── */}
-      <div className="w-full flex flex-col items-center bg-ws-gray-30 border border-ws-border-primary rounded-xl py-8 px-6">
+      <div className="w-full flex flex-col items-center bg-ws-light-teal-25 border border-ws-border-primary rounded-xl py-8 px-6">
         <div className="w-full flex items-center justify-between">
           <div className="space-y-1">
-            <h3 className="text-4xl font-medium text-ws-black-90">Industry Turnover</h3>
-            <p className="text-base text-ws-black-90 w-full xl:w-3/4 mt-2">Lorem Ipsum</p>
+            <h3 className="text-4xl font-medium text-ws-text-primary">Industry Turnover</h3>
+            <p className="text-base text-ws-text-primary w-full xl:w-3/4 mt-2">Lorem Ipsum</p>
           </div>
           <div className="flex flex-col items-start w-full lg:w-auto shrink-0">
             <Label className="text-sm font-medium text-ws-black-20 flex mb-1.5">
@@ -372,13 +372,13 @@ export default function BenchmarkPage() {
        <div className="text-xs w-full flex items-start mt-8 text-ws-gray-800">Source: Lorem Ipsum dolor</div>
       </div>
 
-      <div className="w-full flex flex-col bg-ws-gray-30 border border-ws-border-primary rounded-xl py-8 px-6">
+      <div className="w-full flex flex-col bg-ws-light-teal-25 border border-ws-border-primary rounded-xl py-8 px-6">
         <div className="w-full flex items-center justify-between">
           <div className="space-y-1">
-            <h3 className="text-4xl font-medium text-ws-black-90">
+            <h3 className="text-4xl font-medium text-ws-text-primary">
               Area Median Wage: Manchester, NH
             </h3>
-            <p className="text-base text-ws-black-90 w-full  mt-2">
+            <p className="text-base text-ws-text-primary w-full  mt-2">
               Lorem ipsum dolor sit amet, consectetur adipiscing elit. Fusce quis felis venenatis.
             </p>
           </div>
@@ -437,10 +437,10 @@ export default function BenchmarkPage() {
         </div>
       </div>
 
-      <div className="w-full flex flex-col bg-ws-gray-30 border border-ws-border-primary rounded-xl py-8 px-6">
+      <div className="w-full flex flex-col bg-ws-light-teal-25 border border-ws-border-primary rounded-xl py-8 px-6">
         <div className="w-full flex items-center justify-between">
           <div className="space-y-1">
-            <h3 className="text-4xl font-medium text-ws-black-90">Housing Burden</h3>
+            <h3 className="text-4xl font-medium text-ws-text-primary">Housing Burden</h3>
           </div>
           <div className="flex flex-col items-start w-full lg:w-auto shrink-0">
             <Label className="text-sm font-medium text-ws-black-20 flex mb-1.5">
@@ -480,10 +480,10 @@ export default function BenchmarkPage() {
           </p>
         </div>
         <div className="my-4">
-          <h2 className="text-xl font-semibold text-ws-black-90 mb-1">
+          <h2 className="text-xl font-semibold text-ws-text-primary mb-1">
             Housing Cost Burdened Owners
           </h2>
-          <p className="text-sm font-medium text-ws-black-90">Q4 2023</p>
+          <p className="text-sm font-medium text-ws-text-primary">Q4 2023</p>
         </div>
         <div className="flex items-center justify-between gap-4">
           <ProgressCard
@@ -504,10 +504,10 @@ export default function BenchmarkPage() {
           />
         </div>
         <div className="my-4">
-          <h2 className="text-xl font-semibold text-ws-black-90 mb-1">
+          <h2 className="text-xl font-semibold text-ws-text-primary mb-1">
             Housing Cost Burdened Renters
           </h2>
-          <p className="text-sm font-medium text-ws-black-90">Q4 2023</p>
+          <p className="text-sm font-medium text-ws-text-primary">Q4 2023</p>
         </div>
         <div className="flex items-center justify-between gap-4">
           <ProgressCard
@@ -533,7 +533,7 @@ export default function BenchmarkPage() {
           </p>
           <div className="w-full flex items-center justify-between mt-8">
             <div className="space-y-1 w-full">
-              <h3 className="text-2xl font-medium text-ws-black-90">
+              <h3 className="text-2xl font-medium text-ws-text-primary">
                 Working Class Housing Cost Burden
               </h3>
               <p className="max-w-3xl text-base text-ws-black-20">In Manchester, New Hampshire, working class residents are increasingly stretched by rising rents that have outpaced wage growth, with many households spending well above the recommended 30 percent of their income just to keep a roof over their heads. </p>
@@ -575,7 +575,7 @@ export default function BenchmarkPage() {
               countClass={
                 selectedHousingData?.workingClassHousingCostBurden?.homeOwnershipRate == null
                   ? "mt-2 text-sm font-medium text-ws-black-10"
-                  : "mt-2 text-3xl font-semibold text-ws-black-90"
+                  : "mt-2 text-3xl font-semibold text-ws-text-primary"
               }
               infoIcon={true}
               infoCircleClass="text-ws-gray-70"
@@ -594,7 +594,7 @@ export default function BenchmarkPage() {
               countClass={
                 selectedHousingData?.workingClassHousingCostBurden?.medianHomeValue == null
                   ? "mt-2 text-sm font-medium text-ws-black-10"
-                  : "mt-2 text-3xl font-semibold text-ws-black-90"
+                  : "mt-2 text-3xl font-semibold text-ws-text-primary"
               }
               infoIcon={true}
               infoCircleClass="text-ws-gray-70"
@@ -611,7 +611,7 @@ export default function BenchmarkPage() {
               countClass={
                 selectedHousingData?.workingClassHousingCostBurden?.medianRent == null
                   ? "mt-2 text-sm font-medium text-ws-black-10"
-                  : "mt-2 text-3xl font-semibold text-ws-black-90"
+                  : "mt-2 text-3xl font-semibold text-ws-text-primary"
               }
               infoIcon={true}
               infoCircleClass="text-ws-gray-70"
@@ -761,7 +761,7 @@ export default function BenchmarkPage() {
                     : undefined
                 )
               }
-              countClass="mt-10 text-3xl xl:text-5xl font-medium text-ws-black-90"
+              countClass="mt-10 text-3xl xl:text-5xl font-medium text-ws-text-primary"
               infoIcon={false}
               classess="bg-ws-gray-10! w-full"
             />
@@ -778,7 +778,7 @@ export default function BenchmarkPage() {
                 )
               }
               infoIcon={false}
-              countClass="mt-10 text-3xl xl:text-5xl font-medium text-ws-black-90"
+              countClass="mt-10 text-3xl xl:text-5xl font-medium text-ws-text-primary"
               classess="bg-ws-gray-10! w-full"
             />
             <StaticCard
@@ -794,7 +794,7 @@ export default function BenchmarkPage() {
                 )
               }
               infoIcon={false}
-              countClass="mt-10 text-3xl xl:text-5xl font-medium text-ws-black-90"
+              countClass="mt-10 text-3xl xl:text-5xl font-medium text-ws-text-primary"
               classess="bg-ws-gray-10! w-full"
             />
           </div>
@@ -806,20 +806,20 @@ export default function BenchmarkPage() {
         <div className="flex items-center">
           <div className="space-y-4">
             <h3 className="text-2xl font-medium text-ws-black">The Cost of Housing</h3>
-            <p className="text-base text-ws-black-90">
+            <p className="text-base text-ws-text-primary">
               The concept of rent (or housing cost) burden applies to both renters and homeowners,
               but it's calculated a bit differently for each. Both renters and homeowners can
               experience housing burdened costs; the main difference is what expenses are counted,
               not the income thresholds.
             </p>
             <div className="flex items-center justify-between gap-4 flex-col lg:flex-row">
-              <p className="text-base text-ws-black-90">
+              <p className="text-base text-ws-text-primary">
                 Rent Burdened: A household is considered rent burdened when it{" "}
                 <strong>spends 30% or more of its gross income on rent and utilities.</strong> At
                 this level, housing costs can start to limit spending on essentials like food,
                 healthcare, and savings.
               </p>
-              <p className="text-base text-ws-black-90">
+              <p className="text-base text-ws-text-primary">
                 Severely Rent Burdened: A household is severely rent burdened when it{" "}
                 <strong>spends 50% or more of its gross income on rent and utilities.</strong> This
                 indicates a high risk of financial instability, leaving very little income for other
@@ -883,7 +883,7 @@ export default function BenchmarkPage() {
             countClass={
               selectedHousingData?.housingCostBurdenedOwners?.[0]?.burdened == null
                 ? "mt-2 text-sm font-medium text-ws-black-10"
-                : "text-3xl xl:text-5xl font-medium text-ws-black-90 mt-2"
+                : "text-3xl xl:text-5xl font-medium text-ws-text-primary mt-2"
             }
             infoIcon={true}
             infoCircleClass="text-ws-gray-70"
@@ -902,7 +902,7 @@ export default function BenchmarkPage() {
             countClass={
               selectedHousingData?.housingCostBurdenedOwners?.[0]?.severelyBurdened == null
                 ? "mt-2 text-sm font-medium text-ws-black-10"
-                : "text-3xl xl:text-5xl font-medium text-ws-black-90 mt-2"
+                : "text-3xl xl:text-5xl font-medium text-ws-text-primary mt-2"
             }
             infoIcon={true}
             infoCircleClass="text-ws-gray-70"
@@ -942,7 +942,7 @@ export default function BenchmarkPage() {
             countClass={
               selectedHousingData?.housingCostBurdenedRenters?.[0]?.burdened == null
                 ? "mt-2 text-sm font-medium text-ws-black-10"
-                : "text-3xl xl:text-5xl font-medium text-ws-black-90 mt-2"
+                : "text-3xl xl:text-5xl font-medium text-ws-text-primary mt-2"
             }
             infoIcon={true}
             infoCircleClass="text-ws-gray-70"
@@ -961,7 +961,7 @@ export default function BenchmarkPage() {
             countClass={
               selectedHousingData?.housingCostBurdenedRenters?.[0]?.severelyBurdened == null
                 ? "mt-2 text-sm font-medium text-ws-black-10"
-                : "text-3xl xl:text-5xl font-medium text-ws-black-90 mt-2"
+                : "text-3xl xl:text-5xl font-medium text-ws-text-primary mt-2"
             }
             infoIcon={true}
             infoCircleClass="text-ws-gray-70"
@@ -1023,7 +1023,7 @@ export default function BenchmarkPage() {
               countClass={
                 selectedHousingData?.workingClassHousingCostBurden?.homeOwnershipRate == null
                   ? "mt-2 text-sm font-medium text-ws-black-10"
-                  : "text-3xl xl:text-5xl font-medium text-ws-black-90 mt-2"
+                  : "text-3xl xl:text-5xl font-medium text-ws-text-primary mt-2"
               }
               infoIcon={true}
               infoCircleClass="text-ws-gray-70"
@@ -1042,7 +1042,7 @@ export default function BenchmarkPage() {
               countClass={
                 selectedHousingData?.workingClassHousingCostBurden?.medianHomeValue == null
                   ? "mt-2 text-sm font-medium text-ws-black-10"
-                  : "text-3xl xl:text-5xl font-medium text-ws-black-90 mt-2"
+                  : "text-3xl xl:text-5xl font-medium text-ws-text-primary mt-2"
               }
               infoIcon={true}
               infoCircleClass="text-ws-gray-70"
@@ -1059,7 +1059,7 @@ export default function BenchmarkPage() {
               countClass={
                 selectedHousingData?.workingClassHousingCostBurden?.medianRent == null
                   ? "mt-2 text-sm font-medium text-ws-black-10"
-                  : "text-3xl xl:text-5xl font-medium text-ws-black-90 mt-2"
+                  : "text-3xl xl:text-5xl font-medium text-ws-text-primary mt-2"
               }
               infoIcon={true}
               infoCircleClass="text-ws-gray-70"
