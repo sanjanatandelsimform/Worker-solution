@@ -1,5 +1,6 @@
 import { Routes, Route, Navigate } from "react-router-dom";
 import { Oval } from "react-loader-spinner";
+import { Toaster } from "@/components/ui/sonner";
 import { AuthErrorBoundary } from "./components/auth/AuthErrorBoundary";
 import { ProtectedRoute } from "./components/routes/ProtectedRoute";
 import { PublicRoute } from "./components/routes/PublicRoute";
@@ -172,6 +173,7 @@ function App() {
           />
         </Routes>
       </div>
+      <Toaster />
     </AuthErrorBoundary>
   );
 }
