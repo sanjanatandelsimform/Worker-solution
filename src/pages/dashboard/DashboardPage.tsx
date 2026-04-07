@@ -525,7 +525,7 @@ export const DashboardPage = () => {
                   size="sm"
                   color="primary"
                   className="min-w-30 absolute bottom-6 left-7"
-                  onClick={() => void connectWithFinch()}
+                  onClick={connectWithFinch}
                   isDisabled={isFinchLoading}
                 >
                   Start with Finch
@@ -546,7 +546,7 @@ export const DashboardPage = () => {
               descriptionClass="text-ws-gray-800"
               toggleButton={true}
               buttonLabel="Connect"
-              onClick={() => void connectWithFinch()}
+              onClick={connectWithFinch}
               buttonIsDisabled={isFinchLoading}
             />
           )}
