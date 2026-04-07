@@ -110,9 +110,7 @@ export default function GetMore() {
   };
 
   const handleGetStarted = () => {
-    if (selectedPlan === "finch") {
-      navigate("/additional-questions");
-    } else if (selectedPlan === "manual") {
+    if (selectedPlan === "manual") {
       navigate("/assessment");
     }
   };
