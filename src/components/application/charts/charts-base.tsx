@@ -164,7 +164,7 @@ export const ChartActiveDot = ({ cx = 0, cy = 0 }: ChartActiveDotProps) => {
         width="8"
         height="8"
         rx="6"
-        className="fill-bg-ws-white stroke-utility-brand-600"
+        className="fill-bg-ws-base-white stroke-utility-brand-600"
         strokeWidth="2"
       />
     </svg>

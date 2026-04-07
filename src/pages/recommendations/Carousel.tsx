@@ -50,7 +50,7 @@ export default function CarouselSection() {
             align: "start",
           }}
         >
-          <div className="space-y-6 bg-ws-gray-30 border border-ws-primary-100 rounded-xl p-4">
+          <div className="space-y-6 bg-ws-gray-30 border border-ws-border-primary rounded-xl p-4">
             {/* Carousel Content - Only this slides */}
             <Carousel.Content>
               {didYouKnowSlides.map(slide => (

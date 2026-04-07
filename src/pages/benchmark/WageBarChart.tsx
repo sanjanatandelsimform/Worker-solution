@@ -256,7 +256,7 @@ export default function WageBarChart({ data, width, height = 350 }: CanvasChartP
     data.some(item => item.industryAverage > 0 || item.yourCompany > 0 || item.nationalAverage > 0);
 
   return (
-    <div className="flex w-full flex-col rounded-xl border border-ws-primary-100 bg-ws-white p-6">
+    <div className="flex w-full flex-col rounded-xl border border-ws-border-primary bg-ws-base-white p-6">
       <figure
         ref={containerRef}
         aria-label="Wage comparison bar chart"
@@ -271,7 +271,7 @@ export default function WageBarChart({ data, width, height = 350 }: CanvasChartP
         />
         {tooltip && (
           <div
-            className="pointer-events-none absolute rounded-lg border border-ws-primary-100 bg-ws-white px-3 py-2 shadow-lg"
+            className="pointer-events-none absolute rounded-lg border border-ws-border-primary bg-ws-base-white px-3 py-2 shadow-lg"
             style={{
               left: `${tooltip.x + 10}px`,
               top: `${tooltip.y - 10}px`,

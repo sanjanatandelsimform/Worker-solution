@@ -139,7 +139,7 @@ export const DashboardSidebar = ({ activeUrl = "/" }: DashboardSidebarProps) => 
 
   return (
     <div
-      className={`flex h-[calc(100vh-40px)] xl:h-[calc(100vh-80px)] flex-col border-0 border-ws-primary-100 bg-ws-white py-6 lg:py-10 m-5 xl:m-10 rounded-lg inset-shadow-sm shadow-md transition-all duration-300 ease-in-out ${
+      className={`flex h-[calc(100vh-40px)] xl:h-[calc(100vh-80px)] flex-col border-0 border-ws-border-primary bg-ws-base-white py-6 lg:py-10 m-5 xl:m-10 rounded-lg inset-shadow-sm shadow-md transition-all duration-300 ease-in-out ${
         isTabletRange ? (isCollapsed ? "w-20 px-3" : "w-66 px-6") : "w-66 px-6"
       }`}
     >
@@ -180,7 +180,7 @@ export const DashboardSidebar = ({ activeUrl = "/" }: DashboardSidebarProps) => 
         <NavList
           items={settingsItems}
           activeUrl={activeUrl}
-          className="mt-4 border-t border-ws-primary-100"
+          className="mt-4 border-t border-ws-border-primary"
           isCollapsed={shouldBeCollapsed}
         />
       </nav>

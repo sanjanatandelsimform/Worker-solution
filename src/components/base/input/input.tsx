@@ -98,13 +98,13 @@ export const InputBase = ({
       ref={groupRef}
       className={({ isFocusWithin, isDisabled, isInvalid }) =>
         cx(
-          "relative flex w-full flex-row place-content-center place-items-center rounded-lg bg-ws-white shadow-xs ring-1 ring-ws-primary-100 transition-shadow duration-100 ease-linear ring-inset border-0",
+          "relative flex w-full flex-row place-content-center place-items-center rounded-lg bg-ws-base-white shadow-xs ring-1 ring-ws-border-primary transition-shadow duration-100 ease-linear ring-inset border-0",
 
           isFocusWithin && !isDisabled && isInvalid && "ring-2 ring-ws-red-10",
 
           // Disabled state styles
-          isDisabled && "cursor-not-allowed bg-ws-gray-10 ring-ws-primary-100",
-          "group-disabled:cursor-not-allowed group-disabled:bg-ws-gray-10 group-disabled:ring-ws-primary-100",
+          isDisabled && "cursor-not-allowed bg-ws-gray-10 ring-ws-border-primary",
+          "group-disabled:cursor-not-allowed group-disabled:bg-ws-gray-10 group-disabled:ring-ws-border-primary",
 
           // Invalid state styles
           isInvalid && "ring-1 ring-ws-red-20",
@@ -138,7 +138,7 @@ export const InputBase = ({
         ref={ref}
         placeholder={placeholder}
         className={cx(
-          "m-0 w-full bg-transparent text-md text-ws-black ring-0 outline-hidden placeholder:text-ws-gray-300 autofill:rounded-lg autofill:text-ws-black question-text",
+          "m-0 w-full bg-transparent text-md text-ws-gray-500 ring-0 outline-hidden placeholder:text-ws-gray-500 autofill:rounded-lg autofill:text-ws-black question-text",
           isDisabled && "cursor-not-allowed bg-ws-gray-10 text-disabled",
           sizes[inputSize].root,
           context?.inputClassName,
@@ -178,7 +178,7 @@ export const InputBase = ({
       {shortcut && (
         <div
           className={cx(
-            "pointer-events-none absolute inset-y-0.5 right-0.5 z-10 flex items-center rounded-r-[inherit] bg-linear-to-r from-transparent to-bg-ws-white to-40% pl-8",
+            "pointer-events-none absolute inset-y-0.5 right-0.5 z-10 flex items-center rounded-r-[inherit] bg-linear-to-r from-transparent to-bg-ws-base-white to-40% pl-8",
             sizes[inputSize].shortcut
           )}
         >

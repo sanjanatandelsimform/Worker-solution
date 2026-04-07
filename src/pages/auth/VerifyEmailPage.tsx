@@ -102,7 +102,7 @@ export const VerifyEmailPage: React.FC = () => {
   if (!isVerifying && errorMessage) {
     return (
       <div className="flex min-h-screen items-center justify-center bg-secondary">
-        <div className="flex w-2xl items-center justify-center rounded-xl border border-solid border-ws-primary-100 bg-ws-white py-22">
+        <div className="flex w-2xl items-center justify-center rounded-xl border border-solid border-ws-border-primary bg-ws-base-white py-22">
           <div className="flex w-full max-w-md flex-col items-center gap-8">
             <div className="flex items-center justify-center px-2 py-1">
               <img src={siteLogo} alt="Logo" className="max-w-80" />

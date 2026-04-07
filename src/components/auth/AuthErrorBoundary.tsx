@@ -34,9 +34,9 @@ export class AuthErrorBoundary extends Component<ErrorBoundaryProps, ErrorBounda
   render(): ReactNode {
     if (this.state.hasError) {
       return (
-        <div className="flex min-h-screen items-center justify-center bg-gray-50 px-4 py-12">
+        <div className="flex min-h-screen items-center justify-center bg-ws-primary-50 px-4 py-12">
           <div className="w-full max-w-md text-center">
-            <div className="rounded-lg bg-ws-white p-8 shadow-md">
+            <div className="rounded-lg bg-ws-base-white p-8 shadow-md">
               {/* Error Icon */}
               <div className="mb-6 flex justify-center">
                 <div className="flex h-16 w-16 items-center justify-center rounded-full bg-red-100">
@@ -83,7 +83,7 @@ export class AuthErrorBoundary extends Component<ErrorBoundaryProps, ErrorBounda
                 </button>
                 <Link
                   to="/"
-                  className="block w-full rounded-lg border border-ws-primary-100 px-4 py-2 text-sm font-semibold text-ws-black-20 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-gray-500 focus:ring-offset-2"
+                  className="block w-full rounded-lg border border-ws-border-primary px-4 py-2 text-sm font-semibold text-ws-black-20 hover:bg-ws-primary-50 focus:outline-none focus:ring-2 focus:ring-ws-primary-500 focus:ring-offset-2"
                 >
                   Go to Home
                 </Link>

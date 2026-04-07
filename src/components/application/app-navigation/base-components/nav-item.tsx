@@ -5,7 +5,7 @@ import { Badge } from "@/components/base/badges/badges";
 import { cx, sortCx } from "@/utils/cx";
 
 const styles = sortCx({
-  root: "group relative flex w-full cursor-pointer items-center rounded-md bg-ws-white outline-focus-ring transition duration-100 ease-linear select-none hover:bg-ws-primary-400 select-none hover:text-ws-white focus-visible:z-10 focus-visible:outline-2 focus-visible:outline-offset-2",
+  root: "group relative flex w-full cursor-pointer items-center rounded-md bg-ws-base-white outline-focus-ring transition duration-100 ease-linear select-none hover:bg-ws-primary-400 select-none hover:text-ws-white focus-visible:z-10 focus-visible:outline-2 focus-visible:outline-offset-2",
   rootSelected: "bg-ws-primary-400 hover:bg-ws-primary-400",
 });
 

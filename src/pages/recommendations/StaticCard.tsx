@@ -30,7 +30,7 @@ export default function StaticCard({
   countIcon,
 }: Readonly<StaticCardProps>) {
   return (
-    <div className={`bg-ws-white w-full ring ring-ws-primary-100 rounded-xl py-5 px-6 ${classess}`}>
+    <div className={`bg-ws-base-white w-full ring ring-ws-border-primary rounded-xl py-5 px-6 ${classess}`}>
       <p
         className={`flex items-center, text-base gap-2 justify-${itemAlign || "start"} ${titleClass}`}
       >
@@ -44,7 +44,7 @@ export default function StaticCard({
               arrow={true}
             >
               <TooltipTrigger className="group relative flex cursor-pointer flex-col items-center gap-2 text-fg-quaternary transition duration-100 ease-linear hover:text-fg-quaternary_hover focus:text-fg-quaternary_hover">
-                <InfoCircle className={`size-5 ${infoCircleClass}`} />
+                <InfoCircle className={`${infoCircleClass}`} />
               </TooltipTrigger>
             </Tooltip>
           ) : (

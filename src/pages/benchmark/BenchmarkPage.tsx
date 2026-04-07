@@ -2,28 +2,26 @@
 import { useState } from "react";
 // import { Button } from "@/components/base/buttons/button";
 import StaticCard from "../recommendations/StaticCard";
-import CostCard from "./CostCard";
 import { Select } from "@/components/base/select/select";
 import { IncomeDistributionChart } from "./CostBurdenBarChart";
 // import { Tooltip, TooltipTrigger } from "@/components/base/tooltip/tooltip";
 // import { InfoCircle } from "@untitledui/icons";
 import { GetInTouchModal } from "@/components/modals/GetInTouchModal";
-import type { Key } from "react";
 import { useAppSelector } from "@/store/hooks";
 import {
   selectIndustryOverview,
-  selectTurnoverMetrics,
-  selectSeparationMetrics,
   selectZipCodes,
   selectIndustry,
   selectDashboardData,
-  selectPrimaryAreaMedianWage,
 } from "@/store/selectors/dashboardSelectors";
-import { formatCurrency, formatPercentage, formatCurrencyWithCents } from "@/utils/formatters";
-import { SmileFace } from "@/assets/icons/SmileFace";
+import { formatCurrency, formatPercentage } from "@/utils/formatters";
 import { Label } from "@/components/base/input/label";
+import { GlobeIcon } from "@/assets/icons/Globe";
+import { DollarIcon } from "@/assets/icons/DollarIcon";
+import { CurrencyStackIcon } from "@/assets/icons/CurrencyStackIcon";
 import TurnoverRateCard from "./TurnoverRateCard";
-import SalaryHourlyComparisonChart from "./SalaryHourlyComparisonChart";
+import SalaryHourlyComparisonChart from "./SalaryHourlyCharts/SalaryHourlyChartsView/SalaryHourlyComparisonChart";
+import ProgressCard from "./ProgressCard";
 
 export default function BenchmarkPage() {
   const [isGetInTouchModalOpen, setIsGetInTouchModalOpen] = useState(false);
@@ -31,9 +29,6 @@ export default function BenchmarkPage() {
 
   // Get dashboard benchmark data from Redux store
   const industryOverview = useAppSelector(selectIndustryOverview);
-  const turnoverMetrics = useAppSelector(selectTurnoverMetrics);
-  const separationMetrics = useAppSelector(selectSeparationMetrics);
-  const areaMedianWage = useAppSelector(selectPrimaryAreaMedianWage);
   const zipCodes = useAppSelector(selectZipCodes);
   const industry = useAppSelector(selectIndustry);
   const dashboardData = useAppSelector(selectDashboardData);
@@ -44,8 +39,7 @@ export default function BenchmarkPage() {
     dashboardData?.housingCost?.[0]?.zipcode ||
     null;
 
-  const [selectedZip, setSelectedZip] = useState<string | null>(initialZip);
-  const [selectedHousingZip, setSelectedHousingZip] = useState<string | null>(initialZip);
+  const selectedHousingZip = initialZip;
 
   // Derive housing data for selected housing zip
   const selectedHousingData = selectedHousingZip
@@ -99,8 +93,12 @@ export default function BenchmarkPage() {
     }
   })();
 
+  // Salary and Hourly comparison data
+  const salaryData = { industryAverage: 31000, nationalAverage: 78000 };
+  const hourlyData = { industryAverage: 13.5, nationalAverage: 24.0 };
+
   return (
-    <div className="bg-ws-white py-10 px-6 space-y-6 shadow-xl rounded-b-xl">
+    <div className="bg-ws-base-white py-10 px-6 space-y-6 shadow-xl rounded-b-xl">
       <div className="w-full flex items-center justify-between">
         <h2 className="text-2xl lg:text-4xl font-medium text-ws-black-60 leading-10">
           {`Current Trends for  ${industry?.name}`}
@@ -124,10 +122,10 @@ export default function BenchmarkPage() {
           countClass={
             industryOverview?.turnoverRate?.rate == null
               ? "mt-2 text-sm font-medium text-ws-black-10"
-              : "mt-2 text-3xl xl:text-5xl font-medium text-ws-black-90"
+              : "mt-2 text-3xl font-semibold text-ws-black-90"
           }
           infoIcon={true}
-          infoCircleClass="text-ws-gray-70"
+          infoCircleClass="text-ws-gray-70 size-4"
           tooltipText="Turnover Rate"
           descriptionText="Industry specific turnover metrics are calculated from US Census Bureau QWI data sources"
           placements="top"
@@ -145,10 +143,10 @@ export default function BenchmarkPage() {
           countClass={
             industryOverview?.avgTurnover?.rate == null
               ? "mt-2 text-sm font-medium text-ws-black-10"
-              : "mt-2 text-3xl xl:text-5xl font-medium text-ws-black-90"
+              : "mt-2 text-3xl font-semibold text-ws-black-90"
           }
           infoIcon={true}
-          infoCircleClass="text-ws-gray-70"
+          infoCircleClass="text-ws-gray-70 size-4"
           tooltipText="Average Turnover"
           descriptionText="Average turnover metrics are calculated from US Census Bureau QWI data sources"
           placements="top"
@@ -164,10 +162,10 @@ export default function BenchmarkPage() {
           countClass={
             industryOverview?.avgCostOfTurnover?.amount == null
               ? "mt-2 text-sm font-medium text-ws-black-10"
-              : "mt-2 text-3xl xl:text-5xl font-medium text-ws-black-90"
+              : "mt-2 text-3xl font-semibold text-ws-black-90"
           }
           infoIcon={true}
-          infoCircleClass="text-ws-gray-70"
+          infoCircleClass="text-ws-gray-70 size-4"
           tooltipText="Average Cost of Turnover"
           descriptionText={`Industry specific cost of turnover is calculated from ${industryOverview?.avgCostOfTurnover?.year || " "}`}
           placements="top"
@@ -233,7 +231,7 @@ export default function BenchmarkPage() {
           </div> */}
 
       {/* ── Industry Turnover ── */}
-      <div className="w-full flex flex-col items-center bg-ws-gray-30 border border-ws-primary-100 rounded-xl py-8 px-6">
+      <div className="w-full flex flex-col items-center bg-ws-gray-30 border border-ws-border-primary rounded-xl py-8 px-6">
         <div className="w-full flex items-center justify-between">
           <div className="space-y-1">
             <h3 className="text-4xl font-medium text-ws-black-90">Industry Turnover</h3>
@@ -295,7 +293,7 @@ export default function BenchmarkPage() {
                 //       title: "Voluntary",
                 //       statics: formatPercentage(60.1),
                 //       staticsPoints: "-23pts",
-                        //staticsPointsState: true,
+                //staticsPointsState: true,
                 //       progressValue: 60.1,
                 //       customBarColor: "bg-utility-success-500",
                 //     },
@@ -310,13 +308,12 @@ export default function BenchmarkPage() {
                 // },
               ]}
               industryText={
-                industryOverview?.turnoverRate?.rate
-                  ? "Industry-wide cost of turnover:"
-                  : undefined
+                industryOverview?.turnoverRate?.rate ? "Industry-wide cost of turnover:" : undefined
               }
               industryBoldText="$4,149.2M"
               sourceText="Source: Lorem ipsum sit amet dolor"
               className="col-span-1"
+              sourceClass="mt-0"
             />
             <TurnoverRateCard
               title="Turnover Rate"
@@ -348,7 +345,7 @@ export default function BenchmarkPage() {
                 //       title: "Voluntary",
                 //       statics: formatPercentage(60.1),
                 //       staticsPoints: "-23pts",
-                        //staticsPointsState: true,
+                //staticsPointsState: true,
                 //       progressValue: 60.1,
                 //       customBarColor: "bg-utility-success-500",
                 //     },
@@ -363,24 +360,27 @@ export default function BenchmarkPage() {
                 // },
               ]}
               industryText={
-                industryOverview?.turnoverRate?.rate
-                  ? "Industry-wide cost of turnover:"
-                  : undefined
+                industryOverview?.turnoverRate?.rate ? "Industry-wide cost of turnover:" : undefined
               }
               industryBoldText="$4,149.2M"
               sourceText="Source: Lorem ipsum sit amet dolor"
               className="col-span-1"
+              sourceClass="mt-0"
             />
           </div>
         </div>
-        <div className="w-full flex items-start mt-8">Source: Lorem Ipsum dolor</div>
+       <div className="text-xs w-full flex items-start mt-8 text-ws-gray-800">Source: Lorem Ipsum dolor</div>
       </div>
 
-       <div className="w-full flex flex-col items-center bg-ws-gray-30 border border-ws-primary-100 rounded-xl py-8 px-6">
+      <div className="w-full flex flex-col bg-ws-gray-30 border border-ws-border-primary rounded-xl py-8 px-6">
         <div className="w-full flex items-center justify-between">
           <div className="space-y-1">
-            <h3 className="text-4xl font-medium text-ws-black-90">Area Median Wage: Manchester, NH</h3>
-            <p className="text-base text-ws-black-90 w-full  mt-2">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Fusce quis felis venenatis.</p>
+            <h3 className="text-4xl font-medium text-ws-black-90">
+              Area Median Wage: Manchester, NH
+            </h3>
+            <p className="text-base text-ws-black-90 w-full  mt-2">
+              Lorem ipsum dolor sit amet, consectetur adipiscing elit. Fusce quis felis venenatis.
+            </p>
           </div>
           <div className="flex flex-col items-start w-full lg:w-auto shrink-0">
             <Label className="text-sm font-medium text-ws-black-20 flex mb-1.5">
@@ -406,9 +406,233 @@ export default function BenchmarkPage() {
             </Select>
           </div>
         </div>
+        <div className="w-full mt-8">
+          <SalaryHourlyComparisonChart salaryData={salaryData} hourlyData={hourlyData} />
+          <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 w-full mt-4">
+            <StaticCard
+              classess="border-ws-gray-40"
+              title="[State] Median Living Wage"
+              titleClass="text-ws-black-10 text-sm"
+              countIcon={<DollarIcon className="size-5 text-ws-gray-300" />}
+              count="$24.03"
+              countClass="text-ws-primary-700 text-3xl xl:text-4xl font-medium mt-6"
+            />
+            <StaticCard
+              classess="border-ws-gray-40"
+              title="[State} Average Salary, 2023"
+              titleClass="text-ws-black-10 text-sm"
+              countIcon={<CurrencyStackIcon className="size-5 text-ws-gray-300" />}
+              count="$92,377"
+              countClass="text-ws-primary-700 text-3xl xl:text-4xl font-medium mt-6"
+            />
+            <StaticCard
+              classess="border-ws-gray-40"
+              title="National Average Salary"
+              titleClass="text-ws-black-10 text-sm"
+              countIcon={<GlobeIcon className="size-5 text-ws-gray-300" />}
+              count="$83,227"
+              countClass="text-ws-primary-700 text-3xl xl:text-4xl font-medium mt-6"
+            />
+          </div>
+        </div>
       </div>
 
-      <div className="bg-ws-purple-10 border border-ws-primary-100 rounded-xl p-4">
+      <div className="w-full flex flex-col bg-ws-gray-30 border border-ws-border-primary rounded-xl py-8 px-6">
+        <div className="w-full flex items-center justify-between">
+          <div className="space-y-1">
+            <h3 className="text-4xl font-medium text-ws-black-90">Housing Burden</h3>
+          </div>
+          <div className="flex flex-col items-start w-full lg:w-auto shrink-0">
+            <Label className="text-sm font-medium text-ws-black-20 flex mb-1.5">
+              Metropolitan Area
+            </Label>
+            <Select
+              className="w-full flex items-start min-w-50 md:min-w-full lg:min-w-50"
+              isRequired
+              size="md"
+              placeholder="Select Area"
+              items={[
+                { label: "Manchester, NH", id: "manchester-nh" },
+                { label: "Manchester, NH", id: "manchester-nh" },
+              ]}
+              value={selectedGraphType}
+              onSelectionChange={key => {
+                if (key) {
+                  setSelectedGraphType(key as "owners" | "renters");
+                }
+              }}
+            >
+              {item => <Select.Item id={item.id}>{item.label}</Select.Item>}
+            </Select>
+          </div>
+        </div>
+        <div className="w-full mt-8">
+          <h3 className="text-base font-bold">
+            Your workers residing in Manchester, New Hampshire are likely financially burdened -
+            meaning workers likely spend a large portion of their wages on housing and
+            transportation
+          </h3>
+          <p className="text-base mt-4">
+            The concept of rent (or housing cost) burden applies to both renters and homeowners, but
+            it’s calculated a bit differently for each. Both renters and homeowners can be
+            housing-cost burdened; the main difference is what expenses are counted, not the income
+            thresholds.
+          </p>
+        </div>
+        <div className="my-4">
+          <h2 className="text-xl font-semibold text-ws-black-90 mb-1">
+            Housing Cost Burdened Owners
+          </h2>
+          <p className="text-sm font-medium text-ws-black-90">Q4 2023</p>
+        </div>
+        <div className="flex items-center justify-between gap-4">
+          <ProgressCard
+            title="Burdened Owners"
+            showInfoIcon={true}
+            tooltipText="Households spending 30% or more of gross income on housing costs"
+            progressLabel="Metro Area"
+            percentage={18.2}
+            progressColor="bg-ws-progress-secondary"
+          />
+          <ProgressCard
+            title="Severely Burdened Owners"
+            showInfoIcon={true}
+            tooltipText="spends 50% or more of its gross income on rent and utilities."
+            progressLabel="Metro Area"
+            percentage={14.3}
+            progressColor="bg-ws-progress-secondary"
+          />
+        </div>
+        <div className="my-4">
+          <h2 className="text-xl font-semibold text-ws-black-90 mb-1">
+            Housing Cost Burdened Renters
+          </h2>
+          <p className="text-sm font-medium text-ws-black-90">Q4 2023</p>
+        </div>
+        <div className="flex items-center justify-between gap-4">
+          <ProgressCard
+            title="Burdened Renters"
+            showInfoIcon={true}
+            tooltipText="Households spending 30% or more of gross income on housing costs"
+            progressLabel="Metro Area"
+            percentage={18.2}
+            progressColor="bg-ws-primary-300"
+          />
+          <ProgressCard
+            title="Severely Burdened Renters"
+            showInfoIcon={true}
+            tooltipText="spends 50% or more of its gross income on rent and utilities."
+            progressLabel="Metro Area"
+            percentage={16.3}
+            progressColor="bg-ws-primary-300"
+          />
+        </div>
+        <div>
+          <p className="text-xs text-ws-gray-800 mt-4 border-b border-ws-border-primary pb-8">
+            Source: US Census Bureau, 2023
+          </p>
+          <div className="w-full flex items-center justify-between mt-8">
+            <div className="space-y-1 w-full">
+              <h3 className="text-2xl font-medium text-ws-black-90">
+                Working Class Housing Cost Burden
+              </h3>
+              <p className="max-w-3xl text-base text-ws-black-20">In Manchester, New Hampshire, working class residents are increasingly stretched by rising rents that have outpaced wage growth, with many households spending well above the recommended 30 percent of their income just to keep a roof over their heads. </p>
+              <p className="text-xs text-ws-gray-900 mt-2">
+            Source: US Census Bureau, 2023
+          </p>
+            </div>
+            <div className="flex flex-col items-start w-full lg:w-auto shrink-0">
+               <Label className="text-ws-black-20 flex mb-1.5">Household type</Label>
+              <Select
+                className="w-full flex items-start min-w-50 md:min-w-full lg:min-w-50"
+                isRequired
+                size="md"
+                placeholder="Select Household Type"
+                items={[
+                  { label: "Owners", id: "owners" },
+                  { label: "Renters", id: "renters" },
+                ]}
+                value={selectedGraphType}
+                onSelectionChange={key => {
+                  if (key) {
+                    setSelectedGraphType(key as "owners" | "renters");
+                  }
+                }}
+              >
+                {item => <Select.Item id={item.id}>{item.label}</Select.Item>}
+              </Select>
+            </div>
+          </div>
+          <div className="grid xl:grid-cols-3 gap-4 mt-6 flex-col lg:flex-row">
+            <StaticCard
+              title="Home Ownership Rate"
+              titleClass="text-sm font-medium text-ws-black-10"
+              itemAlign="between"
+              count={formatPercentage(
+                selectedHousingData?.workingClassHousingCostBurden?.homeOwnershipRate,
+                0
+              )}
+              countClass={
+                selectedHousingData?.workingClassHousingCostBurden?.homeOwnershipRate == null
+                  ? "mt-2 text-sm font-medium text-ws-black-10"
+                  : "mt-2 text-3xl font-semibold text-ws-black-90"
+              }
+              infoIcon={true}
+              infoCircleClass="text-ws-gray-70"
+              tooltipText="Home Ownership Rate"
+              descriptionText="U.S. Census Bureau, 5-Year American Community Survey"
+              placements="top"
+              classess="flex-1 bg-ws-gray-10! ring-ws-gray-40!"
+            />
+            <StaticCard
+              title="Median Home Value"
+              itemAlign="between"
+              titleClass="text-sm font-medium text-ws-black-10"
+              count={formatCurrency(
+                selectedHousingData?.workingClassHousingCostBurden?.medianHomeValue
+              )}
+              countClass={
+                selectedHousingData?.workingClassHousingCostBurden?.medianHomeValue == null
+                  ? "mt-2 text-sm font-medium text-ws-black-10"
+                  : "mt-2 text-3xl font-semibold text-ws-black-90"
+              }
+              infoIcon={true}
+              infoCircleClass="text-ws-gray-70"
+              tooltipText="Median Home Value"
+              descriptionText="U.S. Census Bureau, 5-Year American Community Survey"
+              placements="top"
+              classess="flex-1 bg-ws-gray-10! ring-ws-gray-40!"
+            />
+            <StaticCard
+              title="Median Rent"
+              itemAlign="between"
+              titleClass="text-sm font-medium text-ws-black-10"
+              count={formatCurrency(selectedHousingData?.workingClassHousingCostBurden?.medianRent)}
+              countClass={
+                selectedHousingData?.workingClassHousingCostBurden?.medianRent == null
+                  ? "mt-2 text-sm font-medium text-ws-black-10"
+                  : "mt-2 text-3xl font-semibold text-ws-black-90"
+              }
+              infoIcon={true}
+              infoCircleClass="text-ws-gray-70"
+              tooltipText="Median Rent"
+              descriptionText="U.S. Census Bureau, 5-Year American Community Survey"
+              placements="top"
+              classess="flex-1 bg-ws-gray-10! ring-ws-gray-40!"
+            />
+          </div>
+          {/* Chart */}
+          <div className="flex-1 w-full overflow-x-auto mt-6">
+            <div className="min-w-[700px]">
+              <IncomeDistributionChart
+                data={Array.isArray(workingClassHousingGraph) ? workingClassHousingGraph : []}
+              />
+            </div>
+          </div>
+        </div>
+      </div>
+
+      {/* <div className="bg-ws-purple-10 border border-ws-border-primary rounded-xl p-4">
         <div className="flex items-center gap-2 text-lg text-ws-black-70 font-medium mb-2">
           <SmileFace />
           <h3 className="text-base font-medium leading-7 text-ws-black-70">Did you know?</h3>
@@ -417,8 +641,8 @@ export default function BenchmarkPage() {
           The cost of replacing an individual employee can range from one-half to two times the
           employee's annual salary.
         </p>
-      </div>
-      <div className="grid xl:grid-cols-2 gap-6">
+      </div> */}
+      {/* <div className="grid xl:grid-cols-2 gap-6">
         <CostCard
           classess="border-ws-gray-40!"
           title="Turnover Voluntary vs Involuntary"
@@ -451,10 +675,10 @@ export default function BenchmarkPage() {
             industry?.name ? `Industry: ${industry?.name}` : "Industry: No data available"
           }
         />
-      </div>
+      </div> */}
 
       {/* ── Area Median Wage ── */}
-      <div className="bg-ws-white border border-ws-primary-100 rounded-xl px-6 py-8">
+      {/* <div className="bg-ws-base-white border border-ws-border-primary rounded-xl px-6 py-8">
         <div className="flex items-center justify-between md:items-start flex-col xl:flex-row">
           <div className="space-y-1">
             <h3 className="text-2xl font-medium text-ws-black-60">
@@ -517,9 +741,9 @@ export default function BenchmarkPage() {
                 })()}
                 height={397}
               /> */}
-              <SalaryHourlyComparisonChart
+              {/* <SalaryHourlyComparisonChart
                 salaryData={{ industryAverage: 31000, nationalAverage: 78000 }}
-                hourlyData={{ industryAverage: 13.50, nationalAverage: 24.00 }}
+                hourlyData={{ industryAverage: 13.5, nationalAverage: 24.0 }}
                 sourceAttribution="Source: BLS, 2023"
               />
             </div>
@@ -530,12 +754,12 @@ export default function BenchmarkPage() {
               titleClass="text-ws-black-300 text-base"
               itemAlign="between"
               count={
-                selectedZip && dashboardData?.areaMedianWage
-                  ? formatCurrencyWithCents(
-                      dashboardData.areaMedianWage.find(a => a.zipcode === selectedZip)
+                formatCurrencyWithCents(
+                  selectedZip && dashboardData?.areaMedianWage
+                    ? dashboardData.areaMedianWage.find(a => a.zipcode === selectedZip)
                         ?.medianHourlyWages
-                    )
-                  : formatCurrencyWithCents(areaMedianWage?.medianHourlyWages)
+                    : undefined
+                )
               }
               countClass="mt-10 text-3xl xl:text-5xl font-medium text-ws-black-90"
               infoIcon={false}
@@ -546,12 +770,12 @@ export default function BenchmarkPage() {
               titleClass="text-ws-black-300 text-base"
               itemAlign="between"
               count={
-                selectedZip && dashboardData?.areaMedianWage
-                  ? formatCurrencyWithCents(
-                      dashboardData.areaMedianWage.find(a => a.zipcode === selectedZip)
+                formatCurrencyWithCents(
+                  selectedZip && dashboardData?.areaMedianWage
+                    ? dashboardData.areaMedianWage.find(a => a.zipcode === selectedZip)
                         ?.medianLivingWage
-                    )
-                  : formatCurrencyWithCents(areaMedianWage?.medianLivingWage)
+                    : undefined
+                )
               }
               infoIcon={false}
               countClass="mt-10 text-3xl xl:text-5xl font-medium text-ws-black-90"
@@ -562,12 +786,12 @@ export default function BenchmarkPage() {
               titleClass="text-ws-black-300 text-base"
               itemAlign="between"
               count={
-                selectedZip && dashboardData?.areaMedianWage
-                  ? formatCurrency(
-                      dashboardData.areaMedianWage.find(a => a.zipcode === selectedZip)
+                formatCurrency(
+                  selectedZip && dashboardData?.areaMedianWage
+                    ? dashboardData.areaMedianWage.find(a => a.zipcode === selectedZip)
                         ?.nationalAverage
-                    )
-                  : formatCurrency(areaMedianWage?.nationalAverage)
+                    : undefined
+                )
               }
               infoIcon={false}
               countClass="mt-10 text-3xl xl:text-5xl font-medium text-ws-black-90"
@@ -575,10 +799,10 @@ export default function BenchmarkPage() {
             />
           </div>
         </div>
-      </div>
+      </div> */}
 
       {/* ── The Cost of Housing ── */}
-      <div className="bg-ws-white border border-ws-primary-100 rounded-xl px-6 py-8">
+      {/* <div className="bg-ws-base-white border border-ws-border-primary rounded-xl px-6 py-8">
         <div className="flex items-center">
           <div className="space-y-4">
             <h3 className="text-2xl font-medium text-ws-black">The Cost of Housing</h3>
@@ -607,7 +831,7 @@ export default function BenchmarkPage() {
 
         <hr className="border-t border-gray-200 mt-5 mb-6" />
         {/* ── Housing Cost Burdened Owners ── */}
-        <div className="flex items-center justify-between md:items-start flex-col lg:flex-row mb-4">
+        {/*<div className="flex items-center justify-between md:items-start flex-col lg:flex-row mb-4">
           <div className="space-y-1">
             <h3 className="text-xl font-medium text-ws-black flex items-center gap-2">
               Housing Cost Burdened Owners
@@ -616,7 +840,7 @@ export default function BenchmarkPage() {
                     <InfoCircle className="size-5 text-ws-gray-70" />
                   </TooltipTrigger>
                 </Tooltip> */}
-            </h3>
+            {/*</h3> 
             <p className="text-xs text-ws-black">
               {selectedHousingData?.housingCostBurdenedOwners?.[0]?.year
                 ? `${selectedHousingData.housingCostBurdenedOwners[0].year}`
@@ -625,7 +849,7 @@ export default function BenchmarkPage() {
           </div>
 
           {/* Zip Code selector — shown once on the Owners row, controls both sections */}
-          {zipCodes && zipCodes.length > 0 ? (
+          {/* {zipCodes && zipCodes.length > 0 ? (
             <div className="flex flex-col items-start w-full lg:w-auto">
               <Label htmlFor="housing-zip-select" className="text-ws-black-20 flex mb-1.5">
                 Zip Code
@@ -646,11 +870,11 @@ export default function BenchmarkPage() {
                 {item => <Select.Item id={item.id}>{item.label}</Select.Item>}
               </Select>
             </div>
-          ) : null}
-        </div>
+          ) : null} */}
+        {/* </div>
 
         {/* Owners stat cards */}
-        <div className="grid xl:grid-cols-2 gap-4 mb-6">
+        {/* <div className="grid xl:grid-cols-2 gap-4 mb-6">
           <StaticCard
             title="Burdened Owners"
             titleClass="text-sm font-medium text-ws-black-10 uppercase"
@@ -687,29 +911,29 @@ export default function BenchmarkPage() {
             placements="top"
             classess="flex-1 bg-ws-gray-10! ring-ws-gray-40!"
           />
-        </div>
+        </div> */}
 
         {/* ── Housing Cost Burdened Renters ── */}
-        <div className="flex items-center justify-between md:items-start flex-col lg:flex-row mb-4">
+        {/* <div className="flex items-center justify-between md:items-start flex-col lg:flex-row mb-4">
           <div className="space-y-1">
             <h3 className="text-xl font-medium text-ws-black flex items-center gap-2">
-              Housing Cost Burdened Renters
+              Housing Cost Burdened Renters */}
               {/* <Tooltip title="This is a tooltip" arrow={true}>
                   <TooltipTrigger className="group relative flex cursor-pointer flex-col items-center gap-2 text-fg-quaternary transition duration-100 ease-linear hover:text-fg-quaternary_hover focus:text-fg-quaternary_hover">
                     <InfoCircle className="size-5 text-ws-gray-70" />
                   </TooltipTrigger>
                 </Tooltip> */}
-            </h3>
+            {/* </h3>
             <p className="text-xs text-ws-black">
               {selectedHousingData?.housingCostBurdenedRenters?.[0]?.year
                 ? `${selectedHousingData.housingCostBurdenedRenters[0].year}`
                 : "—"}
             </p>
           </div>
-        </div>
+        </div> */}
 
         {/* Renters stat cards */}
-        <div className="grid xl:grid-cols-2 gap-4 flex-col lg:flex-row">
+        {/* <div className="grid xl:grid-cols-2 gap-4 flex-col lg:flex-row">
           <StaticCard
             title="Burdened Renters"
             titleClass="text-sm font-medium text-ws-black-10 uppercase"
@@ -726,8 +950,8 @@ export default function BenchmarkPage() {
             descriptionText="U.S. Census Bureau, 5-Year American Community Survey"
             placements="top"
             classess="flex-1 bg-ws-gray-10! ring-ws-gray-40!"
-          />
-          <StaticCard
+          /> */}
+          {/* <StaticCard
             title="Severely Burdened Renters"
             titleClass="text-sm font-medium text-ws-black-10 uppercase"
             itemAlign="between"
@@ -746,12 +970,12 @@ export default function BenchmarkPage() {
             placements="top"
             classess="flex-1 bg-ws-gray-10! ring-ws-gray-40!"
           />
-        </div>
+        </div> */}
 
         {/* ── Working Class Housing Cost Burden ── */}
-        <div className="bg-ws-white border border-ws-primary-100 rounded-xl px-6 py-8 mt-6">
+        {/* <div className="bg-ws-base-white border border-ws-border-primary rounded-xl px-6 py-8 mt-6"> */}
           {/* Header row: title + Household type selector only */}
-          <div className="flex items-start justify-between flex-col lg:flex-row gap-4 mb-6">
+          {/* <div className="flex items-start justify-between flex-col lg:flex-row gap-4 mb-6">
             <div className="space-y-1">
               <h3 className="text-2xl font-medium text-ws-black">
                 Working Class Housing Cost Burden
@@ -760,10 +984,10 @@ export default function BenchmarkPage() {
                 The data below outlines the housing cost burden for your employees in{" "}
                 {selectedHousingZip} across income levels for that area.
               </p>
-            </div>
+            </div> */}
 
             {/* Household type selector only */}
-            <div className="flex flex-col items-start w-full lg:w-auto shrink-0">
+            {/* <div className="flex flex-col items-start w-full lg:w-auto shrink-0">
               <Label className="text-ws-black-20 flex mb-1.5">Household type</Label>
               <Select
                 className="w-full flex items-start min-w-50 md:min-w-full lg:min-w-50"
@@ -784,10 +1008,10 @@ export default function BenchmarkPage() {
                 {item => <Select.Item id={item.id}>{item.label}</Select.Item>}
               </Select>
             </div>
-          </div>
+          </div> */}
 
           {/* Stat cards */}
-          <div className="grid xl:grid-cols-3 gap-4 mt-6 flex-col lg:flex-row">
+          {/* <div className="grid xl:grid-cols-3 gap-4 mt-6 flex-col lg:flex-row">
             <StaticCard
               title="Home Ownership Rate"
               titleClass="uppercase text-sm font-medium text-ws-black-10"
@@ -844,10 +1068,10 @@ export default function BenchmarkPage() {
               placements="top"
               classess="flex-1 bg-ws-gray-10! ring-ws-gray-40!"
             />
-          </div>
+          </div> */}
 
           {/* Chart */}
-          <div className="flex-1 w-full overflow-x-auto mt-6">
+          {/* <div className="flex-1 w-full overflow-x-auto mt-6">
             <div className="min-w-[700px]">
               <IncomeDistributionChart
                 data={Array.isArray(workingClassHousingGraph) ? workingClassHousingGraph : []}
@@ -855,9 +1079,9 @@ export default function BenchmarkPage() {
             </div>
           </div>
         </div>
-      </div>
+      </div> */}
 
-      <div className="w-full">
+      {/* <div className="w-full">
         <p className="text-xs color-base-black">
           This product provides informational insights and recommendations based on the data you
           share and industry benchmarks. It does not provide legal, financial, tax, or benefits
@@ -865,7 +1089,7 @@ export default function BenchmarkPage() {
           vary, and you are responsible for evaluating and implementing any recommendations based on
           your organization's specific circumstances.
         </p>
-      </div>
+      </div> */}
 
       {/* Get In Touch Modal */}
       <GetInTouchModal

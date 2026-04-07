@@ -5,107 +5,57 @@
 @theme inline {
   /* Worker Solutions Colors - Tailwind CSS Format */
   /* Base Colors */
-  --color-ws-white: var(--ws-color-base-white);
-  --color-ws-black: var(--ws-color-base-black);
-  --color-ws-transparent: var(--ws-color-base-transparent);
+  --color-ws-base-white: var(--ws-color-base-white);
+  --color-ws-base-black: var(--ws-color-base-black);
+  --color-ws-base-transparent: var(--ws-color-base-transparent);
 
-  /* WS Black Colors */
-  --color-ws-black-10: var(--ws-color-black-10);
-  --color-ws-black-20: var(--ws-color-black-20);
-  --color-ws-black-30: var(--ws-color-black-30);
-  --color-ws-black-40: var(--ws-color-black-40);
-  --color-ws-black-50: var(--ws-color-black-50);
-  --color-ws-black-60: var(--ws-color-black-60);
-  --color-ws-black-70: var(--ws-color-black-70);
-  --color-ws-black-80: var(--ws-color-black-80);
-  --color-ws-black-90: var(--ws-color-black-90);
-  --color-ws-black-100: var(--ws-color-black-100);
-  --color-ws-black-200: var(--ws-color-black-200);
-  --color-ws-black-300: var(--ws-color-black-300);
+  /* Border Colors */
+  --color-ws-border-primary: var(--ws-color-border-primary);
 
-  /* WS Gray Colors */
-  --color-ws-gray-10: var(--ws-color-gray-10);
-  --color-ws-gray-20: var(--ws-color-gray-20);
-  --color-ws-gray-30: var(--ws-color-gray-30);
-  --color-ws-gray-40: var(--ws-color-gray-40);
-  --color-ws-gray-50: var(--ws-color-gray-50);
-  --color-ws-gray-60: var(--ws-color-gray-60);
-  --color-ws-gray-70: var(--ws-color-gray-70);
-  --color-ws-gray-80: var(--ws-color-gray-80);
-  --color-ws-gray-90: var(--ws-color-gray-90);
-  --color-ws-gray-100: var(--ws-color-gray-100);
-  --color-ws-gray-200: var(--ws-color-gray-200);
-  --color-ws-gray-300: var(--ws-color-gray-300);
-  --color-ws-gray-350: var(--ws-color-gray-350);
+  /* Text Colors */
+  --color-ws-text-primary: var(--ws-color-text-primary);
+  --color-ws-text-secondary: var(--ws-color-text-secondary);
+  --color-ws-text-tertiary: var(--ws-color-text-tertiary);
+  --color-ws-text-disabled: var(--ws-color-text-disabled);
+
+  /* Gray Colors */
   --color-ws-gray-400: var(--ws-color-gray-400);
   --color-ws-gray-500: var(--ws-color-gray-500);
-  --color-ws-gray-600: var(--ws-color-gray-600);
-  --color-ws-gray-700: var(--ws-color-gray-700);
-  --color-ws-gray-800: var(--ws-color-gray-800);
-  --color-ws-gray-900: var(--ws-color-gray-900);
 
-  /* WS Cyan Colors */
-  --color-ws-cyan-10: var(--ws-color-cyan-10);
-  --color-ws-cyan-20: var(--ws-color-cyan-20);
-  --color-ws-cyan-30: var(--ws-color-cyan-30);
-  --color-ws-cyan-40: var(--ws-color-cyan-40);
-  --color-ws-cyan-50: var(--ws-color-cyan-50);
-  --color-ws-cyan-60: var(--ws-color-cyan-60);
-  --color-ws-cyan-70: var(--ws-color-cyan-70);
+  /* Light Teal Colors */
+  --color-ws-light-teal-25: var(--ws-color-light-teal-25);
+  --color-ws-light-teal-50: var(--ws-color-light-teal-50);
+  --color-ws-light-teal-100: var(--ws-color-light-teal-100);
+  --color-ws-light-teal-200: var(--ws-color-light-teal-200);
+  --color-ws-light-teal-300: var(--ws-color-light-teal-300);
+  --color-ws-light-teal-400: var(--ws-color-light-teal-400);
+  --color-ws-light-teal-500: var(--ws-color-light-teal-500);
+  --color-ws-light-teal-600: var(--ws-color-light-teal-600);
+  --color-ws-light-teal-700: var(--ws-color-light-teal-700);
+  --color-ws-light-teal-800: var(--ws-color-light-teal-800);
+  --color-ws-light-teal-850: var(--ws-color-light-teal-850);
+  --color-ws-light-teal-900: var(--ws-color-light-teal-900);
+  --color-ws-light-teal-950: var(--ws-color-light-teal-950);
 
-  /* WS Purple Colors */
-  --color-ws-purple-10: var(--ws-color-purple-10);
-  --color-ws-purple-20: var(--ws-color-purple-20);
-  --color-ws-purple-30: var(--ws-color-purple-30);
-  --color-ws-purple-40: var(--ws-color-purple-40);
-  --color-ws-purple-50: var(--ws-color-purple-50);
-  --color-ws-purple-60: var(--ws-color-purple-60);
+  /* Navy Colors */
+  --color-ws-navy-25: var(--ws-color-navy-25);
+  --color-ws-navy-100: var(--ws-color-navy-100);
+  --color-ws-navy-200: var(--ws-color-navy-200);
+  --color-ws-navy-300: var(--ws-color-navy-300);
+  --color-ws-navy-400: var(--ws-color-navy-400);
+  --color-ws-navy-500: var(--ws-color-navy-500);
+  --color-ws-navy-600: var(--ws-color-navy-600);
+  --color-ws-navy-700: var(--ws-color-navy-700);
+  --color-ws-navy-800: var(--ws-color-navy-800);
+  --color-ws-navy-900: var(--ws-color-navy-900);
+  --color-ws-navy-950: var(--ws-color-navy-950);
 
-  /* WS Teal Colors */
-  --color-ws-teal-10: var(--ws-color-teal-10);
-  --color-ws-teal-20: var(--ws-color-teal-20);
+  /* Additional Teal & Blue Colors */
+  --color-ws-teal: var(--ws-color-teal);
+  --color-ws-teal-lite: var(--ws-color-teal-lite);
+  --color-ws-blue: var(--ws-color-ws-blue);
+  --color-ws-error-600: var(--color-red-600);
 
-  /* WS Red Colors */
-  --color-ws-red-10: var(--ws-color-red-10);
-  --color-ws-red-20: var(--ws-color-red-20);
-  --color-ws-red-30: var(--ws-color-red-30);
-  --color-ws-red-40: var(--ws-color-red-40);
-
-  /* WS Green Colors */
-  --color-ws-green-10: var(--ws-color-green-10);
-  --color-ws-green-20: var(--ws-color-green-20);
-  --color-ws-green-30: var(--ws-color-green-30);
-
-  /* Single Use Colors */
-  --color-ws-blue-100: var(--ws-color-blue-100);
-  --color-ws-blue-300: var(--ws-color-blue-300);
-
-  --color-ws-yellow-50: var(--ws-color-yellow-50);
-
-  /* Finch Colors */
-  --color-ws-primary-50: var(--ws-color-primary-50);
-  --color-ws-primary-100: var(--ws-color-primary-100);
-  --color-ws-primary-200: var(--ws-color-primary-200);
-  --color-ws-primary-300: var(--ws-color-primary-300);
-  --color-ws-primary-400: var(--ws-color-primary-400);
-  --color-ws-primary-500: var(--ws-color-primary-500);
-  --color-ws-primary-600: var(--ws-color-primary-600);
-  --color-ws-primary-700: var(--ws-color-primary-700);
-  --color-ws-primary-800: var(--ws-color-primary-800);
-  --color-ws-primary-900: var(--ws-color-primary-900);
-  --color-ws-navy-50: var(--ws-color-navy-50);
-  --color-ws-gray-50: var(--ws-color-gray-50);
-  --color-ws-gray-100: var(--ws-color-gray-100);
-  --color-ws-gray-700: var(--ws-color-gray-700);
-  --color-ws-tab-bg: var(--ws-color-tab-bg);
-  --color-ws-tab-active: var(--ws-color-tab-active);
-  --color-ws-tab-active-text: var(--ws-color-tab-active-text);
-  --color-ws-success-bg: var(--ws-color-success-bg);
-  --color-ws-success-text: var(--ws-color-success-text);
-  --color-ws-warning-bg: var(--ws-color-warning-bg);
-  --color-ws-warning-text: var(--ws-color-warning-text);
-  --color-ws-progress-primary: var(--ws-color-progress-primary);
-  --color-ws-progress-secondary: var(--ws-color-progress-secondary);
 }
 
 :root {
@@ -123,109 +73,57 @@
 
   /* Worker Solutions Design Tokens */
   /* Base Colors */
-  --ws-color-base-white: oklch(1 0 0); /* #FFFFFF */
-  --ws-color-base-black: oklch(0 0 0); /* #000000 */
+  --ws-color-base-white: #FFFFFF;
+  --ws-color-base-black: #000000;
   --ws-color-base-transparent: transparent;
 
-  /* Black Colors */
-  --ws-color-black-10: oklch(0.445 0.02 257); /* #535862 */
-  --ws-color-black-20: oklch(0.372 0.021 257); /* #414651 */
-  --ws-color-black-30: oklch(0.349 0 0); /* #313131 */
-  --ws-color-black-40: oklch(0.325 0.008 260); /* #2E2F32 */
-  --ws-color-black-50: oklch(0.296 0.045 285); /* #26203B */
-  --ws-color-black-60: oklch(0.285 0 0); /* #232323 */
-  --ws-color-black-70: oklch(0.266 0.072 280); /* #1E184E */
-  --ws-color-black-80: oklch(0.247 0.06 240); /* #04233C */
-  --ws-color-black-90: oklch(0.246 0.024 257); /* #181D27 */
-  --ws-color-black-100: oklch(0 0 0); /* #000000 */
-  --ws-color-black-200: oklch(0.279 0.03 257); /* #1F2937 */
-  --ws-color-black-300: oklch(0.2445 0.0437 255.37); /* #0D223A */
+  /* Border Colors */
+  --ws-color-border-primary: #D5D7DA;
 
+  /* Text Colors */
+  --ws-color-text-primary: #181D27;
+  --ws-color-text-secondary: #414651;
+  --ws-color-text-tertiary: #535862;
+  --ws-color-text-disabled: #B3B3B3;
 
-  /* Gray Colors */
-  --ws-color-gray-10: oklch(0.985 0 0); /* #FAFAFA */
-  --ws-color-gray-20: oklch(0.975 0 0); /* #F8F8F8 */
-  --ws-color-gray-30: oklch(0.965 0 0); /* #F5F5F5 */
-  --ws-color-gray-40: oklch(0.915 0.004 255); /* #E9EAEB */
-  --ws-color-gray-50: oklch(0.865 0.008 255); /* #D5D7DA */
-  --ws-color-gray-60: oklch(0.72 0.012 260); /* #A4A7AE */
-  --ws-color-gray-70: oklch(0.7 0.015 255); /* #9DA4AE */
-  --ws-color-gray-80: oklch(0.69 0.018 275); /* #9C9AA5 */
-  --ws-color-gray-90: oklch(0.68 0 0); /* #969696 */
-  --ws-color-gray-100: oklch(0.64 0 0); /* #8B8B8B */
-  --ws-color-gray-200: oklch(0.63 0.06 265); /* #7D89B0 */
-  --ws-color-gray-300: oklch(0.6 0.012 260); /* #717680 */
-  --ws-color-gray-350: oklch(0.56 0.01 92); /* #73726C */
-  --ws-color-gray-400: oklch(0.58 0 0); /* #6C6C6C */
-  --ws-color-gray-500: oklch(0.949 0 0); /* #EEEEEE */
-  --ws-color-gray-600: oklch(0.942 0.005 258.3); /* #EAECEF */
-  --ws-color-gray-700: oklch(0.267 0.041 232); /* #0E2936 */
-  --ws-color-gray-800: oklch(0.455 0.022 262); /* #535862 */
-  --ws-color-gray-900: oklch(0.556 0.009 92); /* #73726C */
+  /* Gray Colors from Figma */
+  --ws-color-gray-400: #A4A7AE;
+  --ws-color-gray-500: #717680;
 
-  /* Cyan Colors */
-  --ws-color-cyan-10: oklch(0.955 0.05 200); /* #CDF2FF */
-  --ws-color-cyan-20: oklch(0.945 0.055 215); /* #CFF9FE */
-  --ws-color-cyan-30: oklch(0.9 0.08 205); /* #A5F0FC */
-  --ws-color-cyan-40: oklch(0.76 0.09 210); /* #6DC5D3 */
-  --ws-color-cyan-50: oklch(0.73 0.14 220); /* #22CCEE */
-  --ws-color-cyan-60: oklch(0.68 0.135 225); /* #06AED4 */
-  --ws-color-cyan-70: oklch(0.64 0.12 230); /* #088AB2 */
+  /* Light Teal Colors from Figma */
+  --ws-color-light-teal-25: #f5f5f5;
+  --ws-color-light-teal-50: #e6eded;
+  --ws-color-light-teal-100: #d2f1ef;
+  --ws-color-light-teal-200: #cde5e3;
+  --ws-color-light-teal-300: #b6d3d0;
+  --ws-color-light-teal-400: #89d4cc;
+  --ws-color-light-teal-500: #73a09b;
+  --ws-color-light-teal-600: #62938e;
+  --ws-color-light-teal-700: #55a19e;
+  --ws-color-light-teal-800: #3b8383;
+  --ws-color-light-teal-850: #007d7e;
+  --ws-color-light-teal-900: #006c68;
+  --ws-color-light-teal-950: #2e5450;
 
-  /* Purple Colors */
-  --ws-color-purple-10: oklch(0.985 0.012 285); /* #FCFAFF */
-  --ws-color-purple-20: oklch(0.93 0.035 280); /* #EBE9FE */
-  --ws-color-purple-30: oklch(0.62 0.18 285); /* #7F56D9 */
-  --ws-color-purple-40: oklch(0.56 0.195 285); /* #6941C6 */
-  --ws-color-purple-50: oklch(0.52 0.22 285); /* #5925DC */
-  --ws-color-purple-60: oklch(0.56 0.21 275); /* #6938EF */
+  /* Navy Colors from Figma */
+  --ws-color-navy-25: #fdfdfd;
+  --ws-color-navy-100: #eef7fc;
+  --ws-color-navy-200: #cbdfe8;
+  --ws-color-navy-300: #94cee9;
+  --ws-color-navy-400: #79c2e4;
+  --ws-color-navy-500: #63a2bf;
+  --ws-color-navy-600: #5792ad;
+  --ws-color-navy-700: #4c829a;
+  --ws-color-navy-800: #366176;
+  --ws-color-navy-900: #1f4151;
+  --ws-color-navy-950: #0e2936;
 
-  /* Teal Colors */
-  --ws-color-teal-10: oklch(0.92 0.02 195); /* #DBEBEB */
-  --ws-color-teal-20: oklch(0.72 0.13 200); /* #00C4C7 */
+  /* Additional Teal & Blue Colors */
+  --ws-color-teal: #00c4c7;
+  --ws-color-teal-lite: #dbebeb;
+  --ws-color-ws-blue: #0611f6;
+  --color-red-600: #D92D20;
 
-  /* Red Colors */
-  --ws-color-red-10: oklch(0.78 0.14 25); /* #FDA29B */
-  --ws-color-red-20: oklch(0.63 0.21 25); /* #F04438 */
-  --ws-color-red-30: oklch(0.58 0.22 25); /* #D92D20 */
-  --ws-color-red-40: oklch(0.52 0.21 25); /* #B42318 */
-
-  /* Green Colors */
-  --ws-color-green-10: oklch(0.7 0.14 150); /* #34A853 */
-  --ws-color-green-20: oklch(0.989 0.011 160); /* #F6FEF9 */
-  --ws-color-green-30: oklch(0.9 0.03 225); /* #CBDFE8 */
-
-  /* Single Use Colors */
-  --ws-color-blue-100: oklch(0.915 0.055 260); /* #D4DFFC */
-
-  --ws-color-blue-300: oklch(0.53 0.1 217.7); /* #E7090 */
-
-  --ws-color-yellow-50: oklch(0.988 0.037 92); /* #FEF3C7 */
-
-  /* Finch Colors */
-  --ws-color-primary-50: #e6eded;
-  --ws-color-primary-100: #d5d7da;
-  --ws-color-primary-200: #dbeaeb;
-  --ws-color-primary-300: #62938e;
-  --ws-color-primary-400: #3b8383;
-  --ws-color-primary-500: #007d7e;
-  --ws-color-primary-600: #0e7090;
-  --ws-color-primary-700: #006c68;
-  --ws-color-primary-800: #366176;
-  --ws-color-primary-900: #1f4151;
-  --ws-color-navy-50: #e4f3fa;
-  --ws-color-gray-50: #fdfdfd;
-  --ws-color-gray-100: #575757;
-  --ws-color-gray-700: #343E3E;
-  --ws-color-tab-bg: #D2F1EF;
-  --ws-color-tab-active: #B6D3D0;
-  --ws-color-tab-active-text: #2E5450;
-  --ws-color-success-bg: #E1F6EF;
-  --ws-color-success-text: #0F6F57;
-  --ws-color-warning-bg: #FAEDE7;
-  --ws-color-warning-text: #993C1E;
-  --ws-color-progress-primary: #89D4CC;
-  --ws-color-progress-secondary: #5792AD; 
 
 
 }

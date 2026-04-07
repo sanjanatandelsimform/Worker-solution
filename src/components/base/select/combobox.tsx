@@ -67,7 +67,7 @@ const ComboBoxValue = ({
       {...otherProps}
       className={({ isFocusWithin, isDisabled }) =>
         cx(
-          "relative flex w-full items-center gap-2 rounded-lg bg-ws-white shadow-xs ring-1 ring-primary outline-hidden transition-shadow duration-100 ease-linear ring-inset",
+          "relative flex w-full items-center gap-2 rounded-lg bg-ws-base-white shadow-xs ring-1 ring-primary outline-hidden transition-shadow duration-100 ease-linear ring-inset",
           isDisabled && "cursor-not-allowed bg-disabled_subtle",
           isFocusWithin && "ring-2 ring-brand",
           sizes[size].root
@@ -111,7 +111,7 @@ const ComboBoxValue = ({
           {shortcut && (
             <div
               className={cx(
-                "absolute inset-y-0.5 right-0.5 z-10 flex items-center rounded-r-[inherit] bg-linear-to-r from-transparent to-bg-ws-white to-40% pl-8",
+                "absolute inset-y-0.5 right-0.5 z-10 flex items-center rounded-r-[inherit] bg-linear-to-r from-transparent to-bg-ws-base-white to-40% pl-8",
                 isDisabled && "to-bg-disabled_subtle",
                 sizes[size].shortcut,
                 shortcutClassName

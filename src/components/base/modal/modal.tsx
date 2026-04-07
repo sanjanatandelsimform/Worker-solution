@@ -45,7 +45,7 @@ export const Modal = ({ children, className, size = "md", ...props }: ModalProps
     >
       <AriaModal
         className={cx(
-          "w-full rounded-xl bg-ws-white shadow-2xl outline-hidden",
+          "w-full rounded-xl bg-ws-base-white shadow-2xl outline-hidden",
           "entering:animate-in entering:zoom-in-95 entering:duration-200",
           "exiting:animate-out exiting:zoom-out-95 exiting:duration-150",
           sizeClasses[size]

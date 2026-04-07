@@ -325,7 +325,7 @@ export const SettingsPage = () => {
           )}
 
           <div className="space-y-6 mt-6">
-            <div className="bg-ws-gray-20 border border-ws-primary-100 rounded-xl p-6">
+            <div className="bg-ws-gray-20 border border-ws-border-primary rounded-xl p-6">
               {/* Personal Info Section */}
               <div className="flex items-center justify-between gap-2">
                 <div className="flex flex-col">
@@ -337,7 +337,7 @@ export const SettingsPage = () => {
               </div>
               <hr className="border-t border-gray-200 mt-5 mb-6" />
 
-              <div className="bg-ws-white border border-ws-primary-100 rounded-xl py-8 px-6 mb-6">
+              <div className="bg-ws-base-white border border-ws-border-primary rounded-xl py-8 px-6 mb-6">
                 {/* Name Fields */}
                 <div className="flex mb-6 flex-col xl:flex-row">
                   <div className="w-full xl:w-1/3 mb-3 xl:mb-0">
@@ -455,7 +455,7 @@ export const SettingsPage = () => {
               </div>
               <hr className="border-t border-gray-200 mt-5 mb-6" />
 
-              <div className="bg-ws-white border border-ws-primary-100 rounded-xl py-8 px-6 mb-6">
+              <div className="bg-ws-base-white border border-ws-border-primary rounded-xl py-8 px-6 mb-6">
                 {/* Retake Assessment */}
                 <div className="flex mb-6 flex-col xl:flex-row">
                   <div className="w-full xl:w-1/2 flex flex-col">

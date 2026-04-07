@@ -25,7 +25,7 @@ export const CheckboxBase = ({
   return (
     <div
       className={cx(
-        "relative flex size-4 shrink-0 cursor-pointer appearance-none items-center justify-center rounded bg-ws-white ring-1 ring-ws-primary-100 ring-inset",
+        "relative flex size-4 shrink-0 cursor-pointer appearance-none items-center justify-center rounded bg-ws-base-white ring-1 ring-ws-border-primary ring-inset",
         size === "md" && "size-5 rounded-md",
         (isSelected || isIndeterminate) && "bg-blue-700 ring-blue-700 text-ws-white",
         isDisabled && "cursor-not-allowed bg-disabled_subtle ring-disabled",

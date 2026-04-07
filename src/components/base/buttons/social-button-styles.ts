@@ -22,7 +22,7 @@ export const styles = sortCx({
 
   colors: {
     gray: {
-      root: "bg-ws-white text-secondary shadow-xs-skeumorphic ring-1 ring-ws-primary-100 ring-inset hover:bg-primary_hover hover:text-secondary_hover",
+      root: "bg-ws-base-white text-secondary shadow-xs-skeumorphic ring-1 ring-ws-border-primary ring-inset hover:bg-primary_hover hover:text-secondary_hover",
       icon: "text-fg-quaternary group-hover:text-fg-quaternary_hover",
     },
     black: {

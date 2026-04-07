@@ -101,7 +101,7 @@ export const NavAccountMenu = ({
         className
       )}
     >
-      <div className="rounded-xl bg-ws-white ring-1 ring-secondary">
+      <div className="rounded-xl bg-ws-base-white ring-1 ring-secondary">
         <div className="flex flex-col gap-0.5 py-1.5">
           <NavAccountCardMenuItem label="View profile" icon={User01} shortcut="⌘K->P" />
           <NavAccountCardMenuItem label="Account settings" icon={Settings01} shortcut="⌘S" />

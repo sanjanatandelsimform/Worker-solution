@@ -285,7 +285,7 @@ export default function AdditionalQuestions() {
         <div className="my-8 mx-12.5">
           <div className="space-y-6">
             {/* Workforce Section */}
-            <div className="bg-ws-base-white rounded-lg border border-ws-primary-100 shadow-sm p-6 space-y-6">
+            <div className="bg-ws-base-white rounded-lg border border-ws-border-primary shadow-sm p-6 space-y-6">
               <h2 className="text-3xl font-semibold mb-2">Workforce</h2>
               <p className="text-base text-ws-gray-90">
                 We’d like to get a better understanding of your workforce and how they’re
@@ -308,7 +308,7 @@ export default function AdditionalQuestions() {
                         <label key={option.id} className="flex items-center gap-3 cursor-pointer">
                           <RadioButton
                             value={option.id}
-                            className="border border-ws-primary-100 rounded-full"
+                            className="border border-ws-border-primary rounded-full"
                           />
                           <span className="text-sm font-normal text-ws-black-20">
                             {option.label}
@@ -322,7 +322,7 @@ export default function AdditionalQuestions() {
             </div>
 
             {/* Compensation Section */}
-            <div className="bg-ws-base-white rounded-lg border border-ws-primary-100 shadow-sm p-6 space-y-6">
+            <div className="bg-ws-base-white rounded-lg border border-ws-border-primary shadow-sm p-6 space-y-6">
               <h2 className="text-3xl font-semibold mb-2">Compensation </h2>
               <p className="text-base text-ws-gray-90">
                 Select salary that apply best to your workforce. This doesn’t have to be exact.
@@ -350,7 +350,7 @@ export default function AdditionalQuestions() {
                             >
                               <RadioButton
                                 value={option.id}
-                                className="border border-ws-primary-100 rounded-full"
+                                className="border border-ws-border-primary rounded-full"
                               />
                               <span className="text-sm font-normal text-ws-black-20">
                                 {option.label}
@@ -392,7 +392,7 @@ export default function AdditionalQuestions() {
             </div>
 
             {/* Benefits & Retirement Section */}
-            <div className="bg-ws-base-white rounded-lg border border-ws-primary-100 shadow-sm p-6 space-y-6">
+            <div className="bg-ws-base-white rounded-lg border border-ws-border-primary shadow-sm p-6 space-y-6">
               <h2 className="text-3xl font-semibold mb-2">Benefits </h2>
               <p className="text-base text-ws-gray-90">
                 To understand what gaps may exist in your current benefits offerings, please select
@@ -417,7 +417,7 @@ export default function AdditionalQuestions() {
                           <label key={option.id} className="flex items-center gap-3 cursor-pointer">
                             <RadioButton
                               value={option.id}
-                              className="border border-ws-primary-100 rounded-full"
+                              className="border border-ws-border-primary rounded-full"
                             />
                             <span className="text-sm font-normal text-ws-black-20">
                               {option.label}
@@ -466,7 +466,7 @@ export default function AdditionalQuestions() {
                             >
                               <RadioButton
                                 value={option.id}
-                                className="border border-ws-primary-100 rounded-full"
+                                className="border border-ws-border-primary rounded-full"
                               />
                               <span className="text-sm font-normal text-ws-black-20">
                                 {option.label}
@@ -491,7 +491,7 @@ export default function AdditionalQuestions() {
             </div>
 
             {/* Goals Section */}
-            <div className="bg-ws-base-white rounded-lg border border-ws-primary-100 shadow-sm p-6 space-y-6">
+            <div className="bg-ws-base-white rounded-lg border border-ws-border-primary shadow-sm p-6 space-y-6">
               <h2 className="text-3xl font-semibold mb-2">Goals </h2>
               <p className="text-base text-ws-gray-90">
                 Pick the goal that best reflects your company’s workforce priorities. This helps us
@@ -521,7 +521,7 @@ export default function AdditionalQuestions() {
                               isSelected={goalsAnswers.selectedGoals.includes(goal.id)}
                               onChange={() => handleGoalToggle(goal.id)}
                               size="sm"
-                              className="border border-ws-primary-100 rounded-sm"
+                              className="border border-ws-border-primary rounded-sm"
                             />
                             <span className="text-sm font-normal text-ws-black-20">
                               {goal.label}
@@ -546,7 +546,7 @@ export default function AdditionalQuestions() {
       </div>
 
       {/* Bottom Navigation Bar */}
-      <div className="flex items-center justify-end border-t border-ws-primary-100 bg-ws-white px-6 py-2.5">
+      <div className="flex items-center justify-end border-t border-ws-border-primary bg-ws-base-white px-6 py-2.5">
         <Button
           color="primary"
           size="md"

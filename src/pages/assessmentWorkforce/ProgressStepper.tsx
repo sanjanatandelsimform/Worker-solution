@@ -26,7 +26,7 @@ export function ProgressStepper({
   const resolvedIndex = steps.findIndex(step => step.id === resolvedStep);
 
   return (
-    <div className="flex w-full items-center gap-2 rounded-xl border border-ws-primary-100 bg-ws-white p-2">
+    <div className="flex w-full items-center gap-2 rounded-xl border border-ws-border-primary bg-ws-base-white p-2">
       {steps.map((step, index) => {
         const isCompleted = completedSteps.includes(step.id);
         const isCurrent = step.id === resolvedStep; // actual progress position

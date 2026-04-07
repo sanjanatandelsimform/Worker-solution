@@ -30,13 +30,13 @@ export default function DashboardCard({
   toggleAvatar = false,
   onClick,
 }: Readonly<DashboardCardProps>) {
-  // Only apply default bg-ws-white if classes don't provide a background color
+  // Only apply default bg-ws-base-white if classes don't provide a background color
   const hasBgClass = /\bbg-/.test(classes);
-  const backgroundColor = hasBgClass ? "" : "bg-ws-white";
+  const backgroundColor = hasBgClass ? "" : "bg-ws-base-white";
 
   return (
     <div
-      className={`mt-6 border border-ws-primary-100 rounded-xl p-4 ${backgroundColor} flex gap-4 justify-between items-center flex-col lg:flex-row ${classes}`}
+      className={`mt-6 border border-ws-border-primary rounded-xl p-4 ${backgroundColor} flex gap-4 justify-between items-center flex-col lg:flex-row ${classes}`}
     >
       <div className="flex items-center gap-4 xl:flex-row">
         {toggleAvatar &&

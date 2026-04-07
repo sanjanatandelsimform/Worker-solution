@@ -168,7 +168,7 @@ export default function GetMore() {
       </div>
 
       {/* Bottom Navigation Bar */}
-      <div className="flex items-center justify-end border-t border-ws-primary-100 bg-ws-white px-6 py-2.5">
+      <div className="flex items-center justify-end border-t border-ws-border-primary bg-ws-base-white px-6 py-2.5">
         <Button
           color="primary"
           size="md"

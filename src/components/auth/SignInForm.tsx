@@ -18,7 +18,7 @@ import { signInSchema, type SignInFormData } from "@/services/validation/authSch
 import { getErrorState, type ErrorState } from "@/utils/errorHandler";
 import ErrorMessage from "@/components/common/ErrorMessage";
 import { ChangePasswordModal } from "@/components/modals";
-import { GoogleSSOButton } from "@/components/auth/GoogleSSOButton";
+import { Label } from "../base/input/label";
 
 export const SignInForm = () => {
   const [showPassword, setShowPassword] = useState(false);
@@ -113,8 +113,8 @@ export const SignInForm = () => {
   };
 
   return (
-    <div className="flex min-h-screen items-center justify-center bg-ws-primary-200">
-      <div className="flex w-2xl items-center justify-center rounded-xl border border-ws-primary-100 bg-ws-white py-15">
+    <div className="flex min-h-screen items-center justify-center bg-ws-light-teal-50">
+      <div className="flex w-2xl items-center justify-center rounded-xl border border-ws-border-primary bg-ws-base-white py-30">
         <div className="flex w-sm max-w-sm flex-col items-center gap-8">
           {/* Header */}
           <div className="flex w-full flex-col items-center gap-6">
@@ -125,10 +125,10 @@ export const SignInForm = () => {
 
             {/* Title and Description */}
             <div className="flex w-full flex-col items-start gap-3 text-center">
-              <h2 className="w-full text-3xl font-semibold leading-9.5 text-ws-black-90">
+              <h2 className="w-full text-3xl font-semibold leading-9.5 text-ws-text-primary">
                 Log in to your account
               </h2>
-              <p className="w-full text-base font-normal leading-6 text-ws-black-10">
+              <p className="w-full text-base font-normal leading-6 text-ws-text-tertiary">
                 Welcome back! Please enter your details.
               </p>
             </div>
@@ -143,9 +143,9 @@ export const SignInForm = () => {
               {/* Email Input Field */}
               <InputGroup>
                 <div className="flex flex-col gap-1.5 w-full">
-                  <label className="text-sm font-medium text-ws-black-20">
-                    Email <span className="text-red-500">*</span>
-                  </label>
+                  <Label className="text-sm font-medium text-ws-text-secondary">
+                    Email <span className="text-ws-error-600">*</span>
+                  </Label>
                   <Input
                     name="email"
                     size="md"
@@ -167,9 +167,9 @@ export const SignInForm = () => {
               {/* Password Input Field */}
               <InputGroup className="relative">
                 <div className="flex flex-col gap-1.5 w-full">
-                  <label className="text-sm font-medium text-ws-black-20">
-                    Password <span className="text-red-500">*</span>
-                  </label>
+                  <Label className="text-sm font-medium text-ws-black-20">
+                    Password <span className="text-ws-error-600">*</span>
+                  </Label>
                   <Input
                     name="password"
                     hint={errors.password?.message}
@@ -200,9 +200,9 @@ export const SignInForm = () => {
                   {!errors.password && (
                     <>
                       {showPassword ? (
-                        <Eye className="size-5 text-ws-gray-60" />
+                        <Eye className="size-5 text-ws-gray-400" />
                       ) : (
-                        <EyeOff className="size-5 text-ws-gray-60" />
+                        <EyeOff className="size-5 text-ws-gray-400" />
                       )}
                     </>
                   )}
@@ -227,14 +227,14 @@ export const SignInForm = () => {
                     isSelected={rememberMe}
                     onChange={selected => setValue("rememberMe", selected)}
                     label="Remember for 30 days"
-                    className="text-ws-black-20"
+                    className="text-ws-text-secondary"
                   />
                 </div>
 
                 <Button
                   type="button"
                   color="link-color"
-                  className="text-ws-primary-500"
+                  className="text-ws-navy-800"
                   href="/forgot-password"
                   size="md"
                 >
@@ -242,34 +242,28 @@ export const SignInForm = () => {
                 </Button>
               </div>
 
-              {/* Actions */}
-              <div className="flex w-full flex-col items-start gap-4">
+              <div className="flex w-full flex-col items-start">
                 {/* Sign in Button */}
                 <Button
                   type="submit"
                   color="primary"
                   size="lg"
                   isDisabled={isSubmitting}
-                  className="w-full bg-ws-primary-900 text-ws-white hover:bg-ws-primary-900-hover focus:bg-ws-primary-900-hover active:bg-ws-primary-900-hover"
+                  className="w-full mt-1"
                 >
                   {isSubmitting ? "Signing in..." : "Sign in"}
                 </Button>
-
-                {/* Social button groups */}
-                <div className="flex w-full flex-col items-center justify-center gap-3">
-                  <GoogleSSOButton />
-                </div>
               </div>
             </form>
           </div>
 
           {/* Sign up link */}
           <div className="flex w-full items-baseline justify-center gap-1">
-            <p className="text-sm font-normal leading-5 text-ws-black-10">Don't have an account?</p>
+            <p className="text-sm font-normal leading-5 text-ws-text-tertiary">Don't have an account?</p>
             <Button
-              href="/sign-up"
+              href="/sign-up" 
               color="link-color"
-              className="text-ws-primary-500 font-bold"
+              className="text-ws-light-teal-850 font-semibold"
               size="md"
             >
               Sign up

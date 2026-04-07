@@ -107,7 +107,7 @@ export const Tooltip = ({
               <AriaOverlayArrow>
                 <svg
                   viewBox="0 0 100 100"
-                  className="size-2.5 fill-bg-ws-white-solid in-placement-left:-rotate-90 in-placement-right:rotate-90 in-placement-top:rotate-0 in-placement-bottom:rotate-180"
+                  className="size-2.5 fill-bg-ws-base-white-solid in-placement-left:-rotate-90 in-placement-right:rotate-90 in-placement-top:rotate-0 in-placement-bottom:rotate-180"
                 >
                   <path d="M0,0 L35.858,35.858 Q50,50 64.142,35.858 L100,0 Z" />
                 </svg>

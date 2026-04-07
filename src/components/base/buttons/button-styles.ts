@@ -39,7 +39,7 @@ export const styles = sortCx({
   colors: {
     primary: {
       root: [
-        "bg-ws-primary-800 text-ws-white shadow-xs-skeumorphic ring-1 ring-transparent ring-inset hover:bg-ws-primary-800 data-loading:bg-ws-primary-700",
+        "bg-ws-navy-900 text-ws-base-white ring-1 ring-transparent ring-inset hover:bg-ws-navy-900 data-loading:bg-ws-navy-900 text-base font-semibold",
         "before:absolute before:inset-px before:border before:border-white/12 before:mask-b-from-0%",
         "disabled:bg-disabled disabled:shadow-xs disabled:ring-disabled_subtle",
         "*:data-icon:text-button-primary-icon hover:*:data-icon:text-button-primary-icon_hover",
@@ -47,14 +47,14 @@ export const styles = sortCx({
     },
     secondary: {
       root: [
-        "bg-ws-white text-secondary shadow-xs-skeumorphic ring-1 ring-ws-primary-100 ring-inset hover:bg-primary_hover hover:text-secondary_hover data-loading:bg-primary_hover",
+        "bg-ws-base-white text-secondary ring-1 ring-ws-border-primary ring-inset hover:bg-primary_hover hover:text-secondary_hover data-loading:bg-primary_hover text-base font-semibold",
         "disabled:shadow-xs disabled:ring-disabled_subtle",
         "*:data-icon:text-fg-quaternary hover:*:data-icon:text-fg-quaternary_hover",
       ].join(" "),
     },
     tertiary: {
       root: [
-        "text-ws-black-10 hover:bg-primary_hover hover:text-ws-black-10_hover data-loading:bg-primary_hover",
+        "text-ws-black-10 hover:bg-primary_hover hover:text-ws-black-10_hover data-loading:bg-primary_hover text-base font-semibold",
         "*:data-icon:text-fg-quaternary hover:*:data-icon:text-fg-quaternary_hover",
       ].join(" "),
     },
@@ -82,8 +82,8 @@ export const styles = sortCx({
     },
     "secondary-destructive": {
       root: [
-        "bg-ws-white text-ws-red-30 shadow-xs-skeumorphic ring-1 ring-error_subtle outline-error ring-inset hover:bg-error-primary hover:text-error-primary_hover data-loading:bg-error-primary",
-        "disabled:bg-ws-white disabled:shadow-xs disabled:ring-disabled_subtle",
+        "bg-ws-base-white text-ws-red-30 shadow-xs-skeumorphic ring-1 ring-error_subtle outline-error ring-inset hover:bg-error-primary hover:text-error-primary_hover data-loading:bg-error-primary",
+        "disabled:bg-ws-base-white disabled:shadow-xs disabled:ring-disabled_subtle",
         "*:data-icon:text-fg-error-secondary hover:*:data-icon:text-fg-error-primary",
       ].join(" "),
     },

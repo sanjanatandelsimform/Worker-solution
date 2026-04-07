@@ -1,3 +1,4 @@
+import { cx } from "@/utils/cx";
 import AverageCard from "./AverageCard";
 
 export interface AverageCardData {
@@ -36,6 +37,7 @@ export interface TurnoverRateCardProps {
   industryBoldText?: string;
   sourceText?: string;
   className?: string;
+  sourceClass?: string;
 }
 
 export default function TurnoverRateCard({
@@ -46,6 +48,7 @@ export default function TurnoverRateCard({
   industryBoldText,
   sourceText,
   className,
+  sourceClass,
 }: Readonly<TurnoverRateCardProps>) {
   // Map column count to grid class
   const gridClassMap = {
@@ -60,7 +63,7 @@ export default function TurnoverRateCard({
   };
 
   return (
-    <div className={`bg-ws-white ring ring-ws-primary-100 rounded-xl p-5 ${className}`}>
+    <div className={`bg-ws-base-white ring ring-ws-border-primary rounded-xl p-5 ${className}`}>
       <h2 className="flex items-center justify-between text-lg text-ws-black font-medium gap-2">
         {title}
         <span className="text-xs text-ws-gray-900 uppercase">{titleQatar}</span>
@@ -87,7 +90,7 @@ export default function TurnoverRateCard({
                       staticsPoints={card.staticsPoints}
                       staticsPointsState={card.staticsPointsState}
                       progressValue={card.progressValue}
-                      className="bg-ws-white"
+                      className="bg-ws-base-white"
                       customBarColor={card.customBarColor}
                     />
                   ))}
@@ -105,7 +108,7 @@ export default function TurnoverRateCard({
           <span className="text-xs font-medium">{industryBoldText}</span>
         </p>
       )}
-      {sourceText && <p className="text-xs text-ws-black-90 mt-2">{sourceText}</p>}
+      {sourceText && <p className={cx("text-xs text-ws-black-90 mt-2", sourceClass)}>{sourceText}</p>}
     </div>
   );
 }

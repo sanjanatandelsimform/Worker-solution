@@ -32,7 +32,7 @@ type TabTypeColors<T> = T extends "horizontal" ? HorizontalTypes : VerticalTypes
 // Styles for different types of tab
 const getTabStyles = ({ isFocusVisible, isSelected, isHovered }: AriaTabRenderProps) => ({
   "button-brand": cx(
-    "outline-focus-ring rounded-full bg-ws-white ring-1 ring-ws-primary-100 ring-inset text-base font-bold px-6 py-3 mr-2 min-w-50",
+    "outline-focus-ring rounded-full bg-ws-base-white ring-1 ring-ws-border-primary ring-inset text-base font-bold px-6 py-3 mr-2 min-w-50",
     isFocusVisible && "outline-2 -outline-offset-2 bg-cyan-700 text-ws-white",
     (isSelected || isHovered) && "bg-cyan-700 text-ws-white"
   ),
@@ -51,7 +51,7 @@ const getTabStyles = ({ isFocusVisible, isSelected, isHovered }: AriaTabRenderPr
     "rounded-lg outline-focus-ring",
     isHovered && "text-secondary",
     isFocusVisible && "outline-2 -outline-offset-2",
-    isSelected && "bg-primary_alt text-secondary shadow-xs ring-1 ring-ws-primary-100 ring-inset"
+    isSelected && "bg-primary_alt text-secondary shadow-xs ring-1 ring-ws-border-primary ring-inset"
   ),
   underline: cx(
     "rounded-none border-b-2 border-transparent outline-focus-ring px-26",
@@ -89,10 +89,10 @@ const getHorizontalStyles = ({ size, fullWidth }: { size?: "sm" | "md"; fullWidt
   "button-brand": "gap-1",
   "button-gray": "gap-1",
   "button-border": cx(
-    "gap-1 rounded-[10px] bg-secondary_alt p-1 ring-1 ring-ws-primary-100 ring-inset",
+    "gap-1 rounded-[10px] bg-secondary_alt p-1 ring-1 ring-ws-border-primary ring-inset",
     size === "md" && "rounded-xl p-1.5"
   ),
-  "button-minimal": "gap-0.5 rounded-lg bg-secondary_alt ring-1 ring-inset ring-ws-primary-100",
+  "button-minimal": "gap-0.5 rounded-lg bg-secondary_alt ring-1 ring-inset ring-ws-border-primary",
   underline: cx("gap-3", fullWidth && "w-full gap-4"),
   line: "gap-2",
 });

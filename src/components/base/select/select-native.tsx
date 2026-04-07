@@ -29,7 +29,7 @@ export const NativeSelect = ({
     <div className={cx("w-full in-data-input-wrapper:w-max", className)}>
       {label && (
         <Label htmlFor={selectId} id={selectId} className="mb-1.5">
-          {label} {isRequired && <span className="text-red-500">*</span>}{" "}
+          {label} {isRequired && <span className="text-ws-error-600">*</span>}{" "}
           {/* Add asterisk if required */}
         </Label>
       )}
@@ -42,7 +42,7 @@ export const NativeSelect = ({
           aria-labelledby={selectId}
           style={{ color: "var(--color-text-ws-black)", ...props.style }}
           className={cx(
-            "appearance-none rounded-lg bg-ws-white px-3.5 py-2.5 text-md font-medium shadow-xs outline-hidden transition duration-100 ease-linear ring-inset placeholder:text-fg-quaternary focus-visible:ring-2 focus-visible:ring-brand disabled:cursor-not-allowed disabled:bg-disabled_subtle disabled:text-disabled ring-1 border border-ws-primary-100 border-r-0",
+            "appearance-none rounded-lg bg-ws-base-white px-3.5 py-2.5 text-md font-medium shadow-xs outline-hidden transition duration-100 ease-linear ring-inset placeholder:text-ws-gray-500 focus-visible:ring-2 focus-visible:ring-brand disabled:cursor-not-allowed disabled:bg-disabled_subtle disabled:text-disabled ring-1 border border-ws-border-primary border-r-0",
             // Force text color for both select and options
             "text-[var(--color-text-ws-black)] [&>option]:text-[var(--color-text-ws-black)]",
             // Styles when the select is within an `InputGroup`

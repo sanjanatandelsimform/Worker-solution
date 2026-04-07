@@ -15,6 +15,7 @@ import {
 import checkmarkIcon from "@/assets/finch-checkmark.svg";
 import ErrorMessage from "../common/ErrorMessage";
 import { getErrorState, type ErrorState } from "@/utils/errorHandler";
+import { Label } from "../base/input/label";
 
 export default function ForgotPasswordForm() {
   const navigate = useNavigate();
@@ -58,8 +59,8 @@ export default function ForgotPasswordForm() {
   };
 
   return (
-    <div className="flex min-h-screen items-center justify-center bg-ws-primary-200">
-      <div className="flex w-2xl items-center justify-center rounded-xl border border-ws-primary-100 bg-ws-white py-22">
+    <div className="flex min-h-screen items-center justify-center bg-ws-light-teal-50">
+      <div className="flex w-2xl items-center justify-center rounded-xl border border-ws-border-primary bg-ws-base-white py-22">
         <div className="flex w-full max-w-md flex-col items-center gap-8">
           {/* Header */}
           <div className="flex w-full flex-col items-center gap-6">
@@ -69,11 +70,11 @@ export default function ForgotPasswordForm() {
             </div>
 
             {/* Title and Description */}
-            <div className="flex w-full flex-col items-center gap-3 text-center">
-              <h2 className="w-full text-3xl font-semibold leading-9.5 text-ws-black">
+            <div className="flex w-full flex-col items-center gap-3">
+              <h2 className="w-full text-3xl font-semibold leading-9.5 text-ws-text-primary">
                 Forgot your password?
               </h2>
-              <p className="w-full text-medium font-normal leading-6 text-ws-black-10">
+              <p className="w-full text-medium font-normal leading-6 text-ws-text-secondary">
                 Enter the email address associated with your account and we'll send you a link to
                 reset your password.
               </p>
@@ -89,12 +90,13 @@ export default function ForgotPasswordForm() {
               {/* Email Input Field */}
               <InputGroup>
                 <div className="flex flex-col gap-1.5 w-full">
-                  <label className="text-sm font-medium text-ws-black-20">
-                    Business Email Address <span className="text-red-500">*</span>
-                  </label>
+                  <Label className="text-sm font-medium text-ws-text-secondary">
+                    Business Email Address <span className="text-ws-error-600">*</span>
+                  </Label>
                   <Input
                     name="email"
                     icon={Mail01}
+                    iconClassName="text-ws-gray-400"
                     size="md"
                     placeholder="olivia@untitledui.com"
                     hint={errors.email?.message}
@@ -128,7 +130,7 @@ export default function ForgotPasswordForm() {
                   color="primary"
                   size="lg"
                   isDisabled={isSubmitting}
-                  className="w-auto bg-ws-primary-900 text-ws-white hover:bg-ws-primary-900-hover focus:bg-ws-primary-900-hover active:bg-ws-primary-900-hover"
+                  className="w-full"
                 >
                   {isSubmitting ? "Sending..." : "Reset Password"}
                 </Button>
@@ -138,16 +140,16 @@ export default function ForgotPasswordForm() {
 
           {/* Sign in link */}
           <div className="flex w-full items-baseline justify-center gap-1">
-            <p className="text-sm font-normal leading-5 text-ws-black-10">
-              Already have an account?
+            <p className="text-sm font-normal leading-5 text-ws-text-tertiary">
+              Don’t have an account?
             </p>
             <Button
-              href="/sign-in"
+              href="/sign-up"
               color="link-color"
               size="md"
-              className="text-ws-primary-500 font-bold"
+              className="text-ws-light-teal-850 font-bold"
             >
-              Sign in
+              Sign up
             </Button>
           </div>
         </div>

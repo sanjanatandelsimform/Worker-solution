@@ -24,7 +24,7 @@ export default function RecommendationsPage() {
   const companyAtGlance = useAppSelector(selectCompanyAtGlance);
   const strategicRecommendations = useAppSelector(selectStrategicRecommendations);
   return (
-    <div className="bg-ws-white py-10 px-6 space-y-6 shadow-xl rounded-b-xl">
+    <div className="bg-ws-base-white py-10 px-6 space-y-6 shadow-xl rounded-b-xl">
       <h2 className="text-2xl lg:text-4xl font-medium text-ws-black-60 leading-10">
         Your Company at a Glance
       </h2>
@@ -58,11 +58,6 @@ export default function RecommendationsPage() {
           classess="border-ws-gray-40"
           title="Average Salary"
           titleClass="text-ws-black-10 text-sm"
-          // count={
-          //   typeof companyAtGlance?.averageSalary === "number"
-          //     ? formatCurrency(companyAtGlance.averageSalary)
-          //     : (companyAtGlance?.averageSalary ?? "N/A")
-          // }
           countIcon={<BriefcaseIcon className="size-5 text-ws-gray-300" />}
           count={"$72k"}
           countClass="text-ws-primary-700 text-3xl xl:text-4xl font-medium mt-6"
@@ -70,15 +65,15 @@ export default function RecommendationsPage() {
         <StaticCard
           classess="border-ws-gray-40"
           title="National Industry Average Wage"
-          titleClass="text-ws-black-10 text-sm"
+          titleClass="text-ws-black-10 text-sm flex items-center gap-1"
           count={
             companyAtGlance?.industryAverageWage != null
               ? formatCurrency(Number(companyAtGlance.industryAverageWage))
               : "N/A"
           }
           infoIcon={true}
-          countIcon={<DollarIcon className="size-5 text-ws-gray-300" />}
-          infoCircleClass="text-ws-black-200"
+          countIcon={<DollarIcon className="text-ws-gray-300" />}
+          infoCircleClass="text-ws-black-200 size-4" 
           tooltipText="How is this calculated"
           descriptionText="This is calculated based on LMI."
           placements="top"
@@ -96,7 +91,7 @@ export default function RecommendationsPage() {
       {/* Carousel Section */}
       <CarouselSection />
 
-      <div className="bg-ws-gray-30 py-8 px-6 border border-ws-primary-100 rounded-2xl">
+      <div className="bg-ws-gray-30 py-8 px-6 border border-ws-border-primary rounded-2xl">
         {/* <Badge
           type="pill-color"
           size="lg"
@@ -119,7 +114,7 @@ export default function RecommendationsPage() {
               participation with these options:
             </p>
             <h4 className="text-2xl font-medium text-ws-black-90 my-6">Proven strategies</h4>
-            <div className="bg-ws-gray-50 border border-ws-primary-100 rounded-lg p-3.5">
+            <div className="bg-ws-gray-50 border border-ws-border-primary rounded-lg p-3.5">
               <h4 className="text-lg font-medium text-ws-black-90">Strategies Impemented: 2/3</h4>
               <p className="my-4 text-base text-ws-black-90">
                 You have already implemented 2 of 3 proven strategies! Keep going to see lorem ipsum
@@ -201,7 +196,7 @@ export default function RecommendationsPage() {
         </div>
       </div>
 
-      <div className="bg-ws-gray-30 py-8 px-6 border border-ws-primary-100 rounded-2xl">
+      <div className="bg-ws-gray-30 py-8 px-6 border border-ws-border-primary rounded-2xl">
         {/* <Badge
         {/* <Badge
           type="pill-color"
@@ -249,7 +244,7 @@ export default function RecommendationsPage() {
           )}
         </div>
         <div className="w-full mt-6">
-          <div className="bg-ws-primary-50 flex gape-4 rounded-xl max-h-33 ring-1 ring-ws-primary-100">
+          <div className="bg-ws-primary-50 flex gape-4 rounded-xl max-h-33 ring-1 ring-ws-border-primary">
             <div className="">
               <img
                 src={didHeroImg}
