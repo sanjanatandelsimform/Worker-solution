@@ -52,14 +52,14 @@ export const InProgressModal = ({
             aria-label="Close modal"
             className="absolute right-3 top-3 flex size-11 items-center justify-center overflow-clip p-2 rounded-lg"
           >
-            <X className="size-6 text-ws-black-10" />
+            <X className="size-6 text-ws-text-tertiary" />
           </Button> */}
 
           <div className="flex w-full flex-col gap-1">
             <ModalTitle className="text-[36px] font-medium leading-11 tracking-[-0.72px] font-display text-ws-black">
               {title}
             </ModalTitle>
-            <p className="text-sm font-normal leading-5 font-body text-ws-black-10">{subtitle}</p>
+            <p className="text-sm font-normal leading-5 font-body text-ws-text-tertiary">{subtitle}</p>
           </div>
 
           <div className="h-5 w-full shrink-0" />

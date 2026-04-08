@@ -81,8 +81,8 @@ export const SuccessPage: React.FC<SuccessCardProps> = ({
   };
 
   return (
-    <div className={`flex min-h-screen items-center justify-center bg-ws-primary-200 ${classess}`}>
-      <div className="flex w-2xl items-center justify-center rounded-xl border border-ws-primary-100 bg-ws-white py-22">
+    <div className={`flex min-h-screen items-center justify-center bg-ws-light-teal-50 ${classess}`}>
+      <div className="flex w-2xl items-center justify-center rounded-xl border border-ws-border-primary bg-ws-base-white py-22">
         <div className="flex w-full max-w-lg flex-col items-center gap-8">
           {/* Header */}
           <div className="flex w-full flex-col items-center gap-6">
@@ -94,16 +94,16 @@ export const SuccessPage: React.FC<SuccessCardProps> = ({
               <img
                 src={successImageSrc || state.messageImg || insightHero}
                 alt="Success"
-                className="w-full"
+                className="max-w-40"
               />
             </div>
 
             {/* Title and Description */}
             <div className="flex flex-col w-full items-center justify-center text-center">
-              <h2 className="w-full text-ws-black-50 text-4xl font-medium">
+              <h2 className="w-full text-ws-text-primary text-4xl font-medium">
                 {title || state.title || "Account created successfully!"}
               </h2>
-              <p className="max-w-md text-2xl font-normal leading-8 text-ws-gray-80 mt-2">
+              <p className="max-w-md text-2xl font-normal leading-8 text-ws-text-tertiary mt-2">
                 {descriptionText ||
                   state.subtitle ||
                   "Welcome aboard! Start your success journey with BeneStats"}
@@ -112,7 +112,7 @@ export const SuccessPage: React.FC<SuccessCardProps> = ({
             <Button
               color="primary"
               size="lg"
-              className="mt-4 bg-ws-primary-900 text-ws-white hover:bg-ws-primary-900-hover focus:bg-ws-primary-900-hover active:bg-ws-primary-900-hover"
+              className="w-auto bg-ws-navy-800"
               onClick={handleButtonClick}
             >
               {buttonLabel || state.buttonText || "Let's Get Started"}

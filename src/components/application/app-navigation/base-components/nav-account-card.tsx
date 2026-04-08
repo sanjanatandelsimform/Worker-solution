@@ -101,14 +101,14 @@ export const NavAccountMenu = ({
         className
       )}
     >
-      <div className="rounded-xl bg-ws-white ring-1 ring-secondary">
+      <div className="rounded-xl bg-ws-base-white ring-1 ring-secondary">
         <div className="flex flex-col gap-0.5 py-1.5">
           <NavAccountCardMenuItem label="View profile" icon={User01} shortcut="⌘K->P" />
           <NavAccountCardMenuItem label="Account settings" icon={Settings01} shortcut="⌘S" />
           <NavAccountCardMenuItem label="Documentation" icon={BookOpen01} />
         </div>
         <div className="flex flex-col gap-0.5 border-t border-secondary py-1.5">
-          <div className="px-3 pt-1.5 pb-1 text-xs font-semibold text-ws-black-10">
+          <div className="px-3 pt-1.5 pb-1 text-xs font-semibold text-ws-text-tertiary">
             Switch account
           </div>
 
@@ -181,7 +181,7 @@ const NavAccountCardMenuItem = ({
         </div>
 
         {shortcut && (
-          <kbd className="flex rounded px-1 py-px font-body text-xs font-medium text-ws-black-10 ring-1 ring-secondary ring-inset">
+          <kbd className="flex rounded px-1 py-px font-body text-xs font-medium text-ws-text-tertiary ring-1 ring-secondary ring-inset">
             {shortcut}
           </kbd>
         )}

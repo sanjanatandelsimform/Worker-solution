@@ -13,6 +13,7 @@ import siteLogo from "@/assets/logo.svg";
 import { SuccessModalWithLogo } from "../modals/SuccessModalWithLogo";
 import ErrorMessage from "../common/ErrorMessage";
 import { getErrorState, type ErrorState } from "@/utils/errorHandler";
+import { Label } from "../base/input/label";
 
 export default function ResetPasswordForm() {
   const [showPassword, setShowPassword] = useState(false);
@@ -65,8 +66,8 @@ export default function ResetPasswordForm() {
     navigate("/sign-in");
   };
   return (
-    <div className="flex min-h-screen items-center justify-center bg-ws-primary-200">
-      <div className="flex w-2xl items-center justify-center rounded-xl border border-ws-primary-100 bg-ws-white py-22">
+    <div className="flex min-h-screen items-center justify-center bg-ws-light-teal-50">
+      <div className="flex w-2xl items-center justify-center rounded-xl border border-ws-border-primary bg-ws-base-white py-22">
         <div className="flex w-full max-w-md flex-col items-center gap-8">
           {/* Header */}
           <div className="flex w-full flex-col items-center gap-6">
@@ -80,7 +81,7 @@ export default function ResetPasswordForm() {
               <h2 className="w-full text-3xl font-semibold leading-9.5 text-ws-black">
                 Reset Password
               </h2>
-              <p className="w-full text-medium font-normal leading-6 text-ws-black-10">
+              <p className="w-full text-medium font-normal leading-6 text-ws-text-tertiary">
                 Please enter a new password below.
               </p>
             </div>
@@ -95,9 +96,9 @@ export default function ResetPasswordForm() {
               {/* New Password Input Field */}
               <InputGroup className="relative">
                 <div className="flex flex-col gap-1.5 w-full">
-                  <label className="text-sm font-medium text-ws-black-20">
-                    Password <span className="text-red-500">*</span>
-                  </label>
+                  <Label className="text-sm font-medium text-ws-text-secondary">
+                    Password <span className="text-ws-error-600">*</span>
+                  </Label>
                   <Input
                     name="newPassword"
                     placeholder="Password"
@@ -124,9 +125,9 @@ export default function ResetPasswordForm() {
                     {!errors.newPassword && (
                       <>
                         {showPassword ? (
-                          <Eye className="size-5 text-ws-gray-70" />
+                          <Eye className="size-5 text-ws-gray-400" />
                         ) : (
-                          <EyeOff className="size-5 text-ws-gray-70" />
+                          <EyeOff className="size-5 text-ws-gray-400" />
                         )}
                       </>
                     )}
@@ -137,9 +138,9 @@ export default function ResetPasswordForm() {
               {/* Confirm Password Input Field */}
               <InputGroup className="relative">
                 <div className="flex flex-col gap-1.5 w-full">
-                  <label className="text-sm font-medium text-ws-black-20">
-                    Confirm Password <span className="text-red-500">*</span>
-                  </label>
+                  <Label className="text-sm font-medium text-ws-text-secondary">
+                    Confirm Password <span className="text-ws-error-600">*</span>
+                  </Label>
                   <Input
                     name="confirmPassword"
                     placeholder="Confirm Password"
@@ -166,9 +167,9 @@ export default function ResetPasswordForm() {
                     {!errors.confirmPassword && (
                       <>
                         {showConfirmPassword ? (
-                          <Eye className="size-5 text-ws-gray-70" />
+                          <Eye className="size-5 text-ws-gray-400" />
                         ) : (
-                          <EyeOff className="size-5 text-ws-gray-70" />
+                          <EyeOff className="size-5 text-ws-gray-400" />
                         )}
                       </>
                     )}
@@ -193,7 +194,7 @@ export default function ResetPasswordForm() {
                   color="primary"
                   size="lg"
                   isDisabled={isSubmitting || !resetToken}
-                  className="w-full bg-ws-primary-900 text-ws-white hover:bg-ws-primary-900-hover focus:bg-ws-primary-900-hover active:bg-ws-primary-900-hover"
+                  className="w-full"
                 >
                   {isSubmitting ? "Resetting..." : "Save password"}
                 </Button>
@@ -203,14 +204,14 @@ export default function ResetPasswordForm() {
 
           {/* Sign in link */}
           <div className="flex w-full items-baseline justify-center gap-1">
-            <p className="text-sm font-normal leading-5 text-ws-black-10">
+            <p className="text-sm font-normal leading-5 text-ws-text-tertiary">
               Remember your password?
             </p>
             <Button
               href="/sign-in"
               color="link-color"
               size="md"
-              className="text-ws-primary-500 font-bold"
+              className="text-ws-primary-light-teal-850 font-bold"
             >
               Sign in
             </Button>

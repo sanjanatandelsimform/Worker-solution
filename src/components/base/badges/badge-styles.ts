@@ -11,7 +11,7 @@ export const filledColors: Record<
     addonButton: "hover:bg-gray-100 text-ws-gray-70 hover:text-ws-gray-100",
   },
   brand: {
-    root: "bg-ws-white text-ws-black ring-ws-primary-100",
+    root: "bg-ws-base-white text-ws-black ring-ws-border-primary",
     addon: "text-utility-brand-500",
     addonButton: "hover:bg-utility-brand-100 text-utility-brand-400 hover:text-utility-brand-500",
   },
@@ -96,7 +96,7 @@ export const withPillTypes = {
     common: "size-max flex items-center whitespace-nowrap rounded-md ring-1 ring-inset shadow-xs",
     styles: {
       gray: {
-        root: "bg-ws-white text-secondary ring-primary",
+        root: "bg-ws-base-white text-secondary ring-primary",
         addon: "text-ws-gray-100",
         addonButton: "hover:bg-utility-gray-100 text-utility-gray-400 hover:text-utility-gray-500",
       },
@@ -115,7 +115,7 @@ export const withBadgeTypes = {
   },
   [badgeTypes.badgeModern]: {
     common:
-      "size-max flex items-center whitespace-nowrap rounded-md ring-1 ring-inset bg-ws-white text-secondary ring-primary shadow-xs",
+      "size-max flex items-center whitespace-nowrap rounded-md ring-1 ring-inset bg-ws-base-white text-secondary ring-primary shadow-xs",
     styles: addonOnlyColors,
   },
 };

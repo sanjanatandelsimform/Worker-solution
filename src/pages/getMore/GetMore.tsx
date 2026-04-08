@@ -67,8 +67,8 @@ export default function GetMore() {
 
       {/* Plan Title and Price */}
       <div className="flex flex-1 items-center justify-between gap-4">
-        <span className="text-lg font-medium text-ws-black-20">{plan.name}</span>
-        <span className="cursor-pointer text-base font-normal text-ws-black-10 hover:text-ws-black-20">
+        <span className="text-lg font-medium text-ws-text-secondary">{plan.name}</span>
+        <span className="cursor-pointer text-base font-normal text-ws-text-tertiary hover:text-ws-text-secondary">
           {plan.price}
         </span>
       </div>
@@ -116,7 +116,7 @@ export default function GetMore() {
   };
 
   return (
-    <div className="flex min-h-screen flex-col bg-ws-gray-50">
+    <div className="flex min-h-screen flex-col bg-ws-navy-25">
       {/* Top Navigation Bar */}
       <div className="flex h-14 items-center justify-between border-b border-ws-primary-600 px-6 py-4">
         {/* Back Button */}
@@ -144,7 +144,7 @@ export default function GetMore() {
       <div className="mx-auto w-full flex-1 py-8 px-4">
         {/* Header Section */}
         <div className="mx-auto w-full max-w-2xl text-center mt-25">
-          <h1 className="text-4xl font-semibold tracking-tight text-ws-black-90">
+          <h1 className="text-4xl font-semibold tracking-tight text-ws-text-primary">
             Get more from BeneStats
           </h1>
           <p className="text-lg font-normal text-ws-black mt-2">
@@ -166,12 +166,12 @@ export default function GetMore() {
       </div>
 
       {/* Bottom Navigation Bar */}
-      <div className="flex items-center justify-end border-t border-ws-primary-100 bg-ws-white px-6 py-2.5">
+      <div className="flex items-center justify-end border-t border-ws-border-primary bg-ws-base-white px-6 py-2.5">
         <Button
           color="primary"
           size="md"
           onClick={handleGetStarted}
-          className="min-w-30 bg-ws-primary-900 text-ws-white hover:bg-ws-primary-900-hover focus:bg-ws-primary-900-hover active:bg-ws-primary-900-hover"
+          className="min-w-30 bg-ws-primary-900 text-ws-base-white hover:bg-ws-primary-900-hover focus:bg-ws-primary-900-hover active:bg-ws-primary-900-hover"
         >
           Let's Get Started
         </Button>

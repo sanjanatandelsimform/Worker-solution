@@ -73,7 +73,7 @@ function DesignReference() {
   ];
 
   return (
-    <div className="min-h-screen bg-ws-white text-ws-black transition-colors">
+    <div className="min-h-screen bg-ws-base-white text-ws-black transition-colors">
       <div className="container mx-auto p-8">
         {/* Demo Section for Untitled UI Inputs */}
         <div className="mt-8 space-y-6">
@@ -524,7 +524,7 @@ function DesignReference() {
           <h2 className="text-2xl font-bold">Change Password Modal Component</h2>
           <div className="space-y-4">
             <div className="space-y-3">
-              <p className="text-sm text-ws-black-10">
+              <p className="text-sm text-ws-text-tertiary">
                 Click the button below to open the Change Password modal with form validation.
               </p>
               <Button color="primary" size="md" onClick={() => setIsChangePasswordModalOpen(true)}>
@@ -641,12 +641,12 @@ function DesignReference() {
                         <div className="flex flex-col gap-2">
                           {/* Header with Icon and Title */}
                           <div className="flex items-center gap-2">
-                            <Lightbulb02 className="size-6 text-ws-black-90" />
-                            <h3 className="text-lg font-medium leading-7 text-ws-black-90">
+                            <Lightbulb02 className="size-6 text-ws-text-primary" />
+                            <h3 className="text-lg font-medium leading-7 text-ws-text-primary">
                               Did you know?
                             </h3>
                           </div>
-                          <p className="text-base font-normal text-ws-black-90 leading-6">
+                          <p className="text-base font-normal text-ws-text-primary leading-6">
                             {slide.content}
                           </p>
                         </div>
@@ -656,7 +656,7 @@ function DesignReference() {
                 </Carousel.Content>
 
                 {/* Navigation Controls - Fixed position, doesn't slide */}
-                <div className="flex items-center justify-center gap-2 border rounded-md px-2 py-1 w-fit bg-ws-white border-gray-200 mx-auto">
+                <div className="flex items-center justify-center gap-2 border rounded-md px-2 py-1 w-fit bg-ws-base-white border-gray-200 mx-auto">
                   {/* Previous Button */}
                   <Carousel.PrevTrigger asChild>
                     <button
@@ -887,14 +887,14 @@ const BenchmarkChart = () => {
 
   if (!mounted) {
     return (
-      <div className="bg-ws-white border border-gray-200 min-h-90 rounded-xl p-6 flex items-center justify-center">
-        <p className="text-ws-black-10">Loading chart...</p>
+      <div className="bg-ws-base-white border border-gray-200 min-h-90 rounded-xl p-6 flex items-center justify-center">
+        <p className="text-ws-text-tertiary">Loading chart...</p>
       </div>
     );
   }
 
   return (
-    <div className="bg-ws-white border border-gray-200 rounded-xl p-6 flex flex-col gap-8">
+    <div className="bg-ws-base-white border border-gray-200 rounded-xl p-6 flex flex-col gap-8">
       {/* Charts Container */}
       <div className="flex gap-8 items-center justify-center">
         {/* Salary Chart */}

@@ -50,20 +50,20 @@ export default function CarouselSection() {
             align: "start",
           }}
         >
-          <div className="space-y-6 bg-ws-gray-30 border border-ws-primary-100 rounded-xl p-4">
+          <div className="space-y-6 bg-ws-light-teal-25 border border-ws-border-primary rounded-xl p-4">
             {/* Carousel Content - Only this slides */}
             <Carousel.Content>
               {didYouKnowSlides.map(slide => (
                 <Carousel.Item key={slide.id}>
                   <div className="flex flex-col gap-2">
                     {/* Header with Icon and Title */}
-                    <div className="flex items-center gap-2 text-lg text-ws-gray-700 font-medium">
+                    <div className="flex items-center gap-2 text-lg text-ws-navy-950 font-medium">
                       {slide.icon}
-                      <h3 className="text-lg font-medium leading-7 text-ws-gray-700">
+                      <h3 className="text-lg font-medium leading-7 text-ws-navy-950">
                         {slide.title}
                       </h3>
                     </div>
-                    <p className="text-base font-normal text-ws-primary-900 leading-6">
+                    <p className="text-base font-normal text-ws-navy-900 leading-6">
                       {slide.content}
                     </p>
                   </div>
@@ -72,7 +72,7 @@ export default function CarouselSection() {
             </Carousel.Content>
 
             {/* Navigation Controls - Fixed position, doesn't slide */}
-            <div className="bg-ws-gray-50 flex items-center justify-center gap-2 border border-ws-gray-40 rounded-2xl px-3 py-2 w-fit">
+            <div className="bg-ws-navy-25 flex items-center justify-center gap-2 border border-ws-gray-200 rounded-2xl px-3 py-2 w-fit">
               {/* Previous Button */}
               <Carousel.PrevTrigger asChild>
                 <Button
@@ -91,7 +91,7 @@ export default function CarouselSection() {
                       <div
                         className={cx(
                           "size-2 rounded transition-colors cursor-pointer",
-                          isSelected ? "bg-ws-primary-400" : "bg-ws-gray-40"
+                          isSelected ? "bg-ws-navy-700" : "bg-ws-gray-200"
                         )}
                       />
                     )}

@@ -257,7 +257,7 @@ export default function WageBarChart({ data, width, height = 350 }: CanvasChartP
     data.some(item => item.industryAverage > 0 || item.yourCompany > 0 || item.nationalAverage > 0);
 
   return (
-    <div className="flex w-full flex-col rounded-xl border border-ws-primary-100 bg-ws-white p-6">
+    <div className="flex w-full flex-col rounded-xl border border-ws-border-primary bg-ws-base-white p-6">
       <figure
         ref={containerRef}
         aria-label="Wage comparison bar chart"
@@ -272,7 +272,7 @@ export default function WageBarChart({ data, width, height = 350 }: CanvasChartP
         />
         {tooltip && (
           <div
-            className="pointer-events-none absolute rounded-lg border border-ws-gray-50 bg-ws-white px-3 py-2 shadow-lg"
+            className="pointer-events-none absolute rounded-lg border border-ws-border-primary bg-ws-base-white px-3 py-2 shadow-lg"
             style={{
               left: tooltip.x > canvasWidth * 0.65 ? `${tooltip.x - 10}px` : `${tooltip.x + 10}px`,
               top: `${tooltip.y - 10}px`,
@@ -281,7 +281,7 @@ export default function WageBarChart({ data, width, height = 350 }: CanvasChartP
               minWidth: "max-content",
             }}
           >
-            <p className="mb-1 text-sm font-medium text-ws-black-90 whitespace-nowrap">
+            <p className="mb-1 text-sm font-medium text-ws-text-primary">
               {tooltip.label}
             </p>
             <div className="flex items-center gap-2">
@@ -289,7 +289,7 @@ export default function WageBarChart({ data, width, height = 350 }: CanvasChartP
                 className="h-3 w-3 shrink-0 rounded"
                 style={{ backgroundColor: tooltip.color }}
               />
-              <span className="text-sm text-ws-black-90 whitespace-nowrap">
+              <span className="text-sm text-ws-text-primary">
                 {tooltip.barName}: {formatCurrencyWithCents(tooltip.value)}
               </span>
             </div>

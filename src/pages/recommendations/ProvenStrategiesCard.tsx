@@ -11,12 +11,12 @@ export default function ProvenStrategiesCard({
   className,
 }: Readonly<ProvenStrategiesCardProps>) {
   return (
-    <div className={`bg-ws-green-20 ring ring-ws-gray-40 rounded-xl p-4 min-h-48 ${className}`}>
-      <h2 className="flex items-center justify-between text-xl text-ws-black-20 font-bold gap-2">
+    <div className={`bg-ws-success-25 ring ring-ws-border-secondary rounded-xl p-4 min-h-48 ${className}`}>
+      <h2 className="flex items-center justify-between text-xl text-ws-text-secondary font-bold gap-2">
         {title}
         <span>{titleIcon}</span>
       </h2>
-      <p className="text-base text-ws-black-90 mt-3">{descriptionText}</p>
+      <p className="text-base text-ws-text-primary mt-3">{descriptionText}</p>
     </div>
   );
 }

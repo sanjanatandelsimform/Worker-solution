@@ -1,5 +1,6 @@
 import { Avatar } from "@/components/base/avatar/avatar";
 import { Button } from "@/components/base/buttons/button";
+import { cx } from "@/utils/cx";
 
 export interface DashboardCardProps {
   title: string;
@@ -13,6 +14,7 @@ export interface DashboardCardProps {
   descriptionClass?: string;
   toggleButton?: boolean;
   toggleAvatar?: boolean;
+  avatarClassName?: string;
   onClick?: () => void;
 }
 
@@ -28,15 +30,16 @@ export default function DashboardCard({
   descriptionClass = "",
   toggleButton = true,
   toggleAvatar = false,
+  avatarClassName = "",
   onClick,
 }: Readonly<DashboardCardProps>) {
-  // Only apply default bg-ws-white if classes don't provide a background color
+  // Only apply default bg-ws-base-white if classes don't provide a background color
   const hasBgClass = /\bbg-/.test(classes);
-  const backgroundColor = hasBgClass ? "" : "bg-ws-white";
+  const backgroundColor = hasBgClass ? "" : "bg-ws-base-white";
 
   return (
     <div
-      className={`mt-6 border border-ws-primary-100 rounded-xl p-4 ${backgroundColor} flex gap-4 justify-between items-center flex-col lg:flex-row ${classes}`}
+      className={`mt-6 border border-ws-border-primary rounded-xl p-4 ${backgroundColor} flex gap-4 justify-between items-center flex-col lg:flex-row ${classes}`}
     >
       <div className="flex items-center gap-4 xl:flex-row">
         {toggleAvatar &&
@@ -45,10 +48,10 @@ export default function DashboardCard({
               size="xl"
               alt="email"
               src={avatarIconSrc}
-              className="w-15 h-15 bg-ws-green-30 outline-0 flex items-center justify-center"
+              className={cx("w-15 h-15 bg-ws-green-30 outline-0 flex items-center justify-center", avatarClassName)}
             />
           ) : (
-            <div className="w-15 h-15 bg-ws-green-30 rounded-full flex items-center justify-center">
+            <div className={cx("w-15 h-15 bg-ws-green-30 rounded-full flex items-center justify-center", avatarClassName)}>
               {avatarIconSrc}
             </div>
           ))}
@@ -64,7 +67,7 @@ export default function DashboardCard({
             size="sm"
             isDisabled={buttonIsDisabled}
             onClick={onClick}
-            className="bg-ws-primary-900 text-ws-white hover:bg-ws-primary-900-hover focus:bg-ws-primary-900-hover active:bg-ws-primary-900-hover min-w-30"
+            className="bg-ws-navy-900 text-ws-base-white hover:bg-ws-navy-900-hover focus:bg-ws-navy-900-hover active:bg-ws-navy-900-hover min-w-30"
           >
             {buttonLabel}
           </Button>

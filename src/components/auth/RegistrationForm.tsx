@@ -18,6 +18,7 @@ import { NativeSelect } from "@/components/base/select/select-native";
 import { COUNTRY_CODES } from "@/constants/formOptions";
 import { Button } from "@/components/base/buttons/button";
 import ErrorMessage from "@/components/common/ErrorMessage";
+import { Label } from "../base/input/label";
 
 export function RegistrationForm() {
   const dispatch = useAppDispatch();
@@ -181,19 +182,19 @@ export function RegistrationForm() {
     }
   };
   return (
-    <div className="flex min-h-screen items-center justify-center md:p-8 bg-ws-primary-200">
+    <div className="flex min-h-screen items-center justify-center bg-ws-light-teal-50">
       {/* Container */}
-      <div className="flex w-3xl items-center justify-center rounded-xl border border-ws-primary-100 bg-ws-white p-10">
+      <div className="flex w-3xl items-center justify-center rounded-xl border border-ws-border-primary bg-ws-base-white p-10">
         {/* Content */}
         <div className="flex w-full flex-col items-center">
           {/* Logo */}
           <div className="flex items-center justify-center px-2 py-1">
-            <h1 className="text-3xl font-bold leading-15 text-ws-black">Sign up</h1>
+            <h1 className="text-3xl font-semibold leading-15 text-ws-text-primary">Sign up</h1>
           </div>
 
           {/* Header */}
           <div className="flex w-full flex-col items-start gap-2">
-            <p className="w-full flex items-center justify-center text-center font-normal text-lg/7 leading-6 text-ws-black-10">
+            <p className="w-full flex items-center justify-center text-center font-normal text-lg text-ws-text-secondary">
               We’re excited that you’ve decided to try our BeneStats platform. Before we begin we’ll
               need to collect some information about your business.
             </p>
@@ -206,9 +207,9 @@ export function RegistrationForm() {
               {/* Row 1 - First Name & Last Name */}
               <InputGroup>
                 <div className="flex flex-col gap-1.5 w-full">
-                  <label className="text-sm font-medium text-ws-black-20">
-                    First Name <span className="text-red-500">*</span>
-                  </label>
+                  <Label className="text-sm font-medium text-ws-text-secondary">
+                    First Name <span className="text-ws-error-600">*</span>
+                  </Label>
                   <Input
                     name="firstName"
                     size="md"
@@ -229,9 +230,9 @@ export function RegistrationForm() {
               </InputGroup>
               <InputGroup>
                 <div className="flex flex-col gap-1.5 w-full">
-                  <label className="text-sm font-medium text-ws-black-20">
-                    Last Name <span className="text-red-500">*</span>
-                  </label>
+                  <Label className="text-sm font-medium text-ws-text-secondary">
+                    Last Name <span className="text-ws-error-600">*</span>
+                  </Label>
                   <Input
                     name="lastName"
                     size="md"
@@ -254,9 +255,9 @@ export function RegistrationForm() {
               {/* Row 2 - Legal Business Name & Industry */}
               <InputGroup>
                 <div className="flex flex-col gap-1.5 w-full">
-                  <label className="text-sm font-medium text-ws-black-20">
-                    Legal Business Name <span className="text-red-500">*</span>
-                  </label>
+                  <Label className="text-sm font-medium text-ws-text-secondary">
+                    Legal Business Name <span className="text-ws-error-600">*</span>
+                  </Label>
                   <Input
                     name="legalBusinessName"
                     size="md"
@@ -278,9 +279,9 @@ export function RegistrationForm() {
                 </div>
               </InputGroup>
               <div className="flex flex-col gap-1.5 w-full">
-                <label className="text-sm font-medium text-ws-black-20">
-                  Business Phone Number <span className="text-red-500">*</span>
-                </label>
+                <Label className="text-sm font-medium text-ws-text-secondary">
+                  Business Phone Number <span className="text-ws-error-600">*</span>
+                </Label>
                 <InputGroup
                   className={errors.businessPhone ? "error-ring" : "col-start-2"}
                   // label="Business Phone Number"
@@ -316,14 +317,14 @@ export function RegistrationForm() {
               {/* Row 3 - Zip Code & (empty space for layout) */}
               <InputGroup>
                 <div className="flex flex-col gap-1.5 w-full">
-                  <label className="text-sm font-medium text-ws-black-20">
-                    Zip Code <span className="text-red-500">*</span>
-                  </label>
+                  <Label className="text-sm font-medium text-ws-text-secondary">
+                    Zip Code <span className="text-ws-error-600">*</span>
+                  </Label>
                   <Input
                     name="zipCode"
                     size="md"
                     hint={errors.zipCode?.message}
-                    placeholder=""
+                    placeholder="01234"
                     isInvalid={!!errors.zipCode}
                     value={zipCode}
                     maxLength={5}
@@ -343,9 +344,9 @@ export function RegistrationForm() {
               </InputGroup>
               <InputGroup isRequired>
                 <div className="flex flex-col gap-1.5 w-full">
-                  <label className="text-sm font-medium text-ws-black-20">
-                    Select Your Industry <span className="text-red-500">*</span>
-                  </label>
+                  <Label className="text-sm font-medium text-ws-text-secondary">
+                    Select Your Industry <span className="text-ws-error-600">*</span>
+                  </Label>
                   <Select
                     className="w-full flex items-start"
                     size="md"
@@ -390,15 +391,16 @@ export function RegistrationForm() {
               {/* Row 4 - Business Email & Business Phone */}
               <InputGroup className="col-start-1 w-full block">
                 <div className="flex flex-col gap-1.5 w-full">
-                  <label className="text-sm font-medium text-ws-black-20">
-                    Business Email Address <span className="text-red-500">*</span>
-                  </label>
+                  <Label className="text-sm font-medium text-ws-text-secondary">
+                    Work Email Address <span className="text-ws-error-600">*</span>
+                  </Label>
                   <Input
                     name="businessEmail"
                     size="md"
                     hint={errors.businessEmail?.message}
-                    placeholder="olivia@untitledui.com"
+                    placeholder="email@email.com"
                     icon={Mail01}
+                    iconClassName="text-ws-gray-400"
                     isInvalid={!!errors.businessEmail}
                     value={businessEmail}
                     className={errors.businessEmail ? "error-ring" : ""}
@@ -417,9 +419,9 @@ export function RegistrationForm() {
               {/* Row 5 - Password & Confirm Password */}
               <InputGroup className="relative">
                 <div className="flex flex-col gap-1.5 w-full">
-                  <label className="text-sm font-medium text-ws-black-20">
-                    Password <span className="text-red-500">*</span>
-                  </label>
+                  <Label className="text-sm font-medium text-ws-text-secondary">
+                    Password <span className="text-ws-error-600">*</span>
+                  </Label>
                   <Input
                     name="password"
                     hint={errors.password?.message}
@@ -450,9 +452,9 @@ export function RegistrationForm() {
                   {!errors.password && (
                     <>
                       {showPassword ? (
-                        <Eye className="size-5 text-ws-gray-70" />
+                        <Eye className="size-5 text-ws-gray-400" />
                       ) : (
-                        <EyeOff className="size-5 text-ws-gray-70" />
+                        <EyeOff className="size-5 text-ws-gray-400" />
                       )}
                     </>
                   )}
@@ -461,9 +463,9 @@ export function RegistrationForm() {
 
               <InputGroup className="relative">
                 <div className="flex flex-col gap-1.5 w-full">
-                  <label className="text-sm font-medium text-ws-black-20">
-                    Confirm Password <span className="text-red-500">*</span>
-                  </label>
+                  <Label className="text-sm font-medium text-ws-text-secondary">
+                    Confirm Password <span className="text-ws-error-600">*</span>
+                  </Label>
                   <Input
                     name="confirmPassword"
                     hint={errors.confirmPassword?.message}
@@ -494,9 +496,9 @@ export function RegistrationForm() {
                   {!errors.password && (
                     <>
                       {showConfirmPassword ? (
-                        <Eye className="size-5 text-ws-gray-70" />
+                        <Eye className="size-5 text-ws-gray-400" />
                       ) : (
-                        <EyeOff className="size-5 text-ws-gray-70" />
+                        <EyeOff className="size-5 text-ws-gray-400" />
                       )}
                     </>
                   )}
@@ -507,14 +509,14 @@ export function RegistrationForm() {
             {/* Agreement Section */}
             <div className="col-span-2 mt-6 flex items-center flex-col justify-center gap-2">
               <div className="flex gap-2 items-start">
-                <p className="text-sm font-normal leading-5 text-ws-black">
+                <p className="text-sm font-normal leading-5 text-ws-text-secondary">
                   By clicking Create Account, you are confirming that you have read and agree to the
                   BeneStats{" "}
-                  <Link to="/terms-page" className="cursor-pointer text-ws-primary-500">
+                  <Link to="/terms-page" className="cursor-pointer text-ws-light-teal-850 underline">
                     Terms
                   </Link>{" "}
                   and{" "}
-                  <Link to="/privacy-policy" className="cursor-pointer text-ws-primary-500">
+                  <Link to="/privacy-policy" className="cursor-pointer text-ws-light-teal-850 underline">
                     Privacy Policies
                   </Link>
                 </p>
@@ -541,16 +543,16 @@ export function RegistrationForm() {
                 type="submit"
                 color="primary"
                 size="lg"
-                className="w-full bg-ws-primary-900 text-ws-white hover:bg-ws-primary-900-hover focus:bg-ws-primary-900-hover active:bg-ws-primary-900-hover"
+                className="w-full"
                 isDisabled={isSubmitting}
               >
                 {isSubmitting ? "Creating account..." : "Create Account"}
               </Button>
 
               {/* Sign in link */}
-              <p className="text-sm font-normal leading-5 text-ws-black">
+              <p className="text-sm font-normal leading-5 text-ws-text-secondary">
                 Already have an account?{" "}
-                <Link to="/sign-in" className="font-bold text-ws-primary-500">
+                <Link to="/sign-in" className="font-normal underline text-ws-light-teal-850">
                   Sign in
                 </Link>
               </p>

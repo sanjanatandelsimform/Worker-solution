@@ -30,12 +30,14 @@ export default function StaticCard({
   countIcon,
 }: Readonly<StaticCardProps>) {
   return (
-    <div className={`bg-ws-white w-full ring ring-ws-primary-100 rounded-xl py-5 px-6 ${classess}`}>
+    <div className={`bg-ws-base-white w-full ring ring-ws-border-secondary rounded-xl py-5 px-6 ${classess}`}>
+      <div className="flex items-center justify-between">
       <p
-        className={`flex items-center, text-base gap-2 justify-${itemAlign || "start"} ${titleClass}`}
+        className={`text-ws-text-tertiary flex items-center, text-base gap-2 justify-${itemAlign || "start"} ${titleClass}`}
       >
         {title}
-        <span>
+      </p>
+      <span>
           {infoIcon ? (
             <Tooltip
               title={tooltipText || ""}
@@ -44,18 +46,18 @@ export default function StaticCard({
               arrow={true}
             >
               <TooltipTrigger className="group relative flex cursor-pointer flex-col items-center gap-2 text-fg-quaternary transition duration-100 ease-linear hover:text-fg-quaternary_hover focus:text-fg-quaternary_hover">
-                <InfoCircle className={`size-5 ${infoCircleClass}`} />
+                <InfoCircle className={`text-ws-gray-400 ${infoCircleClass}`} />
               </TooltipTrigger>
             </Tooltip>
           ) : (
             ""
           )}
         </span>
-      </p>
+      </div>
       <div className="flex items-end gap-2 justify-between">
         <h2 className={`w-full ${countClass}`}>
           {count === "N/A" ? (
-            <span className="mt-4 text-sm font-medium text-ws-black-10">No data available</span>
+            <span className="mt-4 text-base font-medium text-ws-text-tertiary">No data available</span>
           ) : (
             count
           )}
