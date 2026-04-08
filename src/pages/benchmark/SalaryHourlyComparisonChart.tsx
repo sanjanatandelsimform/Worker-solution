@@ -26,13 +26,17 @@ export default function SalaryHourlyComparisonChart({
       <div className="grid grid-cols-2 gap-8">
         {/* Salary Card */}
         <div className="flex flex-col">
-          <h3 className="w-full flex items-center justify-center text-lg font-medium text-ws-black-90">Salary</h3>
+          <h3 className="w-full flex items-center justify-center text-lg font-medium text-ws-black-90">
+            Salary
+          </h3>
           <SalaryChart data={salaryData} width={500} height={350} />
         </div>
 
         {/* Hourly Card */}
         <div className="flex flex-col">
-          <h3 className="w-full flex items-center justify-center text-lg font-medium text-ws-black-90">Hourly</h3>
+          <h3 className="w-full flex items-center justify-center text-lg font-medium text-ws-black-90">
+            Hourly
+          </h3>
           <HourlyChart data={hourlyData} width={500} height={350} />
         </div>
       </div>

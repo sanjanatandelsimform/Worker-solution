@@ -215,7 +215,7 @@ export default function AdditionalQuestions() {
   });
 
   const handleBack = () => {
-    navigate("/get-more");
+    navigate("/dashboard");
   };
 
   const handleClose = () => {

@@ -16,7 +16,10 @@ import { fetchUserById } from "@/store/slices/userSlice";
 import { resendVerificationEmail } from "@/store/slices/profileSlice";
 import { selectProfileError } from "@/store/selectors/profileSelectors";
 import { useModalConfig } from "@/hooks/useModalConfig";
+import fpoHero from "@/assets/fpo-hero-image.png";
 import { useAssessmentStatus } from "@/hooks/useAssessmentStatus";
+import { useFinchConnect } from "@/hooks/useFinchConnect";
+import { useFinchStatus } from "@/hooks/useFinchStatus";
 import { Tabs } from "@/components/base/tabs/tabs";
 import RecommendationsPage from "../recommendations/RecommendationsPage";
 import BenchmarkPage from "../benchmark/BenchmarkPage";
@@ -33,6 +36,13 @@ export const DashboardPage = () => {
   const user = useAppSelector(selectUser);
   const dispatch = useAppDispatch();
   const profileError = useAppSelector(selectProfileError);
+  const {
+    connectWithFinch,
+    isLoading: isFinchLoading,
+    error: finchError,
+    clearError: clearFinchError,
+  } = useFinchConnect();
+  const { isConnected } = useFinchStatus();
 
   const emailVerify = user?.emailVerify || false;
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
@@ -337,10 +347,6 @@ export const DashboardPage = () => {
     navigate("/assessment");
   };
 
-  const handleFinchStarted = () => {
-    navigate("/additional-questions");
-  };
-
   return (
     <div className="flex h-screen overflow-hidden bg-ws-white">
       {/* Sidebar */}
@@ -405,11 +411,11 @@ export const DashboardPage = () => {
               </div>
             )}
 
-            {/* {assessmentData?.status !== "completed" && (
+            {completionCount > 0 && emailVerify && assessmentData?.status !== "completed" && (
               <div className="mt-6 border border-ws-primary-100 rounded-xl p-4 bg-ws-primary-50 shadow-sm flex gap-4 justify-between flex-col lg:flex-row">
                 <div className="flex-1">
                   <h2 className="text-ws-primary-900 text-3xl font-normal mb-2">
-                    Thanks for signing up.
+                    Complete your assessment
                   </h2>
                   <p className="text-ws-primary-900 text-base pr-10">
                     Pick up where you left off and complete your company assessment for results and
@@ -420,7 +426,7 @@ export const DashboardPage = () => {
                   <img src={fpoHero} alt="Insight hero" className="w-full" />
                 </div>
               </div>
-            )} */}
+            )}
 
             {!emailVerify && (
               <DashboardCard
@@ -450,92 +456,114 @@ export const DashboardPage = () => {
               />
             )}
 
-            {emailVerify && assessmentData?.status !== "completed" && (
+            {emailVerify && assessmentData?.status !== "completed" && !isConnected && (
               <DashboardCard
                 classes="bg-ws-primary-50 border-ws-primary-100"
                 // title={`${completionCount > 0 ? `${completionCount} ` : ""}Take the Assessment`}
                 title="Take the Assessment"
                 description={
-                  <div className="max-w-2xl text-ws-primary-900">
-                    Take our 15 minute assessment for specific recommendations to improve your
-                    business
-                  </div>
+                  completionCount > 0 ? (
+                    <div className="max-w-2xl text-ws-primary-900">
+                      Complete our quick assessment for customized recommendations and insights.
+                    </div>
+                  ) : (
+                    <div className="max-w-2xl text-ws-primary-900">
+                      Get started on your assessment. Choose the best plan to achieve your workforce
+                      goal at no cost to you.
+                    </div>
+                  )
                 }
                 avatarIconSrc={checkIcon}
                 buttonLabel={completionCount > 0 ? "Continue" : "Start assessment"}
                 buttonType={emailVerify ? "primary" : "secondary"}
                 buttonIsDisabled={!emailVerify}
-                //onClick={() => navigate("/assessment")}
+                onClick={() => navigate("/assessment")}
                 //onClick={() => navigate("/get-more")}
-                toggleButton={false}
+                toggleButton={completionCount > 0 ? true : false}
               />
             )}
           </div>
 
-          {emailVerify && assessmentData?.status !== "completed" && (
-            <div className="flex items-center justify-between gap-4 mt-6">
-              <div className="flex-1 py-6 px-7 border border-ws-primary-100 rounded-xl min-h-109 relative">
-                <div className="flex items-center justify-between border-b border-ws-primary-100 pb-4 mb-4">
-                  <h2 className="text-ws-black-10 text-2xl font-medium">Basic Plan</h2>
-                  <p className="text-ws-black-10 text-base">Free</p>
+          {completionCount === 0 &&
+            emailVerify &&
+            assessmentData?.status !== "completed" &&
+            !isConnected && (
+              <div className="flex items-center justify-between gap-4 mt-6">
+                <div className="flex-1 py-6 px-7 border border-ws-primary-100 rounded-xl min-h-109 relative">
+                  <div className="flex items-center justify-between border-b border-ws-primary-100 pb-4 mb-4">
+                    <h2 className="text-ws-black-10 text-2xl font-medium">Basic Plan</h2>
+                    <p className="text-ws-black-10 text-base">Free</p>
+                  </div>
+                  <p className="text-ws-black-10 text-base">
+                    Fill out a simple assessment form and get high level recommendations to enhance
+                    your benefits program.
+                  </p>
+                  <ul className="text-ws-black-10 text-base list-disc list-inside my-4">
+                    <li>Results in 10 min</li>
+                    <li>Industry benchmarks</li>
+                    <li>Placed-based insights</li>
+                    <li>Annual data updates</li>
+                  </ul>
+                  <Button
+                    iconTrailing={<ChevronRight />}
+                    size="sm"
+                    color="primary"
+                    className="min-w-30 absolute bottom-6 left-7"
+                    onClick={handleGetStarted}
+                  >
+                    Let’s Get Started
+                  </Button>
                 </div>
-                <p className="text-ws-black-10 text-base">
-                  Fill out a simple assessment form and get high level recommendations to enhance
-                  your benefits program.
-                </p>
-                <ul className="text-ws-black-10 text-base list-disc list-inside my-4">
-                  <li>Results in 10 min</li>
-                  <li>Industry benchmarks</li>
-                  <li>Placed-based insights</li>
-                  <li>Annual data updates</li>
-                </ul>
-                <Button
-                  iconTrailing={<ChevronRight />}
-                  size="sm"
-                  color="primary"
-                  className="min-w-30 absolute bottom-6 left-7"
-                  onClick={handleGetStarted}
-                >
-                  Let’s Get Started
-                </Button>
-              </div>
-              <div className="flex-1 py-6 px-7 border border-ws-primary-100 rounded-xl min-h-109 relative">
-                <div className="flex items-center justify-between border-b border-ws-primary-100 pb-4 mb-4">
-                  <h2 className="flex items-center text-ws-black-10 text-2xl font-medium">
-                    Connect with <img src={finchLogo} alt="Finch Logo" className="ml-2" />
-                  </h2>
-                  <p className="text-ws-black-10 text-base">Free</p>
+                <div className="flex-1 py-6 px-7 border border-ws-primary-100 rounded-xl min-h-109 relative">
+                  <div className="flex items-center justify-between border-b border-ws-primary-100 pb-4 mb-4">
+                    <h2 className="flex items-center text-ws-black-10 text-2xl font-medium">
+                      Connect with <img src={finchLogo} alt="Finch Logo" className="ml-2" />
+                    </h2>
+                    <p className="text-ws-black-10 text-base">Free</p>
+                  </div>
+                  <p className="text-ws-black-10 text-base">
+                    Finch handles the connection for you, syncing all your data automatically so you
+                    get richer insights and expanded dashboard views — without any extra work on
+                    your end.
+                  </p>
+                  <ul className="text-ws-black-10 text-base list-disc list-inside my-4">
+                    <li>Results in 3-5 min</li>
+                    <li>Custom workforce data and insights</li>
+                    <li>Additional dashboard views plus everything you get in the basic plan</li>
+                  </ul>
+                  <p className="text-ws-black-10 text-base">
+                    By connecting with Finch, you'll be redirected to their site to complete the
+                    setup. Please note that data shared is secure and protected by Finch’s thorough
+                    data privacy policies.
+                  </p>
+                  <Button
+                    iconTrailing={<ChevronRight />}
+                    size="sm"
+                    color="primary"
+                    className="min-w-30 absolute bottom-6 left-7"
+                    onClick={connectWithFinch}
+                    isDisabled={isFinchLoading}
+                  >
+                    Start with Finch
+                  </Button>
                 </div>
-                <p className="text-ws-black-10 text-base">
-                  Finch handles the connection for you, syncing all your data automatically so you
-                  get richer insights and expanded dashboard views — without any extra work on your
-                  end.
-                </p>
-                <ul className="text-ws-black-10 text-base list-disc list-inside my-4">
-                  <li>Results in 3-5 min</li>
-                  <li>Custom workforce data and insights</li>
-                  <li>Additional dashboard views plus everything you get in the basic plan</li>
-                </ul>
-                <p className="text-ws-black-10 text-base">
-                  By connecting with Finch, you'll be redirected to their site to complete the
-                  setup. Please note that data shared is secure and protected by Finch’s thorough
-                  data privacy policies.
-                </p>
-                <Button
-                  iconTrailing={<ChevronRight />}
-                  size="sm"
-                  color="primary"
-                  className="min-w-30 absolute bottom-6 left-7"
-                  onClick={handleFinchStarted}
-                >
-                  Start with Finch
-                </Button>
               </div>
+            )}
+
+          {finchError && (
+            <div className="mb-4">
+              <ErrorMessage
+                errorType="danger"
+                textColor="text-red-700"
+                alertIcon={AlertCircle}
+                errorMessage={finchError}
+                onClose={clearFinchError}
+              />
             </div>
           )}
 
           {/* Tabs — only render after dashboard data is confirmed ready */}
-          {emailVerify && assessmentData?.status === "completed" && (
+          {emailVerify && assessmentData?.status === "completed" && !isConnected && (
             <DashboardCard
               classes="bg-ws-white border-ws-primary-100 mt-10 shadow-none"
               toggleAvatar={true}
@@ -546,6 +574,22 @@ export const DashboardPage = () => {
               descriptionClass="text-ws-gray-800"
               toggleButton={true}
               buttonLabel="Connect"
+              onClick={connectWithFinch}
+              buttonIsDisabled={isFinchLoading}
+            />
+          )}
+          {emailVerify && isConnected && (
+            <DashboardCard
+              classes="bg-ws-white border-ws-primary-100 mt-10 shadow-none"
+              toggleAvatar={true}
+              title="Complete your assessment"
+              titleClass="text-ws-black-90"
+              avatarIconSrc={<ConnectIcon className="text-ws-primary-900" />}
+              description="Pick up where you left off and complete your company assessment for results and recommendations."
+              descriptionClass="text-ws-gray-800"
+              toggleButton={true}
+              buttonLabel="Continue"
+              onClick={() => navigate("/additional-questions")}
             />
           )}
           {emailVerify && assessmentData?.status === "completed" && isDashboardReady && (

@@ -141,7 +141,6 @@
   --ws-color-black-200: oklch(0.279 0.03 257); /* #1F2937 */
   --ws-color-black-300: oklch(0.2445 0.0437 255.37); /* #0D223A */
 
-
   /* Gray Colors */
   --ws-color-gray-10: oklch(0.985 0 0); /* #FAFAFA */
   --ws-color-gray-20: oklch(0.975 0 0); /* #F8F8F8 */
@@ -216,18 +215,16 @@
   --ws-color-navy-50: #e4f3fa;
   --ws-color-gray-50: #fdfdfd;
   --ws-color-gray-100: #575757;
-  --ws-color-gray-700: #343E3E;
-  --ws-color-tab-bg: #D2F1EF;
-  --ws-color-tab-active: #B6D3D0;
-  --ws-color-tab-active-text: #2E5450;
-  --ws-color-success-bg: #E1F6EF;
-  --ws-color-success-text: #0F6F57;
-  --ws-color-warning-bg: #FAEDE7;
-  --ws-color-warning-text: #993C1E;
-  --ws-color-progress-primary: #89D4CC;
-  --ws-color-progress-secondary: #5792AD; 
-
-
+  --ws-color-gray-700: #343e3e;
+  --ws-color-tab-bg: #d2f1ef;
+  --ws-color-tab-active: #b6d3d0;
+  --ws-color-tab-active-text: #2e5450;
+  --ws-color-success-bg: #e1f6ef;
+  --ws-color-success-text: #0f6f57;
+  --ws-color-warning-bg: #faede7;
+  --ws-color-warning-text: #993c1e;
+  --ws-color-progress-primary: #89d4cc;
+  --ws-color-progress-secondary: #5792ad;
 }
 
 .h-110 {

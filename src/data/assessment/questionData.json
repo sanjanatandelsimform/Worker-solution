@@ -8,10 +8,10 @@
         {
           "key": "headCountSize",
           "questionText": "Headcount size (all employees)",
-          "questionType": "SINGLE_SELECT_DROPDOWN",
+          "questionType": "SINGLE_SELECT",
           "displayOrder": 1,
           "validationRules": {
-            "type": "SINGLE_SELECT_DROPDOWN",
+            "type": "SINGLE_SELECT",
             "required": true,
             "errorMessage": "Select an option"
           },
@@ -41,7 +41,7 @@
           "schemaVersion": 1,
           "isRequired": true,
           "options": [
-            { "label": "Work (email , and/or text)", "value": "Email", "displayOrder": 1 },
+            { "label": "Work (email , and/or text)", "value": "Work", "displayOrder": 1 },
             { "label": "Personal (email , and/or text)", "value": "Personal", "displayOrder": 2 },
             {
               "label": "In-office (flyer, in person-announcements etc.)",
@@ -89,10 +89,10 @@
         {
           "key": "averageCommuteTime",
           "questionText": "How long are employees commuting to the office (estimated average time)",
-          "questionType": "MULTIPLE_CHOICE",
+          "questionType": "SINGLE_SELECT",
           "displayOrder": 5,
           "validationRules": {
-            "type": "MULTIPLE_CHOICE",
+            "type": "SINGLE_SELECT",
             "required": false,
             "minSelections": 1,
             "errorMessage": "Select an option"

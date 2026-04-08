@@ -84,8 +84,8 @@ export const BarChartPage = () => {
 
           <Tooltip
             content={<ChartTooltipContent />}
-            formatter={(value: string | number | undefined) =>
-              value !== undefined ? Number(value).toLocaleString() : ""
+            formatter={value =>
+              value !== undefined && !Array.isArray(value) ? Number(value).toLocaleString() : ""
             }
             // Custom label formatter to show the week range
             labelFormatter={(value: React.ReactNode) => {

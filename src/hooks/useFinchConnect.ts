@@ -1,0 +1,71 @@
+import { useCallback, useState } from "react";
+import { useFinchConnect as useFinchSDK } from "@tryfinch/react-connect";
+import { useNavigate } from "react-router-dom";
+import { getFinchSessionId, exchangeFinchCode } from "@/services/api/finchApi";
+
+type FinchConnectStatus = "idle" | "fetching-session" | "connecting" | "exchanging-code";
+
+export interface UseFinchConnectReturn {
+  connectWithFinch: () => Promise<void>;
+  isLoading: boolean;
+  error: string | null;
+  clearError: () => void;
+}
+
+export function useFinchConnect(): UseFinchConnectReturn {
+  const navigate = useNavigate();
+  const [status, setStatus] = useState<FinchConnectStatus>("idle");
+  const [error, setError] = useState<string | null>(null);
+  const isLoading = status !== "idle";
+
+  const clearError = useCallback(() => setError(null), []);
+
+  const onSuccess = useCallback(
+    async ({ code }: { code: string; state?: string }) => {
+      if (!code) {
+        setError("Failed to complete Finch connection. Please try again.");
+        setStatus("idle");
+        return;
+      }
+
+      setStatus("exchanging-code");
+      try {
+        await exchangeFinchCode(code);
+        navigate("/additional-questions");
+      } catch (e) {
+        const msg = e instanceof Error ? e.message : undefined;
+        setError(msg || "Failed to complete Finch connection. Please try again.");
+        setStatus("idle");
+      }
+    },
+    [navigate]
+  );
+
+  const onError = useCallback(({ errorMessage }: { errorMessage: string }) => {
+    setError(errorMessage || "Failed to complete Finch connection. Please try again.");
+    setStatus("idle");
+  }, []);
+
+  const onClose = useCallback(() => {
+    setStatus("idle");
+  }, []);
+
+  const { open } = useFinchSDK({ onSuccess, onError, onClose });
+
+  const connectWithFinch = useCallback(async () => {
+    if (isLoading) return;
+    setError(null);
+    setStatus("fetching-session");
+    try {
+      const { sessionId } = await getFinchSessionId();
+      setStatus("connecting");
+      open({ sessionId });
+    } catch (e) {
+      const msg = e instanceof Error ? e.message : undefined;
+      setError(msg || "Failed to start Finch Connect. Please try again.");
+      setStatus("idle");
+    }
+  }, [isLoading, open]);
+
+  return { connectWithFinch, isLoading, error, clearError };
+}
