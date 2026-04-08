@@ -268,7 +268,7 @@ export const SettingsPage = () => {
         <div className="flex flex-1 flex-col overflow-hidden">
           <main className="flex-1 overflow-y-auto p-6">
             <div className="max-w-4xl mx-auto">
-              <p className="text-center text-ws-black-10">Loading user data...</p>
+              <p className="text-center text-ws-text-tertiary">Loading user data...</p>
             </div>
           </main>
         </div>
@@ -330,7 +330,7 @@ export const SettingsPage = () => {
               <div className="flex items-center justify-between gap-2">
                 <div className="flex flex-col">
                   <h2 className="text-lg font-semibold text-ws-text-primary">Personal info</h2>
-                  <p className="text-sm text-ws-black-10">
+                  <p className="text-sm text-ws-text-tertiary">
                     Update your photo and personal details here.
                   </p>
                 </div>
@@ -341,7 +341,7 @@ export const SettingsPage = () => {
                 {/* Name Fields */}
                 <div className="flex mb-6 flex-col xl:flex-row">
                   <div className="w-full xl:w-1/3 mb-3 xl:mb-0">
-                    <label htmlFor="firstName" className="text-ws-black-20 font-medium text-sm">
+                    <label htmlFor="firstName" className="text-ws-text-secondary font-medium text-sm">
                       Name <span className="text-ws-red-40">*</span>
                     </label>
                   </div>
@@ -384,7 +384,7 @@ export const SettingsPage = () => {
                 {/* Email Field */}
                 <div className="flex mb-6 flex-col xl:flex-row">
                   <div className="w-full xl:w-1/3 mb-3 xl:mb-0">
-                    <label htmlFor="email" className="text-ws-black-20 font-medium text-sm">
+                    <label htmlFor="email" className="text-ws-text-secondary font-medium text-sm">
                       Email address <span className="text-ws-red-40">*</span>
                     </label>
                   </div>
@@ -417,7 +417,7 @@ export const SettingsPage = () => {
                 {/* Password Field */}
                 <div className="flex mb-6 flex-col xl:flex-row">
                   <div className="w-full xl:w-1/3 mb-3 xl:mb-0">
-                    <label htmlFor="password" className="text-ws-black-20 font-medium text-sm">
+                    <label htmlFor="password" className="text-ws-text-secondary font-medium text-sm">
                       Password <span className="text-ws-red-40">*</span>
                     </label>
                   </div>
@@ -448,7 +448,7 @@ export const SettingsPage = () => {
               <div className="flex items-center justify-between gap-2">
                 <div className="flex flex-col">
                   <h2 className="text-lg font-semibold text-ws-text-primary">Account Management</h2>
-                  <p className="text-sm text-ws-black-10">
+                  <p className="text-sm text-ws-text-tertiary">
                     Update your photo and personal details here.
                   </p>
                 </div>
@@ -459,10 +459,10 @@ export const SettingsPage = () => {
                 {/* Retake Assessment */}
                 <div className="flex mb-6 flex-col xl:flex-row">
                   <div className="w-full xl:w-1/2 flex flex-col">
-                    <label htmlFor="firstName" className="text-ws-black-20 font-medium text-sm">
+                    <label htmlFor="firstName" className="text-ws-text-secondary font-medium text-sm">
                       Retake the assessment
                     </label>
-                    <span className="text-ws-black-10 text-sm">
+                    <span className="text-ws-text-tertiary text-sm">
                       Retaking the assessment will result in loss of progress.
                     </span>
                   </div>
@@ -482,10 +482,10 @@ export const SettingsPage = () => {
                 {/* Delete Account */}
                 <div className="flex mb-6 flex-col xl:flex-row">
                   <div className="w-full xl:w-1/2 flex flex-col">
-                    <label htmlFor="firstName" className="text-ws-black-20 font-medium text-sm">
+                    <label htmlFor="firstName" className="text-ws-text-secondary font-medium text-sm">
                       Delete account
                     </label>
-                    <span className="text-ws-black-10 text-sm">This cannot be undone</span>
+                    <span className="text-ws-text-tertiary text-sm">This cannot be undone</span>
                   </div>
                   <div className="w-full xl:w-1/2 flex gap-4 mt-3 xl:mt-0">
                     <Button

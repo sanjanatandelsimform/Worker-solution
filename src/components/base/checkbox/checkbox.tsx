@@ -27,7 +27,7 @@ export const CheckboxBase = ({
       className={cx(
         "relative flex size-4 shrink-0 cursor-pointer appearance-none items-center justify-center rounded bg-ws-base-white ring-1 ring-ws-border-primary ring-inset",
         size === "md" && "size-5 rounded-md",
-        (isSelected || isIndeterminate) && "bg-blue-700 ring-blue-700 text-ws-white",
+        (isSelected || isIndeterminate) && "bg-blue-700 ring-blue-700 text-ws-base-white",
         isDisabled && "cursor-not-allowed bg-disabled_subtle ring-disabled",
         isFocusVisible && "outline-2 outline-offset-2 outline-focus-ring",
         className
@@ -38,7 +38,7 @@ export const CheckboxBase = ({
         viewBox="0 0 14 14"
         fill="none"
         className={cx(
-          "pointer-events-none absolute h-3 w-2.5 text-ws-white opacity-0 transition-inherit-all",
+          "pointer-events-none absolute h-3 w-2.5 text-ws-base-white opacity-0 transition-inherit-all",
           size === "md" && "size-3.5",
           isIndeterminate && "opacity-100",
           isDisabled && "text-fg-disabled_subtle"
@@ -137,7 +137,7 @@ export const Checkbox = ({
               )}
               {hint && (
                 <span
-                  className={cx("text-ws-black-10", sizes[size].hint)}
+                  className={cx("text-ws-text-tertiary", sizes[size].hint)}
                   onClick={event => event.stopPropagation()}
                 >
                   {hint}

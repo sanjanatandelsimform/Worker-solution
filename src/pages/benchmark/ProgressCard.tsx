@@ -85,7 +85,7 @@ export default function ProgressCard({
               isDisabled={false}
               className="cursor-pointer text-ws-red-30 transition duration-200 hover:text-ws-red-40 focus:text-ws-red-40"
             >
-              <InfoCircle className="size-5 text-ws-gray-70" />
+              <InfoCircle className="size-5 text-ws-gray-400" />
             </TooltipTrigger>
           </Tooltip>
         )}

@@ -111,14 +111,14 @@ export const VerifyEmailPage: React.FC = () => {
               <h2 className="w-full text-4xl font-semibold leading-9.5 text-ws-black">
                 Verification Failed
               </h2>
-              <p className="w-full text-medium font-normal leading-6 text-ws-black-10">
+              <p className="w-full text-medium font-normal leading-6 text-ws-text-tertiary">
                 {errorMessage}
               </p>
             </div>
             <div className="flex w-full flex-col items-center gap-4">
               <button
                 onClick={() => navigate("/sign-in")}
-                className="w-full rounded-lg bg-utility-brand-600 px-4 py-3 text-base font-semibold text-ws-white hover:bg-utility-brand-700"
+                className="w-full rounded-lg bg-utility-brand-600 px-4 py-3 text-base font-semibold text-ws-base-white hover:bg-utility-brand-700"
               >
                 Back to Sign In
               </button>

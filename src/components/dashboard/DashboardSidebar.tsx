@@ -166,9 +166,9 @@ export const DashboardSidebar = ({ activeUrl = "/" }: DashboardSidebarProps) => 
             className={isCollapsed ? "w-full" : ""}
           >
             {isCollapsed ? (
-              <Menu01 className="size-5 text-ws-white" />
+              <Menu01 className="size-5 text-ws-base-white" />
             ) : (
-              <XClose className="size-5 text-ws-white" />
+              <XClose className="size-5 text-ws-base-white" />
             )}
           </Button>
         )}

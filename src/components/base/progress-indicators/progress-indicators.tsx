@@ -64,7 +64,7 @@ export const ProgressBarBase = ({
         style={{ transform: `translateX(-${100 - percentage}%)` }}
         className={cx(
           `size-full rounded-md ${barColor} transition duration-75 ease-linear`,
-          progressClassName,
+          progressClassName
         )}
       />
     </div>

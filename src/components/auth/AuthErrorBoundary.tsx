@@ -60,7 +60,7 @@ export class AuthErrorBoundary extends Component<ErrorBoundaryProps, ErrorBounda
               <h1 className="mb-4 text-2xl font-bold text-ws-text-primary">Something went wrong</h1>
 
               {/* Description */}
-              <p className="mb-6 text-sm text-ws-black-10">
+              <p className="mb-6 text-sm text-ws-text-tertiary">
                 We encountered an error while processing your authentication request. Please try
                 again or contact support if the problem persists.
               </p>
@@ -77,13 +77,13 @@ export class AuthErrorBoundary extends Component<ErrorBoundaryProps, ErrorBounda
               <div className="space-y-3">
                 <button
                   onClick={() => window.location.reload()}
-                  className="w-full rounded-lg bg-blue-600 px-4 py-2 text-sm font-semibold text-ws-white hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2"
+                  className="w-full rounded-lg bg-blue-600 px-4 py-2 text-sm font-semibold text-ws-base-white hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2"
                 >
                   Try Again
                 </button>
                 <Link
                   to="/"
-                  className="block w-full rounded-lg border border-ws-border-primary px-4 py-2 text-sm font-semibold text-ws-black-20 hover:bg-ws-primary-50 focus:outline-none focus:ring-2 focus:ring-ws-primary-500 focus:ring-offset-2"
+                  className="block w-full rounded-lg border border-ws-border-primary px-4 py-2 text-sm font-semibold text-ws-text-secondary hover:bg-ws-primary-50 focus:outline-none focus:ring-2 focus:ring-ws-primary-500 focus:ring-offset-2"
                 >
                   Go to Home
                 </Link>

@@ -167,7 +167,7 @@ export const SignInForm = () => {
               {/* Password Input Field */}
               <InputGroup className="relative">
                 <div className="flex flex-col gap-1.5 w-full">
-                  <Label className="text-sm font-medium text-ws-black-20">
+                  <Label className="text-sm font-medium text-ws-text-secondary">
                     Password <span className="text-ws-error-600">*</span>
                   </Label>
                   <Input

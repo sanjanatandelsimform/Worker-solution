@@ -18,14 +18,14 @@ export const InputPrefix = ({ isDisabled, children, ...props }: InputPrefixProps
   <span
     {...props}
     className={cx(
-      "flex text-md text-ws-black-10 shadow-xs ring-1 ring-ws-border-primary ring-inset",
+      "flex text-md text-ws-text-tertiary shadow-xs ring-1 ring-ws-border-primary ring-inset",
       // Styles when the prefix is within an `InputGroup`
       "in-data-input-wrapper:in-data-leading:-mr-px in-data-input-wrapper:in-data-leading:rounded-l-lg",
       "in-data-input-wrapper:in-data-trailing:-ml-px in-data-input-wrapper:in-data-trailing:rounded-r-lg",
       // Size styles based on size when within an `InputGroup`
       "in-data-input-wrapper:in-data-[input-size=md]:py-2.5 in-data-input-wrapper:in-data-[input-size=md]:pr-3 in-data-input-wrapper:in-data-[input-size=md]:pl-3.5 in-data-input-wrapper:in-data-[input-size=sm]:px-3 in-data-input-wrapper:in-data-[input-size=sm]:py-2",
       // Disabled styles
-      isDisabled && "border-disabled bg-disabled_subtle text-ws-black-10",
+      isDisabled && "border-disabled bg-disabled_subtle text-ws-text-tertiary",
       "in-data-input-wrapper:group-disabled:bg-disabled_subtle in-data-input-wrapper:group-disabled:text-disabled in-data-input-wrapper:group-disabled:ring-border-disabled",
 
       props.className
@@ -132,7 +132,7 @@ export const InputGroup = ({
 
             {prefix && (
               <span className={cx("my-auto grow pr-2", paddings[size].leadingText)}>
-                <p className={cx("text-md text-ws-black-10", isDisabled && "text-disabled")}>
+                <p className={cx("text-md text-ws-text-tertiary", isDisabled && "text-disabled")}>
                   {prefix}
                 </p>
               </span>

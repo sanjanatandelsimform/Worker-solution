@@ -35,6 +35,7 @@ export interface TurnoverRateCardProps {
   sections?: CardSection[];
   industryText?: string;
   industryBoldText?: string;
+  sourceBoldText?: string;
   sourceText?: string;
   className?: string;
   sourceClass?: string;
@@ -46,6 +47,7 @@ export default function TurnoverRateCard({
   sections,
   industryText,
   industryBoldText,
+  sourceBoldText,
   sourceText,
   className,
   sourceClass,
@@ -64,18 +66,18 @@ export default function TurnoverRateCard({
 
   return (
     <div className={`bg-ws-base-white ring ring-ws-border-primary rounded-xl p-5 ${className}`}>
-      <h2 className="flex items-center justify-between text-lg text-ws-black font-medium gap-2">
+      <h2 className="flex items-center justify-between text-lg text-ws-base-black font-medium gap-2">
         {title}
-        <span className="text-xs text-ws-gray-900 uppercase">{titleQatar}</span>
+        <span className="text-xs text-ws-gray-300 uppercase">{titleQatar}</span>
       </h2>
 
       {/* Render Multiple Sections */}
       {sections && sections.length > 0 && (
-        <div className="mt-6 space-y-6">
+        <div className="mt-4 space-y-6">
           {sections.map((section, sectionIndex) => (
             <div key={`section-${sectionIndex}`}>
               {/* Section Title */}
-              <h3 className="text-sm font-semibold text-ws-gray-350 uppercase mb-3">
+              <h3 className="text-sm font-semibold text-ws-gray-300 uppercase mb-3">
                 {section.sectionTitle}
               </h3>
 
@@ -103,12 +105,12 @@ export default function TurnoverRateCard({
 
       {/* Footer Text */}
       {industryText && (
-        <p className="text-xs text-ws-text-primary mt-4">
+        <p className="text-xs text-ws-gray-300 mt-4">
           {industryText}
-          <span className="text-xs font-medium">{industryBoldText}</span>
+          <span className="text-xs font-medium text-ws-text-primary">{industryBoldText}</span>
         </p>
       )}
-      {sourceText && <p className={cx("text-xs text-ws-text-primary mt-2", sourceClass)}>{sourceText}</p>}
+      {sourceText && <p className={cx("text-xs text-ws-gray-300 mt-2", sourceClass)}>{sourceText} <span className="text-xs font-medium text-ws-text-primary">{sourceBoldText}</span></p>}
     </div>
   );
 }

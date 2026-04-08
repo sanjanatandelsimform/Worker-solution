@@ -96,7 +96,7 @@ export const ModalDescription = ({
   children: ReactNode;
   className?: string;
 }) => {
-  return <p className={cx("text-sm text-ws-black-10", className)}>{children}</p>;
+  return <p className={cx("text-sm text-ws-text-tertiary", className)}>{children}</p>;
 };
 
 export const ModalBody = ({ children, className }: { children: ReactNode; className?: string }) => {

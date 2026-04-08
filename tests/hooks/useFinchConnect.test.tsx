@@ -46,14 +46,6 @@ vi.mock("@/services/api/finchApi", () => ({
   exchangeFinchCode: (code: string) => mockExchangeFinchCode(code),
 }));
 
-const mockToastError = vi.fn();
-vi.mock("sonner", () => ({
-  toast: {
-    error: (msg: string) => mockToastError(msg),
-    success: vi.fn(),
-  },
-}));
-
 // ── Import hook after all mocks ─────────────────────────────────────────────
 const { useFinchConnect } = await import("@/hooks/useFinchConnect");
 
@@ -125,7 +117,7 @@ describe("useFinchConnect", () => {
   });
 
   // T011 — session ID fetch failure
-  it("session ID fetch failure: calls toast.error and resets to idle", async () => {
+  it("session ID fetch failure: sets error and resets to idle", async () => {
     mockGetFinchSessionId.mockRejectedValue(new Error("Network error"));
     const { result } = renderHook(() => useFinchConnect(), { wrapper });
 
@@ -134,14 +126,14 @@ describe("useFinchConnect", () => {
     });
 
     await waitFor(() => {
-      expect(mockToastError).toHaveBeenCalledWith("Network error");
+      expect(result.current.error).toBe("Network error");
       expect(result.current.isLoading).toBe(false);
     });
     expect(mockNavigate).not.toHaveBeenCalled();
   });
 
   // T012 — Finch onError callback
-  it("onError callback: calls toast.error and resets to idle", async () => {
+  it("onError callback: sets error and resets to idle", async () => {
     const { result } = renderHook(() => useFinchConnect(), { wrapper });
 
     await act(async () => {
@@ -156,14 +148,14 @@ describe("useFinchConnect", () => {
     });
 
     await waitFor(() => {
-      expect(mockToastError).toHaveBeenCalledWith("employer_connection_error");
+      expect(result.current.error).toBe("employer_connection_error");
       expect(result.current.isLoading).toBe(false);
     });
     expect(mockNavigate).not.toHaveBeenCalled();
   });
 
   // T013 — Finch onClose callback
-  it("onClose callback: resets to idle without toast", async () => {
+  it("onClose callback: resets to idle without setting error", async () => {
     const { result } = renderHook(() => useFinchConnect(), { wrapper });
 
     await act(async () => {
@@ -177,12 +169,12 @@ describe("useFinchConnect", () => {
     await waitFor(() => {
       expect(result.current.isLoading).toBe(false);
     });
-    expect(mockToastError).not.toHaveBeenCalled();
+    expect(result.current.error).toBeNull();
     expect(mockNavigate).not.toHaveBeenCalled();
   });
 
   // T014 — code exchange failure
-  it("code exchange failure: calls toast.error and resets to idle without navigating", async () => {
+  it("code exchange failure: sets error and resets to idle without navigating", async () => {
     mockExchangeFinchCode.mockRejectedValue(new Error("Exchange failed"));
     const { result } = renderHook(() => useFinchConnect(), { wrapper });
 
@@ -195,14 +187,14 @@ describe("useFinchConnect", () => {
     });
 
     await waitFor(() => {
-      expect(mockToastError).toHaveBeenCalledWith("Exchange failed");
+      expect(result.current.error).toBe("Exchange failed");
       expect(result.current.isLoading).toBe(false);
     });
     expect(mockNavigate).not.toHaveBeenCalled();
   });
 
   // T015 — empty code in onSuccess
-  it("empty code in onSuccess: calls toast.error, does not call exchangeFinchCode", async () => {
+  it("empty code in onSuccess: sets error, does not call exchangeFinchCode", async () => {
     const { result } = renderHook(() => useFinchConnect(), { wrapper });
 
     await act(async () => {
@@ -214,9 +206,7 @@ describe("useFinchConnect", () => {
     });
 
     await waitFor(() => {
-      expect(mockToastError).toHaveBeenCalledWith(
-        "Failed to complete Finch connection. Please try again."
-      );
+      expect(result.current.error).toBe("Failed to complete Finch connection. Please try again.");
       expect(result.current.isLoading).toBe(false);
     });
     expect(mockExchangeFinchCode).not.toHaveBeenCalled();
@@ -240,5 +230,40 @@ describe("useFinchConnect", () => {
     });
 
     expect(mockGetFinchSessionId).toHaveBeenCalledTimes(1);
+  });
+
+  // clearError — resets error to null
+  it("clearError() resets error to null", async () => {
+    mockGetFinchSessionId.mockRejectedValue(new Error("Some error"));
+    const { result } = renderHook(() => useFinchConnect(), { wrapper });
+
+    await act(async () => {
+      await result.current.connectWithFinch();
+    });
+    await waitFor(() => expect(result.current.error).toBe("Some error"));
+
+    act(() => {
+      result.current.clearError();
+    });
+    expect(result.current.error).toBeNull();
+  });
+
+  // auto-clear — error is cleared when a new connectWithFinch call begins
+  it("error is cleared when a new connectWithFinch call begins", async () => {
+    mockGetFinchSessionId.mockRejectedValueOnce(new Error("First failure"));
+    const { result } = renderHook(() => useFinchConnect(), { wrapper });
+
+    // First attempt sets error
+    await act(async () => {
+      await result.current.connectWithFinch();
+    });
+    await waitFor(() => expect(result.current.error).toBe("First failure"));
+
+    // Second attempt clears error immediately
+    mockGetFinchSessionId.mockReturnValue(new Promise(() => {})); // hold open
+    act(() => {
+      void result.current.connectWithFinch();
+    });
+    expect(result.current.error).toBeNull();
   });
 });

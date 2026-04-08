@@ -26,17 +26,17 @@ export const styles = sortCx({
       icon: "text-fg-quaternary group-hover:text-fg-quaternary_hover",
     },
     black: {
-      root: "bg-black text-ws-white shadow-xs-skeumorphic ring-1 ring-transparent ring-inset before:absolute before:inset-px before:border before:border-white/12 before:mask-b-from-0%",
+      root: "bg-black text-ws-base-white shadow-xs-skeumorphic ring-1 ring-transparent ring-inset before:absolute before:inset-px before:border before:border-white/12 before:mask-b-from-0%",
       icon: "",
     },
 
     facebook: {
-      root: "bg-[#1877F2] text-ws-white shadow-xs-skeumorphic ring-1 ring-transparent ring-inset before:absolute before:inset-px before:border before:border-white/12 before:mask-b-from-0% hover:bg-[#0C63D4]",
+      root: "bg-[#1877F2] text-ws-base-white shadow-xs-skeumorphic ring-1 ring-transparent ring-inset before:absolute before:inset-px before:border before:border-white/12 before:mask-b-from-0% hover:bg-[#0C63D4]",
       icon: "",
     },
 
     dribble: {
-      root: "bg-[#EA4C89] text-ws-white shadow-xs-skeumorphic ring-1 ring-transparent ring-inset before:absolute before:inset-px before:border before:border-white/12 before:mask-b-from-0% hover:bg-[#E62872]",
+      root: "bg-[#EA4C89] text-ws-base-white shadow-xs-skeumorphic ring-1 ring-transparent ring-inset before:absolute before:inset-px before:border before:border-white/12 before:mask-b-from-0% hover:bg-[#E62872]",
       icon: "",
     },
   },

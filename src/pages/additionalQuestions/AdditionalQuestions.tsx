@@ -310,7 +310,7 @@ export default function AdditionalQuestions() {
                             value={option.id}
                             className="border border-ws-border-primary rounded-full"
                           />
-                          <span className="text-sm font-normal text-ws-black-20">
+                          <span className="text-sm font-normal text-ws-text-secondary">
                             {option.label}
                           </span>
                         </label>
@@ -352,7 +352,7 @@ export default function AdditionalQuestions() {
                                 value={option.id}
                                 className="border border-ws-border-primary rounded-full"
                               />
-                              <span className="text-sm font-normal text-ws-black-20">
+                              <span className="text-sm font-normal text-ws-text-secondary">
                                 {option.label}
                               </span>
                             </label>
@@ -362,7 +362,7 @@ export default function AdditionalQuestions() {
                         {/* Conditional Month Dropdown for Annual Raises Question */}
                         {question.hasConditional && answers[question.id] === "yes-raises" && (
                           <div className="ml-6 space-y-2 pt-2">
-                            <Label className="text-sm font-normal text-ws-black-20">
+                            <Label className="text-sm font-normal text-ws-text-secondary">
                               If yes, when?
                             </Label>
                             <Select
@@ -419,7 +419,7 @@ export default function AdditionalQuestions() {
                               value={option.id}
                               className="border border-ws-border-primary rounded-full"
                             />
-                            <span className="text-sm font-normal text-ws-black-20">
+                            <span className="text-sm font-normal text-ws-text-secondary">
                               {option.label}
                             </span>
                           </label>
@@ -468,7 +468,7 @@ export default function AdditionalQuestions() {
                                 value={option.id}
                                 className="border border-ws-border-primary rounded-full"
                               />
-                              <span className="text-sm font-normal text-ws-black-20">
+                              <span className="text-sm font-normal text-ws-text-secondary">
                                 {option.label}
                               </span>
                             </label>
@@ -508,7 +508,7 @@ export default function AdditionalQuestions() {
                   {/* Goals by Category */}
                   {goalsData.map(categoryGroup => (
                     <div key={categoryGroup.category} className="space-y-3">
-                      <h3 className="text-sm font-semibold text-ws-black-20">
+                      <h3 className="text-sm font-semibold text-ws-text-secondary">
                         {categoryGroup.category}
                       </h3>
                       <div className="space-y-2 ml-0">
@@ -523,7 +523,7 @@ export default function AdditionalQuestions() {
                               size="sm"
                               className="border border-ws-border-primary rounded-sm"
                             />
-                            <span className="text-sm font-normal text-ws-black-20">
+                            <span className="text-sm font-normal text-ws-text-secondary">
                               {goal.label}
                             </span>
                           </label>
@@ -550,7 +550,7 @@ export default function AdditionalQuestions() {
         <Button
           color="primary"
           size="md"
-          className="min-w-30 bg-ws-primary-900 text-ws-white hover:bg-ws-primary-900-hover focus:bg-ws-primary-900-hover active:bg-ws-primary-900-hover"
+          className="min-w-30 bg-ws-primary-900 text-ws-base-white hover:bg-ws-primary-900-hover focus:bg-ws-primary-900-hover active:bg-ws-primary-900-hover"
         >
           Next
         </Button>

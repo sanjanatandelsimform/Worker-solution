@@ -291,7 +291,7 @@ export default function AssessmentWorkforcePage() {
           color="primary"
           size="md"
           onClick={handleNext}
-          className="min-w-30 bg-ws-primary-900 text-ws-white hover:bg-ws-primary-900-hover focus:bg-ws-primary-900-hover active:bg-ws-primary-900-hover"
+          className="min-w-30 bg-ws-primary-900 text-ws-base-white hover:bg-ws-primary-900-hover focus:bg-ws-primary-900-hover active:bg-ws-primary-900-hover"
           // isDisabled={isSaving}
           // isLoading={isSaving}
         >

@@ -1,52 +1,14 @@
 import { useEffect, useRef } from 'react';
 
 interface DonutChartProps {
-  /**
-   * Percentage value (0-100)
-   */
   percentage: number;
-  
-  /**
-   * Label text displayed below the percentage (e.g., "Full Time")
-   */
   label: string;
-  
-  /**
-   * Center text displayed with the percentage (optional, defaults to formatted percentage)
-   */
-  centerText?: string;
-  
-  /**
-   * Color of the progress portion (e.g., "bg-ws-progress-primary" or hex color)
-   */
+  enterText?: string;
   progressColor: string;
-  
-  /**
-   * Color of the background portion (e.g., "bg-ws-light-teal-25" or hex color)
-   */
   backgroundColor?: string;
-  
-  /**
-   * Chart width in pixels
-   * @default 200
-   */
   width?: number;
-  
-  /**
-   * Chart height in pixels
-   * @default 200
-   */
   height?: number;
-  
-  /**
-   * Ring stroke width in pixels
-   * @default 30
-   */
   strokeWidth?: number;
-  
-  /**
-   * Container CSS class
-   */
   className?: string;
 }
 

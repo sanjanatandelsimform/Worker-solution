@@ -67,8 +67,8 @@ export default function GetMore() {
 
       {/* Plan Title and Price */}
       <div className="flex flex-1 items-center justify-between gap-4">
-        <span className="text-lg font-medium text-ws-black-20">{plan.name}</span>
-        <span className="cursor-pointer text-base font-normal text-ws-black-10 hover:text-ws-black-20">
+        <span className="text-lg font-medium text-ws-text-secondary">{plan.name}</span>
+        <span className="cursor-pointer text-base font-normal text-ws-text-tertiary hover:text-ws-text-secondary">
           {plan.price}
         </span>
       </div>
@@ -171,7 +171,7 @@ export default function GetMore() {
           color="primary"
           size="md"
           onClick={handleGetStarted}
-          className="min-w-30 bg-ws-primary-900 text-ws-white hover:bg-ws-primary-900-hover focus:bg-ws-primary-900-hover active:bg-ws-primary-900-hover"
+          className="min-w-30 bg-ws-primary-900 text-ws-base-white hover:bg-ws-primary-900-hover focus:bg-ws-primary-900-hover active:bg-ws-primary-900-hover"
         >
           Let's Get Started
         </Button>

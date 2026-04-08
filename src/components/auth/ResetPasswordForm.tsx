@@ -81,7 +81,7 @@ export default function ResetPasswordForm() {
               <h2 className="w-full text-3xl font-semibold leading-9.5 text-ws-black">
                 Reset Password
               </h2>
-              <p className="w-full text-medium font-normal leading-6 text-ws-black-10">
+              <p className="w-full text-medium font-normal leading-6 text-ws-text-tertiary">
                 Please enter a new password below.
               </p>
             </div>

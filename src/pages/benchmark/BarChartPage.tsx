@@ -41,7 +41,7 @@ export const BarChartPage = () => {
             top: 12,
             bottom: 18,
           }}
-          className="text-ws-black-10 [&_.recharts-text]:text-xs"
+          className="text-ws-text-tertiary [&_.recharts-text]:text-xs"
         >
           <CartesianGrid vertical={false} stroke="currentColor" className="text-utility-gray-100" />
 
@@ -84,9 +84,9 @@ export const BarChartPage = () => {
 
           <Tooltip
             content={<ChartTooltipContent />}
-            formatter={(value) =>
-                value !== undefined && !Array.isArray(value) ? Number(value).toLocaleString() : ""
-              }
+            formatter={value =>
+              value !== undefined && !Array.isArray(value) ? Number(value).toLocaleString() : ""
+            }
             // Custom label formatter to show the week range
             labelFormatter={(value: React.ReactNode) => {
               if (!value) return "";

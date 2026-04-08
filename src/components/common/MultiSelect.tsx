@@ -118,7 +118,7 @@ export const MultiSelect: React.FC<MultiSelectProps> = ({
                   onClick={() => toggleOption(option.value)}
                 >
                   <div
-                    className={`flex h-5 w-5 items-center justify-center rounded-md border relative ${checked ? "border-primary bg-primary text-ws-white" : "border-gray-300"}`}
+                    className={`flex h-5 w-5 items-center justify-center rounded-md border relative ${checked ? "border-primary bg-primary text-ws-base-white" : "border-gray-300"}`}
                   >
                     {checked && <CheckIcon className="right-1 bottom-1" />}
                   </div>

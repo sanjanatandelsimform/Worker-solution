@@ -21,8 +21,11 @@
 
   /* Gray Colors */
   --color-ws-gray-200: var(--ws-color-gray-200);
+  --color-ws-gray-300: var(--ws-color-gray-300);
   --color-ws-gray-400: var(--ws-color-gray-400);
   --color-ws-gray-500: var(--ws-color-gray-500);
+  --color-ws-gray-600: var(--ws-color-gray-600);
+  --color-ws-gray-700: var(--ws-color-gray-700);
 
   /* Light Teal Colors */
   --color-ws-light-teal-25: var(--ws-color-light-teal-25);
@@ -56,9 +59,13 @@
   --color-ws-teal: var(--ws-color-teal);
   --color-ws-teal-lite: var(--ws-color-teal-lite);
   --color-ws-blue: var(--ws-color-ws-blue);
-  --color-ws-error-600: var(--ws-color-red-600);
+  --color-ws-error-600: var(--ws-color-error-600);
   --color-ws-success-25: var(--ws-color-success-25);
   --color-ws-warning-50: var(--ws-color-warning-50);
+  --color-ws-bg-positive: var(--ws-color-bg-positive);
+  --color-ws-bg-negative: var(--ws-color-bg-negative);
+  --color-ws-text-positive: var(--ws-color-text-positive);
+  --color-ws-text-negative: var(--ws-color-text-negative);
 
 }
 
@@ -93,8 +100,11 @@
 
   /* Gray Colors from Figma */
   --ws-color-gray-200: #E9EAEB;
+  --ws-color-gray-300: #73726C;
   --ws-color-gray-400: #A4A7AE;
   --ws-color-gray-500: #717680;
+  --ws-color-gray-600: #626770;
+  --ws-color-gray-700: #777777;
 
   /* Light Teal Colors from Figma */
   --ws-color-light-teal-25: #f5f5f5;
@@ -131,6 +141,10 @@
   --ws-color-error-600: #D92D20;
   --ws-color-success-25: #F6FEF9;
   --ws-color-warning-50: #FFFAEB;
+  --ws-color-bg-positive: #E1F6EF;
+  --ws-color-bg-negative: #FAEDE7;
+  --ws-color-text-positive: #0F6F57;
+  --ws-color-text-negative: #993C1E;
 }
 
 .h-110 {

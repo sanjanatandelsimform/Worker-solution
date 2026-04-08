@@ -96,7 +96,7 @@ export const SuccessModalWithLogo = ({
             color={button.color || "primary"}
             size="lg"
             onClick={button.onClick}
-            className="w-auto mb-10 bg-ws-primary-900 text-ws-white hover:bg-ws-primary-900-hover focus:bg-ws-primary-900-hover active:bg-ws-primary-900-hover"
+            className="w-auto mb-10 bg-ws-primary-900 text-ws-base-white hover:bg-ws-primary-900-hover focus:bg-ws-primary-900-hover active:bg-ws-primary-900-hover"
             isDisabled={button.isDisabled}
           >
             {button.text}

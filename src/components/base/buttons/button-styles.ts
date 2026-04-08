@@ -54,13 +54,13 @@ export const styles = sortCx({
     },
     tertiary: {
       root: [
-        "text-ws-black-10 hover:bg-primary_hover hover:text-ws-black-10_hover data-loading:bg-primary_hover text-base font-semibold",
+        "text-ws-text-tertiary hover:bg-primary_hover hover:text-ws-text-tertiary_hover data-loading:bg-primary_hover text-base font-semibold",
         "*:data-icon:text-fg-quaternary hover:*:data-icon:text-fg-quaternary_hover",
       ].join(" "),
     },
     "link-gray": {
       root: [
-        "justify-normal rounded p-0! text-ws-black-10 hover:text-ws-black-10_hover",
+        "justify-normal rounded p-0! text-ws-text-tertiary hover:text-ws-text-tertiary_hover",
         "*:data-text:underline *:data-text:decoration-transparent *:data-text:underline-offset-2 hover:*:data-text:decoration-current",
         "*:data-icon:text-fg-quaternary hover:*:data-icon:text-fg-quaternary_hover",
       ].join(" "),
@@ -74,7 +74,7 @@ export const styles = sortCx({
     },
     "primary-destructive": {
       root: [
-        "bg-red-600 text-ws-white shadow-xs-skeumorphic ring-1 ring-transparent outline-error ring-inset hover:bg-red-500 data-loading:bg-red-500",
+        "bg-red-600 text-ws-base-white shadow-xs-skeumorphic ring-1 ring-transparent outline-error ring-inset hover:bg-red-500 data-loading:bg-red-500",
         "before:absolute before:inset-px before:border before:border-white/12 before:mask-b-from-0%",
         "disabled:bg-disabled disabled:shadow-xs disabled:ring-red-600",
         "*:data-icon:text-button-destructive-primary-icon hover:*:data-icon:text-button-destructive-primary-icon_hover",

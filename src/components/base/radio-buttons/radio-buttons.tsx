@@ -115,7 +115,7 @@ export const RadioButton = ({
               )}
               {hint && (
                 <span
-                  className={cx("text-ws-black-10", sizes[size].hint)}
+                  className={cx("text-ws-text-tertiary", sizes[size].hint)}
                   onClick={event => event.stopPropagation()}
                 >
                   {hint}

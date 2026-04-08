@@ -92,7 +92,7 @@ const ComboBoxValue = ({
                 {last && (
                   <p
                     className={cx(
-                      "-ml-0.75 text-md text-ws-black-10",
+                      "-ml-0.75 text-md text-ws-text-tertiary",
                       isDisabled && "text-disabled"
                     )}
                   >

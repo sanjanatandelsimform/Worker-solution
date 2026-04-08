@@ -524,7 +524,7 @@ function DesignReference() {
           <h2 className="text-2xl font-bold">Change Password Modal Component</h2>
           <div className="space-y-4">
             <div className="space-y-3">
-              <p className="text-sm text-ws-black-10">
+              <p className="text-sm text-ws-text-tertiary">
                 Click the button below to open the Change Password modal with form validation.
               </p>
               <Button color="primary" size="md" onClick={() => setIsChangePasswordModalOpen(true)}>
@@ -888,7 +888,7 @@ const BenchmarkChart = () => {
   if (!mounted) {
     return (
       <div className="bg-ws-base-white border border-gray-200 min-h-90 rounded-xl p-6 flex items-center justify-center">
-        <p className="text-ws-black-10">Loading chart...</p>
+        <p className="text-ws-text-tertiary">Loading chart...</p>
       </div>
     );
   }

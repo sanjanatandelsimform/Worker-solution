@@ -67,7 +67,7 @@ export default function CostCard({
       {/* Middle content */}
       <div className="flex flex-col flex-1 mt-4">
         {isNoData ? (
-          <div className="flex items-center h-[110px] text-sm text-ws-black-10">
+          <div className="flex items-center h-[110px] text-sm text-ws-text-tertiary">
             No data available
           </div>
         ) : (
@@ -77,7 +77,7 @@ export default function CostCard({
 
             {/* Cyan bar — dynamic width */}
             <div
-              className="flex items-center bg-ws-cyan-60 px-3 py-2 text-ws-white text-base transition-all duration-500 whitespace-nowrap"
+              className="flex items-center bg-ws-cyan-60 px-3 py-2 text-ws-base-white text-base transition-all duration-500 whitespace-nowrap"
               style={{ width: primaryWidth }}
             >
               {primaryScore}

@@ -163,7 +163,7 @@ export function Table<T extends Record<string, unknown>>({
               <th
                 className={cx(
                   cellPadding[size],
-                  'text-left font-semibold text-foreground w-12 border-r border-ws-gray-40'
+                  'text-left font-semibold text-foreground w-12 border-r border-ws-border-primary'
                 )}
               >
                 <input
@@ -189,7 +189,7 @@ export function Table<T extends Record<string, unknown>>({
                 key={column.key}
                 className={cx(
                   cellPadding[size],
-                  'text-base text-left font-medium text-foreground border-r border-ws-gray-40 last:border-r-0',
+                  'text-base text-left font-medium text-foreground border-r border-ws-border-primary last:border-r-0',
                   column.sortable && 'cursor-pointer hover:bg-muted-foreground/10',
                   column.className
                 )}
@@ -206,7 +206,7 @@ export function Table<T extends Record<string, unknown>>({
             <tr>
               <td
                 colSpan={columns.length + (selectable ? 1 : 0)}
-                className={cx(cellPadding[size], 'text-center text-muted-foreground border-r border-ws-gray-40')}
+                className={cx(cellPadding[size], 'text-center text-muted-foreground border-r border-ws-border-primary')}
               >
                 Loading...
               </td>
@@ -215,7 +215,7 @@ export function Table<T extends Record<string, unknown>>({
             <tr>
               <td
                 colSpan={columns.length + (selectable ? 1 : 0)}
-                className={cx(cellPadding[size], 'text-center text-muted-foreground border-r border-ws-gray-40')}
+                className={cx(cellPadding[size], 'text-center text-muted-foreground border-r border-ws-border-primary')}
               >
                 {emptyMessage}
               </td>
@@ -265,7 +265,7 @@ export function Table<T extends Record<string, unknown>>({
                     return (
                       <td
                         key={`${rowKey}-${column.key}`}
-                        className={cx(cellPadding[size], column.className, 'text-foreground border-r border-ws-gray-40 border-t border-ws-gray-40 last:border-r-0 text-sm')}
+                        className={cx(cellPadding[size], column.className, 'text-foreground border-r border-ws-border-primary border-t border-ws-border-primary last:border-r-0 text-sm')}
                       >
                         {column.render ? column.render(item, value) : (
                           <Fragment>{String(value ?? '')}</Fragment>

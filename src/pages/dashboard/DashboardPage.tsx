@@ -39,7 +39,12 @@ export const DashboardPage = () => {
   const user = useAppSelector(selectUser);
   const dispatch = useAppDispatch();
   const profileError = useAppSelector(selectProfileError);
-  const { connectWithFinch, isLoading: isFinchLoading } = useFinchConnect();
+  const {
+    connectWithFinch,
+    isLoading: isFinchLoading,
+    error: finchError,
+    clearError: clearFinchError,
+  } = useFinchConnect();
   const { isConnected } = useFinchStatus();
 
   const emailVerify = user?.emailVerify || false;
@@ -356,7 +361,7 @@ export const DashboardPage = () => {
         <main className="flex-1 overflow-y-auto p-5 xl:p-10 xl:pl-2">
           <div className="space-y-6"></div>
           <div>
-            <h2 className="text-4xl font-bold text-ws-black-60">
+            <h2 className="text-4xl font-bold text-ws-text-primary">
               {assessmentData?.status !== "completed" ? (
                 `Welcome, ${user?.firstName ? `${user.firstName}!` : ""}`
               ) : (
@@ -548,6 +553,18 @@ export const DashboardPage = () => {
                 </div>
               </div>
             )}
+
+          {finchError && (
+            <div className="mb-4">
+              <ErrorMessage
+                errorType="danger"
+                textColor="text-red-700"
+                alertIcon={AlertCircle}
+                errorMessage={finchError}
+                onClose={clearFinchError}
+              />
+            </div>
+          )}
 
           {/* Tabs — only render after dashboard data is confirmed ready */}
           {emailVerify && assessmentData?.status === "completed" && !isConnected && (

@@ -78,10 +78,10 @@ export default function CostBurdenBarChart({ data, width, height = 400 }: Canvas
 
     // Colors from Figma
     const color1 = "#006C68"; // Darker cyan
-    const color2 = "#62938E"; // Lighter cyan
+    const color2 = "#73A09B"; // Lighter cyan
     const textColor = "#000000";
     //const labelColorBottom = "#f00";
-    const gridLineColor = "#ccc";
+    const gridLineColor = "#D5D7DA";
 
     // Draw horizontal grid lines and Y-axis labels
     ctx.strokeStyle = gridLineColor;
@@ -348,12 +348,12 @@ export function IncomeDistributionChart({
       <CostBurdenBarChart data={chartData} height={400} />
       <div className="flex gap-6 items-center justify-center">
         <div className="flex gap-4 items-center">
-          <div className="size-4.5 rounded-xs bg-ws-primary-300" />
-          <p className="font-normal text-lg leading-7 text-black">Burdened</p>
+          <div className="size-4.5 rounded-xs bg-ws-light-teal-500" />
+          <p className="font-normal text-lg leading-7 text-ws-text-primary">Burdened</p>
         </div>
         <div className="flex gap-4 items-center">
-          <div className="size-4.5 rounded-xs bg-ws-primary-700" />
-          <p className="font-normal text-lg leading-7 text-black">Severely Burdened</p>
+          <div className="size-4.5 rounded-xs bg-ws-light-teal-900" />
+          <p className="font-normal text-lg leading-7 text-ws-text-primary">Severely Burdened</p>
         </div>
       </div>
     </div>
