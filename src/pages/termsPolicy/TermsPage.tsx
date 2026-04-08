@@ -4,7 +4,7 @@ export default function TermsPage() {
   const navigate = useNavigate();
   return (
     <div className="flex min-h-screen items-center justify-center bg-secondary">
-      <div className="flex w-3xl items-center justify-center rounded-xl border border-solid border-ws-primary-100 bg-ws-white pt-6">
+      <div className="flex w-3xl items-center justify-center rounded-xl border border-solid border-ws-border-primary bg-ws-base-white pt-6">
         <div className="flex w-full flex-col items-center p-6 ">
           {/* Logo */}
           <div className="flex items-center justify-center px-2 py-1 mb-6">

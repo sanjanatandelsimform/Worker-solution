@@ -82,10 +82,10 @@ export const BaseModalWithIcon = ({
             </ModalTitle>
             {subtitle && (
               <>
-                <p className="font-body text-sm font-normal leading-5 text-ws-black-10">
+                <p className="font-body text-sm font-normal leading-5 text-ws-text-tertiary">
                   {subtitle}
                 </p>
-                <p className="font-body text-sm font-normal leading-5 text-ws-black-10">
+                <p className="font-body text-sm font-normal leading-5 text-ws-text-tertiary">
                   {subtitleOne}
                 </p>
               </>

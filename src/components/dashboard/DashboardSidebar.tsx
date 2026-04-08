@@ -139,7 +139,7 @@ export const DashboardSidebar = ({ activeUrl = "/" }: DashboardSidebarProps) => 
 
   return (
     <div
-      className={`flex h-[calc(100vh-40px)] xl:h-[calc(100vh-80px)] flex-col border-0 border-ws-primary-100 bg-ws-white py-6 lg:py-10 m-5 xl:m-10 rounded-lg inset-shadow-sm shadow-md transition-all duration-300 ease-in-out ${
+      className={`flex h-[calc(100vh-40px)] xl:h-[calc(100vh-80px)] flex-col border-0 border-ws-border-primary bg-ws-base-white py-6 lg:py-10 m-5 xl:m-10 rounded-lg inset-shadow-sm shadow-md transition-all duration-300 ease-in-out ${
         isTabletRange ? (isCollapsed ? "w-20 px-3" : "w-66 px-6") : "w-66 px-6"
       }`}
     >
@@ -166,9 +166,9 @@ export const DashboardSidebar = ({ activeUrl = "/" }: DashboardSidebarProps) => 
             className={isCollapsed ? "w-full" : ""}
           >
             {isCollapsed ? (
-              <Menu01 className="size-5 text-ws-white" />
+              <Menu01 className="size-5 text-ws-base-white" />
             ) : (
-              <XClose className="size-5 text-ws-white" />
+              <XClose className="size-5 text-ws-base-white" />
             )}
           </Button>
         )}
@@ -180,17 +180,17 @@ export const DashboardSidebar = ({ activeUrl = "/" }: DashboardSidebarProps) => 
         <NavList
           items={settingsItems}
           activeUrl={activeUrl}
-          className="mt-4 border-t border-ws-primary-100"
+          className="mt-4 border-t border-ws-border-primary"
           isCollapsed={shouldBeCollapsed}
         />
       </nav>
 
       {/* User Account Card at Bottom - Dynamic User Info */}
-      <div className="border border-ws-gray-40 rounded-xl p-2 lg:p-3 mt-6 overflow-hidden ">
+      <div className="border border-ws-border-secondary rounded-xl p-2 lg:p-3 mt-6 overflow-hidden ">
         {isTabletRange && isCollapsed ? (
           // Show initials when collapsed
           <div className="flex items-center justify-center">
-            <div className="flex items-center justify-center w-10 h-10 rounded-full bg-cyan-500 text-ws-white font-semibold text-sm">
+            <div className="flex items-center justify-center w-10 h-10 rounded-full bg-ws-light-teal-900 text-ws-base-white font-semibold text-sm">
               {getUserInitials()}
             </div>
           </div>
@@ -198,10 +198,10 @@ export const DashboardSidebar = ({ activeUrl = "/" }: DashboardSidebarProps) => 
           // Show full info when expanded
           <div className="flex items-start gap-3">
             <div className="flex-1 min-w-0">
-              <p className="text-sm font-semibold text-ws-black-90 truncate transition-opacity duration-300">
+              <p className="text-sm font-semibold text-ws-text-primary truncate transition-opacity duration-300">
                 {displayName}
               </p>
-              <p className="text-sm text-ws-black-10 mt-1 truncate transition-opacity duration-300">
+              <p className="text-sm text-ws-text-tertiary mt-1 truncate transition-opacity duration-300">
                 {displayEmail}
               </p>
             </div>

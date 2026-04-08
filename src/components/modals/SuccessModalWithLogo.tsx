@@ -40,7 +40,7 @@ export const SuccessModalWithLogo = ({
 }: SuccessModalWithLogoProps) => {
   return (
     <Modal isOpen={isOpen} onOpenChange={onClose} size={size}>
-      <ModalContent className="bg-ws-white rounded-lg" aria-label={title || "Success notification"}>
+      <ModalContent className="bg-ws-base-white rounded-lg" aria-label={title || "Success notification"}>
         {/* Modal Header with Logo, Icon, and Close Button */}
         <ModalHeader className="relative flex flex-col items-center gap-6 border-0">
           {/* Logo */}
@@ -96,7 +96,7 @@ export const SuccessModalWithLogo = ({
             color={button.color || "primary"}
             size="lg"
             onClick={button.onClick}
-            className="w-auto mb-10 bg-ws-primary-900 text-ws-white hover:bg-ws-primary-900-hover focus:bg-ws-primary-900-hover active:bg-ws-primary-900-hover"
+            className="w-auto mb-10 bg-ws-primary-900 text-ws-base-white hover:bg-ws-primary-900-hover focus:bg-ws-primary-900-hover active:bg-ws-primary-900-hover"
             isDisabled={button.isDisabled}
           >
             {button.text}

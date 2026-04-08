@@ -757,7 +757,7 @@ export const DynamicQuestionRenderer = ({
             isInvalid={error ? true : false}
           >
             {(item: SelectItemType) => (
-              <Select.Item className="text-ws-black-20" id={item.id}>
+              <Select.Item className="text-ws-text-secondary" id={item.id}>
                 {item.label || ""}
               </Select.Item>
             )}

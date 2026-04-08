@@ -37,18 +37,18 @@ export default function AverageCard({
   const badgeColor = staticsPoints ? getBadgeColor(staticsPoints) : undefined;
 
   return (
-    <div className={`bg-ws-white ring ring-ws-primary-100 rounded-lg p-3 ${className}`}>
-      <h2 className="text-xs text-ws-black-90 mb-2">{title}</h2>
+    <div className={`bg-ws-base-white ring ring-ws-border-secondary rounded-lg p-3 ${className}`}>
+      <h2 className="text-xs text-ws-text-primary mb-2">{title}</h2>
       <div className="flex items-center justify-between">
-        <h3 className="text-2xl font-semibold text-ws-black-90">{cardStatics}</h3>
+        <h3 className="text-2xl font-semibold text-ws-text-primary">{cardStatics}</h3>
         {staticsPointsState && badgeColor && (
           <Badge
             type="pill-color"
             color={badgeColor}
             className={
               badgeColor === "success"
-                ? "text-xs bg-ws-success-bg text-ws-success-text ring-0 rounded-none py-1"
-                : "text-xs bg-ws-warning-bg text-ws-warning-text ring-0 rounded-none py-1"
+                ? "text-xs bg-ws-bg-positive text-ws-text-positive ring-0 rounded-none py-1"
+                : "text-xs bg-ws-bg-negative text-ws-text-negative ring-0 rounded-none py-1"
             }
             size="sm"
           >

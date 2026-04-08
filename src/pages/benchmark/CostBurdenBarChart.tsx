@@ -70,17 +70,18 @@ export default function CostBurdenBarChart({ data, width, height = 400 }: Canvas
     const yScale = chartHeight / maxValue;
 
     // Bar configuration
-    const barWidth = 128;
+    const barWidth = 70;
     const totalBarsWidth = barWidth * data.length;
     const availableSpaceForGaps = chartWidth - totalBarsWidth;
     const barSpacing = data.length > 1 ? availableSpaceForGaps / (data.length + 1) : 0;
-    const barGap = 18; // Gap between stacked bars
+    const barGap = 0; // Gap between stacked bars
 
     // Colors from Figma
-    const color1 = "#6dc5d3"; // Darker cyan
-    const color2 = "#a5f0fc"; // Lighter cyan
+    const color1 = "#006C68"; // Darker cyan
+    const color2 = "#73A09B"; // Lighter cyan
     const textColor = "#000000";
-    const gridLineColor = "#ccc";
+    //const labelColorBottom = "#f00";
+    const gridLineColor = "#D5D7DA";
 
     // Draw horizontal grid lines and Y-axis labels
     ctx.strokeStyle = gridLineColor;
@@ -242,7 +243,7 @@ export default function CostBurdenBarChart({ data, width, height = 400 }: Canvas
             y: mouseY,
             label: item.sublabel,
             value: item.value2,
-            color: "#a5f0fc",
+            color: "#006C68",
           };
         } else {
           foundTooltip = {
@@ -250,7 +251,7 @@ export default function CostBurdenBarChart({ data, width, height = 400 }: Canvas
             y: mouseY,
             label: item.sublabel,
             value: item.value1,
-            color: "#6dc5d3",
+            color: "#62938E",
           };
         }
       }
@@ -277,7 +278,7 @@ export default function CostBurdenBarChart({ data, width, height = 400 }: Canvas
       />
       {tooltip && (
         <div
-          className="pointer-events-none absolute rounded-lg border border-gray-200 bg-ws-white px-3 py-2 shadow-lg"
+          className="pointer-events-none absolute rounded-lg border border-gray-200 bg-ws-base-white px-3 py-2 shadow-lg"
           style={{
             left: `${tooltip.x + 10}px`,
             top: `${tooltip.y - 10}px`,
@@ -287,7 +288,7 @@ export default function CostBurdenBarChart({ data, width, height = 400 }: Canvas
           <div className="flex items-center gap-2">
             <div className="h-3 w-3 rounded" style={{ backgroundColor: tooltip.color }} />
             <div className="text-sm">
-              <div className="font-medium text-ws-black-90">{tooltip.value.toFixed(2)}%</div>
+              <div className="font-medium text-ws-text-primary">{tooltip.value.toFixed(2)}%</div>
               <div className="text-xs text-ws-gray-100">{tooltip.label}</div>
             </div>
           </div>
@@ -347,12 +348,12 @@ export function IncomeDistributionChart({
       <CostBurdenBarChart data={chartData} height={400} />
       <div className="flex gap-6 items-center justify-center">
         <div className="flex gap-4 items-center">
-          <div className="size-4.5 rounded-xs bg-cyan-400" />
-          <p className="font-normal text-lg leading-7 text-black">Burdened</p>
+          <div className="size-4.5 rounded-xs bg-ws-light-teal-500" />
+          <p className="font-normal text-lg leading-7 text-ws-text-primary">Burdened</p>
         </div>
         <div className="flex gap-4 items-center">
-          <div className="size-4.5 rounded-xs bg-cyan-200" />
-          <p className="font-normal text-lg leading-7 text-black">Severely Burdened</p>
+          <div className="size-4.5 rounded-xs bg-ws-light-teal-900" />
+          <p className="font-normal text-lg leading-7 text-ws-text-primary">Severely Burdened</p>
         </div>
       </div>
     </div>

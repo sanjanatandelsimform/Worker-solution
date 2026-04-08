@@ -41,7 +41,7 @@ export const BarChartPage = () => {
             top: 12,
             bottom: 18,
           }}
-          className="text-ws-black-10 [&_.recharts-text]:text-xs"
+          className="text-ws-text-tertiary [&_.recharts-text]:text-xs"
         >
           <CartesianGrid vertical={false} stroke="currentColor" className="text-utility-gray-100" />
 

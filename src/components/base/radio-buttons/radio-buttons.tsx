@@ -31,7 +31,7 @@ export const RadioButtonBase = ({
   return (
     <div
       className={cx(
-        "flex size-4 min-h-4 min-w-4 cursor-pointer appearance-none items-center justify-center rounded-full bg-ws-white ring-1 ring-ws-primary-100 ring-inset",
+        "flex size-4 min-h-4 min-w-4 cursor-pointer appearance-none items-center justify-center rounded-full bg-ws-base-white ring-1 ring-ws-border-primary ring-inset",
         size === "md" && "size-5 min-h-5 min-w-5",
         isSelected && !isDisabled && "bg-blue-700 ring-blue-700",
         isDisabled && "cursor-not-allowed border-disabled bg-disabled_subtle",
@@ -41,7 +41,7 @@ export const RadioButtonBase = ({
     >
       <div
         className={cx(
-          "size-1.5 rounded-full bg-ws-white opacity-0 transition-inherit-all",
+          "size-1.5 rounded-full bg-ws-base-white opacity-0 transition-inherit-all",
           size === "md" && "size-2",
           isDisabled && "bg-fg-disabled_subtle",
           isSelected && "opacity-100"
@@ -115,7 +115,7 @@ export const RadioButton = ({
               )}
               {hint && (
                 <span
-                  className={cx("text-ws-black-10", sizes[size].hint)}
+                  className={cx("text-ws-text-tertiary", sizes[size].hint)}
                   onClick={event => event.stopPropagation()}
                 >
                   {hint}
