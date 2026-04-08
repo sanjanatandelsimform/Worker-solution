@@ -1,7 +1,6 @@
 import { useCallback, useState } from "react";
 import { useFinchConnect as useFinchSDK } from "@tryfinch/react-connect";
 import { useNavigate } from "react-router-dom";
-import { toast } from "sonner";
 import { getFinchSessionId, exchangeFinchCode } from "@/services/api/finchApi";
 
 type FinchConnectStatus = "idle" | "fetching-session" | "connecting" | "exchanging-code";
@@ -9,17 +8,22 @@ type FinchConnectStatus = "idle" | "fetching-session" | "connecting" | "exchangi
 export interface UseFinchConnectReturn {
   connectWithFinch: () => Promise<void>;
   isLoading: boolean;
+  error: string | null;
+  clearError: () => void;
 }
 
 export function useFinchConnect(): UseFinchConnectReturn {
   const navigate = useNavigate();
   const [status, setStatus] = useState<FinchConnectStatus>("idle");
+  const [error, setError] = useState<string | null>(null);
   const isLoading = status !== "idle";
+
+  const clearError = useCallback(() => setError(null), []);
 
   const onSuccess = useCallback(
     async ({ code }: { code: string; state?: string }) => {
       if (!code) {
-        toast.error("Failed to complete Finch connection. Please try again.");
+        setError("Failed to complete Finch connection. Please try again.");
         setStatus("idle");
         return;
       }
@@ -30,7 +34,7 @@ export function useFinchConnect(): UseFinchConnectReturn {
         navigate("/additional-questions");
       } catch (e) {
         const msg = e instanceof Error ? e.message : undefined;
-        toast.error(msg || "Failed to complete Finch connection. Please try again.");
+        setError(msg || "Failed to complete Finch connection. Please try again.");
         setStatus("idle");
       }
     },
@@ -38,7 +42,7 @@ export function useFinchConnect(): UseFinchConnectReturn {
   );
 
   const onError = useCallback(({ errorMessage }: { errorMessage: string }) => {
-    toast.error(errorMessage || "Failed to complete Finch connection. Please try again.");
+    setError(errorMessage || "Failed to complete Finch connection. Please try again.");
     setStatus("idle");
   }, []);
 
@@ -50,18 +54,18 @@ export function useFinchConnect(): UseFinchConnectReturn {
 
   const connectWithFinch = useCallback(async () => {
     if (isLoading) return;
+    setError(null);
     setStatus("fetching-session");
     try {
       const { sessionId } = await getFinchSessionId();
       setStatus("connecting");
       open({ sessionId });
     } catch (e) {
-      console.log("Error in connectWithFinch:", e);
       const msg = e instanceof Error ? e.message : undefined;
-      toast.error(msg || "Failed to start Finch Connect. Please try again.");
+      setError(msg || "Failed to start Finch Connect. Please try again.");
       setStatus("idle");
     }
   }, [isLoading, open]);
 
-  return { connectWithFinch, isLoading };
+  return { connectWithFinch, isLoading, error, clearError };
 }
