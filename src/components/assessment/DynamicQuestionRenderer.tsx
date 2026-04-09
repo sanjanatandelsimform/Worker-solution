@@ -679,7 +679,7 @@ export const DynamicQuestionRenderer = ({
                           size="md"
                           iconLeading={Trash01}
                           onClick={() => removeArrayItem(conditionalKey, item.id)}
-                          className="mt-6 h-10 shrink-0 px-2 bg-tertiary *:data-icon:text-gray-400"
+                          className="mt-6 h-10 shrink-0 px-2 bg-tertiary *:data-icon:text-ws-navy-800 border border-ws-navy-800"
                           aria-label="Remove item"
                         />
                       )}
@@ -692,11 +692,11 @@ export const DynamicQuestionRenderer = ({
                       iconLeading={Plus}
                       onClick={() => addArrayItem(conditionalKey)}
                       className={cx(
-                        "max-w-60 text-sm font-semibold text-ws-color-black-20",
-                        error && "border-ws-red-40"
+                        "max-w-60 text-sm font-semibold text-ws-navy-800 border border-ws-navy-800",
+                        error && "border-ws-error-600"
                       )}
                     >
-                      Add another
+                      Add another location
                     </Button>
                   )}
                 </>
@@ -906,7 +906,13 @@ export const DynamicQuestionRenderer = ({
           <Label isRequired={question.isRequired} className="text-base custom-label">
             {displayOrder}. {question.questionText}
           </Label>
-          {error && <span className="text-sm text-ws-error-600">{error}</span>}
+          {error && (
+            <div className="flex items-center gap-2">
+              <InputInfo className="text-ws-error-600" />
+              <span className="text-sm text-ws-error-600">{error}</span>
+            </div>
+          )}
+          {/* {error && <span className="text-sm text-ws-error-600">{error}</span>} */}
           <div className="flex w-full flex-col gap-4 custom-question-options">
             <RadioGroup
               aria-label={question.questionText}
@@ -967,7 +973,12 @@ export const DynamicQuestionRenderer = ({
             isInvalid={error ? true : false}
             tooltip={error ? error : undefined}
           />
-          {error && <span className="text-sm text-ws-error-600">{error}</span>}
+            {error && (
+            <div className="flex items-center gap-2">
+              <InputInfo className="text-ws-error-600" />
+              <span className="text-sm text-ws-error-600">{error}</span>
+            </div>
+          )}
         </div>
       );
 

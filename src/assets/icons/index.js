@@ -1,5 +1,6 @@
 export * from "./ArrowLeft";
 export * from "./ArrowRight";
+export * from "./AssessmentIcon";
 export * from "./BriefcaseIcon";
 export * from "./ChartIcon";
 export * from "./CheckIcon";

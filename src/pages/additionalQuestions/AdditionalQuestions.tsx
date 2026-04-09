@@ -1,5 +1,5 @@
 import { Button } from "@/components/base/buttons/button";
-import { ChevronLeft, XClose } from "@untitledui/icons";
+import { ChevronRight, XClose } from "@untitledui/icons";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { RadioButton, RadioGroup } from "@/components/base/radio-buttons/radio-buttons";
@@ -214,10 +214,6 @@ export default function AdditionalQuestions() {
     topThreeGoals: [],
   });
 
-  const handleBack = () => {
-    navigate("/dashboard");
-  };
-
   const handleClose = () => {
     navigate("/dashboard");
   };
@@ -255,9 +251,9 @@ export default function AdditionalQuestions() {
   return (
     <div className="flex min-h-screen flex-col bg-ws-navy-25">
       {/* Top Navigation Bar */}
-      <div className="flex h-14 items-center justify-between border-b border-ws-primary-600 px-6 py-4">
+      <div className="flex h-14 items-center justify-end border-b border-ws-navy-800 px-6 py-4">
         {/* Back Button */}
-        <Button
+        {/* <Button
           onClick={handleBack}
           color="tertiary"
           size="md"
@@ -265,40 +261,151 @@ export default function AdditionalQuestions() {
           className="flex items-center gap-1 text-lg font-normal text-ws-primary-800 transition-opacity"
         >
           Back
-        </Button>
+        </Button> */}
 
         {/* Title */}
-        <h1 className="text-lg font-medium text-ws-primary-800">Additional Questions</h1>
+        {/* <h1 className="text-lg font-medium text-ws-primary-800">Additional Questions</h1> */}
 
         {/* Close Button */}
         <Button
           onClick={handleClose}
           color="tertiary"
           size="md"
-          iconLeading={<XClose data-icon className="text-ws-primary-800" />}
-          className="text-ws-primary-800 transition-opacity hover:opacity-80"
+          iconLeading={<XClose data-icon className="font-bold text-ws-navy-800" />}
         />
       </div>
 
       {/* Compensation Area */}
       <div className="mx-auto w-full max-w-4xl flex-1 space-y-3 py-8 px-4">
-        <div className="my-8 mx-12.5">
-          <div className="space-y-6">
-            {/* Workforce Section */}
-            <div className="bg-ws-base-white rounded-lg border border-ws-border-primary shadow-sm p-6 space-y-6">
-              <h2 className="text-3xl font-semibold mb-2">Workforce</h2>
-              <p className="text-base text-ws-gray-90">
-                We’d like to get a better understanding of your workforce and how they’re
-                structured. This will help us customize relevant solution providers.
-              </p>
+        <div className="space-y-6">
+          <div className="w-full">
+            <h2 className="text-3xl font-medium mb-2 text-ws-text-primary">Almost there!</h2>
+            <p className="text-base text-ws-text-secondary">
+              While we intergrate with Finch to automatically sync your HR and payroll data, fill
+              out this short assessment so we can tailor our recommendations to your goals.
+            </p>
+          </div>
+          {/* Workforce Section */}
+          <div className="bg-ws-base-white rounded-lg border border-ws-border-primary shadow-sm p-6 space-y-6">
+            <h2 className="text-3xl font-semibold mb-2">Workforce</h2>
+            <p className="text-base text-ws-gray-90">
+              We’d like to get a better understanding of your workforce and how they’re structured.
+              This will help us customize relevant solution providers.
+            </p>
 
-              {/* Question section */}
-              <div className="space-y-8 pt-4">
-                {questions.map((question, index) => (
-                  <div key={question.id} className="space-y-3">
-                    <Label isRequired={question.required} className="text-base text-ws-text-primary">
-                      {index + 1}. {question.question}
-                    </Label>
+            {/* Question section */}
+            <div className="space-y-8">
+              {questions.map((question, index) => (
+                <div key={question.id} className="space-y-3">
+                  <Label isRequired={question.required} className="text-base text-ws-text-primary">
+                    {index + 1}. {question.question}
+                  </Label>
+                  <RadioGroup
+                    value={answers[question.id] || ""}
+                    onChange={value => handleAnswerChange(question.id, value)}
+                    className="flex flex-col gap-3"
+                  >
+                    {question.options.map(option => (
+                      <label key={option.id} className="flex items-center gap-3 cursor-pointer">
+                        <RadioButton
+                          value={option.id}
+                          className="border border-ws-border-primary rounded-full"
+                        />
+                        <span className="text-sm font-normal text-ws-text-secondary">
+                          {option.label}
+                        </span>
+                      </label>
+                    ))}
+                  </RadioGroup>
+                </div>
+              ))}
+            </div>
+          </div>
+
+          {/* Compensation Section */}
+          <div className="bg-ws-base-white rounded-lg border border-ws-border-primary shadow-sm p-6 space-y-6">
+            <h2 className="text-3xl font-semibold mb-2">Compensation </h2>
+            <p className="text-base text-ws-gray-90">
+              Select salary that apply best to your workforce. This doesn’t have to be exact.
+            </p>
+
+            {/* Compensation section */}
+            <div className="space-y-8">
+              {compensationQuestions.map((question, index) => (
+                <div key={question.id} className="space-y-3">
+                  <Label isRequired={question.required} className="text-base text-ws-text-primary">
+                    {index + 1}. {question.question}
+                  </Label>
+
+                  {!question.isDropdown ? (
+                    <>
+                      <RadioGroup
+                        value={answers[question.id] || ""}
+                        onChange={value => handleAnswerChange(question.id, value)}
+                        className="flex flex-col gap-3"
+                      >
+                        {question.options.map(option => (
+                          <label key={option.id} className="flex items-center gap-3 cursor-pointer">
+                            <RadioButton
+                              value={option.id}
+                              className="border border-ws-border-primary rounded-full"
+                            />
+                            <span className="text-sm font-normal text-ws-text-secondary">
+                              {option.label}
+                            </span>
+                          </label>
+                        ))}
+                      </RadioGroup>
+
+                      {/* Conditional Month Dropdown for Annual Raises Question */}
+                      {question.hasConditional && answers[question.id] === "yes-raises" && (
+                        <div className="ml-6 space-y-2 pt-2">
+                          <Label className="text-sm font-normal text-ws-text-secondary">
+                            If yes, when?
+                          </Label>
+                          <Select
+                            items={monthOptions}
+                            placeholder="Select Month"
+                            size="md"
+                            className="w-full max-w-xs rounded-lg"
+                          >
+                            {item => <SelectItem id={item.id} label={item.label} />}
+                          </Select>
+                        </div>
+                      )}
+                    </>
+                  ) : (
+                    <Select
+                      items={question.options}
+                      placeholder="Select payroll provider"
+                      size="md"
+                      className="w-full max-w-xs rounded-lg"
+                    >
+                      {item => <SelectItem id={item.id} label={item.label} />}
+                    </Select>
+                  )}
+                </div>
+              ))}
+            </div>
+          </div>
+
+          {/* Benefits & Retirement Section */}
+          <div className="bg-ws-base-white rounded-lg border border-ws-border-primary shadow-sm p-6 space-y-6">
+            <h2 className="text-3xl font-semibold mb-2">Benefits </h2>
+            <p className="text-base text-ws-gray-90">
+              To understand what gaps may exist in your current benefits offerings, please select
+              all relevant options that you currently offer.{" "}
+            </p>
+
+            {/* Benefits questions */}
+            <div className="space-y-8">
+              {benefitsQuestions.map((question, index) => (
+                <div key={question.id} className="space-y-3">
+                  <Label isRequired={question.required} className="text-base text-ws-text-primary">
+                    {index + 1}. {question.question}
+                  </Label>
+
+                  {!question.isDropdown ? (
                     <RadioGroup
                       value={answers[question.id] || ""}
                       onChange={value => handleAnswerChange(question.id, value)}
@@ -316,95 +423,32 @@ export default function AdditionalQuestions() {
                         </label>
                       ))}
                     </RadioGroup>
-                  </div>
-                ))}
-              </div>
+                  ) : (
+                    <Select
+                      items={question.options}
+                      placeholder="Select Month"
+                      size="md"
+                      className="w-full max-w-xs rounded-lg"
+                    >
+                      {item => <SelectItem id={item.id} label={item.label} />}
+                    </Select>
+                  )}
+                </div>
+              ))}
             </div>
 
-            {/* Compensation Section */}
-            <div className="bg-ws-base-white rounded-lg border border-ws-border-primary shadow-sm p-6 space-y-6">
-              <h2 className="text-3xl font-semibold mb-2">Compensation </h2>
-              <p className="text-base text-ws-gray-90">
-                Select salary that apply best to your workforce. This doesn’t have to be exact.
-              </p>
+            {/* Retirement subsection within Benefits */}
+            <div className="pt-8">
+              <h3 className="text-2xl font-medium pb-2 mb-6 border-b border-ws-border-primary">
+                Retirement
+              </h3>
 
-              {/* Compensation section */}
+              {/* Retirement questions section */}
               <div className="space-y-8 pt-4">
-                {compensationQuestions.map((question, index) => (
+                {retirementQuestions.map((question, index) => (
                   <div key={question.id} className="space-y-3">
-                    <Label isRequired={question.required} className="text-base text-ws-text-primary">
-                      {index + 1}. {question.question}
-                    </Label>
-
-                    {!question.isDropdown ? (
-                      <>
-                        <RadioGroup
-                          value={answers[question.id] || ""}
-                          onChange={value => handleAnswerChange(question.id, value)}
-                          className="flex flex-col gap-3"
-                        >
-                          {question.options.map(option => (
-                            <label
-                              key={option.id}
-                              className="flex items-center gap-3 cursor-pointer"
-                            >
-                              <RadioButton
-                                value={option.id}
-                                className="border border-ws-border-primary rounded-full"
-                              />
-                              <span className="text-sm font-normal text-ws-text-secondary">
-                                {option.label}
-                              </span>
-                            </label>
-                          ))}
-                        </RadioGroup>
-
-                        {/* Conditional Month Dropdown for Annual Raises Question */}
-                        {question.hasConditional && answers[question.id] === "yes-raises" && (
-                          <div className="ml-6 space-y-2 pt-2">
-                            <Label className="text-sm font-normal text-ws-text-secondary">
-                              If yes, when?
-                            </Label>
-                            <Select
-                              items={monthOptions}
-                              placeholder="Select Month"
-                              size="md"
-                              className="w-full max-w-xs rounded-lg"
-                            >
-                              {item => <SelectItem id={item.id} label={item.label} />}
-                            </Select>
-                          </div>
-                        )}
-                      </>
-                    ) : (
-                      <Select
-                        items={question.options}
-                        placeholder="Select payroll provider"
-                        size="md"
-                        className="w-full max-w-xs rounded-lg"
-                      >
-                        {item => <SelectItem id={item.id} label={item.label} />}
-                      </Select>
-                    )}
-                  </div>
-                ))}
-              </div>
-            </div>
-
-            {/* Benefits & Retirement Section */}
-            <div className="bg-ws-base-white rounded-lg border border-ws-border-primary shadow-sm p-6 space-y-6">
-              <h2 className="text-3xl font-semibold mb-2">Benefits </h2>
-              <p className="text-base text-ws-gray-90">
-                To understand what gaps may exist in your current benefits offerings, please select
-                all relevant options that you currently offer.{" "}
-              </p>
-
-              {/* Benefits questions */}
-              <div className="space-y-8 pt-4">
-                {benefitsQuestions.map((question, index) => (
-                  <div key={question.id} className="space-y-3">
-                    <Label isRequired={question.required} className="text-base text-ws-text-primary">
-                      {index + 1}. {question.question}
+                    <Label isRequired={question.required} className="text-base">
+                      {index + 3}. {question.question}
                     </Label>
 
                     {!question.isDropdown ? (
@@ -428,7 +472,7 @@ export default function AdditionalQuestions() {
                     ) : (
                       <Select
                         items={question.options}
-                        placeholder="Select Month"
+                        placeholder="Select"
                         size="md"
                         className="w-full max-w-xs rounded-lg"
                       >
@@ -438,122 +482,71 @@ export default function AdditionalQuestions() {
                   </div>
                 ))}
               </div>
-
-              {/* Retirement subsection within Benefits */}
-              <div className="pt-8">
-                <h3 className="text-2xl font-medium pb-2 mb-6 border-b border-gray-200">
-                  Retirement
-                </h3>
-
-                {/* Retirement questions section */}
-                <div className="space-y-8 pt-4">
-                  {retirementQuestions.map((question, index) => (
-                    <div key={question.id} className="space-y-3">
-                      <Label isRequired={question.required} className="text-base">
-                        {index + 3}. {question.question}
-                      </Label>
-
-                      {!question.isDropdown ? (
-                        <RadioGroup
-                          value={answers[question.id] || ""}
-                          onChange={value => handleAnswerChange(question.id, value)}
-                          className="flex flex-col gap-3"
-                        >
-                          {question.options.map(option => (
-                            <label
-                              key={option.id}
-                              className="flex items-center gap-3 cursor-pointer"
-                            >
-                              <RadioButton
-                                value={option.id}
-                                className="border border-ws-border-primary rounded-full"
-                              />
-                              <span className="text-sm font-normal text-ws-text-secondary">
-                                {option.label}
-                              </span>
-                            </label>
-                          ))}
-                        </RadioGroup>
-                      ) : (
-                        <Select
-                          items={question.options}
-                          placeholder="Select"
-                          size="md"
-                          className="w-full max-w-xs rounded-lg"
-                        >
-                          {item => <SelectItem id={item.id} label={item.label} />}
-                        </Select>
-                      )}
-                    </div>
-                  ))}
-                </div>
-              </div>
             </div>
+          </div>
 
-            {/* Goals Section */}
-            <div className="bg-ws-base-white rounded-lg border border-ws-border-primary shadow-sm p-6 space-y-6">
-              <h2 className="text-3xl font-semibold mb-2">Goals </h2>
-              <p className="text-base text-ws-gray-90">
-                Pick the goal that best reflects your company’s workforce priorities. This helps us
-                share insights and tips that fit your team’s needs.
-              </p>
+          {/* Goals Section */}
+          <div className="bg-ws-base-white rounded-lg border border-ws-border-primary shadow-sm p-6 space-y-6">
+            <h2 className="text-3xl font-semibold mb-2">Goals </h2>
+            <p className="text-base text-ws-gray-90">
+              Pick the goal that best reflects your company’s workforce priorities. This helps us
+              share insights and tips that fit your team’s needs.
+            </p>
 
-              {/* Question 1: Select Goals */}
-              <div className="space-y-6 pt-4">
-                <div className="flex flex-col gap-6">
-                  <Label className="text-base font-medium">
-                    1. Please select your workforce goals.
-                  </Label>
+            {/* Question 1: Select Goals */}
+            <div className="space-y-6">
+              <div className="flex flex-col gap-6">
+                <Label className="text-base font-medium">
+                  1. Please select your workforce goals.
+                </Label>
 
-                  {/* Goals by Category */}
-                  {goalsData.map(categoryGroup => (
-                    <div key={categoryGroup.category} className="space-y-3">
-                      <h3 className="text-sm font-semibold text-ws-text-secondary">
-                        {categoryGroup.category}
-                      </h3>
-                      <div className="space-y-2 ml-0">
-                        {categoryGroup.goals.map(goal => (
-                          <label
-                            key={goal.id}
-                            className="flex items-center gap-3 cursor-pointer hover:opacity-80 transition-opacity"
-                          >
-                            <Checkbox
-                              isSelected={goalsAnswers.selectedGoals.includes(goal.id)}
-                              onChange={() => handleGoalToggle(goal.id)}
-                              size="sm"
-                              className="border border-ws-border-primary rounded-sm"
-                            />
-                            <span className="text-sm font-normal text-ws-text-secondary">
-                              {goal.label}
-                            </span>
-                          </label>
-                        ))}
-                      </div>
+                {/* Goals by Category */}
+                {goalsData.map(categoryGroup => (
+                  <div key={categoryGroup.category} className="space-y-3">
+                    <h3 className="text-sm font-semibold text-ws-text-secondary">
+                      {categoryGroup.category}
+                    </h3>
+                    <div className="space-y-2 ml-0">
+                      {categoryGroup.goals.map(goal => (
+                        <label
+                          key={goal.id}
+                          className="flex items-center gap-3 cursor-pointer hover:opacity-80 transition-opacity"
+                        >
+                          <Checkbox
+                            isSelected={goalsAnswers.selectedGoals.includes(goal.id)}
+                            onChange={() => handleGoalToggle(goal.id)}
+                            size="sm"
+                            className="border border-ws-border-primary rounded-sm"
+                          />
+                          <span className="text-sm font-normal text-ws-text-secondary">
+                            {goal.label}
+                          </span>
+                        </label>
+                      ))}
                     </div>
-                  ))}
-                </div>
+                  </div>
+                ))}
+              </div>
 
-                {/* Question 2: Rank Top 3 Goals */}
-                <div className="pt-4">
-                  <Label className="text-base font-medium">
-                    2. Rank your company's top three workforce goals (from above list).
-                  </Label>
-                </div>
+              {/* Question 2: Rank Top 3 Goals */}
+              <div className="pt-4">
+                <Label className="text-base font-medium">
+                  2. Rank your company's top three workforce goals (from above list).
+                </Label>
               </div>
             </div>
           </div>
         </div>
-      </div>
-
-      {/* Bottom Navigation Bar */}
-      <div className="flex items-center justify-end border-t border-ws-border-primary bg-ws-base-white px-6 py-2.5">
-        <Button
-          color="primary"
-          size="md"
-          className="min-w-30 bg-ws-primary-900 text-ws-base-white hover:bg-ws-primary-900-hover focus:bg-ws-primary-900-hover active:bg-ws-primary-900-hover"
-        >
-          Next
-        </Button>
+        <div className="flex gap-8 my-6 justify-end">
+          <Button
+            color="primary"
+            size="md"
+            iconTrailing={<ChevronRight data-icon />}
+            className="text-base font-semibold min-w-30 bg-ws-navy-800 text-ws-base-white hover:bg-ws-navy-800 focus:bg-ws-navy-800 active:bg-ws-navy-800"
+          >
+            Next
+          </Button>
+        </div>
       </div>
     </div>
   );

@@ -335,7 +335,7 @@ export const SettingsPage = () => {
                   </p>
                 </div>
               </div>
-              <hr className="border-t border-gray-200 mt-5 mb-6" />
+              <hr className="border-t border-ws-border-primary mt-5 mb-6" />
 
               <div className="bg-ws-base-white border border-ws-border-primary rounded-xl py-8 px-6 mb-6">
                 {/* Name Fields */}
@@ -453,7 +453,7 @@ export const SettingsPage = () => {
                   </p>
                 </div>
               </div>
-              <hr className="border-t border-gray-200 mt-5 mb-6" />
+              <hr className="border-t border-ws-border-primary mt-5 mb-6" />
 
               <div className="bg-ws-base-white border border-ws-border-primary rounded-xl py-8 px-6 mb-6">
                 {/* Retake Assessment */}

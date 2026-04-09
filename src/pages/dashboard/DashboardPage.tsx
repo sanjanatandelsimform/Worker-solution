@@ -32,6 +32,7 @@ import { ConnectIcon } from "@/assets/icons/ConnectIcon";
 import RecommendationsFinchPage from "../recommendations/RecommendationsFinchPage";
 import BenchmarkFinchPage from "../benchmark/BenchmarkFinchPage";
 import WorkforcePage from "../workforce/WorkforcePage";
+import { AssessmentIcon } from "@/assets/icons/AssessmentIcon";
 
 export const DashboardPage = () => {
   const navigate = useNavigate();
@@ -583,13 +584,14 @@ export const DashboardPage = () => {
               buttonIsDisabled={isFinchLoading}
             />
           )}
-          {emailVerify && isConnected && (
+          {(
             <DashboardCard
-              classes="bg-ws-white border-ws-primary-100 mt-10 shadow-none"
+              classes="bg-ws-navy-100 border-ws-primary-100 mt-10 shadow-none"
               toggleAvatar={true}
               title="Complete your assessment"
               titleClass="text-ws-text-primary"
-              avatarIconSrc={<ConnectIcon className="text-ws-primary-900" />}
+              avatarIconSrc={<AssessmentIcon className="text-ws-primary-900" />}
+              avatarClassName="bg-ws-navy-200"
               description="Pick up where you left off and complete your company assessment for results and recommendations."
               descriptionClass="text-ws-gray-800"
               toggleButton={true}

@@ -65,7 +65,7 @@ export function Accordion({ children, defaultValue, value, onChange }: Accordion
   };
 
   return (
-    <div className="space-y-0 rounded-lg border border-gray-200 bg-white shadow-sm overflow-hidden">
+    <div className="space-y-0 rounded-lg border border-ws-border-primary bg-white shadow-sm overflow-hidden">
       {React.Children.map(children, child => {
         if (React.isValidElement<AccordionItemProps>(child)) {
           const typedChild = child as ReactElement<AccordionItemProps>;

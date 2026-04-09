@@ -106,7 +106,7 @@ export const MultiSelect: React.FC<MultiSelectProps> = ({
 
       {/* Dropdown */}
       {open && (
-        <div className="absolute z-50 mt-2 w-full rounded-2xl border border-gray-200 bg-ws-base-white shadow-lg">
+        <div className="absolute z-50 mt-2 w-full rounded-2xl border border-ws-border-primary bg-ws-base-white shadow-lg">
           <ul className="max-h-72 overflow-auto py-2">
             {options.map(option => {
               const checked = value.includes(option.value);
