@@ -24,6 +24,20 @@ interface DynamicTabProps {
   stateOptions?: StateOption[];
 }
 
+// Health and Wellness option values from the supplementalBenefits question.
+// If any of these are selected, the HealthCare subsection is shown.
+const HEALTH_WELLNESS_VALUES = new Set([
+  "Healthcare",
+  "Dental",
+  "Vision",
+  "Medical FSA",
+  "HSA",
+  "Limited Purpose FSA",
+  "Dependent Care FSA",
+  "Medical Expense Help",
+  "Mental Health",
+]);
+
 export const DynamicTab = forwardRef<
   {
     submit: () => Promise<{
@@ -85,7 +99,6 @@ export const DynamicTab = forwardRef<
         if (!Array.isArray(value)) return;
 
         const updatedArray = value.map((item: Record<string, unknown>) => {
-          // Only normalize items that have a zipCode but NO __zipValidityState yet
           if (
             item &&
             typeof item === "object" &&
@@ -99,10 +112,6 @@ export const DynamicTab = forwardRef<
               ...item,
               __zipValidityState: "valid" as const,
               __zipIsValid: true,
-              // __zipStateAbbreviation intentionally NOT set here —
-              // we don't know it from prefilled data; state mismatch
-              // check in onSelectionChange requires user to re-select state
-              // to trigger real-time validation, which is correct UX.
             };
           }
           return item;
@@ -114,12 +123,10 @@ export const DynamicTab = forwardRef<
       });
 
       if (needsUpdate) {
-        // Merge only the normalized arrays — do not replace the whole answers object
         Object.entries(updatedAnswers).forEach(([key, val]) => {
           updateAnswer(key, val);
         });
       }
-      // Run only when answers reference changes (i.e., after API load)
       // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [answers]);
 
@@ -127,7 +134,21 @@ export const DynamicTab = forwardRef<
       const newErrors: Record<string, string> = {};
       let isValid = true;
 
+      // Derive HealthCare visibility at validation time so hidden questions are skipped
+      const selectedBenefits = Array.isArray(answers["supplementalBenefits"])
+        ? (answers["supplementalBenefits"] as string[])
+        : [];
+      const isHealthCareVisible = selectedBenefits.some(v => HEALTH_WELLNESS_VALUES.has(v));
+
       questions.forEach(question => {
+        // ── Skip HealthCare subsection questions when the section is hidden ──
+        if (
+          (question as Question & { subsection?: string }).subsection === "HealthCare" &&
+          !isHealthCareVisible
+        ) {
+          return;
+        }
+
         const value = answers[question.key];
         const rules = question.validationRules;
 
@@ -239,7 +260,6 @@ export const DynamicTab = forwardRef<
                     }
                   }
 
-                  // ZIP code validation — uses __zipValidityState set by ZipCodeAutocomplete
                   if (
                     field.name === "zipCode" &&
                     fieldValue !== null &&
@@ -268,14 +288,11 @@ export const DynamicTab = forwardRef<
                     } else if (zipValidityState === "valid") {
                       // Explicitly valid — no error
                     } else if (zipValidityState === "pending" || zipValidityState === undefined) {
-                      // Only flag as invalid if __zipIsValid is explicitly false
-                      // (meaning ZipCodeAutocomplete has evaluated it and rejected it)
                       const zipIsValid = (item as Record<string, unknown>).__zipIsValid as
                         | boolean
                         | undefined;
 
                       if (zipIsValid === false) {
-                        // Component evaluated it and found it invalid
                         if (!newErrors[fieldKey]) {
                           newErrors[fieldKey] = "Please enter a valid ZIP code";
                         }
@@ -414,7 +431,6 @@ export const DynamicTab = forwardRef<
         "__zipStateFips",
       ]);
 
-      // Helper: returns true only if item has at least one real non-empty field
       const hasRealData = (item: Record<string, unknown>): boolean =>
         Object.entries(item).some(([key, val]) => {
           if (INTERNAL_FIELDS.has(key)) return false;
@@ -423,7 +439,21 @@ export const DynamicTab = forwardRef<
           return true;
         });
 
+      // Derive HealthCare visibility at clean time so hidden answers are excluded
+      const selectedBenefits = Array.isArray(answers["supplementalBenefits"])
+        ? (answers["supplementalBenefits"] as string[])
+        : [];
+      const isHealthCareVisible = selectedBenefits.some(v => HEALTH_WELLNESS_VALUES.has(v));
+
       questions.forEach(question => {
+        // ── Exclude HealthCare subsection answers when the section is hidden ──
+        if (
+          (question as Question & { subsection?: string }).subsection === "HealthCare" &&
+          !isHealthCareVisible
+        ) {
+          return;
+        }
+
         const value = answers[question.key];
 
         if (value === null || value === undefined) {
@@ -600,7 +630,6 @@ export const DynamicTab = forwardRef<
               String(parentValue || "").toLowerCase() === String(showWhen).toLowerCase();
           }
 
-          // If condition is not met, remove the conditional field from payload
           if (!conditionMet && conditionalQ?.key && conditionalQ.key in cleaned) {
             delete cleaned[conditionalQ.key];
           }
@@ -640,7 +669,6 @@ export const DynamicTab = forwardRef<
 
       const cleanedAnswers = cleanAnswers();
 
-      // Check if answers are empty (for goals section)
       const hasAnyAnswers =
         Object.keys(cleanedAnswers).length > 0 &&
         Object.values(cleanedAnswers).some(value => {
@@ -660,7 +688,6 @@ export const DynamicTab = forwardRef<
 
       setIsSaving(true);
 
-      // Strip internal __zipStateAbbreviation and __zipIsValid metadata
       const cleanedForSubmission = { ...cleanedAnswers };
       Object.entries(cleanedForSubmission).forEach(([key, val]) => {
         if (Array.isArray(val)) {
@@ -691,7 +718,6 @@ export const DynamicTab = forwardRef<
         }
       });
 
-      // Call stripHiddenConditionalData (now a stable useCallback, NOT defined inline here)
       const preparedPayload = stripHiddenConditionalData(cleanedForSubmission);
       try {
         const response = await submitSection(preparedPayload);
@@ -803,7 +829,24 @@ export const DynamicTab = forwardRef<
           const next = { ...prev };
           const question = questions.find(q => q.key === key);
 
-          // ── Conditional child: clear child errors when parent hides it ────────
+          // ── When supplementalBenefits changes, clear all HealthCare errors
+          //    if no Health & Wellness option is now selected ─────────────────
+          if (key === "supplementalBenefits" && Array.isArray(value)) {
+            const stillVisible = (value as string[]).some(v => HEALTH_WELLNESS_VALUES.has(v));
+            if (!stillVisible) {
+              Object.keys(next).forEach(errorKey => {
+                // Remove errors belonging to any HealthCare-subsection question key
+                const matchingQuestion = questions.find(
+                  q =>
+                    (q as Question & { subsection?: string }).subsection === "HealthCare" &&
+                    (errorKey === q.key || errorKey.startsWith(`${q.key}.`))
+                );
+                if (matchingQuestion) delete next[errorKey];
+              });
+            }
+          }
+
+          // ── Conditional child: clear child errors when parent hides it ────
           const conditionalQ = question?.conditionalQuestion?.question;
           const conditionalKey = conditionalQ?.key;
           if (conditionalKey) {
@@ -1020,6 +1063,15 @@ export const DynamicTab = forwardRef<
       }
     });
 
+    // Derive whether the HealthCare subsection should be visible.
+    // It shows only when the user has selected at least one Health & Wellness option.
+    const selectedSupplementalBenefits = Array.isArray(answers["supplementalBenefits"])
+      ? (answers["supplementalBenefits"] as string[])
+      : [];
+    const isHealthCareVisible = selectedSupplementalBenefits.some(v =>
+      HEALTH_WELLNESS_VALUES.has(v)
+    );
+
     const renderQuestion = (question: Question, idx: number, subsectionQuestions?: Question[]) => {
       const displayOrderValue = subsectionQuestions
         ? subsectionQuestions.slice(0, idx + 1).length
@@ -1093,20 +1145,24 @@ export const DynamicTab = forwardRef<
           </div>
         )}
 
-        {/* One card per subsection */}
-        {Array.from(subsectionMap.entries()).map(([subsection, subsectionQuestions]) => (
-          <div
-            key={subsection}
-            className="bg-ws-base-white rounded-lg border border-ws-border-primary shadow-sm p-6 space-y-6"
-          >
-            <h2 className="text-2xl font-medium text-ws-text-primary pb-4">
-              {subsection === "HealthCare" ? "Healthcare" : subsection}
-            </h2>
-            {subsectionQuestions.map((question, idx) =>
-              renderQuestion(question, idx, subsectionQuestions)
-            )}
-          </div>
-        ))}
+        {/* One card per subsection — HealthCare is hidden unless a Health & Wellness benefit is selected */}
+        {Array.from(subsectionMap.entries()).map(([subsection, subsectionQuestions]) => {
+          if (subsection === "HealthCare" && !isHealthCareVisible) return null;
+
+          return (
+            <div
+              key={subsection}
+              className="bg-ws-base-white rounded-lg border border-ws-border-primary shadow-sm p-6 space-y-6"
+            >
+              <h2 className="text-2xl font-medium text-ws-text-primary pb-4">
+                {subsection === "HealthCare" ? "Healthcare" : subsection}
+              </h2>
+              {subsectionQuestions.map((question, idx) =>
+                renderQuestion(question, idx, subsectionQuestions)
+              )}
+            </div>
+          );
+        })}
       </div>
     );
   }
