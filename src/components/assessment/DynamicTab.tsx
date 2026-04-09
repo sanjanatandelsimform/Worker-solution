@@ -4,6 +4,7 @@ import type { Question } from "@/types/questionTypes";
 import { useAssessment } from "@/hooks/useAssessment";
 import ErrorMessage from "@/components/common/ErrorMessage";
 import { AlertCircle } from "@untitledui/icons";
+import type { StateOption } from "@/hooks/useStatesLookup";
 
 interface AddressItem {
   state?: string;
@@ -20,6 +21,7 @@ interface DynamicTabProps {
   onApiError?: (errorMessage: string) => void;
   hideHeader?: boolean;
   disableWindowRegistration?: boolean;
+  stateOptions?: StateOption[];
 }
 
 export const DynamicTab = forwardRef<
@@ -48,6 +50,7 @@ export const DynamicTab = forwardRef<
       onApiError,
       hideHeader = false,
       disableWindowRegistration = false,
+      stateOptions,
     },
     ref
   ) => {
@@ -408,6 +411,7 @@ export const DynamicTab = forwardRef<
         "__zipStateAbbreviation",
         "__zipIsValid",
         "__zipValidityState",
+        "__zipStateFips",
       ]);
 
       // Helper: returns true only if item has at least one real non-empty field
@@ -666,14 +670,20 @@ export const DynamicTab = forwardRef<
               typeof item === "object" &&
               ("__zipStateAbbreviation" in item ||
                 "__zipIsValid" in item ||
-                "__zipValidityState" in item)
+                "__zipValidityState" in item ||
+                "__zipStateFips" in item)
             ) {
               const {
                 __zipStateAbbreviation: _sa,
                 __zipIsValid: _iv,
                 __zipValidityState: _vs,
+                __zipStateFips: _zfips,
                 ...rest
               } = item as Record<string, unknown>;
+              if (_zfips && !rest.stateFips) {
+                rest.stateFips = _zfips;
+              }
+
               return rest;
             }
             return item;
@@ -1024,6 +1034,7 @@ export const DynamicTab = forwardRef<
           errors={errors}
           subsectionDisplayOrder={displayOrderValue}
           onErrorChange={handleErrorChange}
+          stateOptions={stateOptions}
         />
       );
     };

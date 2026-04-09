@@ -5,10 +5,11 @@ import { getStates, type StateOptionApi } from "@/services/api/assessmentApi";
 export interface StateOption {
   id: string;
   label: string;
+  stateFips?: string;
 }
 
 /**
- * Transforms raw API entries into the `{ id, label }` shape consumed by
+ * Transforms raw API entries into the `{ id, label, stateFips }` shape consumed by
  * `DynamicQuestionRenderer.renderStructuredArrayField()`.
  *
  * Entries missing `stateAbbreviation` or `stateName` are silently skipped
@@ -20,6 +21,7 @@ export function transformStates(raw: StateOptionApi[]): StateOption[] {
     .map(s => ({
       id: s.stateAbbreviation,
       label: s.stateName,
+      stateFips: s.stateFips ?? "",
     }));
 }
 
