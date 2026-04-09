@@ -201,7 +201,7 @@ export const DynamicQuestionRenderer = ({
               )}
             </Select>
             {displayFieldError && (
-              <span className="text-sm text-ws-red-40">{displayFieldError}</span>
+              <span className="text-sm text-ws-error-600">{displayFieldError}</span>
             )}
           </>
         ) : field.name === "state" ? (
@@ -306,7 +306,7 @@ export const DynamicQuestionRenderer = ({
               )}
             </Select>
             {displayFieldError && (
-              <span className="text-sm text-ws-red-40">{displayFieldError}</span>
+              <span className="text-sm text-ws-error-600">{displayFieldError}</span>
             )}
           </>
         ) : field.name === "zipCode" ? (
@@ -418,7 +418,7 @@ export const DynamicQuestionRenderer = ({
               }}
             />
             {displayFieldError && displayFieldError !== "State does not match zipcode" && (
-              <span className="text-sm text-ws-red-40">{displayFieldError}</span>
+              <span className="text-sm text-ws-error-600">{displayFieldError}</span>
             )}
           </>
         ) : (
@@ -438,7 +438,7 @@ export const DynamicQuestionRenderer = ({
               }}
             />
             {displayFieldError && (
-              <span className="text-sm text-ws-red-40">{displayFieldError}</span>
+              <span className="text-sm text-ws-error-600">{displayFieldError}</span>
             )}
           </>
         )}
@@ -498,7 +498,7 @@ export const DynamicQuestionRenderer = ({
               }
             />
             {errors[conditionalQuestion.key] && (
-              <span className="text-sm text-ws-red-40">{errors[conditionalQuestion.key]}</span>
+              <span className="text-sm text-ws-error-600">{errors[conditionalQuestion.key]}</span>
             )}
           </>
         )}
@@ -541,7 +541,7 @@ export const DynamicQuestionRenderer = ({
               }
             />
             {errors[conditionalQuestion.key] && (
-              <span className="text-sm text-ws-red-40">{errors[conditionalQuestion.key]}</span>
+              <span className="text-sm text-ws-error-600">{errors[conditionalQuestion.key]}</span>
             )}
           </>
         )}
@@ -569,7 +569,7 @@ export const DynamicQuestionRenderer = ({
               {(item: SelectItemType) => <Select.Item id={item.id}>{item.label || ""}</Select.Item>}
             </Select>
             {errors[conditionalQuestion.key] && (
-              <span className="text-sm text-ws-red-40">{errors[conditionalQuestion.key]}</span>
+              <span className="text-sm text-ws-error-600">{errors[conditionalQuestion.key]}</span>
             )}
             {conditionalQuestion.conditionalQuestion &&
               renderConditionalQuestion(
@@ -600,7 +600,7 @@ export const DynamicQuestionRenderer = ({
               ))}
             </div>
             {errors[conditionalQuestion.key] && (
-              <span className="text-sm text-ws-red-40">{errors[conditionalQuestion.key]}</span>
+              <span className="text-sm text-ws-error-600">{errors[conditionalQuestion.key]}</span>
             )}
           </>
         )}
@@ -764,8 +764,8 @@ export const DynamicQuestionRenderer = ({
           </Select>
           {error && (
             <div className="flex items-center gap-2">
-              <InputInfo className="text-ws-red-40" />
-              <span className="text-sm text-ws-red-40">{error}</span>
+              <InputInfo className="text-ws-error-600" />
+              <span className="text-sm text-ws-error-600">{error}</span>
             </div>
           )}
           {question.conditionalQuestion &&
@@ -780,8 +780,8 @@ export const DynamicQuestionRenderer = ({
           </Label>
           {error && (
             <div className="flex items-center gap-2">
-              <InputInfo className="text-ws-red-40" />
-              <span className="text-sm text-ws-red-40">{error}</span>
+              <InputInfo className="text-ws-error-600" />
+              <span className="text-sm text-ws-error-600">{error}</span>
             </div>
           )}
           <div className="flex flex-col gap-4 custom-question-options">
@@ -864,7 +864,7 @@ export const DynamicQuestionRenderer = ({
           <Label isRequired={question.isRequired} className="text-base custom-label">
             {displayOrder}. {question.questionText}
           </Label>
-          {error && <span className="text-sm text-ws-red-40">{error}</span>}
+          {error && <span className="text-sm text-ws-error-600">{error}</span>}
           <div className="flex w-full flex-col gap-4 custom-question-options">
             <RadioGroup
               aria-label={question.questionText}
@@ -925,7 +925,7 @@ export const DynamicQuestionRenderer = ({
             isInvalid={error ? true : false}
             tooltip={error ? error : undefined}
           />
-          {error && <span className="text-sm text-ws-red-40">{error}</span>}
+          {error && <span className="text-sm text-ws-error-600">{error}</span>}
         </div>
       );
 
@@ -944,7 +944,7 @@ export const DynamicQuestionRenderer = ({
             maxLength={question.validationRules?.maxLength}
             isInvalid={error ? true : false}
           />
-          {error && <span className="text-sm text-ws-red-40">{error}</span>}
+          {error && <span className="text-sm text-ws-error-600">{error}</span>}
         </div>
       );
 
@@ -980,7 +980,7 @@ export const DynamicQuestionRenderer = ({
                   size="md"
                   iconLeading={Trash01}
                   onClick={() => removeArrayItem(question.key, (item as { id: number }).id)}
-                  className="mt-6 h-10 shrink-0 px-2 bg-tertiary *:data-icon:text-ws-primary-800 border border-ws-primary-800"
+                  className="mt-6 h-10 shrink-0 px-2 bg-tertiary *:data-icon:text-ws-navy-800 border border-ws-navy-800"
                   aria-label="Remove item"
                 />
               )}
@@ -994,8 +994,8 @@ export const DynamicQuestionRenderer = ({
               iconLeading={Plus}
               onClick={() => addArrayItem(question.key)}
               className={cx(
-                "max-w-60 text-sm font-semibold text-ws-primary-800 border border-ws-primary-800",
-                error && "border-ws-red-40"
+                "max-w-60 text-sm font-semibold text-ws-navy-800 border border-ws-navy-800",
+                error && "border-ws-error-600"
               )}
             >
               {question.key === "topWorkLocations"
@@ -1004,7 +1004,7 @@ export const DynamicQuestionRenderer = ({
             </Button>
           )}
 
-          {error && <span className="text-sm text-ws-red-40">{error}</span>}
+          {error && <span className="text-sm text-ws-error-600">{error}</span>}
         </div>
       );
     }
@@ -1046,7 +1046,7 @@ export const DynamicQuestionRenderer = ({
                       <Select.Item id={item.id}>{item.label || ""}</Select.Item>
                     )}
                   </Select>
-                  {fieldError && <span className="text-sm text-ws-red-40 mt-1">{fieldError}</span>}
+                  {fieldError && <span className="text-sm text-ws-error-600 mt-1">{fieldError}</span>}
                 </div>
               </div>
             );
@@ -1058,7 +1058,7 @@ export const DynamicQuestionRenderer = ({
       const sourceField = question.dynamicOptions?.sourceField;
       if (!sourceField) {
         return (
-          <div className="text-ws-red-40">
+          <div className="text-ws-error-600">
             RANKING question requires dynamicOptions.sourceField configuration
           </div>
         );
@@ -1102,7 +1102,7 @@ export const DynamicQuestionRenderer = ({
 
     default:
       return (
-        <div className="text-ws-red-40">Unsupported question type: {question.questionType}</div>
+        <div className="text-ws-error-600">Unsupported question type: {question.questionType}</div>
       );
   }
 };

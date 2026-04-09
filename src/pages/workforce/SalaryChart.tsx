@@ -158,8 +158,21 @@ const SalaryRangeChart: React.FC = () => {
   }, []);
 
   return (
-    <div ref={containerRef} className="w-full" style={{ height: "450px" }}>
-      <canvas ref={canvasRef} style={{ display: "block", width: "98%", height: "100%" }} />
+    <div
+      ref={containerRef}
+      className="w-full"
+      style={{
+        height: "450px",
+      }}
+    >
+      <canvas
+        ref={canvasRef}
+        style={{
+          display: "block",
+          width: "100%",
+          height: "100%",
+        }}
+      />
     </div>
   );
 };

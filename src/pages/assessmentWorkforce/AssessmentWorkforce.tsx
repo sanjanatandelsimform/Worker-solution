@@ -156,7 +156,7 @@ export default function AssessmentWorkforcePage() {
   }
 
   return (
-    <div className="flex min-h-screen flex-col bg-ws-color-gray-20">
+    <div className="flex min-h-screen flex-col bg-ws-navy-25">
       {/* Top Navigation Bar */}
       <div className="flex h-14 items-center justify-end border-b border-ws-navy-700 px-6 py-4">
         {/* Back Button */}

@@ -617,7 +617,7 @@ export const DashboardPage = () => {
               </Tabs> */}
               <Tabs>
                 <Tabs.List
-                  className="bg-ws-light-teal-50 pt-9 pl-6 pr-6 rounded-t-lg text-ws-light-teal-900"
+                  className="bg-ws-light-teal-50 pt-9 pl-6 pr-6 rounded-t-lg text-ws-light-teal-900 overflow-auto"
                   type="underline"
                   items={[
                     { id: "recommendations", label: "Recommendations" },
