@@ -158,31 +158,13 @@ export default function AssessmentWorkforcePage() {
   return (
     <div className="flex min-h-screen flex-col bg-ws-navy-25">
       {/* Top Navigation Bar */}
-      <div className="flex h-14 items-center justify-end border-b border-ws-navy-700 px-6 py-4">
-        {/* Back Button */}
-        {/* <Button
-          color="tertiary"
-          size="md"
-          iconLeading={<ChevronLeft data-icon />}
-          onClick={handleBack}
-          isDisabled={isLoadingGet}
-          className={`flex items-center gap-1 text-lg font-normal text-ws-primary-800 transition-opacity ${
-            isLoadingGet ? "cursor-not-allowed opacity-40" : "hover:opacity-80"
-          }`}
-        >
-          Back
-        </Button> */}
-
-        {/* Title */}
-        {/* <h1 className="text-lg font-medium text-ws-primary-800">Assessment</h1> */}
-
-        {/* Close Button */}
+      <div className="flex h-14 items-center justify-end border-b border-ws-navy-800 px-6 py-4">
+       {/* Close Button */}
         <Button
           color="tertiary"
           size="md"
-          iconLeading={<XClose data-icon />}
+          iconLeading={<XClose data-icon className="font-bold text-ws-navy-800" />}
           onClick={handleClose}
-          className="text-ws-navy-800 transition-opacity hover:opacity-80"
         />
       </div>
 

@@ -278,7 +278,7 @@ export default function CostBurdenBarChart({ data, width, height = 400 }: Canvas
       />
       {tooltip && (
         <div
-          className="pointer-events-none absolute rounded-lg border border-gray-200 bg-ws-base-white px-3 py-2 shadow-lg"
+          className="pointer-events-none absolute rounded-lg border border-ws-border-primary bg-ws-base-white px-3 py-2 shadow-lg"
           style={{
             left: `${tooltip.x + 10}px`,
             top: `${tooltip.y - 10}px`,

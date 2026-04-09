@@ -1095,17 +1095,17 @@ export const DynamicTab = forwardRef<
       <div className="space-y-4">
         {isLoadingGet && (
           <div className="flex items-center justify-center py-4">
-            <div className="h-6 w-6 animate-spin rounded-full border-4 border-ws-cyan-60 border-t-transparent"></div>
-            <span className="ml-3 text-sm text-ws-gray-60">Restoring your data...</span>
+            <div className="h-6 w-6 animate-spin rounded-full border-4 border-ws-border-primary border-t-transparent"></div>
+            <span className="ml-3 text-sm text-ws-text-tertiary">Restoring your data...</span>
           </div>
         )}
 
         {apiError?.type === "get" && (
-          <div className="rounded-md border border-ws-red-20 bg-ws-red-40 p-4">
+          <div className="rounded-md border border-ws-error-600 bg-ws-error-600 p-4">
             <p className="text-sm text-ws-error-600">{apiError.message}</p>
             <button
               onClick={retryGetAssessment}
-              className="mt-2 text-sm font-medium text-ws-error-600 hover:text-ws-red-30"
+              className="mt-2 text-sm font-medium text-ws-error-600 hover:text-ws-error-600"
             >
               Retry
             </button>
@@ -1117,7 +1117,7 @@ export const DynamicTab = forwardRef<
             alertIcon={AlertCircle}
             onClose={() => setShowApiError(false)}
             classess="fixed top-4 right-4 z-50 w-80 shadow-lg"
-            textColor="text-red-700"
+            textColor="text-ws-error-600"
             errorMessage={
               <div>
                 <p className="font-semibold mb-1">{apiError.message}</p>
@@ -1132,7 +1132,7 @@ export const DynamicTab = forwardRef<
         )}
         {/* Main card: section header + questions without a subsection */}
         {(noSubsectionQuestions.length > 0 || (!hideHeader && sectionContent[section])) && (
-          <div className="bg-white rounded-lg border border-gray-200 shadow-sm p-6 space-y-6">
+          <div className="bg-ws-base-white rounded-lg border border-ws-border-primary shadow-sm p-6 space-y-6">
             {sectionContent[section] && !hideHeader && (
               <>
                 <h2 className="text-ws-text-primary text-3xl font-semibold mb-2">
@@ -1152,9 +1152,9 @@ export const DynamicTab = forwardRef<
           return (
             <div
               key={subsection}
-              className="bg-white rounded-lg border border-gray-200 shadow-sm p-6 space-y-6"
+              className="bg-ws-base-white rounded-lg border border-ws-border-primary shadow-sm p-6 space-y-6"
             >
-              <h2 className="text-2xl font-medium text-ws-text-primary pb-4 border-b border-ws-gray-40">
+              <h2 className="text-2xl font-medium text-ws-text-primary pb-4">
                 {subsection === "HealthCare" ? "Healthcare" : subsection}
               </h2>
               {subsectionQuestions.map((question, idx) =>

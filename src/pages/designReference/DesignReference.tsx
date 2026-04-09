@@ -637,7 +637,7 @@ function DesignReference() {
                 <Carousel.Content>
                   {didYouKnowSlides.map(slide => (
                     <Carousel.Item key={slide.id}>
-                      <div className="border border-gray-200 rounded-xl p-4 bg-purple-50">
+                      <div className="border border-ws-border-primary rounded-xl p-4 bg-purple-50">
                         <div className="flex flex-col gap-2">
                           {/* Header with Icon and Title */}
                           <div className="flex items-center gap-2">
@@ -656,7 +656,7 @@ function DesignReference() {
                 </Carousel.Content>
 
                 {/* Navigation Controls - Fixed position, doesn't slide */}
-                <div className="flex items-center justify-center gap-2 border rounded-md px-2 py-1 w-fit bg-ws-base-white border-gray-200 mx-auto">
+                <div className="flex items-center justify-center gap-2 border rounded-md px-2 py-1 w-fit bg-ws-base-white border-ws-border-primary mx-auto">
                   {/* Previous Button */}
                   <Carousel.PrevTrigger asChild>
                     <button
@@ -887,14 +887,14 @@ const BenchmarkChart = () => {
 
   if (!mounted) {
     return (
-      <div className="bg-ws-base-white border border-gray-200 min-h-90 rounded-xl p-6 flex items-center justify-center">
+      <div className="bg-ws-base-white border border-ws-border-primary min-h-90 rounded-xl p-6 flex items-center justify-center">
         <p className="text-ws-text-tertiary">Loading chart...</p>
       </div>
     );
   }
 
   return (
-    <div className="bg-ws-base-white border border-gray-200 rounded-xl p-6 flex flex-col gap-8">
+    <div className="bg-ws-base-white border border-ws-border-primary rounded-xl p-6 flex flex-col gap-8">
       {/* Charts Container */}
       <div className="flex gap-8 items-center justify-center">
         {/* Salary Chart */}
