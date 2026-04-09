@@ -39,29 +39,29 @@ export default function DashboardCard({
 
   return (
     <div
-      className={`mt-6 border border-ws-border-primary rounded-xl p-4 ${backgroundColor} flex gap-4 justify-between items-center flex-col lg:flex-row ${classes}`}
+      className={`mt-6 border border-ws-border-primary rounded-xl p-4 ${backgroundColor} flex gap-4 justify-between items-center lg:flex-row ${classes}`}
     >
-      <div className="flex items-center gap-4 xl:flex-row">
+      <div className="flex items-center gap-4 xl:flex-row w-3/4 xl:w-4/5">
         {toggleAvatar &&
           (typeof avatarIconSrc === "string" ? (
             <Avatar
               size="xl"
               alt="email"
               src={avatarIconSrc}
-              className={cx("w-15 h-15 bg-ws-green-30 outline-0 flex items-center justify-center", avatarClassName)}
+              className={cx("min-w-15 h-15 bg-ws-green-30 outline-0 flex items-center justify-center", avatarClassName)}
             />
           ) : (
-            <div className={cx("w-15 h-15 bg-ws-green-30 rounded-full flex items-center justify-center", avatarClassName)}>
+            <div className={cx("min-w-15 h-15 bg-ws-green-30 rounded-full flex items-center justify-center", avatarClassName)}>
               {avatarIconSrc}
             </div>
           ))}
-        <div>
+        <div className="flex flex-col gap-2">
           <h2 className={`text-ws-black-30 text-xl font-medium ${titleClass}`}>{title}</h2>
           <p className={`text-ws-gray-90 text-base mt-1 ${descriptionClass}`}>{description}</p>
         </div>
       </div>
       {toggleButton && (
-        <div className="flex-col lg:flex-row justify-end items-end flex gap-3 w-full lg:w-auto">
+        <div className="flex-col lg:flex-row justify-end items-end flex gap-3 x-1/4 xl:w-1/5">
           <Button
             color={buttonType}
             size="sm"

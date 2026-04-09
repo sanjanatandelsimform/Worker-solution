@@ -1,10 +1,7 @@
 "use client";
-import { useState } from "react";
-// import { Button } from "@/components/base/buttons/button";
+import { useEffect, useState } from "react";
 import StaticCard from "../recommendations/StaticCard";
 import { Select } from "@/components/base/select/select";
-// import { Tooltip, TooltipTrigger } from "@/components/base/tooltip/tooltip";
-// import { InfoCircle } from "@untitledui/icons";
 import { GetInTouchModal } from "@/components/modals/GetInTouchModal";
 import { useAppSelector } from "@/store/hooks";
 import {
@@ -25,10 +22,179 @@ import DonutChart from "./EmployTypeChart";
 import { Table, TableColumn } from "@/components/base/table";
 import SalaryChart from "./SalaryChart";
 import { Link } from "react-router-dom";
+import emptyStateWorkforce from "@/assets/placeholder.svg";
+
+const OverviewCardSkeleton = () => (
+  <div className="border border-ws-border-secondary rounded-lg p-4 bg-ws-base-white animate-pulse shadow-sm">
+    <div className="flex items-end justify-between">
+      <div className="h-4 bg-ws-gray-200 rounded w-3/4 mb-4"></div>
+      <div className="w-4 h-4 bg-ws-gray-200 rounded-full mb-4"></div>
+    </div>
+    <div className="h-10 bg-ws-gray-200 rounded w-1/3"></div>
+  </div>
+);
+
+const WagesCardSkeleton = () => (
+  <div className="border border-ws-border-secondary rounded-lg p-4 bg-ws-base-white animate-pulse shadow-sm">
+    <div className="h-4 bg-ws-gray-200 rounded w-3/4 mb-3"></div>
+    <div className="flex items-end justify-between">
+      <div className="h-12 bg-ws-gray-200 rounded w-3/4"></div>
+      <div className="w-8 h-8 bg-ws-gray-200 rounded-full"></div>
+    </div>
+  </div>
+);
+
+const ProgressCardSkeleton = () => (
+  <div className="border border-ws-border-secondary rounded-lg p-4 bg-ws-base-white animate-pulse shadow-sm">
+    <div className="w-full space-y-3">
+      <div className="h-4 bg-ws-gray-200 rounded w-1/6 mb-3"></div>
+      <div className="flex items-center justify-between gap-4">
+        <div className="h-3 bg-ws-gray-200 rounded w-1/6"></div>
+        <div className="h-8 bg-ws-gray-200 rounded w-5/6"></div>
+      </div>
+      <div className="flex items-center justify-between gap-4">
+        <div className="h-3 bg-ws-gray-200 rounded w-1/6"></div>
+        <div className="h-8 bg-ws-gray-200 rounded w-5/6"></div>
+      </div>
+      <div className="flex items-center justify-between gap-4">
+        <div className="h-3 bg-ws-gray-200 rounded w-1/6"></div>
+        <div className="h-8 bg-ws-gray-200 rounded w-5/6"></div>
+      </div>
+    </div>
+  </div>
+);
+
+const ProgressCardSkeletonOne = () => (
+  <div className="border border-ws-border-secondary rounded-lg p-4 bg-ws-base-white animate-pulse shadow-sm">
+    <div className="w-full">
+      <div className="h-4 bg-ws-gray-200 rounded w-1/6 mb-3"></div>
+      <div className="flex items-center justify-between gap-4">
+        <div className="h-3 bg-ws-gray-200 rounded w-1/6"></div>
+        <div className="h-8 bg-ws-gray-200 rounded w-5/6"></div>
+      </div>
+    </div>
+  </div>
+);
+
+const ProgressCardSkeletonFour = () => (
+  <div className="border border-ws-border-secondary rounded-lg p-4 bg-ws-base-white animate-pulse shadow-sm">
+    <div className="w-full space-y-3">
+      <div className="h-4 bg-ws-gray-200 rounded w-1/6 mb-3"></div>
+      <div className="flex items-center justify-between gap-4">
+        <div className="h-3 bg-ws-gray-200 rounded w-1/6"></div>
+        <div className="h-8 bg-ws-gray-200 rounded w-5/6"></div>
+      </div>
+      <div className="flex items-center justify-between gap-4">
+        <div className="h-3 bg-ws-gray-200 rounded w-1/6"></div>
+        <div className="h-8 bg-ws-gray-200 rounded w-5/6"></div>
+      </div>
+      <div className="flex items-center justify-between gap-4">
+        <div className="h-3 bg-ws-gray-200 rounded w-1/6"></div>
+        <div className="h-8 bg-ws-gray-200 rounded w-5/6"></div>
+      </div>
+      <div className="flex items-center justify-between gap-4">
+        <div className="h-3 bg-ws-gray-200 rounded w-1/6"></div>
+        <div className="h-8 bg-ws-gray-200 rounded w-5/6"></div>
+      </div>
+    </div>
+  </div>
+);
+
+const DonutChartSkeleton = () => (
+  <div className="rounded-lg p-4 bg-ws-base-white">
+    <div className="flex items-center justify-center animate-pulse">
+      <div className="h-48 w-48 rounded-full border-20 border-ws-gray-200"></div>
+      <div className="flex items-center justify-center absolute flex-col space-y-3">
+        <div className="h-4 bg-ws-gray-200 w-15"></div>
+        <div className="h-3 bg-ws-gray-200 w-18"></div>
+      </div>
+    </div>
+  </div>
+);
+
+const BreakDownCardSkeleton = () => (
+  <div className="border border-ws-border-secondary rounded-lg p-4 bg-ws-base-white animate-pulse shadow-sm">
+    <div className="w-full space-y-3">
+      <div className="flex items-center justify-between gap-4">
+        <div className="h-3 bg-ws-gray-200 rounded w-32"></div>
+        <div className="h-8 bg-ws-gray-200 rounded w-full"></div>
+        <div className="h-3 bg-ws-gray-200 rounded w-24"></div>
+      </div>
+      <div className="flex items-center justify-between gap-4">
+        <div className="h-3 bg-ws-gray-200 rounded w-32"></div>
+        <div className="h-8 bg-ws-gray-200 rounded w-full"></div>
+        <div className="h-3 bg-ws-gray-200 rounded w-24"></div>
+      </div>
+      <div className="flex items-center justify-between gap-4">
+        <div className="h-3 bg-ws-gray-200 rounded w-32"></div>
+        <div className="h-8 bg-ws-gray-200 rounded w-full"></div>
+        <div className="h-3 bg-ws-gray-200 rounded w-24"></div>
+      </div>
+      <div className="flex items-center justify-between gap-4">
+        <div className="h-3 bg-ws-gray-200 rounded w-32"></div>
+        <div className="h-8 bg-ws-gray-200 rounded w-full"></div>
+        <div className="h-3 bg-ws-gray-200 rounded w-24"></div>
+      </div>
+      <div className="flex items-center justify-between gap-4">
+        <div className="h-3 bg-ws-gray-200 rounded w-32"></div>
+        <div className="h-8 bg-ws-gray-200 rounded w-full"></div>
+        <div className="h-3 bg-ws-gray-200 rounded w-24"></div>
+      </div>
+    </div>
+  </div>
+);
+
+const BreakDownChartSkeleton = () => (
+  <div className="border border-ws-border-secondary rounded-lg p-5 bg-ws-base-white animate-pulse shadow-sm">
+    <div className="flex items-end w-full gap-4">
+      <div className="w-full h-80 flex items-center justify-center flex-col gap-4">
+        <div className="flex items-end justify-center gap-4">
+          <div className="w-10 h-40 bg-ws-gray-200"></div>
+        </div>
+      </div>
+      <div className="w-full h-80 flex items-center justify-center flex-col gap-4">
+        <div className="flex items-end justify-center gap-4">
+          <div className="w-10 h-25 bg-ws-gray-200"></div>
+        </div>
+      </div>
+      <div className="w-full h-80 flex items-center justify-center flex-col gap-4">
+        <div className="flex items-end justify-center gap-4">
+          <div className="w-10 h-15 bg-ws-gray-200"></div>
+        </div>
+      </div>
+      <div className="w-full h-80 flex items-center justify-center flex-col gap-4">
+        <div className="flex items-end justify-center gap-4">
+          <div className="w-10 h-10 bg-ws-gray-200"></div>
+        </div>
+      </div>
+      <div className="w-full h-80 flex items-center justify-center flex-col gap-4">
+        <div className="flex items-end justify-center gap-4">
+          <div className="w-10 h-30 bg-ws-gray-200"></div>
+        </div>
+      </div>
+    </div>
+    <div className="flex items-center justify-around w-full gap-8">
+      <div className="h-2 w-30 bg-ws-gray-200 rounded"></div>
+      <div className="h-2 w-30 bg-ws-gray-200 rounded"></div>
+      <div className="h-2 w-30 bg-ws-gray-200 rounded"></div>
+      <div className="h-2 w-30 bg-ws-gray-200 rounded"></div>
+      <div className="h-2 w-30 bg-ws-gray-200 rounded"></div>
+    </div>
+  </div>
+);
 
 export default function WorkforcePage() {
   const [isGetInTouchModalOpen, setIsGetInTouchModalOpen] = useState(false);
   const [selectedGraphType, setSelectedGraphType] = useState<"owners" | "renters">("renters");
+  const [isLoadingCards, setIsLoadingCards] = useState(true);
+
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      setIsLoadingCards(false);
+    }, 5000);
+
+    return () => clearTimeout(timer);
+  }, []);
 
   // Get dashboard benchmark data from Redux store
   const industryOverview = useAppSelector(selectIndustryOverview);
@@ -126,6 +292,304 @@ export default function WorkforcePage() {
     },
   ];
 
+  interface StaticCardOverviewConfig {
+    id: string;
+    title: string;
+    count: string;
+    tooltipText: string;
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    getDescriptionText: (industryOverview?: any) => string;
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    getCountClass: (industryOverview?: any) => string;
+  }
+
+  const overviewCardsConfig: StaticCardOverviewConfig[] = [
+    {
+      id: "total-workforce",
+      title: "Total Workforce",
+      count: "3,120",
+      tooltipText: "Turnover Rate",
+      getDescriptionText: () =>
+        "Industry specific turnover metrics are calculated from US Census Bureau QWI data sources",
+      getCountClass: industryOverview =>
+        industryOverview?.turnoverRate?.rate == null
+          ? "mt-2 text-sm font-medium text-ws-text-primary"
+          : "mt-2 text-3xl font-semibold text-ws-text-primary",
+    },
+    {
+      id: "enrolled-benefits",
+      title: "Enrolled in Benefits",
+      count: "2,450",
+      tooltipText: "Average Turnover",
+      getDescriptionText: () =>
+        "Average turnover metrics are calculated from US Census Bureau QWI data sources",
+      getCountClass: industryOverview =>
+        industryOverview?.avgTurnover?.rate == null
+          ? "mt-2 text-sm font-medium text-ws-text-primary"
+          : "mt-2 text-3xl font-semibold text-ws-text-primary",
+    },
+    {
+      id: "avg-employee-cost",
+      title: "Avg. Employee Cost Per Pay Period",
+      count: "$2,254",
+      tooltipText: "Average Cost of Turnover",
+      getDescriptionText: industryOverview =>
+        `Industry specific cost of turnover is calculated from ${industryOverview?.avgCostOfTurnover?.year || " "}`,
+      getCountClass: industryOverview =>
+        industryOverview?.avgCostOfTurnover?.amount == null
+          ? "mt-2 text-sm font-medium text-ws-text-primary"
+          : "mt-2 text-3xl font-semibold text-ws-text-primary",
+    },
+  ];
+
+  const employeeCardsConfig: StaticCardOverviewConfig[] = [
+    {
+      id: "employer-cost",
+      title: "Employer Cost Per Employee",
+      count: "$11,240/yr",
+      tooltipText: "Turnover Rate",
+      getDescriptionText: () =>
+        "Industry specific turnover metrics are calculated from US Census Bureau QWI data sources",
+      getCountClass: industryOverview =>
+        industryOverview?.turnoverRate?.rate == null
+          ? "mt-2 text-sm font-medium text-ws-text-primary"
+          : "mt-2 text-3xl font-semibold text-ws-text-primary",
+    },
+    {
+      id: "avg-pto-taken",
+      title: "Avg. PTO Taken",
+      count: "13",
+      tooltipText: "Average Turnover",
+      getDescriptionText: () =>
+        "Average turnover metrics are calculated from US Census Bureau QWI data sources",
+      getCountClass: industryOverview =>
+        industryOverview?.avgTurnover?.rate == null
+          ? "mt-2 text-sm font-medium text-ws-text-primary"
+          : "mt-2 text-3xl font-semibold text-ws-text-primary",
+    },
+    {
+      id: "avg-sick-days",
+      title: "Avg. Sick Days Taken",
+      count: "4",
+      tooltipText: "Average Cost of Turnover",
+      getDescriptionText: industryOverview =>
+        `Industry specific cost of turnover is calculated from ${industryOverview?.avgCostOfTurnover?.year || " "}`,
+      getCountClass: industryOverview =>
+        industryOverview?.avgCostOfTurnover?.amount == null
+          ? "mt-2 text-sm font-medium text-ws-text-primary"
+          : "mt-2 text-3xl font-semibold text-ws-text-primary",
+    },
+  ];
+
+  interface ParticipationCardConfig {
+    id: string;
+    title: string;
+    count: string;
+    countIcon: React.ReactNode;
+  }
+
+  const participationCardsConfig: ParticipationCardConfig[] = [
+    {
+      id: "eligible-employees",
+      title: "Eligible Employees",
+      count: "2,450",
+      countIcon: <GlobeIcon className="size-5 text-ws-gray-300" />,
+    },
+    {
+      id: "enrolled-employees",
+      title: "Enrolled Employees",
+      count: "2,254",
+      countIcon: <EnrolledIcon className="size-5 text-ws-gray-300" />,
+    },
+    {
+      id: "enrolled-retirement",
+      title: "Enrolled in retirement",
+      count: "64%",
+      countIcon: <SavingIcon className="size-5 text-ws-gray-300" />,
+    },
+    {
+      id: "enrolled-healthcare",
+      title: "Enrolled in healthcare",
+      count: "92%",
+      countIcon: <HeartLineIcon className="size-5 text-ws-gray-300" />,
+    },
+  ];
+
+  interface DemographicsCardConfig {
+    id: string;
+    title: string;
+    count: string;
+    tooltipText: string;
+    getCountClass: (industryOverview?: any) => string;
+  }
+
+  const demographicsCardsConfig: DemographicsCardConfig[] = [
+    {
+      id: "women",
+      title: "Women",
+      count: "32%",
+      tooltipText: "Turnover Rate",
+      getCountClass: industryOverview =>
+        industryOverview?.turnoverRate?.rate == null
+          ? "mt-2 text-sm font-medium text-ws-text-tertiary"
+          : "mt-2 text-3xl font-semibold text-ws-text-primary",
+    },
+    {
+      id: "men",
+      title: "Men",
+      count: "68%",
+      tooltipText: "Average Turnover",
+      getCountClass: industryOverview =>
+        industryOverview?.avgTurnover?.rate == null
+          ? "mt-2 text-sm font-medium text-ws-text-tertiary"
+          : "mt-2 text-3xl font-semibold text-ws-text-primary",
+    },
+  ];
+
+  interface DonutChartConfig {
+    id: string;
+    label: string;
+    percentage: number;
+    progressColor: string;
+    backgroundColor: string;
+  }
+
+  const donutChartsConfig: DonutChartConfig[] = [
+    {
+      id: "full-time",
+      label: "Full Time",
+      percentage: 60,
+      progressColor: "color-ws-progress-primary",
+      backgroundColor: "bg-ws-progress-primary",
+    },
+    {
+      id: "part-time",
+      label: "Part Time",
+      percentage: 23,
+      progressColor: "color-ws-progress-secondary",
+      backgroundColor: "bg-ws-progress-secondary",
+    },
+    {
+      id: "seasonal",
+      label: "Seasonal",
+      percentage: 7,
+      progressColor: "color-ws-progress-turnery",
+      backgroundColor: "bg-ws-progress-turnery",
+    },
+  ];
+
+  interface AgeBreakdownConfig {
+    id: string;
+    label: string;
+    value: number;
+    customColor: string;
+  }
+
+  const ageBreakdownConfig: AgeBreakdownConfig[] = [
+    {
+      id: "age-gt-30",
+      label: "Age: > 30",
+      value: 10,
+      customColor: "bg-ws-light-teal-400 rounded-none",
+    },
+    {
+      id: "age-30-40",
+      label: "Age: 30 - 40",
+      value: 30,
+      customColor: "bg-ws-light-teal-700 rounded-none",
+    },
+    {
+      id: "age-40-50",
+      label: "Age: 40 - 50",
+      value: 45,
+      customColor: "bg-ws-light-teal-100 rounded-none",
+    },
+    {
+      id: "age-50-60",
+      label: "Age: 50 - 60",
+      value: 10,
+      customColor: "bg-ws-light-teal-300 rounded-none",
+    },
+    {
+      id: "age-60-plus",
+      label: "Age: 60 +",
+      value: 5,
+      customColor: "bg-ws-light-teal-950 rounded-none",
+    },
+  ];
+
+  interface SalaryBreakdownCardConfig {
+    id: string;
+    title: string;
+    count: string;
+    tooltipText: string;
+    getCountClass: (selectedHousingData?: any) => string;
+  }
+
+  const salaryBreakdownCardsConfig: SalaryBreakdownCardConfig[] = [
+    {
+      id: "employee-contribution",
+      title: "Employee Contribution Per Paycheck (All benefits)",
+      count: "$468.33",
+      tooltipText: "Home Ownership Rate",
+      getCountClass: selectedHousingData =>
+        selectedHousingData?.workingClassHousingCostBurden?.homeOwnershipRate == null
+          ? "mt-2 text-sm font-medium text-ws-text-primary"
+          : "mt-2 text-3xl font-semibold text-ws-text-primary",
+    },
+    {
+      id: "employer-cost",
+      title: "Employer Cost Per Employee (Avg)",
+      count: "$11,240/yr",
+      tooltipText: "Median Home Value",
+      getCountClass: selectedHousingData =>
+        selectedHousingData?.workingClassHousingCostBurden?.medianHomeValue == null
+          ? "mt-2 text-sm font-medium text-ws-text-primary"
+          : "mt-2 text-3xl font-semibold text-ws-text-primary",
+    },
+  ];
+
+  interface CompensationCardConfig {
+    id: string;
+    title: string;
+    count: string;
+    tooltipText: string;
+    getCountClass: (selectedHousingData?: any) => string;
+  }
+
+  const compensationCardsConfig: CompensationCardConfig[] = [
+    {
+      id: "median-salary",
+      title: "Median Base Salary",
+      count: "$123,000/yr",
+      tooltipText: "Home Ownership Rate",
+      getCountClass: selectedHousingData =>
+        selectedHousingData?.workingClassHousingCostBurden?.homeOwnershipRate == null
+          ? "mt-2 text-sm font-medium text-ws-text-tertiary"
+          : "mt-2 text-3xl font-semibold text-ws-text-primary",
+    },
+    {
+      id: "average-salary",
+      title: "Average Salary",
+      count: "$6,012.33",
+      tooltipText: "Median Home Value",
+      getCountClass: selectedHousingData =>
+        selectedHousingData?.workingClassHousingCostBurden?.medianHomeValue == null
+          ? "mt-2 text-sm font-medium text-ws-text-tertiary"
+          : "mt-2 text-3xl font-semibold text-ws-text-primary",
+    },
+    {
+      id: "hourly-wage",
+      title: "Average Hourly Wage",
+      count: "$25.22",
+      tooltipText: "Median Rent",
+      getCountClass: selectedHousingData =>
+        selectedHousingData?.workingClassHousingCostBurden?.medianRent == null
+          ? "mt-2 text-sm font-medium text-ws-text-tertiary"
+          : "mt-2 text-3xl font-semibold text-ws-text-primary",
+    },
+  ];
+
   return (
     <div className="bg-ws-base-white py-10 px-6 space-y-6 shadow-xl rounded-b-xl">
       <div className="w-full flex items-start flex-col gap-4">
@@ -137,284 +601,231 @@ export default function WorkforcePage() {
 
       {/* ── Industry Overview ── */}
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 w-full">
-        <StaticCard
-          title="Total Workforce"
-          titleClass="text-sm font-medium text-ws-text-tertiary"
-          itemAlign="between"
-          count="3,120"
-          countClass={
-            industryOverview?.turnoverRate?.rate == null
-              ? "mt-2 text-sm font-medium text-ws-text-primary"
-              : "mt-2 text-3xl font-semibold text-ws-text-primary"
-          }
-          infoIcon={true}
-          infoCircleClass="text-ws-gray-400 size-5"
-          tooltipText="Turnover Rate"
-          descriptionText="Industry specific turnover metrics are calculated from US Census Bureau QWI data sources"
-          placements="top"
-        />
-        <StaticCard
-          title="Enrolled in Benefits"
-          titleClass="text-sm font-medium text-ws-text-tertiary"
-          itemAlign="between"
-          count="2,450"
-          countClass={
-            industryOverview?.avgTurnover?.rate == null
-              ? "mt-2 text-sm font-medium text-ws-text-primary"
-              : "mt-2 text-3xl font-semibold text-ws-text-primary"
-          }
-          infoIcon={true}
-          infoCircleClass="text-ws-gray-400 size-5"
-          tooltipText="Average Turnover"
-          descriptionText="Average turnover metrics are calculated from US Census Bureau QWI data sources"
-          placements="top"
-        />
-        <StaticCard
-          title="Avg. Employee Cost Per Pay Period"
-          titleClass="text-sm font-medium text-ws-text-tertiary"
-          itemAlign="between"
-          count="$2,254"
-          countClass={
-            industryOverview?.avgCostOfTurnover?.amount == null
-              ? "mt-2 text-sm font-medium text-ws-text-primary"
-              : "mt-2 text-3xl font-semibold text-ws-text-primary"
-          }
-          infoIcon={true}
-          infoCircleClass="text-ws-gray-400 size-5"
-          tooltipText="Average Cost of Turnover"
-          descriptionText={`Industry specific cost of turnover is calculated from ${industryOverview?.avgCostOfTurnover?.year || " "}`}
-          placements="top"
-        />
+        {isLoadingCards ? (
+          <>
+            <OverviewCardSkeleton />
+            <OverviewCardSkeleton />
+            <OverviewCardSkeleton />
+          </>
+        ) : (
+          <>
+            {overviewCardsConfig.map(card => (
+              <StaticCard
+                key={card.id}
+                title={card.title}
+                titleClass="text-sm font-medium text-ws-text-tertiary"
+                itemAlign="between"
+                count={card.count}
+                countClass={card.getCountClass(industryOverview)}
+                infoIcon={true}
+                infoCircleClass="text-ws-gray-400 size-5"
+                tooltipText={card.tooltipText}
+                descriptionText={card.getDescriptionText(industryOverview)}
+                placements="top"
+              />
+            ))}
+          </>
+        )}
       </div>
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 w-full">
-        <StaticCard
-          title="Employer Cost Per Employee"
-          titleClass="text-sm font-medium text-ws-text-tertiary"
-          itemAlign="between"
-          count="$11,240/yr"
-          countClass={
-            industryOverview?.turnoverRate?.rate == null
-              ? "mt-2 text-sm font-medium text-ws-text-primary"
-              : "mt-2 text-3xl font-semibold text-ws-text-primary"
-          }
-          infoIcon={true}
-          infoCircleClass="text-ws-gray-400 size-5"
-          tooltipText="Turnover Rate"
-          descriptionText="Industry specific turnover metrics are calculated from US Census Bureau QWI data sources"
-          placements="top"
-        />
-        <StaticCard
-          //  title={`Avg Turnover since  ${industryOverview?.avgTurnover?.sinceYear}`}
-          title="Avg. PTO Taken"
-          titleClass="text-sm font-medium text-ws-text-tertiary"
-          itemAlign="between"
-          count="13"
-          countClass={
-            industryOverview?.avgTurnover?.rate == null
-              ? "mt-2 text-sm font-medium text-ws-text-primary"
-              : "mt-2 text-3xl font-semibold text-ws-text-primary"
-          }
-          infoIcon={true}
-          infoCircleClass="text-ws-gray-400 size-5"
-          tooltipText="Average Turnover"
-          descriptionText="Average turnover metrics are calculated from US Census Bureau QWI data sources"
-          placements="top"
-        />
-        <StaticCard
-          title="Avg. Sick Days Taken"
-          titleClass="text-sm font-medium text-ws-text-tertiary"
-          itemAlign="between"
-          count="4"
-          countClass={
-            industryOverview?.avgCostOfTurnover?.amount == null
-              ? "mt-2 text-sm font-medium text-ws-text-primary"
-              : "mt-2 text-3xl font-semibold text-ws-text-primary"
-          }
-          infoIcon={true}
-          infoCircleClass="text-ws-gray-400 size-5"
-          tooltipText="Average Cost of Turnover"
-          descriptionText={`Industry specific cost of turnover is calculated from ${industryOverview?.avgCostOfTurnover?.year || " "}`}
-          placements="top"
-        />
+        {isLoadingCards ? (
+          <>
+            <OverviewCardSkeleton />
+            <OverviewCardSkeleton />
+            <OverviewCardSkeleton />
+          </>
+        ) : (
+          <>
+            {employeeCardsConfig.map(card => (
+              <StaticCard
+                key={card.id}
+                title={card.title}
+                titleClass="text-sm font-medium text-ws-text-tertiary"
+                itemAlign="between"
+                count={card.count}
+                countClass={card.getCountClass(industryOverview)}
+                infoIcon={true}
+                infoCircleClass="text-ws-gray-400 size-5"
+                tooltipText={card.tooltipText}
+                descriptionText={card.getDescriptionText(industryOverview)}
+                placements="top"
+              />
+            ))}
+          </>
+        )}
       </div>
 
       <div className="w-full mt-6">
-          <div className="bg-ws-light-teal-50 flex gape-4 rounded-xl max-h-33 ring-1 ring-ws-border-primary">
-            <div className="flex">
-              <img
-                src={didHeroImg}
-                alt="Workforce hero"
-                className="w-38 rounded-tl-xl rounded-bl-xl h-full object-cover"
-              />
-            </div>
-            <div className="p-4 overflow-auto">
-              <h4 className="text-base font-semibold mb-2 text-ws-light-teal-950">
-                Did you know?
-              </h4>
-              <p className="text-lg text-ws-light-teal-950">
-                <span className="font-semibold">78%</span> of employees reported they’re more likely to stay with an employer because of
-              their benefits program.
-              </p>
-            </div>
+        <div className="bg-ws-light-teal-50 flex gape-4 rounded-xl xl:max-h-33 ring-1 ring-ws-border-primary">
+          <div className="flex w-100 xl:w-auto">
+            <img
+              src={didHeroImg}
+              alt="Workforce hero"
+              className="w-full xl:w-42 rounded-tl-xl rounded-bl-xl h-full object-cover"
+            />
+          </div>
+          <div className="p-4 overflow-auto">
+            <h4 className="text-base font-semibold mb-2 text-ws-light-teal-950">Did you know?</h4>
+            <p className="text-lg text-ws-light-teal-950">
+              <span className="font-semibold">78%</span> of employees reported they’re more likely
+              to stay with an employer because of their benefits program.
+            </p>
           </div>
         </div>
+      </div>
 
       {/* ── Industry Turnover ── */}
       <div className="w-full flex flex-col items-center bg-ws-light-teal-25 border border-ws-border-primary rounded-xl py-8 px-6">
         <div className="w-full flex items-center justify-between">
           <div className="space-y-1">
-            <h3 className="text-4xl font-medium text-ws-text-primary">Participation Breakdown</h3>
+            <h3 className="text-2xl lg:text-4xl font-medium text-ws-text-primary">
+              Participation Breakdown
+            </h3>
             <p className="text-base text-ws-text-primary w-full mt-2">
               Your highest participation rate is health insurance. 89% of your employees are using
-              this benefit. Your lowest partitication rate is wellness program.{" "}
+              this benefit. Your lowest participation rate is wellness program.{" "}
             </p>
           </div>
         </div>
 
-        <div className="grid grid-cols-1 lg:grid-cols-4 gap-6 w-full mt-4">
-          <StaticCard
-            classess="border-ws-border-secondary"
-            title="Eligible Employees"
-            titleClass="text-ws-text-tertiary text-sm"
-            countIcon={<GlobeIcon className="size-5 text-ws-gray-300" />}
-            count="2,450"
-            countClass="text-ws-light-teal-900  text-3xl xl:text-4xl font-medium mt-6"
-          />
-          <StaticCard
-            classess="border-ws-border-secondary"
-            title="Enrolled Employees"
-            titleClass="text-ws-text-tertiary text-sm"
-            countIcon={<EnrolledIcon className="size-5 text-ws-gray-300" />}
-            count="2,254"
-            countClass="text-ws-light-teal-900  text-3xl xl:text-4xl font-medium mt-6"
-          />
-          <StaticCard
-            classess="border-ws-border-secondary"
-            title="Enrolled in retirement"
-            titleClass="text-ws-text-tertiary text-sm"
-            countIcon={<SavingIcon className="size-5 text-ws-gray-300" />}
-            count="64%"
-            countClass="text-ws-light-teal-900  text-3xl xl:text-4xl font-medium mt-6"
-          />
-          <StaticCard
-            classess="border-ws-border-secondary"
-            title="Enrolled in healthcare"
-            titleClass="text-ws-text-tertiary text-sm"
-            countIcon={<HeartLineIcon className="size-5 text-ws-gray-300" />}
-            count="92%"
-            countClass="text-ws-light-teal-900  text-3xl xl:text-4xl font-medium mt-6"
-          />
+        <div className="grid grid-cols-2 xl:grid-cols-4 gap-6 w-full mt-4">
+          {isLoadingCards ? (
+            <>
+              <WagesCardSkeleton />
+              <WagesCardSkeleton />
+              <WagesCardSkeleton />
+              <WagesCardSkeleton />
+            </>
+          ) : (
+            <>
+              {participationCardsConfig.map(card => (
+                <StaticCard
+                  key={card.id}
+                  classess="border-ws-border-secondary"
+                  title={card.title}
+                  titleClass="text-ws-text-tertiary text-sm"
+                  countIcon={card.countIcon}
+                  count={card.count}
+                  countClass="text-ws-light-teal-900  text-3xl xl:text-4xl font-medium mt-6"
+                />
+              ))}
+            </>
+          )}
         </div>
         <div className="w-full space-y-4 mt-4">
-          <div className="flex items-center justify-between gap-4">
-            <ProgressCard
-              title="Benefits"
-              showInfoIcon={false}
-              tooltipText="Households spending 30% or more of gross income on housing costs"
-              sections={[
-                {
-                  columnsCount: 1,
-                  items: [
-                    {
-                      label: "FSA",
-                      percentage: 16.2,
-                      progressColor: "bg-ws-navy-300",
-                    },
-                    {
-                      label: "Wellness",
-                      percentage: 19.5,
-                      progressColor: "bg-ws-navy-300",
-                    },
-                    {
-                      label: "Employee Assist",
-                      percentage: 19.5,
-                      progressColor: "bg-ws-navy-300",
-                    },
-                  ],
-                },
-              ]}
-            />
+          <div className="grid grid-cols- gap-4 w-full">
+            {isLoadingCards ? (
+              <>
+                <ProgressCardSkeleton />
+              </>
+            ) : (
+              <ProgressCard
+                title="Benefits"
+                showInfoIcon={false}
+                tooltipText="Households spending 30% or more of gross income on housing costs"
+                sections={[
+                  {
+                    columnsCount: 1,
+                    items: [
+                      {
+                        label: "FSA",
+                        percentage: 16.2,
+                        progressColor: "bg-ws-navy-300",
+                      },
+                      {
+                        label: "Wellness",
+                        percentage: 19.5,
+                        progressColor: "bg-ws-navy-300",
+                      },
+                      {
+                        label: "Employee Assist",
+                        percentage: 19.5,
+                        progressColor: "bg-ws-navy-300",
+                      },
+                    ],
+                  },
+                ]}
+              />
+            )}
           </div>
-          <div className="flex items-center justify-between gap-4">
-            <ProgressCard
-              title="Retirement"
-              showInfoIcon={false}
-              tooltipText="Households spending 30% or more of gross income on housing costs"
-              sections={[
-                {
-                  columnsCount: 1,
-                  items: [
-                    {
-                      label: "401k",
-                      percentage: 70.4,
-                      progressColor: "bg-ws-light-teal-400",
-                    },
-                  ],
-                },
-              ]}
-            />
+          <div className="grid grid-cols- gap-4 w-full">
+            {isLoadingCards ? (
+              <>
+                <ProgressCardSkeletonOne />
+              </>
+            ) : (
+              <ProgressCard
+                title="Retirement"
+                showInfoIcon={false}
+                tooltipText="Households spending 30% or more of gross income on housing costs"
+                sections={[
+                  {
+                    columnsCount: 1,
+                    items: [
+                      {
+                        label: "401k",
+                        percentage: 70.4,
+                        progressColor: "bg-ws-light-teal-400",
+                      },
+                    ],
+                  },
+                ]}
+              />
+            )}
           </div>
-          <div className="flex items-center justify-between gap-4">
-            <ProgressCard
-              title="Insurance"
-              showInfoIcon={false}
-              tooltipText="Households spending 30% or more of gross income on housing costs"
-              sections={[
-                {
-                  columnsCount: 1,
-                  items: [
-                    {
-                      label: "Health",
-                      percentage: 16.2,
-                      progressColor: "bg-ws-light-teal-300",
-                    },
-                    {
-                      label: "Dental",
-                      percentage: 19.5,
-                      progressColor: "bg-ws-light-teal-300",
-                    },
-                    {
-                      label: "Vision",
-                      percentage: 19.5,
-                      progressColor: "bg-ws-light-teal-300",
-                    },
-                    {
-                      label: "Life",
-                      percentage: 19.5,
-                      progressColor: "bg-ws-light-teal-300",
-                    },
-                  ],
-                },
-              ]}
-            />
+          <div className="grid grid-cols- gap-4 w-full">
+            {isLoadingCards ? (
+              <>
+                <ProgressCardSkeletonFour />
+              </>
+            ) : (
+              <ProgressCard
+                title="Insurance"
+                showInfoIcon={false}
+                tooltipText="Households spending 30% or more of gross income on housing costs"
+                sections={[
+                  {
+                    columnsCount: 1,
+                    items: [
+                      {
+                        label: "Health",
+                        percentage: 16.2,
+                        progressColor: "bg-ws-light-teal-300",
+                      },
+                      {
+                        label: "Dental",
+                        percentage: 19.5,
+                        progressColor: "bg-ws-light-teal-300",
+                      },
+                      {
+                        label: "Vision",
+                        percentage: 19.5,
+                        progressColor: "bg-ws-light-teal-300",
+                      },
+                      {
+                        label: "Life",
+                        percentage: 19.5,
+                        progressColor: "bg-ws-light-teal-300",
+                      },
+                    ],
+                  },
+                ]}
+              />
+            )}
           </div>
-          {/* <div className="bg-ws-base-white p-5 border border-ws-border-primary rounded-xl w-full flex flex-col relative">
-            <div className="flex items-center justify-between">
-              <h2 className="text-lg font-medium text-ws-text-primary">Employees with dependents</h2>
-              <p className="text-sm text-ws-text-primary flex items-center gap-3">
-                <span className="flex w-4 h-4 bg-ws-primary-300"></span>With dependents 68%
-              </p>
-            </div>
-            <ProgressBar
-              value={70.4}
-              max={100}
-              className="h-4 rounded-none mt-4"
-              customColor="bg-ws-primary-300 rounded-none"
-            />
-          </div> */}
         </div>
       </div>
 
       <div className="w-full flex flex-col bg-ws-light-teal-25 border border-ws-border-primary rounded-xl py-8 px-6 space-y-4">
-        <div className="w-full flex items-center justify-between">
+        <div className="w-full flex items-start justify-between flex-col xl:flex-row">
           <div className="space-y-1">
-            <h3 className="text-4xl font-medium text-ws-text-primary">Demographics</h3>
+            <h3 className="text-2xl lg:text-4xl font-medium text-ws-text-primary">Demographics</h3>
             <p className="text-base text-ws-text-primary max-w-2xl mt-4">
               Demographics lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod
               tempor incididunt ut labore et dolore magna aliqua.
             </p>
           </div>
-          <div className="flex flex-col items-start w-full lg:w-auto shrink-0">
+          <div className="flex flex-col items-start w-full lg:w-auto shrink-0 my-3 xl:my-0">
             <Label className="text-sm font-medium text-ws-text-secondary flex mb-1.5 mt-6">
               Department
             </Label>
@@ -440,75 +851,66 @@ export default function WorkforcePage() {
         </div>
         <div className="w-full">
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 w-full">
-            <StaticCard
-              title="Women"
-              titleClass="text-sm font-medium text-ws-text-tertiary"
-              itemAlign="between"
-              count="32%"
-              countClass={
-                industryOverview?.turnoverRate?.rate == null
-                  ? "mt-2 text-sm font-medium text-ws-text-tertiary"
-                  : "mt-2 text-3xl font-semibold text-ws-text-primary"
-              }
-              infoIcon={true}
-              infoCircleClass="text-ws-gray-70 size-5"
-              tooltipText="Turnover Rate"
-              descriptionText="Industry specific turnover metrics are calculated from US Census Bureau QWI data sources"
-              placements="top"
-            />
-            <StaticCard
-              title="Men"
-              titleClass="text-sm font-medium text-ws-text-tertiary"
-              itemAlign="between"
-              count="68%"
-              countClass={
-                industryOverview?.avgTurnover?.rate == null
-                  ? "mt-2 text-sm font-medium text-ws-text-tertiary"
-                  : "mt-2 text-3xl font-semibold text-ws-text-primary"
-              }
-              infoIcon={true}
-              infoCircleClass="text-ws-gray-70 size-5"
-              tooltipText="Average Turnover"
-              descriptionText="Average turnover metrics are calculated from US Census Bureau QWI data sources"
-              placements="top"
-            />
+            {isLoadingCards ? (
+              <>
+                <OverviewCardSkeleton />
+                <OverviewCardSkeleton />
+              </>
+            ) : (
+              <>
+                {demographicsCardsConfig.map(card => (
+                  <StaticCard
+                    key={card.id}
+                    title={card.title}
+                    titleClass="text-sm font-medium text-ws-text-tertiary"
+                    itemAlign="between"
+                    count={card.count}
+                    countClass={card.getCountClass(industryOverview)}
+                    infoIcon={true}
+                    infoCircleClass="text-ws-gray-70 size-5"
+                    tooltipText={card.tooltipText}
+                    descriptionText="Industry specific turnover metrics are calculated from US Census Bureau QWI data sources"
+                    placements="top"
+                  />
+                ))}
+              </>
+            )}
           </div>
         </div>
         <div className="bg-ws-base-white p-5 border border-ws-border-primary rounded-xl w-full flex flex-col relative">
           <h2 className="text-2xl font-medium text-ws-text-primary">Employment type</h2>
-          <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 w-full my-6">
-            <DonutChart
-              percentage={60}
-              label="Full Time"
-              progressColor="color-ws-progress-primary"
-              backgroundColor="bg-ws-progress-primary"
-              width={200}
-              strokeWidth={25}
-            />
-            <DonutChart
-              percentage={23}
-              label="Part Time"
-              progressColor="color-ws-progress-secondary"
-              backgroundColor="bg-ws-progress-secondary"
-              width={200}
-              strokeWidth={25}
-            />
-            <DonutChart
-              percentage={7}
-              label="Seasonal"
-              progressColor="color-ws-progress-turnery"
-              backgroundColor="bg-ws-progress-turnery"
-              width={200}
-              strokeWidth={25}
-            />
+          <div className="grid grid-cols-1 xl:grid-cols-3 gap-6 w-full my-6 space-y-6 xl:space-y-0">
+            {isLoadingCards ? (
+              <>
+                <DonutChartSkeleton />
+                <DonutChartSkeleton />
+                <DonutChartSkeleton />
+              </>
+            ) : (
+              <>
+                {donutChartsConfig.map(chart => (
+                  <DonutChart
+                    key={chart.id}
+                    percentage={chart.percentage}
+                    label={chart.label}
+                    progressColor={chart.progressColor}
+                    backgroundColor={chart.backgroundColor}
+                    width={200}
+                    strokeWidth={25}
+                  />
+                ))}
+              </>
+            )}
           </div>
         </div>
         <div className="bg-ws-base-white p-5 border border-ws-border-primary rounded-xl w-full flex flex-col relative">
-          <div className="w-full flex items-start justify-between">
-            <div className="space-y-1">
-              <h3 className="text-2xl font-medium text-ws-text-primary">Employment Breakdown by Age</h3>
+          <div className="w-full flex items-start justify-between flex-col xl:flex-row">
+            <div className="space-y-1 ">
+              <h3 className="text-2xl font-medium text-ws-text-primary">
+                Employment Breakdown by Age
+              </h3>
             </div>
-            <div className="flex flex-col items-start w-full lg:w-auto shrink-0">
+            <div className="flex flex-col items-start w-full lg:w-auto shrink-0 mt-4 xl:mt-0">
               <Label className="text-sm font-medium text-ws-text-secondary flex mb-1.5">
                 Employment type <span className="text-ws-error-600">*</span>
               </Label>
@@ -533,56 +935,24 @@ export default function WorkforcePage() {
             </div>
           </div>
           <div className="space-y-2 mt-6">
-            <div className="flex items-center justify-between gap-4">
-              <div className="min-w-30">Age: &gt; 30</div>
-              <ProgressBar
-                value={10}
-                max={100}
-                className="h-6 rounded-none"
-                customColor="bg-ws-light-teal-400 rounded-none"
-              />
-              <div className="flex min-w-8">10%</div>
-            </div>
-            <div className="flex items-center justify-between gap-4">
-              <div className="min-w-30">Age: 30 - 40</div>
-              <ProgressBar
-                value={30}
-                max={100}
-                className="h-6 rounded-none"
-                customColor="bg-ws-light-teal-700 rounded-none"
-              />
-              <div className="flex min-w-8">30%</div>
-            </div>
-            <div className="flex items-center justify-between gap-4">
-              <div className="min-w-30">Age: 40 - 50</div>
-              <ProgressBar
-                value={45}
-                max={100}
-                className="h-6 rounded-none"
-                customColor="bg-ws-light-teal-100 rounded-none"
-              />
-              <div className="flex min-w-8">45%</div>
-            </div>
-            <div className="flex items-center justify-between gap-4">
-              <div className="min-w-30">Age: 50 - 60</div>
-              <ProgressBar
-                value={10}
-                max={100}
-                className="h-6 rounded-none"
-                customColor="bg-ws-light-teal-300 rounded-none"
-              />
-              <div className="flex min-w-8">10%</div>
-            </div>
-            <div className="flex items-center justify-between gap-4">
-              <div className="min-w-30">Age: 60 +</div>
-              <ProgressBar
-                value={5}
-                max={100}
-                className="h-6 rounded-none"
-                customColor="bg-ws-light-teal-950 rounded-none"
-              />
-              <div className="flex min-w-8">5%</div>
-            </div>
+            {isLoadingCards ? (
+              <BreakDownCardSkeleton />
+            ) : (
+              <>
+                {ageBreakdownConfig.map(item => (
+                  <div key={item.id} className="flex items-center justify-between gap-4">
+                    <div className="min-w-30">{item.label}</div>
+                    <ProgressBar
+                      value={item.value}
+                      max={100}
+                      className="h-6 rounded-none"
+                      customColor={item.customColor}
+                    />
+                    <div className="flex min-w-8">{item.value}%</div>
+                  </div>
+                ))}
+              </>
+            )}
           </div>
         </div>
       </div>
@@ -590,7 +960,7 @@ export default function WorkforcePage() {
       <div className="w-full flex flex-col bg-ws-light-teal-25 border border-ws-border-primary rounded-xl py-8 px-6">
         <div className="w-full flex items-center justify-between">
           <div className="space-y-1">
-            <h3 className="text-4xl font-medium text-ws-text-primary">Compensation</h3>
+            <h3 className="text-2xl xl:text-4xl font-medium text-ws-text-primary">Compensation</h3>
             <p className="text-base text-ws-text-tertiary">
               Compensation lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod
               tempor incididunt ut labore et dolore magna aliqua.
@@ -598,65 +968,42 @@ export default function WorkforcePage() {
           </div>
         </div>
         <div className="grid xl:grid-cols-3 gap-4 mt-6 flex-col lg:flex-row">
-          <StaticCard
-            title="Median Base Salary"
-            titleClass="text-sm font-medium text-ws-text-tertiary"
-            itemAlign="between"
-            count="$123,000/yr"
-            countClass={
-              selectedHousingData?.workingClassHousingCostBurden?.homeOwnershipRate == null
-                ? "mt-2 text-sm font-medium text-ws-text-tertiary"
-                : "mt-2 text-3xl font-semibold text-ws-text-primary"
-            }
-            infoIcon={true}
-            infoCircleClass="text-ws-gray-70"
-            tooltipText="Home Ownership Rate"
-            descriptionText="U.S. Census Bureau, 5-Year American Community Survey"
-            placements="top"
-          />
-          <StaticCard
-            title="Average Salary"
-            itemAlign="between"
-            titleClass="text-sm font-medium text-ws-text-tertiary"
-            count="$6,012.33"
-            countClass={
-              selectedHousingData?.workingClassHousingCostBurden?.medianHomeValue == null
-                ? "mt-2 text-sm font-medium text-ws-text-tertiary"
-                : "mt-2 text-3xl font-semibold text-ws-text-primary"
-            }
-            infoIcon={true}
-            infoCircleClass="text-ws-gray-70"
-            tooltipText="Median Home Value"
-            descriptionText="U.S. Census Bureau, 5-Year American Community Survey"
-            placements="top"
-          />
-          <StaticCard
-            title="Average Hourly Wage"
-            itemAlign="between"
-            titleClass="text-sm font-medium text-ws-text-tertiary"
-            count="$25.22"
-            countClass={
-              selectedHousingData?.workingClassHousingCostBurden?.medianRent == null
-                ? "mt-2 text-sm font-medium text-ws-text-tertiary"
-                : "mt-2 text-3xl font-semibold text-ws-text-primary"
-            }
-            infoIcon={true}
-            infoCircleClass="text-ws-gray-70"
-            tooltipText="Median Rent"
-            descriptionText="U.S. Census Bureau, 5-Year American Community Survey"
-            placements="top"
-          />
+          {isLoadingCards ? (
+            <>
+              <OverviewCardSkeleton />
+              <OverviewCardSkeleton />
+              <OverviewCardSkeleton />
+            </>
+          ) : (
+            <>
+              {compensationCardsConfig.map(card => (
+                <StaticCard
+                  key={card.id}
+                  title={card.title}
+                  titleClass="text-sm font-medium text-ws-text-tertiary"
+                  itemAlign="between"
+                  count={card.count}
+                  countClass={card.getCountClass(selectedHousingData)}
+                  infoIcon={true}
+                  infoCircleClass="text-ws-gray-70"
+                  tooltipText={card.tooltipText}
+                  descriptionText="U.S. Census Bureau, 5-Year American Community Survey"
+                  placements="top"
+                />
+              ))}
+            </>
+          )}
         </div>
 
         <div className="w-full border-t border-ws-border-primary mt-8">
-          <div className="w-full flex items-center justify-between mt-8">
+          <div className="w-full flex items-start justify-between mt-8 flex-col xl:flex-row">
             <div className="space-y-1 w-full">
               <h3 className="text-2xl font-medium text-ws-text-primary">Workforce Breakdown</h3>
               <p className="max-w-3xl text-base text-ws-text-secondary">
                 Here you can find how your workforce is broken down by job types.{" "}
               </p>
             </div>
-            <div className="flex flex-col items-start w-full lg:w-auto shrink-0">
+            <div className="flex flex-col items-start w-full lg:w-auto shrink-0 mt-4 xl:mt-0">
               <Label className="text-ws-text-secondary flex mb-1.5">
                 Department <span className="text-ws-error-600">*</span>
               </Label>
@@ -678,67 +1025,95 @@ export default function WorkforcePage() {
               >
                 {item => <Select.Item id={item.id}>{item.label}</Select.Item>}
               </Select>
-              <p className="text-xs text-ws-text-tertiary mt-1">This is a hint text to help user.</p>
-            </div>
-          </div>
-          <div className="bg-ws-base-white border border-ws-border-primary rounded-xl w-full mt-4">
-            <Table data={users} columns={columns} variant="striped" size="md" />
-          </div>
-          <div className="w-full border-t border-ws-border-primary mt-8">
-          <div className="w-full flex items-center justify-between mt-8">
-            <div className="space-y-1 w-full">
-              <h3 className="text-2xl font-medium text-ws-text-primary">Salary Breakdown</h3>
-              <p className="max-w-3xl text-base text-ws-text-secondary">
-                Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
+              <p className="text-xs text-ws-text-tertiary mt-1">
+                This is a hint text to help user.
               </p>
             </div>
           </div>
+          {isLoadingCards ? (
+            <div className="bg-ws-base-white border border-ws-border-primary rounded-xl w-full mt-4">
+              <div className="w-lg flex items-center justify-center flex-col p-15 mx-auto">
+                <img src={emptyStateWorkforce} alt="Empty state" className="mb-4" />
+                <h2 className="text-2xl/8 font-medium text-ws-text-tertiary mb-1">
+                  We’re still collecting data
+                </h2>
+                <p className="text-base/6 text-ws-text-tertiary">
+                  We’re getting things ready for you. Your dashboard will populate once data is
+                  collected. Check back soon.
+                </p>
+              </div>
+            </div>
+          ) : (
+            <div className="bg-ws-base-white border border-ws-border-primary rounded-xl w-full mt-4">
+              <Table data={users} columns={columns} variant="striped" size="md" />
+            </div>
+          )}
+          <div className="w-full border-t border-ws-border-primary mt-8">
+            <div className="w-full flex items-center justify-between mt-8">
+              <div className="space-y-1 w-full">
+                <h3 className="text-2xl font-medium text-ws-text-primary">Salary Breakdown</h3>
+                <p className="max-w-3xl text-base text-ws-text-secondary">
+                  Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor
+                  incididunt ut labore et dolore magna aliqua.
+                </p>
+              </div>
+            </div>
           </div>
           <div className="grid xl:grid-cols-2 gap-4 mt-6 flex-col lg:flex-row">
-            <StaticCard
-              title="Employee Contribution Per Paycheck (All benefits)"
-              titleClass="text-sm font-medium text-ws-text-tertiary mb-14"
-              itemAlign="between"
-              count="$468.33"
-              countClass={
-                selectedHousingData?.workingClassHousingCostBurden?.homeOwnershipRate == null
-                  ? "mt-2 text-sm font-medium text-ws-text-primary"
-                  : "mt-2 text-3xl font-semibold text-ws-text-primary"
-              }
-              infoIcon={true}
-              infoCircleClass="text-ws-gray-70"
-              tooltipText="Home Ownership Rate"
-              descriptionText="U.S. Census Bureau, 5-Year American Community Survey"
-              placements="top"
-            />
-            <StaticCard
-              title="Employer Cost Per Employee (Avg)"
-              itemAlign="between"
-              titleClass="text-sm font-medium text-ws-text-tertiary mb-14"
-              count="$11,240/yr"
-              countClass={
-                selectedHousingData?.workingClassHousingCostBurden?.medianHomeValue == null
-                  ? "mt-2 text-sm font-medium text-ws-text-primary"
-                  : "mt-2 text-3xl font-semibold text-ws-text-primary"
-              }
-              infoIcon={true}
-              infoCircleClass="text-ws-gray-70"
-              tooltipText="Median Home Value"
-              descriptionText="U.S. Census Bureau, 5-Year American Community Survey"
-              placements="top"
-            />
+            {isLoadingCards ? (
+              <>
+                <OverviewCardSkeleton />
+                <OverviewCardSkeleton />
+              </>
+            ) : (
+              <>
+                {salaryBreakdownCardsConfig.map(card => (
+                  <StaticCard
+                    key={card.id}
+                    title={card.title}
+                    titleClass="text-sm font-medium text-ws-text-tertiary mb-14"
+                    itemAlign="between"
+                    count={card.count}
+                    countClass={card.getCountClass(selectedHousingData)}
+                    infoIcon={true}
+                    infoCircleClass="text-ws-gray-70"
+                    tooltipText={card.tooltipText}
+                    descriptionText="U.S. Census Bureau, 5-Year American Community Survey"
+                    placements="top"
+                  />
+                ))}
+              </>
+            )}
           </div>
           {/* Chart */}
           <div className="bg-ws-base-white border border-ws-border-primary flex-1 w-full overflow-x-auto mt-6 rounded-xl">
-            <SalaryChart />
+            {isLoadingCards ? <BreakDownChartSkeleton /> : <SalaryChart />}
           </div>
-          <div className="bg-ws-base-white border border-ws-border-primary rounded-xl w-full mt-4">
-            <Table data={salary} columns={columnsOne} variant="striped" size="md" />
-          </div>
+          {isLoadingCards ? (
+            <div className="bg-ws-base-white border border-ws-border-primary rounded-xl w-full mt-4">
+              <div className="w-lg flex items-center justify-center flex-col p-15 mx-auto">
+                <img src={emptyStateWorkforce} alt="Empty state" className="mb-4" />
+                <h2 className="text-2xl/8 font-medium text-ws-text-tertiary mb-1">
+                  We’re still collecting data
+                </h2>
+                <p className="text-base/6 text-ws-text-tertiary">
+                  We’re getting things ready for you. Your dashboard will populate once data is
+                  collected. Check back soon.
+                </p>
+              </div>
+            </div>
+          ) : (
+            <div className="bg-ws-base-white border border-ws-border-primary rounded-xl w-full mt-4">
+              <Table data={salary} columns={columnsOne} variant="striped" size="md" />
+            </div>
+          )}
         </div>
       </div>
       <div className="w-full">
-        <p className="text-ws-text-secondary text-sm mb-4">All data metrics provided through Finch are based on the most current information accessible at the time of reporting, as of September 2025.</p>
+        <p className="text-ws-text-secondary text-sm mb-4">
+          All data metrics provided through Finch are based on the most current information
+          accessible at the time of reporting, as of September 2025.
+        </p>
         <p className="text-xs/5 text-ws-text-primary">
           This product provides informational insights and recommendations based on the data you
           share and industry benchmarks. It does not provide legal, financial, tax, or benefits

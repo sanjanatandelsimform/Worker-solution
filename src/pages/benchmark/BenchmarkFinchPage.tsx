@@ -1,5 +1,5 @@
 "use client";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 // import { Button } from "@/components/base/buttons/button";
 import StaticCard from "../recommendations/StaticCard";
 import { Select } from "@/components/base/select/select";
@@ -13,7 +13,7 @@ import {
   selectZipCodes,
   selectDashboardData,
 } from "@/store/selectors/dashboardSelectors";
-import { formatPercentage } from "@/utils/formatters";
+import { formatCurrency, formatPercentage } from "@/utils/formatters";
 import { Label } from "@/components/base/input/label";
 import TurnoverRateCard from "./TurnoverRateCard";
 import { GlobeIcon } from "@/assets/icons/Globe";
@@ -24,9 +24,571 @@ import SalaryHourlyFinchChart from "./SalaryHourlyCharts/SalaryHourlyChartsFinch
 import { TimerIcon } from "@/assets/icons/TimerIcon";
 import { Link } from "react-router-dom";
 
+const OverviewCardSkeleton = () => (
+  <div className="border border-ws-border-secondary rounded-lg p-4 bg-ws-base-white animate-pulse shadow-sm">
+    <div className="flex items-end justify-between">
+      <div className="h-4 bg-ws-gray-200 rounded w-3/4 mb-4"></div>
+      <div className="w-4 h-4 bg-ws-gray-200 rounded-full mb-4"></div>
+    </div>
+    <div className="h-10 bg-ws-gray-200 rounded w-1/3"></div>
+  </div>
+);
+
+const TurnoverRateCardSkeleton = () => (
+  <div className="border border-ws-border-secondary rounded-lg p-4 bg-ws-base-white animate-pulse shadow-sm">
+    <div className="flex items-center justify-between">
+      <div className="h-4 bg-ws-gray-200 rounded w-1/2 mb-6"></div>
+      <div className="h-3 bg-ws-gray-200 w-15 mb-6"></div>
+    </div>
+    <div className="h-4 bg-ws-gray-200 rounded w-1/2 mb-2"></div>
+    <div className="flex gap-4">
+      <div className="border border-ws-border-secondary rounded-lg p-4 bg-ws-base-white animate-pulse shadow-sm w-full">
+        <div className="h-3 bg-ws-gray-200 rounded w-1/2 mb-2"></div>
+        <div className="h-6 bg-ws-gray-200 rounded w-1/2 mb-2"></div>
+        <div className="h-2 bg-ws-gray-200 rounded w-full"></div>
+      </div>
+      <div className="border border-ws-border-secondary rounded-lg p-4 bg-ws-base-white animate-pulse shadow-sm w-full">
+        <div className="h-3 bg-ws-gray-200 rounded w-1/2 mb-2"></div>
+        <div className="h-6 bg-ws-gray-200 rounded w-1/2 mb-2"></div>
+        <div className="h-2 bg-ws-gray-200 rounded w-full"></div>
+      </div>
+    </div>
+    <div className="h-4 bg-ws-gray-200 rounded w-1/2 mb-2 mt-5"></div>
+    <div className="flex gap-4">
+      <div className="border border-ws-border-secondary rounded-lg p-4 bg-ws-base-white animate-pulse shadow-sm w-full">
+        <div className="h-3 bg-ws-gray-200 rounded w-1/2 mb-2"></div>
+        <div className="h-6 bg-ws-gray-200 rounded w-1/2 mb-2"></div>
+        <div className="h-2 bg-ws-gray-200 rounded w-full"></div>
+      </div>
+      <div className="border border-ws-border-secondary rounded-lg p-4 bg-ws-base-white animate-pulse shadow-sm w-full">
+        <div className="h-3 bg-ws-gray-200 rounded w-1/2 mb-2"></div>
+        <div className="h-6 bg-ws-gray-200 rounded w-1/2 mb-2"></div>
+        <div className="h-2 bg-ws-gray-200 rounded w-full"></div>
+      </div>
+    </div>
+    <div className="flex flex-col items-start mt-4 gap-2">
+      <div className="h-1 bg-ws-gray-200 rounded w-1/2"></div>
+      <div className="h-1 bg-ws-gray-200 rounded w-1/2"></div>
+    </div>
+  </div>
+);
+
+const SalaryHourlySkeleton = () => (
+  <div className="border border-ws-border-secondary rounded-lg p-5 bg-ws-base-white animate-pulse shadow-sm">
+    <div className="h-8 bg-ws-gray-200 rounded w-1/3 my-4"></div>
+    <div className="flex w-full gap-4">
+      <div className="w-full h-80 flex items-center justify-center flex-col gap-4">
+        <div className="flex w-15 h-4 bg-ws-gray-200 mb-4"></div>
+        <div className="flex items-end justify-center gap-4">
+          <div className="w-10 h-30 bg-ws-gray-200"></div>
+          <div className="w-10 h-50 bg-ws-gray-200"></div>
+          <div className="w-10 h-65 bg-ws-gray-200"></div>
+        </div>
+      </div>
+      <div className="w-full h-80 flex items-center justify-center flex-col gap-4">
+        <div className="flex w-15 h-4 bg-ws-gray-200 mb-4"></div>
+        <div className="flex items-end justify-center gap-4">
+          <div className="w-10 h-30 bg-ws-gray-200"></div>
+          <div className="w-10 h-50 bg-ws-gray-200"></div>
+          <div className="w-10 h-65 bg-ws-gray-200"></div>
+        </div>
+      </div>
+    </div>
+    <div className="flex items-center justify-between">
+      <div className="flex items-center gap-4 mt-6">
+        <div className="h-4 bg-ws-gray-200 w-30"></div>
+        <div className="h-4 bg-ws-gray-200 w-30"></div>
+      </div>
+      <div className="h-3 bg-ws-gray-200 w-15"></div>
+    </div>
+  </div>
+);
+
+const WagesCardSkeleton = () => (
+  <div className="border border-ws-border-secondary rounded-lg p-4 bg-ws-base-white animate-pulse shadow-sm">
+    <div className="h-4 bg-ws-gray-200 rounded w-3/4 mb-3"></div>
+    <div className="flex items-end justify-between">
+      <div className="h-12 bg-ws-gray-200 rounded w-3/4"></div>
+      <div className="w-8 h-8 bg-ws-gray-200 rounded-full"></div>
+    </div>
+  </div>
+);
+
+const ProgressCardSkeleton = () => (
+  <div className="border border-ws-border-secondary rounded-lg p-4 bg-ws-base-white animate-pulse shadow-sm">
+    <div className="flex w-full gap-4">
+      <div className="w-full">
+        <div className="w-1/3 h-6 bg-ws-gray-200 mb-4 rounded"></div>
+        <div className="flex items-center justify-between gap-4">
+          <div className="w-1/3 h-2 bg-ws-gray-200 rounded"></div>
+          <div className="w-2/3 h-8 bg-ws-gray-200 rounded"></div>
+        </div>
+        <div className="flex items-center justify-between gap-4 mt-2">
+          <div className="w-1/3 h-2 bg-ws-gray-200 rounded"></div>
+          <div className="w-2/3 h-8 bg-ws-gray-200 rounded"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+);
+interface BenchmarkCardConfig {
+  id: string;
+  title: (industryOverview: unknown) => string;
+  count: (industryOverview: unknown) => string;
+  tooltipText: string;
+  descriptionText: (industryOverview: unknown) => string;
+  countClass: (industryOverview: unknown) => string;
+}
+
+const benchmarkCardsConfig: BenchmarkCardConfig[] = [
+  {
+    id: "turnover-rate",
+    title: (data: any) =>
+      !data?.turnoverRate?.month || !data?.turnoverRate?.year
+        ? "Turnover rate"
+        : `Turnover rate since ${data?.turnoverRate?.month} ${data?.turnoverRate?.year}`,
+    count: (data: any) => formatPercentage(data?.turnoverRate?.rate),
+    tooltipText: "Turnover Rate",
+    descriptionText: () =>
+      "Industry specific turnover metrics are calculated from US Census Bureau QWI data sources",
+    countClass: (data: any) =>
+      data?.turnoverRate?.rate == null
+        ? "mt-2 text-sm font-medium text-ws-text-primary"
+        : "mt-2 text-3xl font-semibold text-ws-text-primary",
+  },
+  {
+    id: "avg-turnover",
+    title: (data: any) =>
+      !data?.avgTurnover?.sinceYear
+        ? "Avg Turnover"
+        : `Avg Turnover since  ${data?.avgTurnover?.sinceYear}`,
+    count: (data: any) => formatPercentage(data?.avgTurnover?.rate),
+    tooltipText: "Average Turnover",
+    descriptionText: () =>
+      "Average turnover metrics are calculated from US Census Bureau QWI data sources",
+    countClass: (data: any) =>
+      data?.avgTurnover?.rate == null
+        ? "mt-2 text-sm font-medium text-ws-text-primary"
+        : "mt-2 text-3xl font-semibold text-ws-text-primary",
+  },
+  {
+    id: "avg-cost-turnover",
+    title: () => "Avg. Cost of Turnover",
+    count: (data: any) =>
+      data?.avgCostOfTurnover?.formatted || formatCurrency(data?.avgCostOfTurnover?.amount),
+    tooltipText: "Average Cost of Turnover",
+    descriptionText: (data: any) =>
+      `Industry specific cost of turnover is calculated from ${data?.avgCostOfTurnover?.year || " "}`,
+    countClass: (data: any) =>
+      data?.avgCostOfTurnover?.amount == null
+        ? "mt-2 text-sm font-medium text-ws-text-primary"
+        : "mt-2 text-3xl font-semibold text-ws-text-primary",
+  },
+];
+
+const benchmarkCardsConfigR2: BenchmarkCardConfig[] = [
+  {
+    id: "hire-rate-y-o-y",
+    title: (data: any) =>
+      !data?.turnoverRate?.month || !data?.turnoverRate?.year
+        ? "Hire Rate y-o-y"
+        : `Hire Rate since ${data?.turnoverRate?.month} ${data?.turnoverRate?.year}`,
+    count: (data: any) => formatPercentage(data?.turnoverRate?.rate),
+    tooltipText: "Hire Rate",
+    descriptionText: () =>
+      "Industry specific hire rate metrics are calculated from US Census Bureau QWI data sources",
+    countClass: (data: any) =>
+      data?.turnoverRate?.rate == null
+        ? "mt-2 text-sm font-medium text-ws-text-primary"
+        : "mt-2 text-3xl font-semibold text-ws-text-primary",
+  },
+  {
+    id: "separation-rate-y-o-y",
+    title: (data: any) =>
+      !data?.avgTurnover?.sinceYear
+        ? "Separation Rate y-o-y"
+        : `Separation Rate since  ${data?.avgTurnover?.sinceYear}`,
+    count: (data: any) => formatPercentage(data?.avgTurnover?.rate),
+    tooltipText: "Separation Rate",
+    descriptionText: () =>
+      "Industry specific separation rate metrics are calculated from US Census Bureau QWI data sources",
+    countClass: (data: any) =>
+      data?.avgTurnover?.rate == null
+        ? "mt-2 text-sm font-medium text-ws-text-primary"
+        : "mt-2 text-3xl font-semibold text-ws-text-primary",
+  },
+];
+
+interface SalaryCardConfig {
+  id: string;
+  title: string;
+  icon: React.ReactNode;
+  count: string;
+}
+
+const salaryCardsConfig: SalaryCardConfig[] = [
+  {
+    id: "company-median-hourly-wages",
+    title: "Company's Median Hourly Wages",
+    icon: <TimerIcon className="size-5 text-ws-gray-500" />,
+    count: "$14.03",
+  },
+  {
+    id: "median-living-wage",
+    title: "[State] Median Living Wage",
+    icon: <DollarIcon className="size-5 text-ws-gray-500" />,
+    count: "$24.03",
+  },
+  {
+    id: "average-salary-2023",
+    title: "[State} Average Salary, 2023",
+    icon: <CurrencyStackIcon className="size-5 text-ws-gray-500" />,
+    count: "$92,377",
+  },
+  {
+    id: "national-average-salary",
+    title: "National Average Salary",
+    icon: <GlobeIcon className="size-5 text-ws-gray-500" />,
+    count: "$83,227",
+  },
+];
+
+interface CostBurdenCardConfig {
+  id: string;
+  title: string;
+  count: string;
+  tooltipText: string;
+  descriptionText: string;
+  countClass: string;
+}
+
+const costBurdenCardsConfig: CostBurdenCardConfig[] = [
+  {
+    id: "home-ownership-rate",
+    title: "Home Ownership Rate",
+    count: "72%",
+    tooltipText: "Turnover Rate",
+    descriptionText:
+      "Industry specific turnover metrics are calculated from US Census Bureau QWI data sources",
+    countClass: "mt-2 text-sm font-medium text-ws-text-primary",
+  },
+  {
+    id: "median-home-value",
+    title: "Median Home Value",
+    count: "$367,000",
+    tooltipText: "Median Home Value",
+    descriptionText:
+      "Industry specific turnover metrics are calculated from US Census Bureau QWI data sources",
+    countClass: "mt-2 text-sm font-medium text-ws-text-primary",
+  },
+  {
+    id: "median-rent",
+    title: "Median Rent",
+    count: "$1,423",
+    tooltipText: "Median Rent",
+    descriptionText:
+      "Industry specific turnover metrics are calculated from US Census Bureau QWI data sources",
+    countClass: "mt-2 text-sm font-medium text-ws-text-primary",
+  },
+];
+
+interface TurnoverRateCardConfig {
+  id: string;
+  title: string;
+  titleQatar: string;
+  sections: Array<{
+    sectionTitle: string;
+    columnsCount: 1 | 2 | 3 | 4;
+    cardsData: Array<{
+      title: string;
+      statics: string;
+      staticsPoints?: string;
+      staticsPointsState?: boolean;
+      progressValue: number;
+      customBarColor: string;
+    }>;
+  }>;
+  industryText: string | undefined;
+  industryBoldText: string;
+  sourceText: string;
+  sourceBoldText: string;
+  className: string;
+  sourceClass: string;
+}
+
+const turnoverCardsConfigFinch: TurnoverRateCardConfig[] = [
+  {
+    id: "turnover-rate",
+    title: "Industry Turnover Rate",
+    titleQatar: "Q4 2023",
+    sections: [
+      {
+        sectionTitle: "INDUSTRY AVERAGE",
+        columnsCount: 2 as const,
+        cardsData: [
+          {
+            title: "Involuntary",
+            statics: formatPercentage(39.8),
+            progressValue: 39.8,
+            customBarColor: "bg-ws-light-teal-400",
+          },
+          {
+            title: "Voluntary",
+            statics: formatPercentage(60.1),
+            progressValue: 60.1,
+            customBarColor: "bg-ws-navy-600",
+          },
+        ],
+      },
+      {
+        sectionTitle: "YOUR COMPANY",
+        columnsCount: 2 as const,
+        cardsData: [
+          {
+            title: "Voluntary",
+            statics: formatPercentage(16.8),
+            staticsPoints: "+23pts",
+            staticsPointsState: true,
+            progressValue: 16.8,
+            customBarColor: "bg-ws-light-teal-400",
+          },
+          {
+            title: "Company Average",
+            statics: formatPercentage(83.2),
+            staticsPoints: "-23pts",
+            staticsPointsState: true,
+            progressValue: 83.2,
+            customBarColor: "bg-ws-navy-600",
+          },
+        ],
+      },
+    ],
+    industryText: undefined,
+    industryBoldText: "$4,149.2M",
+    sourceText: "Source: ",
+    sourceBoldText: "Lorem ipsum sit amet dolor",
+    className: "col-span-1",
+    sourceClass: "mt-0",
+  },
+  {
+    id: "separation-rate",
+    title: "Industry Separation Rate",
+    titleQatar: "Q4 2023",
+    sections: [
+      {
+        sectionTitle: "INDUSTRY AVERAGE",
+        columnsCount: 2 as const,
+        cardsData: [
+          {
+            title: "Separation",
+            statics: formatPercentage(7.7),
+            progressValue: 7.7,
+            customBarColor: "bg-ws-light-teal-400",
+          },
+          {
+            title: "Hiring Rate",
+            statics: formatPercentage(11.1),
+            progressValue: 11.1,
+            customBarColor: "bg-ws-navy-600",
+          },
+        ],
+      },
+      {
+        sectionTitle: "YOUR COMPANY",
+        columnsCount: 2 as const,
+        cardsData: [
+          {
+            title: "Separation",
+            statics: formatPercentage(2.7),
+            staticsPoints: "+5pts",
+            staticsPointsState: true,
+            progressValue: 2.7,
+            customBarColor: "bg-ws-light-teal-400",
+          },
+          {
+            title: "Hiring Rate",
+            statics: formatPercentage(8.1),
+            staticsPoints: "-3pts",
+            staticsPointsState: true,
+            progressValue: 8.1,
+            customBarColor: "bg-ws-navy-600",
+          },
+        ],
+      },
+    ],
+    industryText: undefined,
+    industryBoldText: "$4,149.2M",
+    sourceText: "Source: ",
+    sourceBoldText: "Lorem ipsum sit amet dolor",
+    className: "col-span-1",
+    sourceClass: "mt-0",
+  },
+];
+
+interface ProgressCardFinchConfig {
+  id: string;
+  title: string;
+  showInfoIcon: boolean;
+  tooltipText: string;
+  sections: Array<{
+    columnsCount: 1;
+    items: Array<{
+      label: string;
+      percentage: number;
+      progressColor: string;
+    }>;
+  }>;
+}
+
+const housingBurdenOwnersConfigFinch: ProgressCardFinchConfig[] = [
+  {
+    id: "burdened-owners",
+    title: "Burdened Owners",
+    showInfoIcon: true,
+    tooltipText: "Households spending 30% or more of gross income on housing costs",
+    sections: [
+      {
+        columnsCount: 1,
+        items: [
+          {
+            label: "Metro Area",
+            percentage: 16.2,
+            progressColor: "bg-ws-navy-600",
+          },
+          {
+            label: "Your employees",
+            percentage: 19.5,
+            progressColor: "bg-ws-navy-200",
+          },
+        ],
+      },
+    ],
+  },
+  {
+    id: "severely-burdened-owners",
+    title: "Severely Burdened Owners",
+    showInfoIcon: true,
+    tooltipText: "Households spending 30% or more of gross income on housing costs",
+    sections: [
+      {
+        columnsCount: 1,
+        items: [
+          {
+            label: "Metro Area",
+            percentage: 16.2,
+            progressColor: "bg-ws-navy-600",
+          },
+          {
+            label: "Your employees",
+            percentage: 19.5,
+            progressColor: "bg-ws-navy-200",
+          },
+        ],
+      },
+    ],
+  },
+];
+
+const housingBurdenRentersConfigFinch: ProgressCardFinchConfig[] = [
+  {
+    id: "burdened-renters",
+    title: "Burdened Renters",
+    showInfoIcon: true,
+    tooltipText: "Households spending 30% or more of gross income on housing costs",
+    sections: [
+      {
+        columnsCount: 1,
+        items: [
+          {
+            label: "Metro Area",
+            percentage: 16.2,
+            progressColor: "bg-ws-light-teal-600",
+          },
+          {
+            label: "Your employees",
+            percentage: 19.5,
+            progressColor: "bg-ws-light-teal-400",
+          },
+        ],
+      },
+    ],
+  },
+  {
+    id: "severely-burdened-renters",
+    title: "Severely Burdened Renters",
+    showInfoIcon: true,
+    tooltipText: "Households spending 30% or more of gross income on housing costs",
+    sections: [
+      {
+        columnsCount: 1,
+        items: [
+          {
+            label: "Metro Area",
+            percentage: 16.2,
+            progressColor: "bg-ws-light-teal-600",
+          },
+          {
+            label: "Your employees",
+            percentage: 19.5,
+            progressColor: "bg-ws-light-teal-400",
+          },
+        ],
+      },
+    ],
+  },
+];
+
+const CostBurdenChartSkeleton = () => (
+  <div className="border border-ws-border-secondary rounded-lg p-5 bg-ws-base-white animate-pulse shadow-sm">
+    <div className="flex items-end w-full gap-4">
+      <div className="w-full h-80 flex items-center justify-end flex-col gap-4">
+        <div className="flex items-end justify-center gap-4">
+          <div className="w-15 h-40 bg-ws-gray-200"></div>
+        </div>
+        <div className="h-2 w-30 bg-ws-gray-200 rounded"></div>
+        <div className="h-2 w-30 bg-ws-gray-200 rounded"></div>
+      </div>
+      <div className="w-full h-80 flex items-center justify-end flex-col gap-4">
+        <div className="flex items-end justify-center gap-4">
+          <div className="w-15 h-25 bg-ws-gray-200"></div>
+        </div>
+        <div className="h-2 w-30 bg-ws-gray-200 rounded"></div>
+        <div className="h-2 w-30 bg-ws-gray-200 rounded"></div>
+      </div>
+      <div className="w-full h-80 flex items-center justify-end flex-col gap-4">
+        <div className="flex items-end justify-center gap-4">
+          <div className="w-15 h-15 bg-ws-gray-200"></div>
+        </div>
+        <div className="h-2 w-30 bg-ws-gray-200 rounded"></div>
+        <div className="h-2 w-30 bg-ws-gray-200 rounded"></div>
+      </div>
+      <div className="w-full h-80 flex items-center justify-end flex-col gap-4">
+        <div className="flex items-end justify-center gap-4">
+          <div className="w-15 h-10 bg-ws-gray-200"></div>
+        </div>
+        <div className="h-2 w-30 bg-ws-gray-200 rounded"></div>
+        <div className="h-2 w-30 bg-ws-gray-200 rounded"></div>
+      </div>
+    </div>
+    <div className="flex items-center justify-center gap-4 mt-8">
+      <div className="h-4 bg-ws-gray-200 w-30"></div>
+      <div className="h-4 bg-ws-gray-200 w-30"></div>
+    </div>
+  </div>
+);
+
 export default function BenchmarkFinchPage() {
   const [isGetInTouchModalOpen, setIsGetInTouchModalOpen] = useState(false);
   const [selectedGraphType, setSelectedGraphType] = useState<"owners" | "renters">("renters");
+  const [isLoadingCards, setIsLoadingCards] = useState(true);
+
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      setIsLoadingCards(false);
+    }, 5000);
+
+    return () => clearTimeout(timer);
+  }, []);
 
   // Get dashboard benchmark data from Redux store
   const industryOverview = useAppSelector(selectIndustryOverview);
@@ -103,231 +665,118 @@ export default function BenchmarkFinchPage() {
         <h2 className="text-2xl lg:text-4xl font-medium text-ws-text-primary leading-10">
           Current Trends for Wholesale Trade
         </h2>
-        {/* <Button color="secondary" onClick={() => setIsGetInTouchModalOpen(true)}>
-          Share feedback
-        </Button> */}
       </div>
 
       {/* ── Industry Overview ── */}
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 w-full">
-        <StaticCard
-          title="Turnover rate since Jan 2024"
-          titleClass="text-sm font-medium text-ws-text-tertiary"
-          itemAlign="between"
-          count="2.1M"
-          countClass={
-            industryOverview?.turnoverRate?.rate == null
-              ? "mt-2 text-sm font-medium text-ws-text-primary"
-              : "mt-2 text-3xl font-semibold text-ws-text-primary"
-          }
-          infoIcon={true}
-          infoCircleClass="text-ws-gray-400 size-5"
-          tooltipText="Turnover Rate"
-          descriptionText="Industry specific turnover metrics are calculated from US Census Bureau QWI data sources"
-          placements="top"
-        />
-        <StaticCard
-          //  title={`Avg Turnover since  ${industryOverview?.avgTurnover?.sinceYear}`}
-          title="Avg Turnover since 2020"
-          titleClass="text-sm font-medium text-ws-text-tertiary"
-          itemAlign="between"
-          count="40%"
-          countClass={
-            industryOverview?.avgTurnover?.rate == null
-              ? "mt-2 text-sm font-medium text-ws-text-primary"
-              : "mt-2 text-3xl font-semibold text-ws-text-primary"
-          }
-          infoIcon={true}
-          infoCircleClass="text-ws-gray-400 size-5"
-          tooltipText="Average Turnover"
-          descriptionText="Average turnover metrics are calculated from US Census Bureau QWI data sources"
-          placements="top"
-        />
-        <StaticCard
-          title="Avg. Cost of Turnover"
-          titleClass="text-sm font-medium text-ws-text-tertiary"
-          itemAlign="between"
-          count="30%"
-          countClass={
-            industryOverview?.avgCostOfTurnover?.amount == null
-              ? "mt-2 text-sm font-medium text-ws-text-primary"
-              : "mt-2 text-3xl font-semibold text-ws-text-primary"
-          }
-          infoIcon={true}
-          infoCircleClass="text-ws-gray-400 size-5"
-          tooltipText="Average Cost of Turnover"
-          descriptionText={`Industry specific cost of turnover is calculated from ${industryOverview?.avgCostOfTurnover?.year || " "}`}
-          placements="top"
-        />
+        {isLoadingCards ? (
+          <>
+            <OverviewCardSkeleton />
+            <OverviewCardSkeleton />
+            <OverviewCardSkeleton />
+          </>
+        ) : (
+          <>
+            {benchmarkCardsConfig.map(card => (
+              <StaticCard
+                key={card.id}
+                title={card.title(industryOverview)}
+                titleClass="text-sm font-medium text-ws-text-tertiary"
+                itemAlign="between"
+                count={card.count(industryOverview)}
+                countClass={card.countClass(industryOverview)}
+                infoIcon={true}
+                infoCircleClass="text-ws-gray-400 size-4"
+                tooltipText={card.tooltipText}
+                descriptionText={card.descriptionText(industryOverview)}
+                placements="top"
+              />
+            ))}
+          </>
+        )}
       </div>
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 w-full">
-        <StaticCard
-          title="Hire Rate y-o-y "
-          titleClass="text-sm font-medium text-ws-text-tertiary"
-          itemAlign="between"
-          count="31%"
-          countClass={
-            industryOverview?.turnoverRate?.rate == null
-              ? "mt-2 text-sm font-medium text-ws-text-primary"
-              : "mt-2 text-3xl font-semibold text-ws-text-primary"
-          }
-          infoIcon={true}
-          infoCircleClass="text-ws-gray-400 size-5"
-          tooltipText="Turnover Rate"
-          descriptionText="Industry specific turnover metrics are calculated from US Census Bureau QWI data sources"
-          placements="top"
-        />
-        <StaticCard
-          title="Separation Rate y-o-y"
-          titleClass="text-sm font-medium text-ws-text-tertiary"
-          itemAlign="between"
-          count="40%"
-          countClass={
-            industryOverview?.turnoverRate?.rate == null
-              ? "mt-2 text-sm font-medium text-ws-text-primary"
-              : "mt-2 text-3xl font-semibold text-ws-text-primary"
-          }
-          infoIcon={true}
-          infoCircleClass="text-ws-gray-400 size-5"
-          tooltipText="Turnover Rate"
-          descriptionText="Industry specific turnover metrics are calculated from US Census Bureau QWI data sources"
-          placements="top"
-        />
+
+      <div className="grid grid-cols-2 xl:grid-cols-2 gap-6 w-full">
+        {isLoadingCards ? (
+          <>
+            <OverviewCardSkeleton />
+            <OverviewCardSkeleton />
+          </>
+        ) : (
+          <>
+            {benchmarkCardsConfigR2.map(card => (
+              <StaticCard
+                key={card.id}
+                title={card.title(industryOverview)}
+                titleClass="text-sm font-medium text-ws-text-tertiary"
+                itemAlign="between"
+                count={card.count(industryOverview)}
+                countClass={card.countClass(industryOverview)}
+                infoIcon={true}
+                infoCircleClass="text-ws-gray-400 size-4"
+                tooltipText={card.tooltipText}
+                descriptionText={card.descriptionText(industryOverview)}
+                placements="top"
+              />
+            ))}
+          </>
+        )}
       </div>
       {/* ── Industry Turnover ── */}
       <div className="w-full flex flex-col items-center bg-ws-light-teal-25 border border-ws-border-primary rounded-xl py-8 px-6">
         <div className="w-full flex items-center justify-between">
           <div className="space-y-1">
-            <h3 className="text-4xl font-medium text-ws-text-primary">Industry Turnover</h3>
+            <h3 className="text-2xl lg:text-4xl font-medium text-ws-text-primary">Industry Turnover</h3>
             <p className="text-base text-ws-text-primary w-full mt-2">Lorem Ipsum</p>
           </div>
         </div>
         <div className="w-full flex mt-8">
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 w-full">
-            <TurnoverRateCard
-              title="Industry Turnover Rate"
-              titleQatar="Q4 2023"
-              sections={[
-                {
-                  sectionTitle: "INDUSTRY AVERAGE",
-                  columnsCount: 2,
-                  cardsData: [
-                    {
-                      title: "Involuntary",
-                      statics: formatPercentage(39.8),
-                      progressValue: 39.8,
-                      customBarColor: "bg-ws-light-teal-400",
-                    },
-                    {
-                      title: "Voluntary",
-                      statics: formatPercentage(60.1),
-                      progressValue: 60.1,
-                      customBarColor: "bg-ws-navy-600",
-                    },
-                  ],
-                },
-                {
-                  sectionTitle: "YOUR COMPANY",
-                  columnsCount: 2,
-                  cardsData: [
-                    {
-                      title: "Voluntary",
-                      statics: formatPercentage(16.8),
-                      staticsPoints: "+23pts",
-                      staticsPointsState: true,
-                      progressValue: 16.8,
-                      customBarColor: "bg-ws-light-teal-400",
-                    },
-                    {
-                      title: "Company Average",
-                      statics: formatPercentage(83.2),
-                      staticsPoints: "-23pts",
-                      staticsPointsState: true,
-                      progressValue: 83.2,
-                      customBarColor: "bg-ws-navy-600",
-                    },
-                  ],
-                },
-              ]}
-              industryText={
-                industryOverview?.turnoverRate?.rate ? "Industry-wide cost of turnover:" : undefined
-              }
-              industryBoldText="$4,149.2M"
-              sourceText="Source: "
-              sourceBoldText="Lorem ipsum sit amet dolor"
-              className="col-span-1"
-              sourceClass="mt-0"
-            />
-            <TurnoverRateCard
-              title="Industry Separation Rate"
-              titleQatar="Q4 2023"
-              sections={[
-                {
-                  sectionTitle: "INDUSTRY AVERAGE",
-                  columnsCount: 2,
-                  cardsData: [
-                    {
-                      title: "Separation",
-                      statics: formatPercentage(7.7),
-                      progressValue: 7.7,
-                      customBarColor: "bg-ws-light-teal-400",
-                    },
-                    {
-                      title: "Hiring Rate",
-                      statics: formatPercentage(11.1),
-                      progressValue: 11.1,
-                      customBarColor: "bg-ws-navy-600",
-                    },
-                  ],
-                },
-                {
-                  sectionTitle: "YOUR COMPANY",
-                  columnsCount: 2,
-                  cardsData: [
-                    {
-                      title: "Separation",
-                      statics: formatPercentage(2.7),
-                      staticsPoints: "+5pts",
-                      staticsPointsState: true,
-                      progressValue: 2.7,
-                      customBarColor: "bg-ws-light-teal-400",
-                    },
-                    {
-                      title: "Hiring Rate",
-                      statics: formatPercentage(8.1),
-                      staticsPoints: "-3pts",
-                      staticsPointsState: true,
-                      progressValue: 8.1,
-                      customBarColor: "bg-ws-navy-600",
-                    },
-                  ],
-                },
-              ]}
-              industryText={
-                industryOverview?.turnoverRate?.rate ? "Industry-wide cost of turnover:" : undefined
-              }
-              industryBoldText="$4,149.2M"
-              sourceText="Source: "
-              sourceBoldText="Lorem ipsum sit amet dolor"
-              className="col-span-1"
-              sourceClass="mt-0"
-            />
+            {isLoadingCards ? (
+              <>
+                <TurnoverRateCardSkeleton />
+                <TurnoverRateCardSkeleton />
+              </>
+            ) : (
+              <>
+                {turnoverCardsConfigFinch.map(card => (
+                  <TurnoverRateCard
+                    key={card.id}
+                    title={card.title}
+                    titleQatar={card.titleQatar}
+                    sections={card.sections}
+                    industryText={
+                      industryOverview?.turnoverRate?.rate
+                        ? "Industry-wide cost of turnover:"
+                        : undefined
+                    }
+                    industryBoldText={card.industryBoldText}
+                    sourceText={card.sourceText}
+                    sourceBoldText={card.sourceBoldText}
+                    className={card.className}
+                    sourceClass={card.sourceClass}
+                  />
+                ))}
+              </>
+            )}
           </div>
         </div>
-        <div className="text-xs w-full flex items-start mt-8 text-ws-text-tertiary"><span className="text-ws-text-primary mr-1">Source:</span> Lorem Ipsum dolor</div>
+        <div className="text-xs w-full flex items-start mt-8 text-ws-text-tertiary">
+          <span className="text-ws-text-primary mr-1">Source:</span> Lorem Ipsum dolor
+        </div>
       </div>
 
       <div className="w-full flex flex-col bg-ws-light-teal-25 border border-ws-border-primary rounded-xl py-8 px-6">
-        <div className="w-full flex items-center justify-between">
+        <div className="w-full flex items-center justify-between flex-col xl:flex-row">
           <div className="space-y-1">
-            <h3 className="text-4xl font-medium text-ws-text-primary">
+            <h3 className="text-2xl lg:text-4xl font-medium text-ws-text-primary">
               Area Median Wage: Manchester, NH
             </h3>
             <p className="text-base text-ws-text-primary w-full  mt-2">
               Lorem ipsum dolor sit amet, consectetur adipiscing elit. Fusce quis felis venenatis.
             </p>
           </div>
-          <div className="flex flex-col items-start w-full lg:w-auto shrink-0">
+          <div className="flex flex-col items-start w-full lg:w-auto shrink-0 mt-4 xl:mt-0">
             <Label className="text-sm font-medium text-ws-text-secondary flex mb-1.5">
               Metropolitan Area <span className="text-ws-error-600">*</span>
             </Label>
@@ -353,50 +802,46 @@ export default function BenchmarkFinchPage() {
           </div>
         </div>
         <div className="w-full mt-8">
-          <SalaryHourlyFinchChart salaryData={salaryData} hourlyData={hourlyData} />
-          <div className="grid grid-cols-1 lg:grid-cols-4 gap-6 w-full mt-4">
-            <StaticCard
-              classess="border-ws-border-secondary"
-              title="Company's Median Hourly Wages"
-              titleClass="text-ws-text-tertiary text-sm"
-              countIcon={<TimerIcon className="size-5 text-ws-gray-400" />}
-              count="$14.03"
-              countClass="text-ws-light-teal-900 text-3xl xl:text-4xl font-medium mt-6"
-            />
-            <StaticCard
-              classess="border-ws-gray-40"
-              title="[State] Median Living Wage"
-              titleClass="text-ws-text-tertiary text-sm"
-              countIcon={<DollarIcon className="size-5 text-ws-gray-300" />}
-              count="$24.03"
-              countClass="text-ws-light-teal-900  text-3xl xl:text-4xl font-medium mt-6"
-            />
-            <StaticCard
-              classess="border-ws-gray-40"
-              title="[State} Average Salary, 2023"
-              titleClass="text-ws-text-tertiary text-sm"
-              countIcon={<CurrencyStackIcon className="size-5 text-ws-gray-300" />}
-              count="$92,377"
-              countClass="text-ws-light-teal-900  text-3xl xl:text-4xl font-medium mt-6"
-            />
-            <StaticCard
-              classess="border-ws-gray-40"
-              title="National Average Salary"
-              titleClass="text-ws-text-tertiary text-sm"
-              countIcon={<GlobeIcon className="size-5 text-ws-gray-300" />}
-              count="$120,000"
-              countClass="text-ws-light-teal-900  text-3xl xl:text-4xl font-medium mt-6"
-            />
+          {isLoadingCards ? (
+            <>
+              <SalaryHourlySkeleton />
+            </>
+          ) : (
+            <SalaryHourlyFinchChart salaryData={salaryData} hourlyData={hourlyData} />
+          )}
+          <div className="grid grid-cols-2 xl:grid-cols-4 gap-6 w-full mt-4">
+            {isLoadingCards ? (
+              <>
+                <WagesCardSkeleton />
+                <WagesCardSkeleton />
+                <WagesCardSkeleton />
+                <WagesCardSkeleton />
+              </>
+            ) : (
+              <>
+                {salaryCardsConfig.map(card => (
+                  <StaticCard
+                    key={card.id}
+                    classess="border-ws-border-secondary"
+                    title={card.title}
+                    titleClass="text-ws-text-tertiary text-sm"
+                    countIcon={card.icon}
+                    count={card.count}
+                    countClass="text-ws-light-teal-900 text-3xl xl:text-4xl font-medium mt-6"
+                  />
+                ))}
+              </>
+            )}
           </div>
         </div>
       </div>
 
       <div className="w-full flex flex-col bg-ws-light-teal-25 border border-ws-border-primary rounded-xl py-8 px-6">
-        <div className="w-full flex items-center justify-between">
+        <div className="w-full flex items-start justify-between flex-col xl:flex-row">
           <div className="space-y-1">
-            <h3 className="text-4xl font-medium text-ws-text-primary">Housing Burden</h3>
+            <h3 className="text-2xl lg:text-4xl font-medium text-ws-text-primary">Housing Burden</h3>
           </div>
-          <div className="flex flex-col items-start w-full lg:w-auto shrink-0">
+          <div className="flex flex-col items-start w-full lg:w-auto shrink-0 mt-4 xl:mt-0">
             <Label className="text-sm font-medium text-ws-text-secondary flex mb-1.5">
               Metropolitan Area <span className="text-ws-error-600">*</span>
             </Label>
@@ -418,7 +863,7 @@ export default function BenchmarkFinchPage() {
             >
               {item => <Select.Item id={item.id}>{item.label}</Select.Item>}
             </Select>
-             <p className="text-xs text-ws-text-tertiary mt-1">This is a hint text to help user.</p>
+            <p className="text-xs text-ws-text-tertiary mt-1">This is a hint text to help user.</p>
           </div>
         </div>
         <div className="w-full mt-8">
@@ -440,51 +885,25 @@ export default function BenchmarkFinchPage() {
           </h2>
           <p className="text-sm font-medium text-ws-text-primary">Q4 2023</p>
         </div>
-        <div className="flex items-center justify-between gap-4">
-          <ProgressCard
-            title="Burdened Owners"
-            showInfoIcon={true}
-            tooltipText="Households spending 30% or more of gross income on housing costs"
-            sections={[
-              {
-                columnsCount: 1,
-                items: [
-                  {
-                    label: "Metro Area",
-                    percentage: 16.2,
-                    progressColor: "bg-ws-navy-600",
-                  },
-                  {
-                    label: "Your employees",
-                    percentage: 19.5,
-                    progressColor: "bg-ws-navy-200",
-                  },
-                ],
-              },
-            ]}
-          />
-          <ProgressCard
-            title="Severely Burdened Owners"
-            showInfoIcon={true}
-            tooltipText="Households spending 30% or more of gross income on housing costs"
-            sections={[
-              {
-                columnsCount: 1,
-                items: [
-                  {
-                    label: "Metro Area",
-                    percentage: 16.2,
-                    progressColor: "bg-ws-navy-600",
-                  },
-                  {
-                    label: "Your employees",
-                    percentage: 19.5,
-                    progressColor: "bg-ws-navy-200",
-                  },
-                ],
-              },
-            ]}
-          />
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 w-full">
+          {isLoadingCards ? (
+            <>
+              <ProgressCardSkeleton />
+              <ProgressCardSkeleton />
+            </>
+          ) : (
+            <>
+              {housingBurdenOwnersConfigFinch.map(card => (
+                <ProgressCard
+                  key={card.id}
+                  title={card.title}
+                  showInfoIcon={card.showInfoIcon}
+                  tooltipText={card.tooltipText}
+                  sections={card.sections}
+                />
+              ))}
+            </>
+          )}
         </div>
         <div className="my-4">
           <h2 className="text-xl font-semibold text-ws-text-primary mb-1">
@@ -492,55 +911,31 @@ export default function BenchmarkFinchPage() {
           </h2>
           <p className="text-sm font-medium text-ws-text-primary">Q4 2023</p>
         </div>
-        <div className="flex items-center justify-between gap-4">
-          <ProgressCard
-            title="Burdened Renters"
-            showInfoIcon={true}
-            tooltipText="Households spending 30% or more of gross income on housing costs"
-            sections={[
-              {
-                columnsCount: 1,
-                items: [
-                  {
-                    label: "Metro Area",
-                    percentage: 16.2,
-                    progressColor: "bg-ws-light-teal-600",
-                  },
-                  {
-                    label: "Your employees",
-                    percentage: 19.5,
-                    progressColor: "bg-ws-light-teal-400",
-                  },
-                ],
-              },
-            ]}
-          />
-          <ProgressCard
-            title="Severely Burdened Renters"
-            showInfoIcon={true}
-            tooltipText="Households spending 30% or more of gross income on housing costs"
-            sections={[
-              {
-                columnsCount: 1,
-                items: [
-                  {
-                    label: "Metro Area",
-                    percentage: 16.2,
-                    progressColor: "bg-ws-light-teal-600",
-                  },
-                  {
-                    label: "Your employees",
-                    percentage: 19.5,
-                    progressColor: "bg-ws-light-teal-400",
-                  },
-                ],
-              },
-            ]}
-          />
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 w-full">
+          {isLoadingCards ? (
+            <>
+              <ProgressCardSkeleton />
+              <ProgressCardSkeleton />
+            </>
+          ) : (
+            <>
+              {housingBurdenRentersConfigFinch.map(card => (
+                <ProgressCard
+                  key={card.id}
+                  title={card.title}
+                  showInfoIcon={card.showInfoIcon}
+                  tooltipText={card.tooltipText}
+                  sections={card.sections}
+                />
+              ))}
+            </>
+          )}
         </div>
         <div>
-          <p className="text-xs text-ws-text-tertiary mt-6"><span className="font-semibold">Source:</span> Lorem Ipsum dolor</p>
-          <div className="w-full flex items-center justify-between mt-8">
+          <p className="text-xs text-ws-text-tertiary mt-6">
+            <span className="font-semibold">Source:</span> Lorem Ipsum dolor
+          </p>
+          <div className="w-full flex items-center justify-between mt-8 flex-col xl:flex-row">
             <div className="space-y-1 w-full">
               <h3 className="text-2xl font-medium text-ws-text-primary">
                 Working Class Housing Cost Burden
@@ -551,10 +946,14 @@ export default function BenchmarkFinchPage() {
                 above the recommended 30 percent of their income just to keep a roof over their
                 heads.{" "}
               </p>
-              <p className="text-xs text-ws-text-tertiary mt-6"><span className="font-semibold">Source:</span> Lorem Ipsum dolor</p>
+              <p className="text-xs text-ws-text-tertiary mt-6">
+                <span className="font-semibold">Source:</span> Lorem Ipsum dolor
+              </p>
             </div>
-            <div className="flex flex-col items-start w-full lg:w-auto shrink-0">
-              <Label className="text-ws-text-secondary flex mb-1.5">Household type <span className="text-ws-error-600">*</span></Label>
+            <div className="flex flex-col items-start w-full lg:w-auto shrink-0 mt-4 xl:mt-0">
+              <Label className="text-ws-text-secondary flex mb-1.5">
+                Household type <span className="text-ws-error-600">*</span>
+              </Label>
               <Select
                 className="w-full flex items-start min-w-50 md:min-w-full lg:min-w-50"
                 isRequired
@@ -573,70 +972,52 @@ export default function BenchmarkFinchPage() {
               >
                 {item => <Select.Item id={item.id}>{item.label}</Select.Item>}
               </Select>
-               <p className="text-xs text-ws-text-tertiary mt-1">This is a hint text to help user.</p>
+              <p className="text-xs text-ws-text-tertiary mt-1">
+                This is a hint text to help user.
+              </p>
             </div>
           </div>
           <div className="grid xl:grid-cols-3 gap-4 mt-6 flex-col lg:flex-row">
-            <StaticCard
-              title="Home Ownership Rate"
-              titleClass="text-sm font-medium text-ws-text-tertiary"
-              itemAlign="between"
-              count="72%"
-              countClass={
-                selectedHousingData?.workingClassHousingCostBurden?.homeOwnershipRate == null
-                  ? "mt-2 text-sm font-medium text-ws-text-tertiary"
-                  : "mt-2 text-3xl font-semibold text-ws-text-primary"
-              }
-              infoIcon={true}
-              infoCircleClass="text-ws-gray-70"
-              tooltipText="Home Ownership Rate"
-              descriptionText="U.S. Census Bureau, 5-Year American Community Survey"
-              placements="top"
-              classess="flex-1 bg-ws-gray-10! ring-ws-gray-40!"
-            />
-            <StaticCard
-              title="Median Home Value"
-              itemAlign="between"
-              titleClass="text-sm font-medium text-ws-text-tertiary"
-              count="$367,000"
-              countClass={
-                selectedHousingData?.workingClassHousingCostBurden?.medianHomeValue == null
-                  ? "mt-2 text-sm font-medium text-ws-text-tertiary"
-                  : "mt-2 text-3xl font-semibold text-ws-text-primary"
-              }
-              infoIcon={true}
-              infoCircleClass="text-ws-gray-70"
-              tooltipText="Median Home Value"
-              descriptionText="U.S. Census Bureau, 5-Year American Community Survey"
-              placements="top"
-              classess="flex-1 bg-ws-gray-10! ring-ws-gray-40!"
-            />
-            <StaticCard
-              title="Median Rent"
-              itemAlign="between"
-              titleClass="text-sm font-medium text-ws-text-tertiary"
-              count="$1,423"
-              countClass={
-                selectedHousingData?.workingClassHousingCostBurden?.medianRent == null
-                  ? "mt-2 text-sm font-medium text-ws-text-tertiary"
-                  : "mt-2 text-3xl font-semibold text-ws-text-primary"
-              }
-              infoIcon={true}
-              infoCircleClass="text-ws-gray-70"
-              tooltipText="Median Rent"
-              descriptionText="U.S. Census Bureau, 5-Year American Community Survey"
-              placements="top"
-              classess="flex-1 bg-ws-gray-10! ring-ws-gray-40!"
-            />
+            {isLoadingCards ? (
+              <>
+                <OverviewCardSkeleton />
+                <OverviewCardSkeleton />
+                <OverviewCardSkeleton />
+              </>
+            ) : (
+              <>
+                {costBurdenCardsConfig.map(card => (
+                  <StaticCard
+                    key={card.id}
+                    title={card.title}
+                    titleClass="text-sm font-medium text-ws-text-tertiary"
+                    itemAlign="between"
+                    count={card.count}
+                    countClass="mt-2 text-3xl font-semibold text-ws-text-primary"
+                    infoIcon={true}
+                    infoCircleClass="text-ws-gray-400 size-4"
+                    tooltipText={card.tooltipText}
+                    descriptionText={card.descriptionText}
+                    placements="top"
+                  />
+                ))}
+              </>
+            )}
           </div>
           {/* Chart */}
           <div className="flex-1 w-full overflow-x-auto mt-6 bg-ws-base-white p-4 rounded-xl border border-ws-border-primary">
-            <IncomeDistributionChart
-              data={Array.isArray(workingClassHousingGraph) ? workingClassHousingGraph : []}
-            />
+            {isLoadingCards ? (
+              <CostBurdenChartSkeleton />
+            ) : (
+              <IncomeDistributionChart
+                data={Array.isArray(workingClassHousingGraph) ? workingClassHousingGraph : []}
+              />
+            )}
           </div>
         </div>
-        <p className="text-xs text-ws-text-tertiary mt-6"><span className="font-semibold">Source:</span> Lorem Ipsum dolor</p>
+        <p className="text-xs text-ws-text-tertiary mt-6">
+          <span className="font-semibold">Source:</span> Lorem Ipsum dolor
+        </p>
       </div>
       <div className="w-full">
         <p className="text-xs text-ws-text-primary">

@@ -342,7 +342,7 @@ export const SettingsPage = () => {
                 <div className="flex mb-6 flex-col xl:flex-row">
                   <div className="w-full xl:w-1/3 mb-3 xl:mb-0">
                     <label htmlFor="firstName" className="text-ws-text-secondary font-medium text-sm">
-                      Name <span className="text-ws-red-40">*</span>
+                      Name <span className="text-ws-error-600">*</span>
                     </label>
                   </div>
                   <div className="w-full xl:w-2/3 flex flex-col gap-4">
@@ -385,7 +385,7 @@ export const SettingsPage = () => {
                 <div className="flex mb-6 flex-col xl:flex-row">
                   <div className="w-full xl:w-1/3 mb-3 xl:mb-0">
                     <label htmlFor="email" className="text-ws-text-secondary font-medium text-sm">
-                      Email address <span className="text-ws-red-40">*</span>
+                      Email address <span className="text-ws-error-600">*</span>
                     </label>
                   </div>
                   <div className="w-full xl:w-2/3 flex flex-col gap-4">
@@ -418,7 +418,7 @@ export const SettingsPage = () => {
                 <div className="flex mb-6 flex-col xl:flex-row">
                   <div className="w-full xl:w-1/3 mb-3 xl:mb-0">
                     <label htmlFor="password" className="text-ws-text-secondary font-medium text-sm">
-                      Password <span className="text-ws-red-40">*</span>
+                      Password <span className="text-ws-error-600">*</span>
                     </label>
                   </div>
                   <div className="w-full xl:w-2/3 flex flex-col gap-4">

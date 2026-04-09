@@ -274,7 +274,7 @@ export default function CostBurdenBarChart({ data, width, height = 400 }: Canvas
       <canvas
         ref={canvasRef}
         className="block w-full"
-        style={{ width: `${canvasWidth}px`, height: `${height}px` }}
+        style={{ width: `${canvasWidth}px`, height: `${height}px`, overflowX: "auto" }}
       />
       {tooltip && (
         <div

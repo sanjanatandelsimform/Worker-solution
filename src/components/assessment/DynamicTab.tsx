@@ -1050,10 +1050,10 @@ export const DynamicTab = forwardRef<
 
         {apiError?.type === "get" && (
           <div className="rounded-md border border-ws-red-20 bg-ws-red-40 p-4">
-            <p className="text-sm text-ws-red-40">{apiError.message}</p>
+            <p className="text-sm text-ws-error-600">{apiError.message}</p>
             <button
               onClick={retryGetAssessment}
-              className="mt-2 text-sm font-medium text-ws-red-40 hover:text-ws-red-30"
+              className="mt-2 text-sm font-medium text-ws-error-600 hover:text-ws-red-30"
             >
               Retry
             </button>

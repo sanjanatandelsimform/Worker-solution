@@ -151,7 +151,7 @@ export const InputBase = ({
         <Tooltip title={tooltip} placement="top" arrow={true}>
           <TooltipTrigger
             className={cx(
-              "absolute cursor-pointer text-ws-gray-60 transition duration-200 hover:text-ws-red-40 focus:text-ws-red-40",
+              "absolute cursor-pointer text-ws-gray-60 transition duration-200 hover:text-ws-error-600 focus:text-ws-error-600",
               sizes[inputSize].iconTrailing,
               context?.tooltipClassName,
               tooltipClassName

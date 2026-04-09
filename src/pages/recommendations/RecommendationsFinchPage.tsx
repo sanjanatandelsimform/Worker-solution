@@ -276,7 +276,7 @@ export default function RecommendationsFinchPage() {
             Your Company at a Glance
           </h2>
           <h4 className="text-2xl font-medium text-ws-text-primary">Company Overview</h4>
-          <div className="grid grid-cols-1 lg:grid-cols-4 gap-6 w-full">
+          <div className="grid grid-cols-2 xl:grid-cols-4 gap-6 w-full">
             {isLoadingCards ? (
               <>
                 <OverviewCardSkeleton />
@@ -309,7 +309,7 @@ export default function RecommendationsFinchPage() {
             )}
           </div>
           <h4 className="text-2xl font-medium text-ws-text-primary">Benefits Overview</h4>
-          <div className="grid grid-cols-1 lg:grid-cols-4 gap-6 w-full">
+          <div className="grid grid-cols-2 xl:grid-cols-4 gap-6 w-full">
             {isLoadingCards ? (
               <>
                 <OverviewCardSkeleton />
@@ -388,7 +388,7 @@ export default function RecommendationsFinchPage() {
                 />
               )}
             </div>
-            <div className="mt-6 grid grid-cols-1 lg:grid-cols-3 gap-6 w-full">
+            <div className="mt-6 grid grid-cols-1 xl:grid-cols-3 gap-6 w-full">
               {isLoadingCards ? (
                 <>
                   <ProvenStrategiesCardsSkeleton />
@@ -461,12 +461,12 @@ export default function RecommendationsFinchPage() {
           )}
         </div>
         <div className="w-full mt-6">
-          <div className="bg-ws-light-teal-50 flex gape-4 rounded-xl max-h-33 ring-1 ring-ws-border-primary">
-            <div className="flex">
+          <div className="bg-ws-light-teal-50 flex gape-4 rounded-xl xl:max-h-33 ring-1 ring-ws-border-primary">
+            <div className="flex w-100 xl:w-auto">
               <img
                 src={didHeroImg}
                 alt="Workforce hero"
-                className="w-38 rounded-tl-xl rounded-bl-xl h-full object-cover"
+                className="w-full xl:w-42 rounded-tl-xl rounded-bl-xl h-full object-cover"
               />
             </div>
             <div className="p-4 overflow-auto">

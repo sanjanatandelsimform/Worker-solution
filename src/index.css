@@ -211,17 +211,17 @@
   cursor: pointer;
 }
 .custom-label {
-  color: var(--ws-color-black-90);
+  color: var(--ws-color-text-primary);
   font-size: 16px;
   font-weight: 400;
 }
 .custom-input .question-text {
-  color: var(--ws-color-black-20);
+  color: var(--ws-color-text-tertiary);
   font-size: 14px;
   font-weight: 400;
 }
 .custom-question-options .question-text {
-  color: var(--ws-color-black-20);
+  color: var(--ws-color-text-secondary);
   font-size: 14px;
   font-weight: 400;
 }
