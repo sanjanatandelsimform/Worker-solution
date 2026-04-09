@@ -55,18 +55,18 @@ export default function WorkforceTab({ onNext, onSuccess }: WorkforceTabProps) {
 
       // Path 2: employeesResideInSameZipCodes → conditionalQuestion.question.fields[0].options
       if (question.key === "employeesResideInSameZipCodes") {
-        const fields = question.conditionalQuestion?.question?.validationRules?.fields;
-        if (fields?.[0]) {
-          fields[0].options = resolvedOptions;
+        const conditionalFields = question.conditionalQuestion?.question?.validationRules?.fields;
+        if (conditionalFields?.[0]) {
+          conditionalFields[0].options = resolvedOptions;
           if (placeholder) {
-            fields[0].placeholder = placeholder;
+            conditionalFields[0].placeholder = placeholder;
           }
         }
       }
     }
 
     return cloned;
-  }, [stateOptions, isLoading, error, workforceSection]);
+  }, [workforceSection, stateOptions, isLoading, error]);
 
   if (!workforceSection) {
     return <div className="text-ws-red-40">Workforce section not found in question data</div>;
@@ -74,10 +74,11 @@ export default function WorkforceTab({ onNext, onSuccess }: WorkforceTabProps) {
 
   return (
     <DynamicTab
+      questions={modifiedQuestions as Question[]}
       section="workforce"
-      questions={modifiedQuestions}
       onNext={onNext}
       onSuccess={onSuccess}
+      stateOptions={stateOptions}
     />
   );
 }

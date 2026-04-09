@@ -1,4 +1,5 @@
 import { useEffect, useRef, useState } from "react";
+import { formatCurrencyWithCents } from "@/utils/formatters";
 
 interface ChartDataItem {
   name: string;
@@ -273,16 +274,23 @@ export default function WageBarChart({ data, width, height = 350 }: CanvasChartP
           <div
             className="pointer-events-none absolute rounded-lg border border-ws-border-primary bg-ws-base-white px-3 py-2 shadow-lg"
             style={{
-              left: `${tooltip.x + 10}px`,
+              left: tooltip.x > canvasWidth * 0.65 ? `${tooltip.x - 10}px` : `${tooltip.x + 10}px`,
               top: `${tooltip.y - 10}px`,
-              transform: "translateY(-100%)",
+              transform:
+                tooltip.x > canvasWidth * 0.65 ? "translate(-100%, -100%)" : "translateY(-100%)",
+              minWidth: "max-content",
             }}
           >
-            <p className="mb-1 text-sm font-medium text-ws-text-primary">{tooltip.label}</p>
+            <p className="mb-1 text-sm font-medium text-ws-text-primary">
+              {tooltip.label}
+            </p>
             <div className="flex items-center gap-2">
-              <div className="h-3 w-3 rounded" style={{ backgroundColor: tooltip.color }} />
+              <div
+                className="h-3 w-3 shrink-0 rounded"
+                style={{ backgroundColor: tooltip.color }}
+              />
               <span className="text-sm text-ws-text-primary">
-                {tooltip.barName}: ${tooltip.value.toFixed(2)}
+                {tooltip.barName}: {formatCurrencyWithCents(tooltip.value)}
               </span>
             </div>
           </div>
