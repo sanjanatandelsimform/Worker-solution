@@ -584,7 +584,7 @@ export const DashboardPage = () => {
               buttonIsDisabled={isFinchLoading}
             />
           )}
-          {(
+          {emailVerify && isConnected &&(
             <DashboardCard
               classes="bg-ws-navy-100 border-ws-primary-100 mt-10 shadow-none"
               toggleAvatar={true}
