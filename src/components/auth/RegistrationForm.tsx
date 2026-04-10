@@ -11,11 +11,9 @@ import { clearFormData, saveFormData } from "@/store/slices/registrationFormSlic
 import { getIndustries, signup } from "@/services/api/authApi";
 import checkmarkIcon from "@/assets/finch-checkmark.svg";
 import { InputGroup } from "@/components/base/input/input-group";
-import { Input, InputBase } from "@/components/base/input/input";
+import { Input } from "@/components/base/input/input";
 import { Select } from "@/components/base/select/select";
 import { AlertCircle, Eye, EyeOff, Mail01 } from "@untitledui/icons";
-import { NativeSelect } from "@/components/base/select/select-native";
-import { COUNTRY_CODES } from "@/constants/formOptions";
 import { Button } from "@/components/base/buttons/button";
 import ErrorMessage from "@/components/common/ErrorMessage";
 import { Label } from "../base/input/label";
@@ -28,7 +26,6 @@ export function RegistrationForm() {
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
   const [phoneNumber, setPhoneNumber] = useState(savedFormData?.businessPhone || "");
-  const [countryCode, setCountryCode] = useState("US");
   const [submitError, setSubmitError] = useState<ErrorState | null>(null);
   const [industries, setIndustries] = useState<Industry[]>([]);
   const [isLoadingIndustries, setIsLoadingIndustries] = useState(true);
@@ -282,7 +279,27 @@ export function RegistrationForm() {
                 <Label className="text-sm font-medium text-ws-text-secondary">
                   Business Phone Number <span className="text-ws-error-600">*</span>
                 </Label>
-                <InputGroup
+                  <Input
+                  //className={errors.businessPhone ? "error-ring" : "col-start-2"}
+                      placeholder="(555) 000-0000"
+                      type="tel"
+                      size="sm"
+                      prefix="+1"
+                      hint={errors.businessPhone?.message}
+                      isInvalid={!!errors.businessPhone}
+                      value={phoneNumber}
+                      maxLength={10}
+                      onChange={(e: React.ChangeEvent<HTMLInputElement> | string) => {
+                        const inputValue = typeof e === "string" ? e : e?.target?.value || "";
+                        // Only allow numeric input and limit to 10 digits
+                        const numericValue = inputValue.replace(/\D/g, "").slice(0, 10);
+                        setPhoneNumber(numericValue);
+                        setValue("businessPhone", numericValue);
+                        trigger("businessPhone");
+                      }}
+                    tooltip={errors.businessPhone ? errors.businessPhone.message : undefined}
+                  />
+                {/* <InputGroup
                   className={errors.businessPhone ? "error-ring" : "col-start-2"}
                   // label="Business Phone Number"
                   hint={errors.businessPhone?.message}
@@ -294,8 +311,8 @@ export function RegistrationForm() {
                       options={COUNTRY_CODES}
                     />
                   }
-                >
-                  <InputBase
+                > */}
+                  {/* <InputBase
                     placeholder="(555) 000-0000"
                     type="tel"
                     size="sm"
@@ -311,7 +328,7 @@ export function RegistrationForm() {
                     }}
                     tooltip={errors.businessPhone ? errors.businessPhone.message : undefined}
                   />
-                </InputGroup>
+                </InputGroup> */}
               </div>
 
               {/* Row 3 - Zip Code & (empty space for layout) */}

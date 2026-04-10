@@ -34,6 +34,8 @@ export interface InputBaseProps extends TextFieldProps {
   size?: "sm" | "md";
   /** Placeholder text. */
   placeholder?: string;
+  /** Prefix text displayed inside the input field. */
+  prefix?: string;
   /** Class name for the icon. */
   iconClassName?: string;
   /** Class name for the input. */
@@ -59,6 +61,7 @@ export const InputBase = ({
   isInvalid,
   isDisabled,
   icon: Icon,
+  prefix,
   placeholder,
   wrapperClassName,
   tooltipClassName,
@@ -70,7 +73,7 @@ export const InputBase = ({
 }: Omit<InputBaseProps, "label" | "hint">) => {
   // Check if the input has a leading icon or tooltip
   const hasTrailingIcon = tooltip || isInvalid;
-  const hasLeadingIcon = Icon;
+  const hasLeadingIcon = Icon || prefix;
 
   // If the input is inside a `TextFieldContext`, use its context to simplify applying styles
   const context = useContext(TextFieldContext);
@@ -132,13 +135,20 @@ export const InputBase = ({
         />
       )}
 
+      {/* Prefix text */}
+      {prefix && (
+        <span className={cx("absolute left-3 my-auto text-md text-ws-text-tertiary", isDisabled && "text-disabled")}>
+          {prefix}
+        </span>
+      )}
+
       {/* Input field */}
       <AriaInput
         {...(inputProps as AriaInputProps)}
         ref={ref}
         placeholder={placeholder}
         className={cx(
-          "m-0 w-full bg-transparent text-md text-ws-gray-500 ring-0 outline-hidden placeholder:text-ws-gray-500 autofill:rounded-lg autofill:text-ws-black question-text",
+          "m-0 w-full bg-transparent text-md text-ws-gray-500 ring-0 outline-hidden placeholder:text-ws-gray-500 autofill:rounded-lg autofill:text-ws-text-primary question-text",
           isDisabled && "cursor-not-allowed bg-ws-gray-10 text-disabled",
           sizes[inputSize].root,
           context?.inputClassName,
@@ -250,6 +260,7 @@ export const Input = ({
   label,
   hint,
   shortcut,
+  prefix,
   hideRequiredIndicator,
   className,
   ref,
@@ -277,6 +288,7 @@ export const Input = ({
               groupRef,
               size,
               placeholder,
+              prefix,
               icon: Icon,
               shortcut,
               iconClassName,

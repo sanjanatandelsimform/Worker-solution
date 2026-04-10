@@ -8,7 +8,7 @@ export default function PrivacyPage() {
         <div className="flex w-full flex-col items-center p-6 ">
           {/* Logo */}
           <div className="flex items-center justify-center px-2 py-1 mb-6">
-            <h1 className="text-5xl font-bold leading-15 text-ws-black">BeneStats</h1>
+            <h1 className="text-5xl font-bold leading-15 text-ws-text-primary">BeneStats</h1>
           </div>
           <div className="flex w-full flex-col items-start gap-6">
             <div className="prose w-full">

@@ -46,7 +46,7 @@ export default function CostCard({
         </Tooltip>
       </div>
 
-      <h3 className="text-lg font-medium text-ws-black">{title}</h3>
+      <h3 className="text-lg font-medium text-ws-text-primary">{title}</h3>
 
       {/* Middle content */}
       <div className="flex flex-col flex-1 mt-4">
@@ -57,7 +57,7 @@ export default function CostCard({
         ) : (
           <>
             {/* Year — spaced from title */}
-            <p className="text-sm text-ws-black mb-4">{year}</p>
+            <p className="text-sm text-ws-text-primary mb-4">{year}</p>
 
             {/* Cyan bar */}
             <div className="flex items-center bg-ws-cyan-60 px-3 py-2 text-ws-base-white text-base">
@@ -65,7 +65,7 @@ export default function CostCard({
             </div>
 
             {/* Gray bar — small gap below cyan */}
-            <div className="bg-ws-gray-600 text-ws-black px-3 py-2 w-3/5 text-base">
+            <div className="bg-ws-gray-600 text-ws-text-primary px-3 py-2 w-3/5 text-base">
               {involuntaryScore}
             </div>
           </>
@@ -74,11 +74,11 @@ export default function CostCard({
 
       {/* Industry text — pinned to bottom */}
       <div className="flex items-center justify-between mt-6">
-        <div className="text-sm text-ws-black">
+        <div className="text-sm text-ws-text-primary">
           {industryText}
           <span className="text-ws-purple-60">{industryCostText}</span>
         </div>
-        <div className="text-sm text-ws-black">{industryTradeText}</div>
+        <div className="text-sm text-ws-text-primary">{industryTradeText}</div>
       </div>
     </div>
   );

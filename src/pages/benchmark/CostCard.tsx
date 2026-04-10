@@ -62,7 +62,7 @@ export default function CostCard({
       </div>
 
       {/* Title */}
-      <h3 className="text-lg font-medium text-ws-black">{title}</h3>
+      <h3 className="text-lg font-medium text-ws-text-primary">{title}</h3>
 
       {/* Middle content */}
       <div className="flex flex-col flex-1 mt-4">
@@ -73,7 +73,7 @@ export default function CostCard({
         ) : (
           <>
             {/* Year */}
-            <p className="text-sm text-ws-black mb-4">{year}</p>
+            <p className="text-sm text-ws-text-primary mb-4">{year}</p>
 
             {/* Cyan bar — dynamic width */}
             <div
@@ -85,7 +85,7 @@ export default function CostCard({
 
             {/* Gray bar — dynamic width, no gap */}
             <div
-              className="bg-ws-gray-600 text-ws-black px-3 py-2 text-base transition-all duration-500 whitespace-nowrap"
+              className="bg-ws-gray-600 text-ws-text-primary px-3 py-2 text-base transition-all duration-500 whitespace-nowrap"
               style={{ width: secondaryWidth }}
             >
               {secondaryScore}
@@ -96,11 +96,11 @@ export default function CostCard({
 
       {/* Industry text — pinned to bottom */}
       <div className="flex items-center justify-between mt-6">
-        <div className="text-sm text-ws-black">
+        <div className="text-sm text-ws-text-primary">
           {industryText}
           <span className="text-ws-purple-60">{industryCostText}</span>
         </div>
-        <div className="text-sm text-ws-black">{industryTradeText}</div>
+        <div className="text-sm text-ws-text-primary">{industryTradeText}</div>
       </div>
     </div>
   );

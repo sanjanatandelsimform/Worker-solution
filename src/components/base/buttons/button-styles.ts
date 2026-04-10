@@ -5,7 +5,7 @@ export const styles = sortCx({
     root: [
       "group relative inline-flex h-max cursor-pointer items-center justify-center whitespace-nowrap outline-brand transition duration-100 ease-linear before:absolute focus-visible:outline-2 focus-visible:outline-offset-2",
       "in-data-input-wrapper:shadow-xs in-data-input-wrapper:focus:!z-50 in-data-input-wrapper:in-data-leading:-mr-px in-data-input-wrapper:in-data-leading:rounded-r-none in-data-input-wrapper:in-data-leading:before:rounded-r-none in-data-input-wrapper:in-data-trailing:-ml-px in-data-input-wrapper:in-data-trailing:rounded-l-none in-data-input-wrapper:in-data-trailing:before:rounded-l-none",
-      "disabled:cursor-not-allowed disabled:bg-gray-100! disabled:ring-gray-200! disabled:text-ws-gray-70!",
+      "disabled:cursor-not-allowed disabled:bg-gray-200! disabled:ring-gray-200! disabled:text-ws-navy-800! disabled:border border-ws-gray-500!",
       "disabled:*:data-icon:text-fg-disabled_subtle",
       "*:data-icon:pointer-events-none *:data-icon:size-5 *:data-icon:shrink-0 *:data-icon:transition-inherit-all",
     ].join(" "),

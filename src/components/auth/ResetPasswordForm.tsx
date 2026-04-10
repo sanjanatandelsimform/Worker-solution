@@ -78,7 +78,7 @@ export default function ResetPasswordForm() {
 
             {/* Title and Description */}
             <div className="flex w-full flex-col items-center gap-3 text-center">
-              <h2 className="w-full text-3xl font-semibold leading-9.5 text-ws-black">
+              <h2 className="w-full text-3xl font-semibold leading-9.5 text-ws-text-primary">
                 Reset Password
               </h2>
               <p className="w-full text-medium font-normal leading-6 text-ws-text-tertiary">
