@@ -147,7 +147,7 @@ export default function GetMore() {
           <h1 className="text-4xl font-semibold tracking-tight text-ws-text-primary">
             Get more from BeneStats
           </h1>
-          <p className="text-lg font-normal text-ws-black mt-2">
+          <p className="text-lg font-normal text-ws-text-primary mt-2">
             Save time and unlock deeper insights by integrating your payroll with BeneStats. Choose
             the best plan to achieve your workforce goals—at no cost to you.
           </p>

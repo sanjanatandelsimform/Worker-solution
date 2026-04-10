@@ -56,7 +56,7 @@ export const InProgressModal = ({
           </Button> */}
 
           <div className="flex w-full flex-col gap-1">
-            <ModalTitle className="text-[36px] font-medium leading-11 tracking-[-0.72px] font-display text-ws-black">
+            <ModalTitle className="text-[36px] font-medium leading-11 tracking-[-0.72px] font-display text-ws-text-primary">
               {title}
             </ModalTitle>
             <p className="text-sm font-normal leading-5 font-body text-ws-text-tertiary">{subtitle}</p>

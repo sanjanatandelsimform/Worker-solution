@@ -108,7 +108,7 @@ export const VerifyEmailPage: React.FC = () => {
               <img src={siteLogo} alt="Logo" className="max-w-80" />
             </div>
             <div className="flex w-full flex-col items-center gap-6 text-center">
-              <h2 className="w-full text-4xl font-semibold leading-9.5 text-ws-black">
+              <h2 className="w-full text-4xl font-semibold leading-9.5 text-ws-text-primary">
                 Verification Failed
               </h2>
               <p className="w-full text-medium font-normal leading-6 text-ws-text-tertiary">

@@ -40,11 +40,11 @@ export const NativeSelect = ({
           id={selectId}
           aria-describedby={hintId}
           aria-labelledby={selectId}
-          style={{ color: "var(--color-text-ws-black)", ...props.style }}
+          style={{ color: "var(--color-text-ws-text-primary)", ...props.style }}
           className={cx(
             "appearance-none rounded-lg bg-ws-base-white px-3.5 py-2.5 text-md font-medium shadow-xs outline-hidden transition duration-100 ease-linear ring-inset placeholder:text-ws-gray-500 focus-visible:ring-2 focus-visible:ring-brand disabled:cursor-not-allowed disabled:bg-disabled_subtle disabled:text-disabled ring-1 border border-ws-border-primary border-r-0",
             // Force text color for both select and options
-            "text-[var(--color-text-ws-black)] [&>option]:text-[var(--color-text-ws-black)]",
+            "text-[var(--color-text-ws-text-primary)] [&>option]:text-[var(--color-text-ws-text-primary)]",
             // Styles when the select is within an `InputGroup`
             "in-data-input-wrapper:flex in-data-input-wrapper:h-full in-data-input-wrapper:gap-1 in-data-input-wrapper:bg-inherit in-data-input-wrapper:px-3 in-data-input-wrapper:py-2 in-data-input-wrapper:font-normal in-data-input-wrapper:text-ws-text-tertiary in-data-input-wrapper:shadow-none in-data-input-wrapper:ring-transparent",
             // Styles for the select when `TextField` is disabled

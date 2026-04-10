@@ -56,7 +56,7 @@ export default function DashboardCard({
             </div>
           ))}
         <div className="flex flex-col gap-2">
-          <h2 className={`text-ws-black-30 text-xl font-medium ${titleClass}`}>{title}</h2>
+          <h2 className={`text-ws-text-primary-30 text-xl font-medium ${titleClass}`}>{title}</h2>
           <p className={`text-ws-gray-90 text-base mt-1 ${descriptionClass}`}>{description}</p>
         </div>
       </div>

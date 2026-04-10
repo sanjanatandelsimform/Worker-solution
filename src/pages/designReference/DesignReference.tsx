@@ -73,7 +73,7 @@ function DesignReference() {
   ];
 
   return (
-    <div className="min-h-screen bg-ws-base-white text-ws-black transition-colors">
+    <div className="min-h-screen bg-ws-base-white text-ws-text-primary transition-colors">
       <div className="container mx-auto p-8">
         {/* Demo Section for Untitled UI Inputs */}
         <div className="mt-8 space-y-6">

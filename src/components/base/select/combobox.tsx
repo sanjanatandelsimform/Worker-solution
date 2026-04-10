@@ -85,7 +85,7 @@ const ComboBoxValue = ({
                 aria-hidden="true"
               >
                 <p
-                  className={cx("text-md font-medium text-ws-black", isDisabled && "text-disabled")}
+                  className={cx("text-md font-medium text-ws-text-primary", isDisabled && "text-disabled")}
                 >
                   {first}
                 </p>

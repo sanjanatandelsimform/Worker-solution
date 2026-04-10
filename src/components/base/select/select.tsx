@@ -108,7 +108,7 @@ const SelectValue = ({
 
               {state.selectedItem ? (
                 <section className="flex w-full gap-2 truncate">
-                  <p className="truncate text-md font-medium text-ws-black question-text">
+                  <p className="truncate text-md font-medium text-ws-text-primary question-text">
                     {state.selectedItem?.label}
                   </p>
                   {state.selectedItem?.supportingText && (

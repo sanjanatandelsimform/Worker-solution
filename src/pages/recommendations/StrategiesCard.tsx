@@ -15,7 +15,7 @@ export default function StrategiesCard({
       <h2 className="flex items-center text-xl text-ws-cyan-60 font-bold gap-2">
         {titleIcon} {title}
       </h2>
-      <p className="text-sm text-ws-black mt-3">{descriptionText}</p>
+      <p className="text-sm text-ws-text-primary mt-3">{descriptionText}</p>
     </div>
   );
 }

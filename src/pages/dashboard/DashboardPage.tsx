@@ -370,13 +370,13 @@ export const DashboardPage = () => {
               )}
             </h2>
             {!emailVerify && (
-              <p className="text-base font-normal text-ws-black mt-4">
+              <p className="text-base font-normal text-ws-text-primary mt-4">
                 BeneStats provides an overview of your workforce, industry, and some recommended
                 solutions that can add more value to your benefits packages and employee support.
               </p>
             )}
             {assessmentData?.status === "completed" && (
-              <p className="text-base font-normal text-ws-black">
+              <p className="text-base font-normal text-ws-text-primary">
                 Here's an overview of your workforce, industry, and some recommendations with
                 partners that can add more value to your benefits packages and employee support.
               </p>

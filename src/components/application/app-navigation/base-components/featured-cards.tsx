@@ -27,7 +27,7 @@ export const FeaturedCardProgressBar = ({
 }) => {
   return (
     <div className={cx("relative flex flex-col rounded-xl bg-secondary p-4", className)}>
-      <p className="text-sm font-semibold text-ws-black">{title}</p>
+      <p className="text-sm font-semibold text-ws-text-primary">{title}</p>
       <p className="mt-1 text-sm text-ws-text-tertiary">{description}</p>
       <div className="absolute top-2 right-2">
         <CloseButton onClick={onDismiss} size="sm" />
@@ -68,7 +68,7 @@ export const FeaturedCardProgressCircle = ({
         <CloseButton onClick={onDismiss} size="sm" />
       </div>
       <div className="mt-3">
-        <p className="text-sm font-semibold text-ws-black">{title}</p>
+        <p className="text-sm font-semibold text-ws-text-primary">{title}</p>
         <p className="mt-1 text-sm text-ws-text-tertiary">{description}</p>
       </div>
       <div className="mt-4 flex gap-3">
