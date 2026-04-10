@@ -162,7 +162,7 @@ export function RegistrationForm() {
         state: {
           messageImg: checkmarkIcon,
           title: "Account created successfully!",
-          subtitle: "Welcome aboard! Start your success journey with BeneStats",
+          subtitle: "Welcome aboard! Start your success journey with Lafayette Square Institute®",
           buttonText: "Let's Get Started",
           buttonPath: "/dashboard",
           user,
