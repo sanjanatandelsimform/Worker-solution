@@ -212,7 +212,7 @@ export const DashboardSidebar = ({ activeUrl = "/" }: DashboardSidebarProps) => 
         <div className="fixed top-4 right-4 z-50 rounded-lg bg-red-50 p-4 border border-red-200 shadow-lg max-w-md">
           <div className="flex items-start gap-3">
             <div className="flex-shrink-0">
-              <svg className="h-5 w-5 text-ws-red-30" viewBox="0 0 20 20" fill="currentColor">
+              <svg className="h-5 w-5 text-ws-error-600" viewBox="0 0 20 20" fill="currentColor">
                 <path
                   fillRule="evenodd"
                   d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z"
@@ -226,7 +226,7 @@ export const DashboardSidebar = ({ activeUrl = "/" }: DashboardSidebarProps) => 
             </div>
             <button
               onClick={() => setLogoutError(null)}
-              className="flex-shrink-0 text-red-400 hover:text-ws-red-30"
+              className="flex-shrink-0 text-red-400 hover:text-ws-error-600"
             >
               <svg className="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
                 <path

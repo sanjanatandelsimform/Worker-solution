@@ -522,7 +522,7 @@ export function RegistrationForm() {
                 </p>
               </div>
               {/* {errors.agreeToTerms && (
-                <p className="mt-1 text-sm text-ws-red-30">{errors.agreeToTerms.message}</p>
+                <p className="mt-1 text-sm text-ws-error-600">{errors.agreeToTerms.message}</p>
               )} */}
             </div>
 
