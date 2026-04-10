@@ -507,7 +507,11 @@ export const DynamicTab = forwardRef<
             const numValue = Number(String(value).replace(/[^0-9.]/g, ""));
             cleaned[question.key] = isNaN(numValue) ? value : numValue;
           } else {
-            cleaned[question.key] = value;
+            if (Array.isArray(value) && value.length === 0) {
+              // Do not include this field in the payload
+            } else {
+              cleaned[question.key] = value;
+            }
           }
         }
 
@@ -606,6 +610,16 @@ export const DynamicTab = forwardRef<
           cleaned["workforceGoalsRanking"] = rankingValue.slice(0, 3);
         }
       }
+
+      // Final sanitization: remove any fields with empty arrays or null/undefined values
+      Object.keys(cleaned).forEach(key => {
+        const val = cleaned[key];
+        if (val === null || val === undefined) {
+          delete cleaned[key];
+        } else if (Array.isArray(val) && val.length === 0) {
+          delete cleaned[key];
+        }
+      });
 
       return cleaned;
     }, [answers, questions, section]);
