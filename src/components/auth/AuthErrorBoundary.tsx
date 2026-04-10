@@ -41,7 +41,7 @@ export class AuthErrorBoundary extends Component<ErrorBoundaryProps, ErrorBounda
               <div className="mb-6 flex justify-center">
                 <div className="flex h-16 w-16 items-center justify-center rounded-full bg-red-100">
                   <svg
-                    className="h-8 w-8 text-ws-red-30"
+                    className="h-8 w-8 text-ws-error-600"
                     fill="none"
                     stroke="currentColor"
                     viewBox="0 0 24 24"

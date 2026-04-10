@@ -359,7 +359,7 @@ export const SettingsPage = () => {
                           isDisabled={profileLoading}
                         />
                         {firstNameError && (
-                          <p className="text-ws-red-30 text-sm mt-1">{firstNameError}</p>
+                          <p className="text-ws-error-600 text-sm mt-1">{firstNameError}</p>
                         )}
                       </div>
                       <div className="flex-1">
@@ -374,7 +374,7 @@ export const SettingsPage = () => {
                           isDisabled={profileLoading}
                         />
                         {lastNameError && (
-                          <p className="text-ws-red-30 text-sm mt-1">{lastNameError}</p>
+                          <p className="text-ws-error-600 text-sm mt-1">{lastNameError}</p>
                         )}
                       </div>
                     </div>
