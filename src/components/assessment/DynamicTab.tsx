@@ -720,12 +720,38 @@ export const DynamicTab = forwardRef<
                 __zipValidityState: _vs,
                 __zipStateFips: _zfips,
                 ...rest
-              } = item as Record<string, unknown>;
-              if (_zfips && !rest.stateFips) {
+              } = item as Record<string, unknown>
+;              if (_zfips && !rest.stateFips) {
                 rest.stateFips = _zfips;
               }
 
+              // Fallback: resolve stateFips from stateOptions when still missing
+              if (!rest.stateFips && rest.state && stateOptions) {
+                const matchedState = stateOptions.find(
+                  s => s.id.toUpperCase() === (rest.state as string).toUpperCase()
+                );
+                if (matchedState?.stateFips) {
+                  rest.stateFips = matchedState.stateFips;
+                }
+              }
+
               return rest;
+            }
+            // (e.g., user manually typed zip without triggering any autocomplete)
+            if (
+              item &&
+              typeof item === "object" &&
+              !item.stateFips &&
+              item.state &&
+              item.zipCode &&
+              stateOptions
+            ) {
+              const matchedState = stateOptions.find(
+                s => s.id.toUpperCase() === (item.state as string).toUpperCase()
+              );
+              if (matchedState?.stateFips) {
+                return { ...item, stateFips: matchedState.stateFips };
+              }
             }
             return item;
           });
