@@ -462,7 +462,7 @@ export function RegistrationForm() {
                   color="tertiary"
                   size="sm"
                   type="button"
-                  onClick={() => setShowPassword(!showPassword)}
+                  onClick={() => !errors.password ? setShowPassword(!showPassword) : ""}
                   aria-label={showPassword ? "Hide password" : "Show password"}
                   className="absolute right-0 top-7"
                 >
@@ -506,11 +506,11 @@ export function RegistrationForm() {
                   color="tertiary"
                   size="sm"
                   type="button"
-                  onClick={() => setShowConfirmPassword(!showConfirmPassword)}
+                  onClick={() => !errors.confirmPassword? setShowConfirmPassword(!showConfirmPassword) : ""}
                   aria-label={showConfirmPassword ? "Hide password" : "Show password"}
                   className="absolute right-0 top-7"
                 >
-                  {!errors.password && (
+                  {!errors.confirmPassword && (
                     <>
                       {showConfirmPassword ? (
                         <Eye className="size-5 text-ws-gray-400" />
@@ -536,6 +536,7 @@ export function RegistrationForm() {
                   <Link to="/privacy-policy" className="cursor-pointer text-ws-light-teal-850 underline">
                     Privacy Policies
                   </Link>
+                  {"."}
                 </p>
               </div>
               {/* {errors.agreeToTerms && (

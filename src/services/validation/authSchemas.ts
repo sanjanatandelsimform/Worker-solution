@@ -43,7 +43,7 @@ export const registrationSchema = z
       .email("Enter a valid email address"),
     businessPhone: z
       .string()
-      .min(1, "Business Phone is required")
+      .min(1, "Business Phone Number is required")
       .refine(
         value => /^\d{10}$/.test(value.replace(/\D/g, "")),
         "Phone number must be exactly 10 digits"
