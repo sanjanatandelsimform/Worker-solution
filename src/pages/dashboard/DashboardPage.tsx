@@ -159,7 +159,7 @@ export const DashboardPage = () => {
 
   useEffect(() => {
     if (
-      assessmentData?.status === "completed" &&
+      assessmentData?.data?.status === "completed" &&
       !dashboardLoading &&
       !hasRunDashboardFetchRef.current
     ) {
@@ -218,7 +218,7 @@ export const DashboardPage = () => {
 
       fetchWithModal();
     }
-  }, [assessmentData?.status, dashboardLoading, dispatch]);
+  }, [assessmentData?.data?.status, dashboardLoading, dispatch]);
 
   const handleFetchDashboardWithModals = useCallback(async () => {
     setErrorMessage(null);
@@ -363,7 +363,7 @@ export const DashboardPage = () => {
           <div className="space-y-6"></div>
           <div>
             <h2 className="text-4xl font-bold text-ws-text-primary">
-              {assessmentData?.status !== "completed" ? (
+              {assessmentData?.data?.status !== "completed" ? (
                 `Welcome, ${user?.firstName ? `${user.firstName}!` : ""}`
               ) : (
                 <span className="font-bold mb-4 flex">{`Hi ${user?.firstName}!`}</span>
@@ -375,7 +375,7 @@ export const DashboardPage = () => {
                 solutions that can add more value to your benefits packages and employee support.
               </p>
             )}
-            {assessmentData?.status === "completed" && (
+            {assessmentData?.data?.status === "completed" && (
               <p className="text-base font-normal text-ws-text-primary">
                 Here's an overview of your workforce, industry, and some recommendations with
                 partners that can add more value to your benefits packages and employee support.
@@ -396,7 +396,7 @@ export const DashboardPage = () => {
             )}
 
             {/* Dashboard Error with Retry */}
-            {assessmentData?.status === "completed" && dashboardError && !showInProgressModal && (
+            {assessmentData?.data?.status === "completed" && dashboardError && !showInProgressModal && (
               <div className="mt-6">
                 <ErrorMessage
                   errorType="danger"
@@ -415,7 +415,7 @@ export const DashboardPage = () => {
               </div>
             )}
 
-            {completionCount > 0 && emailVerify && assessmentData?.status !== "completed" && (
+            {completionCount > 0 && emailVerify && assessmentData?.data?.status !== "completed" && (
               <div className="mt-6 border border-ws-border-primary rounded-xl p-4 bg-ws-light-teal-50 flex gap-4 justify-between flex-col lg:flex-row">
                 <div className="flex-1">
                   <h2 className="text-ws-navy-900 text-xl font-medium mb-2">
@@ -460,7 +460,7 @@ export const DashboardPage = () => {
               />
             )}
 
-            {emailVerify && assessmentData?.status !== "completed" && !isConnected && (
+            {emailVerify && assessmentData?.data?.status !== "completed" && !isConnected && (
               <DashboardCard
                 classes="bg-ws-light-teal-50 border-ws-border-primary"
                 title="Take the Assessment"
@@ -490,7 +490,7 @@ export const DashboardPage = () => {
 
           {completionCount === 0 &&
             emailVerify &&
-            assessmentData?.status !== "completed" &&
+            assessmentData?.data?.status !== "completed" &&
             !isConnected && (
               <div className="flex items-center justify-between gap-4 mt-6">
                 <div className="flex-1 py-6 px-7 border border-ws-border-primary rounded-xl min-h-115 relative">
@@ -568,7 +568,7 @@ export const DashboardPage = () => {
           )}
 
           {/* Tabs — only render after dashboard data is confirmed ready */}
-          {emailVerify && assessmentData?.status === "completed" && !isConnected && (
+          {emailVerify && assessmentData?.data?.status === "completed" && !isConnected && (
             <DashboardCard
               classes="bg-ws-base-white border-ws-border-primary mt-10 shadow-none"
               toggleAvatar={true}
@@ -599,7 +599,7 @@ export const DashboardPage = () => {
               onClick={() => navigate("/additional-questions")}
             />
           )}
-          {emailVerify && assessmentData?.status === "completed" && isDashboardReady && (
+          {emailVerify && assessmentData?.data?.status === "completed" && isDashboardReady && (
             <div className="mt-10">
               {/* <Tabs>
                 <Tabs.List

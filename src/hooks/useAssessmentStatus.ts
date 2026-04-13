@@ -54,7 +54,7 @@ export const useAssessmentStatus = ({
     fetchAssessmentStatus();
   }, [fetchAssessmentStatus]);
 
-  const sections = assessmentData?.sections;
+  const sections = assessmentData?.data?.sections;
 
   const sectionCompletion = {
     workforce:

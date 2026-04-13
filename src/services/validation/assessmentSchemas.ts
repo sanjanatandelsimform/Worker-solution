@@ -36,7 +36,7 @@ export const workforceSchema = z
       )
       .max(5, "Maximum 5 work locations allowed")
       .optional(),
-    employeesResideInSameZipCodes: z.boolean({ message: "This field is required" }),
+    employeesResideInSameZipCodes: z.string({ message: "This field is required" }),
     employeeLivingZipCodes: z
       .array(
         z.object({
@@ -77,7 +77,7 @@ export const workforceSchema = z
     }
 
     if (
-      !data.employeesResideInSameZipCodes &&
+      data.employeesResideInSameZipCodes === "No" &&
       (!data.employeeLivingZipCodes || data.employeeLivingZipCodes.length === 0)
     ) {
       ctx.addIssue({

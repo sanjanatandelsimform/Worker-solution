@@ -350,10 +350,16 @@ export const DynamicTab = forwardRef<
         }
 
         if (question.conditionalQuestion) {
+          // const isFirstLevelShown = (() => {
+          //   const showWhen = question.conditionalQuestion.showWhen;
+          //   if (showWhen === "yes") return value === true;
+          //   if (showWhen === "no") return value === false;
+          //   return String(value || "").toLowerCase() === String(showWhen).toLowerCase();
+          // })();
           const isFirstLevelShown = (() => {
             const showWhen = question.conditionalQuestion.showWhen;
-            if (showWhen === "yes") return value === true;
-            if (showWhen === "no") return value === false;
+            if (showWhen === "yes") return value === true || String(value).toLowerCase() === "yes";
+            if (showWhen === "no") return value === false || String(value).toLowerCase() === "no";
             return String(value || "").toLowerCase() === String(showWhen).toLowerCase();
           })();
 
@@ -507,7 +513,11 @@ export const DynamicTab = forwardRef<
             const numValue = Number(String(value).replace(/[^0-9.]/g, ""));
             cleaned[question.key] = isNaN(numValue) ? value : numValue;
           } else {
-            cleaned[question.key] = value;
+            if (Array.isArray(value) && value.length === 0) {
+              // Do not include this field in the payload
+            } else {
+              cleaned[question.key] = value;
+            }
           }
         }
 
@@ -519,10 +529,18 @@ export const DynamicTab = forwardRef<
           const showWhen = question.conditionalQuestion.showWhen;
 
           let conditionMet = false;
+          // if (showWhen === "yes") {
+          //   conditionMet = parentValue === true;
+          // } else if (showWhen === "no") {
+          //   conditionMet = parentValue === false;
+          // } else {
+          //   conditionMet =
+          //     String(parentValue || "").toLowerCase() === String(showWhen).toLowerCase();
+          // }
           if (showWhen === "yes") {
-            conditionMet = parentValue === true;
+            conditionMet = parentValue === true || String(parentValue).toLowerCase() === "yes";
           } else if (showWhen === "no") {
-            conditionMet = parentValue === false;
+            conditionMet = parentValue === false || String(parentValue).toLowerCase() === "no";
           } else {
             conditionMet =
               String(parentValue || "").toLowerCase() === String(showWhen).toLowerCase();
@@ -607,6 +625,16 @@ export const DynamicTab = forwardRef<
         }
       }
 
+      // Final sanitization: remove any fields with empty arrays or null/undefined values
+      Object.keys(cleaned).forEach(key => {
+        const val = cleaned[key];
+        if (val === null || val === undefined) {
+          delete cleaned[key];
+        } else if (Array.isArray(val) && val.length === 0) {
+          delete cleaned[key];
+        }
+      });
+
       return cleaned;
     }, [answers, questions, section]);
 
@@ -620,16 +648,25 @@ export const DynamicTab = forwardRef<
           const { showWhen, question: conditionalQ } = question.conditionalQuestion;
           const parentValue = cleaned[question.key];
 
+          // let conditionMet = false;
+          // if (showWhen === "yes") {
+          //   conditionMet = parentValue === true;
+          // } else if (showWhen === "no") {
+          //   conditionMet = parentValue === false;
+          // } else {
+          //   conditionMet =
+          //     String(parentValue || "").toLowerCase() === String(showWhen).toLowerCase();
+          // }
+
           let conditionMet = false;
           if (showWhen === "yes") {
-            conditionMet = parentValue === true;
+            conditionMet = parentValue === true || String(parentValue).toLowerCase() === "yes";
           } else if (showWhen === "no") {
-            conditionMet = parentValue === false;
+            conditionMet = parentValue === false || String(parentValue).toLowerCase() === "no";
           } else {
             conditionMet =
               String(parentValue || "").toLowerCase() === String(showWhen).toLowerCase();
           }
-
           if (!conditionMet && conditionalQ?.key && conditionalQ.key in cleaned) {
             delete cleaned[conditionalQ.key];
           }
@@ -706,12 +743,38 @@ export const DynamicTab = forwardRef<
                 __zipValidityState: _vs,
                 __zipStateFips: _zfips,
                 ...rest
-              } = item as Record<string, unknown>;
-              if (_zfips && !rest.stateFips) {
+              } = item as Record<string, unknown>
+;              if (_zfips && !rest.stateFips) {
                 rest.stateFips = _zfips;
               }
 
+              // Fallback: resolve stateFips from stateOptions when still missing
+              if (!rest.stateFips && rest.state && stateOptions) {
+                const matchedState = stateOptions.find(
+                  s => s.id.toUpperCase() === (rest.state as string).toUpperCase()
+                );
+                if (matchedState?.stateFips) {
+                  rest.stateFips = matchedState.stateFips;
+                }
+              }
+
               return rest;
+            }
+            // (e.g., user manually typed zip without triggering any autocomplete)
+            if (
+              item &&
+              typeof item === "object" &&
+              !item.stateFips &&
+              item.state &&
+              item.zipCode &&
+              stateOptions
+            ) {
+              const matchedState = stateOptions.find(
+                s => s.id.toUpperCase() === (item.state as string).toUpperCase()
+              );
+              if (matchedState?.stateFips) {
+                return { ...item, stateFips: matchedState.stateFips };
+              }
             }
             return item;
           });
@@ -852,11 +915,13 @@ export const DynamicTab = forwardRef<
           if (conditionalKey) {
             const showWhen = question?.conditionalQuestion?.showWhen;
             let conditionMet = false;
-            if (showWhen === "yes") conditionMet = value === true;
-            else if (showWhen === "no") conditionMet = value === false;
-            else
-              conditionMet = String(value || "").toLowerCase() === String(showWhen).toLowerCase();
-
+            // if (showWhen === "yes") conditionMet = value === true;
+            // else if (showWhen === "no") conditionMet = value === false;
+            // else
+            //   conditionMet = String(value || "").toLowerCase() === String(showWhen).toLowerCase();
+            if (showWhen === "yes") conditionMet = value === true || String(value).toLowerCase() === "yes";
+            else if (showWhen === "no") conditionMet = value === false || String(value).toLowerCase() === "no";
+            else conditionMet = String(value || "").toLowerCase() === String(showWhen).toLowerCase();
             if (!conditionMet) {
               Object.keys(next).forEach(errorKey => {
                 if (errorKey === conditionalKey || errorKey.startsWith(`${conditionalKey}.`)) {
