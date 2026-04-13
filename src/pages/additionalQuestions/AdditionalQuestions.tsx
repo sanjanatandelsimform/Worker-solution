@@ -76,16 +76,7 @@ const compensationQuestions = [
     ],
     hasConditional: true,
   },
-  // {
-  //   id: "hr-payroll-inhouse",
-  //   question: "Do you handle HR/payroll in-house?",
-  //   required: true,
-  //   options: [
-  //     { id: "yes-inhouse", label: "Yes" },
-  //     { id: "no-inhouse", label: "No" },
-  //     { id: "unsure-inhouse", label: "Unsure" },
-  //   ],
-  // },
+
   {
     id: "payroll-provider",
     question: "Who is your company's payroll provider?",
@@ -184,19 +175,6 @@ const benefitsQuestions = [
 ];
 
 const retirementQuestions = [
-  // {
-  //   id: "retirement-record-keeper",
-  //   question: "Who is your retirement benefits record keeper or provider?",
-  //   required: true,
-  //   isDropdown: true,
-  //   options: [
-  //     { id: "fidelity", label: "Fidelity" },
-  //     { id: "vanguard", label: "Vanguard" },
-  //     { id: "schwab", label: "Charles Schwab" },
-  //     { id: "empower", label: "Empower" },
-  //     { id: "other-retirement", label: "Other" },
-  //   ],
-  // },
   {
     id: "retirement-vesting-period",
     question: "What is the vesting period of your business's retirement plan?",
