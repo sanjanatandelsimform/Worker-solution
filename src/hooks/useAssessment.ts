@@ -137,8 +137,8 @@ export const useAssessment = ({ section }: UseAssessmentOptions): UseAssessmentR
     setApiError(null);
     try {
       const response = await getAssessment();
-      if (response.success && response.data?.sections?.[section]) {
-        const sectionAnswers = response.data.sections[section] as Record<string, unknown>;
+      if (response.success && response.data?.data?.sections?.[section]) {
+        const sectionAnswers = response.data.data?.sections[section] as Record<string, unknown>;
         const normalizedAnswers = normalizeSectionAnswers(section, sectionAnswers);
         setAnswers(normalizedAnswers);
         // Mark as completed if section exists in API response

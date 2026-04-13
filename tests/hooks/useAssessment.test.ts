@@ -24,18 +24,20 @@ describe("useAssessment Hook", () => {
     const mockResponse: ApiResponse<AssessmentData> = {
       success: true,
       data: {
-        id: "assessment-1",
-        userId: "user-1",
-        createdAt: "2026-02-13T00:00:00Z",
-        updatedAt: "2026-02-13T00:00:00Z",
-        status: "in_progress",
-        sections: {
-          workforce: {
-            q1: "answer1",
-            q2: 42,
+        assessmentType: "manual",
+        data: {
+          assessmentResponseId: 1,
+          userId: "user-1",
+          createdAt: "2026-02-13T00:00:00Z",
+          updatedAt: "2026-02-13T00:00:00Z",
+          status: "in_progress",
+          sections: {
+            workforce: {
+              q1: "answer1",
+              q2: 42,
+            },
           },
         },
-        completionPercentage: 25,
       },
     };
 
@@ -53,18 +55,20 @@ describe("useAssessment Hook", () => {
     const mockResponse: ApiResponse<AssessmentData> = {
       success: true,
       data: {
-        id: "assessment-1",
-        userId: "user-1",
-        createdAt: "2026-02-13T00:00:00Z",
-        updatedAt: "2026-02-13T00:00:00Z",
-        status: "in_progress",
-        sections: {
-          workforce: {
-            q1: "answer1",
-            q2: 42,
+        assessmentType: "manual",
+        data: {
+          assessmentResponseId: 1,
+          userId: "user-1",
+          createdAt: "2026-02-13T00:00:00Z",
+          updatedAt: "2026-02-13T00:00:00Z",
+          status: "in_progress",
+          sections: {
+            workforce: {
+              q1: "answer1",
+              q2: 42,
+            },
           },
         },
-        completionPercentage: 25,
       },
     };
 
@@ -79,6 +83,7 @@ describe("useAssessment Hook", () => {
       });
     });
   });
+
   // T011: should set isLoadingGet=true during GET call
   it("should set isLoadingGet=true during GET call", async () => {
     let resolveGetAssessment!: (value: ApiResponse<AssessmentData>) => void;
@@ -98,13 +103,15 @@ describe("useAssessment Hook", () => {
     resolveGetAssessment({
       success: true,
       data: {
-        id: "assessment-1",
-        userId: "user-1",
-        createdAt: "2026-02-13T00:00:00Z",
-        updatedAt: "2026-02-13T00:00:00Z",
-        status: "in_progress",
-        sections: { workforce: {} },
-        completionPercentage: 0,
+        assessmentType: "manual",
+        data: {
+          assessmentResponseId: 1,
+          userId: "user-1",
+          createdAt: "2026-02-13T00:00:00Z",
+          updatedAt: "2026-02-13T00:00:00Z",
+          status: "in_progress",
+          sections: { workforce: {} },
+        },
       },
     });
 
@@ -113,20 +120,23 @@ describe("useAssessment Hook", () => {
       expect(result.current.isLoadingGet).toBe(false);
     });
   });
+
   // T012: should NOT call localStorage functions
   it("should NOT call localStorage functions (saveAssessmentProgress, loadSectionProgress)", async () => {
     const mockResponse: ApiResponse<AssessmentData> = {
       success: true,
       data: {
-        id: "assessment-1",
-        userId: "user-1",
-        createdAt: "2026-02-13T00:00:00Z",
-        updatedAt: "2026-02-13T00:00:00Z",
-        status: "in_progress",
-        sections: {
-          workforce: { q1: "answer1" },
+        assessmentType: "manual",
+        data: {
+          assessmentResponseId: 1,
+          userId: "user-1",
+          createdAt: "2026-02-13T00:00:00Z",
+          updatedAt: "2026-02-13T00:00:00Z",
+          status: "in_progress",
+          sections: {
+            workforce: { q1: "answer1" },
+          },
         },
-        completionPercentage: 25,
       },
     };
 
@@ -151,30 +161,34 @@ describe("useAssessment Hook", () => {
     const workforceResponse: ApiResponse<AssessmentData> = {
       success: true,
       data: {
-        id: "assessment-1",
-        userId: "user-1",
-        createdAt: "2026-02-13T00:00:00Z",
-        updatedAt: "2026-02-13T00:00:00Z",
-        status: "in_progress",
-        sections: {
-          workforce: { q1: "workforce-answer" },
+        assessmentType: "manual",
+        data: {
+          assessmentResponseId: 1,
+          userId: "user-1",
+          createdAt: "2026-02-13T00:00:00Z",
+          updatedAt: "2026-02-13T00:00:00Z",
+          status: "in_progress",
+          sections: {
+            workforce: { q1: "workforce-answer" },
+          },
         },
-        completionPercentage: 25,
       },
     };
 
     const compensationResponse: ApiResponse<AssessmentData> = {
       success: true,
       data: {
-        id: "assessment-1",
-        userId: "user-1",
-        createdAt: "2026-02-13T00:00:00Z",
-        updatedAt: "2026-02-13T00:00:00Z",
-        status: "in_progress",
-        sections: {
-          compensation: { q1: "compensation-answer" },
+        assessmentType: "manual",
+        data: {
+          assessmentResponseId: 1,
+          userId: "user-1",
+          createdAt: "2026-02-13T00:00:00Z",
+          updatedAt: "2026-02-13T00:00:00Z",
+          status: "in_progress",
+          sections: {
+            compensation: { q1: "compensation-answer" },
+          },
         },
-        completionPercentage: 50,
       },
     };
 

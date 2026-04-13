@@ -350,10 +350,16 @@ export const DynamicTab = forwardRef<
         }
 
         if (question.conditionalQuestion) {
+          // const isFirstLevelShown = (() => {
+          //   const showWhen = question.conditionalQuestion.showWhen;
+          //   if (showWhen === "yes") return value === true;
+          //   if (showWhen === "no") return value === false;
+          //   return String(value || "").toLowerCase() === String(showWhen).toLowerCase();
+          // })();
           const isFirstLevelShown = (() => {
             const showWhen = question.conditionalQuestion.showWhen;
-            if (showWhen === "yes") return value === true;
-            if (showWhen === "no") return value === false;
+            if (showWhen === "yes") return value === true || String(value).toLowerCase() === "yes";
+            if (showWhen === "no") return value === false || String(value).toLowerCase() === "no";
             return String(value || "").toLowerCase() === String(showWhen).toLowerCase();
           })();
 
@@ -523,10 +529,18 @@ export const DynamicTab = forwardRef<
           const showWhen = question.conditionalQuestion.showWhen;
 
           let conditionMet = false;
+          // if (showWhen === "yes") {
+          //   conditionMet = parentValue === true;
+          // } else if (showWhen === "no") {
+          //   conditionMet = parentValue === false;
+          // } else {
+          //   conditionMet =
+          //     String(parentValue || "").toLowerCase() === String(showWhen).toLowerCase();
+          // }
           if (showWhen === "yes") {
-            conditionMet = parentValue === true;
+            conditionMet = parentValue === true || String(parentValue).toLowerCase() === "yes";
           } else if (showWhen === "no") {
-            conditionMet = parentValue === false;
+            conditionMet = parentValue === false || String(parentValue).toLowerCase() === "no";
           } else {
             conditionMet =
               String(parentValue || "").toLowerCase() === String(showWhen).toLowerCase();
@@ -634,16 +648,25 @@ export const DynamicTab = forwardRef<
           const { showWhen, question: conditionalQ } = question.conditionalQuestion;
           const parentValue = cleaned[question.key];
 
+          // let conditionMet = false;
+          // if (showWhen === "yes") {
+          //   conditionMet = parentValue === true;
+          // } else if (showWhen === "no") {
+          //   conditionMet = parentValue === false;
+          // } else {
+          //   conditionMet =
+          //     String(parentValue || "").toLowerCase() === String(showWhen).toLowerCase();
+          // }
+
           let conditionMet = false;
           if (showWhen === "yes") {
-            conditionMet = parentValue === true;
+            conditionMet = parentValue === true || String(parentValue).toLowerCase() === "yes";
           } else if (showWhen === "no") {
-            conditionMet = parentValue === false;
+            conditionMet = parentValue === false || String(parentValue).toLowerCase() === "no";
           } else {
             conditionMet =
               String(parentValue || "").toLowerCase() === String(showWhen).toLowerCase();
           }
-
           if (!conditionMet && conditionalQ?.key && conditionalQ.key in cleaned) {
             delete cleaned[conditionalQ.key];
           }
@@ -892,11 +915,13 @@ export const DynamicTab = forwardRef<
           if (conditionalKey) {
             const showWhen = question?.conditionalQuestion?.showWhen;
             let conditionMet = false;
-            if (showWhen === "yes") conditionMet = value === true;
-            else if (showWhen === "no") conditionMet = value === false;
-            else
-              conditionMet = String(value || "").toLowerCase() === String(showWhen).toLowerCase();
-
+            // if (showWhen === "yes") conditionMet = value === true;
+            // else if (showWhen === "no") conditionMet = value === false;
+            // else
+            //   conditionMet = String(value || "").toLowerCase() === String(showWhen).toLowerCase();
+            if (showWhen === "yes") conditionMet = value === true || String(value).toLowerCase() === "yes";
+            else if (showWhen === "no") conditionMet = value === false || String(value).toLowerCase() === "no";
+            else conditionMet = String(value || "").toLowerCase() === String(showWhen).toLowerCase();
             if (!conditionMet) {
               Object.keys(next).forEach(errorKey => {
                 if (errorKey === conditionalKey || errorKey.startsWith(`${conditionalKey}.`)) {
