@@ -406,8 +406,8 @@ export const SettingsPage = () => {
                               isDisabled={true}
                             />
                             <Button
-                              color="link-color"
-                              className="max-w-22 text-ws-navy-800 font-semibold shadow-none"
+                              color="link-disable-color"
+                              className="text-ws-navy-800 font-semibold shadow-none"
                               onClick={
                                 resendVerification
                                   ? handleResendVerification
@@ -453,8 +453,8 @@ export const SettingsPage = () => {
                               </>
                             </Button>
                             <Button
-                              color="link-color"
-                              className="max-w-22 text-ws-navy-800 font-semibold shadow-none"
+                              color="link-disable-color"
+                              className="text-ws-navy-800 font-semibold shadow-none"
                               onClick={() => setIsChangePasswordModalOpen(true)}
                               isDisabled={profileLoading || !firstName || !lastName}
                             >
