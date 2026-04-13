@@ -515,7 +515,7 @@
           "options": [
             { "label": "Cash bonuses", "value": "Cash bonuses", "displayOrder": 1 },
             { "label": "Profit sharing", "value": "Profit sharing", "displayOrder": 2 },
-            { "label": "Comissions", "value": "Comissions", "displayOrder": 3 }
+            { "label": "Commissions", "value": "Commissions", "displayOrder": 3 }
           ]
         },
         {
