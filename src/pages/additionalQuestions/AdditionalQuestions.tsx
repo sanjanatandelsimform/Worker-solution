@@ -218,8 +218,6 @@ const retirementQuestions = [
   },
 ];
 
-// goalsData is imported from @/data/goalsData (shared with buildFinchAssessmentPayload)
-
 export default function AdditionalQuestions() {
   const navigate = useNavigate();
   const [answers, setAnswers] = useState<QuestionAnswer>({});

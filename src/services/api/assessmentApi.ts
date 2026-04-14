@@ -1,6 +1,8 @@
 import axios, { AxiosError, AxiosRequestConfig } from "axios";
 import { mapMonthToApiValue } from "@/utils/monthUtils";
 import type { ZipCodeLookupResponse } from "@/types/lookupTypes";
+import apiClient from "@/services/api/authApi";
+import type { FinchAssessmentPayload } from "@/types/finchAssessmentTypes";
 
 /**
  * Assessment API Service
@@ -554,8 +556,6 @@ api.interceptors.response.use(
 export { api };
 
 // ── Finch Assessment ────────────────────────────────────────────────────────
-import apiClient from "@/services/api/authApi";
-import type { FinchAssessmentPayload } from "@/types/finchAssessmentTypes";
 
 /**
  * Submits the full Additional Questions form payload to POST /assessment/finch.
