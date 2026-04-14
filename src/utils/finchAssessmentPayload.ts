@@ -17,6 +17,20 @@ export interface GoalsAnswer {
 }
 
 /**
+ * Removes fields whose value is null, an empty string, or an empty array.
+ * Boolean values (including false) are always kept.
+ */
+function stripEmpty(obj: Record<string, unknown>): Record<string, unknown> {
+  return Object.fromEntries(
+    Object.entries(obj).filter(([, v]) => {
+      if (v === null || v === "") return false;
+      if (Array.isArray(v) && v.length === 0) return false;
+      return true;
+    })
+  );
+}
+
+/**
  * Assembles the four-section FinchAssessmentPayload from local form state.
  * All option IDs in the static form data arrays directly equal API values — no runtime
  * string transformation is required for option IDs. Only boolean coercion, broker ID
@@ -70,5 +84,16 @@ export function buildFinchAssessmentPayload(
     workforceGoalsRanking: [...goalsAnswers.topThreeGoals],
   };
 
-  return { workforce, compensation, benefits, goals };
+  return {
+    workforce: stripEmpty(
+      workforce as unknown as Record<string, unknown>
+    ) as unknown as WorkforcePayload,
+    compensation: stripEmpty(
+      compensation as unknown as Record<string, unknown>
+    ) as unknown as CompensationPayload,
+    benefits: stripEmpty(
+      benefits as unknown as Record<string, unknown>
+    ) as unknown as BenefitsPayload,
+    goals: stripEmpty(goals as unknown as Record<string, unknown>) as unknown as GoalsPayload,
+  };
 }
