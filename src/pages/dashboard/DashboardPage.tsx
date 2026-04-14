@@ -65,6 +65,7 @@ export const DashboardPage = () => {
   const {
     completionCount,
     assessmentData,
+    isFinchCompleted,
     isLoading: isLoadingAssessment,
   } = useAssessmentStatus({ enabled: emailVerify });
   const dashboardLoading = useAppSelector(selectDashboardLoading);
@@ -396,24 +397,25 @@ export const DashboardPage = () => {
             )}
 
             {/* Dashboard Error with Retry */}
-            {assessmentData?.data?.status === "completed" && dashboardError && !showInProgressModal && (
-              <div className="mt-6">
-                <ErrorMessage
-                  errorType="danger"
-                  textColor="text-red-700"
-                  alertIcon={AlertCircle}
-                  errorMessage={dashboardError}
-                  onClose={() => {}}
-                />
-                <button
-                  onClick={handleRetryDashboard}
-                  className="mt-4 px-4 py-2 bg-ws-primary text-white rounded-lg hover:bg-ws-primary-dark transition-colors"
-                  disabled={dashboardLoading}
-                >
-                  {dashboardLoading ? "Retrying..." : "Retry"}
-                </button>
-              </div>
-            )}
+            {assessmentData?.data?.status === "completed" &&
+              dashboardError &&
+              !showInProgressModal && (
+                <div className="mt-6">
+                  <ErrorMessage
+                    errorType="danger"
+                    textColor="text-red-700"
+                    alertIcon={AlertCircle}
+                    errorMessage={dashboardError}
+                  />
+                  <button
+                    onClick={handleRetryDashboard}
+                    className="mt-4 px-4 py-2 bg-ws-primary text-white rounded-lg hover:bg-ws-primary-dark transition-colors"
+                    disabled={dashboardLoading}
+                  >
+                    {dashboardLoading ? "Retrying..." : "Retry"}
+                  </button>
+                </div>
+              )}
 
             {completionCount > 0 && emailVerify && assessmentData?.data?.status !== "completed" && (
               <div className="mt-6 border border-ws-border-primary rounded-xl p-4 bg-ws-light-teal-50 flex gap-4 justify-between flex-col lg:flex-row">
@@ -515,7 +517,9 @@ export const DashboardPage = () => {
                     setup. Please note that data shared is secure and protected by Finch’s thorough
                     data privacy policies.
                   </p>
-                  <p className="text-xs text-ws-text-tertiary mt-4">*Result loading time is payroll provider-specific</p>
+                  <p className="text-xs text-ws-text-tertiary mt-4">
+                    *Result loading time is payroll provider-specific
+                  </p>
                   <Button
                     iconTrailing={<ChevronRight />}
                     size="sm"
@@ -584,7 +588,7 @@ export const DashboardPage = () => {
               buttonIsDisabled={isFinchLoading}
             />
           )}
-          {emailVerify && isConnected &&(
+          {emailVerify && isConnected && !isFinchCompleted && (
             <DashboardCard
               classes="bg-ws-navy-100 border-ws-primary-100 mt-10 shadow-none"
               toggleAvatar={true}

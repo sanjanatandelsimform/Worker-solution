@@ -56,7 +56,7 @@ export const SettingsPage = () => {
   const [resendError, setResendError] = useState<string | null>(null);
   const [retakeLoading, setRetakeLoading] = useState(false);
   const [retakeError, setRetakeError] = useState<string | null>(null);
-  const { completionCount } = useAssessmentStatus();
+  const { completionCount, isFinchCompleted } = useAssessmentStatus();
 
   // Modal configurations using the hook
   const updateCompleteModal = useModalConfig("updateComplete", {
@@ -174,7 +174,7 @@ export const SettingsPage = () => {
     try {
       await dispatch(retakeAssessmentAction()).unwrap();
       setIsRetakeAssessmentModalOpen(false);
-      navigate("/assessment");
+      navigate("/dashboard");
     } catch (error) {
       setIsRetakeAssessmentModalOpen(false);
       setRetakeError(typeof error === "string" ? error : "Failed to retake assessment");
@@ -380,7 +380,7 @@ export const SettingsPage = () => {
                               onChange={handleLastNameChange}
                               isDisabled={profileLoading}
                             />
-                             {lastNameError && (
+                            {lastNameError && (
                               <p className="text-ws-error-600 text-sm mt-1">{lastNameError}</p>
                             )}
                           </div>
@@ -497,7 +497,7 @@ export const SettingsPage = () => {
                           size="md"
                           className="w-full text-base font-semibold text-ws-navy-800"
                           onClick={() => setIsRetakeAssessmentModalOpen(true)}
-                          isDisabled={completionCount === 0}
+                          isDisabled={completionCount === 0 && !isFinchCompleted}
                         >
                           Retake Assessment
                         </Button>

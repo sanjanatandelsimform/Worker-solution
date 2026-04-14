@@ -1,6 +1,8 @@
 import axios, { AxiosError, AxiosRequestConfig } from "axios";
 import { mapMonthToApiValue } from "@/utils/monthUtils";
 import type { ZipCodeLookupResponse } from "@/types/lookupTypes";
+import apiClient from "@/services/api/authApi";
+import type { FinchAssessmentPayload } from "@/types/finchAssessmentTypes";
 
 /**
  * Assessment API Service
@@ -552,3 +554,22 @@ api.interceptors.response.use(
 );
 
 export { api };
+
+// ── Finch Assessment ────────────────────────────────────────────────────────
+
+/**
+ * Submits the full Additional Questions form payload to POST /assessment/finch.
+ * Uses apiClient (authApi.ts) which carries the token-refresh interceptor.
+ * Throws on non-2xx responses so that the calling hook can catch and set error state.
+ */
+export const submitFinchAssessment = async (
+  payload: FinchAssessmentPayload
+): Promise<ApiResponse> => {
+  const response = await apiClient.post("/assessment/finch", payload, {
+    timeout: 10000,
+  });
+  return {
+    success: true,
+    data: response.data,
+  };
+};

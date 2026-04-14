@@ -1,12 +1,19 @@
 import { Button } from "@/components/base/buttons/button";
-import { ChevronRight, XClose } from "@untitledui/icons";
-import { useState } from "react";
+import { ChevronRight, InfoCircle, XClose } from "@untitledui/icons";
+import { InputInfo } from "@/assets/icons/inputInfo";
+import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { RadioButton, RadioGroup } from "@/components/base/radio-buttons/radio-buttons";
 import { Label } from "@/components/base/input/label";
 import { Select } from "@/components/base/select/select";
 import { SelectItem } from "@/components/base/select/select-item";
 import { Checkbox } from "@/components/base/checkbox/checkbox";
+import ErrorMessage from "@/components/common/ErrorMessage";
+import { RankingList } from "@/components/common/RankList";
+import { goalsData } from "@/data/goalsData";
+import { useSubmitFinchAssessment } from "@/hooks/useSubmitFinchAssessment";
+import { buildFinchAssessmentPayload } from "@/utils/finchAssessmentPayload";
+import { Tooltip, TooltipTrigger } from "@/components/base/tooltip/tooltip";
 
 interface QuestionAnswer {
   [key: string]: string | string[];
@@ -24,9 +31,9 @@ const questions = [
     required: true,
     isMultiSelect: true,
     options: [
-      { id: "work-email", label: "Work (email and/or text)" },
-      { id: "personal-device", label: "Personal device (email and/or text)" },
-      { id: "office-flyer", label: "Office flyer, in-office experience" },
+      { id: "work_email", label: "Work (email and/or text)" },
+      { id: "personal_email", label: "Personal device (email and/or text)" },
+      { id: "office_signs", label: "Office flyer, in-office experience" },
     ],
   },
   {
@@ -49,7 +56,7 @@ const questions = [
       { id: "car", label: "Car" },
       { id: "bike", label: "Bike" },
       { id: "walking", label: "Walking" },
-      { id: "group-transportation", label: "Group Transportation (i.e. Carpooling, Company bus)" },
+      { id: "group_transportation", label: "Group Transportation (i.e. Carpooling, Company bus)" },
     ],
   },
   {
@@ -57,10 +64,10 @@ const questions = [
     question: "How long are employees commuting to the office (estimated average time)",
     required: false,
     options: [
-      { id: "commute-under-15min", label: "> 15min" },
-      { id: "commute-15-30min", label: "15-30min" },
-      { id: "commute-30-1hr", label: "30-1hr min" },
-      { id: "commute-1hr-plus", label: "1hr +" },
+      { id: ">15min", label: "> 15min" },
+      { id: "15-30min", label: "15-30min" },
+      { id: "30-1hr", label: "30-1hr min" },
+      { id: "1hr+", label: "1hr +" },
     ],
   },
 ];
@@ -80,7 +87,7 @@ const compensationQuestions = [
   {
     id: "payroll-provider",
     question: "Who is your company's payroll provider?",
-    required: false,
+    required: true,
     isDropdown: true,
     options: [
       { id: "ADP", label: "ADP" },
@@ -88,7 +95,7 @@ const compensationQuestions = [
       { id: "Paycom", label: "Paycom" },
       { id: "Paylocity", label: "Paylocity" },
       { id: "Gusto", label: "Gusto" },
-      { id: "Quickbooks", label: "Quickbooks" },
+      { id: "QuickBooks", label: "QuickBooks" },
       { id: "TriNet", label: "TriNet" },
       { id: "Deel", label: "Deel" },
       { id: "Rippling", label: "Rippling" },
@@ -118,8 +125,8 @@ const compensationQuestions = [
     required: false,
     isMultiSelect: true,
     options: [
-      { id: "cash-bonuses", label: "Cash bonuses" },
-      { id: "profit-sharing", label: "Profit sharing" },
+      { id: "cash_bonuses", label: "Cash bonuses" },
+      { id: "profit_sharing", label: "Profit sharing" },
       { id: "commissions", label: "Commissions" },
     ],
   },
@@ -130,11 +137,11 @@ const compensationQuestions = [
     required: false,
     isMultiSelect: true,
     options: [
-      { id: "stock-options", label: "Stock options" },
+      { id: "stock_options", label: "Stock options" },
       { id: "rsus", label: "Restricted Stock Units (RSUs)" },
       { id: "espps", label: "Employee Stock Purchase Plans (ESPPs)" },
-      { id: "deferred-compensation", label: "Deferred compensation" },
-      { id: "pension-plans", label: "Pension plans" },
+      { id: "deferred_compensation", label: "Deferred compensation" },
+      { id: "pension_plans", label: "Pension plans" },
     ],
   },
 ];
@@ -158,7 +165,11 @@ const benefitsQuestions = [
   {
     id: "benefits-broker",
     question: "Do you work with a benefits broker?",
-    required: false,
+    required: true,
+    tooltip: {
+      title: "A benefits broker is lorem ipsum dolor sit amet, consectetur adipiscing elit ",
+      description: "",
+    },
     options: [
       { id: "yes-broker", label: "Yes" },
       { id: "no-broker", label: "No" },
@@ -168,7 +179,7 @@ const benefitsQuestions = [
   {
     id: "benefits-enrollment-period",
     question: "When is your benefits enrollment period?",
-    required: false,
+    required: true,
     isDropdown: true,
     options: monthOptions,
   },
@@ -180,11 +191,11 @@ const retirementQuestions = [
     question: "What is the vesting period of your business's retirement plan?",
     required: true,
     options: [
-      { id: "vesting-less-6m", label: "6 months of less" },
-      { id: "vesting-6m-1y", label: "Greater than 6 months - 1 year" },
-      { id: "vesting-1y-2y", label: "Greater than 1 year - 2 years" },
-      { id: "vesting-2y-4y", label: "Greater than 2 years - 4 years" },
-      { id: "vesting-4y", label: "Greater than 4 years" },
+      { id: "6mo_or_less", label: "6 months or less" },
+      { id: "6mo_1yr", label: "Greater than 6 months - 1 year" },
+      { id: "1yr_2yr", label: "Greater than 1 year - 2 years" },
+      { id: "2yr_4yr", label: "Greater than 2 years - 4 years" },
+      { id: "4yr_plus", label: "Greater than 4 years" },
     ],
   },
   {
@@ -207,46 +218,6 @@ const retirementQuestions = [
   },
 ];
 
-const goalsData = [
-  {
-    category: "Financial health",
-    goals: [
-      { id: "improve-benefits-participation", label: "Improve benefits participation" },
-      { id: "reduce-401k-loans", label: "Reduce 401k loans and withdrawals" },
-      { id: "increase-worker-financial-health", label: "Increase worker financial health" },
-    ],
-  },
-  {
-    category: "Healthcare",
-    goals: [
-      { id: "improve-employee-health-outcomes", label: "Improve employee health outcomes" },
-      { id: "reduce-healthcare-costs", label: "Reduce healthcare costs" },
-      { id: "address-caregiving-challenges", label: "Address caregiving challenges" },
-    ],
-  },
-  {
-    category: "Performance",
-    goals: [
-      { id: "attract-talent", label: "Attract talent" },
-      { id: "reduce-time-to-hire", label: "Reduce time-to-hire" },
-      { id: "reduce-absenteeism", label: "Reduce absenteeism" },
-      { id: "reduce-quick-quits", label: "Reduce quick quits (turnover in under 90 days)" },
-    ],
-  },
-  {
-    category: "Education and training",
-    goals: [
-      { id: "retain-talent", label: "Retain talent" },
-      { id: "upskilling-training", label: "Upskilling and training" },
-      { id: "employee-satisfaction", label: "Employee satisfaction" },
-      {
-        id: "support-employees-navigating",
-        label: "Support employees navigating company benefits and community resources",
-      },
-    ],
-  },
-];
-
 export default function AdditionalQuestions() {
   const navigate = useNavigate();
   const [answers, setAnswers] = useState<QuestionAnswer>({});
@@ -254,16 +225,91 @@ export default function AdditionalQuestions() {
     selectedGoals: [],
     topThreeGoals: [],
   });
+  // T013: Controlled state for the three Select dropdowns
+  const [annualRaiseMonth, setAnnualRaiseMonth] = useState<string>("");
+  const [payrollProvider, setPayrollProvider] = useState<string>("");
+  const [benefitsEnrollmentMonth, setBenefitsEnrollmentMonth] = useState<string>("");
+  // T015: Hook + validation state
+  const { isSubmitting, error, success, submit, clearError } = useSubmitFinchAssessment();
+  const [fieldErrors, setFieldErrors] = useState<Record<string, string>>({});
 
   const handleClose = () => {
     navigate("/dashboard");
   };
+
+  // T016: Form submission handler with validation
+  const handleSubmit = async () => {
+    const newErrors: Record<string, string> = {};
+
+    // Minimum 3 goals required for ranking
+    if (goalsAnswers.selectedGoals.length < 3) {
+      newErrors["selectedGoals"] = "Please select at least 3 workforce goals to rank them.";
+    }
+    // Required field validation
+    const benefitsUpdates = answers["benefits-updates"];
+    if (!benefitsUpdates || (Array.isArray(benefitsUpdates) && benefitsUpdates.length === 0)) {
+      newErrors["benefits-updates"] = "Select an option";
+    }
+    if (!answers["deskless-employees"]) {
+      newErrors["deskless-employees"] = "Select an option";
+    }
+    if (!answers["annual-raises"]) {
+      newErrors["annual-raises"] = "Select an option";
+    }
+    if (!payrollProvider) {
+      newErrors["payroll-provider"] = "Select an option";
+    }
+    // annualRaiseMonth is required when offersAnnualRaises is true
+    if (answers["annual-raises"] === "yes-raises" && !annualRaiseMonth) {
+      newErrors["annualRaiseMonth"] = "Please select a month.";
+    }
+    if (!answers["benefits-broker"]) {
+      newErrors["benefits-broker"] = "Select an option";
+    }
+    if (!benefitsEnrollmentMonth) {
+      newErrors["benefits-enrollment-period"] = "Select an option";
+    }
+    if (!answers["retirement-vesting-period"]) {
+      newErrors["retirement-vesting-period"] = "Select an option";
+    }
+    if (!answers["retirement-auto-enroll"]) {
+      newErrors["retirement-auto-enroll"] = "Select an option";
+    }
+    if (!answers["retirement-hardship-withdrawals"]) {
+      newErrors["retirement-hardship-withdrawals"] = "Select an option";
+    }
+
+    if (Object.keys(newErrors).length > 0) {
+      setFieldErrors(newErrors);
+      return;
+    }
+
+    setFieldErrors({});
+    const payload = buildFinchAssessmentPayload(
+      answers,
+      goalsAnswers,
+      annualRaiseMonth,
+      payrollProvider,
+      benefitsEnrollmentMonth
+    );
+    await submit(payload);
+  };
+
+  // T018: Navigate to /dashboard after successful submission
+  useEffect(() => {
+    if (success) {
+      navigate("/dashboard");
+    }
+  }, [success, navigate]);
 
   const handleAnswerChange = (questionId: string, value: string) => {
     setAnswers(prev => ({
       ...prev,
       [questionId]: value,
     }));
+    if (fieldErrors[questionId]) {
+      setFieldErrors(prev => ({ ...prev, [questionId]: "" }));
+    }
   };
 
   const handleMultiSelectToggle = (questionId: string, optionId: string) => {
@@ -277,6 +323,9 @@ export default function AdditionalQuestions() {
           : [...currentArray, optionId],
       };
     });
+    if (fieldErrors[questionId]) {
+      setFieldErrors(prev => ({ ...prev, [questionId]: "" }));
+    }
   };
 
   const handleGoalToggle = (goalId: string) => {
@@ -286,6 +335,9 @@ export default function AdditionalQuestions() {
         ? prev.selectedGoals.filter(id => id !== goalId)
         : [...prev.selectedGoals, goalId],
     }));
+    if (fieldErrors["selectedGoals"]) {
+      setFieldErrors(prev => ({ ...prev, selectedGoals: "" }));
+    }
   };
 
   // const handleTopThreeGoalChange = (position: number, goalId: string) => {
@@ -331,6 +383,18 @@ export default function AdditionalQuestions() {
 
       {/* Compensation Area */}
       <div className="mx-auto w-full max-w-4xl flex-1 space-y-3 py-8 px-4">
+        {/* T019/T020: Success and error banners */}
+        {success && (
+          <ErrorMessage
+            errorType="success"
+            errorMessage="Assessment submitted successfully!"
+            onClose={() => {
+              /* navigation handled by useEffect */
+            }}
+          />
+        )}
+        {error && <ErrorMessage errorType="danger" errorMessage={error} onClose={clearError} />}
+
         <div className="space-y-6">
           <div className="w-full">
             <h2 className="text-3xl font-medium mb-2 text-ws-text-primary">Almost there!</h2>
@@ -354,6 +418,12 @@ export default function AdditionalQuestions() {
                   <Label isRequired={question.required} className="text-base text-ws-text-primary">
                     {index + 1}. {question.question}
                   </Label>
+                  {question.required && fieldErrors[question.id] && (
+                    <div className="flex items-center gap-2">
+                      <InputInfo className="text-ws-error-600" />
+                      <span className="text-sm text-ws-error-600">{fieldErrors[question.id]}</span>
+                    </div>
+                  )}
 
                   {question.isMultiSelect ? (
                     <div className="flex flex-col gap-3">
@@ -414,6 +484,12 @@ export default function AdditionalQuestions() {
                   <Label isRequired={question.required} className="text-base text-ws-text-primary">
                     {index + 1}. {question.question}
                   </Label>
+                  {question.required && !question.isDropdown && fieldErrors[question.id] && (
+                    <div className="flex items-center gap-2">
+                      <InputInfo className="text-ws-error-600" />
+                      <span className="text-sm text-ws-error-600">{fieldErrors[question.id]}</span>
+                    </div>
+                  )}
 
                   {question.isMultiSelect ? (
                     <div className="flex flex-col gap-3">
@@ -467,21 +543,53 @@ export default function AdditionalQuestions() {
                             placeholder="Select Month"
                             size="md"
                             className="w-full max-w-xs rounded-lg"
+                            selectedKey={annualRaiseMonth}
+                            onSelectionChange={key => {
+                              setAnnualRaiseMonth(String(key));
+                              if (fieldErrors["annualRaiseMonth"]) {
+                                setFieldErrors(prev => ({ ...prev, annualRaiseMonth: "" }));
+                              }
+                            }}
                           >
                             {item => <SelectItem id={item.id} label={item.label} />}
                           </Select>
+                          {fieldErrors["annualRaiseMonth"] && (
+                            <div className="flex items-center gap-2">
+                              <InputInfo className="text-ws-error-600" />
+                              <span className="text-sm text-ws-error-600">
+                                {fieldErrors["annualRaiseMonth"]}
+                              </span>
+                            </div>
+                          )}
                         </div>
                       )}
                     </>
                   ) : (
-                    <Select
-                      items={question.options}
-                      placeholder="Select payroll provider"
-                      size="md"
-                      className="w-full max-w-xs rounded-lg"
-                    >
-                      {item => <SelectItem id={item.id} label={item.label} />}
-                    </Select>
+                    <>
+                      {fieldErrors["payroll-provider"] && (
+                        <div className="flex items-center gap-2">
+                          <InputInfo className="text-ws-error-600" />
+                          <span className="text-sm text-ws-error-600">
+                            {fieldErrors["payroll-provider"]}
+                          </span>
+                        </div>
+                      )}
+                      <Select
+                        items={question.options}
+                        placeholder="Select payroll provider"
+                        size="md"
+                        className="w-full max-w-xs rounded-lg"
+                        selectedKey={payrollProvider}
+                        onSelectionChange={key => {
+                          setPayrollProvider(String(key));
+                          if (fieldErrors["payroll-provider"]) {
+                            setFieldErrors(prev => ({ ...prev, "payroll-provider": "" }));
+                          }
+                        }}
+                      >
+                        {item => <SelectItem id={item.id} label={item.label} />}
+                      </Select>
+                    </>
                   )}
                 </div>
               ))}
@@ -500,9 +608,33 @@ export default function AdditionalQuestions() {
             <div className="space-y-8">
               {benefitsQuestions.map((question, index) => (
                 <div key={question.id} className="space-y-3">
-                  <Label isRequired={question.required} className="text-base text-ws-text-primary">
-                    {index + 1}. {question.question}
-                  </Label>
+                  <div className="flex items-center gap-2">
+                    <Label
+                      isRequired={question.required}
+                      className="text-base text-ws-text-primary"
+                    >
+                      {index + 1}. {question.question}
+                    </Label>
+                    {question.tooltip && (
+                      <Tooltip
+                        title={question.tooltip.title}
+                        description={question.tooltip.description}
+                        placement="top"
+                        arrow={true}
+                      >
+                        <TooltipTrigger className="group relative flex cursor-pointer flex-col items-center gap-2 text-fg-quaternary transition duration-100 ease-linear hover:text-fg-quaternary_hover focus:text-fg-quaternary_hover">
+                          <InfoCircle className="size-5 text-ws-gray-70" />
+                        </TooltipTrigger>
+                      </Tooltip>
+                    )}
+                  </div>
+
+                  {question.required && !question.isDropdown && fieldErrors[question.id] && (
+                    <div className="flex items-center gap-2">
+                      <InputInfo className="text-ws-error-600" />
+                      <span className="text-sm text-ws-error-600">{fieldErrors[question.id]}</span>
+                    </div>
+                  )}
 
                   {!question.isDropdown ? (
                     <RadioGroup
@@ -523,14 +655,31 @@ export default function AdditionalQuestions() {
                       ))}
                     </RadioGroup>
                   ) : (
-                    <Select
-                      items={question.options}
-                      placeholder="Select Month"
-                      size="md"
-                      className="w-full max-w-xs rounded-lg"
-                    >
-                      {item => <SelectItem id={item.id} label={item.label} />}
-                    </Select>
+                    <>
+                      {fieldErrors[question.id] && (
+                        <div className="flex items-center gap-2">
+                          <InputInfo className="text-ws-error-600" />
+                          <span className="text-sm text-ws-error-600">
+                            {fieldErrors[question.id]}
+                          </span>
+                        </div>
+                      )}
+                      <Select
+                        items={question.options}
+                        placeholder="Select Month"
+                        size="md"
+                        className="w-full max-w-xs rounded-lg"
+                        selectedKey={benefitsEnrollmentMonth}
+                        onSelectionChange={key => {
+                          setBenefitsEnrollmentMonth(String(key));
+                          if (fieldErrors[question.id]) {
+                            setFieldErrors(prev => ({ ...prev, [question.id]: "" }));
+                          }
+                        }}
+                      >
+                        {item => <SelectItem id={item.id} label={item.label} />}
+                      </Select>
+                    </>
                   )}
                 </div>
               ))}
@@ -549,6 +698,14 @@ export default function AdditionalQuestions() {
                     <Label isRequired={question.required} className="text-base">
                       {index + 3}. {question.question}
                     </Label>
+                    {fieldErrors[question.id] && (
+                      <div className="flex items-center gap-2">
+                        <InputInfo className="text-ws-error-600" />
+                        <span className="text-sm text-ws-error-600">
+                          {fieldErrors[question.id]}
+                        </span>
+                      </div>
+                    )}
 
                     {
                       <RadioGroup
@@ -589,6 +746,14 @@ export default function AdditionalQuestions() {
                 <Label className="text-base font-medium">
                   1. Please select your workforce goals.
                 </Label>
+                {fieldErrors["selectedGoals"] && (
+                  <div className="flex items-center gap-2">
+                    <InputInfo className="text-ws-error-600" />
+                    <span className="text-sm text-ws-error-600">
+                      {fieldErrors["selectedGoals"]}
+                    </span>
+                  </div>
+                )}
 
                 {/* Goals by Category */}
                 {goalsData.map(categoryGroup => (
@@ -620,9 +785,17 @@ export default function AdditionalQuestions() {
 
               {/* Question 2: Rank Top 3 Goals */}
               <div className="pt-4">
-                <Label className="text-base font-medium">
-                  2. Rank your company's top three workforce goals (from above list).
-                </Label>
+                <RankingList
+                  label="Rank your company's top three workforce goals (from above list)."
+                  isRequired={true}
+                  displayOrder={2}
+                  availableOptions={goalsData
+                    .flatMap(cat => cat.goals.map(g => ({ label: g.label, value: g.id })))
+                    .filter(opt => goalsAnswers.selectedGoals.includes(opt.value))}
+                  value={goalsAnswers.topThreeGoals}
+                  onChange={value => setGoalsAnswers(prev => ({ ...prev, topThreeGoals: value }))}
+                  maxItems={3}
+                />
               </div>
             </div>
           </div>
@@ -633,8 +806,10 @@ export default function AdditionalQuestions() {
             size="md"
             iconTrailing={<ChevronRight data-icon />}
             className="text-base font-semibold min-w-30 bg-ws-navy-800 text-ws-base-white hover:bg-ws-navy-800 focus:bg-ws-navy-800 active:bg-ws-navy-800"
+            onClick={handleSubmit}
+            isDisabled={isSubmitting}
           >
-            Next
+            {isSubmitting ? "Submitting..." : "Next"}
           </Button>
         </div>
       </div>
