@@ -18,6 +18,7 @@ import { updateEmailAddress } from "@/store/slices/profileSlice";
 import { selectUser } from "@/store/selectors/authSelectors";
 import { selectProfileLoading } from "@/store/selectors/profileSelectors";
 import { validateEmail } from "@/utils/validation";
+import { Label } from "react-aria-components";
 
 interface UpdateYourEmailModalProps {
   isOpen: boolean;
@@ -140,7 +141,7 @@ export const UpdateYourEmailModal = ({
         <ModalHeader>
           <div className="flex items-center justify-between w-full relative">
             <div className="flex flex-col gap-1">
-              <ModalTitle>Update your email</ModalTitle>
+              <ModalTitle>Update your information</ModalTitle>
               <ModalDescription>
                 {showSuccess
                   ? "Check your inbox for a verification link and follow the steps to confirm the update."
@@ -180,27 +181,54 @@ export const UpdateYourEmailModal = ({
             )}
 
             <div className="flex flex-col gap-4">
+              <div className="grid grid-cols-1 xl:grid-cols-2 gap-6">
+                <InputGroup>
+                  <div className="flex flex-col gap-1.5 w-full">
+                    <Label className="text-sm font-medium text-ws-text-secondary">
+                      First Name <span className="text-ws-error-600">*</span>
+                    </Label>
+
+                    <Input size="md" placeholder="First Name" />
+                  </div>
+                </InputGroup>
+                <InputGroup className="relative">
+                  <div className="flex flex-col gap-1.5 w-full">
+                    <Label className="text-sm font-medium text-ws-text-secondary">
+                      Last Name <span className="text-ws-error-600">*</span>
+                    </Label>
+                    <Input size="md" placeholder="Last Name" />
+                  </div>
+                </InputGroup>
+              </div>
               <InputGroup className="relative">
-                <Input
-                  icon={Mail01}
-                  size="md"
-                  label="Current Email"
-                  placeholder="current@email.com"
-                  value={userData?.businessEmail || ""}
-                  isDisabled={true}
-                />
+                <div className="flex flex-col gap-1.5 w-full">
+                  <Label className="text-sm font-medium text-ws-text-secondary">
+                    Current Email <span className="text-ws-error-600">*</span>
+                  </Label>
+                  <Input
+                    icon={Mail01}
+                    iconClassName="text-ws-gray-400"
+                    size="md"
+                    placeholder="current@email.com"
+                    value={userData?.businessEmail || ""}
+                    isDisabled={true}
+                  />
+                </div>
               </InputGroup>
 
               <InputGroup className="relative">
-                <Input
-                  isRequired
-                  icon={Mail01}
-                  size="md"
-                  label="New Email"
-                  placeholder="new@email.com"
-                  value={newEmail}
-                  onChange={handleNewEmailChange}
-                />
+                <div className="flex flex-col gap-1.5 w-full">
+                  <Label className="text-sm font-medium text-ws-text-secondary">New Email</Label>
+                  <Input
+                    isRequired
+                    icon={Mail01}
+                    iconClassName="text-ws-gray-400"
+                    size="md"
+                    placeholder="new@email.com"
+                    value={newEmail}
+                    onChange={handleNewEmailChange}
+                  />
+                </div>
               </InputGroup>
             </div>
           </ModalBody>

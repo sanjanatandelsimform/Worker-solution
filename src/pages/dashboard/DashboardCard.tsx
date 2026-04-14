@@ -55,9 +55,9 @@ export default function DashboardCard({
               {avatarIconSrc}
             </div>
           ))}
-        <div className="flex flex-col gap-2">
-          <h2 className={`text-ws-text-primary-30 text-xl font-medium ${titleClass}`}>{title}</h2>
-          <p className={`text-ws-gray-90 text-base mt-1 ${descriptionClass}`}>{description}</p>
+        <div className="flex flex-col">
+          <h2 className={`text-ws-navy-900 text-xl font-medium ${titleClass}`}>{title}</h2>
+          <p className={`text-ws-navy-900 text-base mt-1 ${descriptionClass}`}>{description}</p>
         </div>
       </div>
       {toggleButton && (
