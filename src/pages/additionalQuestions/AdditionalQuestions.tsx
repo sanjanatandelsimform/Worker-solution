@@ -1,5 +1,6 @@
 import { Button } from "@/components/base/buttons/button";
 import { ChevronRight, InfoCircle, XClose } from "@untitledui/icons";
+import { InputInfo } from "@/assets/icons/inputInfo";
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { RadioButton, RadioGroup } from "@/components/base/radio-buttons/radio-buttons";
@@ -232,7 +233,7 @@ export default function AdditionalQuestions() {
   const [benefitsEnrollmentMonth, setBenefitsEnrollmentMonth] = useState<string>("");
   // T015: Hook + validation state
   const { isSubmitting, error, success, submit, clearError } = useSubmitFinchAssessment();
-  const [validationError, setValidationError] = useState<string | null>(null);
+  const [fieldErrors, setFieldErrors] = useState<Record<string, string>>({});
 
   const handleClose = () => {
     navigate("/dashboard");
@@ -240,34 +241,43 @@ export default function AdditionalQuestions() {
 
   // T016: Form submission handler with validation
   const handleSubmit = async () => {
+    const newErrors: Record<string, string> = {};
+
     // Minimum 3 goals required for ranking
     if (goalsAnswers.selectedGoals.length < 3) {
-      setValidationError("Please select at least 3 workforce goals to rank them.");
-      return;
+      newErrors["selectedGoals"] = "Please select at least 3 workforce goals to rank them.";
     }
     // Required field validation
+    const benefitsUpdates = answers["benefits-updates"];
+    if (!benefitsUpdates || (Array.isArray(benefitsUpdates) && benefitsUpdates.length === 0)) {
+      newErrors["benefits-updates"] = "This field is required.";
+    }
     if (!answers["deskless-employees"]) {
-      setValidationError("Please answer all required fields.");
-      return;
+      newErrors["deskless-employees"] = "This field is required.";
     }
-    if (!answers["retirement-vesting-period"]) {
-      setValidationError("Please answer all required fields.");
-      return;
-    }
-    if (!answers["retirement-auto-enroll"]) {
-      setValidationError("Please answer all required fields.");
-      return;
-    }
-    if (!answers["retirement-hardship-withdrawals"]) {
-      setValidationError("Please answer all required fields.");
-      return;
+    if (!answers["annual-raises"]) {
+      newErrors["annual-raises"] = "This field is required.";
     }
     // annualRaiseMonth is required when offersAnnualRaises is true
     if (answers["annual-raises"] === "yes-raises" && !annualRaiseMonth) {
-      setValidationError("monthly-raise");
+      newErrors["annualRaiseMonth"] = "Please select a month.";
+    }
+    if (!answers["retirement-vesting-period"]) {
+      newErrors["retirement-vesting-period"] = "This field is required.";
+    }
+    if (!answers["retirement-auto-enroll"]) {
+      newErrors["retirement-auto-enroll"] = "This field is required.";
+    }
+    if (!answers["retirement-hardship-withdrawals"]) {
+      newErrors["retirement-hardship-withdrawals"] = "This field is required.";
+    }
+
+    if (Object.keys(newErrors).length > 0) {
+      setFieldErrors(newErrors);
       return;
     }
-    setValidationError(null);
+
+    setFieldErrors({});
     const payload = buildFinchAssessmentPayload(
       answers,
       goalsAnswers,
@@ -290,6 +300,9 @@ export default function AdditionalQuestions() {
       ...prev,
       [questionId]: value,
     }));
+    if (fieldErrors[questionId]) {
+      setFieldErrors(prev => ({ ...prev, [questionId]: "" }));
+    }
   };
 
   const handleMultiSelectToggle = (questionId: string, optionId: string) => {
@@ -303,6 +316,9 @@ export default function AdditionalQuestions() {
           : [...currentArray, optionId],
       };
     });
+    if (fieldErrors[questionId]) {
+      setFieldErrors(prev => ({ ...prev, [questionId]: "" }));
+    }
   };
 
   const handleGoalToggle = (goalId: string) => {
@@ -312,6 +328,9 @@ export default function AdditionalQuestions() {
         ? prev.selectedGoals.filter(id => id !== goalId)
         : [...prev.selectedGoals, goalId],
     }));
+    if (fieldErrors["selectedGoals"]) {
+      setFieldErrors(prev => ({ ...prev, selectedGoals: "" }));
+    }
   };
 
   // const handleTopThreeGoalChange = (position: number, goalId: string) => {
@@ -368,13 +387,7 @@ export default function AdditionalQuestions() {
           />
         )}
         {error && <ErrorMessage errorType="danger" errorMessage={error} onClose={clearError} />}
-        {validationError && validationError !== "monthly-raise" && (
-          <ErrorMessage
-            errorType="danger"
-            errorMessage={validationError}
-            onClose={() => setValidationError(null)}
-          />
-        )}
+
         <div className="space-y-6">
           <div className="w-full">
             <h2 className="text-3xl font-medium mb-2 text-ws-text-primary">Almost there!</h2>
@@ -398,6 +411,12 @@ export default function AdditionalQuestions() {
                   <Label isRequired={question.required} className="text-base text-ws-text-primary">
                     {index + 1}. {question.question}
                   </Label>
+                  {question.required && fieldErrors[question.id] && (
+                    <div className="flex items-center gap-2">
+                      <InputInfo className="text-ws-error-600" />
+                      <span className="text-sm text-ws-error-600">{fieldErrors[question.id]}</span>
+                    </div>
+                  )}
 
                   {question.isMultiSelect ? (
                     <div className="flex flex-col gap-3">
@@ -458,6 +477,12 @@ export default function AdditionalQuestions() {
                   <Label isRequired={question.required} className="text-base text-ws-text-primary">
                     {index + 1}. {question.question}
                   </Label>
+                  {question.required && fieldErrors[question.id] && (
+                    <div className="flex items-center gap-2">
+                      <InputInfo className="text-ws-error-600" />
+                      <span className="text-sm text-ws-error-600">{fieldErrors[question.id]}</span>
+                    </div>
+                  )}
 
                   {question.isMultiSelect ? (
                     <div className="flex flex-col gap-3">
@@ -512,13 +537,22 @@ export default function AdditionalQuestions() {
                             size="md"
                             className="w-full max-w-xs rounded-lg"
                             selectedKey={annualRaiseMonth}
-                            onSelectionChange={key => setAnnualRaiseMonth(String(key))}
+                            onSelectionChange={key => {
+                              setAnnualRaiseMonth(String(key));
+                              if (fieldErrors["annualRaiseMonth"]) {
+                                setFieldErrors(prev => ({ ...prev, annualRaiseMonth: "" }));
+                              }
+                            }}
                           >
                             {item => <SelectItem id={item.id} label={item.label} />}
                           </Select>
-                          {/* T017: Inline validation error when month not selected */}
-                          {validationError === "monthly-raise" && !annualRaiseMonth && (
-                            <p className="text-sm text-destructive mt-1">Please select a month</p>
+                          {fieldErrors["annualRaiseMonth"] && (
+                            <div className="flex items-center gap-2">
+                              <InputInfo className="text-ws-error-600" />
+                              <span className="text-sm text-ws-error-600">
+                                {fieldErrors["annualRaiseMonth"]}
+                              </span>
+                            </div>
                           )}
                         </div>
                       )}
@@ -620,6 +654,14 @@ export default function AdditionalQuestions() {
                     <Label isRequired={question.required} className="text-base">
                       {index + 3}. {question.question}
                     </Label>
+                    {fieldErrors[question.id] && (
+                      <div className="flex items-center gap-2">
+                        <InputInfo className="text-ws-error-600" />
+                        <span className="text-sm text-ws-error-600">
+                          {fieldErrors[question.id]}
+                        </span>
+                      </div>
+                    )}
 
                     {
                       <RadioGroup
@@ -660,6 +702,14 @@ export default function AdditionalQuestions() {
                 <Label className="text-base font-medium">
                   1. Please select your workforce goals.
                 </Label>
+                {fieldErrors["selectedGoals"] && (
+                  <div className="flex items-center gap-2">
+                    <InputInfo className="text-ws-error-600" />
+                    <span className="text-sm text-ws-error-600">
+                      {fieldErrors["selectedGoals"]}
+                    </span>
+                  </div>
+                )}
 
                 {/* Goals by Category */}
                 {goalsData.map(categoryGroup => (
