@@ -87,7 +87,7 @@ const compensationQuestions = [
   {
     id: "payroll-provider",
     question: "Who is your company's payroll provider?",
-    required: false,
+    required: true,
     isDropdown: true,
     options: [
       { id: "ADP", label: "ADP" },
@@ -165,7 +165,7 @@ const benefitsQuestions = [
   {
     id: "benefits-broker",
     question: "Do you work with a benefits broker?",
-    required: false,
+    required: true,
     tooltip: {
       title: "A benefits broker is lorem ipsum dolor sit amet, consectetur adipiscing elit ",
       description: "",
@@ -179,7 +179,7 @@ const benefitsQuestions = [
   {
     id: "benefits-enrollment-period",
     question: "When is your benefits enrollment period?",
-    required: false,
+    required: true,
     isDropdown: true,
     options: monthOptions,
   },
@@ -250,26 +250,35 @@ export default function AdditionalQuestions() {
     // Required field validation
     const benefitsUpdates = answers["benefits-updates"];
     if (!benefitsUpdates || (Array.isArray(benefitsUpdates) && benefitsUpdates.length === 0)) {
-      newErrors["benefits-updates"] = "This field is required.";
+      newErrors["benefits-updates"] = "Select an option";
     }
     if (!answers["deskless-employees"]) {
-      newErrors["deskless-employees"] = "This field is required.";
+      newErrors["deskless-employees"] = "Select an option";
     }
     if (!answers["annual-raises"]) {
-      newErrors["annual-raises"] = "This field is required.";
+      newErrors["annual-raises"] = "Select an option";
+    }
+    if (!payrollProvider) {
+      newErrors["payroll-provider"] = "Select an option";
     }
     // annualRaiseMonth is required when offersAnnualRaises is true
     if (answers["annual-raises"] === "yes-raises" && !annualRaiseMonth) {
       newErrors["annualRaiseMonth"] = "Please select a month.";
     }
+    if (!answers["benefits-broker"]) {
+      newErrors["benefits-broker"] = "Select an option";
+    }
+    if (!benefitsEnrollmentMonth) {
+      newErrors["benefits-enrollment-period"] = "Select an option";
+    }
     if (!answers["retirement-vesting-period"]) {
-      newErrors["retirement-vesting-period"] = "This field is required.";
+      newErrors["retirement-vesting-period"] = "Select an option";
     }
     if (!answers["retirement-auto-enroll"]) {
-      newErrors["retirement-auto-enroll"] = "This field is required.";
+      newErrors["retirement-auto-enroll"] = "Select an option";
     }
     if (!answers["retirement-hardship-withdrawals"]) {
-      newErrors["retirement-hardship-withdrawals"] = "This field is required.";
+      newErrors["retirement-hardship-withdrawals"] = "Select an option";
     }
 
     if (Object.keys(newErrors).length > 0) {
@@ -477,7 +486,7 @@ export default function AdditionalQuestions() {
                   <Label isRequired={question.required} className="text-base text-ws-text-primary">
                     {index + 1}. {question.question}
                   </Label>
-                  {question.required && fieldErrors[question.id] && (
+                  {question.required && !question.isDropdown && fieldErrors[question.id] && (
                     <div className="flex items-center gap-2">
                       <InputInfo className="text-ws-error-600" />
                       <span className="text-sm text-ws-error-600">{fieldErrors[question.id]}</span>
@@ -558,16 +567,31 @@ export default function AdditionalQuestions() {
                       )}
                     </>
                   ) : (
-                    <Select
-                      items={question.options}
-                      placeholder="Select payroll provider"
-                      size="md"
-                      className="w-full max-w-xs rounded-lg"
-                      selectedKey={payrollProvider}
-                      onSelectionChange={key => setPayrollProvider(String(key))}
-                    >
-                      {item => <SelectItem id={item.id} label={item.label} />}
-                    </Select>
+                    <>
+                      {fieldErrors["payroll-provider"] && (
+                        <div className="flex items-center gap-2">
+                          <InputInfo className="text-ws-error-600" />
+                          <span className="text-sm text-ws-error-600">
+                            {fieldErrors["payroll-provider"]}
+                          </span>
+                        </div>
+                      )}
+                      <Select
+                        items={question.options}
+                        placeholder="Select payroll provider"
+                        size="md"
+                        className="w-full max-w-xs rounded-lg"
+                        selectedKey={payrollProvider}
+                        onSelectionChange={key => {
+                          setPayrollProvider(String(key));
+                          if (fieldErrors["payroll-provider"]) {
+                            setFieldErrors(prev => ({ ...prev, "payroll-provider": "" }));
+                          }
+                        }}
+                      >
+                        {item => <SelectItem id={item.id} label={item.label} />}
+                      </Select>
+                    </>
                   )}
                 </div>
               ))}
@@ -607,6 +631,13 @@ export default function AdditionalQuestions() {
                     )}
                   </div>
 
+                  {question.required && !question.isDropdown && fieldErrors[question.id] && (
+                    <div className="flex items-center gap-2">
+                      <InputInfo className="text-ws-error-600" />
+                      <span className="text-sm text-ws-error-600">{fieldErrors[question.id]}</span>
+                    </div>
+                  )}
+
                   {!question.isDropdown ? (
                     <RadioGroup
                       value={(answers[question.id] as string) || ""}
@@ -626,16 +657,31 @@ export default function AdditionalQuestions() {
                       ))}
                     </RadioGroup>
                   ) : (
-                    <Select
-                      items={question.options}
-                      placeholder="Select Month"
-                      size="md"
-                      className="w-full max-w-xs rounded-lg"
-                      selectedKey={benefitsEnrollmentMonth}
-                      onSelectionChange={key => setBenefitsEnrollmentMonth(String(key))}
-                    >
-                      {item => <SelectItem id={item.id} label={item.label} />}
-                    </Select>
+                    <>
+                      {fieldErrors[question.id] && (
+                        <div className="flex items-center gap-2">
+                          <InputInfo className="text-ws-error-600" />
+                          <span className="text-sm text-ws-error-600">
+                            {fieldErrors[question.id]}
+                          </span>
+                        </div>
+                      )}
+                      <Select
+                        items={question.options}
+                        placeholder="Select Month"
+                        size="md"
+                        className="w-full max-w-xs rounded-lg"
+                        selectedKey={benefitsEnrollmentMonth}
+                        onSelectionChange={key => {
+                          setBenefitsEnrollmentMonth(String(key));
+                          if (fieldErrors[question.id]) {
+                            setFieldErrors(prev => ({ ...prev, [question.id]: "" }));
+                          }
+                        }}
+                      >
+                        {item => <SelectItem id={item.id} label={item.label} />}
+                      </Select>
+                    </>
                   )}
                 </div>
               ))}
