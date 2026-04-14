@@ -174,7 +174,7 @@ export const SettingsPage = () => {
     try {
       await dispatch(retakeAssessmentAction()).unwrap();
       setIsRetakeAssessmentModalOpen(false);
-      navigate("/assessment");
+      navigate("/dashboard");
     } catch (error) {
       setIsRetakeAssessmentModalOpen(false);
       setRetakeError(typeof error === "string" ? error : "Failed to retake assessment");
