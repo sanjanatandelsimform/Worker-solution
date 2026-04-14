@@ -66,7 +66,7 @@ const questions = [
     options: [
       { id: ">15min", label: "> 15min" },
       { id: "15-30min", label: "15-30min" },
-      { id: "30min-1hr", label: "30-1hr min" },
+      { id: "30-1hr", label: "30-1hr min" },
       { id: "1hr+", label: "1hr +" },
     ],
   },
