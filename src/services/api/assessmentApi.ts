@@ -81,18 +81,20 @@ export interface ApiError {
 }
 
 export interface AssessmentData {
-  id: string;
-  userId: string;
-  createdAt: string;
-  updatedAt: string;
-  sections: {
-    workforce?: Record<string, unknown>;
-    compensation?: Record<string, unknown>;
-    benefits?: Record<string, unknown>;
-    goals?: Record<string, unknown>;
+  assessmentType: string;
+  data: {
+    assessmentResponseId: number;
+    userId: string;
+    status: string;
+    sections: {
+      workforce?: Record<string, unknown>;
+      compensation?: Record<string, unknown>;
+      benefits?: Record<string, unknown>;
+      goals?: Record<string, unknown>;
+    };
+    createdAt: string;
+    updatedAt: string;
   };
-  status: "in_progress" | "completed";
-  completionPercentage: number;
 }
 
 export type SectionType = "workforce" | "compensation" | "benefits" | "goals";

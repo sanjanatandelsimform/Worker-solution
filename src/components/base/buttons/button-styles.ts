@@ -100,6 +100,13 @@ export const styles = sortCx({
         "*:data-icon:text-fg-error-secondary hover:*:data-icon:text-fg-error-primary",
       ].join(" "),
     },
+    "link-disable-color": {
+      root: [
+        "max-w-38 justify-normal rounded py-1! px-3! text-ws-cyan-60 hover:text-ws-cyan-60_hover",
+        "*:data-text:underline *:data-text:decoration-transparent *:data-text:underline-offset-2 hover:*:data-text:decoration-current shadow-none ring-0 border-0",
+        "*:data-icon:text-fg-brand-secondary_alt hover:*:data-icon:text-fg-brand-secondary_hover",
+      ].join(" "),
+    },
   },
 });
 

@@ -43,7 +43,7 @@ export default function AssessmentWorkforcePage() {
 
   //Check if email is verified before allowing access
   useEffect(() => {
-    if (!user?.emailVerify || assessmentData?.status === "completed") {
+    if (!user?.emailVerify || assessmentData?.data?.status === "completed") {
       navigate("/dashboard");
     }
   }, [user?.emailVerify, assessmentData, navigate]);
@@ -133,7 +133,7 @@ export default function AssessmentWorkforcePage() {
   const isLoadingGet = currentStep === null;
   // Add a derived "ready to render" flag
   const shouldRedirect =
-    !isLoading && (!user?.emailVerify || assessmentData?.status === "completed");
+    !isLoading && (!user?.emailVerify || assessmentData?.data?.status === "completed");
 
   const isReadyToRender = !isLoading && !shouldRedirect;
 
