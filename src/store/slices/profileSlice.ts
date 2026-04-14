@@ -20,12 +20,13 @@ const initialState: ProfileState = {
 
 // Async thunks
 export const updateProfileData = createAsyncThunk<
-  void,
+  ProfileApiResponse,
   ProfileUpdatePayload,
   { rejectValue: string }
 >("profile/updateProfile", async (payload, { rejectWithValue }) => {
   try {
-    await profileService.updateProfile(payload);
+    const user = await profileService.updateProfile(payload);
+    return { success: true, data: { user } } as ProfileApiResponse;
   } catch (error) {
     return rejectWithValue(error instanceof Error ? error.message : "Failed to update profile");
   }
@@ -131,7 +132,7 @@ const profileSlice = createSlice({
         state.loading = true;
         state.error = null;
       })
-      .addCase(updateProfileData.fulfilled, state => {
+      .addCase(updateProfileData.fulfilled, (state, _action) => {
         state.loading = false;
         state.error = null;
       })
