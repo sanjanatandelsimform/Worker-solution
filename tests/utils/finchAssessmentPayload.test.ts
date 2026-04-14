@@ -68,13 +68,13 @@ describe("buildFinchAssessmentPayload", () => {
     expect(unsureResult.benefits.workWithBenefitsBroker).toBe("Unsure");
   });
 
-  it("submits multi-select fields as empty arrays when nothing is selected", () => {
+  it("omits multi-select fields from payload when nothing is selected", () => {
     const result = buildFinchAssessmentPayload(emptyAnswers, emptyGoals, "", "", "");
-    expect(result.workforce.communicationMethods).toEqual([]);
-    expect(result.workforce.commuteMethods).toEqual([]);
-    expect(result.compensation.shortTermIncentives).toEqual([]);
-    expect(result.compensation.longTermIncentives).toEqual([]);
-    expect(result.goals.workforceGoals).toEqual([]);
+    expect(result.workforce.communicationMethods).toBeUndefined();
+    expect(result.workforce.commuteMethods).toBeUndefined();
+    expect(result.compensation.shortTermIncentives).toBeUndefined();
+    expect(result.compensation.longTermIncentives).toBeUndefined();
+    expect(result.goals.workforceGoals).toBeUndefined();
   });
 
   it("maps selected goal IDs (= API values) directly to workforceGoals", () => {
