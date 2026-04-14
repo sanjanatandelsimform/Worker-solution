@@ -787,6 +787,7 @@ export const SettingsPage = () => {
         onClose={() => setIsChangePasswordModalOpen(false)}
       />
       <UpdateYourEmailModal
+        key={userData?.firstName + userData?.lastName}
         isOpen={isUpdateEmailModalOpen}
         onClose={() => setIsUpdateEmailModalOpen(false)}
         getResponse={handleGetResponse}

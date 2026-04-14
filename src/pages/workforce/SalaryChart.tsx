@@ -13,7 +13,7 @@ const data: ChartItem[] = [
   { label: "50k - 70k", min: 70, boxStart: 150, boxEnd: 370, max: 430 },
   { label: "70k - 90k", min: 82, boxStart: 125, boxEnd: 380, max: 440 },
   { label: "90k - 110k", min: 82, boxStart: 100, boxEnd: 330, max: 410 },
-  { label: "90k - 110k", min: 67, boxStart: 120, boxEnd: 305, max: 360 }
+  { label: "90k - 110k", min: 67, boxStart: 120, boxEnd: 305, max: 360 },
 ];
 
 const SalaryRangeChart: React.FC = () => {
@@ -53,8 +53,7 @@ const SalaryRangeChart: React.FC = () => {
       const barWidth = columnSpacing * 0.35;
       const maxValue = 500;
 
-      const scaleY = (value: number) =>
-        chartBottom - (value / maxValue) * chartHeight;
+      const scaleY = (value: number) => chartBottom - (value / maxValue) * chartHeight;
 
       const drawGrid = () => {
         ctx.strokeStyle = "#E5E7EB";

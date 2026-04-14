@@ -137,7 +137,12 @@ export const InputBase = ({
 
       {/* Prefix text */}
       {prefix && (
-        <span className={cx("absolute left-3 my-auto text-md text-ws-text-tertiary", isDisabled && "text-disabled")}>
+        <span
+          className={cx(
+            "absolute left-3 my-auto text-md text-ws-text-tertiary",
+            isDisabled && "text-disabled"
+          )}
+        >
           {prefix}
         </span>
       )}

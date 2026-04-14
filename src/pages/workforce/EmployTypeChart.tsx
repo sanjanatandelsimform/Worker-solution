@@ -1,4 +1,4 @@
-import { useEffect, useRef } from 'react';
+import { useEffect, useRef } from "react";
 
 interface DonutChartProps {
   percentage: number;
@@ -15,12 +15,12 @@ interface DonutChartProps {
 // Helper function to convert Tailwind color class to hex
 const getColorFromClass = (colorClass: string): string => {
   const colorMap: Record<string, string> = {
-    'color-ws-progress-primary': '#89D4CC',
-    'bg-ws-progress-primary': '#E6EDED',
-    'color-ws-progress-secondary': '#79C2E4',
-    'bg-ws-progress-secondary': '#EEF7FC',
-    'color-ws-progress-turnery': '#3B8383',
-    'bg-ws-progress-turnery': '#E6EDED',
+    "color-ws-progress-primary": "#89D4CC",
+    "bg-ws-progress-primary": "#E6EDED",
+    "color-ws-progress-secondary": "#79C2E4",
+    "bg-ws-progress-secondary": "#EEF7FC",
+    "color-ws-progress-turnery": "#3B8383",
+    "bg-ws-progress-turnery": "#E6EDED",
     // 'bg-ws-primary-100': '#A8D5E2',
     // 'bg-ws-primary-300': '#5B8FA3',
     // 'bg-ws-light-teal-25': '#E8E8E8',
@@ -34,11 +34,11 @@ export default function DonutChart({
   percentage,
   label,
   progressColor,
-  backgroundColor = 'bg-ws-light-teal-25',
+  backgroundColor = "bg-ws-light-teal-25",
   width = 200,
   height = 200,
   strokeWidth = 30,
-  className = '',
+  className = "",
 }: Readonly<DonutChartProps>) {
   const canvasRef = useRef<HTMLCanvasElement>(null);
 
@@ -46,7 +46,7 @@ export default function DonutChart({
     const canvas = canvasRef.current;
     if (!canvas) return;
 
-    const ctx = canvas.getContext('2d');
+    const ctx = canvas.getContext("2d");
     if (!ctx) return;
 
     // Set canvas size with DPR for retina displays
@@ -89,9 +89,9 @@ export default function DonutChart({
     ctx.stroke();
 
     // Draw center text
-    ctx.fillStyle = '#1a1a1a'; // Dark text color
-    ctx.textAlign = 'center';
-    ctx.textBaseline = 'middle';
+    ctx.fillStyle = "#1a1a1a"; // Dark text color
+    ctx.textAlign = "center";
+    ctx.textBaseline = "middle";
 
     // Percentage text (larger)
     ctx.font = `28px bold Inter, sans-serif`;

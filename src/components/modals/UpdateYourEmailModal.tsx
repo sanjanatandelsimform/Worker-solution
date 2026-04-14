@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import {
   Modal,
   ModalContent,
@@ -44,16 +44,16 @@ export const UpdateYourEmailModal = ({
 
   const [newEmail, setNewEmail] = useState("");
   const [newEmailError, setNewEmailError] = useState("");
-  const [firstName, setFirstName] = useState("");
-  const [lastName, setLastName] = useState("");
   const [showError, setShowError] = useState(false);
   const [showSuccess, setShowSuccess] = useState(false);
+  const [firstName, setFirstName] = useState(() => userData?.firstName ?? "");
+  const [lastName, setLastName] = useState(() => userData?.lastName ?? "");
 
-  useEffect(() => {
-    if (!userData) return;
-    setFirstName(userData.firstName ?? "");
-    setLastName(userData.lastName ?? "");
-  }, [userData]);
+  // useEffect(() => {
+  //   if (!userData) return;
+  //   setFirstName(userData.firstName ?? "");
+  //   setLastName(userData.lastName ?? "");
+  // }, [userData]);
 
   const hasChanges =
     firstName.trim() !== (userData?.firstName ?? "").trim() ||
