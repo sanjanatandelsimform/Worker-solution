@@ -9,7 +9,7 @@ import { SelectItem } from "@/components/base/select/select-item";
 import { Checkbox } from "@/components/base/checkbox/checkbox";
 
 interface QuestionAnswer {
-  [key: string]: string;
+  [key: string]: string | string[];
 }
 
 interface GoalsAnswer {
@@ -20,8 +20,9 @@ interface GoalsAnswer {
 const questions = [
   {
     id: "benefits-updates",
-    question: "How do employees receive benefits updates?",
+    question: "Where are employees most likely to receive benefits updates?",
     required: true,
+    isMultiSelect: true,
     options: [
       { id: "work-email", label: "Work (email and/or text)" },
       { id: "personal-device", label: "Personal device (email and/or text)" },
@@ -38,12 +39,28 @@ const questions = [
     ],
   },
   {
-    id: "commute-distance",
-    question: "Do most employees commute more than 15 miles to work?",
+    id: "commute-methods",
+    question: "What is the most common commute methods among your employees?",
+    required: false,
+    isMultiSelect: true,
+    options: [
+      { id: "train", label: "Train" },
+      { id: "bus", label: "Bus" },
+      { id: "car", label: "Car" },
+      { id: "bike", label: "Bike" },
+      { id: "walking", label: "Walking" },
+      { id: "group-transportation", label: "Group Transportation (i.e. Carpooling, Company bus)" },
+    ],
+  },
+  {
+    id: "commute-duration",
+    question: "How long are employees commuting to the office (estimated average time)",
     required: false,
     options: [
-      { id: "yes-commute", label: "Yes" },
-      { id: "no-commute", label: "No" },
+      { id: "commute-under-15min", label: "> 15min" },
+      { id: "commute-15-30min", label: "15-30min" },
+      { id: "commute-30-1hr", label: "30-1hr min" },
+      { id: "commute-1hr-plus", label: "1hr +" },
     ],
   },
 ];
@@ -59,16 +76,7 @@ const compensationQuestions = [
     ],
     hasConditional: true,
   },
-  {
-    id: "hr-payroll-inhouse",
-    question: "Do you handle HR/payroll in-house?",
-    required: true,
-    options: [
-      { id: "yes-inhouse", label: "Yes" },
-      { id: "no-inhouse", label: "No" },
-      { id: "unsure-inhouse", label: "Unsure" },
-    ],
-  },
+
   {
     id: "payroll-provider",
     question: "Who is your company's payroll provider?",
@@ -76,11 +84,57 @@ const compensationQuestions = [
     isDropdown: true,
     options: [
       { id: "ADP", label: "ADP" },
-      { id: "Gusto", label: "Gusto" },
       { id: "Paychex", label: "Paychex" },
-      { id: "Workday", label: "Workday" },
-      { id: "BambooHR", label: "BambooHR" },
+      { id: "Paycom", label: "Paycom" },
+      { id: "Paylocity", label: "Paylocity" },
+      { id: "Gusto", label: "Gusto" },
+      { id: "Quickbooks", label: "Quickbooks" },
+      { id: "TriNet", label: "TriNet" },
+      { id: "Deel", label: "Deel" },
+      { id: "Rippling", label: "Rippling" },
+      { id: "Paycor", label: "Paycor" },
+      { id: "Square", label: "Square" },
+      { id: "Patriot Software", label: "Patriot Software" },
+      { id: "OnPay", label: "OnPay" },
+      { id: "SurePayroll", label: "SurePayroll" },
+      { id: "Insperity", label: "Insperity" },
       { id: "Other", label: "Other" },
+    ],
+  },
+  {
+    id: "shift-differentials",
+    question:
+      "Are your hourly employees eligible for shift differentials e.g. extra pay for nights/weekends/holidays?",
+    required: false,
+    options: [
+      { id: "yes-shift-diff", label: "Yes" },
+      { id: "no-shift-diff", label: "No" },
+    ],
+  },
+  {
+    id: "short-term-incentives",
+    question:
+      "Are most of your employees eligible for short-term incentives such as spot, quarterly or annual bonuses, commissions, profit sharing?",
+    required: false,
+    isMultiSelect: true,
+    options: [
+      { id: "cash-bonuses", label: "Cash bonuses" },
+      { id: "profit-sharing", label: "Profit sharing" },
+      { id: "commissions", label: "Commissions" },
+    ],
+  },
+  {
+    id: "long-term-incentives",
+    question:
+      "Are most of your employees eligible for long-term incentives such as stock plans, pension plan, deferred compensation?",
+    required: false,
+    isMultiSelect: true,
+    options: [
+      { id: "stock-options", label: "Stock options" },
+      { id: "rsus", label: "Restricted Stock Units (RSUs)" },
+      { id: "espps", label: "Employee Stock Purchase Plans (ESPPs)" },
+      { id: "deferred-compensation", label: "Deferred compensation" },
+      { id: "pension-plans", label: "Pension plans" },
     ],
   },
 ];
@@ -121,19 +175,6 @@ const benefitsQuestions = [
 ];
 
 const retirementQuestions = [
-  {
-    id: "retirement-record-keeper",
-    question: "Who is your retirement benefits record keeper or provider?",
-    required: true,
-    isDropdown: true,
-    options: [
-      { id: "fidelity", label: "Fidelity" },
-      { id: "vanguard", label: "Vanguard" },
-      { id: "schwab", label: "Charles Schwab" },
-      { id: "empower", label: "Empower" },
-      { id: "other-retirement", label: "Other" },
-    ],
-  },
   {
     id: "retirement-vesting-period",
     question: "What is the vesting period of your business's retirement plan?",
@@ -225,6 +266,19 @@ export default function AdditionalQuestions() {
     }));
   };
 
+  const handleMultiSelectToggle = (questionId: string, optionId: string) => {
+    setAnswers(prev => {
+      const current = prev[questionId];
+      const currentArray = Array.isArray(current) ? current : [];
+      return {
+        ...prev,
+        [questionId]: currentArray.includes(optionId)
+          ? currentArray.filter(id => id !== optionId)
+          : [...currentArray, optionId],
+      };
+    });
+  };
+
   const handleGoalToggle = (goalId: string) => {
     setGoalsAnswers(prev => ({
       ...prev,
@@ -300,23 +354,47 @@ export default function AdditionalQuestions() {
                   <Label isRequired={question.required} className="text-base text-ws-text-primary">
                     {index + 1}. {question.question}
                   </Label>
-                  <RadioGroup
-                    value={answers[question.id] || ""}
-                    onChange={value => handleAnswerChange(question.id, value)}
-                    className="flex flex-col gap-3"
-                  >
-                    {question.options.map(option => (
-                      <label key={option.id} className="flex items-center gap-3 cursor-pointer">
-                        <RadioButton
-                          value={option.id}
-                          className="border border-ws-border-primary rounded-full"
-                        />
-                        <span className="text-sm font-normal text-ws-text-secondary">
-                          {option.label}
-                        </span>
-                      </label>
-                    ))}
-                  </RadioGroup>
+
+                  {question.isMultiSelect ? (
+                    <div className="flex flex-col gap-3">
+                      {question.options.map(option => (
+                        <label
+                          key={option.id}
+                          className="flex items-center gap-3 cursor-pointer hover:opacity-80 transition-opacity"
+                        >
+                          <Checkbox
+                            isSelected={((answers[question.id] as string[]) || []).includes(
+                              option.id
+                            )}
+                            onChange={() => handleMultiSelectToggle(question.id, option.id)}
+                            size="sm"
+                            className="border border-ws-border-primary rounded-sm"
+                          />
+                          <span className="text-sm font-normal text-ws-text-secondary">
+                            {option.label}
+                          </span>
+                        </label>
+                      ))}
+                    </div>
+                  ) : (
+                    <RadioGroup
+                      value={(answers[question.id] as string) || ""}
+                      onChange={value => handleAnswerChange(question.id, value)}
+                      className="flex flex-col gap-3"
+                    >
+                      {question.options.map(option => (
+                        <label key={option.id} className="flex items-center gap-3 cursor-pointer">
+                          <RadioButton
+                            value={option.id}
+                            className="border border-ws-border-primary rounded-full"
+                          />
+                          <span className="text-sm font-normal text-ws-text-secondary">
+                            {option.label}
+                          </span>
+                        </label>
+                      ))}
+                    </RadioGroup>
+                  )}
                 </div>
               ))}
             </div>
@@ -337,10 +415,31 @@ export default function AdditionalQuestions() {
                     {index + 1}. {question.question}
                   </Label>
 
-                  {!question.isDropdown ? (
+                  {question.isMultiSelect ? (
+                    <div className="flex flex-col gap-3">
+                      {question.options.map(option => (
+                        <label
+                          key={option.id}
+                          className="flex items-center gap-3 cursor-pointer hover:opacity-80 transition-opacity"
+                        >
+                          <Checkbox
+                            isSelected={((answers[question.id] as string[]) || []).includes(
+                              option.id
+                            )}
+                            onChange={() => handleMultiSelectToggle(question.id, option.id)}
+                            size="sm"
+                            className="border border-ws-border-primary rounded-sm"
+                          />
+                          <span className="text-sm font-normal text-ws-text-secondary">
+                            {option.label}
+                          </span>
+                        </label>
+                      ))}
+                    </div>
+                  ) : !question.isDropdown ? (
                     <>
                       <RadioGroup
-                        value={answers[question.id] || ""}
+                        value={(answers[question.id] as string) || ""}
                         onChange={value => handleAnswerChange(question.id, value)}
                         className="flex flex-col gap-3"
                       >
@@ -407,7 +506,7 @@ export default function AdditionalQuestions() {
 
                   {!question.isDropdown ? (
                     <RadioGroup
-                      value={answers[question.id] || ""}
+                      value={(answers[question.id] as string) || ""}
                       onChange={value => handleAnswerChange(question.id, value)}
                       className="flex flex-col gap-3"
                     >
@@ -451,9 +550,9 @@ export default function AdditionalQuestions() {
                       {index + 3}. {question.question}
                     </Label>
 
-                    {!question.isDropdown ? (
+                    {
                       <RadioGroup
-                        value={answers[question.id] || ""}
+                        value={(answers[question.id] as string) || ""}
                         onChange={value => handleAnswerChange(question.id, value)}
                         className="flex flex-col gap-3"
                       >
@@ -469,16 +568,7 @@ export default function AdditionalQuestions() {
                           </label>
                         ))}
                       </RadioGroup>
-                    ) : (
-                      <Select
-                        items={question.options}
-                        placeholder="Select"
-                        size="md"
-                        className="w-full max-w-xs rounded-lg"
-                      >
-                        {item => <SelectItem id={item.id} label={item.label} />}
-                      </Select>
-                    )}
+                    }
                   </div>
                 ))}
               </div>
