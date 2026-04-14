@@ -54,10 +54,8 @@ const columns: TableColumn<User>[] = [
     key: "status",
     header: "Status",
     width: "20%",
-    render: (item) => (
-      <Badge color={item.status === "active" ? "green" : "gray"}>
-        {item.status}
-      </Badge>
+    render: item => (
+      <Badge color={item.status === "active" ? "green" : "gray"}>{item.status}</Badge>
     ),
   },
 ];
@@ -83,7 +81,7 @@ const [selectedRows, setSelectedRows] = useState<Set<number>>(new Set());
 <Table
   data={users}
   columns={columns}
-  onRowClick={(user) => {
+  onRowClick={user => {
     console.log("Row clicked:", user);
   }}
 />
@@ -121,38 +119,39 @@ const [selectedRows, setSelectedRows] = useState<Set<number>>(new Set());
 
 ### `TableProps<T>`
 
-| Prop | Type | Default | Description |
-| --- | --- | --- | --- |
-| `data` | `T[]` | Required | Array of data items to display |
-| `columns` | `TableColumn<T>[]` | Required | Column definitions |
-| `size` | `"sm" \| "md" \| "lg"` | `"md"` | Table size variant |
-| `variant` | `"default" \| "striped" \| "bordered" \| "compact"` | `"default"` | Visual style variant |
-| `getRowKey` | `(item: T, index: number) => string \| number` | - | Custom key extractor for rows |
-| `onRowClick` | `(item: T, index: number) => void` | - | Callback when row is clicked |
-| `className` | `string` | - | Additional CSS class for wrapper |
-| `isLoading` | `boolean` | `false` | Shows loading state |
-| `emptyMessage` | `ReactNode` | `"No data available"` | Message when data is empty |
-| `caption` | `ReactNode` | - | Table caption/title |
-| `striped` | `boolean` | `false` | Alternate row colors |
-| `bordered` | `boolean` | `false` | Show borders |
-| `selectable` | `boolean` | `false` | Enable row selection |
-| `selectedRows` | `Set<number>` | `new Set()` | Currently selected row indices |
-| `onRowSelectionChange` | `(selected: Set<number>) => void` | - | Called when selection changes |
+| Prop                   | Type                                                | Default               | Description                      |
+| ---------------------- | --------------------------------------------------- | --------------------- | -------------------------------- |
+| `data`                 | `T[]`                                               | Required              | Array of data items to display   |
+| `columns`              | `TableColumn<T>[]`                                  | Required              | Column definitions               |
+| `size`                 | `"sm" \| "md" \| "lg"`                              | `"md"`                | Table size variant               |
+| `variant`              | `"default" \| "striped" \| "bordered" \| "compact"` | `"default"`           | Visual style variant             |
+| `getRowKey`            | `(item: T, index: number) => string \| number`      | -                     | Custom key extractor for rows    |
+| `onRowClick`           | `(item: T, index: number) => void`                  | -                     | Callback when row is clicked     |
+| `className`            | `string`                                            | -                     | Additional CSS class for wrapper |
+| `isLoading`            | `boolean`                                           | `false`               | Shows loading state              |
+| `emptyMessage`         | `ReactNode`                                         | `"No data available"` | Message when data is empty       |
+| `caption`              | `ReactNode`                                         | -                     | Table caption/title              |
+| `striped`              | `boolean`                                           | `false`               | Alternate row colors             |
+| `bordered`             | `boolean`                                           | `false`               | Show borders                     |
+| `selectable`           | `boolean`                                           | `false`               | Enable row selection             |
+| `selectedRows`         | `Set<number>`                                       | `new Set()`           | Currently selected row indices   |
+| `onRowSelectionChange` | `(selected: Set<number>) => void`                   | -                     | Called when selection changes    |
 
 ### `TableColumn<T>`
 
-| Property | Type | Default | Description |
-| --- | --- | --- | --- |
-| `key` | `string` | Required | Unique column identifier |
-| `header` | `ReactNode` | Required | Header display text |
-| `render` | `(item: T, value: unknown) => ReactNode` | - | Custom render function |
-| `className` | `string` | - | Additional CSS classes |
-| `sortable` | `boolean` | - | Mark column as sortable |
-| `width` | `string \| number` | - | Column width |
+| Property    | Type                                     | Default  | Description              |
+| ----------- | ---------------------------------------- | -------- | ------------------------ |
+| `key`       | `string`                                 | Required | Unique column identifier |
+| `header`    | `ReactNode`                              | Required | Header display text      |
+| `render`    | `(item: T, value: unknown) => ReactNode` | -        | Custom render function   |
+| `className` | `string`                                 | -        | Additional CSS classes   |
+| `sortable`  | `boolean`                                | -        | Mark column as sortable  |
+| `width`     | `string \| number`                       | -        | Column width             |
 
 ## Styling
 
 The table component uses Tailwind CSS v4 semantic tokens for colors:
+
 - `bg-background` / `bg-foreground`
 - `bg-muted`
 - `text-foreground` / `text-muted-foreground`
