@@ -17,3 +17,19 @@ export const AGE_COLORS = [
   "bg-ws-light-teal-300",
   "bg-ws-light-teal-950",
 ] as const;
+
+export const WORKFORCE_COLUMNS_ALL: { key: string; header: string }[] = [
+  { key: "department", header: "Department" },
+  { key: "employeeNumber", header: "Employee number" },
+  { key: "partTime", header: "Part time" },
+  { key: "fullTime", header: "Full time" },
+  { key: "salaryRange", header: "Salary range" },
+];
+
+export const WORKFORCE_COLUMNS_BY_DEPT: { key: string; header: string }[] = [
+  { key: "jobTitle", header: "Job Title" },
+  { key: "totalInRole", header: "Total in role" },
+  { key: "partTime", header: "Part time" },
+  { key: "fullTime", header: "Full time" },
+  { key: "salaryRange", header: "Salary range" },
+];

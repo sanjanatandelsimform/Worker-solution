@@ -16,7 +16,12 @@ import { SavingIcon } from "@/assets/icons/SavingIcon";
 import { HeartLineIcon } from "@/assets/icons/HeartLineIcon";
 import type { TableColumn } from "@/components/base/table";
 import { Link } from "react-router-dom";
-import { parsePercentage, AGE_COLORS } from "@/pages/workforce/workforceUtils";
+import {
+  parsePercentage,
+  AGE_COLORS,
+  WORKFORCE_COLUMNS_ALL,
+  WORKFORCE_COLUMNS_BY_DEPT,
+} from "@/pages/workforce/workforceUtils";
 import WorkforceOverview from "@/pages/workforce/WorkforceOverview";
 import WorkforceParticipation from "@/pages/workforce/WorkforceParticipation";
 import WorkforceDemographics from "@/pages/workforce/WorkforceDemographics";
@@ -235,21 +240,7 @@ export default function WorkforcePage() {
   ];
 
   const columns: TableColumn[] =
-    selectedWorkforceDept === "all"
-      ? [
-          { key: "department", header: "Department" },
-          { key: "employeeNumber", header: "Employee number" },
-          { key: "partTime", header: "Part time" },
-          { key: "fullTime", header: "Full time" },
-          { key: "salaryRange", header: "Salary range" },
-        ]
-      : [
-          { key: "jobTitle", header: "Job Title" },
-          { key: "totalInRole", header: "Total in role" },
-          { key: "partTime", header: "Part time" },
-          { key: "fullTime", header: "Full time" },
-          { key: "salaryRange", header: "Salary range" },
-        ];
+    selectedWorkforceDept === "all" ? WORKFORCE_COLUMNS_ALL : WORKFORCE_COLUMNS_BY_DEPT;
 
   const users: Record<string, string>[] =
     selectedWorkforceDept === "all"
