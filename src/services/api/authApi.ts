@@ -21,13 +21,26 @@ const apiClient = axios.create({
 
 const STORAGE_KEY = "userDetail";
 
+/**
+ * Get authentication token from localStorage.
+ * Single source of truth used by all API services.
+ * @returns Bearer token or null if not found
+ */
+export const getAuthToken = (): string | null => {
+  try {
+    const raw = localStorage.getItem(STORAGE_KEY);
+    if (!raw) return null;
+    const parsed = JSON.parse(raw);
+    return parsed?.auth?.tokens?.accessToken ?? null;
+  } catch {
+    return null;
+  }
+};
+
 // Request interceptor: attach access token from localStorage when present
 apiClient.interceptors.request.use(config => {
   try {
-    const raw = localStorage.getItem(STORAGE_KEY);
-    if (!raw) return config;
-    const parsed = JSON.parse(raw);
-    const token = parsed?.auth?.tokens?.accessToken;
+    const token = getAuthToken();
     if (token) {
       config.headers.Authorization = `Bearer ${token}`;
     }
@@ -38,7 +51,7 @@ apiClient.interceptors.request.use(config => {
 });
 
 // Helper function to extract error message
-const getErrorMessage = (error: unknown): string => {
+export const getErrorMessage = (error: unknown): string => {
   if (axios.isAxiosError(error)) {
     const apiError = error.response?.data as ApiError | undefined;
     if (apiError?.message) {
