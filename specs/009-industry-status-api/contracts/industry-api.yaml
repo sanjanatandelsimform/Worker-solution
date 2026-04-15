@@ -1,0 +1,336 @@
+openapi: "3.0.3"
+info:
+  title: Industry Benchmark API
+  version: "1.0.0"
+  description: |
+    Industry benchmark data endpoint. Called conditionally when `/finch/status`
+    returns `connection.industry === "fetch"`.
+
+servers:
+  - url: /api/v1
+
+paths:
+  /industry:
+    get:
+      operationId: getIndustry
+      summary: Fetch industry benchmark data
+      description: |
+        Returns industry overview, turnover metrics, area median wages,
+        and housing burden data for the authenticated user's company.
+        
+        **Precondition**: Only call when `/finch/status` response has
+        `data.connection.industry === "fetch"`.
+      tags:
+        - Industry
+      security:
+        - BearerAuth: []
+      responses:
+        "200":
+          description: Successfully retrieved industry data
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/IndustryApiResponse"
+        "401":
+          description: Authentication required
+        "500":
+          description: Server error
+
+  /finch/status:
+    get:
+      operationId: getFinchStatus
+      summary: Fetch Finch connection status (extended)
+      description: |
+        Existing endpoint. Extended with `connection.industry` field.
+        Already polled every 15 seconds by the frontend.
+      tags:
+        - Finch
+      security:
+        - BearerAuth: []
+      responses:
+        "200":
+          description: Finch status with industry readiness flag
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/FinchStatusApiResponse"
+
+components:
+  securitySchemes:
+    BearerAuth:
+      type: http
+      scheme: bearer
+
+  schemas:
+    # ── Finch Status (extended) ──────────────────────────────────────
+
+    FinchStatusApiResponse:
+      type: object
+      required: [status, data]
+      properties:
+        status:
+          type: boolean
+        data:
+          type: object
+          required: [connection, latestSyncJob]
+          properties:
+            connection:
+              $ref: "#/components/schemas/FinchConnection"
+            latestSyncJob:
+              $ref: "#/components/schemas/FinchSyncJob"
+
+    FinchConnection:
+      type: object
+      required: [id, status, providerId, lastSyncedAt, createdAt, industry]
+      properties:
+        id:
+          type: string
+        status:
+          type: string
+          enum: [connected, reauth_required, disconnected]
+        providerId:
+          type: string
+        lastSyncedAt:
+          type: string
+          nullable: true
+        createdAt:
+          type: string
+        industry:
+          type: string
+          nullable: true
+          enum: ["fetch", null]
+          description: |
+            When "fetch", the Industry API is ready to be called.
+            When null, industry data is not available.
+
+    FinchSyncJob:
+      type: object
+      properties:
+        id:
+          type: string
+        status:
+          type: string
+          enum: [pending, processing, completed, failed]
+        errorMessage:
+          type: string
+          nullable: true
+        startedAt:
+          type: string
+          nullable: true
+        completedAt:
+          type: string
+          nullable: true
+        createdAt:
+          type: string
+
+    # ── Industry API ─────────────────────────────────────────────────
+
+    IndustryApiResponse:
+      type: object
+      required: [industryOverview, industry, areaMedianWage, housingBurden]
+      properties:
+        industryOverview:
+          $ref: "#/components/schemas/IndustryOverview"
+        industry:
+          $ref: "#/components/schemas/IndustryTurnoverComparison"
+        areaMedianWage:
+          $ref: "#/components/schemas/AreaMedianWage"
+        housingBurden:
+          $ref: "#/components/schemas/HousingBurden"
+
+    IndustryOverview:
+      type: object
+      properties:
+        turnoverRate:
+          type: object
+          properties:
+            rate:
+              type: string
+            month:
+              type: string
+            year:
+              type: integer
+        avgTurnover:
+          type: object
+          properties:
+            rate:
+              type: number
+            sinceYear:
+              type: integer
+        industryWideCostOfTurnover:
+          type: object
+          properties:
+            amount:
+              type: number
+            formatted:
+              type: string
+            year:
+              type: integer
+        rates:
+          type: object
+          properties:
+            hire:
+              type: number
+            seperation:
+              type: number
+
+    IndustryTurnoverComparison:
+      type: object
+      properties:
+        turnOverRate:
+          type: object
+          properties:
+            industry:
+              $ref: "#/components/schemas/VoluntaryInvoluntary"
+            company:
+              $ref: "#/components/schemas/VoluntaryInvoluntary"
+        seperationRate:
+          type: object
+          properties:
+            industry:
+              $ref: "#/components/schemas/SeparationHiring"
+            company:
+              $ref: "#/components/schemas/SeparationHiring"
+
+    VoluntaryInvoluntary:
+      type: object
+      properties:
+        involuntary:
+          type: number
+        voluntary:
+          type: number
+
+    SeparationHiring:
+      type: object
+      properties:
+        seperation:
+          type: number
+        hiring:
+          type: number
+
+    AreaMedianWage:
+      type: object
+      properties:
+        availableZipcodes:
+          type: array
+          items:
+            type: string
+        nationalAvgSalary:
+          type: number
+        companyMedianHourlyWage:
+          type: number
+        companyGraph:
+          $ref: "#/components/schemas/SalaryHourly"
+        stateData:
+          type: array
+          items:
+            $ref: "#/components/schemas/StateWageData"
+
+    StateWageData:
+      type: object
+      properties:
+        zipcode:
+          type: string
+        city:
+          type: string
+        medianLivingWage:
+          type: number
+        graph:
+          type: object
+          properties:
+            state:
+              $ref: "#/components/schemas/SalaryHourly"
+            national:
+              $ref: "#/components/schemas/SalaryHourly"
+        avgSalary:
+          type: object
+          properties:
+            salary:
+              type: number
+            year:
+              type: integer
+
+    SalaryHourly:
+      type: object
+      properties:
+        salary:
+          type: number
+        hourly:
+          type: number
+
+    HousingBurden:
+      type: object
+      properties:
+        availableZipcodes:
+          type: array
+          items:
+            type: string
+        data:
+          type: array
+          items:
+            $ref: "#/components/schemas/HousingBurdenEntry"
+
+    HousingBurdenEntry:
+      type: object
+      properties:
+        zipcode:
+          type: string
+        city:
+          type: string
+        owners:
+          $ref: "#/components/schemas/HousingTenureData"
+        renters:
+          $ref: "#/components/schemas/HousingTenureData"
+        workingClass:
+          $ref: "#/components/schemas/WorkingClassData"
+
+    HousingTenureData:
+      type: object
+      properties:
+        period:
+          type: object
+          properties:
+            quarter:
+              type: integer
+            year:
+              type: integer
+        burdened:
+          $ref: "#/components/schemas/BurdenMetrics"
+        severelyBurdened:
+          $ref: "#/components/schemas/BurdenMetrics"
+
+    BurdenMetrics:
+      type: object
+      properties:
+        metroArea:
+          type: number
+        yourEmployees:
+          type: number
+
+    WorkingClassData:
+      type: object
+      properties:
+        homeOwnershipRate:
+          type: number
+        medianHomeValue:
+          type: number
+        medianRent:
+          type: number
+        graph:
+          type: array
+          items:
+            $ref: "#/components/schemas/WorkingClassGraphEntry"
+
+    WorkingClassGraphEntry:
+      type: object
+      properties:
+        incomeCategory:
+          type: string
+        label:
+          type: string
+        range:
+          type: string
+        burdened:
+          type: number
+        severelyBurdened:
+          type: number
