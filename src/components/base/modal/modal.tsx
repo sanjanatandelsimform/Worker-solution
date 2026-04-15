@@ -86,9 +86,7 @@ export const ModalTitle = ({
   children: ReactNode;
   className?: string;
 }) => {
-  return (
-    <h2 className={cx("text-4xl font-medium text-ws-text-primary mb-3", className)}>{children}</h2>
-  );
+  return <h2 className={cx("text-2xl font-semibold text-ws-text-primary mb-2", className)}>{children}</h2>;
 };
 
 export const ModalDescription = ({
@@ -102,7 +100,7 @@ export const ModalDescription = ({
 };
 
 export const ModalBody = ({ children, className }: { children: ReactNode; className?: string }) => {
-  return <div className={cx("flex-1 overflow-y-auto px-6 py-4", className)}>{children}</div>;
+  return <div className={cx("flex-1 overflow-y-auto px-6", className)}>{children}</div>;
 };
 
 export const ModalFooter = ({

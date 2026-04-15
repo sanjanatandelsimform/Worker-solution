@@ -215,7 +215,7 @@ export const UpdateYourEmailModal = ({
         <ModalHeader>
           <div className="flex items-center justify-between w-full relative">
             <div className="flex flex-col gap-1">
-              <ModalTitle>Update your email</ModalTitle>
+              <ModalTitle>Update your information</ModalTitle>
               <ModalDescription>
                 {showSuccess
                   ? "Check your inbox for a verification link and follow the steps to confirm the update."
@@ -285,14 +285,19 @@ export const UpdateYourEmailModal = ({
                 </InputGroup>
               </div>
               <InputGroup className="relative">
-                <Input
-                  icon={Mail01}
-                  size="md"
-                  label="Current Email"
-                  placeholder="current@email.com"
-                  value={userData?.businessEmail || ""}
-                  isDisabled={true}
-                />
+                <div className="flex flex-col gap-1.5 w-full">
+                  <Label className="text-sm font-medium text-ws-text-secondary">
+                    Current Email <span className="text-ws-error-600">*</span>
+                  </Label>
+                  <Input
+                    icon={Mail01}
+                    iconClassName="text-ws-gray-400"
+                    size="md"
+                    placeholder="current@email.com"
+                    value={userData?.businessEmail || ""}
+                    isDisabled={true}
+                  />
+                </div>
               </InputGroup>
 
               <InputGroup className="relative">

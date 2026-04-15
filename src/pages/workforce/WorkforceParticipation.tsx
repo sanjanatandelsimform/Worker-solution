@@ -40,7 +40,7 @@ export default function WorkforceParticipation({
           <h3 className="text-2xl lg:text-4xl font-medium text-ws-text-primary">
             Participation Breakdown
           </h3>
-          <p className="text-base text-ws-text-primary w-full mt-2">
+          <p className="text-base font-normal text-ws-text-primary w-full mt-2">
             Your highest participation rate is health insurance. 89% of your employees are using
             this benefit. Your lowest participation rate is Employee Assist Program.{" "}
           </p>
@@ -62,10 +62,10 @@ export default function WorkforceParticipation({
                 key={card.id}
                 classess="border-ws-border-secondary"
                 title={card.title}
-                titleClass="text-ws-text-tertiary text-sm"
+                titleClass="text-ws-text-tertiary font-normal text-sm"
                 countIcon={card.countIcon}
                 count={card.count}
-                countClass="text-ws-light-teal-900  text-3xl xl:text-4xl font-medium mt-6"
+                countWrap="flex text-ws-light-teal-900 leading-9 text-2xl xl:text-3xl font-medium mt-2"
               />
             ))}
           </>
