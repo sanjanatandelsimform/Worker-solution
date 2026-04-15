@@ -16,7 +16,7 @@ import { SavingIcon } from "@/assets/icons/SavingIcon";
 import { HeartLineIcon } from "@/assets/icons/HeartLineIcon";
 import type { TableColumn } from "@/components/base/table";
 import { Link } from "react-router-dom";
-import { parsePercentage } from "@/pages/workforce/workforceUtils";
+import { parsePercentage, AGE_COLORS } from "@/pages/workforce/workforceUtils";
 import WorkforceOverview from "@/pages/workforce/WorkforceOverview";
 import WorkforceParticipation from "@/pages/workforce/WorkforceParticipation";
 import WorkforceDemographics from "@/pages/workforce/WorkforceDemographics";
@@ -216,20 +216,12 @@ export default function WorkforcePage() {
       ]
     : [];
 
-  const ageColors = [
-    "bg-ws-light-teal-400",
-    "bg-ws-light-teal-700",
-    "bg-ws-light-teal-100",
-    "bg-ws-light-teal-300",
-    "bg-ws-light-teal-950",
-  ];
-
   const ageBreakdownConfig = (demographicsSection?.employmentBreakdownByAge ?? []).map(
     (entry, i) => ({
       id: `age-${i}`,
       label: `Age: ${entry.ageGroup}`,
       value: entry[selectedEmploymentType],
-      customColor: `${ageColors[i % ageColors.length]} rounded-none`,
+      customColor: `${AGE_COLORS[i % AGE_COLORS.length]} rounded-none`,
     })
   );
 
