@@ -12,8 +12,7 @@ interface CompensationCardConfig {
   title: string;
   count: string;
   tooltipText: string;
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  getCountClass: (selectedHousingData?: any) => string;
+  getCountClass: () => string;
 }
 
 interface SalaryBreakdownCardConfig {
@@ -21,8 +20,7 @@ interface SalaryBreakdownCardConfig {
   title: string;
   count: string;
   tooltipText: string;
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  getCountClass: (selectedHousingData?: any) => string;
+  getCountClass: () => string;
 }
 
 interface DropdownItem {
