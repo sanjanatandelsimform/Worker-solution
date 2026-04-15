@@ -21,6 +21,7 @@ import {
   AGE_COLORS,
   WORKFORCE_COLUMNS_ALL,
   WORKFORCE_COLUMNS_BY_DEPT,
+  getWorkforceRowsByDept,
 } from "@/pages/workforce/workforceUtils";
 import WorkforceOverview from "@/pages/workforce/WorkforceOverview";
 import WorkforceParticipation from "@/pages/workforce/WorkforceParticipation";
@@ -251,18 +252,10 @@ export default function WorkforcePage() {
           fullTime: String(d.fullTime),
           salaryRange: d.salaryRange,
         }))
-      : (() => {
-          const dept = compensationSection?.workforceBreakdown.departments.find(
-            d => d.id === selectedWorkforceDept
-          );
-          return (dept?.jobTitles ?? []).map(jt => ({
-            jobTitle: jt.jobTitle,
-            totalInRole: String(jt.totalInRole),
-            partTime: String(jt.partTime),
-            fullTime: String(jt.fullTime),
-            salaryRange: jt.salaryRange,
-          }));
-        })();
+      : getWorkforceRowsByDept(
+          compensationSection?.workforceBreakdown.departments ?? [],
+          selectedWorkforceDept
+        );
 
   const columnsOne: TableColumn[] = [
     { key: "salaryRange", header: "Salary Range" },

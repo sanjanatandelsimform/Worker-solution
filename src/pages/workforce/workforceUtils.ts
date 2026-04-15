@@ -33,3 +33,19 @@ export const WORKFORCE_COLUMNS_BY_DEPT: { key: string; header: string }[] = [
   { key: "fullTime", header: "Full time" },
   { key: "salaryRange", header: "Salary range" },
 ];
+
+import type { Department } from "@/types/workforceTypes";
+
+export function getWorkforceRowsByDept(
+  departments: Department[],
+  selectedDeptId: string
+): Record<string, string>[] {
+  const dept = departments.find(d => d.id === selectedDeptId);
+  return (dept?.jobTitles ?? []).map(jt => ({
+    jobTitle: jt.jobTitle,
+    totalInRole: String(jt.totalInRole),
+    partTime: String(jt.partTime),
+    fullTime: String(jt.fullTime),
+    salaryRange: jt.salaryRange,
+  }));
+}
