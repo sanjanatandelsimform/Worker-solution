@@ -575,7 +575,7 @@ export const DashboardPage = () => {
           )}
 
           {/* Tabs — only render after dashboard data is confirmed ready */}
-          {emailVerify && assessmentData?.data?.status === "completed" && !isConnected && (
+          {emailVerify && assessmentData?.data?.status === "completed" && !isFinchCompleted && (
             <DashboardCard
               classes="bg-ws-base-white border-ws-border-primary mt-10 shadow-none"
               toggleAvatar={true}
