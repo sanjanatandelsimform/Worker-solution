@@ -81,7 +81,9 @@ export const SuccessPage: React.FC<SuccessCardProps> = ({
   };
 
   return (
-    <div className={`flex min-h-screen items-center justify-center bg-ws-light-teal-50 ${classess}`}>
+    <div
+      className={`flex min-h-screen items-center justify-center bg-ws-light-teal-50 ${classess}`}
+    >
       <div className="flex w-2xl items-center justify-center rounded-xl border border-ws-border-primary bg-ws-base-white py-22">
         <div className="flex w-full max-w-lg flex-col items-center gap-8">
           {/* Header */}

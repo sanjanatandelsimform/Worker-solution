@@ -112,7 +112,9 @@ const SelectValue = ({
                     {state.selectedItem?.label}
                   </p>
                   {state.selectedItem?.supportingText && (
-                    <p className="text-md text-ws-text-tertiary">{state.selectedItem?.supportingText}</p>
+                    <p className="text-md text-ws-text-tertiary">
+                      {state.selectedItem?.supportingText}
+                    </p>
                   )}
                 </section>
               ) : (

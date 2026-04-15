@@ -70,7 +70,12 @@ export default function ProgressCard({
   );
 
   return (
-    <div className={cx("bg-ws-base-white p-5 border border-ws-border-primary rounded-xl w-full flex flex-col relative", className)}>
+    <div
+      className={cx(
+        "bg-ws-base-white p-5 border border-ws-border-primary rounded-xl w-full flex flex-col relative",
+        className
+      )}
+    >
       {/* Title Section */}
       <div className="flex items-center gap-2 mb-4">
         <h3 className="text-xl font-medium text-ws-text-primary">{title}</h3>
@@ -97,13 +102,12 @@ export default function ProgressCard({
         <div className="space-y-6">
           {sections.map((section, sectionIndex) => (
             <div key={`section-${sectionIndex}`}>
-              
               {/* Progress Items Grid */}
               {section.items && section.items.length > 0 && (
-                <div className={cx("grid grid-cols-1 gap-2", getGridColsClass(section.columnsCount))}>
-                  {section.items.map((item, itemIndex) => (
-                    renderProgressItem(item, itemIndex)
-                  ))}
+                <div
+                  className={cx("grid grid-cols-1 gap-2", getGridColsClass(section.columnsCount))}
+                >
+                  {section.items.map((item, itemIndex) => renderProgressItem(item, itemIndex))}
                 </div>
               )}
             </div>

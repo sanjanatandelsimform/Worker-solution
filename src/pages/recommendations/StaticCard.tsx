@@ -59,7 +59,9 @@ export default function StaticCard({
       <div className={`flex items-end gap-2 justify-between ${countWrap}`}>
         <h2 className={`w-full ${countClass}`}>
           {count === "N/A" ? (
-            <span className="mt-4 text-base font-medium text-ws-text-tertiary">No data available</span>
+            <span className="mt-4 text-base font-medium text-ws-text-tertiary">
+              No data available
+            </span>
           ) : (
             count
           )}

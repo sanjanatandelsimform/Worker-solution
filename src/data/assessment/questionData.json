@@ -83,7 +83,11 @@
             { "label": "Car", "value": "Car", "displayOrder": 3 },
             { "label": "Bike", "value": "Bike", "displayOrder": 4 },
             { "label": "Walking", "value": "Walking", "displayOrder": 5 },
-            { "label": "Group Transportation (i.e. Carpooling, Company bus)", "value": "Group Transportation", "displayOrder": 6 }
+            {
+              "label": "Group Transportation (i.e. Carpooling, Company bus)",
+              "value": "Group Transportation",
+              "displayOrder": 6
+            }
           ]
         },
         {
@@ -533,9 +537,21 @@
           "isRequired": false,
           "options": [
             { "label": "Stock options", "value": "Stock options", "displayOrder": 1 },
-            { "label": "Restricted Stock Units (RSUs)", "value": "Restricted Stock Units (RSUs)", "displayOrder": 2 },
-            { "label": "Employee Stock Purchase Plans (ESPPs)", "value": "Employee Stock Purchase Plans (ESPPs)", "displayOrder": 3 },
-            { "label": "Deferred compensation", "value": "Deferred compensation", "displayOrder": 4 },
+            {
+              "label": "Restricted Stock Units (RSUs)",
+              "value": "Restricted Stock Units (RSUs)",
+              "displayOrder": 2
+            },
+            {
+              "label": "Employee Stock Purchase Plans (ESPPs)",
+              "value": "Employee Stock Purchase Plans (ESPPs)",
+              "displayOrder": 3
+            },
+            {
+              "label": "Deferred compensation",
+              "value": "Deferred compensation",
+              "displayOrder": 4
+            },
             { "label": "Pension plans", "value": "Pension plans", "displayOrder": 5 }
           ]
         }
@@ -649,67 +665,67 @@
             {
               "groupName": "Other Supplemental Benefits",
               "options": [
-                  {
-                    "label": "Employer assistance program (EAP)",
-                    "value": "EAP",
-                    "displayOrder": 18
-                  },
-                  {
-                    "label": "Life Insurance",
-                    "value": "Life Insurance",
-                    "displayOrder": 19
-                  },
-                  {
-                    "label": "Supplemental life insurance",
-                    "value": "Supplemental Life Insurance",
-                    "displayOrder": 20
-                  },
-                  {
-                    "label": "AD&D insurance",
-                    "value": "AD&D Insurance",
-                    "displayOrder": 21
-                  },
-                  {
-                    "label": "Short term disability",
-                    "value": "Short Term Disability",
-                    "displayOrder": 22
-                  },
-                  {
-                    "label": "Long term disability",
-                    "value": "Long Term Disability",
-                    "displayOrder": 23
-                  },
-                  {
-                    "label": "Transportation/commuter benefits",
-                    "value": "Transportation Benefits",
-                    "displayOrder": 24
-                  },
-                  {
-                    "label": "Free meals or food discounts",
-                    "value": "Meals or Food Discounts",
-                    "displayOrder": 25
-                  },
-                  {
-                    "label": "Childcare assistance",
-                    "value": "Childcare Assistance",
-                    "displayOrder": 26
-                  },
-                  {
-                    "label": "Care navigation services",
-                    "value": "Care Navigation",
-                    "displayOrder": 27
-                  },
-                  {
-                    "label": "Unsure",
-                    "value": "Unsure",
-                    "displayOrder": 28
-                  },
-                  {
-                    "label": "My company does not offer any supplemental benefits",
-                    "value": "None",
-                    "displayOrder": 29
-                  }
-                ]
+                {
+                  "label": "Employer assistance program (EAP)",
+                  "value": "EAP",
+                  "displayOrder": 18
+                },
+                {
+                  "label": "Life Insurance",
+                  "value": "Life Insurance",
+                  "displayOrder": 19
+                },
+                {
+                  "label": "Supplemental life insurance",
+                  "value": "Supplemental Life Insurance",
+                  "displayOrder": 20
+                },
+                {
+                  "label": "AD&D insurance",
+                  "value": "AD&D Insurance",
+                  "displayOrder": 21
+                },
+                {
+                  "label": "Short term disability",
+                  "value": "Short Term Disability",
+                  "displayOrder": 22
+                },
+                {
+                  "label": "Long term disability",
+                  "value": "Long Term Disability",
+                  "displayOrder": 23
+                },
+                {
+                  "label": "Transportation/commuter benefits",
+                  "value": "Transportation Benefits",
+                  "displayOrder": 24
+                },
+                {
+                  "label": "Free meals or food discounts",
+                  "value": "Meals or Food Discounts",
+                  "displayOrder": 25
+                },
+                {
+                  "label": "Childcare assistance",
+                  "value": "Childcare Assistance",
+                  "displayOrder": 26
+                },
+                {
+                  "label": "Care navigation services",
+                  "value": "Care Navigation",
+                  "displayOrder": 27
+                },
+                {
+                  "label": "Unsure",
+                  "value": "Unsure",
+                  "displayOrder": 28
+                },
+                {
+                  "label": "My company does not offer any supplemental benefits",
+                  "value": "None",
+                  "displayOrder": 29
+                }
+              ]
             }
           ]
         },

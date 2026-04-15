@@ -1,8 +1,8 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { Button } from "@/components/base/buttons/button";
 import { Input } from "@/components/base/input/input";
-import { Mail01, AlertCircle, Eye, EyeOff } from "@untitledui/icons";
+import { Mail01, AlertCircle } from "@untitledui/icons";
 import { ChangePasswordModal } from "@/components/modals/ChangePasswordModal";
 import { UpdateYourEmailModal } from "@/components/modals/UpdateYourEmailModal";
 import SessionExpiredModal from "@/components/modals/SessionExpiredModal";
@@ -14,7 +14,7 @@ import { useAppDispatch, useAppSelector } from "@/store/hooks";
 import {
   deleteUserAccount,
   // clearProfileData,
-  resendVerificationEmail,
+  // resendVerificationEmail,
   retakeAssessmentAction,
 } from "@/store/slices/profileSlice";
 import { clearUser, updateUser } from "@/store/slices/authSlice";
@@ -25,6 +25,7 @@ import { useModalConfig } from "@/hooks/useModalConfig";
 import { useAssessmentStatus } from "@/hooks/useAssessmentStatus";
 import { InputGroup } from "@/components/base/input/input-group";
 import { Label } from "@/components/base/input/label";
+import { ProfileApiResponse } from "@/types/profileTypes";
 
 export const SettingsPage = () => {
   const dispatch = useAppDispatch();
@@ -52,11 +53,20 @@ export const SettingsPage = () => {
   const [firstNameError, setFirstNameError] = useState("");
   const [lastNameError, setLastNameError] = useState("");
   const [showError, setShowError] = useState(false);
-  const [resendVerification, setResendVerification] = useState(false);
+  // const [resendVerification, setResendVerification] = useState(false);
   const [resendError, setResendError] = useState<string | null>(null);
-  const [retakeLoading, setRetakeLoading] = useState(false);
   const [retakeError, setRetakeError] = useState<string | null>(null);
-  const { completionCount } = useAssessmentStatus();
+  const [retakeLoading, setRetakeLoading] = useState(false);
+
+  // Sync local form state when userData changes in Redux (e.g., after profile update from modal)
+  useEffect(() => {
+    if (userData) {
+      setFirstName(userData.firstName ?? "");
+      setLastName(userData.lastName ?? "");
+    }
+  }, [userData?.firstName, userData?.lastName]);
+
+  const { completionCount, isFinchCompleted } = useAssessmentStatus();
 
   // Modal configurations using the hook
   const updateCompleteModal = useModalConfig("updateComplete", {
@@ -174,7 +184,7 @@ export const SettingsPage = () => {
     try {
       await dispatch(retakeAssessmentAction()).unwrap();
       setIsRetakeAssessmentModalOpen(false);
-      navigate("/assessment");
+      navigate("/dashboard");
     } catch (error) {
       setIsRetakeAssessmentModalOpen(false);
       setRetakeError(typeof error === "string" ? error : "Failed to retake assessment");
@@ -222,25 +232,58 @@ export const SettingsPage = () => {
     navigate("/sign-in", { state: { from: "/settings" } });
   };
 
-  const handleGetResponse = (response: {
-    success: boolean;
-    data?: { email?: string; emailVerify?: boolean };
-    message?: string;
-  }) => {
-    if (response.success && response.data) {
-      dispatch(
-        updateUser({
-          businessEmail: response.data.email,
-          emailVerify: response.data.emailVerify,
-        })
-      );
+  // const handleGetResponse = (response: {
+  //   success: boolean;
+  //   data?: { email?: string; emailVerify?: boolean };
+  //   message?: string;
+  // }) => {
+  //   if (response.success && response.data) {
+  //     dispatch(
+  //       updateUser({
+  //         businessEmail: response.data.email,
+  //         emailVerify: response.data.emailVerify,
+  //       })
+  //     );
 
+  //     const userDetail = localStorage.getItem("userDetail");
+  //     if (userDetail) {
+  //       const parsedUserDetail = JSON.parse(userDetail);
+  //       if (parsedUserDetail.auth?.user) {
+  //         parsedUserDetail.auth.user.businessEmail = response.data.email;
+  //         parsedUserDetail.auth.user.emailVerify = response.data.emailVerify ?? false;
+  //         localStorage.setItem("userDetail", JSON.stringify(parsedUserDetail));
+  //       }
+  //     }
+  //   }
+
+  //   setIsUpdateEmailModalOpen(false);
+  //   setTimeout(() => setShowSuccess(true), 100);
+  //   // setResendVerification(true);
+  // };
+
+  function handleGetResponse(response: ProfileApiResponse) {
+    if (response.success && response.data) {
+      const updatePayload: Record<string, unknown> = {};
+      if (response.data.user) {
+        Object.assign(updatePayload, response.data.user);
+      }
+      if (response.data.email) {
+        updatePayload.businessEmail = response.data.email;
+      }
+      if (response.data.emailVerify !== undefined) {
+        updatePayload.emailVerify = response.data.emailVerify;
+      }
+
+      if (Object.keys(updatePayload).length > 0) {
+        dispatch(updateUser(updatePayload));
+      }
+
+      // Sync localStorage
       const userDetail = localStorage.getItem("userDetail");
       if (userDetail) {
         const parsedUserDetail = JSON.parse(userDetail);
         if (parsedUserDetail.auth?.user) {
-          parsedUserDetail.auth.user.businessEmail = response.data.email;
-          parsedUserDetail.auth.user.emailVerify = response.data.emailVerify ?? false;
+          Object.assign(parsedUserDetail.auth.user, updatePayload);
           localStorage.setItem("userDetail", JSON.stringify(parsedUserDetail));
         }
       }
@@ -248,21 +291,19 @@ export const SettingsPage = () => {
 
     setIsUpdateEmailModalOpen(false);
     setTimeout(() => setShowSuccess(true), 100);
-    setResendVerification(true);
-  };
+  }
+  // const handleResendVerification = async () => {
+  //   try {
+  //     await dispatch(resendVerificationEmail()).unwrap();
 
-  const handleResendVerification = async () => {
-    try {
-      await dispatch(resendVerificationEmail()).unwrap();
-
-      setShowSuccess(true);
-    } catch (error) {
-      setResendError(
-        error instanceof Error ? error.message : "Failed to resend verification email"
-      );
-      setShowError(true);
-    }
-  };
+  //     setShowSuccess(true);
+  //   } catch (error) {
+  //     setResendError(
+  //       error instanceof Error ? error.message : "Failed to resend verification email"
+  //     );
+  //     setShowError(true);
+  //   }
+  // };
 
   if (!userData) {
     return (
@@ -358,7 +399,8 @@ export const SettingsPage = () => {
                               placeholder="First name"
                               value={firstName}
                               onChange={handleFirstNameChange}
-                              isDisabled={profileLoading}
+                              // isDisabled={profileLoading}
+                              isDisabled={true}
                             />
                             {firstNameError && (
                               <p className="text-ws-error-600 text-sm mt-1">{firstNameError}</p>
@@ -378,9 +420,10 @@ export const SettingsPage = () => {
                               placeholder="Last name"
                               value={lastName}
                               onChange={handleLastNameChange}
-                              isDisabled={profileLoading}
+                              // isDisabled={profileLoading}
+                              isDisabled={true}
                             />
-                             {lastNameError && (
+                            {lastNameError && (
                               <p className="text-ws-error-600 text-sm mt-1">{lastNameError}</p>
                             )}
                           </div>
@@ -390,9 +433,7 @@ export const SettingsPage = () => {
                     <div className="w-full xl:w-full">
                       <InputGroup>
                         <div className="flex flex-col gap-1.5 w-full">
-                          <Label htmlFor="email">
-                            Email address <span className="text-ws-error-600">*</span>
-                          </Label>
+                          <Label htmlFor="email">Email</Label>
                           <div className="w-full flex flex-col gap-4">
                             <Input
                               id="email"
@@ -408,14 +449,16 @@ export const SettingsPage = () => {
                             <Button
                               color="link-disable-color"
                               className="text-ws-navy-800 font-semibold shadow-none"
-                              onClick={
-                                resendVerification
-                                  ? handleResendVerification
-                                  : () => setIsUpdateEmailModalOpen(true)
-                              }
+                              // onClick={
+                              //   resendVerification
+                              //     ? handleResendVerification
+                              //     : () => setIsUpdateEmailModalOpen(true)
+                              // }
+                              onClick={() => setIsUpdateEmailModalOpen(true)}
                               isDisabled={profileLoading || !firstName || !lastName}
                             >
-                              {resendVerification ? "Resend Verification Email" : "Update email"}
+                              {/* {resendVerification ? "Resend Verification Email" : "Update email"} */}
+                              {"Update your information"}
                             </Button>
                           </div>
                         </div>
@@ -444,13 +487,13 @@ export const SettingsPage = () => {
                               aria-label={showPassword ? "Hide password" : "Show password"}
                               className="absolute right-0 top-7"
                             >
-                              <>
+                              {/* <>
                                 {showPassword ? (
                                   <Eye className="size-5 text-ws-gray-400" />
                                 ) : (
                                   <EyeOff className="size-5 text-ws-gray-400" />
                                 )}
-                              </>
+                              </> */}
                             </Button>
                             <Button
                               color="link-disable-color"
@@ -497,7 +540,7 @@ export const SettingsPage = () => {
                           size="md"
                           className="w-full text-base font-semibold text-ws-navy-800"
                           onClick={() => setIsRetakeAssessmentModalOpen(true)}
-                          isDisabled={completionCount === 0}
+                          isDisabled={completionCount === 0 && !isFinchCompleted}
                         >
                           Retake Assessment
                         </Button>
@@ -744,6 +787,7 @@ export const SettingsPage = () => {
         onClose={() => setIsChangePasswordModalOpen(false)}
       />
       <UpdateYourEmailModal
+        key={userData?.firstName + userData?.lastName}
         isOpen={isUpdateEmailModalOpen}
         onClose={() => setIsUpdateEmailModalOpen(false)}
         getResponse={handleGetResponse}

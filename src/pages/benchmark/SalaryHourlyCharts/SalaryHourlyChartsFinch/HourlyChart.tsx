@@ -88,7 +88,7 @@ export default function HourlyChart({ data, width = 500, height = 350 }: HourlyC
       ctx.lineTo(width - padding.right, y);
       ctx.stroke();
     });
-     ctx.stroke();
+    ctx.stroke();
 
     // Draw bottom axis
     ctx.strokeStyle = axisColor;
@@ -143,7 +143,7 @@ export default function HourlyChart({ data, width = 500, height = 350 }: HourlyC
         color: colors.industryAverage,
         label: "Industry average",
       },
-       yourCompanyBar: {
+      yourCompanyBar: {
         x: yourCompanyX,
         y: yBase - yourCompanyHeight,
         width: barWidth,

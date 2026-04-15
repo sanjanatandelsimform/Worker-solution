@@ -279,26 +279,26 @@ export function RegistrationForm() {
                 <Label className="text-sm font-medium text-ws-text-secondary">
                   Business Phone Number <span className="text-ws-error-600">*</span>
                 </Label>
-                  <Input
+                <Input
                   //className={errors.businessPhone ? "error-ring" : "col-start-2"}
-                      placeholder="(555) 000-0000"
-                      type="tel"
-                      size="sm"
-                      prefix="+1"
-                      hint={errors.businessPhone?.message}
-                      isInvalid={!!errors.businessPhone}
-                      value={phoneNumber}
-                      maxLength={10}
-                      onChange={(e: React.ChangeEvent<HTMLInputElement> | string) => {
-                        const inputValue = typeof e === "string" ? e : e?.target?.value || "";
-                        // Only allow numeric input and limit to 10 digits
-                        const numericValue = inputValue.replace(/\D/g, "").slice(0, 10);
-                        setPhoneNumber(numericValue);
-                        setValue("businessPhone", numericValue);
-                        trigger("businessPhone");
-                      }}
-                    tooltip={errors.businessPhone ? errors.businessPhone.message : undefined}
-                  />
+                  placeholder="(555) 000-0000"
+                  type="tel"
+                  size="sm"
+                  prefix="+1"
+                  hint={errors.businessPhone?.message}
+                  isInvalid={!!errors.businessPhone}
+                  value={phoneNumber}
+                  maxLength={10}
+                  onChange={(e: React.ChangeEvent<HTMLInputElement> | string) => {
+                    const inputValue = typeof e === "string" ? e : e?.target?.value || "";
+                    // Only allow numeric input and limit to 10 digits
+                    const numericValue = inputValue.replace(/\D/g, "").slice(0, 10);
+                    setPhoneNumber(numericValue);
+                    setValue("businessPhone", numericValue);
+                    trigger("businessPhone");
+                  }}
+                  tooltip={errors.businessPhone ? errors.businessPhone.message : undefined}
+                />
                 {/* <InputGroup
                   className={errors.businessPhone ? "error-ring" : "col-start-2"}
                   // label="Business Phone Number"
@@ -312,7 +312,7 @@ export function RegistrationForm() {
                     />
                   }
                 > */}
-                  {/* <InputBase
+                {/* <InputBase
                     placeholder="(555) 000-0000"
                     type="tel"
                     size="sm"
@@ -462,7 +462,7 @@ export function RegistrationForm() {
                   color="tertiary"
                   size="sm"
                   type="button"
-                  onClick={() => !errors.password ? setShowPassword(!showPassword) : ""}
+                  onClick={() => (!errors.password ? setShowPassword(!showPassword) : "")}
                   aria-label={showPassword ? "Hide password" : "Show password"}
                   className="absolute right-0 top-7"
                 >
@@ -506,7 +506,9 @@ export function RegistrationForm() {
                   color="tertiary"
                   size="sm"
                   type="button"
-                  onClick={() => !errors.confirmPassword? setShowConfirmPassword(!showConfirmPassword) : ""}
+                  onClick={() =>
+                    !errors.confirmPassword ? setShowConfirmPassword(!showConfirmPassword) : ""
+                  }
                   aria-label={showConfirmPassword ? "Hide password" : "Show password"}
                   className="absolute right-0 top-7"
                 >
@@ -529,11 +531,17 @@ export function RegistrationForm() {
                 <p className="text-sm font-normal leading-5 text-ws-text-secondary">
                   By clicking Create Account, you are confirming that you have read and agree to the
                   BeneStats{" "}
-                  <Link to="/terms-page" className="cursor-pointer text-ws-light-teal-850 underline">
+                  <Link
+                    to="/terms-page"
+                    className="cursor-pointer text-ws-light-teal-850 underline"
+                  >
                     Terms
                   </Link>{" "}
                   and{" "}
-                  <Link to="/privacy-policy" className="cursor-pointer text-ws-light-teal-850 underline">
+                  <Link
+                    to="/privacy-policy"
+                    className="cursor-pointer text-ws-light-teal-850 underline"
+                  >
                     Privacy Policies
                   </Link>
                   {"."}
