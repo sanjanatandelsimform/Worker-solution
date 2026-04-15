@@ -34,6 +34,12 @@ export const WORKFORCE_COLUMNS_BY_DEPT: { key: string; header: string }[] = [
   { key: "salaryRange", header: "Salary range" },
 ];
 
+export const SALARY_COST_COLUMNS: { key: string; header: string }[] = [
+  { key: "salaryRange", header: "Salary Range" },
+  { key: "avgEmployeeCostPerPaycheck", header: "Average Employee Cost per Paycheck" },
+  { key: "employerCostPerPaycheck", header: "Employer Cost per Paycheck" },
+];
+
 import type { Department } from "@/types/workforceTypes";
 
 export function getWorkforceRowsByDept(

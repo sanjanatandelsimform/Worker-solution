@@ -22,6 +22,7 @@ import {
   WORKFORCE_COLUMNS_ALL,
   WORKFORCE_COLUMNS_BY_DEPT,
   getWorkforceRowsByDept,
+  SALARY_COST_COLUMNS,
 } from "@/pages/workforce/workforceUtils";
 import WorkforceOverview from "@/pages/workforce/WorkforceOverview";
 import WorkforceParticipation from "@/pages/workforce/WorkforceParticipation";
@@ -257,11 +258,7 @@ export default function WorkforcePage() {
           selectedWorkforceDept
         );
 
-  const columnsOne: TableColumn[] = [
-    { key: "salaryRange", header: "Salary Range" },
-    { key: "avgEmployeeCostPerPaycheck", header: "Average Employee Cost per Paycheck" },
-    { key: "employerCostPerPaycheck", header: "Employer Cost per Paycheck" },
-  ];
+  const columnsOne: TableColumn[] = SALARY_COST_COLUMNS;
 
   const salary = (compensationSection?.benefitsCost.table ?? []).map(row => ({
     salaryRange: row.salaryRange,
