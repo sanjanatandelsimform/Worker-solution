@@ -4,15 +4,10 @@ import { useAppSelector } from "@/store/hooks";
 import {
   selectWorkforceLoading,
   selectWorkforceError,
-  selectParticipationSection,
   selectDemographicsSection,
   selectCompensationSection,
 } from "@/store/selectors/workforceSelectors";
 import ErrorMessage from "@/components/common/ErrorMessage";
-import { GlobeIcon } from "@/assets/icons/Globe";
-import { EnrolledIcon } from "@/assets/icons/EnrolledIcon";
-import { SavingIcon } from "@/assets/icons/SavingIcon";
-import { HeartLineIcon } from "@/assets/icons/HeartLineIcon";
 import type { TableColumn } from "@/components/base/table";
 import { Link } from "react-router-dom";
 import {
@@ -28,6 +23,7 @@ import WorkforceParticipation from "@/pages/workforce/WorkforceParticipation";
 import WorkforceDemographics from "@/pages/workforce/WorkforceDemographics";
 import WorkforceCompensation from "@/pages/workforce/WorkforceCompensation";
 import { useWorkforceOverviewConfig } from "@/hooks/useWorkforceOverviewConfig";
+import { useWorkforceParticipationConfig } from "@/hooks/useWorkforceParticipationConfig";
 
 export default function WorkforcePage() {
   const [isGetInTouchModalOpen, setIsGetInTouchModalOpen] = useState(false);
@@ -40,7 +36,6 @@ export default function WorkforcePage() {
   // Redux state
   const isLoadingCards = useAppSelector(selectWorkforceLoading);
   const workforceError = useAppSelector(selectWorkforceError);
-  const participationSection = useAppSelector(selectParticipationSection);
   const demographicsSection = useAppSelector(selectDemographicsSection);
   const compensationSection = useAppSelector(selectCompensationSection);
 
@@ -48,81 +43,8 @@ export default function WorkforcePage() {
   const { overviewCardsConfig, employeeCardsConfig } = useWorkforceOverviewConfig();
 
   // -- Participation config -----------------------------------------------------
-  const participationCardsConfig = [
-    {
-      id: "eligible-employees",
-      title: "Eligible Employees",
-      count: participationSection?.totalWorkforce?.toLocaleString() ?? "--",
-      countIcon: <GlobeIcon className="size-5 text-ws-gray-300" />,
-    },
-    {
-      id: "enrolled-employees",
-      title: "Enrolled Employees",
-      count: participationSection?.enrolledBenefits?.toLocaleString() ?? "--",
-      countIcon: <EnrolledIcon className="size-5 text-ws-gray-300" />,
-    },
-    {
-      id: "enrolled-retirement",
-      title: "Enrolled in Retirement",
-      count: participationSection?.retirementEnrollment ?? "--",
-      countIcon: <SavingIcon className="size-5 text-ws-gray-300" />,
-    },
-    {
-      id: "enrolled-healthcare",
-      title: "Enrolled in Healthcare",
-      count: participationSection?.healthcareEnrollment ?? "--",
-      countIcon: <HeartLineIcon className="size-5 text-ws-gray-300" />,
-    },
-  ];
-
-  const benefitsItems = [
-    {
-      label: "FSA",
-      percentage: parsePercentage(participationSection?.benefits.FSA ?? "0"),
-      progressColor: "bg-ws-navy-300",
-    },
-    {
-      label: "Wellness",
-      percentage: parsePercentage(participationSection?.benefits.wellness ?? "0"),
-      progressColor: "bg-ws-navy-300",
-    },
-    {
-      label: "Employee Assist",
-      percentage: parsePercentage(participationSection?.benefits.EAP ?? "0"),
-      progressColor: "bg-ws-navy-300",
-    },
-  ];
-
-  const retirementItems = [
-    {
-      label: "401k",
-      percentage: parsePercentage(participationSection?.retirement["401k"] ?? "0"),
-      progressColor: "bg-ws-light-teal-400",
-    },
-  ];
-
-  const insuranceItems = [
-    {
-      label: "Health",
-      percentage: parsePercentage(participationSection?.insurance.health ?? "0"),
-      progressColor: "bg-ws-light-teal-300",
-    },
-    {
-      label: "Dental",
-      percentage: parsePercentage(participationSection?.insurance.dental ?? "0"),
-      progressColor: "bg-ws-light-teal-300",
-    },
-    {
-      label: "Vision",
-      percentage: parsePercentage(participationSection?.insurance.vision ?? "0"),
-      progressColor: "bg-ws-light-teal-300",
-    },
-    {
-      label: "Life",
-      percentage: parsePercentage(participationSection?.insurance.life ?? "0"),
-      progressColor: "bg-ws-light-teal-300",
-    },
-  ];
+  const { participationCardsConfig, benefitsItems, retirementItems, insuranceItems } =
+    useWorkforceParticipationConfig();
 
   // -- Demographics config ------------------------------------------------------
   const departmentItems =
