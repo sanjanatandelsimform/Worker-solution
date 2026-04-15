@@ -2,7 +2,8 @@
  * Tests for AdditionalQuestions page
  *
  * Covers: redirect to dashboard when isFinchCompleted is true,
- * and no redirect when isFinchCompleted is false.
+ * redirect to dashboard when isConnected is false (and not loading),
+ * and no redirect when isFinchCompleted is false and isConnected is true.
  */
 
 import React from "react";
@@ -10,6 +11,7 @@ import { describe, it, expect, vi, beforeEach } from "vitest";
 import { render, waitFor } from "@testing-library/react";
 import { MemoryRouter } from "react-router-dom";
 import { useAssessmentStatus } from "@/hooks/useAssessmentStatus";
+import { useFinchStatus } from "@/hooks/useFinchStatus";
 
 // ── Mocks ──────────────────────────────────────────────────────────────────
 
@@ -31,6 +33,16 @@ vi.mock("@/hooks/useAssessmentStatus", () => ({
     assessmentData: null,
     sectionCompletion: { workforce: false, compensation: false, benefits: false, goals: false },
     refetch: vi.fn(),
+  })),
+}));
+
+vi.mock("@/hooks/useFinchStatus", () => ({
+  useFinchStatus: vi.fn(() => ({
+    isConnected: true,
+    isLoading: false,
+    connectionStatus: "connected",
+    syncJobStatus: null,
+    error: null,
   })),
 }));
 
@@ -95,6 +107,7 @@ const { default: AdditionalQuestions } =
   await import("@/pages/additionalQuestions/AdditionalQuestions");
 
 const mockUseAssessmentStatus = vi.mocked(useAssessmentStatus);
+const mockUseFinchStatus = vi.mocked(useFinchStatus);
 
 // ── Helpers ────────────────────────────────────────────────────────────────
 
@@ -110,6 +123,13 @@ const renderPage = () =>
 describe("AdditionalQuestions – redirect behaviour", () => {
   beforeEach(() => {
     mockNavigate.mockReset();
+    mockUseFinchStatus.mockReturnValue({
+      isConnected: true,
+      isLoading: false,
+      connectionStatus: "connected",
+      syncJobStatus: null,
+      error: null,
+    });
   });
 
   it("redirects to /dashboard when isFinchCompleted is true", async () => {
@@ -145,6 +165,81 @@ describe("AdditionalQuestions – redirect behaviour", () => {
 
     await waitFor(() => {
       expect(mockNavigate).not.toHaveBeenCalledWith("/dashboard");
+    });
+  });
+
+  it("redirects to /dashboard when isConnected is false and not loading", async () => {
+    mockUseAssessmentStatus.mockReturnValue({
+      isFinchCompleted: false,
+      completionCount: 0,
+      isLoading: false,
+      error: null,
+      assessmentData: null,
+      sectionCompletion: { workforce: false, compensation: false, benefits: false, goals: false },
+      refetch: vi.fn(),
+    });
+    mockUseFinchStatus.mockReturnValue({
+      isConnected: false,
+      isLoading: false,
+      connectionStatus: "disconnected",
+      syncJobStatus: null,
+      error: null,
+    });
+
+    renderPage();
+
+    await waitFor(() => {
+      expect(mockNavigate).toHaveBeenCalledWith("/dashboard");
+    });
+  });
+
+  it("does not redirect when isConnected is false but isLoading is true", async () => {
+    mockUseAssessmentStatus.mockReturnValue({
+      isFinchCompleted: false,
+      completionCount: 0,
+      isLoading: false,
+      error: null,
+      assessmentData: null,
+      sectionCompletion: { workforce: false, compensation: false, benefits: false, goals: false },
+      refetch: vi.fn(),
+    });
+    mockUseFinchStatus.mockReturnValue({
+      isConnected: false,
+      isLoading: true,
+      connectionStatus: null,
+      syncJobStatus: null,
+      error: null,
+    });
+
+    renderPage();
+
+    await waitFor(() => {
+      expect(mockNavigate).not.toHaveBeenCalledWith("/dashboard");
+    });
+  });
+
+  it("does not redirect when isConnected is true and isFinchCompleted is false", async () => {
+    mockUseAssessmentStatus.mockReturnValue({
+      isFinchCompleted: false,
+      completionCount: 0,
+      isLoading: false,
+      error: null,
+      assessmentData: null,
+      sectionCompletion: { workforce: false, compensation: false, benefits: false, goals: false },
+      refetch: vi.fn(),
+    });
+    mockUseFinchStatus.mockReturnValue({
+      isConnected: true,
+      isLoading: false,
+      connectionStatus: "connected",
+      syncJobStatus: null,
+      error: null,
+    });
+
+    renderPage();
+
+    await waitFor(() => {
+      expect(mockNavigate).not.toHaveBeenCalled();
     });
   });
 });

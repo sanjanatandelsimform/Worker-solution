@@ -13,6 +13,7 @@ import { RankingList } from "@/components/common/RankList";
 import { goalsData } from "@/data/goalsData";
 import { useSubmitFinchAssessment } from "@/hooks/useSubmitFinchAssessment";
 import { useAssessmentStatus } from "@/hooks/useAssessmentStatus";
+import { useFinchStatus } from "@/hooks/useFinchStatus";
 import { buildFinchAssessmentPayload } from "@/utils/finchAssessmentPayload";
 import { Tooltip, TooltipTrigger } from "@/components/base/tooltip/tooltip";
 
@@ -222,6 +223,7 @@ const retirementQuestions = [
 export default function AdditionalQuestions() {
   const navigate = useNavigate();
   const { isFinchCompleted } = useAssessmentStatus();
+  const { isConnected, isLoading: isFinchStatusLoading } = useFinchStatus();
   const [answers, setAnswers] = useState<QuestionAnswer>({});
   const [goalsAnswers, setGoalsAnswers] = useState<GoalsAnswer>({
     selectedGoals: [],
@@ -240,6 +242,12 @@ export default function AdditionalQuestions() {
       navigate("/dashboard");
     }
   }, [isFinchCompleted, navigate]);
+
+  useEffect(() => {
+    if (!isFinchStatusLoading && !isConnected) {
+      navigate("/dashboard");
+    }
+  }, [isConnected, isFinchStatusLoading, navigate]);
 
   const handleClose = () => {
     navigate("/dashboard");
