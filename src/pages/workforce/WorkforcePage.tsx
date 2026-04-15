@@ -1,29 +1,17 @@
 import { useState } from "react";
 import { GetInTouchModal } from "@/components/modals/GetInTouchModal";
 import { useAppSelector } from "@/store/hooks";
-import {
-  selectWorkforceLoading,
-  selectWorkforceError,
-  selectDemographicsSection,
-  selectCompensationSection,
-} from "@/store/selectors/workforceSelectors";
+import { selectWorkforceLoading, selectWorkforceError } from "@/store/selectors/workforceSelectors";
 import ErrorMessage from "@/components/common/ErrorMessage";
-import type { TableColumn } from "@/components/base/table";
 import { Link } from "react-router-dom";
-import {
-  parsePercentage,
-  AGE_COLORS,
-  WORKFORCE_COLUMNS_ALL,
-  WORKFORCE_COLUMNS_BY_DEPT,
-  getWorkforceRowsByDept,
-  SALARY_COST_COLUMNS,
-} from "@/pages/workforce/workforceUtils";
 import WorkforceOverview from "@/pages/workforce/WorkforceOverview";
 import WorkforceParticipation from "@/pages/workforce/WorkforceParticipation";
 import WorkforceDemographics from "@/pages/workforce/WorkforceDemographics";
 import WorkforceCompensation from "@/pages/workforce/WorkforceCompensation";
 import { useWorkforceOverviewConfig } from "@/hooks/useWorkforceOverviewConfig";
 import { useWorkforceParticipationConfig } from "@/hooks/useWorkforceParticipationConfig";
+import { useWorkforceDemographicsConfig } from "@/hooks/useWorkforceDemographicsConfig";
+import { useWorkforceCompensationConfig } from "@/hooks/useWorkforceCompensationConfig";
 
 export default function WorkforcePage() {
   const [isGetInTouchModalOpen, setIsGetInTouchModalOpen] = useState(false);
@@ -36,8 +24,6 @@ export default function WorkforcePage() {
   // Redux state
   const isLoadingCards = useAppSelector(selectWorkforceLoading);
   const workforceError = useAppSelector(selectWorkforceError);
-  const demographicsSection = useAppSelector(selectDemographicsSection);
-  const compensationSection = useAppSelector(selectCompensationSection);
 
   // -- Overview config ----------------------------------------------------------
   const { overviewCardsConfig, employeeCardsConfig } = useWorkforceOverviewConfig();
@@ -46,165 +32,21 @@ export default function WorkforcePage() {
   const { participationCardsConfig, benefitsItems, retirementItems, insuranceItems } =
     useWorkforceParticipationConfig();
 
-  // -- Demographics config ------------------------------------------------------
-  const departmentItems =
-    demographicsSection?.employementType.map(entry => ({
-      id: entry.department,
-      label:
-        entry.department === "all"
-          ? "All"
-          : entry.department.charAt(0).toUpperCase() + entry.department.slice(1),
-    })) ?? [];
+  // -- Demographics config ----------------------------------------------------------
+  const { departmentItems, demographicsCardsConfig, donutChartsConfig, ageBreakdownConfig } =
+    useWorkforceDemographicsConfig(selectedDepartment, selectedEmploymentType);
 
-  const demographicsCardsConfig = [
-    {
-      id: "women",
-      title: "Women",
-      count: demographicsSection?.gender.women ?? "--",
-      tooltipText: "Turnover Rate",
-      getCountClass: () => "mt-2 text-3xl font-semibold text-ws-text-primary",
-    },
-    {
-      id: "men",
-      title: "Men",
-      count: demographicsSection?.gender.men ?? "--",
-      tooltipText: "Average Turnover",
-      getCountClass: () => "mt-2 text-3xl font-semibold text-ws-text-primary",
-    },
-  ];
-
-  const selectedDeptData =
-    demographicsSection?.employementType.find(e => e.department === selectedDepartment) ??
-    demographicsSection?.employementType[0];
-
-  const donutChartsConfig = selectedDeptData
-    ? [
-        {
-          id: "full-time",
-          label: "Full Time",
-          percentage: parsePercentage(selectedDeptData.fullTime),
-          progressColor: "color-ws-progress-primary",
-          backgroundColor: "bg-ws-progress-primary",
-        },
-        {
-          id: "part-time",
-          label: "Part Time",
-          percentage: parsePercentage(selectedDeptData.partTime),
-          progressColor: "color-ws-progress-secondary",
-          backgroundColor: "bg-ws-progress-secondary",
-        },
-        {
-          id: "seasonal",
-          label: "Seasonal",
-          percentage: parsePercentage(selectedDeptData.seasonal),
-          progressColor: "color-ws-progress-turnery",
-          backgroundColor: "bg-ws-progress-turnery",
-        },
-      ]
-    : [];
-
-  const ageBreakdownConfig = (demographicsSection?.employmentBreakdownByAge ?? []).map(
-    (entry, i) => ({
-      id: `age-${i}`,
-      label: `Age: ${entry.ageGroup}`,
-      value: entry[selectedEmploymentType],
-      customColor: `${AGE_COLORS[i % AGE_COLORS.length]} rounded-none`,
-    })
-  );
-
-  // -- Compensation config ------------------------------------------------------
-  const workforceDepartmentItems = [
-    { id: "all", label: "All" },
-    ...(compensationSection?.workforceBreakdown.departments ?? []).map(d => ({
-      id: d.id,
-      label: d.label,
-    })),
-  ];
-
-  const columns: TableColumn[] =
-    selectedWorkforceDept === "all" ? WORKFORCE_COLUMNS_ALL : WORKFORCE_COLUMNS_BY_DEPT;
-
-  const users: Record<string, string>[] =
-    selectedWorkforceDept === "all"
-      ? (compensationSection?.workforceBreakdown.departments ?? []).map(d => ({
-          department: d.label,
-          employeeNumber: String(d.empNumber),
-          partTime: String(d.partTime),
-          fullTime: String(d.fullTime),
-          salaryRange: d.salaryRange,
-        }))
-      : getWorkforceRowsByDept(
-          compensationSection?.workforceBreakdown.departments ?? [],
-          selectedWorkforceDept
-        );
-
-  const columnsOne: TableColumn[] = SALARY_COST_COLUMNS;
-
-  const salary = (compensationSection?.benefitsCost.table ?? []).map(row => ({
-    salaryRange: row.salaryRange,
-    avgEmployeeCostPerPaycheck: `${row.avgEmployeeCostPerPaycheck} (${row.avgEmployeeCostPercentage}%)`,
-    employerCostPerPaycheck:
-      row.employerCostPerPaycheck !== null && row.employerCostPerPaycheck !== undefined
-        ? String(row.employerCostPerPaycheck)
-        : "$xx.xx",
-  }));
-
-  const compensationCardsConfig = [
-    {
-      id: "median-salary",
-      title: "Median Base Salary",
-      count: compensationSection
-        ? `$${compensationSection.salaryBreakdown.medianSalary.toLocaleString()}/yr`
-        : "--",
-      tooltipText: "Home Ownership Rate",
-      getCountClass: () => "mt-2 text-3xl font-semibold text-ws-text-primary",
-    },
-    {
-      id: "average-salary",
-      title: "Average Salary",
-      count: compensationSection
-        ? `$${compensationSection.salaryBreakdown.avgSalary.toLocaleString()}/yr`
-        : "--",
-      tooltipText: "Median Home Value",
-      getCountClass: () => "mt-2 text-3xl font-semibold text-ws-text-primary",
-    },
-    {
-      id: "hourly-wage",
-      title: "Average Hourly Wage",
-      count: compensationSection
-        ? `$${compensationSection.salaryBreakdown.avgHourlyRate.toFixed(2)}`
-        : "--",
-      tooltipText: "Median Rent",
-      getCountClass: () => "mt-2 text-3xl font-semibold text-ws-text-primary",
-    },
-  ];
-
-  const salaryBreakdownCardsConfig = [
-    {
-      id: "employee-contribution",
-      title: "Employee Contribution Per Paycheck (All benefits)",
-      count: compensationSection
-        ? `$${compensationSection.benefitsCost.employeeContribution.toLocaleString()}`
-        : "--",
-      tooltipText: "Home Ownership Rate",
-      getCountClass: () => "mt-2 text-3xl font-semibold text-ws-text-primary",
-    },
-    {
-      id: "employer-cost",
-      title: "Employer Cost Per Employee (Avg)",
-      count: compensationSection?.benefitsCost.employerCost ?? "--",
-      tooltipText: "Median Home Value",
-      getCountClass: () => "mt-2 text-3xl font-semibold text-ws-text-primary",
-    },
-  ];
-
-  const salaryChartData = (compensationSection?.benefitsCost.graph ?? []).map(g => ({
-    label: g.salaryRange,
-    min: g.min,
-    boxStart: g.min,
-    boxEnd: g.max,
-    max: g.max,
-  }));
+  // -- Compensation config ----------------------------------------------------------
+  const {
+    workforceDepartmentItems,
+    columns,
+    users,
+    columnsOne,
+    salary,
+    compensationCardsConfig,
+    salaryBreakdownCardsConfig,
+    salaryChartData,
+  } = useWorkforceCompensationConfig(selectedWorkforceDept);
 
   return (
     <div className="bg-ws-base-white py-10 px-6 space-y-6 shadow-xl rounded-b-xl">
