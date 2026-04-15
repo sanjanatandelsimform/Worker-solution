@@ -1,3 +1,6 @@
+import type { TableColumn } from "@/components/base/table";
+import type { Department } from "@/types/workforceTypes";
+
 /**
  * Parses a percentage string from the workforce API.
  * Strips "%" and returns a number. Returns 0 for "N/A" or any invalid input.
@@ -18,7 +21,7 @@ export const AGE_COLORS = [
   "bg-ws-light-teal-950",
 ] as const;
 
-export const WORKFORCE_COLUMNS_ALL: { key: string; header: string }[] = [
+export const WORKFORCE_COLUMNS_ALL: TableColumn[] = [
   { key: "department", header: "Department" },
   { key: "employeeNumber", header: "Employee number" },
   { key: "partTime", header: "Part time" },
@@ -26,7 +29,7 @@ export const WORKFORCE_COLUMNS_ALL: { key: string; header: string }[] = [
   { key: "salaryRange", header: "Salary range" },
 ];
 
-export const WORKFORCE_COLUMNS_BY_DEPT: { key: string; header: string }[] = [
+export const WORKFORCE_COLUMNS_BY_DEPT: TableColumn[] = [
   { key: "jobTitle", header: "Job Title" },
   { key: "totalInRole", header: "Total in role" },
   { key: "partTime", header: "Part time" },
@@ -34,13 +37,11 @@ export const WORKFORCE_COLUMNS_BY_DEPT: { key: string; header: string }[] = [
   { key: "salaryRange", header: "Salary range" },
 ];
 
-export const SALARY_COST_COLUMNS: { key: string; header: string }[] = [
+export const SALARY_COST_COLUMNS: TableColumn[] = [
   { key: "salaryRange", header: "Salary Range" },
   { key: "avgEmployeeCostPerPaycheck", header: "Average Employee Cost per Paycheck" },
   { key: "employerCostPerPaycheck", header: "Employer Cost per Paycheck" },
 ];
-
-import type { Department } from "@/types/workforceTypes";
 
 export function getWorkforceRowsByDept(
   departments: Department[],
