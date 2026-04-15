@@ -4,7 +4,6 @@ import { useAppSelector } from "@/store/hooks";
 import {
   selectWorkforceLoading,
   selectWorkforceError,
-  selectWorkforceSection,
   selectParticipationSection,
   selectDemographicsSection,
   selectCompensationSection,
@@ -28,6 +27,7 @@ import WorkforceOverview from "@/pages/workforce/WorkforceOverview";
 import WorkforceParticipation from "@/pages/workforce/WorkforceParticipation";
 import WorkforceDemographics from "@/pages/workforce/WorkforceDemographics";
 import WorkforceCompensation from "@/pages/workforce/WorkforceCompensation";
+import { useWorkforceOverviewConfig } from "@/hooks/useWorkforceOverviewConfig";
 
 export default function WorkforcePage() {
   const [isGetInTouchModalOpen, setIsGetInTouchModalOpen] = useState(false);
@@ -40,54 +40,12 @@ export default function WorkforcePage() {
   // Redux state
   const isLoadingCards = useAppSelector(selectWorkforceLoading);
   const workforceError = useAppSelector(selectWorkforceError);
-  const workforceSection = useAppSelector(selectWorkforceSection);
   const participationSection = useAppSelector(selectParticipationSection);
   const demographicsSection = useAppSelector(selectDemographicsSection);
   const compensationSection = useAppSelector(selectCompensationSection);
 
   // -- Overview config ----------------------------------------------------------
-  const overviewCardsConfig = [
-    {
-      id: "total-workforce",
-      title: "Total Workforce",
-      count: workforceSection?.totalWorkforce?.toLocaleString() ?? "--",
-      tooltipText: "Turnover Rate",
-      getDescriptionText: () =>
-        "Industry specific turnover metrics are calculated from US Census Bureau QWI data sources",
-      getCountClass: () => "mt-2 text-3xl font-semibold text-ws-text-primary",
-    },
-    {
-      id: "enrolled-benefits",
-      title: "Enrolled in Benefits",
-      count: workforceSection?.enrolledBenefits?.toLocaleString() ?? "--",
-      tooltipText: "Average Turnover",
-      getDescriptionText: () =>
-        "Average turnover metrics are calculated from US Census Bureau QWI data sources",
-      getCountClass: () => "mt-2 text-3xl font-semibold text-ws-text-primary",
-    },
-    {
-      id: "avg-employee-cost",
-      title: "Avg. Employee Cost Per Pay Period",
-      count: workforceSection ? `$${workforceSection.avgEmployeeCost.toLocaleString()}` : "--",
-      tooltipText: "Average Cost of Turnover",
-      getDescriptionText: () =>
-        "Industry specific cost of turnover is calculated from US Census Bureau QWI data sources",
-      getCountClass: () => "mt-2 text-3xl font-semibold text-ws-text-primary",
-    },
-    {
-      id: "employer-cost",
-      title: "Employer Cost Per Employee",
-      count: workforceSection
-        ? `$${workforceSection.employerCostPerEmployee.toLocaleString()}/yr`
-        : "--",
-      tooltipText: "Turnover Rate",
-      getDescriptionText: () =>
-        "Industry specific turnover metrics are calculated from US Census Bureau QWI data sources",
-      getCountClass: () => "mt-2 text-3xl font-semibold text-ws-text-primary",
-    },
-  ];
-
-  const employeeCardsConfig: typeof overviewCardsConfig = [];
+  const { overviewCardsConfig, employeeCardsConfig } = useWorkforceOverviewConfig();
 
   // -- Participation config -----------------------------------------------------
   const participationCardsConfig = [
