@@ -20,8 +20,7 @@ interface DemographicsCardConfig {
   title: string;
   count: string;
   tooltipText: string;
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  getCountClass: (industryOverview?: any) => string;
+  getCountClass: () => string;
 }
 
 interface DonutChartConfig {
