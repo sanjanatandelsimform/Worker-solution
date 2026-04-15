@@ -66,7 +66,7 @@ export const SettingsPage = () => {
     }
   }, [userData?.firstName, userData?.lastName]);
 
-  const { completionCount } = useAssessmentStatus();
+  const { completionCount, isFinchCompleted } = useAssessmentStatus();
 
   // Modal configurations using the hook
   const updateCompleteModal = useModalConfig("updateComplete", {
@@ -184,7 +184,7 @@ export const SettingsPage = () => {
     try {
       await dispatch(retakeAssessmentAction()).unwrap();
       setIsRetakeAssessmentModalOpen(false);
-      navigate("/assessment");
+      navigate("/dashboard");
     } catch (error) {
       setIsRetakeAssessmentModalOpen(false);
       setRetakeError(typeof error === "string" ? error : "Failed to retake assessment");
@@ -540,7 +540,7 @@ export const SettingsPage = () => {
                           size="md"
                           className="w-full text-base font-semibold text-ws-navy-800"
                           onClick={() => setIsRetakeAssessmentModalOpen(true)}
-                          isDisabled={completionCount === 0}
+                          isDisabled={completionCount === 0 && !isFinchCompleted}
                         >
                           Retake Assessment
                         </Button>

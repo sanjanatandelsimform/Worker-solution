@@ -65,6 +65,7 @@ export const DashboardPage = () => {
   const {
     completionCount,
     assessmentData,
+    isFinchCompleted,
     isLoading: isLoadingAssessment,
   } = useAssessmentStatus({ enabled: emailVerify });
   const dashboardLoading = useAppSelector(selectDashboardLoading);
@@ -405,7 +406,6 @@ export const DashboardPage = () => {
                     textColor="text-red-700"
                     alertIcon={AlertCircle}
                     errorMessage={dashboardError}
-                    onClose={() => {}}
                   />
                   <button
                     onClick={handleRetryDashboard}
@@ -588,7 +588,7 @@ export const DashboardPage = () => {
               buttonIsDisabled={isFinchLoading}
             />
           )}
-          {emailVerify && isConnected && (
+          {emailVerify && isConnected && !isFinchCompleted && (
             <DashboardCard
               classes="bg-ws-navy-100 border-ws-primary-100 mt-10 shadow-none"
               toggleAvatar={true}
