@@ -158,7 +158,6 @@ export default function WorkforcePage() {
       progressColor: "bg-ws-light-teal-300",
     },
   ];
-  // prettier-ignore-end
 
   // -- Demographics config ------------------------------------------------------
   const departmentItems =
