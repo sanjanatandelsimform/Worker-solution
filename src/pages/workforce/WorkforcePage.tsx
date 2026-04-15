@@ -1,14 +1,18 @@
 "use client";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import StaticCard from "../recommendations/StaticCard";
 import { Select } from "@/components/base/select/select";
 import { GetInTouchModal } from "@/components/modals/GetInTouchModal";
 import { useAppSelector } from "@/store/hooks";
 import {
-  selectIndustryOverview,
-  selectZipCodes,
-  selectDashboardData,
-} from "@/store/selectors/dashboardSelectors";
+  selectWorkforceLoading,
+  selectWorkforceError,
+  selectWorkforceSection,
+  selectParticipationSection,
+  selectDemographicsSection,
+  selectCompensationSection,
+} from "@/store/selectors/workforceSelectors";
+import ErrorMessage from "@/components/common/ErrorMessage";
 import { Label } from "@/components/base/input/label";
 
 import { GlobeIcon } from "@/assets/icons/Globe";
@@ -185,34 +189,40 @@ const BreakDownChartSkeleton = () => (
 
 export default function WorkforcePage() {
   const [isGetInTouchModalOpen, setIsGetInTouchModalOpen] = useState(false);
-  const [selectedGraphType, setSelectedGraphType] = useState<"owners" | "renters">("renters");
-  const [isLoadingCards, setIsLoadingCards] = useState(true);
+  const [selectedDepartment, setSelectedDepartment] = useState<string>("all");
+  const [selectedEmploymentType, setSelectedEmploymentType] = useState<
+    "fullTime" | "partTime" | "seasonal"
+  >("fullTime");
 
-  useEffect(() => {
-    const timer = setTimeout(() => {
-      setIsLoadingCards(false);
-    }, 5000);
+  const employmentTypeItems = [
+    { id: "fullTime", label: "Full Time" },
+    { id: "partTime", label: "Part Time" },
+    { id: "seasonal", label: "Seasonal" },
+  ];
 
-    return () => clearTimeout(timer);
-  }, []);
+  // Helper: strip "%" and return a number; returns 0 for "N/A" or invalid strings
+  const parsePercentage = (value: string): number => {
+    const num = parseFloat(value.replace("%", ""));
+    return isNaN(num) ? 0 : num;
+  };
 
-  // Get dashboard benchmark data from Redux store
-  const industryOverview = useAppSelector(selectIndustryOverview);
-  const zipCodes = useAppSelector(selectZipCodes);
-  const dashboardData = useAppSelector(selectDashboardData);
+  // Redux state
+  const isLoadingCards = useAppSelector(selectWorkforceLoading);
+  const workforceError = useAppSelector(selectWorkforceError);
+  const workforceSection = useAppSelector(selectWorkforceSection);
+  const participationSection = useAppSelector(selectParticipationSection);
+  const demographicsSection = useAppSelector(selectDemographicsSection);
+  const compensationSection = useAppSelector(selectCompensationSection);
 
-  const initialZip =
-    (zipCodes && zipCodes.length > 0 && zipCodes[0]) ||
-    dashboardData?.areaMedianWage?.[0]?.zipcode ||
-    dashboardData?.housingCost?.[0]?.zipcode ||
-    null;
-
-  const selectedHousingZip = initialZip;
-
-  // Derive housing data for selected housing zip
-  const selectedHousingData = selectedHousingZip
-    ? dashboardData?.housingCost?.find(h => h.zipcode === selectedHousingZip)
-    : dashboardData?.housingCost?.[0];
+  // Department dropdown items derived from API
+  const departmentItems =
+    demographicsSection?.employementType.map(entry => ({
+      id: entry.department,
+      label:
+        entry.department === "all"
+          ? "All"
+          : entry.department.charAt(0).toUpperCase() + entry.department.slice(1),
+    })) ?? [];
 
   const columns: TableColumn[] = [
     { key: "department", header: "Department" },
@@ -221,76 +231,25 @@ export default function WorkforcePage() {
     { key: "fullTime", header: "Full time" },
     { key: "salaryRange", header: "Salary range" },
   ];
-  const users = [
-    {
-      department: "Design",
-      employeeNumber: "8",
-      partTime: "2",
-      fullTime: "6",
-      salaryRange: "$79,000-120,000",
-    },
-    {
-      department: "Engineering",
-      employeeNumber: "15",
-      partTime: "4",
-      fullTime: "11",
-      salaryRange: "$110,000-140,000",
-    },
-    {
-      department: "Human Resources",
-      employeeNumber: "25",
-      partTime: "5",
-      fullTime: "20",
-      salaryRange: "$130,000-200,000",
-    },
-    {
-      department: "Product",
-      employeeNumber: "5",
-      partTime: "1",
-      fullTime: "4",
-      salaryRange: "$70,000-100,000",
-    },
-    {
-      department: "Sales",
-      employeeNumber: "5",
-      partTime: "1",
-      fullTime: "4",
-      salaryRange: "$70,000-100,000",
-    },
-  ];
+  const users = (compensationSection?.workforceBreakdown.departments ?? []).map(d => ({
+    department: d.label,
+    employeeNumber: String(d.empNumber),
+    partTime: String(d.partTime),
+    fullTime: String(d.fullTime),
+    salaryRange: d.salaryRange,
+  }));
 
   const columnsOne: TableColumn[] = [
     { key: "salaryRange", header: "Salary range" },
     { key: "avgEmployeeCostPerPaycheck", header: "Avg. Employee cost per paycheck" },
     { key: "employerCostPerPaycheck", header: "Employer cost per paycheck" },
   ];
-  const salary = [
-    {
-      salaryRange: "30k - 50k",
-      avgEmployeeCostPerPaycheck: "120.22 (30%)",
-      employerCostPerPaycheck: "$xx.xx",
-    },
-    {
-      salaryRange: "50k - 70k",
-      avgEmployeeCostPerPaycheck: "220.22 (60%)",
-      employerCostPerPaycheck: "$xx.xx",
-    },
-    {
-      salaryRange: "70k - 90k",
-      avgEmployeeCostPerPaycheck: "330.22 (23%)",
-      employerCostPerPaycheck: "$xx.xx",
-    },
-    {
-      salaryRange: "90k - 110k",
-      avgEmployeeCostPerPaycheck: "440.22 (40%)",
-      employerCostPerPaycheck: "$xx.xx",
-    },
-    {
-      salaryRange: "110k +",
-      avgEmployeeCostPerPaycheck: "600.22 (60%)",
-      employerCostPerPaycheck: "$xx.xx",
-    },
-  ];
+  const salary = (compensationSection?.benefitsCost.table ?? []).map(row => ({
+    salaryRange: row.salaryRange,
+    avgEmployeeCostPerPaycheck: `${row.avgEmployeeCostPerPaycheck} (${row.avgEmployeeCostPercentage}%)`,
+    employerCostPerPaycheck:
+      row.employerCostPerPaycheck != null ? String(row.employerCostPerPaycheck) : "$xx.xx",
+  }));
 
   interface StaticCardOverviewConfig {
     id: string;
@@ -307,78 +266,55 @@ export default function WorkforcePage() {
     {
       id: "total-workforce",
       title: "Total Workforce",
-      count: "3,120",
+      count: workforceSection?.totalWorkforce?.toLocaleString() ?? "--",
       tooltipText: "Turnover Rate",
       getDescriptionText: () =>
         "Industry specific turnover metrics are calculated from US Census Bureau QWI data sources",
-      getCountClass: industryOverview =>
-        industryOverview?.turnoverRate?.rate == null
-          ? "mt-2 text-sm font-medium text-ws-text-primary"
-          : "mt-2 text-3xl font-semibold text-ws-text-primary",
+      getCountClass: () => "mt-2 text-3xl font-semibold text-ws-text-primary",
     },
     {
       id: "enrolled-benefits",
       title: "Enrolled in Benefits",
-      count: "2,450",
+      count: workforceSection?.enrolledBenefits?.toLocaleString() ?? "--",
       tooltipText: "Average Turnover",
       getDescriptionText: () =>
         "Average turnover metrics are calculated from US Census Bureau QWI data sources",
-      getCountClass: industryOverview =>
-        industryOverview?.avgTurnover?.rate == null
-          ? "mt-2 text-sm font-medium text-ws-text-primary"
-          : "mt-2 text-3xl font-semibold text-ws-text-primary",
+      getCountClass: () => "mt-2 text-3xl font-semibold text-ws-text-primary",
     },
     {
       id: "avg-employee-cost",
       title: "Avg. Employee Cost Per Pay Period",
-      count: "$2,254",
+      count: workforceSection ? `$${workforceSection.avgEmployeeCost.toLocaleString()}` : "--",
       tooltipText: "Average Cost of Turnover",
-      getDescriptionText: industryOverview =>
-        `Industry specific cost of turnover is calculated from ${industryOverview?.avgCostOfTurnover?.year || " "}`,
-      getCountClass: industryOverview =>
-        industryOverview?.avgCostOfTurnover?.amount == null
-          ? "mt-2 text-sm font-medium text-ws-text-primary"
-          : "mt-2 text-3xl font-semibold text-ws-text-primary",
+      getDescriptionText: () =>
+        "Industry specific cost of turnover is calculated from US Census Bureau QWI data sources",
+      getCountClass: () => "mt-2 text-3xl font-semibold text-ws-text-primary",
+    },
+    {
+      id: "employer-cost",
+      title: "Employer Cost Per Employee",
+      count: workforceSection
+        ? `$${workforceSection.employerCostPerEmployee.toLocaleString()}/yr`
+        : "--",
+      tooltipText: "Turnover Rate",
+      getDescriptionText: () =>
+        "Industry specific turnover metrics are calculated from US Census Bureau QWI data sources",
+      getCountClass: () => "mt-2 text-3xl font-semibold text-ws-text-primary",
     },
   ];
 
   const employeeCardsConfig: StaticCardOverviewConfig[] = [
-    {
-      id: "employer-cost",
-      title: "Employer Cost Per Employee",
-      count: "$11,240/yr",
-      tooltipText: "Turnover Rate",
-      getDescriptionText: () =>
-        "Industry specific turnover metrics are calculated from US Census Bureau QWI data sources",
-      getCountClass: industryOverview =>
-        industryOverview?.turnoverRate?.rate == null
-          ? "mt-2 text-sm font-medium text-ws-text-primary"
-          : "mt-2 text-3xl font-semibold text-ws-text-primary",
-    },
-    {
-      id: "avg-pto-taken",
-      title: "Avg. PTO Taken",
-      count: "13",
-      tooltipText: "Average Turnover",
-      getDescriptionText: () =>
-        "Average turnover metrics are calculated from US Census Bureau QWI data sources",
-      getCountClass: industryOverview =>
-        industryOverview?.avgTurnover?.rate == null
-          ? "mt-2 text-sm font-medium text-ws-text-primary"
-          : "mt-2 text-3xl font-semibold text-ws-text-primary",
-    },
-    {
-      id: "avg-sick-days",
-      title: "Avg. Sick Days Taken",
-      count: "4",
-      tooltipText: "Average Cost of Turnover",
-      getDescriptionText: industryOverview =>
-        `Industry specific cost of turnover is calculated from ${industryOverview?.avgCostOfTurnover?.year || " "}`,
-      getCountClass: industryOverview =>
-        industryOverview?.avgCostOfTurnover?.amount == null
-          ? "mt-2 text-sm font-medium text-ws-text-primary"
-          : "mt-2 text-3xl font-semibold text-ws-text-primary",
-    },
+    //   {
+    //     id: "employer-cost",
+    //     title: "Employer Cost Per Employee",
+    //     count: workforceSection
+    //       ? `$${workforceSection.employerCostPerEmployee.toLocaleString()}/yr`
+    //       : "--",
+    //     tooltipText: "Turnover Rate",
+    //     getDescriptionText: () =>
+    //       "Industry specific turnover metrics are calculated from US Census Bureau QWI data sources",
+    //     getCountClass: () => "mt-2 text-3xl font-semibold text-ws-text-primary",
+    //   },
   ];
 
   interface ParticipationCardConfig {
@@ -392,25 +328,25 @@ export default function WorkforcePage() {
     {
       id: "eligible-employees",
       title: "Eligible Employees",
-      count: "2,450",
+      count: participationSection?.totalWorkforce?.toLocaleString() ?? "--",
       countIcon: <GlobeIcon className="size-5 text-ws-gray-300" />,
     },
     {
       id: "enrolled-employees",
       title: "Enrolled Employees",
-      count: "2,254",
+      count: participationSection?.enrolledBenefits?.toLocaleString() ?? "--",
       countIcon: <EnrolledIcon className="size-5 text-ws-gray-300" />,
     },
     {
       id: "enrolled-retirement",
       title: "Enrolled in retirement",
-      count: "64%",
+      count: participationSection?.retirementEnrollment ?? "--",
       countIcon: <SavingIcon className="size-5 text-ws-gray-300" />,
     },
     {
       id: "enrolled-healthcare",
       title: "Enrolled in healthcare",
-      count: "92%",
+      count: participationSection?.healthcareEnrollment ?? "--",
       countIcon: <HeartLineIcon className="size-5 text-ws-gray-300" />,
     },
   ];
@@ -420,6 +356,7 @@ export default function WorkforcePage() {
     title: string;
     count: string;
     tooltipText: string;
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     getCountClass: (industryOverview?: any) => string;
   }
 
@@ -427,22 +364,16 @@ export default function WorkforcePage() {
     {
       id: "women",
       title: "Women",
-      count: "32%",
+      count: demographicsSection?.gender.women ?? "--",
       tooltipText: "Turnover Rate",
-      getCountClass: industryOverview =>
-        industryOverview?.turnoverRate?.rate == null
-          ? "mt-2 text-sm font-medium text-ws-text-tertiary"
-          : "mt-2 text-3xl font-semibold text-ws-text-primary",
+      getCountClass: () => "mt-2 text-3xl font-semibold text-ws-text-primary",
     },
     {
       id: "men",
       title: "Men",
-      count: "68%",
+      count: demographicsSection?.gender.men ?? "--",
       tooltipText: "Average Turnover",
-      getCountClass: industryOverview =>
-        industryOverview?.avgTurnover?.rate == null
-          ? "mt-2 text-sm font-medium text-ws-text-tertiary"
-          : "mt-2 text-3xl font-semibold text-ws-text-primary",
+      getCountClass: () => "mt-2 text-3xl font-semibold text-ws-text-primary",
     },
   ];
 
@@ -454,29 +385,35 @@ export default function WorkforcePage() {
     backgroundColor: string;
   }
 
-  const donutChartsConfig: DonutChartConfig[] = [
-    {
-      id: "full-time",
-      label: "Full Time",
-      percentage: 60,
-      progressColor: "color-ws-progress-primary",
-      backgroundColor: "bg-ws-progress-primary",
-    },
-    {
-      id: "part-time",
-      label: "Part Time",
-      percentage: 23,
-      progressColor: "color-ws-progress-secondary",
-      backgroundColor: "bg-ws-progress-secondary",
-    },
-    {
-      id: "seasonal",
-      label: "Seasonal",
-      percentage: 7,
-      progressColor: "color-ws-progress-turnery",
-      backgroundColor: "bg-ws-progress-turnery",
-    },
-  ];
+  const selectedDeptData =
+    demographicsSection?.employementType.find(e => e.department === selectedDepartment) ??
+    demographicsSection?.employementType[0];
+
+  const donutChartsConfig: DonutChartConfig[] = selectedDeptData
+    ? [
+        {
+          id: "full-time",
+          label: "Full Time",
+          percentage: parsePercentage(selectedDeptData.fullTime),
+          progressColor: "color-ws-progress-primary",
+          backgroundColor: "bg-ws-progress-primary",
+        },
+        {
+          id: "part-time",
+          label: "Part Time",
+          percentage: parsePercentage(selectedDeptData.partTime),
+          progressColor: "color-ws-progress-secondary",
+          backgroundColor: "bg-ws-progress-secondary",
+        },
+        {
+          id: "seasonal",
+          label: "Seasonal",
+          percentage: parsePercentage(selectedDeptData.seasonal),
+          progressColor: "color-ws-progress-turnery",
+          backgroundColor: "bg-ws-progress-turnery",
+        },
+      ]
+    : [];
 
   interface AgeBreakdownConfig {
     id: string;
@@ -485,44 +422,29 @@ export default function WorkforcePage() {
     customColor: string;
   }
 
-  const ageBreakdownConfig: AgeBreakdownConfig[] = [
-    {
-      id: "age-gt-30",
-      label: "Age: > 30",
-      value: 10,
-      customColor: "bg-ws-light-teal-400 rounded-none",
-    },
-    {
-      id: "age-30-40",
-      label: "Age: 30 - 40",
-      value: 30,
-      customColor: "bg-ws-light-teal-700 rounded-none",
-    },
-    {
-      id: "age-40-50",
-      label: "Age: 40 - 50",
-      value: 45,
-      customColor: "bg-ws-light-teal-100 rounded-none",
-    },
-    {
-      id: "age-50-60",
-      label: "Age: 50 - 60",
-      value: 10,
-      customColor: "bg-ws-light-teal-300 rounded-none",
-    },
-    {
-      id: "age-60-plus",
-      label: "Age: 60 +",
-      value: 5,
-      customColor: "bg-ws-light-teal-950 rounded-none",
-    },
+  const ageColors = [
+    "bg-ws-light-teal-400",
+    "bg-ws-light-teal-700",
+    "bg-ws-light-teal-100",
+    "bg-ws-light-teal-300",
+    "bg-ws-light-teal-950",
   ];
+
+  const ageBreakdownConfig: AgeBreakdownConfig[] = (
+    demographicsSection?.employmentBreakdownByAge ?? []
+  ).map((entry, i) => ({
+    id: `age-${i}`,
+    label: `Age: ${entry.ageGroup}`,
+    value: entry[selectedEmploymentType],
+    customColor: `${ageColors[i % ageColors.length]} rounded-none`,
+  }));
 
   interface SalaryBreakdownCardConfig {
     id: string;
     title: string;
     count: string;
     tooltipText: string;
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     getCountClass: (selectedHousingData?: any) => string;
   }
 
@@ -530,22 +452,18 @@ export default function WorkforcePage() {
     {
       id: "employee-contribution",
       title: "Employee Contribution Per Paycheck (All benefits)",
-      count: "$468.33",
+      count: compensationSection
+        ? `$${compensationSection.benefitsCost.employeeContribution.toLocaleString()}`
+        : "--",
       tooltipText: "Home Ownership Rate",
-      getCountClass: selectedHousingData =>
-        selectedHousingData?.workingClassHousingCostBurden?.homeOwnershipRate == null
-          ? "mt-2 text-sm font-medium text-ws-text-primary"
-          : "mt-2 text-3xl font-semibold text-ws-text-primary",
+      getCountClass: () => "mt-2 text-3xl font-semibold text-ws-text-primary",
     },
     {
       id: "employer-cost",
       title: "Employer Cost Per Employee (Avg)",
-      count: "$11,240/yr",
+      count: compensationSection?.benefitsCost.employerCost ?? "--",
       tooltipText: "Median Home Value",
-      getCountClass: selectedHousingData =>
-        selectedHousingData?.workingClassHousingCostBurden?.medianHomeValue == null
-          ? "mt-2 text-sm font-medium text-ws-text-primary"
-          : "mt-2 text-3xl font-semibold text-ws-text-primary",
+      getCountClass: () => "mt-2 text-3xl font-semibold text-ws-text-primary",
     },
   ];
 
@@ -554,6 +472,7 @@ export default function WorkforcePage() {
     title: string;
     count: string;
     tooltipText: string;
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     getCountClass: (selectedHousingData?: any) => string;
   }
 
@@ -561,32 +480,29 @@ export default function WorkforcePage() {
     {
       id: "median-salary",
       title: "Median Base Salary",
-      count: "$123,000/yr",
+      count: compensationSection
+        ? `$${compensationSection.salaryBreakdown.medianSalary.toLocaleString()}/yr`
+        : "--",
       tooltipText: "Home Ownership Rate",
-      getCountClass: selectedHousingData =>
-        selectedHousingData?.workingClassHousingCostBurden?.homeOwnershipRate == null
-          ? "mt-2 text-sm font-medium text-ws-text-tertiary"
-          : "mt-2 text-3xl font-semibold text-ws-text-primary",
+      getCountClass: () => "mt-2 text-3xl font-semibold text-ws-text-primary",
     },
     {
       id: "average-salary",
       title: "Average Salary",
-      count: "$6,012.33",
+      count: compensationSection
+        ? `$${compensationSection.salaryBreakdown.avgSalary.toLocaleString()}/yr`
+        : "--",
       tooltipText: "Median Home Value",
-      getCountClass: selectedHousingData =>
-        selectedHousingData?.workingClassHousingCostBurden?.medianHomeValue == null
-          ? "mt-2 text-sm font-medium text-ws-text-tertiary"
-          : "mt-2 text-3xl font-semibold text-ws-text-primary",
+      getCountClass: () => "mt-2 text-3xl font-semibold text-ws-text-primary",
     },
     {
       id: "hourly-wage",
       title: "Average Hourly Wage",
-      count: "$25.22",
+      count: compensationSection
+        ? `$${compensationSection.salaryBreakdown.avgHourlyRate.toFixed(2)}`
+        : "--",
       tooltipText: "Median Rent",
-      getCountClass: selectedHousingData =>
-        selectedHousingData?.workingClassHousingCostBurden?.medianRent == null
-          ? "mt-2 text-sm font-medium text-ws-text-tertiary"
-          : "mt-2 text-3xl font-semibold text-ws-text-primary",
+      getCountClass: () => "mt-2 text-3xl font-semibold text-ws-text-primary",
     },
   ];
 
@@ -599,10 +515,14 @@ export default function WorkforcePage() {
         <p className="text-2xl text-ws-text-primary">Breakdown Overview</p>
       </div>
 
+      {/* Error banner */}
+      {workforceError && <ErrorMessage errorMessage={workforceError} errorType="danger" />}
+
       {/* ── Industry Overview ── */}
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 w-full">
+      <div className="grid grid-cols-1 lg:grid-cols-4 gap-8 w-full">
         {isLoadingCards ? (
           <>
+            <OverviewCardSkeleton />
             <OverviewCardSkeleton />
             <OverviewCardSkeleton />
             <OverviewCardSkeleton />
@@ -616,11 +536,11 @@ export default function WorkforcePage() {
                 titleClass="text-sm font-medium text-ws-text-tertiary"
                 itemAlign="between"
                 count={card.count}
-                countClass={card.getCountClass(industryOverview)}
+                countClass={card.getCountClass()}
                 infoIcon={true}
                 infoCircleClass="text-ws-gray-400 size-5"
                 tooltipText={card.tooltipText}
-                descriptionText={card.getDescriptionText(industryOverview)}
+                descriptionText={card.getDescriptionText()}
                 placements="top"
               />
             ))}
@@ -643,11 +563,11 @@ export default function WorkforcePage() {
                 titleClass="text-sm font-medium text-ws-text-tertiary"
                 itemAlign="between"
                 count={card.count}
-                countClass={card.getCountClass(industryOverview)}
+                countClass={card.getCountClass()}
                 infoIcon={true}
                 infoCircleClass="text-ws-gray-400 size-5"
                 tooltipText={card.tooltipText}
-                descriptionText={card.getDescriptionText(industryOverview)}
+                descriptionText={card.getDescriptionText()}
                 placements="top"
               />
             ))}
@@ -729,17 +649,17 @@ export default function WorkforcePage() {
                     items: [
                       {
                         label: "FSA",
-                        percentage: 16.2,
+                        percentage: parsePercentage(participationSection?.benefits.FSA ?? "0"),
                         progressColor: "bg-ws-navy-300",
                       },
                       {
                         label: "Wellness",
-                        percentage: 19.5,
+                        percentage: parsePercentage(participationSection?.benefits.wellness ?? "0"),
                         progressColor: "bg-ws-navy-300",
                       },
                       {
                         label: "Employee Assist",
-                        percentage: 19.5,
+                        percentage: parsePercentage(participationSection?.benefits.EAP ?? "0"),
                         progressColor: "bg-ws-navy-300",
                       },
                     ],
@@ -764,7 +684,9 @@ export default function WorkforcePage() {
                     items: [
                       {
                         label: "401k",
-                        percentage: 70.4,
+                        percentage: parsePercentage(
+                          participationSection?.retirement["401k"] ?? "0"
+                        ),
                         progressColor: "bg-ws-light-teal-400",
                       },
                     ],
@@ -789,22 +711,22 @@ export default function WorkforcePage() {
                     items: [
                       {
                         label: "Health",
-                        percentage: 16.2,
+                        percentage: parsePercentage(participationSection?.insurance.health ?? "0"),
                         progressColor: "bg-ws-light-teal-300",
                       },
                       {
                         label: "Dental",
-                        percentage: 19.5,
+                        percentage: parsePercentage(participationSection?.insurance.dental ?? "0"),
                         progressColor: "bg-ws-light-teal-300",
                       },
                       {
                         label: "Vision",
-                        percentage: 19.5,
+                        percentage: parsePercentage(participationSection?.insurance.vision ?? "0"),
                         progressColor: "bg-ws-light-teal-300",
                       },
                       {
                         label: "Life",
-                        percentage: 19.5,
+                        percentage: parsePercentage(participationSection?.insurance.life ?? "0"),
                         progressColor: "bg-ws-light-teal-300",
                       },
                     ],
@@ -834,14 +756,11 @@ export default function WorkforcePage() {
               isRequired
               size="md"
               placeholder="All"
-              items={[
-                { label: "Manchester, NH", id: "manchester-nh" },
-                { label: "Manchester, NH", id: "manchester-nh" },
-              ]}
-              value={selectedGraphType}
+              items={departmentItems}
+              value={selectedDepartment}
               onSelectionChange={key => {
                 if (key) {
-                  setSelectedGraphType(key as "owners" | "renters");
+                  setSelectedDepartment(String(key));
                 }
               }}
             >
@@ -865,7 +784,7 @@ export default function WorkforcePage() {
                     titleClass="text-sm font-medium text-ws-text-tertiary"
                     itemAlign="between"
                     count={card.count}
-                    countClass={card.getCountClass(industryOverview)}
+                    countClass={card.getCountClass()}
                     infoIcon={true}
                     infoCircleClass="text-ws-gray-70 size-5"
                     tooltipText={card.tooltipText}
@@ -918,15 +837,12 @@ export default function WorkforcePage() {
                 className="w-full flex items-start min-w-xl md:min-w-full lg:min-w-50"
                 isRequired
                 size="md"
-                placeholder="All"
-                items={[
-                  { label: "Manchester, NH", id: "manchester-nh" },
-                  { label: "Manchester, NH", id: "manchester-nh" },
-                ]}
-                value={selectedGraphType}
+                placeholder="Full Time"
+                items={employmentTypeItems}
+                value={selectedEmploymentType}
                 onSelectionChange={key => {
                   if (key) {
-                    setSelectedGraphType(key as "owners" | "renters");
+                    setSelectedEmploymentType(key as "fullTime" | "partTime" | "seasonal");
                   }
                 }}
               >
@@ -983,7 +899,7 @@ export default function WorkforcePage() {
                   titleClass="text-sm font-medium text-ws-text-tertiary"
                   itemAlign="between"
                   count={card.count}
-                  countClass={card.getCountClass(selectedHousingData)}
+                  countClass={card.getCountClass()}
                   infoIcon={true}
                   infoCircleClass="text-ws-gray-70"
                   tooltipText={card.tooltipText}
@@ -1012,14 +928,11 @@ export default function WorkforcePage() {
                 isRequired
                 size="md"
                 placeholder="All"
-                items={[
-                  { label: "Owners", id: "owners" },
-                  { label: "Renters", id: "renters" },
-                ]}
-                value={selectedGraphType}
+                items={departmentItems}
+                value={selectedDepartment}
                 onSelectionChange={key => {
                   if (key) {
-                    setSelectedGraphType(key as "owners" | "renters");
+                    setSelectedDepartment(String(key));
                   }
                 }}
               >
@@ -1074,7 +987,7 @@ export default function WorkforcePage() {
                     titleClass="text-sm font-medium text-ws-text-tertiary mb-14"
                     itemAlign="between"
                     count={card.count}
-                    countClass={card.getCountClass(selectedHousingData)}
+                    countClass={card.getCountClass()}
                     infoIcon={true}
                     infoCircleClass="text-ws-gray-70"
                     tooltipText={card.tooltipText}
@@ -1087,7 +1000,19 @@ export default function WorkforcePage() {
           </div>
           {/* Chart */}
           <div className="bg-ws-base-white border border-ws-border-primary flex-1 w-full overflow-x-auto mt-6 rounded-xl">
-            {isLoadingCards ? <BreakDownChartSkeleton /> : <SalaryChart />}
+            {isLoadingCards ? (
+              <BreakDownChartSkeleton />
+            ) : (
+              <SalaryChart
+                data={(compensationSection?.benefitsCost.graph ?? []).map(g => ({
+                  label: g.salaryRange,
+                  min: g.min,
+                  boxStart: g.min,
+                  boxEnd: g.max,
+                  max: g.max,
+                }))}
+              />
+            )}
           </div>
           {isLoadingCards ? (
             <div className="bg-ws-base-white border border-ws-border-primary rounded-xl w-full mt-4">

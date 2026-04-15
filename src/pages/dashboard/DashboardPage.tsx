@@ -24,6 +24,7 @@ import { Tabs } from "@/components/base/tabs/tabs";
 import RecommendationsPage from "../recommendations/RecommendationsPage";
 import BenchmarkPage from "../benchmark/BenchmarkPage";
 import { fetchDashboard } from "@/store/slices/dashboardSlice";
+import { fetchWorkforce } from "@/store/slices/workforceSlice";
 import { CircleCheckIcon } from "@/assets/icons/CircleCheckIcon";
 import { Oval } from "react-loader-spinner";
 import { selectDashboardLoading, selectDashboardError } from "@/store/selectors/dashboardSelectors";
@@ -177,6 +178,7 @@ export const DashboardPage = () => {
           setShowInProgressModal(false);
         }
         try {
+          dispatch(fetchWorkforce());
           const resultAction = await dispatch(fetchDashboard());
           setShowInProgressModal(false);
           setShowLoadingModal(false);
@@ -235,6 +237,7 @@ export const DashboardPage = () => {
     }
 
     try {
+      dispatch(fetchWorkforce());
       const resultAction = await dispatch(fetchDashboard());
       setShowInProgressModal(false);
 

@@ -107,6 +107,40 @@ Do this first when editing code:
 - Open `src/routes/index.tsx` to follow the lazy-load + Suspense pattern (helper: `lazyLoad(Component)`).
 - Use barrel exports (feature `index.ts`) and the `@/` alias for imports (never relative `../..` for src files).
 
+## Active Feature: 009-workforce-tab-api (2026-04-14)
+
+<!-- specify:agent:start -->
+
+**Branch**: `009-workforce-tab-api` | **Spec**: `specs/009-workforce-tab-api/spec.md` | **Plan**: `specs/009-workforce-tab-api/plan.md`
+
+### New files to create
+
+- `src/types/workforceTypes.ts` — TypeScript interfaces for `WorkforceResponse` and all sub-types
+- `src/services/api/workforceApi.ts` — `getWorkforce()` following `dashboardApi.ts` pattern
+- `src/store/slices/workforceSlice.ts` — `fetchWorkforce` thunk (static data inline; real API call commented out)
+- `src/store/selectors/workforceSelectors.ts` — typed selectors for workforce state sections
+- `tests/store/workforceSlice.test.ts` — TDD tests (write **before** implementation)
+- `tests/store/workforceSelectors.test.ts` — TDD tests
+- `tests/services/workforceApi.test.ts` — TDD tests
+
+### Files to edit
+
+- `src/store/store.ts` — add `workforce: workforceReducer` and `WorkforceState` to `RootState`
+- `src/pages/dashboard/DashboardPage.tsx` — dispatch `fetchWorkforce()` alongside `fetchDashboard()` on mount
+- `src/pages/workforce/WorkforcePage.tsx` — replace all hardcoded data with Redux selectors; replace `setTimeout` loading with `selectWorkforceLoading`
+- `src/pages/workforce/SalaryChart.tsx` — accept `data: ChartItem[]` prop instead of internal const
+
+### Key patterns
+
+- Static data toggle: `STATIC_WORKFORCE_DATA` const at top of `workforceSlice.ts`; real `getWorkforce()` call present but commented out directly below the `return` statement
+- Department dropdown options derived from `demographics.employementType` array (note: intentional typo in field name matching backend schema)
+- `parsePercentage(value: string): number` — local helper strips `%`, returns `0` for `"N/A"`
+- `employerCostPerPaycheck: null` in table rows → display `"$xx.xx"`
+- `Avg. PTO Taken` and `Avg. Sick Days Taken` display `"--"` (not in API response)
+- See full field mapping: `specs/009-workforce-tab-api/data-model.md`
+- See full implementation guide: `specs/009-workforce-tab-api/quickstart.md`
+<!-- specify:agent:end -->
+
 Essential files to reference in PRs or fixes:
 
 - Routing: `src/routes/index.tsx` (AuthLayout / PrivateLayout, PageLoader fallback)
