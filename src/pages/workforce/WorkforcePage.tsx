@@ -190,6 +190,7 @@ const BreakDownChartSkeleton = () => (
 export default function WorkforcePage() {
   const [isGetInTouchModalOpen, setIsGetInTouchModalOpen] = useState(false);
   const [selectedDepartment, setSelectedDepartment] = useState<string>("all");
+  const [selectedWorkforceDept, setSelectedWorkforceDept] = useState<string>("all");
   const [selectedEmploymentType, setSelectedEmploymentType] = useState<
     "fullTime" | "partTime" | "seasonal"
   >("fullTime");
@@ -224,25 +225,59 @@ export default function WorkforcePage() {
           : entry.department.charAt(0).toUpperCase() + entry.department.slice(1),
     })) ?? [];
 
-  const columns: TableColumn[] = [
-    { key: "department", header: "Department" },
-    { key: "employeeNumber", header: "Employee number" },
-    { key: "partTime", header: "Part time" },
-    { key: "fullTime", header: "Full time" },
-    { key: "salaryRange", header: "Salary range" },
+  // Workforce breakdown dropdown items: All + each department from compensation data
+  const workforceDepartmentItems = [
+    { id: "all", label: "All" },
+    ...(compensationSection?.workforceBreakdown.departments ?? []).map(d => ({
+      id: d.id,
+      label: d.label,
+    })),
   ];
-  const users = (compensationSection?.workforceBreakdown.departments ?? []).map(d => ({
-    department: d.label,
-    employeeNumber: String(d.empNumber),
-    partTime: String(d.partTime),
-    fullTime: String(d.fullTime),
-    salaryRange: d.salaryRange,
-  }));
+
+  // Columns and rows change based on whether a specific department is selected
+  const columns: TableColumn[] =
+    selectedWorkforceDept === "all"
+      ? [
+          { key: "department", header: "Department" },
+          { key: "employeeNumber", header: "Employee number" },
+          { key: "partTime", header: "Part time" },
+          { key: "fullTime", header: "Full time" },
+          { key: "salaryRange", header: "Salary range" },
+        ]
+      : [
+          { key: "jobTitle", header: "Job Title" },
+          { key: "totalInRole", header: "Total in role" },
+          { key: "partTime", header: "Part time" },
+          { key: "fullTime", header: "Full time" },
+          { key: "salaryRange", header: "Salary range" },
+        ];
+
+  const users: Record<string, string>[] =
+    selectedWorkforceDept === "all"
+      ? (compensationSection?.workforceBreakdown.departments ?? []).map(d => ({
+          department: d.label,
+          employeeNumber: String(d.empNumber),
+          partTime: String(d.partTime),
+          fullTime: String(d.fullTime),
+          salaryRange: d.salaryRange,
+        }))
+      : (() => {
+          const dept = compensationSection?.workforceBreakdown.departments.find(
+            d => d.id === selectedWorkforceDept
+          );
+          return (dept?.jobTitles ?? []).map(jt => ({
+            jobTitle: jt.jobTitle,
+            totalInRole: String(jt.totalInRole),
+            partTime: String(jt.partTime),
+            fullTime: String(jt.fullTime),
+            salaryRange: jt.salaryRange,
+          }));
+        })();
 
   const columnsOne: TableColumn[] = [
-    { key: "salaryRange", header: "Salary range" },
-    { key: "avgEmployeeCostPerPaycheck", header: "Avg. Employee cost per paycheck" },
-    { key: "employerCostPerPaycheck", header: "Employer cost per paycheck" },
+    { key: "salaryRange", header: "Salary Range" },
+    { key: "avgEmployeeCostPerPaycheck", header: "Average Employee Cost per Paycheck" },
+    { key: "employerCostPerPaycheck", header: "Employer Cost per Paycheck" },
   ];
   const salary = (compensationSection?.benefitsCost.table ?? []).map(row => ({
     salaryRange: row.salaryRange,
@@ -339,13 +374,13 @@ export default function WorkforcePage() {
     },
     {
       id: "enrolled-retirement",
-      title: "Enrolled in retirement",
+      title: "Enrolled in Retirement",
       count: participationSection?.retirementEnrollment ?? "--",
       countIcon: <SavingIcon className="size-5 text-ws-gray-300" />,
     },
     {
       id: "enrolled-healthcare",
-      title: "Enrolled in healthcare",
+      title: "Enrolled in Healthcare",
       count: participationSection?.healthcareEnrollment ?? "--",
       countIcon: <HeartLineIcon className="size-5 text-ws-gray-300" />,
     },
@@ -603,7 +638,7 @@ export default function WorkforcePage() {
             </h3>
             <p className="text-base text-ws-text-primary w-full mt-2">
               Your highest participation rate is health insurance. 89% of your employees are using
-              this benefit. Your lowest participation rate is wellness program.{" "}
+              this benefit. Your lowest participation rate is Employee Assist Program.{" "}
             </p>
           </div>
         </div>
@@ -743,8 +778,8 @@ export default function WorkforcePage() {
           <div className="space-y-1">
             <h3 className="text-2xl lg:text-4xl font-medium text-ws-text-primary">Demographics</h3>
             <p className="text-base text-ws-text-primary max-w-2xl mt-4">
-              Demographics lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod
-              tempor incididunt ut labore et dolore magna aliqua.
+              A snapshot of your workforce by gender, employment type, and age. This helps you
+              tailor benefits to the people behind the numbers.
             </p>
           </div>
           <div className="flex flex-col items-start w-full lg:w-auto shrink-0 my-3 xl:my-0">
@@ -797,7 +832,7 @@ export default function WorkforcePage() {
           </div>
         </div>
         <div className="bg-ws-base-white p-5 border border-ws-border-primary rounded-xl w-full flex flex-col relative">
-          <h2 className="text-2xl font-medium text-ws-text-primary">Employment type</h2>
+          <h2 className="text-2xl font-medium text-ws-text-primary">Employment Type</h2>
           <div className="grid grid-cols-1 xl:grid-cols-3 gap-6 w-full my-6 space-y-6 xl:space-y-0">
             {isLoadingCards ? (
               <>
@@ -831,7 +866,7 @@ export default function WorkforcePage() {
             </div>
             <div className="flex flex-col items-start w-full lg:w-auto shrink-0 mt-4 xl:mt-0">
               <Label className="text-sm font-medium text-ws-text-secondary flex mb-1.5">
-                Employment type <span className="text-ws-error-600">*</span>
+                Employment Type <span className="text-ws-error-600">*</span>
               </Label>
               <Select
                 className="w-full flex items-start min-w-xl md:min-w-full lg:min-w-50"
@@ -878,8 +913,8 @@ export default function WorkforcePage() {
           <div className="space-y-1">
             <h3 className="text-2xl xl:text-4xl font-medium text-ws-text-primary">Compensation</h3>
             <p className="text-base text-ws-text-tertiary">
-              Compensation lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod
-              tempor incididunt ut labore et dolore magna aliqua.
+              A look at how your organization compensates employees, from base salaries to hourly
+              wages, so you can benchmark and stay competitive.
             </p>
           </div>
         </div>
@@ -916,7 +951,7 @@ export default function WorkforcePage() {
             <div className="space-y-1 w-full">
               <h3 className="text-2xl font-medium text-ws-text-primary">Workforce Breakdown</h3>
               <p className="max-w-3xl text-base text-ws-text-secondary">
-                Here you can find how your workforce is broken down by job types.{" "}
+                Filter your workforce is broken down by job types.
               </p>
             </div>
             <div className="flex flex-col items-start w-full lg:w-auto shrink-0 mt-4 xl:mt-0">
@@ -928,19 +963,19 @@ export default function WorkforcePage() {
                 isRequired
                 size="md"
                 placeholder="All"
-                items={departmentItems}
-                value={selectedDepartment}
+                items={workforceDepartmentItems}
+                value={selectedWorkforceDept}
                 onSelectionChange={key => {
                   if (key) {
-                    setSelectedDepartment(String(key));
+                    setSelectedWorkforceDept(String(key));
                   }
                 }}
               >
                 {item => <Select.Item id={item.id}>{item.label}</Select.Item>}
               </Select>
-              <p className="text-xs text-ws-text-tertiary mt-1">
+              {/* <p className="text-xs text-ws-text-tertiary mt-1">
                 This is a hint text to help user.
-              </p>
+              </p> */}
             </div>
           </div>
           {isLoadingCards ? (
@@ -964,10 +999,12 @@ export default function WorkforcePage() {
           <div className="w-full border-t border-ws-border-primary mt-8">
             <div className="w-full flex items-center justify-between mt-8">
               <div className="space-y-1 w-full">
-                <h3 className="text-2xl font-medium text-ws-text-primary">Salary Breakdown</h3>
+                <h3 className="text-2xl font-medium text-ws-text-primary">
+                  Benefits Cost Breakdown
+                </h3>
                 <p className="max-w-3xl text-base text-ws-text-secondary">
-                  Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor
-                  incididunt ut labore et dolore magna aliqua.
+                  See how benefits costs are distributed across salary bands, including what
+                  employees contribute per paycheck and what it costs you as the employer.
                 </p>
               </div>
             </div>
