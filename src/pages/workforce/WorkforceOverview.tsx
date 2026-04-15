@@ -7,10 +7,8 @@ interface OverviewCardConfig {
   title: string;
   count: string;
   tooltipText: string;
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  getDescriptionText: (industryOverview?: any) => string;
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  getCountClass: (industryOverview?: any) => string;
+  getDescriptionText: () => string;
+  getCountClass: () => string;
 }
 
 interface WorkforceOverviewProps {
