@@ -629,28 +629,39 @@ export const DashboardPage = () => {
                   className="bg-ws-light-teal-50 pt-9 pl-6 pr-6 rounded-t-lg text-ws-light-teal-900 overflow-auto"
                   type="underline"
                   items={[
-                    { id: "recommendations", label: "Recommendations" },
-                    { id: "industry", label: "Industry" },
-                    { id: "finchRecommendations", label: "Finch Recommendations" },
-                    { id: "finchIndustry", label: "Finch Industry" },
-                    { id: "finchWorkforce", label: "Finch Workforce" },
+                    ...(isFinchCompleted
+                      ? [
+                          { id: "finchRecommendations", label: "Recommendations" },
+                          { id: "finchIndustry", label: "Industry" },
+                          { id: "finchWorkforce", label: "Workforce" },
+                        ]
+                      : [
+                          { id: "industry", label: "Industry" },
+                          { id: "recommendations", label: "Recommendations" },
+                        ]),
                   ]}
                 />
                 <Tabs.Panel id="recommendations" className="pt-0">
                   <RecommendationsPage />
                 </Tabs.Panel>
-                <Tabs.Panel id="industry" className="pt-0">
-                  <BenchmarkPage />
-                </Tabs.Panel>
+                {!isFinchCompleted && (
+                  <Tabs.Panel id="industry" className="pt-0">
+                    <BenchmarkPage />
+                  </Tabs.Panel>
+                )}
                 <Tabs.Panel id="finchRecommendations" className="pt-0">
                   <RecommendationsFinchPage />
                 </Tabs.Panel>
-                <Tabs.Panel id="finchIndustry" className="pt-0">
-                  <BenchmarkFinchPage />
-                </Tabs.Panel>
-                <Tabs.Panel id="finchWorkforce" className="pt-0">
-                  <WorkforcePage />
-                </Tabs.Panel>
+                {isFinchCompleted && (
+                  <Tabs.Panel id="finchIndustry" className="pt-0">
+                    <BenchmarkFinchPage />
+                  </Tabs.Panel>
+                )}
+                {isFinchCompleted && (
+                  <Tabs.Panel id="finchWorkforce" className="pt-0">
+                    <WorkforcePage />
+                  </Tabs.Panel>
+                )}
               </Tabs>
             </div>
           )}
