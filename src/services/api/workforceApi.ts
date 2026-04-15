@@ -10,7 +10,7 @@
 
 import type { WorkforceResponse } from "@/types/workforceTypes";
 import apiClient from "@/services/api/authApi";
-import { getAuthToken, getErrorMessage } from "@/services/api/authApi";
+import { getAuthToken, getErrorMessage } from "@/services/api/apiUtils";
 
 /**
  * Fetch workforce data from GET /api/v1/dashboard/workforce endpoint

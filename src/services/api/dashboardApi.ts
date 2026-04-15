@@ -10,7 +10,7 @@
 
 import type { DashboardResponse } from "@/types/dashboardTypes";
 import apiClient from "@/services/api/authApi";
-import { getAuthToken, getErrorMessage } from "@/services/api/authApi";
+import { getAuthToken, getErrorMessage } from "@/services/api/apiUtils";
 
 /**
  * Fetch dashboard data from GET /dashboard endpoint
