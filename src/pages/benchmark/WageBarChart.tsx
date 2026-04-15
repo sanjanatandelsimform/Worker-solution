@@ -281,9 +281,7 @@ export default function WageBarChart({ data, width, height = 350 }: CanvasChartP
               minWidth: "max-content",
             }}
           >
-            <p className="mb-1 text-sm font-medium text-ws-text-primary">
-              {tooltip.label}
-            </p>
+            <p className="mb-1 text-sm font-medium text-ws-text-primary">{tooltip.label}</p>
             <div className="flex items-center gap-2">
               <div
                 className="h-3 w-3 shrink-0 rounded"

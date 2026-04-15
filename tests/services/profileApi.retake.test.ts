@@ -6,7 +6,7 @@
  */
 
 import { describe, it, expect, vi, beforeEach, afterEach } from "vitest";
-import axios from "axios";
+import _axios from "axios";
 
 // Create a mock apiClient that axios.create will return
 const mockApiClient = {

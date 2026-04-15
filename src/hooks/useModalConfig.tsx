@@ -48,9 +48,9 @@ export const useModalConfig = (
       },
       emailUpdated: {
         size: "sm",
-        title: "Email updated",
+        title: "Your information has been updated",
         subtitle:
-          "All set! Your email has been updated. We've sent a verification link to your new address. Please verify your email.",
+          "All set! Your email has been updated. We’ve sent a verification link to your new address. Please verify your email.",
         icon: <CheckCircle className="size-6" />,
         //messageImg: checkmarkIcon,
         backgroundPattern: "success",
@@ -111,8 +111,8 @@ export const useModalConfig = (
       resendSuccess: {
         size: "sm",
         title: "Email sent",
-        subtitle: `We've sent a verification link to ${
-          (config.additionalData?.email as string) || "your email"
+        subtitle: `We've sent a verification link to your email, ${
+          config.additionalData?.email as string
         }. Verify your email to continue.`,
         icon: <CheckLineIcon className="size-6" />,
         messageImg: checkmarkIcon,

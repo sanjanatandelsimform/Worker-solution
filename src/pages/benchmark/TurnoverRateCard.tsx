@@ -110,7 +110,12 @@ export default function TurnoverRateCard({
           <span className="text-xs font-medium text-ws-text-primary">{industryBoldText}</span>
         </p>
       )}
-      {sourceText && <p className={cx("text-xs text-ws-gray-300 mt-2", sourceClass)}>{sourceText} <span className="text-xs font-medium text-ws-text-primary">{sourceBoldText}</span></p>}
+      {sourceText && (
+        <p className={cx("text-xs text-ws-gray-300 mt-2", sourceClass)}>
+          {sourceText}{" "}
+          <span className="text-xs font-medium text-ws-text-primary">{sourceBoldText}</span>
+        </p>
+      )}
     </div>
   );
 }

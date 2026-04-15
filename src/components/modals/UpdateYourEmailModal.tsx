@@ -14,19 +14,23 @@ import { InputGroup } from "@/components/base/input/input-group";
 import { Mail01, X, AlertCircle } from "@untitledui/icons";
 import ErrorMessage from "@/components/common/ErrorMessage";
 import { useAppDispatch, useAppSelector } from "@/store/hooks";
-import { updateEmailAddress } from "@/store/slices/profileSlice";
+import { updateProfileData } from "@/store/slices/profileSlice";
+import { updateUser } from "@/store/slices/authSlice";
 import { selectUser } from "@/store/selectors/authSelectors";
 import { selectProfileLoading } from "@/store/selectors/profileSelectors";
 import { validateEmail } from "@/utils/validation";
+import { Label } from "react-aria-components";
+import { ProfileApiResponse } from "@/types/profileTypes";
 
 interface UpdateYourEmailModalProps {
   isOpen: boolean;
   onClose: () => void;
-  getResponse: (response: {
-    success: boolean;
-    data?: { email?: string };
-    message?: string;
-  }) => void;
+  // getResponse: (response: {
+  //   success: boolean;
+  //   data?: { email?: string };
+  //   message?: string;
+  // }) => void;
+  getResponse: (response: ProfileApiResponse) => void;
 }
 
 export const UpdateYourEmailModal = ({
@@ -42,15 +46,54 @@ export const UpdateYourEmailModal = ({
   const [newEmailError, setNewEmailError] = useState("");
   const [showError, setShowError] = useState(false);
   const [showSuccess, setShowSuccess] = useState(false);
+  const [firstName, setFirstName] = useState(() => userData?.firstName ?? "");
+  const [lastName, setLastName] = useState(() => userData?.lastName ?? "");
+
+  // useEffect(() => {
+  //   if (!userData) return;
+  //   setFirstName(userData.firstName ?? "");
+  //   setLastName(userData.lastName ?? "");
+  // }, [userData]);
+
+  const hasChanges =
+    firstName.trim() !== (userData?.firstName ?? "").trim() ||
+    lastName.trim() !== (userData?.lastName ?? "").trim() ||
+    (newEmail.trim() !== "" && !newEmailError);
+
+  const isFormValid = firstName.trim() !== "" && lastName.trim() !== "";
 
   // Handle new email input change with real-time validation
+  // const handleNewEmailChange = (value: string) => {
+  //   setNewEmail(value);
+  //   setShowError(false);
+
+  //   // Real-time validation as user types
+  //   if (!value.trim()) {
+  //     setNewEmailError("Email cannot be empty");
+  //     return;
+  //   }
+
+  //   if (!validateEmail(value)) {
+  //     setNewEmailError("Please enter a valid email address");
+  //     return;
+  //   }
+
+  //   const currentEmail = userData?.businessEmail || "";
+  //   if (value.trim().toLowerCase() === currentEmail.toLowerCase()) {
+  //     setNewEmailError("New email must be different from current email");
+  //     return;
+  //   }
+
+  //   // All validations passed - clear error
+  //   setNewEmailError("");
+  // };
   const handleNewEmailChange = (value: string) => {
     setNewEmail(value);
     setShowError(false);
 
-    // Real-time validation as user types
+    // If user cleared the email field, reset error — email is optional
     if (!value.trim()) {
-      setNewEmailError("Email cannot be empty");
+      setNewEmailError("");
       return;
     }
 
@@ -65,16 +108,15 @@ export const UpdateYourEmailModal = ({
       return;
     }
 
-    // All validations passed - clear error
     setNewEmailError("");
   };
 
   // Validate email for submit (runs full validation)
   const validateNewEmail = (): boolean => {
-    if (!newEmail.trim()) {
-      setNewEmailError("Email cannot be empty");
-      return false;
-    }
+    // if (!newEmail.trim()) {
+    //   setNewEmailError("Email cannot be empty");
+    //   return false;
+    // }
 
     if (!validateEmail(newEmail)) {
       setNewEmailError("Please enter a valid email address");
@@ -94,19 +136,52 @@ export const UpdateYourEmailModal = ({
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
-    if (!validateNewEmail()) {
-      setShowError(true);
-      return;
+    if (newEmail !== "") {
+      if (!validateNewEmail()) {
+        setShowError(true);
+        return;
+      }
     }
 
     try {
-      const response = await dispatch(updateEmailAddress({ email: newEmail.trim() })).unwrap();
+      const payload = newEmail.trim()
+        ? {
+            firstName: firstName.trim(),
+            lastName: lastName.trim(),
+            newEmail: newEmail.trim(),
+            currentEmail: userData?.businessEmail?.trim() ?? "",
+          }
+        : {
+            firstName: firstName.trim(),
+            lastName: lastName.trim(),
+          };
+
+      const response = (await dispatch(updateProfileData(payload)).unwrap()) as ProfileApiResponse;
+      const updatedFields: Record<string, unknown> = {
+        firstName: firstName.trim(),
+        lastName: lastName.trim(),
+      };
+      if (response.data?.user) {
+        const apiUser = response.data.user;
+        updatedFields.firstName = apiUser.firstName;
+        updatedFields.lastName = apiUser.lastName;
+        updatedFields.businessEmail = apiUser.businessEmail;
+        if (apiUser.emailVerified !== undefined) {
+          updatedFields.emailVerify = apiUser.emailVerified;
+        }
+      }
+
+      updatedFields.businessEmail = newEmail.trim()
+        ? newEmail.trim()
+        : (response.data?.user?.businessEmail ?? userData?.businessEmail);
+
+      dispatch(updateUser(updatedFields));
 
       if (response.success) {
         handleClose();
         getResponse(response);
       } else {
-        setNewEmailError(response.message || "Failed to update email");
+        setNewEmailError(response.message || "Failed to update");
         setShowError(true);
       }
     } catch (error: unknown) {
@@ -120,7 +195,7 @@ export const UpdateYourEmailModal = ({
       if (errorMessage.includes("already in use") || errorMessage.includes("409")) {
         setNewEmailError("This email is already in use");
       } else {
-        setNewEmailError(errorMessage || "Failed to update email");
+        setNewEmailError(errorMessage || "Failed to update");
       }
       setShowError(true);
     }
@@ -180,6 +255,35 @@ export const UpdateYourEmailModal = ({
             )}
 
             <div className="flex flex-col gap-4">
+              <div className="grid grid-cols-1 xl:grid-cols-2 gap-6">
+                <InputGroup>
+                  <div className="flex flex-col gap-1.5 w-full">
+                    <Label className="text-sm font-medium text-ws-text-secondary">
+                      First Name <span className="text-ws-error-600">*</span>
+                    </Label>
+
+                    <Input
+                      size="md"
+                      placeholder="First Name"
+                      value={firstName || ""}
+                      onChange={value => setFirstName(value)}
+                    />
+                  </div>
+                </InputGroup>
+                <InputGroup className="relative">
+                  <div className="flex flex-col gap-1.5 w-full">
+                    <Label className="text-sm font-medium text-ws-text-secondary">
+                      Last Name <span className="text-ws-error-600">*</span>
+                    </Label>
+                    <Input
+                      size="md"
+                      placeholder="Last Name"
+                      value={lastName || ""}
+                      onChange={value => setLastName(value)}
+                    />
+                  </div>
+                </InputGroup>
+              </div>
               <InputGroup className="relative">
                 <Input
                   icon={Mail01}
@@ -192,15 +296,18 @@ export const UpdateYourEmailModal = ({
               </InputGroup>
 
               <InputGroup className="relative">
-                <Input
-                  isRequired
-                  icon={Mail01}
-                  size="md"
-                  label="New Email"
-                  placeholder="new@email.com"
-                  value={newEmail}
-                  onChange={handleNewEmailChange}
-                />
+                <div className="flex flex-col gap-1.5 w-full">
+                  <Label className="text-sm font-medium text-ws-text-secondary">New Email</Label>
+                  <Input
+                    // isRequired
+                    icon={Mail01}
+                    iconClassName="text-ws-gray-400"
+                    size="md"
+                    placeholder="new@email.com"
+                    value={newEmail}
+                    onChange={handleNewEmailChange}
+                  />
+                </div>
               </InputGroup>
             </div>
           </ModalBody>
@@ -222,9 +329,10 @@ export const UpdateYourEmailModal = ({
                 color="primary"
                 size="md"
                 className="w-full"
-                isDisabled={profileLoading || !newEmail.trim() || !!newEmailError}
+                // isDisabled={profileLoading || !newEmail.trim() || !!newEmailError}
+                isDisabled={profileLoading || !isFormValid || !hasChanges || !!newEmailError}
               >
-                {profileLoading ? "Updating..." : "Update Email"}
+                {profileLoading ? "Updating..." : "Update information"}
               </Button>
             )}
           </ModalFooter>

@@ -259,9 +259,11 @@ export const SignInForm = () => {
 
           {/* Sign up link */}
           <div className="flex w-full items-baseline justify-center gap-1">
-            <p className="text-sm font-normal leading-5 text-ws-text-tertiary">Don't have an account?</p>
+            <p className="text-sm font-normal leading-5 text-ws-text-tertiary">
+              Don't have an account?
+            </p>
             <Button
-              href="/sign-up" 
+              href="/sign-up"
               color="link-color"
               className="text-ws-light-teal-850 font-semibold"
               size="md"

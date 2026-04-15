@@ -27,13 +27,17 @@ export const SalaryHourlyFinchChart = ({
       <div className="grid grid-cols-1 xl:grid-cols-2 gap-8">
         {/* Salary Card */}
         <div className="flex flex-col">
-          <h3 className="w-full flex items-center justify-center text-lg font-normal text-ws-text-primary">Salary</h3>
+          <h3 className="w-full flex items-center justify-center text-lg font-normal text-ws-text-primary">
+            Salary
+          </h3>
           <SalaryChart data={salaryData} width={500} height={350} />
         </div>
 
         {/* Hourly Card */}
         <div className="flex flex-col">
-          <h3 className="w-full flex items-center justify-center text-lg font-normal text-ws-text-primary">Hourly</h3>
+          <h3 className="w-full flex items-center justify-center text-lg font-normal text-ws-text-primary">
+            Hourly
+          </h3>
           <HourlyChart data={hourlyData} width={500} height={350} />
         </div>
       </div>
@@ -56,5 +60,5 @@ export const SalaryHourlyFinchChart = ({
       </div>
     </div>
   );
-}
+};
 export default SalaryHourlyFinchChart;

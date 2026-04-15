@@ -2,8 +2,8 @@ import { CheckCircle } from "@untitledui/icons";
 import { BaseModalWithIcon } from "./BaseModalWithIcon";
 import checkmarkIcon from "@/assets/finch-checkmark.svg";
 import { useNavigate } from "react-router-dom";
-import { useAppDispatch } from "@/store/hooks";
-import { logoutThunk } from "@/store/slices/authSlice";
+// import { useAppDispatch } from "@/store/hooks";
+// import { logoutThunk } from "@/store/slices/authSlice";
 
 interface ChangePasswordSuccessModalProps {
   isOpen: boolean;
@@ -20,14 +20,14 @@ export const ChangePasswordSuccessModal = ({
   onClose,
 }: ChangePasswordSuccessModalProps) => {
   const navigate = useNavigate();
-  const dispatch = useAppDispatch();
+  // const dispatch = useAppDispatch();
 
   const handleBackToSignIn = async () => {
-    await dispatch(logoutThunk())
-      .unwrap()
-      .catch(() => {});
+    // await dispatch(logoutThunk())
+    //   .unwrap()
+    //   .catch(() => {});
     onClose();
-    navigate("/sign-in", { replace: true });
+    navigate("/settings", { replace: true });
   };
 
   return (
@@ -42,7 +42,7 @@ export const ChangePasswordSuccessModal = ({
       backgroundPattern="success"
       buttons={[
         {
-          text: "Back to Sign in",
+          text: "Back to Setting",
           onClick: handleBackToSignIn,
           color: "primary",
         },

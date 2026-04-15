@@ -143,26 +143,28 @@ const overviewCardsConfig: CardConfig[] = [
   },
 ];
 
-
 const provenStrategiesCardsConfig: ProvenCardConfig[] = [
   {
     id: "non-elective-match",
     title: "Non-elective match",
     titleIcon: LikeIcon,
-    descriptionText:"Employer contributions are often skewed due to high earners’s contribution capacity. Separate the employee contribution from employer contribution."
+    descriptionText:
+      "Employer contributions are often skewed due to high earners’s contribution capacity. Separate the employee contribution from employer contribution.",
   },
   {
     id: "auto-enrollment",
     title: "Auto Enrollment",
     titleIcon: LikeIcon,
-    descriptionText:"80% of employees automatically enrolled in a 3% 401K match stay within the retirement plan."
+    descriptionText:
+      "80% of employees automatically enrolled in a 3% 401K match stay within the retirement plan.",
   },
   {
     id: "healthcare-affordability",
     title: "Healthcare affordability",
     titleIcon: UserGroupIcon,
-    descriptionText:"Consider adjusting employee premiums to income level. QSERA and ICRA plans can offer more flexibility and savings for employers and employees."
-  }
+    descriptionText:
+      "Consider adjusting employee premiums to income level. QSERA and ICRA plans can offer more flexibility and savings for employers and employees.",
+  },
 ];
 
 export default function RecommendationsPage() {

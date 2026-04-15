@@ -726,7 +726,9 @@ export default function BenchmarkFinchPage() {
       <div className="w-full flex flex-col items-center bg-ws-light-teal-25 border border-ws-border-primary rounded-xl py-8 px-6">
         <div className="w-full flex items-center justify-between">
           <div className="space-y-1">
-            <h3 className="text-2xl lg:text-4xl font-medium text-ws-text-primary">Industry Turnover</h3>
+            <h3 className="text-2xl lg:text-4xl font-medium text-ws-text-primary">
+              Industry Turnover
+            </h3>
             <p className="text-base text-ws-text-primary w-full mt-2">Lorem Ipsum</p>
           </div>
         </div>
@@ -839,7 +841,9 @@ export default function BenchmarkFinchPage() {
       <div className="w-full flex flex-col bg-ws-light-teal-25 border border-ws-border-primary rounded-xl py-8 px-6">
         <div className="w-full flex items-start justify-between flex-col xl:flex-row">
           <div className="space-y-1">
-            <h3 className="text-2xl lg:text-4xl font-medium text-ws-text-primary">Housing Burden</h3>
+            <h3 className="text-2xl lg:text-4xl font-medium text-ws-text-primary">
+              Housing Burden
+            </h3>
           </div>
           <div className="flex flex-col items-start w-full lg:w-auto shrink-0 mt-4 xl:mt-0">
             <Label className="text-sm font-medium text-ws-text-secondary flex mb-1.5">
