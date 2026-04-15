@@ -77,7 +77,7 @@ export const BaseModalWithIcon = ({
 
           {/* Text and Supporting Text */}
           <div className="flex w-full flex-col gap-2">
-            <ModalTitle className="font-display text-2xl font-semibold leading-5 text-ws-text-primary mb-0 mt-4">
+            <ModalTitle className="font-display text-2xl font-semibold leading-8 text-ws-text-primary mb-0 mt-4">
               {title}
             </ModalTitle>
             {subtitle && (

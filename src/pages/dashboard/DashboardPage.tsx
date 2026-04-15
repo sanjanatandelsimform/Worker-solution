@@ -24,6 +24,7 @@ import { Tabs } from "@/components/base/tabs/tabs";
 import RecommendationsPage from "../recommendations/RecommendationsPage";
 import BenchmarkPage from "../benchmark/BenchmarkPage";
 import { fetchDashboard } from "@/store/slices/dashboardSlice";
+import { fetchWorkforce } from "@/store/slices/workforceSlice";
 import { CircleCheckIcon } from "@/assets/icons/CircleCheckIcon";
 import { Oval } from "react-loader-spinner";
 import { selectDashboardLoading, selectDashboardError } from "@/store/selectors/dashboardSelectors";
@@ -177,6 +178,7 @@ export const DashboardPage = () => {
           setShowInProgressModal(false);
         }
         try {
+          dispatch(fetchWorkforce());
           const resultAction = await dispatch(fetchDashboard());
           setShowInProgressModal(false);
           setShowLoadingModal(false);
@@ -235,6 +237,7 @@ export const DashboardPage = () => {
     }
 
     try {
+      dispatch(fetchWorkforce());
       const resultAction = await dispatch(fetchDashboard());
       setShowInProgressModal(false);
 
@@ -581,7 +584,7 @@ export const DashboardPage = () => {
           )}
 
           {/* Tabs — only render after dashboard data is confirmed ready */}
-          {emailVerify && assessmentData?.data?.status === "completed" && !isConnected && (
+          {emailVerify && assessmentData?.data?.status === "completed" && !isFinchCompleted && (
             <DashboardCard
               classes="bg-ws-base-white border-ws-border-primary mt-10 shadow-none"
               toggleAvatar={true}
@@ -635,28 +638,39 @@ export const DashboardPage = () => {
                   className="bg-ws-light-teal-50 pt-9 pl-6 pr-6 rounded-t-lg text-ws-light-teal-900 overflow-auto"
                   type="underline"
                   items={[
-                    { id: "recommendations", label: "Recommendations" },
-                    { id: "industry", label: "Industry" },
-                    { id: "finchRecommendations", label: "Finch Recommendations" },
-                    { id: "finchIndustry", label: "Finch Industry" },
-                    { id: "finchWorkforce", label: "Finch Workforce" },
+                    ...(isFinchCompleted
+                      ? [
+                          { id: "finchRecommendations", label: "Recommendations" },
+                          { id: "finchIndustry", label: "Industry" },
+                          { id: "finchWorkforce", label: "Workforce" },
+                        ]
+                      : [
+                          { id: "industry", label: "Industry" },
+                          { id: "recommendations", label: "Recommendations" },
+                        ]),
                   ]}
                 />
                 <Tabs.Panel id="recommendations" className="pt-0">
                   <RecommendationsPage />
                 </Tabs.Panel>
-                <Tabs.Panel id="industry" className="pt-0">
-                  <BenchmarkPage />
-                </Tabs.Panel>
+                {!isFinchCompleted && (
+                  <Tabs.Panel id="industry" className="pt-0">
+                    <BenchmarkPage />
+                  </Tabs.Panel>
+                )}
                 <Tabs.Panel id="finchRecommendations" className="pt-0">
                   <RecommendationsFinchPage />
                 </Tabs.Panel>
-                <Tabs.Panel id="finchIndustry" className="pt-0">
-                  <BenchmarkFinchPage />
-                </Tabs.Panel>
-                <Tabs.Panel id="finchWorkforce" className="pt-0">
-                  <WorkforcePage />
-                </Tabs.Panel>
+                {isFinchCompleted && (
+                  <Tabs.Panel id="finchIndustry" className="pt-0">
+                    <BenchmarkFinchPage />
+                  </Tabs.Panel>
+                )}
+                {isFinchCompleted && (
+                  <Tabs.Panel id="finchWorkforce" className="pt-0">
+                    <WorkforcePage />
+                  </Tabs.Panel>
+                )}
               </Tabs>
             </div>
           )}
