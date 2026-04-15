@@ -107,38 +107,42 @@ Do this first when editing code:
 - Open `src/routes/index.tsx` to follow the lazy-load + Suspense pattern (helper: `lazyLoad(Component)`).
 - Use barrel exports (feature `index.ts`) and the `@/` alias for imports (never relative `../..` for src files).
 
-## Active Feature: 009-workforce-tab-api (2026-04-14)
+## Active Feature: 010-refactor-workforce-page (2026-04-15)
 
 <!-- specify:agent:start -->
 
-**Branch**: `009-workforce-tab-api` | **Spec**: `specs/009-workforce-tab-api/spec.md` | **Plan**: `specs/009-workforce-tab-api/plan.md`
+**Branch**: `009-workforce-tab-api` | **Spec**: `specs/010-refactor-workforce-page/spec.md` | **Plan**: `specs/010-refactor-workforce-page/plan.md`
 
-### New files to create
+### Context: Previous feature (009-workforce-tab-api) is complete
 
-- `src/types/workforceTypes.ts` — TypeScript interfaces for `WorkforceResponse` and all sub-types
-- `src/services/api/workforceApi.ts` — `getWorkforce()` following `dashboardApi.ts` pattern
-- `src/store/slices/workforceSlice.ts` — `fetchWorkforce` thunk (static data inline; real API call commented out)
-- `src/store/selectors/workforceSelectors.ts` — typed selectors for workforce state sections
-- `tests/store/workforceSlice.test.ts` — TDD tests (write **before** implementation)
-- `tests/store/workforceSelectors.test.ts` — TDD tests
-- `tests/services/workforceApi.test.ts` — TDD tests
+All files from feature 009 are already implemented: `workforceTypes.ts`, `workforceApi.ts`, `workforceSlice.ts`, `workforceSelectors.ts`, Redux store wired, `WorkforcePage.tsx` consuming Redux data.
+
+### What this feature does
+
+Pure structural refactoring — splits the ~1,100-line `WorkforcePage.tsx` into 6 co-located modules. **Zero behavioral or visual changes.**
+
+### New files to create (all in `src/pages/workforce/`)
+
+- `workforceUtils.ts` — exports `parsePercentage(value: string): number` helper
+- `WorkforceSkeletons.tsx` — named exports for all 8 skeleton loading components
+- `WorkforceOverview.tsx` — 4 overview stat cards + "Did you know?" banner (default export)
+- `WorkforceParticipation.tsx` — participation count cards + Benefits/Retirement/Insurance progress rows (default export)
+- `WorkforceDemographics.tsx` — gender cards, employment type donut charts, age breakdown (default export)
+- `WorkforceCompensation.tsx` — salary stats, workforce breakdown table, benefits cost section, salary chart (default export)
 
 ### Files to edit
 
-- `src/store/store.ts` — add `workforce: workforceReducer` and `WorkforceState` to `RootState`
-- `src/pages/dashboard/DashboardPage.tsx` — dispatch `fetchWorkforce()` alongside `fetchDashboard()` on mount
-- `src/pages/workforce/WorkforcePage.tsx` — replace all hardcoded data with Redux selectors; replace `setTimeout` loading with `selectWorkforceLoading`
-- `src/pages/workforce/SalaryChart.tsx` — accept `data: ChartItem[]` prop instead of internal const
+- `src/pages/workforce/WorkforcePage.tsx` — trim to < 150 lines: keep all `useState`, all `useAppSelector` calls, all config array computations, page header, error banner, footer disclaimer, `<GetInTouchModal>`; replace section JSX blocks with the 4 new section components
 
 ### Key patterns
 
-- Static data toggle: `STATIC_WORKFORCE_DATA` const at top of `workforceSlice.ts`; real `getWorkforce()` call present but commented out directly below the `return` statement
-- Department dropdown options derived from `demographics.employementType` array (note: intentional typo in field name matching backend schema)
-- `parsePercentage(value: string): number` — local helper strips `%`, returns `0` for `"N/A"`
-- `employerCostPerPaycheck: null` in table rows → display `"$xx.xx"`
-- `Avg. PTO Taken` and `Avg. Sick Days Taken` display `"--"` (not in API response)
-- See full field mapping: `specs/009-workforce-tab-api/data-model.md`
-- See full implementation guide: `specs/009-workforce-tab-api/quickstart.md`
+- **Section components are purely presentational** — no Redux imports inside them; parent computes all config arrays and passes as typed props
+- **`parsePercentage`** lives in `src/pages/workforce/workforceUtils.ts`; imported by `WorkforcePage` only
+- **`employmentTypeItems`** (static `[fullTime, partTime, seasonal]`) defined as module-level const inside `WorkforceDemographics.tsx`
+- **`isGetInTouchModalOpen`** state + `<GetInTouchModal>` render stays in `WorkforcePage.tsx` (no trigger button currently, but preserved for future use)
+- **Skeleton components** are named exports from `WorkforceSkeletons.tsx`; imported by section files
+- See full prop interface contracts: `specs/010-refactor-workforce-page/data-model.md`
+- See step-by-step implementation guide: `specs/010-refactor-workforce-page/quickstart.md`
 <!-- specify:agent:end -->
 
 Essential files to reference in PRs or fixes:
