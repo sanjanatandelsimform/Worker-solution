@@ -107,6 +107,44 @@ Do this first when editing code:
 - Open `src/routes/index.tsx` to follow the lazy-load + Suspense pattern (helper: `lazyLoad(Component)`).
 - Use barrel exports (feature `index.ts`) and the `@/` alias for imports (never relative `../..` for src files).
 
+## Active Feature: 010-refactor-workforce-page (2026-04-15)
+
+<!-- specify:agent:start -->
+
+**Branch**: `009-workforce-tab-api` | **Spec**: `specs/010-refactor-workforce-page/spec.md` | **Plan**: `specs/010-refactor-workforce-page/plan.md`
+
+### Context: Previous feature (009-workforce-tab-api) is complete
+
+All files from feature 009 are already implemented: `workforceTypes.ts`, `workforceApi.ts`, `workforceSlice.ts`, `workforceSelectors.ts`, Redux store wired, `WorkforcePage.tsx` consuming Redux data.
+
+### What this feature does
+
+Pure structural refactoring — splits the ~1,100-line `WorkforcePage.tsx` into 6 co-located modules. **Zero behavioral or visual changes.**
+
+### New files to create (all in `src/pages/workforce/`)
+
+- `workforceUtils.ts` — exports `parsePercentage(value: string): number` helper
+- `WorkforceSkeletons.tsx` — named exports for all 8 skeleton loading components
+- `WorkforceOverview.tsx` — 4 overview stat cards + "Did you know?" banner (default export)
+- `WorkforceParticipation.tsx` — participation count cards + Benefits/Retirement/Insurance progress rows (default export)
+- `WorkforceDemographics.tsx` — gender cards, employment type donut charts, age breakdown (default export)
+- `WorkforceCompensation.tsx` — salary stats, workforce breakdown table, benefits cost section, salary chart (default export)
+
+### Files to edit
+
+- `src/pages/workforce/WorkforcePage.tsx` — trim to < 150 lines: keep all `useState`, all `useAppSelector` calls, all config array computations, page header, error banner, footer disclaimer, `<GetInTouchModal>`; replace section JSX blocks with the 4 new section components
+
+### Key patterns
+
+- **Section components are purely presentational** — no Redux imports inside them; parent computes all config arrays and passes as typed props
+- **`parsePercentage`** lives in `src/pages/workforce/workforceUtils.ts`; imported by `WorkforcePage` only
+- **`employmentTypeItems`** (static `[fullTime, partTime, seasonal]`) defined as module-level const inside `WorkforceDemographics.tsx`
+- **`isGetInTouchModalOpen`** state + `<GetInTouchModal>` render stays in `WorkforcePage.tsx` (no trigger button currently, but preserved for future use)
+- **Skeleton components** are named exports from `WorkforceSkeletons.tsx`; imported by section files
+- See full prop interface contracts: `specs/010-refactor-workforce-page/data-model.md`
+- See step-by-step implementation guide: `specs/010-refactor-workforce-page/quickstart.md`
+<!-- specify:agent:end -->
+
 Essential files to reference in PRs or fixes:
 
 - Routing: `src/routes/index.tsx` (AuthLayout / PrivateLayout, PageLoader fallback)

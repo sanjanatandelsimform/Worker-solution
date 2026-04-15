@@ -12,6 +12,7 @@ import ErrorMessage from "@/components/common/ErrorMessage";
 import { RankingList } from "@/components/common/RankList";
 import { goalsData } from "@/data/goalsData";
 import { useSubmitFinchAssessment } from "@/hooks/useSubmitFinchAssessment";
+import { useAssessmentStatus } from "@/hooks/useAssessmentStatus";
 import { buildFinchAssessmentPayload } from "@/utils/finchAssessmentPayload";
 import { Tooltip, TooltipTrigger } from "@/components/base/tooltip/tooltip";
 
@@ -220,6 +221,7 @@ const retirementQuestions = [
 
 export default function AdditionalQuestions() {
   const navigate = useNavigate();
+  const { isFinchCompleted } = useAssessmentStatus();
   const [answers, setAnswers] = useState<QuestionAnswer>({});
   const [goalsAnswers, setGoalsAnswers] = useState<GoalsAnswer>({
     selectedGoals: [],
@@ -232,6 +234,12 @@ export default function AdditionalQuestions() {
   // T015: Hook + validation state
   const { isSubmitting, error, success, submit, clearError } = useSubmitFinchAssessment();
   const [fieldErrors, setFieldErrors] = useState<Record<string, string>>({});
+
+  useEffect(() => {
+    if (isFinchCompleted) {
+      navigate("/dashboard");
+    }
+  }, [isFinchCompleted, navigate]);
 
   const handleClose = () => {
     navigate("/dashboard");
