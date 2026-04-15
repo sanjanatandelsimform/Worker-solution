@@ -8,6 +8,7 @@ import {
   DonutChartSkeleton,
   BreakDownCardSkeleton,
 } from "@/pages/workforce/WorkforceSkeletons";
+import { ArrowDown } from "@/assets/icons/ArrowDown";
 
 const employmentTypeItems = [
   { id: "fullTime", label: "Full Time" },
@@ -73,13 +74,13 @@ export default function WorkforceDemographics({
     <div className="w-full flex flex-col bg-ws-light-teal-25 border border-ws-border-primary rounded-xl py-8 px-6 space-y-4">
       <div className="w-full flex items-start justify-between flex-col xl:flex-row">
         <div className="space-y-1">
-          <h3 className="text-2xl lg:text-4xl font-medium text-ws-text-primary">Demographics</h3>
-          <p className="text-base text-ws-text-primary max-w-2xl mt-4">
+          <h3 className="text-2xl lg:text-4xl font-medium text-ws-base-black">Demographics</h3>
+          <p className="text-base font-normal text-ws-text-tertiary max-w-2xl mt-4">
             A snapshot of your workforce by gender, employment type, and age. This helps you tailor
             benefits to the people behind the numbers.
           </p>
         </div>
-        <div className="flex flex-col items-start w-full lg:w-auto shrink-0 my-3 xl:my-0">
+        <div className="flex flex-col items-start w-full lg:w-auto shrink-0 my-3 xl:my-0 lg:min-w-71">
           <Label className="text-sm font-medium text-ws-text-secondary flex mb-1.5 mt-6">
             Department
           </Label>
@@ -122,6 +123,7 @@ export default function WorkforceDemographics({
                   tooltipText={card.tooltipText}
                   descriptionText="Industry specific turnover metrics are calculated from US Census Bureau QWI data sources"
                   placements="top"
+                  countWrap="text-3xl font-semibold text-ws-text-primary"
                 />
               ))}
             </>
@@ -161,9 +163,9 @@ export default function WorkforceDemographics({
               Employment Breakdown by Age
             </h3>
           </div>
-          <div className="flex flex-col items-start w-full lg:w-auto shrink-0 mt-4 xl:mt-0">
+          <div className="flex flex-col items-start w-full lg:w-auto shrink-0 mt-4 xl:mt-0 lg:min-w-71">
             <Label className="text-sm font-medium text-ws-text-secondary flex mb-1.5">
-              Employment Type <span className="text-ws-error-600">*</span>
+              Employment Type <span className="text-ws-error-600">* <ArrowDown className="inline-block ml-1" /></span> 
             </Label>
             <Select
               className="w-full flex items-start min-w-xl md:min-w-full lg:min-w-50"
@@ -189,14 +191,14 @@ export default function WorkforceDemographics({
             <>
               {ageBreakdownConfig.map(item => (
                 <div key={item.id} className="flex items-center justify-between gap-4">
-                  <div className="min-w-30">{item.label}</div>
+                  <div className="text-base font-normal text-ws-text-secondary min-w-30">{item.label}</div>
                   <ProgressBar
                     value={item.value}
                     max={100}
                     className="h-6 rounded-none"
                     customColor={item.customColor}
                   />
-                  <div className="flex min-w-8">{item.value}%</div>
+                  <div className="flex min-w-8 text-base font-normal text-ws-base-black">{item.value}%</div>
                 </div>
               ))}
             </>

@@ -56,14 +56,14 @@ export default function StaticCard({
           )}
         </span>
       </div>
-      <div className={`flex items-end gap-2 justify-between ${countWrap}`}>
+      <div className={`flex items-end gap-2 justify-between`}>
         <h2 className={`w-full ${countClass}`}>
           {count === "N/A" ? (
             <span className="mt-4 text-base font-medium text-ws-text-tertiary">
               No data available
             </span>
           ) : (
-            count
+            <span className={countWrap}>{count}</span>
           )}
         </h2>
         {countIcon && <div className="mb-1">{countIcon}</div>}

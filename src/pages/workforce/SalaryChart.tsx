@@ -2,10 +2,10 @@ import React, { useEffect, useRef } from "react";
 
 type ChartItem = {
   label: string;
-  min: number;
   boxStart: number;
   boxEnd: number;
   max: number;
+  min: number;
 };
 
 interface SalaryRangeChartProps {

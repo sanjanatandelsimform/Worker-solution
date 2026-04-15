@@ -6,6 +6,7 @@ import type { TableColumn } from "@/components/base/table";
 import SalaryChart from "@/pages/workforce/SalaryChart";
 import emptyStateWorkforce from "@/assets/placeholder.svg";
 import { OverviewCardSkeleton, BreakDownChartSkeleton } from "@/pages/workforce/WorkforceSkeletons";
+import { ArrowDown } from "@/assets/icons/ArrowDown";
 
 interface CompensationCardConfig {
   id: string;
@@ -68,8 +69,8 @@ export default function WorkforceCompensation({
     <div className="w-full flex flex-col bg-ws-light-teal-25 border border-ws-border-primary rounded-xl py-8 px-6">
       <div className="w-full flex items-center justify-between">
         <div className="space-y-1">
-          <h3 className="text-2xl xl:text-4xl font-medium text-ws-text-primary">Compensation</h3>
-          <p className="text-base text-ws-text-tertiary">
+          <h3 className="text-2xl xl:text-4xl font-medium text-ws-base-black">Compensation</h3>
+          <p className="text-base font-normal text-ws-text-secondary">
             A look at how your organization compensates employees, from base salaries to hourly
             wages, so you can benchmark and stay competitive.
           </p>
@@ -97,6 +98,7 @@ export default function WorkforceCompensation({
                 tooltipText={card.tooltipText}
                 descriptionText="U.S. Census Bureau, 5-Year American Community Survey"
                 placements="top"
+                countWrap="text-3xl font-semibold text-ws-text-primary"
               />
             ))}
           </>
@@ -107,13 +109,13 @@ export default function WorkforceCompensation({
         <div className="w-full flex items-start justify-between mt-8 flex-col xl:flex-row">
           <div className="space-y-1 w-full">
             <h3 className="text-2xl font-medium text-ws-text-primary">Workforce Breakdown</h3>
-            <p className="max-w-3xl text-base text-ws-text-secondary">
+            <p className="max-w-3xl text-base font-normal text-ws-text-secondary">
               Filter your workforce is broken down by job types.
             </p>
           </div>
-          <div className="flex flex-col items-start w-full lg:w-auto shrink-0 mt-4 xl:mt-0">
+          <div className="flex flex-col items-start w-full lg:w-auto shrink-0 mt-4 xl:mt-0 lg:min-w-71">
             <Label className="text-ws-text-secondary flex mb-1.5">
-              Department <span className="text-ws-error-600">*</span>
+              Department <span className="text-ws-error-600">* <ArrowDown className="inline-block ml-1" /></span>
             </Label>
             <Select
               className="w-full flex items-start min-w-70 md:min-w-full lg:min-w-50"
@@ -157,7 +159,7 @@ export default function WorkforceCompensation({
           <div className="w-full flex items-center justify-between mt-8">
             <div className="space-y-1 w-full">
               <h3 className="text-2xl font-medium text-ws-text-primary">Benefits Cost Breakdown</h3>
-              <p className="max-w-3xl text-base text-ws-text-secondary">
+              <p className="max-w-3xl text-base font-normal text-ws-text-primary">
                 See how benefits costs are distributed across salary bands, including what employees
                 contribute per paycheck and what it costs you as the employer.
               </p>
@@ -181,10 +183,11 @@ export default function WorkforceCompensation({
                   count={card.count}
                   countClass={card.getCountClass()}
                   infoIcon={true}
-                  infoCircleClass="text-ws-gray-70"
+                  infoCircleClass="text-ws-gray-70 w-5"
                   tooltipText={card.tooltipText}
                   descriptionText="U.S. Census Bureau, 5-Year American Community Survey"
                   placements="top"
+                  countWrap="text-3xl font-semibold text-ws-text-primary"
                 />
               ))}
             </>
