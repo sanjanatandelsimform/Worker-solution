@@ -6,8 +6,6 @@ import { GetInTouchModal } from "@/components/modals/GetInTouchModal";
 import { useAppSelector } from "@/store/hooks";
 import {
   selectIndustryOverview,
-  selectZipCodes,
-  selectDashboardData,
 } from "@/store/selectors/dashboardSelectors";
 import { Label } from "@/components/base/input/label";
 
@@ -23,6 +21,7 @@ import { Table, TableColumn } from "@/components/base/table";
 import SalaryChart from "./SalaryChart";
 import { Link } from "react-router-dom";
 import emptyStateWorkforce from "@/assets/placeholder.svg";
+import { ArrowDown } from "@/assets/icons/ArrowDown";
 
 const OverviewCardSkeleton = () => (
   <div className="border border-ws-border-secondary rounded-lg p-4 bg-ws-base-white animate-pulse shadow-sm">
@@ -198,21 +197,6 @@ export default function WorkforcePage() {
 
   // Get dashboard benchmark data from Redux store
   const industryOverview = useAppSelector(selectIndustryOverview);
-  const zipCodes = useAppSelector(selectZipCodes);
-  const dashboardData = useAppSelector(selectDashboardData);
-
-  const initialZip =
-    (zipCodes && zipCodes.length > 0 && zipCodes[0]) ||
-    dashboardData?.areaMedianWage?.[0]?.zipcode ||
-    dashboardData?.housingCost?.[0]?.zipcode ||
-    null;
-
-  const selectedHousingZip = initialZip;
-
-  // Derive housing data for selected housing zip
-  const selectedHousingData = selectedHousingZip
-    ? dashboardData?.housingCost?.find(h => h.zipcode === selectedHousingZip)
-    : dashboardData?.housingCost?.[0];
 
   const columns: TableColumn[] = [
     { key: "department", header: "Department" },
@@ -340,9 +324,6 @@ export default function WorkforcePage() {
           ? "mt-2 text-sm font-medium text-ws-text-primary"
           : "mt-2 text-3xl font-semibold text-ws-text-primary",
     },
-  ];
-
-  const employeeCardsConfig: StaticCardOverviewConfig[] = [
     {
       id: "employer-cost",
       title: "Employer Cost Per Employee",
@@ -352,30 +333,6 @@ export default function WorkforcePage() {
         "Industry specific turnover metrics are calculated from US Census Bureau QWI data sources",
       getCountClass: industryOverview =>
         industryOverview?.turnoverRate?.rate == null
-          ? "mt-2 text-sm font-medium text-ws-text-primary"
-          : "mt-2 text-3xl font-semibold text-ws-text-primary",
-    },
-    {
-      id: "avg-pto-taken",
-      title: "Avg. PTO Taken",
-      count: "13",
-      tooltipText: "Average Turnover",
-      getDescriptionText: () =>
-        "Average turnover metrics are calculated from US Census Bureau QWI data sources",
-      getCountClass: industryOverview =>
-        industryOverview?.avgTurnover?.rate == null
-          ? "mt-2 text-sm font-medium text-ws-text-primary"
-          : "mt-2 text-3xl font-semibold text-ws-text-primary",
-    },
-    {
-      id: "avg-sick-days",
-      title: "Avg. Sick Days Taken",
-      count: "4",
-      tooltipText: "Average Cost of Turnover",
-      getDescriptionText: industryOverview =>
-        `Industry specific cost of turnover is calculated from ${industryOverview?.avgCostOfTurnover?.year || " "}`,
-      getCountClass: industryOverview =>
-        industryOverview?.avgCostOfTurnover?.amount == null
           ? "mt-2 text-sm font-medium text-ws-text-primary"
           : "mt-2 text-3xl font-semibold text-ws-text-primary",
     },
@@ -600,9 +557,10 @@ export default function WorkforcePage() {
       </div>
 
       {/* ── Industry Overview ── */}
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 w-full">
+      <div className="grid grid-cols-1 lg:grid-cols-4 gap-6 w-full">
         {isLoadingCards ? (
           <>
+            <OverviewCardSkeleton />
             <OverviewCardSkeleton />
             <OverviewCardSkeleton />
             <OverviewCardSkeleton />
@@ -612,43 +570,18 @@ export default function WorkforcePage() {
             {overviewCardsConfig.map(card => (
               <StaticCard
                 key={card.id}
+                classess="flex flex-col justify-between"
                 title={card.title}
                 titleClass="text-sm font-medium text-ws-text-tertiary"
                 itemAlign="between"
                 count={card.count}
-                countClass={card.getCountClass(industryOverview)}
+                //countClass={card.getCountClass(industryOverview)}
                 infoIcon={true}
                 infoCircleClass="text-ws-gray-400 size-5"
                 tooltipText={card.tooltipText}
                 descriptionText={card.getDescriptionText(industryOverview)}
                 placements="top"
-              />
-            ))}
-          </>
-        )}
-      </div>
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 w-full">
-        {isLoadingCards ? (
-          <>
-            <OverviewCardSkeleton />
-            <OverviewCardSkeleton />
-            <OverviewCardSkeleton />
-          </>
-        ) : (
-          <>
-            {employeeCardsConfig.map(card => (
-              <StaticCard
-                key={card.id}
-                title={card.title}
-                titleClass="text-sm font-medium text-ws-text-tertiary"
-                itemAlign="between"
-                count={card.count}
-                countClass={card.getCountClass(industryOverview)}
-                infoIcon={true}
-                infoCircleClass="text-ws-gray-400 size-5"
-                tooltipText={card.tooltipText}
-                descriptionText={card.getDescriptionText(industryOverview)}
-                placements="top"
+                countClass="text-3xl font-semibold text-ws-text-primary mt-2"
               />
             ))}
           </>
@@ -678,7 +611,7 @@ export default function WorkforcePage() {
       <div className="w-full flex flex-col items-center bg-ws-light-teal-25 border border-ws-border-primary rounded-xl py-8 px-6">
         <div className="w-full flex items-center justify-between">
           <div className="space-y-1">
-            <h3 className="text-2xl lg:text-4xl font-medium text-ws-text-primary">
+            <h3 className="text-4xl font-medium text-ws-text-primary">
               Participation Breakdown
             </h3>
             <p className="text-base text-ws-text-primary w-full mt-2">
@@ -701,12 +634,12 @@ export default function WorkforcePage() {
               {participationCardsConfig.map(card => (
                 <StaticCard
                   key={card.id}
-                  classess="border-ws-border-secondary"
+                  classess="border-ws-border-secondary flex flex-col justify-between"
                   title={card.title}
-                  titleClass="text-ws-text-tertiary text-sm"
+                  titleClass="text-ws-text-tertiary text-sm font-normal"
                   countIcon={card.countIcon}
                   count={card.count}
-                  countClass="text-ws-light-teal-900  text-3xl xl:text-4xl font-medium mt-6"
+                  countClass="text-ws-light-teal-900 text-3xl xl:text-4xl font-medium mt-2"
                 />
               ))}
             </>
@@ -819,13 +752,13 @@ export default function WorkforcePage() {
       <div className="w-full flex flex-col bg-ws-light-teal-25 border border-ws-border-primary rounded-xl py-8 px-6 space-y-4">
         <div className="w-full flex items-start justify-between flex-col xl:flex-row">
           <div className="space-y-1">
-            <h3 className="text-2xl lg:text-4xl font-medium text-ws-text-primary">Demographics</h3>
-            <p className="text-base text-ws-text-primary max-w-2xl mt-4">
+            <h3 className="text-2xl lg:text-4xl font-medium text-ws-base-black">Demographics</h3>
+            <p className="text-base font-normal text-ws-text-tertiary max-w-2xl mt-4">
               Demographics lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod
               tempor incididunt ut labore et dolore magna aliqua.
             </p>
           </div>
-          <div className="flex flex-col items-start w-full lg:w-auto shrink-0 my-3 xl:my-0">
+          <div className="flex flex-col items-start w-full lg:w-auto shrink-0 my-3 xl:my-0 lg:min-w-71">
             <Label className="text-sm font-medium text-ws-text-secondary flex mb-1.5 mt-6">
               Department
             </Label>
@@ -865,12 +798,13 @@ export default function WorkforcePage() {
                     titleClass="text-sm font-medium text-ws-text-tertiary"
                     itemAlign="between"
                     count={card.count}
-                    countClass={card.getCountClass(industryOverview)}
+                    //countClass={card.getCountClass(industryOverview)}
                     infoIcon={true}
                     infoCircleClass="text-ws-gray-70 size-5"
                     tooltipText={card.tooltipText}
                     descriptionText="Industry specific turnover metrics are calculated from US Census Bureau QWI data sources"
                     placements="top"
+                    countClass="text-3xl font-semibold text-ws-text-primary mt-2"
                   />
                 ))}
               </>
@@ -910,9 +844,9 @@ export default function WorkforcePage() {
                 Employment Breakdown by Age
               </h3>
             </div>
-            <div className="flex flex-col items-start w-full lg:w-auto shrink-0 mt-4 xl:mt-0">
-              <Label className="text-sm font-medium text-ws-text-secondary flex mb-1.5">
-                Employment type <span className="text-ws-error-600">*</span>
+            <div className="flex flex-col items-start w-full lg:w-auto shrink-0 mt-4 xl:mt-0 lg:min-w-71">
+              <Label className="text-sm font-medium text-ws-text-secondary flex mb-1.5 flex-col">
+                Employment type <span className="text-ws-error-600">* <ArrowDown className="inline-block ml-1" /></span> 
               </Label>
               <Select
                 className="w-full flex items-start min-w-xl md:min-w-full lg:min-w-50"
@@ -941,14 +875,14 @@ export default function WorkforcePage() {
               <>
                 {ageBreakdownConfig.map(item => (
                   <div key={item.id} className="flex items-center justify-between gap-4">
-                    <div className="min-w-30">{item.label}</div>
+                    <div className="min-w-30 text-base font-normal text-ws-text-secondary">{item.label}</div>
                     <ProgressBar
                       value={item.value}
                       max={100}
                       className="h-6 rounded-none"
                       customColor={item.customColor}
                     />
-                    <div className="flex min-w-8">{item.value}%</div>
+                    <div className="flex min-w-8 text-base font-normal text-ws-base-black">{item.value}%</div>
                   </div>
                 ))}
               </>
@@ -960,8 +894,8 @@ export default function WorkforcePage() {
       <div className="w-full flex flex-col bg-ws-light-teal-25 border border-ws-border-primary rounded-xl py-8 px-6">
         <div className="w-full flex items-center justify-between">
           <div className="space-y-1">
-            <h3 className="text-2xl xl:text-4xl font-medium text-ws-text-primary">Compensation</h3>
-            <p className="text-base text-ws-text-tertiary">
+            <h3 className="text-2xl xl:text-4xl font-medium text-ws-base-black">Compensation</h3>
+            <p className="text-base font-normal text-ws-text-secondary">
               Compensation lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod
               tempor incididunt ut labore et dolore magna aliqua.
             </p>
@@ -983,12 +917,13 @@ export default function WorkforcePage() {
                   titleClass="text-sm font-medium text-ws-text-tertiary"
                   itemAlign="between"
                   count={card.count}
-                  countClass={card.getCountClass(selectedHousingData)}
+                  //countClass={card.getCountClass(selectedHousingData)}
                   infoIcon={true}
                   infoCircleClass="text-ws-gray-70"
                   tooltipText={card.tooltipText}
                   descriptionText="U.S. Census Bureau, 5-Year American Community Survey"
                   placements="top"
+                  countClass="text-3xl font-semibold text-ws-text-primary mt-2"
                 />
               ))}
             </>
@@ -999,13 +934,13 @@ export default function WorkforcePage() {
           <div className="w-full flex items-start justify-between mt-8 flex-col xl:flex-row">
             <div className="space-y-1 w-full">
               <h3 className="text-2xl font-medium text-ws-text-primary">Workforce Breakdown</h3>
-              <p className="max-w-3xl text-base text-ws-text-secondary">
+              <p className="max-w-3xl text-base font-normal text-ws-text-primary">
                 Here you can find how your workforce is broken down by job types.{" "}
               </p>
             </div>
-            <div className="flex flex-col items-start w-full lg:w-auto shrink-0 mt-4 xl:mt-0">
+            <div className="flex flex-col items-start w-full lg:w-auto shrink-0 mt-4 xl:mt-0 lg:min-w-71">
               <Label className="text-ws-text-secondary flex mb-1.5">
-                Department <span className="text-ws-error-600">*</span>
+                Department <span className="text-ws-error-600">* <ArrowDown className="inline-block ml-1" /></span> 
               </Label>
               <Select
                 className="w-full flex items-start min-w-70 md:min-w-full lg:min-w-50"
@@ -1025,9 +960,6 @@ export default function WorkforcePage() {
               >
                 {item => <Select.Item id={item.id}>{item.label}</Select.Item>}
               </Select>
-              <p className="text-xs text-ws-text-tertiary mt-1">
-                This is a hint text to help user.
-              </p>
             </div>
           </div>
           {isLoadingCards ? (
@@ -1051,8 +983,8 @@ export default function WorkforcePage() {
           <div className="w-full border-t border-ws-border-primary mt-8">
             <div className="w-full flex items-center justify-between mt-8">
               <div className="space-y-1 w-full">
-                <h3 className="text-2xl font-medium text-ws-text-primary">Salary Breakdown</h3>
-                <p className="max-w-3xl text-base text-ws-text-secondary">
+                <h3 className="text-2xl font-medium text-ws-text-primary">Benefits Cost Breakdown</h3>
+                <p className="max-w-3xl text-base font-normal text-ws-text-primary">
                   Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor
                   incididunt ut labore et dolore magna aliqua.
                 </p>
@@ -1074,12 +1006,13 @@ export default function WorkforcePage() {
                     titleClass="text-sm font-medium text-ws-text-tertiary mb-14"
                     itemAlign="between"
                     count={card.count}
-                    countClass={card.getCountClass(selectedHousingData)}
+                    //countClass={card.getCountClass(selectedHousingData)}
                     infoIcon={true}
-                    infoCircleClass="text-ws-gray-70"
+                    infoCircleClass="text-ws-gray-70 w-5"
                     tooltipText={card.tooltipText}
                     descriptionText="U.S. Census Bureau, 5-Year American Community Survey"
                     placements="top"
+                    countClass="text-3xl font-semibold text-ws-text-primary"
                   />
                 ))}
               </>

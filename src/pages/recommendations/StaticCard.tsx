@@ -12,6 +12,7 @@ export interface StaticCardProps {
   countIcon?: React.ReactNode;
   tooltipText?: string;
   descriptionText?: string;
+  countWrap?: string;
   itemAlign?: "start" | "between" | "end";
   placements?: "top" | "bottom" | "left" | "right";
 }
@@ -25,19 +26,20 @@ export default function StaticCard({
   countClass,
   tooltipText,
   descriptionText,
+  countWrap,
   itemAlign,
   placements,
   countIcon,
 }: Readonly<StaticCardProps>) {
   return (
     <div className={`bg-ws-base-white w-full ring ring-ws-border-secondary rounded-xl py-5 px-6 ${classess}`}>
-      <div className="flex items-center justify-between">
+      <div className="flex items-start justify-between">
       <p
         className={`text-ws-text-tertiary flex items-center, text-base gap-2 justify-${itemAlign || "start"} ${titleClass}`}
       >
         {title}
       </p>
-      <span>
+      <span className="ml-1">
           {infoIcon ? (
             <Tooltip
               title={tooltipText || ""}
@@ -54,7 +56,7 @@ export default function StaticCard({
           )}
         </span>
       </div>
-      <div className="flex items-end gap-2 justify-between">
+      <div className={`flex items-end gap-2 justify-between ${countWrap}`}>
         <h2 className={`w-full ${countClass}`}>
           {count === "N/A" ? (
             <span className="mt-4 text-base font-medium text-ws-text-tertiary">No data available</span>
