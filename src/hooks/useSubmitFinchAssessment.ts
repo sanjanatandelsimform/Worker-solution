@@ -2,7 +2,7 @@ import { useState, useCallback } from "react";
 import { submitFinchAssessment } from "@/services/api/assessmentApi";
 import type { FinchAssessmentPayload } from "@/types/finchAssessmentTypes";
 
-export interface UseSubmitFinchAssessmentReturn {
+interface UseSubmitFinchAssessmentReturn {
   isSubmitting: boolean;
   error: string | null;
   success: boolean;

@@ -1,9 +1,9 @@
-export interface GoalItem {
+interface GoalItem {
   id: string;
   label: string;
 }
 
-export interface GoalCategory {
+interface GoalCategory {
   category: string;
   goals: GoalItem[];
 }

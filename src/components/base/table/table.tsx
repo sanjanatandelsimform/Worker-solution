@@ -1,8 +1,8 @@
-'use client';
+"use client";
 
-import React, { Fragment, type ReactNode } from 'react';
-import type { TableColumn, TableSize, TableVariant } from './table-types';
-import { cx } from '@/utils/cx';
+import React, { Fragment, type ReactNode } from "react";
+import type { TableColumn, TableSize, TableVariant } from "./table-types";
+import { cx } from "@/utils/cx";
 
 /**
  * Table component props
@@ -44,18 +44,18 @@ export interface TableProps<T = unknown> {
  * Sizes configuration for different table sizes
  */
 const sizeStyles: Record<TableSize, string> = {
-  sm: 'text-sm',
-  md: 'text-base',
-  lg: 'text-lg',
+  sm: "text-sm",
+  md: "text-base",
+  lg: "text-lg",
 };
 
 /**
  * Padding configuration for table cells
  */
 const cellPadding: Record<TableSize, string> = {
-  sm: 'px-3 py-2',
-  md: 'px-4 py-3',
-  lg: 'px-6 py-4',
+  sm: "px-3 py-2",
+  md: "px-4 py-3",
+  lg: "px-6 py-4",
 };
 
 /**
@@ -63,24 +63,24 @@ const cellPadding: Record<TableSize, string> = {
  */
 const variantStyles: Record<TableVariant, { table: string; row: string; header: string }> = {
   default: {
-    table: '',
-    row: '',
-    header: 'bg-muted',
+    table: "",
+    row: "",
+    header: "bg-muted",
   },
   striped: {
-    table: '',
-    row: '[&:nth-child(even)]:bg-muted',
-    header: 'bg-muted',
+    table: "",
+    row: "[&:nth-child(even)]:bg-muted",
+    header: "bg-muted",
   },
   bordered: {
-    table: 'border border-border',
-    row: 'border-b border-border last:border-b-0',
-    header: 'border-b-2 border-border bg-muted',
+    table: "border border-border",
+    row: "border-b border-border last:border-b-0",
+    header: "border-b-2 border-border bg-muted",
   },
   compact: {
-    table: 'border-collapse',
-    row: 'border-b border-border last:border-b-0',
-    header: 'border-b border-border bg-muted',
+    table: "border-collapse",
+    row: "border-b border-border last:border-b-0",
+    header: "border-b border-border bg-muted",
   },
 };
 
@@ -106,13 +106,13 @@ const variantStyles: Record<TableVariant, { table: string; row: string; header: 
 export function Table<T extends Record<string, unknown>>({
   data,
   columns,
-  size = 'md',
-  variant = 'default',
+  size = "md",
+  variant = "default",
   getRowKey,
   onRowClick,
   className,
   isLoading = false,
-  emptyMessage = 'No data available',
+  emptyMessage = "No data available",
   caption,
   striped = false,
   bordered = false,
@@ -122,8 +122,8 @@ export function Table<T extends Record<string, unknown>>({
 }: TableProps<T>): React.ReactNode {
   // Merge variant with striped/bordered props
   let finalVariant = variant;
-  if (striped && variant === 'default') finalVariant = 'striped';
-  if (bordered && variant === 'default') finalVariant = 'bordered';
+  if (striped && variant === "default") finalVariant = "striped";
+  if (bordered && variant === "default") finalVariant = "bordered";
 
   const variantConfig = variantStyles[finalVariant];
 
@@ -146,16 +146,18 @@ export function Table<T extends Record<string, unknown>>({
   };
 
   return (
-    <div className={cx('overflow-x-auto', className)}>
+    <div className={cx("overflow-x-auto", className)}>
       <table
         className={cx(
-          'w-full border-collapse',
+          "w-full border-collapse",
           sizeStyles[size],
           variantConfig.table,
-          'text-foreground bg-background'
+          "text-foreground bg-background"
         )}
       >
-        {caption && <caption className="mb-2 text-sm text-muted-foreground text-left">{caption}</caption>}
+        {caption && (
+          <caption className="mb-2 text-sm text-muted-foreground text-left">{caption}</caption>
+        )}
 
         <thead>
           <tr className={cx(variantConfig.header)}>
@@ -163,13 +165,13 @@ export function Table<T extends Record<string, unknown>>({
               <th
                 className={cx(
                   cellPadding[size],
-                  'text-left font-semibold text-foreground w-12 border-r border-ws-border-primary'
+                  "text-left font-semibold text-foreground w-12 border-r border-ws-border-primary"
                 )}
               >
                 <input
                   type="checkbox"
                   checked={selectedRows.size === data.length && data.length > 0}
-                  onChange={(e) => {
+                  onChange={e => {
                     if (!onRowSelectionChange || data.length === 0) return;
                     const newSelected = new Set<number>();
                     if (e.target.checked) {
@@ -184,13 +186,13 @@ export function Table<T extends Record<string, unknown>>({
                 />
               </th>
             )}
-            {columns.map((column) => (
+            {columns.map(column => (
               <th
                 key={column.key}
                 className={cx(
                   cellPadding[size],
-                  'text-base text-left font-medium text-foreground border-r border-ws-border-primary last:border-r-0',
-                  column.sortable && 'cursor-pointer hover:bg-muted-foreground/10',
+                  "text-base text-left font-medium text-foreground border-r border-ws-border-primary last:border-r-0",
+                  column.sortable && "cursor-pointer hover:bg-muted-foreground/10",
                   column.className
                 )}
                 style={column.width ? { width: `${column.width}` } : undefined}
@@ -206,7 +208,10 @@ export function Table<T extends Record<string, unknown>>({
             <tr>
               <td
                 colSpan={columns.length + (selectable ? 1 : 0)}
-                className={cx(cellPadding[size], 'text-center text-muted-foreground border-r border-ws-border-primary')}
+                className={cx(
+                  cellPadding[size],
+                  "text-center text-muted-foreground border-r border-ws-border-primary"
+                )}
               >
                 Loading...
               </td>
@@ -215,7 +220,10 @@ export function Table<T extends Record<string, unknown>>({
             <tr>
               <td
                 colSpan={columns.length + (selectable ? 1 : 0)}
-                className={cx(cellPadding[size], 'text-center text-muted-foreground border-r border-ws-border-primary')}
+                className={cx(
+                  cellPadding[size],
+                  "text-center text-muted-foreground border-r border-ws-border-primary"
+                )}
               >
                 {emptyMessage}
               </td>
@@ -230,17 +238,17 @@ export function Table<T extends Record<string, unknown>>({
                   key={rowKey}
                   className={cx(
                     variantConfig.row,
-                    'hover:bg-muted/50 transition-colors',
-                    onRowClick && 'cursor-pointer',
-                    isSelected && 'bg-primary/10',
-                    'text-foreground'
+                    "hover:bg-muted/50 transition-colors",
+                    onRowClick && "cursor-pointer",
+                    isSelected && "bg-primary/10",
+                    "text-foreground"
                   )}
                   onClick={() => handleRowClick(item, rowIndex)}
-                  role={onRowClick || selectable ? 'button' : undefined}
+                  role={onRowClick || selectable ? "button" : undefined}
                   tabIndex={onRowClick || selectable ? 0 : undefined}
-                  onKeyDown={(e) => {
-                    if (e.key === 'Enter' || e.key === ' ') {
-                      if (selectable && e.key === ' ') {
+                  onKeyDown={e => {
+                    if (e.key === "Enter" || e.key === " ") {
+                      if (selectable && e.key === " ") {
                         e.preventDefault();
                         handleRowSelectionChange(rowIndex);
                       } else if (onRowClick) {
@@ -250,25 +258,32 @@ export function Table<T extends Record<string, unknown>>({
                   }}
                 >
                   {selectable && (
-                    <td className={cx(cellPadding[size], 'w-12')}>
+                    <td className={cx(cellPadding[size], "w-12")}>
                       <input
                         type="checkbox"
                         checked={isSelected}
                         onChange={() => handleRowSelectionChange(rowIndex)}
                         className="cursor-pointer"
                         aria-label={`Select row ${rowIndex + 1}`}
-                      />s
+                      />
+                      s
                     </td>
                   )}
-                  {columns.map((column) => {
+                  {columns.map(column => {
                     const value = item[column.key];
                     return (
                       <td
                         key={`${rowKey}-${column.key}`}
-                        className={cx(cellPadding[size], column.className, 'text-foreground border-r border-ws-border-primary border-t border-ws-border-primary last:border-r-0 text-sm')}
+                        className={cx(
+                          cellPadding[size],
+                          column.className,
+                          "text-foreground border-r border-ws-border-primary border-t border-ws-border-primary last:border-r-0 text-sm"
+                        )}
                       >
-                        {column.render ? column.render(item, value) : (
-                          <Fragment>{String(value ?? '')}</Fragment>
+                        {column.render ? (
+                          column.render(item, value)
+                        ) : (
+                          <Fragment>{String(value ?? "")}</Fragment>
                         )}
                       </td>
                     );

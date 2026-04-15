@@ -409,7 +409,6 @@ export const DashboardPage = () => {
                     textColor="text-red-700"
                     alertIcon={AlertCircle}
                     errorMessage={dashboardError}
-                    onClose={() => {}}
                   />
                   <button
                     onClick={handleRetryDashboard}

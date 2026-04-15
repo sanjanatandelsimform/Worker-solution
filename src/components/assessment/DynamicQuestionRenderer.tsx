@@ -753,18 +753,18 @@ export const DynamicQuestionRenderer = ({
                 <RadioButton key={option.value} label={option.label} value={option.value} />
               ))}
             </div> */}
-          <div className="flex w-full flex-col gap-4 custom-question-options">
-          {question.options?.map(option => (
-            <React.Fragment key={option.value}>
-              <RadioButton label={option.label} value={option.value} />
-              {/* Render conditional inline after the matching option */}
-              {question.conditionalQuestion &&
-                String(question.conditionalQuestion.showWhen).toLowerCase() ===
-                  option.value.toLowerCase() &&
-                renderConditionalQuestion(question.conditionalQuestion, question.key)}
-            </React.Fragment>
-          ))}
-        </div>
+            <div className="flex w-full flex-col gap-4 custom-question-options">
+              {question.options?.map(option => (
+                <React.Fragment key={option.value}>
+                  <RadioButton label={option.label} value={option.value} />
+                  {/* Render conditional inline after the matching option */}
+                  {question.conditionalQuestion &&
+                    String(question.conditionalQuestion.showWhen).toLowerCase() ===
+                      option.value.toLowerCase() &&
+                    renderConditionalQuestion(question.conditionalQuestion, question.key)}
+                </React.Fragment>
+              ))}
+            </div>
           </RadioGroup>
         </div>
       );
@@ -973,7 +973,7 @@ export const DynamicQuestionRenderer = ({
             isInvalid={error ? true : false}
             tooltip={error ? error : undefined}
           />
-            {error && (
+          {error && (
             <div className="flex items-center gap-2">
               <InputInfo className="text-ws-error-600" />
               <span className="text-sm text-ws-error-600">{error}</span>
@@ -1099,7 +1099,9 @@ export const DynamicQuestionRenderer = ({
                       <Select.Item id={item.id}>{item.label || ""}</Select.Item>
                     )}
                   </Select>
-                  {fieldError && <span className="text-sm text-ws-error-600 mt-1">{fieldError}</span>}
+                  {fieldError && (
+                    <span className="text-sm text-ws-error-600 mt-1">{fieldError}</span>
+                  )}
                 </div>
               </div>
             );

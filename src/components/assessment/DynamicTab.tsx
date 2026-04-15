@@ -743,8 +743,8 @@ export const DynamicTab = forwardRef<
                 __zipValidityState: _vs,
                 __zipStateFips: _zfips,
                 ...rest
-              } = item as Record<string, unknown>
-;              if (_zfips && !rest.stateFips) {
+              } = item as Record<string, unknown>;
+              if (_zfips && !rest.stateFips) {
                 rest.stateFips = _zfips;
               }
 
@@ -919,9 +919,12 @@ export const DynamicTab = forwardRef<
             // else if (showWhen === "no") conditionMet = value === false;
             // else
             //   conditionMet = String(value || "").toLowerCase() === String(showWhen).toLowerCase();
-            if (showWhen === "yes") conditionMet = value === true || String(value).toLowerCase() === "yes";
-            else if (showWhen === "no") conditionMet = value === false || String(value).toLowerCase() === "no";
-            else conditionMet = String(value || "").toLowerCase() === String(showWhen).toLowerCase();
+            if (showWhen === "yes")
+              conditionMet = value === true || String(value).toLowerCase() === "yes";
+            else if (showWhen === "no")
+              conditionMet = value === false || String(value).toLowerCase() === "no";
+            else
+              conditionMet = String(value || "").toLowerCase() === String(showWhen).toLowerCase();
             if (!conditionMet) {
               Object.keys(next).forEach(errorKey => {
                 if (errorKey === conditionalKey || errorKey.startsWith(`${conditionalKey}.`)) {
@@ -1203,7 +1206,9 @@ export const DynamicTab = forwardRef<
                 <h2 className="text-ws-text-primary text-3xl font-semibold mb-2">
                   {sectionContent[section].title}
                 </h2>
-                <p className="text-base text-ws-text-secondary">{sectionContent[section].description}</p>
+                <p className="text-base text-ws-text-secondary">
+                  {sectionContent[section].description}
+                </p>
               </>
             )}
             {noSubsectionQuestions.map((question, idx) => renderQuestion(question, idx))}

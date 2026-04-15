@@ -59,7 +59,9 @@ export const InProgressModal = ({
             <ModalTitle className="text-[36px] font-medium leading-11 tracking-[-0.72px] font-display text-ws-text-primary">
               {title}
             </ModalTitle>
-            <p className="text-sm font-normal leading-5 font-body text-ws-text-tertiary">{subtitle}</p>
+            <p className="text-sm font-normal leading-5 font-body text-ws-text-tertiary">
+              {subtitle}
+            </p>
           </div>
 
           <div className="h-5 w-full shrink-0" />
