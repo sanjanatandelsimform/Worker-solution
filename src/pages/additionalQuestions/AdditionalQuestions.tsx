@@ -35,7 +35,7 @@ const questions = [
     options: [
       { id: "work_email", label: "Work (email and/or text)" },
       { id: "personal_email", label: "Personal device (email and/or text)" },
-      { id: "office_signs", label: "Office flyer, in-office experience" },
+      { id: "office_signs", label: "In-office (flyer, in person-announcements etc.)" },
     ],
   },
   {
@@ -169,7 +169,8 @@ const benefitsQuestions = [
     question: "Do you work with a benefits broker?",
     required: true,
     tooltip: {
-      title: "A benefits broker is lorem ipsum dolor sit amet, consectetur adipiscing elit ",
+      title:
+        "A benefits broker is the advisor who helps your company find, negotiate, and manage the best benefits plans for your team",
       description: "",
     },
     options: [
