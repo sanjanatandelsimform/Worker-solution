@@ -13,6 +13,7 @@ import { RankingList } from "@/components/common/RankList";
 import { goalsData } from "@/data/goalsData";
 import { useSubmitFinchAssessment } from "@/hooks/useSubmitFinchAssessment";
 import { useAssessmentStatus } from "@/hooks/useAssessmentStatus";
+import { useFinchStatus } from "@/hooks/useFinchStatus";
 import { buildFinchAssessmentPayload } from "@/utils/finchAssessmentPayload";
 import { Tooltip, TooltipTrigger } from "@/components/base/tooltip/tooltip";
 
@@ -34,7 +35,7 @@ const questions = [
     options: [
       { id: "work_email", label: "Work (email and/or text)" },
       { id: "personal_email", label: "Personal device (email and/or text)" },
-      { id: "office_signs", label: "Office flyer, in-office experience" },
+      { id: "office_signs", label: "In-office (flyer, in person-announcements etc.)" },
     ],
   },
   {
@@ -168,7 +169,8 @@ const benefitsQuestions = [
     question: "Do you work with a benefits broker?",
     required: true,
     tooltip: {
-      title: "A benefits broker is lorem ipsum dolor sit amet, consectetur adipiscing elit ",
+      title:
+        "A benefits broker is the advisor who helps your company find, negotiate, and manage the best benefits plans for your team",
       description: "",
     },
     options: [
@@ -222,6 +224,7 @@ const retirementQuestions = [
 export default function AdditionalQuestions() {
   const navigate = useNavigate();
   const { isFinchCompleted } = useAssessmentStatus();
+  const { isConnected, isLoading: isFinchStatusLoading } = useFinchStatus();
   const [answers, setAnswers] = useState<QuestionAnswer>({});
   const [goalsAnswers, setGoalsAnswers] = useState<GoalsAnswer>({
     selectedGoals: [],
@@ -240,6 +243,12 @@ export default function AdditionalQuestions() {
       navigate("/dashboard");
     }
   }, [isFinchCompleted, navigate]);
+
+  useEffect(() => {
+    if (!isFinchStatusLoading && !isConnected) {
+      navigate("/dashboard");
+    }
+  }, [isConnected, isFinchStatusLoading, navigate]);
 
   const handleClose = () => {
     navigate("/dashboard");
