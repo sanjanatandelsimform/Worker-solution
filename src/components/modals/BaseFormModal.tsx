@@ -57,7 +57,7 @@ export const BaseFormModal = ({
                 <Button
                   iconTrailing={<X data-icon className="text-quaternary size-6" />}
                   onClick={onClose}
-                  color="tertiary"
+                  color="link"
                 />
               </div>
             )}

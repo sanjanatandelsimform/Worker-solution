@@ -459,12 +459,12 @@ export function RegistrationForm() {
                   />
                 </div>
                 <Button
-                  color="tertiary"
+                  color="link"
                   size="sm"
                   type="button"
                   onClick={() => (!errors.password ? setShowPassword(!showPassword) : "")}
                   aria-label={showPassword ? "Hide password" : "Show password"}
-                  className="absolute right-0 top-7"
+                  className="absolute right-0 top-8"
                 >
                   {!errors.password && (
                     <>
@@ -503,14 +503,14 @@ export function RegistrationForm() {
                   />
                 </div>
                 <Button
-                  color="tertiary"
+                  color="link"
                   size="sm"
                   type="button"
                   onClick={() =>
                     !errors.confirmPassword ? setShowConfirmPassword(!showConfirmPassword) : ""
                   }
                   aria-label={showConfirmPassword ? "Hide password" : "Show password"}
-                  className="absolute right-0 top-7"
+                  className="absolute right-0 top-8"
                 >
                   {!errors.confirmPassword && (
                     <>

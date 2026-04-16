@@ -115,12 +115,12 @@ export default function ResetPasswordForm() {
                     }}
                   />
                   <Button
-                    color="tertiary"
+                    color="link"
                     size="sm"
                     type="button"
                     onClick={() => setShowPassword(!showPassword)}
                     aria-label={showPassword ? "Hide password" : "Show password"}
-                    className="absolute right-0 top-7"
+                    className="absolute right-0 top-8"
                   >
                     {!errors.newPassword && (
                       <>
@@ -157,12 +157,12 @@ export default function ResetPasswordForm() {
                     }}
                   />
                   <Button
-                    color="tertiary"
+                    color="link"
                     size="sm"
                     type="button"
                     onClick={() => setShowConfirmPassword(!showConfirmPassword)}
                     aria-label={showConfirmPassword ? "Hide password" : "Show password"}
-                    className="absolute right-0 top-7"
+                    className="absolute right-0 top-8"
                   >
                     {!errors.confirmPassword && (
                       <>

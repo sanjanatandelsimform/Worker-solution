@@ -122,7 +122,7 @@ export default function GetMore() {
         {/* Back Button */}
         <Button
           onClick={handleBack}
-          color="tertiary"
+          color="link"
           size="md"
           iconLeading={<ChevronLeft data-icon className="text-ws-primary-800" />}
           className="flex items-center gap-1 text-lg font-normal text-ws-primary-800 transition-opacity"
@@ -132,7 +132,7 @@ export default function GetMore() {
 
         {/* Close Button */}
         <Button
-          color="tertiary"
+          color="link"
           size="md"
           onClick={handleClose}
           iconLeading={<XClose data-icon className="text-ws-primary-800" />}
