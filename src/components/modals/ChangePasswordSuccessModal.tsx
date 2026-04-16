@@ -1,9 +1,9 @@
 import { CheckCircle } from "@untitledui/icons";
 import { BaseModalWithIcon } from "./BaseModalWithIcon";
-import checkmarkIcon from "@/assets/finch-checkmark.svg";
+// import checkmarkIcon from "@/assets/finch-checkmark.svg";
 import { useNavigate } from "react-router-dom";
-// import { useAppDispatch } from "@/store/hooks";
-// import { logoutThunk } from "@/store/slices/authSlice";
+import { useAppDispatch } from "@/store/hooks";
+import { logoutThunk } from "@/store/slices/authSlice";
 
 interface ChangePasswordSuccessModalProps {
   isOpen: boolean;
@@ -20,14 +20,14 @@ export const ChangePasswordSuccessModal = ({
   onClose,
 }: ChangePasswordSuccessModalProps) => {
   const navigate = useNavigate();
-  // const dispatch = useAppDispatch();
+  const dispatch = useAppDispatch();
 
   const handleBackToSignIn = async () => {
-    // await dispatch(logoutThunk())
-    //   .unwrap()
-    //   .catch(() => {});
+    await dispatch(logoutThunk())
+      .unwrap()
+      .catch(() => {});
     onClose();
-    navigate("/settings", { replace: true });
+    navigate("/sign-in", { replace: true });
   };
 
   return (
@@ -38,11 +38,11 @@ export const ChangePasswordSuccessModal = ({
       title="Your password has been changed."
       subtitle="All set! Your password has been successfully updated."
       icon={<CheckCircle className="size-6" />}
-      messageImg={checkmarkIcon}
+      // messageImg={checkmarkIcon}
       backgroundPattern="success"
       buttons={[
         {
-          text: "Back to Setting",
+          text: "Log in",
           onClick: handleBackToSignIn,
           color: "primary",
         },

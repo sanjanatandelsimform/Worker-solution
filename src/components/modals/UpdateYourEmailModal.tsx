@@ -219,7 +219,7 @@ export const UpdateYourEmailModal = ({
               <ModalDescription>
                 {showSuccess
                   ? "Check your inbox for a verification link and follow the steps to confirm the update."
-                  : "Update your email by entering a new address. After submitting, check your inbox for a verification link and follow the steps to confirm the update."}
+                  : "Update your account by entering new information. After submitting, check your inbox for a verification link and follow the steps to confirm the update."}
               </ModalDescription>
             </div>
             <div className="absolute -right-2 -top-2">
