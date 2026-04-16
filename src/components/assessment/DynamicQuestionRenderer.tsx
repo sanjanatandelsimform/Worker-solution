@@ -66,6 +66,41 @@ export const DynamicQuestionRenderer = ({
   const halfWidthConditionalNumericKeys = new Set(["retirementMatchPercentage"]);
   const halfWidthYesNoKeys = new Set(["offersAnnualRaises"]);
 
+  const handlePercentageChange = useCallback(
+    (value: string, subFieldKey: string) => {
+      let sanitized = value.replace(/[^0-9%]/g, "");
+      const withoutPercent = sanitized.replace(/%/g, "");
+      const endsWithPercent = sanitized.endsWith("%") && withoutPercent.length > 0;
+      sanitized = endsWithPercent ? `${withoutPercent}%` : withoutPercent;
+
+      const currentObj =
+        currentAnswer &&
+        typeof currentAnswer === "object" &&
+        !Array.isArray(currentAnswer)
+          ? (currentAnswer as Record<string, unknown>)
+          : {};
+
+      if (sanitized === "" || sanitized === "%") {
+        onAnswerChange(question.key, {
+          ...currentObj,
+          [subFieldKey]: null,
+        });
+        return;
+      }
+
+      const numericPart = sanitized.replace(/%$/, "");
+      const numValue = Number(numericPart);
+
+      if (isNaN(numValue) || numValue > 100) return;
+
+      onAnswerChange(question.key, {
+        ...currentObj,
+        [subFieldKey]: numValue,
+      });
+    },
+    [currentAnswer, onAnswerChange, question.key]
+  );
+
   useEffect(() => {
     console.debug(`[DynamicQuestionRenderer] Mounted: ${question.key}`, {
       questionKey: question.key,
@@ -490,11 +525,6 @@ export const DynamicQuestionRenderer = ({
       </div>
     );
   };
-
-  // const updateObjectField = (parentKey: string, fieldKey: string, value: unknown) => {
-  //   const current = (answers[parentKey] as Record<string, unknown>) || {};
-  //   onAnswerChange(parentKey, { ...current, [fieldKey]: value });
-  // };
 
   const renderConditionalQuestion = (
     conditionalConfig: Question["conditionalQuestion"],
@@ -1126,37 +1156,7 @@ export const DynamicQuestionRenderer = ({
                           ? String(subFieldValue)
                           : ""
                       }
-                      onChange={(value: string) => {
-                        let sanitized = value.replace(/[^0-9%]/g, "");
-                        const withoutPercent = sanitized.replace(/%/g, "");
-                        const endsWithPercent = sanitized.endsWith("%") && withoutPercent.length > 0;
-                        sanitized = endsWithPercent ? `${withoutPercent}%` : withoutPercent;
-
-                        const currentObj =
-                          currentAnswer &&
-                          typeof currentAnswer === "object" &&
-                          !Array.isArray(currentAnswer)
-                            ? (currentAnswer as Record<string, unknown>)
-                            : {};
-
-                        if (sanitized === "" || sanitized === "%") {
-                          onAnswerChange(question.key, {
-                            ...currentObj,
-                            [subField.key]: null,
-                          });
-                          return;
-                        }
-
-                        const numericPart = sanitized.replace(/%$/, "");
-                        const numValue = Number(numericPart);
-
-                        if (isNaN(numValue) || numValue > 100) return;
-
-                        onAnswerChange(question.key, {
-                          ...currentObj,
-                          [subField.key]: numValue,
-                        });
-                      }}
+                      onChange={(value: string) => handlePercentageChange(value, subField.key)}
                       isInvalid={!!subFieldError}
                       tooltip={subFieldError || undefined}
                     />
