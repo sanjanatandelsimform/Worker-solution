@@ -54,9 +54,18 @@ describe("workforceSlice", () => {
           enrolledBenefits: 2450,
           retirementEnrollment: "64%",
           healthcareEnrollment: "78%",
-          benefits: { FSA: "31%", wellness: "N/A", EAP: "N/A" },
-          retirement: { "401k": "64%" },
-          insurance: { health: "78%", dental: "65%", vision: "60%", life: "45%" },
+          benefits: [
+            { name: "FSA", enrollment: "31%" },
+            { name: "Wellness", enrollment: "N/A" },
+            { name: "EAP", enrollment: "N/A" },
+          ],
+          retirement: [{ name: "401k", enrollment: "64%" }],
+          insurance: [
+            { name: "Health", enrollment: "78%" },
+            { name: "Dental", enrollment: "65%" },
+            { name: "Vision", enrollment: "60%" },
+            { name: "Life", enrollment: "45%" },
+          ],
         },
         demographics: {
           employementType: [],
@@ -108,9 +117,18 @@ describe("workforceSlice", () => {
             enrolledBenefits: 1,
             retirementEnrollment: "0%",
             healthcareEnrollment: "0%",
-            benefits: { FSA: "0%", wellness: "N/A", EAP: "N/A" },
-            retirement: { "401k": "0%" },
-            insurance: { health: "0%", dental: "0%", vision: "0%", life: "0%" },
+            benefits: [
+              { name: "FSA", enrollment: "0%" },
+              { name: "Wellness", enrollment: "N/A" },
+              { name: "EAP", enrollment: "N/A" },
+            ],
+            retirement: [{ name: "401k", enrollment: "0%" }],
+            insurance: [
+              { name: "Health", enrollment: "0%" },
+              { name: "Dental", enrollment: "0%" },
+              { name: "Vision", enrollment: "0%" },
+              { name: "Life", enrollment: "0%" },
+            ],
           },
           demographics: {
             employementType: [],
