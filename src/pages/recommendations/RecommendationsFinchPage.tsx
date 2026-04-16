@@ -6,7 +6,7 @@ import didHeroImg from "@/assets/did-hero.jpg";
 import BenefitCard from "./BenefitCard";
 import { Link } from "react-router-dom";
 import { CircleCheckIcon } from "@/assets/icons/CircleCheckIcon";
-import { useAppSelector } from "@/store/hooks";
+import { useAppSelector, useAppDispatch } from "@/store/hooks";
 import { formatNumber, formatCurrency, formatCurrencyWithCents } from "@/utils/formatters";
 import { GlobeIcon } from "@/assets/icons/Globe";
 import { ClockIcon } from "@/assets/icons/ClockIcon";
@@ -22,9 +22,18 @@ import { SavingIcon } from "@/assets/icons/SavingIcon";
 import { HeartLineIcon } from "@/assets/icons/HeartLineIcon";
 import PreparingDashboard from "./PreparingDashboard";
 import {
-  selectCompanyAtGlance,
-  selectStrategicRecommendations,
-} from "@/store/selectors/dashboardSelectors";
+  selectWorkforceSection,
+  selectCompensationSection,
+  selectParticipationSection,
+  selectWorkforceLoading,
+} from "@/store/selectors/workforceSelectors";
+import {
+  selectRecommStrategicRecommendations,
+  selectProvenStrategiesFlags,
+  selectRecommendationsLoading,
+  selectRecommendationsIsLoaded,
+} from "@/store/selectors/recommendationsSelectors";
+import { fetchRecommendations } from "@/store/slices/recommendationsSlice";
 
 const OverviewCardSkeleton = () => (
   <div className="border border-ws-border-secondary rounded-lg p-4 bg-ws-base-white animate-pulse shadow-sm">
@@ -241,10 +250,28 @@ const provenStrategiesCardsConfig: ProvenCardConfig[] = [
 ];
 
 export default function RecommendationsFinchPage() {
-  const companyAtGlance = useAppSelector(selectCompanyAtGlance);
-  const strategicRecommendations = useAppSelector(selectStrategicRecommendations);
+  const dispatch = useAppDispatch();
+
+  // Workforce slice — Company Overview & Benefits Overview
+  const workforceSection = useAppSelector(selectWorkforceSection);
+  const compensationSection = useAppSelector(selectCompensationSection);
+  const participationSection = useAppSelector(selectParticipationSection);
+  const workforceIsLoading = useAppSelector(selectWorkforceLoading);
+
+  // Recommendations slice — Proven Strategies & Strategic Solutions
+  const strategicRecommendations = useAppSelector(selectRecommStrategicRecommendations);
+  const provenStrategyFlags = useAppSelector(selectProvenStrategiesFlags);
+  const recommendationsIsLoading = useAppSelector(selectRecommendationsLoading);
+  const recommendationsIsLoaded = useAppSelector(selectRecommendationsIsLoaded);
+
   const [isPreparingCard, setIsPreparingCard] = useState(true);
   const [isLoadingCards, setIsLoadingCards] = useState(true);
+
+  useEffect(() => {
+    if (!recommendationsIsLoaded) {
+      dispatch(fetchRecommendations());
+    }
+  }, [dispatch, recommendationsIsLoaded]);
 
   useEffect(() => {
     const timer = setTimeout(() => {
@@ -262,6 +289,39 @@ export default function RecommendationsFinchPage() {
     return () => clearTimeout(timer);
   }, []);
 
+  // Synthetic Company Overview shape (maps workforce fields to existing format fn expectations)
+  const companyGlanceData = {
+    totalWorkforce: workforceSection?.totalWorkforce ?? null,
+    averageHourlyWage: compensationSection?.salaryBreakdown?.avgHourlyRate ?? null,
+    averageSalary: compensationSection?.salaryBreakdown?.avgSalary ?? null,
+    industryAverageWage: null,
+  };
+
+  // Synthetic Benefits Overview shape (maps participation fields to card counts)
+  const benefitsGlanceData: Record<string, string | null> = {
+    "eligible-employees":
+      participationSection?.totalWorkforce == null
+        ? null
+        : String(participationSection.totalWorkforce),
+    "enrolled-employees":
+      participationSection?.enrolledBenefits == null
+        ? null
+        : String(participationSection.enrolledBenefits),
+    "enrolled-in-retirement": participationSection?.retirementEnrollment ?? null,
+    "enrolled-in-healthcare": participationSection?.healthcareEnrollment ?? null,
+  };
+
+  // Proven Strategies computed values
+  const provenStrategiesCount = [
+    provenStrategyFlags.nonElectiveMatch,
+    provenStrategyFlags.autoEnroll,
+    provenStrategyFlags.healthcareAffordability,
+  ].filter(Boolean).length;
+  const provenStrategiesPercent = Math.round((provenStrategiesCount / 3) * 100);
+
+  // Combined loading guard
+  const isAnyLoading = isLoadingCards || workforceIsLoading || recommendationsIsLoading;
+
   return (
     <div className="bg-ws-base-white space-y-6 py-10 px-6 shadow-xl rounded-b-xl">
       {isPreparingCard ? (
@@ -277,7 +337,7 @@ export default function RecommendationsFinchPage() {
           </h2>
           <h4 className="text-2xl font-medium text-ws-text-primary">Company Overview</h4>
           <div className="grid grid-cols-2 xl:grid-cols-4 gap-6 w-full">
-            {isLoadingCards ? (
+            {isAnyLoading ? (
               <>
                 <OverviewCardSkeleton />
                 <OverviewCardSkeleton />
@@ -295,7 +355,7 @@ export default function RecommendationsFinchPage() {
                       title={card.title}
                       titleClass="text-ws-text-tertiary text-sm"
                       countIcon={<Icon className="size-5 text-ws-gray-500" />}
-                      count={String(card.format(companyAtGlance))}
+                      count={String(card.format(companyGlanceData))}
                       countClass="text-ws-light-teal-900 text-3xl xl:text-4xl font-medium mt-6"
                       infoIcon={card.infoIcon}
                       infoCircleClass={card.infoIcon ? "text-ws-text-secondary0 size-4" : undefined}
@@ -310,7 +370,7 @@ export default function RecommendationsFinchPage() {
           </div>
           <h4 className="text-2xl font-medium text-ws-text-primary">Benefits Overview</h4>
           <div className="grid grid-cols-2 xl:grid-cols-4 gap-6 w-full">
-            {isLoadingCards ? (
+            {isAnyLoading ? (
               <>
                 <OverviewCardSkeleton />
                 <OverviewCardSkeleton />
@@ -328,7 +388,7 @@ export default function RecommendationsFinchPage() {
                       title={card.title}
                       titleClass="text-ws-text-tertiary text-sm"
                       countIcon={<Icon className="size-5 text-ws-gray-500" />}
-                      count={card.count}
+                      count={benefitsGlanceData[card.id] ?? card.count}
                       countClass="text-ws-light-teal-900 text-3xl xl:text-4xl font-medium mt-6"
                       infoIcon={card.infoIcon}
                       infoCircleClass={card.infoIcon ? "text-ws-text-secondary0 size-4" : undefined}
@@ -370,18 +430,18 @@ export default function RecommendationsFinchPage() {
             <h4 className="text-2xl font-medium text-ws-text-primary my-6">Proven strategies</h4>
             <div className="bg-ws-navy-25 border border-ws-border-primary rounded-lg p-3.5">
               <h4 className="text-lg font-medium text-ws-text-primary">
-                Strategies Impemented: 2/3
+                Strategies Impemented: {provenStrategiesCount}/3
               </h4>
               <p className="my-4 text-base text-ws-text-primary">
-                You have already implemented 2 of 3 proven strategies! Keep going to see lorem ipsum
-                dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut
-                labore et dolore magna aliqua.{" "}
+                You have already implemented {provenStrategiesCount} of 3 proven strategies! Keep
+                going to see lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod
+                tempor incididunt ut labore et dolore magna aliqua.{" "}
               </p>
-              {isLoadingCards ? (
+              {isAnyLoading ? (
                 <ProvenStrategiesSkeleton />
               ) : (
                 <ProgressBar
-                  value={66}
+                  value={provenStrategiesPercent}
                   labelPosition="none"
                   className="mt-4 h-6 rounded-none"
                   progressClassName="bg-ws-light-teal-600 rounded-none"
@@ -389,7 +449,7 @@ export default function RecommendationsFinchPage() {
               )}
             </div>
             <div className="mt-6 grid grid-cols-1 xl:grid-cols-3 gap-6 w-full">
-              {isLoadingCards ? (
+              {isAnyLoading ? (
                 <>
                   <ProvenStrategiesCardsSkeleton />
                   <ProvenStrategiesCardsSkeleton />
@@ -427,7 +487,7 @@ export default function RecommendationsFinchPage() {
         <div className="mt-6">
           {strategicRecommendations.length > 0 ? (
             <div className="grid xl:grid-cols-3 gap-5 w-full mt-6">
-              {isLoadingCards ? (
+              {isAnyLoading ? (
                 <>
                   <StrategicSolutionsCardsSkeleton />
                   <StrategicSolutionsCardsSkeleton />
