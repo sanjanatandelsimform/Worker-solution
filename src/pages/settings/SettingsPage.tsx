@@ -507,7 +507,7 @@ export const SettingsPage = () => {
                         </div>
                       </InputGroup> */}
                        <Button
-                        color="link-disable-color"
+                        color="link"
                         className="text-ws-navy-800 font-semibold shadow-none"
                         onClick={() => setIsChangePasswordModalOpen(true)}
                         isDisabled={profileLoading || !firstName || !lastName}
