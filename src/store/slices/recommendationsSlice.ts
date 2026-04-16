@@ -37,45 +37,7 @@ const initialState: RecommendationsState = {
 // TODO: Remove STATIC_RECOMMENDATIONS_DATA block when backend is live
 const STATIC_RECOMMENDATIONS_DATA: RecommendationsApiResponse = {
   recommendation: {
-    strategicRecommendations: [
-      {
-        order: 1,
-        title: "Emergency Savings",
-        category: "General",
-        matchScore: 1.83,
-        description:
-          "A financial safety net that helps frontline workers manage everyday expenses and unexpected costs.",
-        keyFeatures: ["Reduces turnover", "Reduces absenteeism"],
-        matchedGoals: ["Reduce Absenteeism", "Retain Talent", "Attract Talent"],
-        providerName: "Sunny Day Fund",
-        workerRanking: 1,
-        priorityLevelUsed: 1,
-      },
-      {
-        order: 2,
-        title: "Medical Financing",
-        category: "General",
-        matchScore: 1.33,
-        description: "On-demand access to funds for high-cost medical expenses.",
-        keyFeatures: ["Reduces financial strain", "Helps employees stay focused at work"],
-        matchedGoals: ["Reduce Absenteeism", "Retain Talent"],
-        providerName: "medZERO",
-        workerRanking: 3,
-        priorityLevelUsed: 1,
-      },
-      {
-        order: 3,
-        title: "Financial Coaching",
-        category: "General",
-        matchScore: 1.33,
-        description: "Financial coaching that lowers employee stress.",
-        keyFeatures: ["Improves productivity", "Supports a more resilient workforce"],
-        matchedGoals: ["Reduce Absenteeism", "Retain Talent"],
-        providerName: "TrustPlus",
-        workerRanking: 4,
-        priorityLevelUsed: 1,
-      },
-    ],
+    strategicRecommendations: [],
     autoEnroll: true,
     nonElectiveMatch: false,
     healthcareAffordability: false,
