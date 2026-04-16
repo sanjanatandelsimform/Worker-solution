@@ -335,20 +335,34 @@ export const DynamicTab = forwardRef<
             }
           }
         }
+        if (question.questionType === "PARTICIPATION_RATES") {
+          if (question.subFields && question.subFields.length > 0) {
+            const ratesAnswer =
+              answers[question.key] &&
+              typeof answers[question.key] === "object" &&
+              !Array.isArray(answers[question.key])
+                ? (answers[question.key] as Record<string, unknown>)
+                : {};
 
-        if (question.questionType === "PARTICIPATION_RATES" && rules.type === "OBJECT") {
-          if (rules.required) {
-            const answerObj = (value as Record<string, unknown>) || {};
-            question.subFields?.forEach(sub => {
-              const subValue = answerObj[sub.key];
-              if (subValue === null || subValue === undefined || subValue === "") {
-                newErrors[`${question.key}.${sub.key}`] = "Enter a valid percentage.";
-                isValid = false;
+            for (const subField of question.subFields) {
+              const val = ratesAnswer[subField.key];
+
+              if (val === null || val === undefined || val === "") {
+                if (question.isRequired) {
+                  newErrors[`${question.key}.${subField.key}`] = "Enter a valid percentage.";
+                  isValid = false;
+                }
+              } else {
+                const num = typeof val === "number" ? val : Number(String(val).replace(/%$/, ""));
+                if (isNaN(num) || num < 0 || num > 100) {
+                  newErrors[`${question.key}.${subField.key}`] =
+                    "Please enter a percentage between 0 and 100";
+                  isValid = false;
+                }
               }
-            });
+            }
           }
         }
-
         if (question.conditionalQuestion) {
           // const isFirstLevelShown = (() => {
           //   const showWhen = question.conditionalQuestion.showWhen;
@@ -1096,12 +1110,12 @@ export const DynamicTab = forwardRef<
         workforce: {
           title: "Workforce",
           description:
-            "We'd like to get a better understanding of your workforce and how they're structured. This will help us customize relevant solution providers.",
+            "We’d like to get a better understanding of your workforce and how it’s structured. This will help us customize relevant solutions.",
         },
         compensation: {
           title: "Compensation",
           description:
-            "Select salary that applies best to your workforce. This doesn't have to be exact.",
+            "Select salary ranges that apply best to your workforce. This doesn’t have to be exact.",
         },
         benefits: {
           title: "Benefits",

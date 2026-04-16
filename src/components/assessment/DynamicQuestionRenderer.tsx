@@ -16,6 +16,21 @@ import questionData from "@/data/assessment/questionData.json";
 import { InputInfo } from "@/assets/icons/inputInfo";
 import type { ZipValidityState } from "@/components/common/ZipCodeAutocomplete";
 import type { StateOption } from "@/hooks/useStatesLookup";
+import { Tooltip, TooltipTrigger } from "@/components/base/tooltip/tooltip";
+import { InfoCircle } from "@untitledui/icons";
+
+/** Tooltips for specific option values */
+const OPTION_TOOLTIPS: Record<string, string> = {
+  "Earned Wage Access":
+    "Earned Wage Access (EWA) is a financial benefit allowing employees to access a portion of their already-earned wages before their scheduled payday.",
+  "Education Support":
+    "Education support includes benefits such as tuition reimbursement, scholarships, and education stipends.",
+};
+/** Tooltips for specific question keys */
+const QUESTION_TOOLTIPS: Record<string, string> = {
+  retirementNonElectiveMatch:
+    "A non-elective match (or non-elective contribution) is a 401(k) employer contribution made to all eligible employees, regardless of whether the employee contributes their own money.",
+};
 
 // Helper to generate unique IDs
 let idCounter = 0;
@@ -476,10 +491,10 @@ export const DynamicQuestionRenderer = ({
     );
   };
 
-  const updateObjectField = (parentKey: string, fieldKey: string, value: unknown) => {
-    const current = (answers[parentKey] as Record<string, unknown>) || {};
-    onAnswerChange(parentKey, { ...current, [fieldKey]: value });
-  };
+  // const updateObjectField = (parentKey: string, fieldKey: string, value: unknown) => {
+  //   const current = (answers[parentKey] as Record<string, unknown>) || {};
+  //   onAnswerChange(parentKey, { ...current, [fieldKey]: value });
+  // };
 
   const renderConditionalQuestion = (
     conditionalConfig: Question["conditionalQuestion"],
@@ -839,6 +854,7 @@ export const DynamicQuestionRenderer = ({
                         <Checkbox
                           key={option.value}
                           label={option.label}
+                          tooltipText={OPTION_TOOLTIPS[option.label]}
                           isSelected={
                             (Array.isArray(currentAnswer) &&
                               currentAnswer.includes(option.value)) ||
@@ -905,6 +921,20 @@ export const DynamicQuestionRenderer = ({
         >
           <Label isRequired={question.isRequired} className="text-base custom-label">
             {displayOrder}. {question.questionText}
+            {QUESTION_TOOLTIPS[question.key] && (
+              <Tooltip
+                title={QUESTION_TOOLTIPS[question.key]}
+                placement="top"
+                arrow={true}
+              >
+                <TooltipTrigger
+                  isDisabled={false}
+                  className="cursor-pointer text-ws-gray-400 transition duration-200 hover:text-ws-gray-600 ml-1 inline-flex align-middle"
+                >
+                  <InfoCircle className="size-4" />
+                </TooltipTrigger>
+              </Tooltip>
+            )}
           </Label>
           {error && (
             <div className="flex items-center gap-2">
@@ -1064,51 +1094,88 @@ export const DynamicQuestionRenderer = ({
 
     case "PARTICIPATION_RATES":
       return (
-        <div className="flex w-full flex-col gap-4" data-question-key={question.key}>
+        <div className="flex flex-col gap-2" data-question-key={question.key}>
           <Label isRequired={question.isRequired} className="text-base custom-label">
             {displayOrder}. {question.questionText}
           </Label>
+          <div className="flex flex-col gap-6 custom-question-options mt-2">
+            {question.subFields?.map(subField => {
+              const subFieldValue =
+                currentAnswer &&
+                typeof currentAnswer === "object" &&
+                !Array.isArray(currentAnswer)
+                  ? (currentAnswer as Record<string, unknown>)[subField.key]
+                  : undefined;
 
-          {question.subFields?.map(sub => {
-            const answerObj = (answers[question.key] as Record<string, unknown>) || {};
-            const currentVal = String(answerObj[sub.key] || "");
-            const fieldError = errors[`${question.key}.${sub.key}`];
-            return (
-              <div key={sub.key} className="flex w-full items-start gap-4">
-                <div className="flex w-84.75 items-center gap-2 px-3 py-2">
-                  <p className="overflow-hidden text-ellipsis text-base font-medium leading-6 text-gray-800 flex items-center gap-3 custom-label">
-                    {sub.label}
-                  </p>
-                </div>
-                <div className="flex flex-1 flex-col gap-1.5">
-                  <Select
-                    className="w-full custom-input"
-                    size="md"
-                    placeholder="Select"
-                    items={sub.options?.map((opt: { value: string; label: string }) => ({
-                      id: opt.value,
-                      label: opt.label,
-                    }))}
-                    selectedKey={currentVal}
-                    onSelectionChange={key =>
-                      updateObjectField(question.key, sub.key, key as string)
-                    }
-                    isInvalid={fieldError ? true : false}
-                  >
-                    {(item: SelectItemType) => (
-                      <Select.Item id={item.id}>{item.label || ""}</Select.Item>
+              const subFieldError =
+                errors?.[`${question.key}.${subField.key}`] ?? "";
+
+              return (
+                <div key={subField.key} className="flex items-start gap-6">
+                  <span className="text-sm font-normal text-ws-text-secondary min-w-60 pt-2.5">
+                    {subField.label}
+                  </span>
+                  <div className="flex flex-col gap-1 w-full max-w-xs">
+                    <Input
+                      type="text"
+                      inputMode="numeric"
+                      placeholder="Percentage"
+                      size="md"
+                      value={
+                        subFieldValue != null && subFieldValue !== ""
+                          ? String(subFieldValue)
+                          : ""
+                      }
+                      onChange={(value: string) => {
+                        let sanitized = value.replace(/[^0-9%]/g, "");
+                        const withoutPercent = sanitized.replace(/%/g, "");
+                        const endsWithPercent = sanitized.endsWith("%") && withoutPercent.length > 0;
+                        sanitized = endsWithPercent ? `${withoutPercent}%` : withoutPercent;
+
+                        const currentObj =
+                          currentAnswer &&
+                          typeof currentAnswer === "object" &&
+                          !Array.isArray(currentAnswer)
+                            ? (currentAnswer as Record<string, unknown>)
+                            : {};
+
+                        if (sanitized === "" || sanitized === "%") {
+                          onAnswerChange(question.key, {
+                            ...currentObj,
+                            [subField.key]: null,
+                          });
+                          return;
+                        }
+
+                        const numericPart = sanitized.replace(/%$/, "");
+                        const numValue = Number(numericPart);
+
+                        if (isNaN(numValue) || numValue > 100) return;
+
+                        onAnswerChange(question.key, {
+                          ...currentObj,
+                          [subField.key]: numValue,
+                        });
+                      }}
+                      isInvalid={!!subFieldError}
+                      tooltip={subFieldError || undefined}
+                    />
+                    {!subFieldError && (
+                      <span className="text-xs text-ws-text-tertiary">i.e. 30%</span>
                     )}
-                  </Select>
-                  {fieldError && (
-                    <span className="text-sm text-ws-error-600 mt-1">{fieldError}</span>
-                  )}
+                    {subFieldError && (
+                      <div className="flex items-center gap-1">
+                        {/* <InputInfo className="text-ws-error-600" /> */}
+                        <span className="text-sm text-ws-error-600">{subFieldError}</span>
+                      </div>
+                    )}
+                  </div>
                 </div>
-              </div>
-            );
-          })}
+              );
+            })}
+          </div>
         </div>
       );
-
     case "RANKING": {
       const sourceField = question.dynamicOptions?.sourceField;
       if (!sourceField) {
