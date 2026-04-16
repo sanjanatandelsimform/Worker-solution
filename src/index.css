@@ -66,7 +66,6 @@
   --color-ws-bg-negative: var(--ws-color-bg-negative);
   --color-ws-text-positive: var(--ws-color-text-positive);
   --color-ws-text-negative: var(--ws-color-text-negative);
-
 }
 
 :root {
@@ -85,24 +84,24 @@
 
   /* Worker Solutions Design Tokens */
   /* Base Colors */
-  --ws-color-base-white: #FFFFFF;
+  --ws-color-base-white: #ffffff;
   --ws-color-base-black: #000000;
   --ws-color-base-transparent: transparent;
 
   /* Border Colors */
-  --ws-color-border-primary: #D5D7DA;
-  --ws-color-border-secondary: #E9EAEB;
-  
+  --ws-color-border-primary: #d5d7da;
+  --ws-color-border-secondary: #e9eaeb;
+
   /* Text Colors */
-  --ws-color-text-primary: #181D27;
+  --ws-color-text-primary: #181d27;
   --ws-color-text-secondary: #414651;
   --ws-color-text-tertiary: #535862;
-  --ws-color-text-disabled: #B3B3B3;
+  --ws-color-text-disabled: #b3b3b3;
 
   /* Gray Colors from Figma */
-  --ws-color-gray-200: #E9EAEB;
-  --ws-color-gray-300: #73726C;
-  --ws-color-gray-400: #A4A7AE;
+  --ws-color-gray-200: #e9eaeb;
+  --ws-color-gray-300: #73726c;
+  --ws-color-gray-400: #a4a7ae;
   --ws-color-gray-500: #717680;
   --ws-color-gray-600: #626770;
   --ws-color-gray-700: #777777;
@@ -139,13 +138,13 @@
   --ws-color-teal: #00c4c7;
   --ws-color-teal-lite: #dbebeb;
   --ws-color-ws-blue: #0611f6;
-  --ws-color-error-600: #D92D20;
-  --ws-color-success-25: #F6FEF9;
-  --ws-color-warning-50: #FFFAEB;
-  --ws-color-bg-positive: #E1F6EF;
-  --ws-color-bg-negative: #FAEDE7;
-  --ws-color-text-positive: #0F6F57;
-  --ws-color-text-negative: #993C1E;
+  --ws-color-error-600: #d92d20;
+  --ws-color-success-25: #f6fef9;
+  --ws-color-warning-50: #fffaeb;
+  --ws-color-bg-positive: #e1f6ef;
+  --ws-color-bg-negative: #faede7;
+  --ws-color-text-positive: #0f6f57;
+  --ws-color-text-negative: #993c1e;
 }
 
 .h-110 {
@@ -227,6 +226,5 @@
   font-weight: 400;
 }
 .box-shadow {
-  box-shadow: 0px 2px 10px 0px #0000001A;
-
+  box-shadow: 0px 2px 10px 0px #0000001a;
 }

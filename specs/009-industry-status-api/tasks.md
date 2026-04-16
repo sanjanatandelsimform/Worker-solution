@@ -19,9 +19,9 @@
 
 **Purpose**: Create all new types, service, slice, and selectors — the foundational data pipeline that all user stories require.
 
-- [ ] T001 [P] Define industry data TypeScript interfaces in `src/types/industryTypes.ts` — all entities from data-model.md: `IndustryData`, `IndustryOverview`, `IndustryTurnoverComparison`, `AreaMedianWage`, `HousingBurden`, `IndustryState`, plus API envelope type `IndustryApiResponse`
-- [ ] T002 [P] Extend `FinchConnection` interface with `industry: "fetch" | null` field in `src/types/finchStatusTypes.ts`
-- [ ] T003 [P] Add `selectFinchIndustryStatus` selector in `src/store/selectors/finchStatusSelectors.ts` — returns `state.finchStatus.connection?.industry ?? null`
+- [X] T001 [P] Define industry data TypeScript interfaces in `src/types/industryTypes.ts` — all entities from data-model.md: `IndustryData`, `IndustryOverview`, `IndustryTurnoverComparison`, `AreaMedianWage`, `HousingBurden`, `IndustryState`, plus API envelope type `IndustryApiResponse`
+- [X] T002 [P] Extend `FinchConnection` interface with `industry: "fetch" | null` field in `src/types/finchStatusTypes.ts`
+- [X] T003 [P] Add `selectFinchIndustryStatus` selector in `src/store/selectors/finchStatusSelectors.ts` — returns `state.finchStatus.connection?.industry ?? null`
 
 ---
 
@@ -33,16 +33,16 @@
 
 ### Tests (write FIRST — must FAIL before implementation)
 
-- [ ] T004 [P] Write unit tests for `getIndustry()` service in `tests/services/industryApi.test.ts` — mock `apiClient.get`, test success response mapping, test error handling, test auth token extraction
-- [ ] T005 [P] Write unit tests for `industrySlice` in `tests/store/slices/industrySlice.test.ts` — test initial state, `fetchIndustry.pending` (loading=true), `.fulfilled` (data set, isLoaded=true), `.rejected` (error set, isLoaded=false), logout reset
-- [ ] T006 [P] Write unit tests for industry selectors in `tests/store/selectors/industrySelectors.test.ts` — test `selectIndustryData`, `selectIndustryLoading`, `selectIndustryError`, `selectIndustryIsLoaded` with various states
+- [X] T004 [P] Write unit tests for `getIndustry()` service in `tests/services/industryApi.test.ts` — mock `apiClient.get`, test success response mapping, test error handling, test auth token extraction
+- [X] T005 [P] Write unit tests for `industrySlice` in `tests/store/slices/industrySlice.test.ts` — test initial state, `fetchIndustry.pending` (loading=true), `.fulfilled` (data set, isLoaded=true), `.rejected` (error set, isLoaded=false), logout reset
+- [X] T006 [P] Write unit tests for industry selectors in `tests/store/selectors/industrySelectors.test.ts` — test `selectIndustryData`, `selectIndustryLoading`, `selectIndustryError`, `selectIndustryIsLoaded` with various states
 
 ### Implementation
 
-- [ ] T007 Create `getIndustry()` API service function in `src/services/api/industryApi.ts` — follows `dashboardApi.ts` pattern: auth token from localStorage, `apiClient.get<IndustryApiResponse>("/industry")`, error extraction via axios helpers
-- [ ] T008 Create `industrySlice` with `fetchIndustry` async thunk in `src/store/slices/industrySlice.ts` — follows `dashboardSlice.ts` pattern: initialState with `data/loading/error/isLoaded`, pending/fulfilled/rejected cases, logout addMatcher reset
-- [ ] T009 [P] Create typed selectors in `src/store/selectors/industrySelectors.ts` — `selectIndustryData`, `selectIndustryLoading`, `selectIndustryError`, `selectIndustryIsLoaded` (follows `dashboardSelectors.ts` pattern)
-- [ ] T010 Register `industryReducer` in `src/store/store.ts` — import `industryReducer` from `industrySlice`, add to `combineReducers`, add `IndustryState` to `RootState` type
+- [X] T007 Create `getIndustry()` API service function in `src/services/api/industryApi.ts` — follows `dashboardApi.ts` pattern: auth token from localStorage, `apiClient.get<IndustryApiResponse>("/industry")`, error extraction via axios helpers
+- [X] T008 Create `industrySlice` with `fetchIndustry` async thunk in `src/store/slices/industrySlice.ts` — follows `dashboardSlice.ts` pattern: initialState with `data/loading/error/isLoaded`, pending/fulfilled/rejected cases, logout addMatcher reset
+- [X] T009 [P] Create typed selectors in `src/store/selectors/industrySelectors.ts` — `selectIndustryData`, `selectIndustryLoading`, `selectIndustryError`, `selectIndustryIsLoaded` (follows `dashboardSelectors.ts` pattern)
+- [X] T010 Register `industryReducer` in `src/store/store.ts` — import `industryReducer` from `industrySlice`, add to `combineReducers`, add `IndustryState` to `RootState` type
 
 **Checkpoint**: Industry data pipeline complete. `fetchIndustry()` can be dispatched and data flows through Redux. All foundational tests pass (green).
 
@@ -56,13 +56,13 @@
 
 ### Tests (write FIRST — must FAIL before implementation)
 
-- [ ] T011 Write unit tests for `useIndustry` hook in `tests/hooks/useIndustry.test.ts` — test: dispatches `fetchIndustry` when `industry === "fetch"` and `!isLoaded`; does NOT dispatch when `isLoaded === true`; does NOT dispatch when `industry !== "fetch"`; returns correct `{ data, isLoading, error, isLoaded }` shape
+- [X] T011 Write unit tests for `useIndustry` hook in `tests/hooks/useIndustry.test.ts` — test: dispatches `fetchIndustry` when `industry === "fetch"` and `!isLoaded`; does NOT dispatch when `isLoaded === true`; does NOT dispatch when `industry !== "fetch"`; returns correct `{ data, isLoading, error, isLoaded }` shape
 
 ### Implementation
 
-- [ ] T012 Create `useIndustry` hook in `src/hooks/useIndustry.ts` — reads `selectFinchIndustryStatus` from finch state; reads `selectIndustryIsLoaded` + `selectIndustryLoading` from industry state; dispatches `fetchIndustry()` via `useEffect` when `industryStatus === "fetch"` && `!isLoaded` && `!loading`; returns `{ data, isLoading, error, isLoaded }` from industry selectors
-- [ ] T013 Integrate `useIndustry` hook into `src/pages/benchmark/BenchmarkPage.tsx` — import hook; replace `setTimeout`-based `isLoadingCards` state with `isLoading` from hook; replace `selectIndustryOverview`/`selectDashboardData` reads with `data` from hook for industry-specific fields; keep existing skeleton components, wire to `isLoading` instead of timer
-- [ ] T014 Integrate `useIndustry` hook into `src/pages/benchmark/BenchmarkFinchPage.tsx` — same integration pattern as T013: import hook, replace timer loading with hook `isLoading`, wire data from hook to existing UI components
+- [X] T012 Create `useIndustry` hook in `src/hooks/useIndustry.ts` — reads `selectFinchIndustryStatus` from finch state; reads `selectIndustryIsLoaded` + `selectIndustryLoading` from industry state; dispatches `fetchIndustry()` via `useEffect` when `industryStatus === "fetch"` && `!isLoaded` && `!loading`; returns `{ data, isLoading, error, isLoaded }` from industry selectors
+- [X] T013 Integrate `useIndustry` hook into `src/pages/benchmark/BenchmarkPage.tsx` — import hook; replace `setTimeout`-based `isLoadingCards` state with `isLoading` from hook; replace `selectIndustryOverview`/`selectDashboardData` reads with `data` from hook for industry-specific fields; keep existing skeleton components, wire to `isLoading` instead of timer
+- [X] T014 Integrate `useIndustry` hook into `src/pages/benchmark/BenchmarkFinchPage.tsx` — same integration pattern as T013: import hook, replace timer loading with hook `isLoading`, wire data from hook to existing UI components
 
 **Checkpoint**: US1 + US2 complete. Industry and Finch Industry tabs fetch data conditionally, show skeleton while loading, render data on success, cache for session.
 
@@ -76,8 +76,8 @@
 
 > Note: The suppression logic is inherently built into the `useIndustry` hook (T012) via the conditional `industry === "fetch"` check. This phase validates that the behavior works correctly end-to-end.
 
-- [ ] T015 [US3] Add targeted test case in `tests/hooks/useIndustry.test.ts` for null/undefined/unexpected `connection.industry` values — verify `fetchIndustry` is NOT dispatched and `isLoading` remains `false`
-- [ ] T016 [US3] Verify in `src/hooks/useIndustry.ts` that the industry status check treats any non-`"fetch"` value (null, undefined, empty string, unexpected string) as "do not fetch" — add defensive guard if not already covered by T012
+- [X] T015 [US3] Add targeted test case in `tests/hooks/useIndustry.test.ts` for null/undefined/unexpected `connection.industry` values — verify `fetchIndustry` is NOT dispatched and `isLoading` remains `false`
+- [X] T016 [US3] Verify in `src/hooks/useIndustry.ts` that the industry status check treats any non-`"fetch"` value (null, undefined, empty string, unexpected string) as "do not fetch" — add defensive guard if not already covered by T012
 
 **Checkpoint**: US3 complete. No unnecessary API calls when `connection.industry !== "fetch"`.
 
@@ -91,8 +91,8 @@
 
 > Note: Existing skeleton components (`OverviewCardSkeleton`, `TurnoverRateCardSkeleton`, `SalaryHourlySkeleton`, `WagesCardSkeleton`, `ProgressCardSkeleton`) are already defined in `BenchmarkPage.tsx`. The integration in T013/T014 wires them to `isLoading` from the hook. This phase validates the wiring is correct.
 
-- [ ] T017 [US4] Verify skeleton loader wiring in `src/pages/benchmark/BenchmarkPage.tsx` — confirm all skeleton components render when `isLoading === true` and hide when `isLoading === false`; confirm no residual `setTimeout` timer logic remains
-- [ ] T018 [US4] Verify skeleton loader wiring in `src/pages/benchmark/BenchmarkFinchPage.tsx` — same verification as T017 for the Finch page
+- [X] T017 [US4] Verify skeleton loader wiring in `src/pages/benchmark/BenchmarkPage.tsx` — confirm all skeleton components render when `isLoading === true` and hide when `isLoading === false`; confirm no residual `setTimeout` timer logic remains
+- [X] T018 [US4] Verify skeleton loader wiring in `src/pages/benchmark/BenchmarkFinchPage.tsx` — same verification as T017 for the Finch page
 
 **Checkpoint**: US4 complete. Skeleton loaders display correctly during data fetch with no layout shift.
 
@@ -102,12 +102,12 @@
 
 **Purpose**: Error handling, edge cases, type-checking, quickstart validation.
 
-- [ ] T019 [P] Add error state handling in `src/pages/benchmark/BenchmarkPage.tsx` — when `error` from `useIndustry` is truthy, display error message within the tab content area (matching existing error patterns in the codebase, e.g., `ErrorMessage` component)
-- [ ] T020 [P] Add error state handling in `src/pages/benchmark/BenchmarkFinchPage.tsx` — same pattern as T019
-- [ ] T021 Run `pnpm run type-check` and fix any TypeScript errors across all modified/new files
-- [ ] T022 Run `pnpm lint:fix` and `pnpm format` to ensure code quality compliance
-- [ ] T023 Run all tests: `pnpm vitest run tests/services/industryApi.test.ts tests/store/slices/industrySlice.test.ts tests/store/selectors/industrySelectors.test.ts tests/hooks/useIndustry.test.ts` — all must pass
-- [ ] T024 Run quickstart.md validation — follow all verification steps in `specs/009-industry-status-api/quickstart.md` manually with dev server
+- [X] T019 [P] Add error state handling in `src/pages/benchmark/BenchmarkPage.tsx` — when `error` from `useIndustry` is truthy, display error message within the tab content area (matching existing error patterns in the codebase, e.g., `ErrorMessage` component)
+- [X] T020 [P] Add error state handling in `src/pages/benchmark/BenchmarkFinchPage.tsx` — same pattern as T019
+- [X] T021 Run `pnpm run type-check` and fix any TypeScript errors across all modified/new files
+- [X] T022 Run `pnpm lint:fix` and `pnpm format` to ensure code quality compliance
+- [X] T023 Run all tests: `pnpm vitest run tests/services/industryApi.test.ts tests/store/slices/industrySlice.test.ts tests/store/selectors/industrySelectors.test.ts tests/hooks/useIndustry.test.ts` — all must pass
+- [X] T024 Run quickstart.md validation — follow all verification steps in `specs/009-industry-status-api/quickstart.md` manually with dev server
 
 ---
 

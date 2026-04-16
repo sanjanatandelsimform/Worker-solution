@@ -66,8 +66,8 @@ export const DashboardPage = () => {
   const {
     completionCount,
     assessmentData,
-    isFinchCompleted,
     isLoading: isLoadingAssessment,
+    isFinchCompleted,
   } = useAssessmentStatus({ enabled: emailVerify });
   const dashboardLoading = useAppSelector(selectDashboardLoading);
   const dashboardError = useAppSelector(selectDashboardError);
@@ -355,6 +355,7 @@ export const DashboardPage = () => {
     navigate("/assessment");
   };
 
+  console.log("isFinchCompleted", isFinchCompleted);
   return (
     <div className="flex h-screen overflow-hidden bg-ws-base-white">
       {/* Sidebar */}
@@ -600,7 +601,7 @@ export const DashboardPage = () => {
               buttonIsDisabled={isFinchLoading}
             />
           )}
-          {emailVerify && isConnected && !isFinchCompleted && (
+          {/* {emailVerify && isConnected && !isFinchCompleted && (
             <DashboardCard
               classes="bg-ws-navy-100 border-ws-primary-100 mt-10 shadow-none"
               toggleAvatar={true}
@@ -614,7 +615,7 @@ export const DashboardPage = () => {
               buttonLabel="Continue"
               onClick={() => navigate("/additional-questions")}
             />
-          )}
+          )} */}
           {emailVerify && assessmentData?.data?.status === "completed" && isDashboardReady && (
             <div className="mt-10">
               {/* <Tabs>
@@ -634,7 +635,7 @@ export const DashboardPage = () => {
                 </Tabs.Panel>
               </Tabs> */}
               <Tabs>
-                <Tabs.List
+                {/* <Tabs.List
                   className="bg-ws-light-teal-50 pt-9 pl-6 pr-6 rounded-t-lg text-ws-light-teal-900 overflow-auto"
                   type="underline"
                   items={[
@@ -649,23 +650,43 @@ export const DashboardPage = () => {
                           { id: "recommendations", label: "Recommendations" },
                         ]),
                   ]}
+                /> */}
+                <Tabs.List
+                  className="bg-ws-light-teal-50 pt-9 pl-6 pr-6 rounded-t-lg text-ws-light-teal-900 overflow-auto"
+                  type="underline"
+                  items={[
+                    { id: "recommendations", label: "Recommendations" },
+                    { id: "industry", label: "Industry" },
+                    { id: "finchIndustry", label: "Finch Industry" },
+
+                    ...(isFinchCompleted
+                      ? [
+                          { id: "finchRecommendations", label: "Finch Recommendations" },
+                          // { id: "finchIndustry", label: "Finch Industry" },
+                          { id: "finchWorkforce", label: "Finch Workforce" },
+                        ]
+                      : []),
+                  ]}
                 />
                 <Tabs.Panel id="recommendations" className="pt-0">
                   <RecommendationsPage />
                 </Tabs.Panel>
-                {!isFinchCompleted && (
-                  <Tabs.Panel id="industry" className="pt-0">
-                    <BenchmarkPage />
-                  </Tabs.Panel>
-                )}
-                <Tabs.Panel id="finchRecommendations" className="pt-0">
-                  <RecommendationsFinchPage />
+                <Tabs.Panel id="industry" className="pt-0">
+                  <BenchmarkPage />
                 </Tabs.Panel>
                 {isFinchCompleted && (
+                  <Tabs.Panel id="finchRecommendations" className="pt-0">
+                    <RecommendationsFinchPage />
+                  </Tabs.Panel>
+                )}
+                {/* {isFinchCompleted && (
                   <Tabs.Panel id="finchIndustry" className="pt-0">
                     <BenchmarkFinchPage />
                   </Tabs.Panel>
-                )}
+                )} */}
+                  <Tabs.Panel id="finchIndustry" className="pt-0">
+                    <BenchmarkFinchPage />
+                  </Tabs.Panel>
                 {isFinchCompleted && (
                   <Tabs.Panel id="finchWorkforce" className="pt-0">
                     <WorkforcePage />
@@ -706,7 +727,7 @@ export const DashboardPage = () => {
         {...cooldownModal}
       />
 
-      <InProgressModal
+      {/* <InProgressModal
         isOpen={showInProgressModal}
         onClose={() => setShowInProgressModal(false)}
         title="Preparing..."
@@ -718,7 +739,7 @@ export const DashboardPage = () => {
         onClose={() => setShowLoadingModal(false)}
         title="Loading..."
         subtitle="This won't take long."
-      />
+      /> */}
 
       <BaseModalWithIcon
         isOpen={showGoalsSuccessModal}
