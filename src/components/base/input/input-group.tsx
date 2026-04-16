@@ -123,7 +123,7 @@ export const InputGroup = ({
               isDisabled &&
                 "cursor-not-allowed has-[&>select]:bg-disabled_subtle has-[&>select]:ring-border-disabled",
               isInvalid &&
-                "has-[&>select]:ring-1 has-[&>select]:ring-red-500 has-[&>select]:has-[input:focus]:ring-red-500 has-[&>select]:shadow-0 has-[&>select]:has-[input:focus]:shadow-0"
+                "has-[&>select]:ring-1 has-[&>select]:ring-ws-error-600 has-[&>select]:has-[input:focus]:ring-ws-error-600 has-[&>select]:shadow-0 has-[&>select]:has-[input:focus]:shadow-0"
             )}
           >
             {leadingAddon && (

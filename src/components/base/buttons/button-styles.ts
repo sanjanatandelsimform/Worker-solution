@@ -5,7 +5,7 @@ export const styles = sortCx({
     root: [
       "group relative inline-flex h-max cursor-pointer items-center justify-center whitespace-nowrap outline-brand transition duration-100 ease-linear before:absolute focus-visible:outline-2 focus-visible:outline-offset-2",
       "in-data-input-wrapper:shadow-xs in-data-input-wrapper:focus:!z-50 in-data-input-wrapper:in-data-leading:-mr-px in-data-input-wrapper:in-data-leading:rounded-r-none in-data-input-wrapper:in-data-leading:before:rounded-r-none in-data-input-wrapper:in-data-trailing:-ml-px in-data-input-wrapper:in-data-trailing:rounded-l-none in-data-input-wrapper:in-data-trailing:before:rounded-l-none",
-      "disabled:cursor-not-allowed disabled:bg-gray-200! disabled:ring-gray-200! disabled:text-ws-navy-800! disabled:border border-ws-gray-500!",
+      "disabled:cursor-not-allowed disabled:bg-ws-light-teal-25! disabled:ring-ws-border-secondary! disabled:text-ws-gray-300 disabled:border border-ws-border-secondary",
       "disabled:*:data-icon:text-fg-disabled_subtle",
       "*:data-icon:pointer-events-none *:data-icon:size-5 *:data-icon:shrink-0 *:data-icon:transition-inherit-all",
     ].join(" "),
@@ -74,37 +74,37 @@ export const styles = sortCx({
     },
     "primary-destructive": {
       root: [
-        "bg-red-600 text-ws-base-white shadow-xs-skeumorphic ring-1 ring-transparent outline-error ring-inset hover:bg-red-500 data-loading:bg-red-500",
-        "before:absolute before:inset-px before:border before:border-white/12 before:mask-b-from-0%",
-        "disabled:bg-disabled disabled:shadow-xs disabled:ring-red-600",
+        "bg-ws-error-600 text-ws-base-white shadow-xs-skeumorphic ring-1 ring-transparent outline-error ring-inset hover:bg-ws-error-600 data-loading:bg-ws-error-600",
+        "before:absolute before:inset-px before:border before:border-ws-base-white/12 before:mask-b-from-0%",
+        "disabled:bg-disabled disabled:shadow-xs disabled:ring-ws-error-600",
         "*:data-icon:text-button-destructive-primary-icon hover:*:data-icon:text-button-destructive-primary-icon_hover",
       ].join(" "),
     },
     "secondary-destructive": {
       root: [
-        "bg-ws-base-white text-ws-error-600 shadow-xs-skeumorphic ring-1 ring-error_subtle outline-error ring-inset hover:bg-error-primary hover:text-error-primary_hover data-loading:bg-error-primary",
+        "bg-ws-base-white text-ws-error-600 shadow-xs-skeumorphic ring-1 ring-ws-error-600 outline-error ring-inset hover:bg-ws-error-600 hover:text-ws-error-600 data-loading:bg-ws-error-600",
         "disabled:bg-ws-base-white disabled:shadow-xs disabled:ring-disabled_subtle",
-        "*:data-icon:text-fg-error-secondary hover:*:data-icon:text-fg-error-primary",
+        "*:data-icon:text-ws-error-600 hover:*:data-icon:text-ws-error-600",
       ].join(" "),
     },
     "tertiary-destructive": {
       root: [
         "text-ws-error-600 outline-error hover:bg-error-primary hover:text-error-primary_hover data-loading:bg-error-primary",
-        "*:data-icon:text-fg-error-secondary hover:*:data-icon:text-fg-error-primary",
+        "*:data-icon:text-ws-error-600 hover:*:data-icon:text-ws-error-600",
       ].join(" "),
     },
     "link-destructive": {
       root: [
         "justify-normal rounded p-0! text-ws-error-600 outline-error hover:text-error-primary_hover",
         "*:data-text:underline *:data-text:decoration-transparent *:data-text:underline-offset-2 hover:*:data-text:decoration-current",
-        "*:data-icon:text-fg-error-secondary hover:*:data-icon:text-fg-error-primary",
+        "*:data-icon:text-ws-error-600 hover:*:data-icon:text-ws-error-600",
       ].join(" "),
     },
     "link-disable-color": {
       root: [
         "max-w-38 justify-normal rounded py-1! px-3! text-ws-cyan-60 hover:text-ws-cyan-60_hover",
-        "*:data-text:underline *:data-text:decoration-transparent *:data-text:underline-offset-2 hover:*:data-text:decoration-current shadow-none ring-0 border-0",
-        "*:data-icon:text-fg-brand-secondary_alt hover:*:data-icon:text-fg-brand-secondary_hover",
+        "*:data-text:underline *:data-text:decoration-transparent *:data-text:underline-offset-2 hover:*:data-text:decoration-current shadow-none! ring-0! border-0!",
+        "*:data-icon:text-ws-text-secondary_alt hover:*:data-icon:text-ws-text-secondary_hover",
       ].join(" "),
     },
   },

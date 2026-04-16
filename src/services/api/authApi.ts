@@ -8,6 +8,11 @@ import type {
   ApiError,
   Industry,
 } from "../../types/auth";
+import { getAuthToken, getErrorMessage } from "@/services/api/apiUtils";
+
+export { getAuthToken, getErrorMessage };
+
+const STORAGE_KEY = "userDetail";
 
 // Create Axios instance with base configuration
 const apiClient = axios.create({
@@ -19,15 +24,10 @@ const apiClient = axios.create({
   },
 });
 
-const STORAGE_KEY = "userDetail";
-
 // Request interceptor: attach access token from localStorage when present
 apiClient.interceptors.request.use(config => {
   try {
-    const raw = localStorage.getItem(STORAGE_KEY);
-    if (!raw) return config;
-    const parsed = JSON.parse(raw);
-    const token = parsed?.auth?.tokens?.accessToken;
+    const token = getAuthToken();
     if (token) {
       config.headers.Authorization = `Bearer ${token}`;
     }
@@ -37,22 +37,7 @@ apiClient.interceptors.request.use(config => {
   return config;
 });
 
-// Helper function to extract error message
-const getErrorMessage = (error: unknown): string => {
-  if (axios.isAxiosError(error)) {
-    const apiError = error.response?.data as ApiError | undefined;
-    if (apiError?.message) {
-      return apiError.message;
-    }
-    if (error.code === "ECONNABORTED") {
-      return "Request timed out. Please try again.";
-    }
-    if (error.message) {
-      return error.message;
-    }
-  }
-  return "An unexpected error occurred. Please try again.";
-};
+// Helper function to extract error message — re-exported from apiUtils
 
 /**
  * Refresh access token using refresh token
