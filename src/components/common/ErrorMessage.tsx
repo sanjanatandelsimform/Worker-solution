@@ -37,7 +37,7 @@ export default function ErrorMessage({
         </div>
         <div>
           <Button
-            color="tertiary"
+            color="link"
             size="sm"
             onClick={onClose}
             iconLeading={<X data-icon className="closeIconColor" />}

@@ -190,7 +190,7 @@ export const ChangePasswordModal = ({ isOpen, onClose }: ChangePasswordModalProp
                 <Button
                   iconTrailing={<X data-icon className="text-ws-gray-70" />}
                   onClick={onClose}
-                  color="tertiary"
+                  color="link"
                 />
               </div>
             </div>
@@ -252,12 +252,12 @@ export const ChangePasswordModal = ({ isOpen, onClose }: ChangePasswordModalProp
                     }}
                   />
                   <Button
-                    color="tertiary"
+                    color="link"
                     size="sm"
                     type="button"
                     onClick={() => setShowCurrentPassword(!showCurrentPassword)}
                     aria-label={showCurrentPassword ? "Hide password" : "Show password"}
-                    className="absolute right-0 top-7"
+                    className="absolute right-0 top-8"
                   >
                     {showCurrentPassword ? (
                       <Eye className="size-5 text-ws-gray-400" />
@@ -306,12 +306,12 @@ export const ChangePasswordModal = ({ isOpen, onClose }: ChangePasswordModalProp
                     }}
                   />
                   <Button
-                    color="tertiary"
+                    color="link"
                     size="sm"
                     type="button"
                     onClick={() => setShowNewPassword(!showNewPassword)}
                     aria-label={showNewPassword ? "Hide password" : "Show password"}
-                    className="absolute right-0 top-7"
+                    className="absolute right-0 top-8"
                   >
                     {showNewPassword ? (
                       <Eye className="size-5 text-ws-gray-400" />
@@ -350,12 +350,12 @@ export const ChangePasswordModal = ({ isOpen, onClose }: ChangePasswordModalProp
                     }}
                   />
                   <Button
-                    color="tertiary"
+                    color="link"
                     size="sm"
                     type="button"
                     onClick={() => setShowConfirmPassword(!showConfirmPassword)}
                     aria-label={showConfirmPassword ? "Hide password" : "Show password"}
-                    className="absolute right-0 top-7"
+                    className="absolute right-0 top-8"
                   >
                     {showConfirmPassword ? (
                       <Eye className="size-5 text-ws-gray-400" />

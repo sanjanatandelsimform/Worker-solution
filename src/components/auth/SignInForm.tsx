@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { Button } from "@/components/base/buttons/button";
 import { Input } from "@/components/base/input/input";
 import { InputGroup } from "@/components/base/input/input-group";
@@ -190,12 +190,12 @@ export const SignInForm = () => {
                   />
                 </div>
                 <Button
-                  color="tertiary"
+                  color="link"
                   size="sm"
                   type="button"
                   onClick={() => setShowPassword(!showPassword)}
                   aria-label={showPassword ? "Hide password" : "Show password"}
-                  className="absolute right-0 top-7"
+                  className="absolute right-0 top-8"
                 >
                   {!errors.password && (
                     <>
@@ -230,16 +230,12 @@ export const SignInForm = () => {
                     className="text-ws-text-secondary"
                   />
                 </div>
-
-                <Button
-                  type="button"
-                  color="link-color"
-                  className="text-ws-navy-800"
-                  href="/forgot-password"
-                  size="md"
+                <Link
+                  to="/forgot-password"
+                  className="text-sm font-semibold text-ws-navy-800 hover:text-ws-navy-800 hover:underline"
                 >
                   Forgot password?
-                </Button>
+                </Link>
               </div>
 
               <div className="flex w-full flex-col items-start">
@@ -262,14 +258,9 @@ export const SignInForm = () => {
             <p className="text-sm font-normal leading-5 text-ws-text-tertiary">
               Don't have an account?
             </p>
-            <Button
-              href="/sign-up"
-              color="link-color"
-              className="text-ws-light-teal-850 font-semibold"
-              size="md"
-            >
+            <Link to="/sign-up" className="text-sm font-semibold text-ws-light-teal-850 hover:text-ws-light-teal-800">
               Sign up
-            </Button>
+            </Link>
           </div>
         </div>
       </div>

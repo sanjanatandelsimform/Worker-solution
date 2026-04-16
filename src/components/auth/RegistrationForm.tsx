@@ -183,7 +183,7 @@ export function RegistrationForm() {
       {/* Container */}
       <div className="flex w-3xl items-center justify-center rounded-xl border border-ws-border-primary bg-ws-base-white p-10">
         {/* Content */}
-        <div className="flex w-full flex-col items-center h-50 break-words">
+        <div className="flex w-full flex-col items-center">
           {/* Logo */}
           <div className="flex items-center justify-center px-2 py-1">
             <h1 className="text-3xl font-semibold leading-15 text-ws-text-primary">Sign up</h1>
@@ -459,12 +459,12 @@ export function RegistrationForm() {
                   />
                 </div>
                 <Button
-                  color="tertiary"
+                  color="link"
                   size="sm"
                   type="button"
                   onClick={() => (!errors.password ? setShowPassword(!showPassword) : "")}
                   aria-label={showPassword ? "Hide password" : "Show password"}
-                  className="absolute right-0 top-7"
+                  className="absolute right-0 top-8"
                 >
                   {!errors.password && (
                     <>
@@ -503,14 +503,14 @@ export function RegistrationForm() {
                   />
                 </div>
                 <Button
-                  color="tertiary"
+                  color="link"
                   size="sm"
                   type="button"
                   onClick={() =>
                     !errors.confirmPassword ? setShowConfirmPassword(!showConfirmPassword) : ""
                   }
                   aria-label={showConfirmPassword ? "Hide password" : "Show password"}
-                  className="absolute right-0 top-7"
+                  className="absolute right-0 top-8"
                 >
                   {!errors.confirmPassword && (
                     <>

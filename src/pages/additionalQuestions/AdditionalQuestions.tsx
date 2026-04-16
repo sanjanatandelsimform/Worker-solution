@@ -378,7 +378,7 @@ export default function AdditionalQuestions() {
         {/* Back Button */}
         {/* <Button
           onClick={handleBack}
-          color="tertiary"
+          color="link"
           size="md"
           iconLeading={<ChevronLeft data-icon className="text-ws-primary-800" />}
           className="flex items-center gap-1 text-lg font-normal text-ws-primary-800 transition-opacity"
@@ -392,7 +392,7 @@ export default function AdditionalQuestions() {
         {/* Close Button */}
         <Button
           onClick={handleClose}
-          color="tertiary"
+          color="link"
           size="md"
           iconLeading={<XClose data-icon className="font-bold text-ws-navy-800" />}
         />

@@ -226,7 +226,7 @@ export const UpdateYourEmailModal = ({
               <Button
                 iconTrailing={<X data-icon className="text-ws-gray-70" />}
                 onClick={handleClose}
-                color="tertiary"
+                color="link"
               />
             </div>
           </div>

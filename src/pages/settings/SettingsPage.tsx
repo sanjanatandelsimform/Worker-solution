@@ -447,8 +447,8 @@ export const SettingsPage = () => {
                               isDisabled={true}
                             />
                             <Button
-                              color="link-disable-color"
-                              className="text-ws-navy-800 font-semibold shadow-none"
+                              color="link"
+                              className="text-ws-navy-800 font-semibold shadow-none max-w-48"
                               // onClick={
                               //   resendVerification
                               //     ? handleResendVerification
@@ -480,12 +480,12 @@ export const SettingsPage = () => {
                               isDisabled={true}
                             />
                             <Button
-                              color="tertiary"
+                              color="link"
                               size="sm"
                               type="button"
                               onClick={() => setShowPassword(!showPassword)}
                               aria-label={showPassword ? "Hide password" : "Show password"}
-                              className="absolute right-0 top-7"
+                              className="absolute right-0 top-8"
                             >
                               <>
                                 {showPassword ? (
@@ -496,8 +496,8 @@ export const SettingsPage = () => {
                               </>
                             </Button>
                             <Button
-                              color="link-disable-color"
-                              className="text-ws-navy-800 font-semibold shadow-none"
+                              color="link"
+                              className="text-ws-navy-800 font-semibold shadow-none max-w-38"
                               onClick={() => setIsChangePasswordModalOpen(true)}
                               isDisabled={profileLoading || !firstName || !lastName}
                             >
@@ -507,7 +507,7 @@ export const SettingsPage = () => {
                         </div>
                       </InputGroup> */}
                        <Button
-                        color="link-disable-color"
+                        color="link"
                         className="text-ws-navy-800 font-semibold shadow-none"
                         onClick={() => setIsChangePasswordModalOpen(true)}
                         isDisabled={profileLoading || !firstName || !lastName}
@@ -544,9 +544,9 @@ export const SettingsPage = () => {
                       </div>
                       <div className="w-full xl:w-1/2 flex gap-4 mt-3 xl:mt-0">
                         <Button
-                          color="secondary"
-                          size="md"
-                          className="w-full text-base font-semibold text-ws-navy-800"
+                          color="subtle"
+                          size="lg"
+                          className="w-full text-base font-semibold text-ws-navy-800 hover:text-ws-base-white"
                           onClick={() => setIsRetakeAssessmentModalOpen(true)}
                           isDisabled={completionCount === 0 && !isFinchCompleted}
                         >
@@ -568,9 +568,9 @@ export const SettingsPage = () => {
                       </div>
                       <div className="w-full xl:w-1/2 flex gap-4 mt-3 xl:mt-0">
                         <Button
-                          color="secondary"
-                          size="md"
-                          className="w-full text-base font-semibold text-ws-error-600"
+                          color="subtle"
+                          size="lg"
+                          className="w-full text-base font-semibold text-ws-error-600 hover:text-ws-base-white"
                           onClick={() => setIsAccountDeleteModalOpen(true)}
                         >
                           Delete my account
