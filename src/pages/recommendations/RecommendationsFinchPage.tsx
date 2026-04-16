@@ -1,12 +1,11 @@
 // import { Badge } from "@/components/base/badges/badges";
-import { useEffect } from "react";
 import CarouselSection from "./Carousel";
 import StaticCard from "./StaticCard";
 import didHeroImg from "@/assets/did-hero.jpg";
 import BenefitCard from "./BenefitCard";
 import { Link } from "react-router-dom";
 import { CircleCheckIcon } from "@/assets/icons/CircleCheckIcon";
-import { useAppSelector, useAppDispatch } from "@/store/hooks";
+import { useAppSelector } from "@/store/hooks";
 import { formatNumber, formatCurrency, formatCurrencyWithCents } from "@/utils/formatters";
 import { GlobeIcon } from "@/assets/icons/Globe";
 import { ClockIcon } from "@/assets/icons/ClockIcon";
@@ -20,7 +19,6 @@ import { UserIcon } from "@/assets/icons/UserIcon";
 import { EnrolledIcon } from "@/assets/icons/EnrolledIcon";
 import { SavingIcon } from "@/assets/icons/SavingIcon";
 import { HeartLineIcon } from "@/assets/icons/HeartLineIcon";
-import PreparingDashboard from "./PreparingDashboard";
 import {
   selectWorkforceSection,
   selectCompensationSection,
@@ -31,9 +29,8 @@ import {
   selectRecommStrategicRecommendations,
   selectProvenStrategiesFlags,
   selectRecommendationsLoading,
-  selectRecommendationsIsLoaded,
 } from "@/store/selectors/recommendationsSelectors";
-import { fetchRecommendations } from "@/store/slices/recommendationsSlice";
+import { useAssessmentStatus } from "@/hooks/useAssessmentStatus";
 
 const OverviewCardSkeleton = () => (
   <div className="border border-ws-border-secondary rounded-lg p-4 bg-ws-base-white animate-pulse shadow-sm">
@@ -245,12 +242,12 @@ const provenStrategiesCardsConfig: ProvenCardConfig[] = [
     title: "Healthcare affordability",
     titleIcon: UserGroupIcon,
     descriptionText:
-      "Consider adjusting employee premiums to income level. QSERA and ICRA plans can offer more flexibility and savings for employers and employees.",
+      "Consider adjusting employee premiums to income level. QSEHRA and ICHRA plans can offer more flexibility and savings for employers and employees.",
   },
 ];
 
 export default function RecommendationsFinchPage() {
-  const dispatch = useAppDispatch();
+  const { isFinchAssessmentIncomplete } = useAssessmentStatus();
 
   // Workforce slice — Company Overview & Benefits Overview
   const workforceSection = useAppSelector(selectWorkforceSection);
@@ -262,13 +259,13 @@ export default function RecommendationsFinchPage() {
   const strategicRecommendations = useAppSelector(selectRecommStrategicRecommendations);
   const provenStrategyFlags = useAppSelector(selectProvenStrategiesFlags);
   const recommendationsIsLoading = useAppSelector(selectRecommendationsLoading);
-  const recommendationsIsLoaded = useAppSelector(selectRecommendationsIsLoaded);
+  // const recommendationsIsLoaded = useAppSelector(selectRecommendationsIsLoaded);
 
-  useEffect(() => {
-    if (!recommendationsIsLoaded) {
-      dispatch(fetchRecommendations());
-    }
-  }, [dispatch, recommendationsIsLoaded]);
+  // useEffect(() => {
+  //   if (!recommendationsIsLoaded) {
+  //     dispatch(fetchRecommendations());
+  //   }
+  // }, [dispatch, recommendationsIsLoaded]);
 
   // Synthetic Company Overview shape (maps workforce fields to existing format fn expectations)
   const companyGlanceData = {
@@ -390,7 +387,7 @@ export default function RecommendationsFinchPage() {
       </div>
       {/* Carousel Section */}
       <CarouselSection />
-      {provenStrategiesCardsConfig.length > 0 && (
+      {!isFinchAssessmentIncomplete && (
         <div className="bg-ws-light-teal-25 py-8 px-6 border border-ws-border-primary rounded-2xl">
           <div className="flex items-stretch gap-6 flex-col xl:flex-row">
             <div className="w-full flex flex-col">
@@ -456,7 +453,7 @@ export default function RecommendationsFinchPage() {
         </div>
       )}
 
-      {strategicRecommendations.length > 0 && (
+      {!isFinchAssessmentIncomplete && (
         <div className="bg-ws-light-teal-25 py-8 px-6 border border-ws-border-primary rounded-2xl">
           <div className="flex mt-2 gap-6 flex-col xl:flex-row">
             <div className="w-full">
@@ -527,7 +524,6 @@ export default function RecommendationsFinchPage() {
           </div>
         </div>
       )}
-
       <div className="w-full">
         <p className="text-xs text-ws-text-primary">
           This product provides informational insights and recommendations based on the data you
