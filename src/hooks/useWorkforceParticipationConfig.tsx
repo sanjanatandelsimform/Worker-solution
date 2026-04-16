@@ -1,7 +1,6 @@
 import { useMemo } from "react";
 import { useAppSelector } from "@/store/hooks";
 import { selectParticipationSection } from "@/store/selectors/workforceSelectors";
-import { GlobeIcon } from "@/assets/icons/Globe";
 import { EnrolledIcon } from "@/assets/icons/EnrolledIcon";
 import { SavingIcon } from "@/assets/icons/SavingIcon";
 import { HeartLineIcon } from "@/assets/icons/HeartLineIcon";
@@ -12,12 +11,6 @@ export function useWorkforceParticipationConfig() {
 
   const participationCardsConfig = useMemo(
     () => [
-      {
-        id: "eligible-employees",
-        title: "Eligible Employees",
-        count: participationSection?.totalWorkforce?.toLocaleString() ?? "--",
-        countIcon: <GlobeIcon className="size-5 text-ws-gray-300" />,
-      },
       {
         id: "enrolled-employees",
         title: "Enrolled Employees",
@@ -53,7 +46,7 @@ export function useWorkforceParticipationConfig() {
         progressColor: "bg-ws-navy-300",
       },
       {
-        label: "Employee Assist",
+        label: "EAP",
         percentage: parsePercentage(participationSection?.benefits.EAP ?? "0"),
         progressColor: "bg-ws-navy-300",
       },

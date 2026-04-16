@@ -93,10 +93,10 @@ export default function WorkforceCompensation({
                 itemAlign="between"
                 count={card.count}
                 countClass={card.getCountClass()}
-                infoIcon={true}
+                infoIcon={false}
                 infoCircleClass="text-ws-gray-70"
                 tooltipText={card.tooltipText}
-                descriptionText="U.S. Census Bureau, 5-Year American Community Survey"
+                descriptionText=""
                 placements="top"
                 countWrap="text-3xl font-semibold text-ws-text-primary"
               />
@@ -115,7 +115,10 @@ export default function WorkforceCompensation({
           </div>
           <div className="flex flex-col items-start w-full lg:w-auto shrink-0 mt-4 xl:mt-0 lg:min-w-71">
             <Label className="text-ws-text-secondary flex mb-1.5">
-              Department <span className="text-ws-error-600">* <ArrowDown className="inline-block ml-1" /></span>
+              Department{" "}
+              <span className="text-ws-error-600">
+                * <ArrowDown className="inline-block ml-1" />
+              </span>
             </Label>
             <Select
               className="w-full flex items-start min-w-70 md:min-w-full lg:min-w-50"
@@ -185,7 +188,6 @@ export default function WorkforceCompensation({
                   infoIcon={true}
                   infoCircleClass="text-ws-gray-70 w-5"
                   tooltipText={card.tooltipText}
-                  descriptionText="U.S. Census Bureau, 5-Year American Community Survey"
                   placements="top"
                   countWrap="text-3xl font-semibold text-ws-text-primary"
                 />

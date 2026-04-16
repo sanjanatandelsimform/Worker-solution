@@ -370,6 +370,7 @@ export const fetchWorkforce = createAsyncThunk<WorkforceResponse, void, { reject
   async (_, { rejectWithValue }) => {
     try {
       // Static data — remove this block when backend is live:
+      await new Promise(resolve => setTimeout(resolve, 70000));
       return STATIC_WORKFORCE_DATA;
 
       // TODO: Uncomment when backend is live (and remove static block above):
