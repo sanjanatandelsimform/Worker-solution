@@ -57,8 +57,8 @@ Only the `demographics` portion of the response is shown. All other top-level ke
 
 ## Change Summary
 
-| Field path | Change |
-|------------|--------|
+| Field path                     | Change                                   |
+| ------------------------------ | ---------------------------------------- |
 | `demographics.employementType` | Renamed to `demographics.employmentType` |
 
 No other fields, types, or constraints are modified.
@@ -67,8 +67,8 @@ No other fields, types, or constraints are modified.
 
 ## Frontend Mapping
 
-| JSON key | TypeScript field | Interface |
-|----------|-----------------|-----------|
+| JSON key                      | TypeScript field              | Interface               |
+| ----------------------------- | ----------------------------- | ----------------------- |
 | `demographics.employmentType` | `Demographics.employmentType` | `EmploymentTypeEntry[]` |
 
 The `EmploymentTypeEntry` schema (fields: `department`, `fullTime`, `partTime`, `seasonal`) is unchanged.

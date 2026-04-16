@@ -5,7 +5,7 @@
 **Status**: Draft  
 **Input**: User description: "Under the workforce API, Whereever we have 'employementType' We need to update it and fix it to 'employmentType'"
 
-## User Scenarios & Testing *(mandatory)*
+## User Scenarios & Testing _(mandatory)_
 
 ### User Story 1 - Developer Sees Correct Field Name (Priority: P1)
 
@@ -45,7 +45,7 @@ As a developer, I want every hook, selector, static-data block, and test that pr
 - What happens when the live API endpoint is connected and the backend still returns `employementType`? The frontend type will no longer match the backend field name, causing runtime data mapping failures for the demographics section. (See Assumptions — this fix assumes the backend is correcting the same typo simultaneously.)
 - What if a developer has a local branch that still uses `employementType`? A merge conflict will be raised at the exact locations changed by this fix, making the discrepancy visible and intentional.
 
-## Requirements *(mandatory)*
+## Requirements _(mandatory)_
 
 ### Functional Requirements
 
@@ -63,7 +63,7 @@ As a developer, I want every hook, selector, static-data block, and test that pr
 - **`WorkforceDemographics`**: TypeScript interface representing the demographics section of a workforce API response. Contains the corrected `employmentType` array alongside `gender` and `employmentBreakdownByAge`.
 - **`EmploymentTypeEntry`**: TypeScript interface representing a single employment-type record keyed by `department`. Remains unchanged by this feature.
 
-## Success Criteria *(mandatory)*
+## Success Criteria _(mandatory)_
 
 ### Measurable Outcomes
 
@@ -76,6 +76,7 @@ As a developer, I want every hook, selector, static-data block, and test that pr
 
 - The backend API will correct the same typo (`employementType` → `employmentType`) concurrently or prior to the live endpoint being activated. The current frontend still uses static data (`STATIC_WORKFORCE_DATA`), so there is no immediate runtime risk. When the static data block is removed and the live API is enabled, the backend field name must match `employmentType`.
 - Spec and documentation files under `specs/009-workforce-tab-api/` that describe the original intentional misspelling are out of scope for this fix; they serve as historical record of the original decision.
+
 # Feature Specification: Fix `employmentType` Typo in Workforce API Contract
 
 **Feature Branch**: `013-fix-employment-type-typo`  
@@ -91,7 +92,7 @@ The backend API contract has now been corrected to use the properly spelled `emp
 
 ---
 
-## User Scenarios & Testing *(mandatory)*
+## User Scenarios & Testing _(mandatory)_
 
 ### User Story 1 - Demographics section renders correctly (Priority: P1)
 
@@ -131,7 +132,7 @@ A developer working on the workforce feature runs the TypeScript type checker an
 
 ---
 
-## Requirements *(mandatory)*
+## Requirements _(mandatory)_
 
 ### Functional Requirements
 
@@ -148,7 +149,7 @@ A developer working on the workforce feature runs the TypeScript type checker an
 
 ---
 
-## Success Criteria *(mandatory)*
+## Success Criteria _(mandatory)_
 
 ### Measurable Outcomes
 

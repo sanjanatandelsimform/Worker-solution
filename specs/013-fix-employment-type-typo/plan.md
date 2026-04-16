@@ -21,16 +21,16 @@ Rename the misspelled `employementType` field to `employmentType` across 7 sourc
 
 ## Constitution Check
 
-*GATE: Must pass before Phase 0 research. Re-checked after Phase 1 design.*
+_GATE: Must pass before Phase 0 research. Re-checked after Phase 1 design._
 
-| Principle | Status | Notes |
-|-----------|--------|-------|
-| I. Component-First Architecture | ✅ Pass | No component changes; type rename only |
-| II. User-Centric Design | ✅ Pass | Spec has user stories + acceptance criteria |
-| III. Test-Driven Development | ✅ Pass | Existing tests updated in same PR; no new untested logic |
-| IV. Type Safety & Code Quality | ✅ Pass | Strict-mode types enforced; rename eliminates misleading spelling |
-| V. Performance & Accessibility | ✅ Pass | No UI changes; no accessibility impact |
-| VI. State Management Discipline | ✅ Pass | Redux shape unchanged; only field key renamed |
+| Principle                       | Status  | Notes                                                             |
+| ------------------------------- | ------- | ----------------------------------------------------------------- |
+| I. Component-First Architecture | ✅ Pass | No component changes; type rename only                            |
+| II. User-Centric Design         | ✅ Pass | Spec has user stories + acceptance criteria                       |
+| III. Test-Driven Development    | ✅ Pass | Existing tests updated in same PR; no new untested logic          |
+| IV. Type Safety & Code Quality  | ✅ Pass | Strict-mode types enforced; rename eliminates misleading spelling |
+| V. Performance & Accessibility  | ✅ Pass | No UI changes; no accessibility impact                            |
+| VI. State Management Discipline | ✅ Pass | Redux shape unchanged; only field key renamed                     |
 
 No violations — Complexity Tracking table not required.
 

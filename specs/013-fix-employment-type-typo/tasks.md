@@ -19,7 +19,7 @@
 
 **Purpose**: Confirm starting state — no new dependencies or files are required for this feature.
 
-- [X] T001 Verify current branch is `013-fix-employment-type-typo` and working tree is clean (`git status`)
+- [x] T001 Verify current branch is `013-fix-employment-type-typo` and working tree is clean (`git status`)
 
 ---
 
@@ -29,7 +29,7 @@
 
 **Independent Test**: Open `src/types/workforceTypes.ts` and confirm the `Demographics` interface declares `employmentType: EmploymentTypeEntry[]` with no `@note` comment above it. (Note: `pnpm run type-check` will emit errors in consumer files until Phase 3 is complete — that is expected.)
 
-- [X] T002 [US1] Rename `employementType` → `employmentType` and remove the `@note` comment in `src/types/workforceTypes.ts` (FR-001, FR-002)
+- [x] T002 [US1] Rename `employementType` → `employmentType` and remove the `@note` comment in `src/types/workforceTypes.ts` (FR-001, FR-002)
 
 **Checkpoint**: Type definition is correct. TypeScript will now flag all remaining consumers — use those errors as a guide for Phase 3.
 
@@ -43,12 +43,12 @@
 
 > All tasks in this phase target different files and can be executed in parallel.
 
-- [X] T003 [P] [US2] Rename `demographics.employementType` object key → `employmentType` in `STATIC_WORKFORCE_DATA` in `src/store/slices/workforceSlice.ts` (FR-003)
-- [X] T004 [P] [US2] Fix all three `demographicsSection?.employementType` property accesses → `.employmentType` in `src/hooks/useWorkforceDemographicsConfig.ts` (FR-004)
-- [X] T005 [P] [US2] Update JSDoc on `selectDemographicsSection` — remove `(note: intentional typo matching backend schema)` and correct spelling to `employmentType` in `src/store/selectors/workforceSelectors.ts` (FR-005)
-- [X] T006 [P] [US2] Fix both test fixture object keys `employementType` → `employmentType` (lines ~71 and ~134) in `tests/store/workforceSlice.test.ts` (FR-006)
-- [X] T007 [P] [US2] Fix test fixture object key `employementType` → `employmentType` (line ~64) in `tests/services/workforceApi.test.ts` (FR-006)
-- [X] T008 [P] [US2] Fix test fixture object key `employementType` → `employmentType` (line ~49) in `tests/store/workforceSelectors.test.ts` (FR-006)
+- [x] T003 [P] [US2] Rename `demographics.employementType` object key → `employmentType` in `STATIC_WORKFORCE_DATA` in `src/store/slices/workforceSlice.ts` (FR-003)
+- [x] T004 [P] [US2] Fix all three `demographicsSection?.employementType` property accesses → `.employmentType` in `src/hooks/useWorkforceDemographicsConfig.ts` (FR-004)
+- [x] T005 [P] [US2] Update JSDoc on `selectDemographicsSection` — remove `(note: intentional typo matching backend schema)` and correct spelling to `employmentType` in `src/store/selectors/workforceSelectors.ts` (FR-005)
+- [x] T006 [P] [US2] Fix both test fixture object keys `employementType` → `employmentType` (lines ~71 and ~134) in `tests/store/workforceSlice.test.ts` (FR-006)
+- [x] T007 [P] [US2] Fix test fixture object key `employementType` → `employmentType` (line ~64) in `tests/services/workforceApi.test.ts` (FR-006)
+- [x] T008 [P] [US2] Fix test fixture object key `employementType` → `employmentType` (line ~49) in `tests/store/workforceSelectors.test.ts` (FR-006)
 
 **Checkpoint**: All source and test files now use `employmentType`. TypeScript should compile cleanly and tests should pass.
 
@@ -58,9 +58,9 @@
 
 **Purpose**: Verify all success criteria are met before the PR is opened.
 
-- [X] T009 Run `pnpm run type-check` and confirm exit code 0 with zero TypeScript errors (SC-003, FR-007)
-- [X] T010 [P] Run `pnpm run test` and confirm all tests pass with zero regressions (SC-004, FR-008)
-- [X] T011 [P] Search `src/` and `tests/` for `employementType` and confirm zero matches — on PowerShell: `Select-String -Path src/**/*.ts,tests/**/*.ts -Pattern "employementType" -Recurse` (SC-001, SC-002)
+- [x] T009 Run `pnpm run type-check` and confirm exit code 0 with zero TypeScript errors (SC-003, FR-007)
+- [x] T010 [P] Run `pnpm run test` and confirm all tests pass with zero regressions (SC-004, FR-008)
+- [x] T011 [P] Search `src/` and `tests/` for `employementType` and confirm zero matches — on PowerShell: `Select-String -Path src/**/*.ts,tests/**/*.ts -Pattern "employementType" -Recurse` (SC-001, SC-002)
 
 ---
 

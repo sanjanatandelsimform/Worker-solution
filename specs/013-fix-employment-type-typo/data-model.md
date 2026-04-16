@@ -22,7 +22,7 @@ This feature renames a single field on the `Demographics` TypeScript interface f
  */
 export interface Demographics {
   /** Employment type split by department. */
-  employmentType: EmploymentTypeEntry[];   // ← corrected (was: employementType)
+  employmentType: EmploymentTypeEntry[]; // ← corrected (was: employementType)
   gender: GenderBreakdown;
   employmentBreakdownByAge: AgeBreakdownEntry[];
 }
@@ -54,18 +54,18 @@ export interface EmploymentTypeEntry {
 
 ## Field Rename Impact Map
 
-| Location | File | Symbol | Old Value | New Value |
-|----------|------|--------|-----------|-----------|
-| Type definition | `src/types/workforceTypes.ts` | `Demographics.employementType` | field name | `employmentType` |
-| Static fixture | `src/store/slices/workforceSlice.ts` | `STATIC_WORKFORCE_DATA.demographics.employementType` | object key | `employmentType` |
-| Hook — dept map | `src/hooks/useWorkforceDemographicsConfig.ts` line 16 | `demographicsSection?.employementType.map(…)` | property access | `.employmentType.map(…)` |
-| Hook — find | `src/hooks/useWorkforceDemographicsConfig.ts` line 48 | `demographicsSection?.employementType.find(…)` | property access | `.employmentType.find(…)` |
-| Hook — fallback | `src/hooks/useWorkforceDemographicsConfig.ts` line 49 | `demographicsSection?.employementType[0]` | property access | `.employmentType[0]` |
-| Selector JSDoc | `src/store/selectors/workforceSelectors.ts` line 53 | JSDoc comment text | `employementType (note: intentional typo…)` | `employmentType` |
-| Test fixture #1 | `tests/store/workforceSlice.test.ts` line 71 | object key in fixture | `employementType` | `employmentType` |
-| Test fixture #2 | `tests/store/workforceSlice.test.ts` line 134 | object key in fixture | `employementType` | `employmentType` |
-| Test fixture #3 | `tests/services/workforceApi.test.ts` line 64 | object key in fixture | `employementType` | `employmentType` |
-| Test fixture #4 | `tests/store/workforceSelectors.test.ts` line 49 | object key in fixture | `employementType` | `employmentType` |
+| Location        | File                                                  | Symbol                                               | Old Value                                   | New Value                 |
+| --------------- | ----------------------------------------------------- | ---------------------------------------------------- | ------------------------------------------- | ------------------------- |
+| Type definition | `src/types/workforceTypes.ts`                         | `Demographics.employementType`                       | field name                                  | `employmentType`          |
+| Static fixture  | `src/store/slices/workforceSlice.ts`                  | `STATIC_WORKFORCE_DATA.demographics.employementType` | object key                                  | `employmentType`          |
+| Hook — dept map | `src/hooks/useWorkforceDemographicsConfig.ts` line 16 | `demographicsSection?.employementType.map(…)`        | property access                             | `.employmentType.map(…)`  |
+| Hook — find     | `src/hooks/useWorkforceDemographicsConfig.ts` line 48 | `demographicsSection?.employementType.find(…)`       | property access                             | `.employmentType.find(…)` |
+| Hook — fallback | `src/hooks/useWorkforceDemographicsConfig.ts` line 49 | `demographicsSection?.employementType[0]`            | property access                             | `.employmentType[0]`      |
+| Selector JSDoc  | `src/store/selectors/workforceSelectors.ts` line 53   | JSDoc comment text                                   | `employementType (note: intentional typo…)` | `employmentType`          |
+| Test fixture #1 | `tests/store/workforceSlice.test.ts` line 71          | object key in fixture                                | `employementType`                           | `employmentType`          |
+| Test fixture #2 | `tests/store/workforceSlice.test.ts` line 134         | object key in fixture                                | `employementType`                           | `employmentType`          |
+| Test fixture #3 | `tests/services/workforceApi.test.ts` line 64         | object key in fixture                                | `employementType`                           | `employmentType`          |
+| Test fixture #4 | `tests/store/workforceSelectors.test.ts` line 49      | object key in fixture                                | `employementType`                           | `employmentType`          |
 
 ---
 

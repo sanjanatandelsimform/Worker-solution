@@ -19,6 +19,7 @@ Feature 009 (`009-workforce-tab-api`) introduced the `employementType` misspelli
 **Rationale**: The misspelling appears only in 7 src locations and 4 test locations — all within a single bounded domain (`workforce`). TypeScript's rename-symbol would work, but given the small, enumerable scope, direct replacement is faster, fully auditable, and carries no risk of touching unintended uses.
 
 **Alternatives considered**:
+
 - TypeScript language-server rename: valid but unnecessary overhead for 11 locations.
 - Regex-based sed/replace across entire repo: higher blast radius than needed; spec files under `specs/009-*` are intentionally excluded.
 
@@ -31,6 +32,7 @@ Feature 009 (`009-workforce-tab-api`) introduced the `employementType` misspelli
 **Rationale**: The spec docs for feature 009 are historical record of the original decision and intentional misspelling. Changing them would rewrite history without adding value. The `specs/013-*/` files are authored fresh with the corrected spelling.
 
 **Alternatives considered**:
+
 - Update all docs globally: unnecessary churn; no developer depends on those docs for code navigation.
 
 ---
@@ -42,6 +44,7 @@ Feature 009 (`009-workforce-tab-api`) introduced the `employementType` misspelli
 **Rationale**: Once the field is correctly spelled, the note is misleading. The `@note` was the only place documenting the original intentional behaviour, and that context is preserved in `specs/009-*`.
 
 **Alternatives considered**:
+
 - Replace with a new note explaining the correction: adds noise; the corrected field name is self-documenting.
 
 ---
@@ -49,9 +52,11 @@ Feature 009 (`009-workforce-tab-api`) introduced the `employementType` misspelli
 ## Decision 4: JSDoc Update in `workforceSelectors.ts`
 
 **Decision**: Update the JSDoc comment on `selectDemographicsSection` from:
+
 > `Contains employementType (note: intentional typo matching backend schema), gender, age breakdown.`
 
 to:
+
 > `Contains employmentType, gender, age breakdown.`
 
 **Rationale**: The parenthetical note was load-bearing context for the original misspelling decision. Once corrected, it is inaccurate and should be removed along with the field name fix.

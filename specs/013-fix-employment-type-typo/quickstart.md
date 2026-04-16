@@ -79,11 +79,11 @@ demographics: {
 
 Three property accesses to update (all on `demographicsSection`):
 
-| Line | Old | New |
-|------|-----|-----|
-| ~16 | `demographicsSection?.employementType.map(…)` | `demographicsSection?.employmentType.map(…)` |
-| ~48 | `demographicsSection?.employementType.find(…)` | `demographicsSection?.employmentType.find(…)` |
-| ~49 | `demographicsSection?.employementType[0]` | `demographicsSection?.employmentType[0]` |
+| Line | Old                                            | New                                           |
+| ---- | ---------------------------------------------- | --------------------------------------------- |
+| ~16  | `demographicsSection?.employementType.map(…)`  | `demographicsSection?.employmentType.map(…)`  |
+| ~48  | `demographicsSection?.employementType.find(…)` | `demographicsSection?.employmentType.find(…)` |
+| ~49  | `demographicsSection?.employementType[0]`      | `demographicsSection?.employmentType[0]`      |
 
 ---
 
@@ -115,12 +115,12 @@ Update the JSDoc for `selectDemographicsSection`:
 
 **Files and locations**:
 
-| File | Approx. line | Change |
-|------|-------------|--------|
-| `tests/store/workforceSlice.test.ts` | ~71 | `employementType: []` → `employmentType: []` |
-| `tests/store/workforceSlice.test.ts` | ~134 | `employementType: []` → `employmentType: []` |
-| `tests/services/workforceApi.test.ts` | ~64 | `employementType: []` → `employmentType: []` |
-| `tests/store/workforceSelectors.test.ts` | ~49 | `employementType: [{ … }]` → `employmentType: [{ … }]` |
+| File                                     | Approx. line | Change                                                 |
+| ---------------------------------------- | ------------ | ------------------------------------------------------ |
+| `tests/store/workforceSlice.test.ts`     | ~71          | `employementType: []` → `employmentType: []`           |
+| `tests/store/workforceSlice.test.ts`     | ~134         | `employementType: []` → `employmentType: []`           |
+| `tests/services/workforceApi.test.ts`    | ~64          | `employementType: []` → `employmentType: []`           |
+| `tests/store/workforceSelectors.test.ts` | ~49          | `employementType: [{ … }]` → `employmentType: [{ … }]` |
 
 Each is a single-key rename inside a `demographics:` object literal.
 
@@ -142,6 +142,7 @@ grep -r "employementType" src/ tests/
 ```
 
 On Windows PowerShell:
+
 ```powershell
 Select-String -Path src\**\*.ts,tests\**\*.ts -Pattern "employementType" -Recurse
 # Expected: no matches
