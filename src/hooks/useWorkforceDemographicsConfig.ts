@@ -13,7 +13,7 @@ export function useWorkforceDemographicsConfig(
 
   const departmentItems = useMemo(
     () =>
-      demographicsSection?.employementType.map(entry => ({
+      demographicsSection?.employmentType.map(entry => ({
         id: entry.department,
         label:
           entry.department === "all"
@@ -45,8 +45,8 @@ export function useWorkforceDemographicsConfig(
 
   const donutChartsConfig = useMemo(() => {
     const selectedDeptData =
-      demographicsSection?.employementType.find(e => e.department === selectedDepartment) ??
-      demographicsSection?.employementType[0];
+      demographicsSection?.employmentType.find(e => e.department === selectedDepartment) ??
+      demographicsSection?.employmentType[0];
 
     if (!selectedDeptData) return [];
 

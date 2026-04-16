@@ -68,7 +68,7 @@ describe("workforceSlice", () => {
           ],
         },
         demographics: {
-          employementType: [],
+          employmentType: [],
           gender: { men: "55%", women: "40%" },
           employmentBreakdownByAge: [],
         },
@@ -131,7 +131,7 @@ describe("workforceSlice", () => {
             ],
           },
           demographics: {
-            employementType: [],
+            employmentType: [],
             gender: { men: "0%", women: "0%" },
             employmentBreakdownByAge: [],
           },

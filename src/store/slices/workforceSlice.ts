@@ -58,7 +58,7 @@ const STATIC_WORKFORCE_DATA: WorkforceResponse = {
     ],
   },
   demographics: {
-    employementType: [
+    employmentType: [
       { department: "all", fullTime: "80%", partTime: "20%", seasonal: "5%" },
       { department: "engineering", fullTime: "90%", partTime: "10%", seasonal: "0%" },
       { department: "sales", fullTime: "70%", partTime: "30%", seasonal: "10%" },
