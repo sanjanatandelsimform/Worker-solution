@@ -260,9 +260,9 @@ export const ChangePasswordModal = ({ isOpen, onClose }: ChangePasswordModalProp
                     className="absolute right-0 top-7"
                   >
                     {showCurrentPassword ? (
-                      <Eye className="size-5 text-ws-gray-70" />
+                      <Eye className="size-5 text-ws-gray-400" />
                     ) : (
-                      <EyeOff className="size-5 text-ws-gray-70" />
+                      <EyeOff className="size-5 text-ws-gray-400" />
                     )}
                   </Button>
                 </InputGroup>
@@ -314,9 +314,9 @@ export const ChangePasswordModal = ({ isOpen, onClose }: ChangePasswordModalProp
                     className="absolute right-0 top-7"
                   >
                     {showNewPassword ? (
-                      <Eye className="size-5 text-ws-gray-70" />
+                      <Eye className="size-5 text-ws-gray-400" />
                     ) : (
-                      <EyeOff className="size-5 text-ws-gray-70" />
+                      <EyeOff className="size-5 text-ws-gray-400" />
                     )}
                   </Button>
                 </InputGroup>
@@ -358,9 +358,9 @@ export const ChangePasswordModal = ({ isOpen, onClose }: ChangePasswordModalProp
                     className="absolute right-0 top-7"
                   >
                     {showConfirmPassword ? (
-                      <Eye className="size-5 text-ws-gray-70" />
+                      <Eye className="size-5 text-ws-gray-400" />
                     ) : (
-                      <EyeOff className="size-5 text-ws-gray-70" />
+                      <EyeOff className="size-5 text-ws-gray-400" />
                     )}
                   </Button>
                 </InputGroup>

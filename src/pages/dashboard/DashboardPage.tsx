@@ -412,7 +412,7 @@ export const DashboardPage = () => {
                   />
                   <button
                     onClick={handleRetryDashboard}
-                    className="mt-4 px-4 py-2 bg-ws-primary text-white rounded-lg hover:bg-ws-primary-dark transition-colors"
+                    className="mt-4 px-4 py-2 bg-ws-primary text-ws-base-white rounded-lg hover:bg-ws-primary-dark transition-colors"
                     disabled={dashboardLoading}
                   >
                     {dashboardLoading ? "Retrying..." : "Retry"}
@@ -497,67 +497,76 @@ export const DashboardPage = () => {
             emailVerify &&
             assessmentData?.data?.status !== "completed" &&
             !isConnected && (
-              <div className="flex items-center justify-between gap-4 mt-6">
-                <div className="flex-1 py-6 px-7 border border-ws-border-primary rounded-xl min-h-115 relative">
+              <div className="flex justify-between gap-4 mt-6 ">
+                <div className="flex-1 py-6 px-7 border border-ws-border-primary rounded-xl relative h-auto">
                   <div className="flex items-center justify-between border-b border-ws-border-primary pb-4 mb-4">
-                    <h2 className="flex items-center text-ws-text-tertiary text-2xl font-medium">
+                    <h2 className="flex items-center text-ws-text-primary text-2xl font-medium">
                       Connect with <img src={finchLogo} alt="Finch Logo" className="ml-2" />
                     </h2>
                     <p className="text-ws-text-tertiary text-base">Free</p>
                   </div>
-                  <p className="text-ws-text-tertiary text-base">
-                    Finch handles the connection for you, syncing all your data automatically so you
-                    get richer insights and expanded dashboard views — without any extra work on
-                    your end.
-                  </p>
-                  <ul className="text-ws-text-tertiary text-base list-disc list-inside my-4">
-                    <li>Results in 3-5 min</li>
-                    <li>Custom workforce data and insights</li>
-                    <li>Additional dashboard views plus everything you get in the basic plan</li>
-                  </ul>
-                  <p className="text-ws-text-tertiary text-base">
-                    By connecting with Finch, you'll be redirected to their site to complete the
-                    setup. Please note that data shared is secure and protected by Finch’s thorough
-                    data privacy policies.
-                  </p>
-                  <p className="text-xs text-ws-text-tertiary mt-4">
-                    *Result loading time is payroll provider-specific
-                  </p>
-                  <Button
-                    iconTrailing={<ChevronRight />}
-                    size="sm"
-                    color="primary"
-                    className="min-w-30 absolute bottom-6 left-7 bg-ws-navy-800"
-                    onClick={connectWithFinch}
-                    isDisabled={isFinchLoading}
-                  >
-                    Start with Finch
-                  </Button>
+                  <div className="h-auto">
+                    <p className="text-ws-text-tertiary text-base">
+                      Finch handles the connection for you, syncing all your data automatically so
+                      you get richer insights and expanded dashboard views — without any extra work
+                      on your end.
+                    </p>
+                    <ul className="text-ws-text-tertiary text-base list-disc list-inside my-4">
+                      <li>Results in as little as 3-5 minutes*</li>
+                      <li>Custom workforce data and insights</li>
+                      <li>Additional dashboard views plus everything you get in the free plan</li>
+                    </ul>
+                    <p className="text-ws-text-tertiary text-base">
+                      By connecting with Finch, you'll be redirected to their site to complete the
+                      setup. Please note that any information shared directly with Finch is subject
+                      to their privacy policy and is outside of our responsibility.
+                    </p>
+                    <p className="text-xs text-ws-text-tertiary mt-4">
+                      *Result loading time is payroll provider-specific
+                    </p>
+                  </div>
+                  <div className="mt-5">
+                    <Button
+                      iconTrailing={<ChevronRight />}
+                      size="sm"
+                      color="primary"
+                      className="min-w-30 bg-ws-navy-800"
+                      onClick={connectWithFinch}
+                      isDisabled={isFinchLoading}
+                    >
+                      Start with Finch
+                    </Button>
+                  </div>
                 </div>
-                <div className="flex-1 py-6 px-7 border border-ws-border-primary rounded-xl min-h-115 relative">
+                <div className="flex-1 py-6 px-7 border border-ws-border-primary rounded-xl relative">
                   <div className="flex items-center justify-between border-b border-ws-border-primary pb-4 mb-4">
-                    <h2 className="text-ws-text-tertiary text-2xl font-medium">Basic Plan</h2>
+                    <h2 className="text-ws-text-primary text-2xl font-medium">Basic Plan</h2>
                     <p className="text-ws-text-tertiary text-base">Free</p>
                   </div>
-                  <p className="text-ws-text-tertiary text-base">
-                    Fill out a simple assessment form and get high level recommendations to enhance
-                    your benefits program.
-                  </p>
-                  <ul className="text-ws-text-tertiary text-base list-disc list-inside my-4">
-                    <li>Results in 10 min</li>
-                    <li>Industry benchmarks</li>
-                    <li>Placed-based insights</li>
-                    <li>Annual data updates</li>
-                  </ul>
-                  <Button
-                    iconTrailing={<ChevronRight />}
-                    size="sm"
-                    color="primary"
-                    className="min-w-30 absolute bottom-6 left-7 bg-ws-navy-800"
-                    onClick={handleGetStarted}
-                  >
-                    Let’s Get Started
-                  </Button>
+                  <div className="h-auto">
+                    <p className="text-ws-text-tertiary text-base">
+                      Fill out a simple assessment form and get high level recommendations to
+                      enhance your benefits program.
+                    </p>
+
+                    <ul className="text-ws-text-tertiary text-base list-disc list-inside my-4">
+                      <li>Results in 10 min</li>
+                      <li>Industry benchmarks</li>
+                      <li>Placed-based insights</li>
+                      <li>Annual data updates</li>
+                    </ul>
+                  </div>
+                  <div className="absolute bottom-6 left-7">
+                    <Button
+                      iconTrailing={<ChevronRight />}
+                      size="sm"
+                      color="primary"
+                      className="min-w-30 bg-ws-navy-800"
+                      onClick={handleGetStarted}
+                    >
+                      Let’s Get Started
+                    </Button>
+                  </div>
                 </div>
               </div>
             )}

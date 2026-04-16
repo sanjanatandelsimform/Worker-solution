@@ -70,13 +70,14 @@
 }
 
 :root {
-  font-family: Inter, system-ui, Avenir, Helvetica, Arial, sans-serif;
+  font-family: "Inter", sans-serif;
   line-height: 1.5;
   font-weight: 400;
 
   /* ========== Typography - Font Family ========== */
-  --font-family-body: "Inter", sans-serif;
-  --font-family-display: "Inter", sans-serif;
+  /* --font-family-body: "Inter", sans-serif;
+  --font-family-display: "Inter", sans-serif; */
+  font-family: "Inter", sans-serif;
   font-synthesis: none;
   text-rendering: optimizeLegibility;
   -webkit-font-smoothing: antialiased;
