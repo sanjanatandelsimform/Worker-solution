@@ -45,7 +45,7 @@ export default function WorkforceOverview({
                 itemAlign="between"
                 count={card.count}
                 countClass={card.getCountClass()}
-                infoIcon={true}
+                infoIcon={false}
                 infoCircleClass="text-ws-gray-400 size-5"
                 tooltipText={card.tooltipText}
                 descriptionText={card.getDescriptionText()}

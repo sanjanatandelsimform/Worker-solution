@@ -47,7 +47,7 @@ export default function WorkforceParticipation({
         </div>
       </div>
 
-      <div className="grid grid-cols-2 xl:grid-cols-4 gap-6 w-full mt-4">
+      <div className="grid grid-cols-2 xl:grid-cols-3 gap-6 w-full mt-4">
         {isLoading ? (
           <>
             <WagesCardSkeleton />
