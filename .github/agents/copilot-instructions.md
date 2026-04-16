@@ -54,4 +54,6 @@ TypeScript with React 19+, strict mode enabled: Follow standard conventions
 - 006-finch-status (2026-04-02): Added GET /api/v1/finch/status polling (15s interval) to Dashboard. New files: finchStatusTypes.ts, finchStatusSlice.ts, finchStatusSelectors.ts (in src/store/selectors/), useFinchStatus.ts hook. Modified: finchApi.ts (getFinchStatus), store.ts (register finchStatus reducer), DashboardPage.tsx (isConnected hides onboarding cards + Connect button wired to connectWithFinch). Polling unconditional — no stop condition implemented (deferred optimisation). Selector convention: separate src/store/selectors/ file (NOT co-located in slice).
 
 <!-- MANUAL ADDITIONS START -->
+
+- 012-participation-dynamic-items (2026-04-16): `participation.benefits`, `participation.retirement`, `participation.insurance` in `WorkforceResponse` changed from fixed-key objects to `EnrollmentItem[]` arrays (`{ name: string; enrollment: string }`). Hook `useWorkforceParticipationConfig` now maps arrays instead of accessing property keys. Static mock data in `workforceSlice.ts` updated to array format. Test fixtures in 3 test files updated. No changes to selectors, `WorkforceParticipation.tsx`, or `WorkforcePage.tsx`.
 <!-- MANUAL ADDITIONS END -->
