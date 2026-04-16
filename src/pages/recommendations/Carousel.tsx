@@ -76,7 +76,7 @@ export default function CarouselSection() {
               {/* Previous Button */}
               <Carousel.PrevTrigger asChild>
                 <Button
-                  color="tertiary"
+                  color="link"
                   className="p-0!"
                   size="sm"
                   iconLeading={<CarouselLeftArrow aria-label="Previous slide" />}
@@ -102,7 +102,7 @@ export default function CarouselSection() {
               {/* Next Button */}
               <Carousel.NextTrigger asChild>
                 <Button
-                  color="tertiary"
+                  color="link"
                   className="p-0!"
                   size="sm"
                   iconLeading={<CarouselRightArrow aria-label="Next slide" />}

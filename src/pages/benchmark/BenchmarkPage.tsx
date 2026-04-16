@@ -183,7 +183,7 @@ interface BenchmarkCardConfig {
   const value = data?.avgTurnover?.rate;
   return typeof value === "number"
     ? formatCurrency(value)
-    : value || "No data";
+    : `${value}%` || "No data";
 },
     tooltipText: "Average Cost of Turnover",
     descriptionText: (data: any) =>
@@ -461,14 +461,13 @@ export default function BenchmarkPage() {
   // const housingData = useAppSelector(selectIndustryHousingData);
 
 
-  const industryOverview = useAppSelector(selectIndustryOverviewData);
+const industryOverview = useAppSelector(selectIndustryOverviewData);
 const zipCodes = useAppSelector(selectIndustryZipCodes);
 const industry = useAppSelector(selectIndustryData);
 const housingBurdenData = useAppSelector(selectIndustryHousingData);
 const areaMedianWage = useAppSelector(selectIndustryAreaMedianWage);
 const industryTurnOverRate = useAppSelector(selectIndustryTurnOverRate);
 
-console.log("industryTurnOverRate", industryTurnOverRate);
 
 const wageZipItems = (areaMedianWage?.stateData ?? []).map(s => ({
   label: s.city,

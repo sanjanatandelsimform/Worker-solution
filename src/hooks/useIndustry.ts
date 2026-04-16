@@ -43,12 +43,12 @@ export function useIndustry(): UseIndustryReturn {
   // const isLoaded = true;
 
   useEffect(() => {
-    if (industryStatus === "fetch" && !isLoaded && !isLoading) {
-      console.log("test----", isLoaded, isLoading)
+    // if (industryStatus === "fetch" && !isLoaded && !isLoading) {
+    if (true && !isLoaded && !isLoading) {
       dispatch(fetchIndustry());
     }
   }, [dispatch, industryStatus, isLoaded, isLoading]);
-
+  
   return {
     data,
     isLoading,

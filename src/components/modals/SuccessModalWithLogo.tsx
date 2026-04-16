@@ -51,7 +51,7 @@ export const SuccessModalWithLogo = ({
           {/* Close Button */}
           {showCloseButton && (
             <Button
-              color="tertiary"
+              color="link"
               size="sm"
               type="button"
               onClick={onClose}

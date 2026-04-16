@@ -31,7 +31,7 @@ export const SettingsPage = () => {
   const dispatch = useAppDispatch();
   const navigate = useNavigate();
 
-  const [showPassword, setShowPassword] = useState(false);
+  // const [showPassword, setShowPassword] = useState(false);
 
   const userData = useAppSelector(selectUser);
   const profileLoading = useAppSelector(selectProfileLoading);
@@ -330,7 +330,7 @@ export const SettingsPage = () => {
           <div>
             <h2 className="text-4xl font-bold text-ws-text-primary">Settings</h2>
             <p className="text-base text-ws-text-secondary mt-4">
-              Manage your profile, preferences, and account settings
+              Manage your profile, preferences, and account settings.
             </p>
           </div>
 
@@ -380,7 +380,7 @@ export const SettingsPage = () => {
                     Personal information
                   </h2>
                   <p className="text-base text-ws-text-tertiary mt-2">
-                    Update your name, email, and personal details
+                    Update your name, email, and personal details.
                   </p>
                 </div>
 
@@ -447,8 +447,8 @@ export const SettingsPage = () => {
                               isDisabled={true}
                             />
                             <Button
-                              color="link-disable-color"
-                              className="text-ws-navy-800 font-semibold shadow-none"
+                              color="link"
+                              className="text-ws-navy-800 font-semibold shadow-none max-w-48"
                               // onClick={
                               //   resendVerification
                               //     ? handleResendVerification
@@ -465,7 +465,7 @@ export const SettingsPage = () => {
                       </InputGroup>
                     </div>
                     <div className="w-full xl:w-full">
-                      <InputGroup>
+                      {/* <InputGroup>
                         <div className="flex flex-col gap-1.5 w-full">
                           <Label htmlFor="changePassword">Change Password</Label>
                           <div className="w-full flex flex-col gap-4">
@@ -480,24 +480,24 @@ export const SettingsPage = () => {
                               isDisabled={true}
                             />
                             <Button
-                              color="tertiary"
+                              color="link"
                               size="sm"
                               type="button"
                               onClick={() => setShowPassword(!showPassword)}
                               aria-label={showPassword ? "Hide password" : "Show password"}
-                              className="absolute right-0 top-7"
+                              className="absolute right-0 top-8"
                             >
-                              {/* <>
+                              <>
                                 {showPassword ? (
                                   <Eye className="size-5 text-ws-gray-400" />
                                 ) : (
                                   <EyeOff className="size-5 text-ws-gray-400" />
                                 )}
-                              </> */}
+                              </>
                             </Button>
                             <Button
-                              color="link-disable-color"
-                              className="text-ws-navy-800 font-semibold shadow-none"
+                              color="link"
+                              className="text-ws-navy-800 font-semibold shadow-none max-w-38"
                               onClick={() => setIsChangePasswordModalOpen(true)}
                               isDisabled={profileLoading || !firstName || !lastName}
                             >
@@ -505,7 +505,15 @@ export const SettingsPage = () => {
                             </Button>
                           </div>
                         </div>
-                      </InputGroup>
+                      </InputGroup> */}
+                       <Button
+                        color="link"
+                        className="text-ws-navy-800 font-semibold shadow-none"
+                        onClick={() => setIsChangePasswordModalOpen(true)}
+                        isDisabled={profileLoading || !firstName || !lastName}
+                        >
+                        Change password
+                        </Button>
                     </div>
                   </div>
                 </div>
@@ -517,7 +525,7 @@ export const SettingsPage = () => {
                       Account Management
                     </h2>
                     <p className="text-base text-ws-text-tertiary mt-2">
-                      Update your photo and personal details here.
+                      Retake your assessment at any time, or permanently delete your account.
                     </p>
                   </div>
                   <div className="flex flex-col gap-4">
@@ -536,13 +544,13 @@ export const SettingsPage = () => {
                       </div>
                       <div className="w-full xl:w-1/2 flex gap-4 mt-3 xl:mt-0">
                         <Button
-                          color="secondary"
-                          size="md"
-                          className="w-full text-base font-semibold text-ws-navy-800"
+                          color="subtle"
+                          size="lg"
+                          className="w-full text-base font-semibold text-ws-navy-800 hover:text-ws-base-white"
                           onClick={() => setIsRetakeAssessmentModalOpen(true)}
                           isDisabled={completionCount === 0 && !isFinchCompleted}
                         >
-                          Retake Assessment
+                          Retake the assessment
                         </Button>
                       </div>
                     </div>
@@ -554,18 +562,18 @@ export const SettingsPage = () => {
                           htmlFor="deleteAccount"
                           className="text-ws-text-primary font-medium text-base mt-2"
                         >
-                          Delete account
+                          Delete my Benestats account
                         </label>
                         {/* <span className="text-ws-text-tertiary text-sm">This cannot be undone</span> */}
                       </div>
                       <div className="w-full xl:w-1/2 flex gap-4 mt-3 xl:mt-0">
                         <Button
-                          color="secondary"
-                          size="md"
-                          className="w-full text-base font-semibold text-ws-error-600"
+                          color="subtle"
+                          size="lg"
+                          className="w-full text-base font-semibold text-ws-error-600 hover:text-ws-base-white"
                           onClick={() => setIsAccountDeleteModalOpen(true)}
                         >
-                          Delete Account
+                          Delete my account
                         </Button>
                       </div>
                     </div>

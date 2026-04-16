@@ -45,7 +45,7 @@ export const InProgressModal = ({
             </svg>
           </div>
           {/* <Button
-            color="tertiary"
+            color="link"
             size="sm"
             type="button"
             onClick={onClose}

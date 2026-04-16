@@ -13,7 +13,7 @@ import featuredIcon from "@/assets/featured-icon.svg";
 export interface BaseModalWithIconButton {
   text: string;
   onClick: () => void;
-  color?: "primary" | "secondary" | "tertiary" | "primary-destructive";
+  color?: "primary" | "secondary" | "tertiary" | "primary-destructive" | "warning" | "error";
   isDisabled?: boolean;
 }
 
@@ -64,7 +64,7 @@ export const BaseModalWithIcon = ({
           {/* Close Button */}
           {showCloseButton && (
             <Button
-              color="tertiary"
+              color="link"
               size="sm"
               type="button"
               onClick={onClose}

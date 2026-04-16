@@ -3,31 +3,22 @@
 @import "./typography.css";
 
 @theme inline {
-  /* Worker Solutions Colors - Tailwind CSS Format */
-  /* Base Colors */
+/* Worker Solutions Design Variables */
+/* =========================
+     BRAND COLORS
+  ========================= */
+  --color-ws-cyan: var(--ws-color-cyan);
+  --color-ws-green: var(--ws-color-green);
+/* =========================
+    BASE COLORS
+  ========================= */
   --color-ws-base-white: var(--ws-color-base-white);
   --color-ws-base-black: var(--ws-color-base-black);
+  --color-ws-bg-overlay: var(--ws-color-bg-overlay);
   --color-ws-base-transparent: var(--ws-color-base-transparent);
-
-  /* Border Colors */
-  --color-ws-border-primary: var(--ws-color-border-primary);
-  --color-ws-border-secondary: var(--ws-color-border-secondary);
-
-  /* Text Colors */
-  --color-ws-text-primary: var(--ws-color-text-primary);
-  --color-ws-text-secondary: var(--ws-color-text-secondary);
-  --color-ws-text-tertiary: var(--ws-color-text-tertiary);
-  --color-ws-text-disabled: var(--ws-color-text-disabled);
-
-  /* Gray Colors */
-  --color-ws-gray-200: var(--ws-color-gray-200);
-  --color-ws-gray-300: var(--ws-color-gray-300);
-  --color-ws-gray-400: var(--ws-color-gray-400);
-  --color-ws-gray-500: var(--ws-color-gray-500);
-  --color-ws-gray-600: var(--ws-color-gray-600);
-  --color-ws-gray-700: var(--ws-color-gray-700);
-
-  /* Light Teal Colors */
+/* =========================
+     LIGHT TEAL
+  ========================= */
   --color-ws-light-teal-25: var(--ws-color-light-teal-25);
   --color-ws-light-teal-50: var(--ws-color-light-teal-50);
   --color-ws-light-teal-100: var(--ws-color-light-teal-100);
@@ -41,8 +32,25 @@
   --color-ws-light-teal-850: var(--ws-color-light-teal-850);
   --color-ws-light-teal-900: var(--ws-color-light-teal-900);
   --color-ws-light-teal-950: var(--ws-color-light-teal-950);
-
-  /* Navy Colors */
+/* =========================
+     MUTED TEAL
+  ========================= */
+  --color-ws-muted-teal-25: var(--ws-color-muted-teal-25);
+  --color-ws-muted-teal-50: var(--ws-color-muted-teal-50);
+  --color-ws-muted-teal-100: var(--ws-color-muted-teal-100);
+  --color-ws-muted-teal-200: var(--ws-color-muted-teal-200);
+  --color-ws-muted-teal-300: var(--ws-color-muted-teal-300);
+  --color-ws-muted-teal-400: var(--ws-color-muted-teal-400);
+  --color-ws-muted-teal-500: var(--ws-color-muted-teal-500);
+  --color-ws-muted-teal-600: var(--ws-color-muted-teal-600);
+  --color-ws-muted-teal-700: var(--ws-color-muted-teal-700);
+  --color-ws-muted-teal-800: var(--ws-color-muted-teal-800);
+  --color-ws-muted-teal-850: var(--ws-color-muted-teal-850);
+  --color-ws-muted-teal-900: var(--ws-color-muted-teal-900);
+  --color-ws-muted-teal-950: var(--ws-color-muted-teal-950);
+/* =========================
+     NAVY
+  ========================= */
   --color-ws-navy-25: var(--ws-color-navy-25);
   --color-ws-navy-100: var(--ws-color-navy-100);
   --color-ws-navy-200: var(--ws-color-navy-200);
@@ -54,59 +62,155 @@
   --color-ws-navy-800: var(--ws-color-navy-800);
   --color-ws-navy-900: var(--ws-color-navy-900);
   --color-ws-navy-950: var(--ws-color-navy-950);
-
-  /* Additional Teal & Blue Colors */
-  --color-ws-teal: var(--ws-color-teal);
-  --color-ws-teal-lite: var(--ws-color-teal-lite);
-  --color-ws-blue: var(--ws-color-ws-blue);
+/* =========================
+    ERROR
+  ========================= */
+  --color-ws-error-25: var(--ws-color-error-25);
+  --color-ws-error-50: var(--ws-color-error-50);
+  --color-ws-error-100: var(--ws-color-error-100);
+  --color-ws-error-200: var(--ws-color-error-200);
+  --color-ws-error-300: var(--ws-color-error-300);
+  --color-ws-error-400: var(--ws-color-error-400);
+  --color-ws-error-500: var(--ws-color-error-500);
   --color-ws-error-600: var(--ws-color-error-600);
+  --color-ws-error-700: var(--ws-color-error-700);
+  --color-ws-error-800: var(--ws-color-error-800);
+  --color-ws-error-900: var(--ws-color-error-900);
+  --color-ws-error-950: var(--ws-color-error-950);
+/* =========================
+    SUCCESS
+  ========================= */
   --color-ws-success-25: var(--ws-color-success-25);
+  --color-ws-success-50: var(--ws-color-success-50);
+  --color-ws-success-100: var(--ws-color-success-100);
+  --color-ws-success-200: var(--ws-color-success-200);
+  --color-ws-success-300: var(--ws-color-success-300);
+  --color-ws-success-400: var(--ws-color-success-400);
+  --color-ws-success-500: var(--ws-color-success-500);  
+  --color-ws-success-600: var(--ws-color-success-600);
+  --color-ws-success-700: var(--ws-color-success-700);
+/* =========================
+    WARNING
+  ========================= */
   --color-ws-warning-50: var(--ws-color-warning-50);
-  --color-ws-bg-positive: var(--ws-color-bg-positive);
-  --color-ws-bg-negative: var(--ws-color-bg-negative);
-  --color-ws-text-positive: var(--ws-color-text-positive);
-  --color-ws-text-negative: var(--ws-color-text-negative);
+  --color-ws-warning-100: var(--ws-color-warning-100);
+  --color-ws-warning-200: var(--ws-color-warning-200);
+  --color-ws-warning-300: var(--ws-color-warning-300);
+  --color-ws-warning-400: var(--ws-color-warning-400);
+  --color-ws-warning-500: var(--ws-color-warning-500);  
+  --color-ws-warning-600: var(--ws-color-warning-600);
+  --color-ws-warning-700: var(--ws-color-warning-700);
+/* =========================
+     GRAY
+  ========================= */
+  --color-ws-gray-25: var(--ws-color-gray-25);
+  --color-ws-gray-50: var(--ws-color-gray-50);
+  --color-ws-gray-100: var(--ws-color-gray-100);
+  --color-ws-gray-200: var(--ws-color-gray-200);  
+  --color-ws-gray-300: var(--ws-color-gray-300);
+  --color-ws-gray-400: var(--ws-color-gray-400);
+  --color-ws-gray-500: var(--ws-color-gray-500);
+  --color-ws-gray-600: var(--ws-color-gray-600);
+  --color-ws-gray-700: var(--ws-color-gray-700);
+  --color-ws-gray-800: var(--ws-color-gray-800);
+  --color-ws-gray-900: var(--ws-color-gray-900);
+  --color-ws-gray-950: var(--ws-color-gray-950);
+/* =========================
+     TEXT COLORS
+  ========================= */
+  --color-ws-text-primary: var(--ws-color-text-primary);
+  --color-ws-text-secondary: var(--ws-color-text-secondary);
+  --color-ws-text-secondary-hover: var(--ws-color-text-secondary-hover);
+  --color-ws-text-tertiary: var(--ws-color-text-tertiary);
+  --color-ws-text-tertiary-hover: var(--ws-color-text-tertiary-hover);
+  --color-ws-text-quaternary: var(--ws-color-text-quaternary);
+  --color-ws-text-white: var(--ws-color-text-white);
+  --color-ws-text-disabled: var(--ws-color-text-disabled);
+  --color-ws-text-placeholder: var(--ws-color-text-placeholder);
+  --color-ws-text-placeholder-subtle: var(--ws-color-text-placeholder-subtle);
+  --color-ws-text-error-primary: var(--ws-color-text-error-primary);
+  --color-ws-text-error-primary-hover: var(--ws-color-text-error-primary-hover);
+  --color-ws-text-warning-primary: var(--ws-color-text-warning-primary);
+/* =========================
+     BORDER COLORS
+  ========================= */
+  --color-ws-border-primary: var(--ws-color-border-primary);
+  --color-ws-border-secondary: var(--ws-color-border-secondary);
+  --color-ws-border-tertiary: var(--ws-color-border-tertiary);
+  --color-ws-border-disabled: var(--ws-color-border-disabled);
+  --color-ws-border-disabled-subtle: var(--ws-color-border-disabled-subtle);
+  --color-ws-border-error: var(--ws-color-border-error);
+  --color-ws-border-error-subtle: var(--ws-color-border-error-subtle);
+  --color-ws-border-focus-ring: var(--ws-color-border-focus-ring);
+  --color-ws-border-focus-ring-error: var(--ws-color-border-focus-ring-error);
+/* =========================
+     SHADOW COLORS
+  ========================= */
+  --color-ws-shadow-xs: var(--ws-color-shadow-xs);
+  --color-ws-shadow-sm: var(--ws-color-shadow-sm);
+  --color-ws-shadow-md: var(--ws-color-shadow-md);
+  --color-ws-shadow-lg: var(--ws-color-shadow-lg);
+  --color-ws-shadow-xl: var(--ws-color-shadow-xl);
+  --color-ws-shadow-2xl: var(--ws-color-shadow-2xl);
+  --color-ws-shadow-3xl: var(--ws-color-shadow-3xl);
+  --color-ws-shadow-inner: var(--ws-color-shadow-inner);
+/* =========================
+    FONT SIZES
+  ========================= */
+  --color-ws-text-xs: var(--ws-color-text-xs);
+  --color-ws-text-sm: var(--ws-color-text-sm);
+  --color-ws-text-md: var(--ws-color-text-md);
+  --color-ws-text-lg: var(--ws-color-text-lg);
+  --color-ws-text-xl: var(--ws-color-text-xl);
+  --color-ws-display-xs: var(--ws-color-display-xs);
+  --color-ws-display-sm: var(--ws-color-display-sm);
+  --color-ws-display-md: var(--ws-color-display-md);
+  --color-ws-display-lg: var(--ws-color-display-lg);
+  --color-ws-display-xl: var(--ws-color-display-xl);
+  --color-ws-display-2xl: var(--ws-color-display-2xl);
+/* =========================
+    LINE HEIGHTS
+  ========================= */
+  --color-ws-lh-text-xs: var(--ws-color-lh-text-xs);
+  --color-ws-lh-text-sm: var(--ws-color-lh-text-sm);
+  --color-ws-lh-text-md: var(--ws-color-lh-text-md);
+  --color-ws-lh-text-lg: var(--ws-color-lh-text-lg);
+  --color-ws-lh-text-xl: var(--ws-color-lh-text-xl);
+  --color-ws-lh-display-xs: var(--ws-color-lh-display-xs);
+  --color-ws-lh-display-sm: var(--ws-color-lh-display-sm);
+  --color-ws-lh-display-md: var(--ws-color-lh-display-md);
+  --color-ws-lh-display-lg: var(--ws-color-lh-display-lg);
+  --color-ws-lh-display-xl: var(--ws-color-lh-display-xl);
+  --color-ws-lh-display-2xl: var(--ws-color-lh-display-2xl);
+
 }
 
 :root {
+/* =========================
+    TYPOGRAPHY
+  ========================= */
   font-family: "Inter", sans-serif;
-  line-height: 1.5;
   font-weight: 400;
-
-  /* ========== Typography - Font Family ========== */
-  /* --font-family-body: "Inter", sans-serif;
-  --font-family-display: "Inter", sans-serif; */
-  font-family: "Inter", sans-serif;
   font-synthesis: none;
   text-rendering: optimizeLegibility;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 
-  /* Worker Solutions Design Tokens */
-  /* Base Colors */
+/* Worker Solutions Design Tokens */
+/* =========================
+     BRAND COLORS
+  ========================= */
+  --ws-color-cyan: #06aed4;
+  --ws-color-green: #00ea4a;
+ /* =========================
+     BASE COLORS
+  ========================= */
   --ws-color-base-white: #ffffff;
   --ws-color-base-black: #000000;
-  --ws-color-base-transparent: transparent;
-
-  /* Border Colors */
-  --ws-color-border-primary: #d5d7da;
-  --ws-color-border-secondary: #e9eaeb;
-
-  /* Text Colors */
-  --ws-color-text-primary: #181d27;
-  --ws-color-text-secondary: #414651;
-  --ws-color-text-tertiary: #535862;
-  --ws-color-text-disabled: #b3b3b3;
-
-  /* Gray Colors from Figma */
-  --ws-color-gray-200: #e9eaeb;
-  --ws-color-gray-300: #73726c;
-  --ws-color-gray-400: #a4a7ae;
-  --ws-color-gray-500: #717680;
-  --ws-color-gray-600: #626770;
-  --ws-color-gray-700: #777777;
-
-  /* Light Teal Colors from Figma */
+  --ws-color-bg-overlay: #0a0d12;
+/* =========================
+     LIGHT TEAL
+  ========================= */
   --ws-color-light-teal-25: #f5f5f5;
   --ws-color-light-teal-50: #e6eded;
   --ws-color-light-teal-100: #d2f1ef;
@@ -120,9 +224,27 @@
   --ws-color-light-teal-850: #007d7e;
   --ws-color-light-teal-900: #006c68;
   --ws-color-light-teal-950: #2e5450;
-
-  /* Navy Colors from Figma */
+/* =========================
+     MUTED TEAL
+  ========================= */
+  --ws-color-muted-teal-25: #fbfbfb;
+  --ws-color-muted-teal-50: #f7fbfb;
+  --ws-color-muted-teal-100: #f3faf9;
+  --ws-color-muted-teal-200: #eff8f7;
+  --ws-color-muted-teal-300: #e7f4f3;
+  --ws-color-muted-teal-400: #dff1ef;
+  --ws-color-muted-teal-500: #d7edeb;
+  --ws-color-muted-teal-600: #b6d3d0;
+  --ws-color-muted-teal-700: #94b9b6;
+  --ws-color-muted-teal-800: #73a09b; 
+  --ws-color-muted-teal-850: #367b7b;
+  --ws-color-muted-teal-900: #62938e;
+  --ws-color-muted-teal-950: #518681;
+/* =========================
+    NAVY
+  ========================= */
   --ws-color-navy-25: #fdfdfd;
+  --ws-color-navy-50: #f2f9fc;
   --ws-color-navy-100: #eef7fc;
   --ws-color-navy-200: #cbdfe8;
   --ws-color-navy-300: #94cee9;
@@ -134,17 +256,133 @@
   --ws-color-navy-900: #1f4151;
   --ws-color-navy-950: #0e2936;
 
-  /* Additional Teal & Blue Colors */
-  --ws-color-teal: #00c4c7;
-  --ws-color-teal-lite: #dbebeb;
-  --ws-color-ws-blue: #0611f6;
+  /* =========================
+     ERROR
+  ========================= */
+  --ws-color-error-25: #fffbfa;
+  --ws-color-error-50: #fef3f2;
+  --ws-color-error-100: #fee4e2;
+  --ws-color-error-200: #fecdca;
+  --ws-color-error-300: #fda29b;
+  --ws-color-error-400: #f97066;
+  --ws-color-error-500: #f04438;
   --ws-color-error-600: #d92d20;
+  --ws-color-error-700: #b42318;
+  --ws-color-error-800: #912018;
+  --ws-color-error-900: #7a271a;
+  --ws-color-error-950: #55160c;
+
+  /* =========================
+     SUCCESS
+  ========================= */
   --ws-color-success-25: #f6fef9;
+  --ws-color-success-50: #ecfdf3;
+  --ws-color-success-100: #dcfae6;
+  --ws-color-success-200: #abefc6;
+  --ws-color-success-300: #75e0a7;
+  --ws-color-success-400: #47cd89;
+  --ws-color-success-500: #17b26a;
+  --ws-color-success-600: #079455;
+  --ws-color-success-700: #067647;
+
+/* =========================
+    WARNING
+  ========================= */
   --ws-color-warning-50: #fffaeb;
-  --ws-color-bg-positive: #e1f6ef;
-  --ws-color-bg-negative: #faede7;
-  --ws-color-text-positive: #0f6f57;
-  --ws-color-text-negative: #993c1e;
+  --ws-color-warning-100: #fef0c7;
+  --ws-color-warning-200: #fedf89;
+  --ws-color-warning-300: #fec84b;
+  --ws-color-warning-400: #fdb022;
+  --ws-color-warning-500: #f79009;
+  --ws-color-warning-600: #dc6803;
+  --ws-color-warning-700: #b54708;
+
+/* =========================
+    GRAY
+  ========================= */
+  --ws-color-gray-25: #fdfdfd;
+  --ws-color-gray-50: #fafafa;
+  --ws-color-gray-100: #f5f5f5;
+  --ws-color-gray-200: #e9eaeb;
+  --ws-color-gray-300: #d5d7da;
+  --ws-color-gray-400: #a4a7ae;
+  --ws-color-gray-500: #717680;
+  --ws-color-gray-600: #535862;
+  --ws-color-gray-700: #414651;
+  --ws-color-gray-800: #252b37;
+  --ws-color-gray-900: #181d27;
+  --ws-color-gray-950: #0a0d12;
+
+/* =========================
+    TEXT COLORS
+  ========================= */
+  --ws-color-text-primary: #181d27;
+  --ws-color-text-secondary: #414651;
+  --ws-color-text-secondary-hover: #252b37;
+  --ws-color-text-tertiary: #535862;
+  --ws-color-text-tertiary-hover: #414651;
+  --ws-color-text-quaternary: #717680;
+  --ws-color-text-white: #ffffff;
+  --ws-color-text-disabled: #717680;
+  --ws-color-text-placeholder: #717680;
+  --ws-color-text-placeholder-subtle: #d5d7da;
+  --ws-color-text-error-primary: #d92d20;
+  --ws-color-text-error-primary-hover: #b42318;
+  --ws-color-text-warning-primary: #dc6803;
+
+/* =========================
+    BORDER COLORS
+  ========================= */
+  --ws-color-border-primary: #d5d7da;
+  --ws-color-border-secondary: #e9eaeb;
+  --ws-color-border-tertiary: #f5f5f5;
+  --ws-color-border-disabled: #d5d7da;
+  --ws-color-border-disabled-subtle: #e9eaeb;
+  --ws-color-border-error: #f04438;
+  --ws-color-border-error-subtle: #fda29b;
+  --ws-color-border-focus-ring: #007d7e;
+  --ws-color-border-focus-ring-error: #f04438;
+
+/* =========================
+    SHADOW COLORS
+  ========================= */
+  --ws-color-shadow-xs: rgba(10,13,18,0.05);
+  --ws-color-shadow-sm: rgba(10,13,18,0.10);
+  --ws-color-shadow-md: rgba(10,13,18,0.10);
+  --ws-color-shadow-lg: rgba(10,13,18,0.08);
+  --ws-color-shadow-xl: rgba(10,13,18,0.08);
+  --ws-color-shadow-2xl: rgba(10,13,18,0.18);
+  --ws-color-shadow-3xl: rgba(10,13,18,0.14);
+  --ws-color-shadow-inner: rgba(10,13,18,0.05);
+
+/* =========================
+    FONT SIZES
+  ========================= */
+  --ws-color-text-xs: 12px;
+  --ws-color-text-sm: 14px;
+  --ws-color-text-md: 16px;
+  --ws-color-text-lg: 18px;
+  --ws-color-text-xl: 20px;
+  --ws-color-display-xs: 24px;
+  --ws-color-display-sm: 30px;
+  --ws-color-display-md: 36px;
+  --ws-color-display-lg: 48px;
+  --ws-color-display-xl: 60px;
+  --ws-color-display-2xl: 72px;
+/* =========================
+    LINE HEIGHTS
+  ========================= */
+  --ws-color-lh-text-xs: 18px;
+  --ws-color-lh-text-sm: 20px;
+  --ws-color-lh-text-md: 24px;
+  --ws-color-lh-text-lg: 28px;
+  --ws-color-lh-text-xl: 30px;
+  --ws-color-lh-display-xs: 32px;
+  --ws-color-lh-display-sm: 38px;
+  --ws-color-lh-display-md: 44px;
+  --ws-color-lh-display-lg: 60px;
+  --ws-color-lh-display-xl: 72px;
+  --ws-color-lh-display-2xl: 90px;
 }
 
 .h-110 {

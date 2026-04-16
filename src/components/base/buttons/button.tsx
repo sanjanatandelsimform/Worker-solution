@@ -23,7 +23,7 @@ export interface CommonProps {
   /** The size variant of the button */
   size?: keyof typeof styles.sizes;
   /** The color variant of the button */
-  color?: keyof typeof styles.colors;
+  color?: keyof typeof styles.variants;
   /** Icon component or element to show before the text */
   iconLeading?: FC<{ className?: string }> | ReactNode;
   /** Icon component or element to show after the text */
@@ -76,7 +76,7 @@ export const Button = ({
   const Component = href ? AriaLink : AriaButton;
 
   const isIcon = (IconLeading || IconTrailing) && !children;
-  const isLinkType = ["link-gray", "link-color", "link-destructive"].includes(color);
+  const isLinkType = ["link", "link-gray", "link-color", "link-destructive"].includes(color);
 
   noTextPadding = isLinkType || noTextPadding;
 
@@ -106,7 +106,7 @@ export const Button = ({
       className={cx(
         styles.common.root,
         styles.sizes[size].root,
-        styles.colors[color].root,
+        styles.variants[color].root,
         isLinkType && styles.sizes[size].linkRoot,
         (loading || (href && (disabled || loading))) && "pointer-events-none",
         // If in `loading` state, hide everything except the loading icon (and text if `showTextWhileLoading` is true).

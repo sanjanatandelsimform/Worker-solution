@@ -86,14 +86,14 @@ export function useWorkforceCompensationConfig(selectedWorkforceDept: string) {
         count: compensationSection
           ? `$${compensationSection.benefitsCost.employeeContribution.toLocaleString()}`
           : "--",
-        tooltipText: "Home Ownership Rate",
+        tooltipText: "The average amount your employees contribute per paycheck across benefits",
         getCountClass: () => COUNT_CLASS,
       },
       {
         id: "employer-cost",
         title: "Employer Cost Per Employee (Avg)",
         count: compensationSection?.benefitsCost.employerCost ?? "--",
-        tooltipText: "Median Home Value",
+        tooltipText: "The average amount each employee costs the company across benefits",
         getCountClass: () => COUNT_CLASS,
       },
     ],

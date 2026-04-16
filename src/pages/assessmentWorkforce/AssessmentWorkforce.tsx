@@ -161,7 +161,7 @@ export default function AssessmentWorkforcePage() {
       <div className="flex h-14 items-center justify-end border-b border-ws-navy-800 px-6 py-4">
         {/* Close Button */}
         <Button
-          color="tertiary"
+          color="link"
           size="md"
           iconLeading={<XClose data-icon className="font-bold text-ws-navy-800" />}
           onClick={handleClose}
@@ -241,7 +241,7 @@ export default function AssessmentWorkforcePage() {
           )}
           <div className="flex gap-8 my-6 justify-end">
             <Button
-              color="tertiary"
+              color="link"
               size="md"
               iconLeading={<ChevronLeft data-icon />}
               onClick={handleBack}
