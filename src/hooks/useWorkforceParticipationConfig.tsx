@@ -34,60 +34,32 @@ export function useWorkforceParticipationConfig() {
   );
 
   const benefitsItems = useMemo(
-    () => [
-      {
-        label: "FSA",
-        percentage: parsePercentage(participationSection?.benefits.FSA ?? "0"),
+    () =>
+      (participationSection?.benefits ?? []).map(item => ({
+        label: item.name,
+        percentage: parsePercentage(item.enrollment),
         progressColor: "bg-ws-navy-300",
-      },
-      {
-        label: "Wellness",
-        percentage: parsePercentage(participationSection?.benefits.wellness ?? "0"),
-        progressColor: "bg-ws-navy-300",
-      },
-      {
-        label: "EAP",
-        percentage: parsePercentage(participationSection?.benefits.EAP ?? "0"),
-        progressColor: "bg-ws-navy-300",
-      },
-    ],
+      })),
     [participationSection]
   );
 
   const retirementItems = useMemo(
-    () => [
-      {
-        label: "401k",
-        percentage: parsePercentage(participationSection?.retirement["401k"] ?? "0"),
+    () =>
+      (participationSection?.retirement ?? []).map(item => ({
+        label: item.name,
+        percentage: parsePercentage(item.enrollment),
         progressColor: "bg-ws-light-teal-400",
-      },
-    ],
+      })),
     [participationSection]
   );
 
   const insuranceItems = useMemo(
-    () => [
-      {
-        label: "Health",
-        percentage: parsePercentage(participationSection?.insurance.health ?? "0"),
+    () =>
+      (participationSection?.insurance ?? []).map(item => ({
+        label: item.name,
+        percentage: parsePercentage(item.enrollment),
         progressColor: "bg-ws-light-teal-300",
-      },
-      {
-        label: "Dental",
-        percentage: parsePercentage(participationSection?.insurance.dental ?? "0"),
-        progressColor: "bg-ws-light-teal-300",
-      },
-      {
-        label: "Vision",
-        percentage: parsePercentage(participationSection?.insurance.vision ?? "0"),
-        progressColor: "bg-ws-light-teal-300",
-      },
-      {
-        label: "Life",
-        percentage: parsePercentage(participationSection?.insurance.life ?? "0"),
-        progressColor: "bg-ws-light-teal-300",
-      },
-    ],
+      })),
     [participationSection]
   );
 

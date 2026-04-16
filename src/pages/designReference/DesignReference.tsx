@@ -102,7 +102,7 @@ function DesignReference() {
                     className="relative"
                   />
                   <Button
-                    color="tertiary"
+                    color="link"
                     size="sm"
                     onClick={() => setShowPassword(!showPassword)}
                     aria-label={showPassword ? "Hide password" : "Show password"}
@@ -128,7 +128,7 @@ function DesignReference() {
                     className="relative"
                   />
                   <Button
-                    color="tertiary"
+                    color="link"
                     size="sm"
                     onClick={() => setShowPassword(!showPassword)}
                     aria-label={showPassword ? "Hide password" : "Show password"}
