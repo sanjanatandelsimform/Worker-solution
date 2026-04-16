@@ -44,20 +44,18 @@ const STATIC_WORKFORCE_DATA: WorkforceResponse = {
     enrolledBenefits: 2450,
     retirementEnrollment: "64%",
     healthcareEnrollment: "78%",
-    benefits: {
-      FSA: "31%",
-      wellness: "10%",
-      EAP: "90%",
-    },
-    retirement: {
-      "401k": "64%",
-    },
-    insurance: {
-      health: "78%",
-      dental: "65%",
-      vision: "60%",
-      life: "45%",
-    },
+    benefits: [
+      { name: "FSA", enrollment: "31%" },
+      { name: "Wellness", enrollment: "10%" },
+      { name: "EAP", enrollment: "90%" },
+    ],
+    retirement: [{ name: "401k", enrollment: "64%" }],
+    insurance: [
+      { name: "Health", enrollment: "78%" },
+      { name: "Dental", enrollment: "65%" },
+      { name: "Vision", enrollment: "60%" },
+      { name: "Life", enrollment: "45%" },
+    ],
   },
   demographics: {
     employementType: [

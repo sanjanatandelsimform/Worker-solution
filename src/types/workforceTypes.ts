@@ -4,6 +4,7 @@
  * TypeScript interfaces for the GET /api/v1/dashboard/workforce API response.
  * Based on: specs/009-workforce-tab-api/data-model.md
  * Contract: specs/009-workforce-tab-api/contracts/workforce-get.md
+ * Updated: specs/012-participation-dynamic-items/contracts/workforce-participation-update.md
  */
 
 /**
@@ -26,6 +27,14 @@ export interface WorkforceOverview {
   employerCostPerEmployee: number;
 }
 
+/** A single dynamic participation line item returned by the backend */
+export interface EnrollmentItem {
+  /** Display label, e.g. "FSA", "401k", "Health" — controlled fully by backend */
+  name: string;
+  /** Enrollment percentage string, e.g. "64%" or "N/A" */
+  enrollment: string;
+}
+
 /**
  * Benefits participation rates and breakdowns
  */
@@ -36,29 +45,9 @@ export interface Participation {
   retirementEnrollment: string;
   /** e.g. "78%" */
   healthcareEnrollment: string;
-  benefits: BenefitsEnrollment;
-  retirement: RetirementEnrollment;
-  insurance: InsuranceEnrollment;
-}
-
-/** FSA / Wellness / EAP enrollment — string percentage or "N/A" */
-export interface BenefitsEnrollment {
-  FSA: string;
-  wellness: string;
-  EAP: string;
-}
-
-/** Retirement plan enrollment rates */
-export interface RetirementEnrollment {
-  "401k": string;
-}
-
-/** Insurance enrollment rates */
-export interface InsuranceEnrollment {
-  health: string;
-  dental: string;
-  vision: string;
-  life: string;
+  benefits: EnrollmentItem[];
+  retirement: EnrollmentItem[];
+  insurance: EnrollmentItem[];
 }
 
 /**
