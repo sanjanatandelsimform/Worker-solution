@@ -6,7 +6,6 @@ import { GlobeIcon } from "@/assets/icons/Globe";
 import { ClockIcon } from "@/assets/icons/ClockIcon";
 import { BriefcaseIcon } from "@/assets/icons/BriefcaseIcon";
 import { DollarIcon } from "@/assets/icons/DollarIcon";
-import { UserIcon } from "@/assets/icons/UserIcon";
 import { EnrolledIcon } from "@/assets/icons/EnrolledIcon";
 import { SavingIcon } from "@/assets/icons/SavingIcon";
 import { HeartLineIcon } from "@/assets/icons/HeartLineIcon";
