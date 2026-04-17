@@ -646,21 +646,20 @@ export const DashboardPage = () => {
                     className="bg-ws-light-teal-50 pt-9 pl-6 pr-6 rounded-t-lg text-ws-light-teal-900 overflow-auto"
                     type="underline"
                     items={[
+                      { id: "finchRecommendations", label: "Recommendations" },
                       ...(isConnected
                         ? [
-                            { id: "finchRecommendations", label: "Recommendations" },
                             { id: "finchIndustry", label: "Industry" },
                             { id: "finchWorkforce", label: "Workforce" },
                           ]
-                        : [
-                            { id: "industry", label: "Industry" },
-                            { id: "recommendations", label: "Recommendations" },
-                          ]),
+                        : [{ id: "industry", label: "Industry" }]),
                     ]}
                   />
-                  <Tabs.Panel id="recommendations" className="pt-0">
+
+                  {/* TODO : Once the SSE API Is ready We'll utilize this component */}
+                  {/* <Tabs.Panel id="recommendations" className="pt-0">
                     <RecommendationsPage />
-                  </Tabs.Panel>
+                  </Tabs.Panel> */}
                   {!isConnected && (
                     <Tabs.Panel id="industry" className="pt-0">
                       <BenchmarkPage />

@@ -10,6 +10,7 @@ import { EnrolledIcon } from "@/assets/icons/EnrolledIcon";
 import { SavingIcon } from "@/assets/icons/SavingIcon";
 import { HeartLineIcon } from "@/assets/icons/HeartLineIcon";
 import { formatNumber, formatCurrency, formatCurrencyWithCents } from "@/utils/formatters";
+import { useFinchStatus } from "@/hooks/useFinchStatus";
 
 interface CardConfig {
   id: string;
@@ -72,7 +73,7 @@ const overviewCardsConfig: CardConfig[] = [
         ? formatCurrency(Number(typedData.industryAverageWage))
         : "N/A";
     },
-    infoIcon: true,
+    // infoIcon: true,
     tooltipText: "How is this calculated",
     descriptionText: "This is calculated based on LMI.",
     placements: "top",
@@ -148,6 +149,8 @@ export default function CompanyAtAGlance({
   companyGlanceData,
   benefitsGlanceData,
 }: CompanyAtAGlanceProps) {
+  const { isConnected } = useFinchStatus();
+
   return (
     <div className="space-y-6 mb-6">
       <h2 className="text-2xl lg:text-4xl font-medium text-ws-text-primary leading-10">
@@ -186,46 +189,52 @@ export default function CompanyAtAGlance({
           </>
         )}
       </div>
-      <h4 className="text-2xl font-medium text-ws-text-primary">Benefits Overview</h4>
-      <div className="grid grid-cols-2 xl:grid-cols-3 gap-8 w-full">
-        {isLoading ? (
-          <>
-            <OverviewCardSkeleton />
-            <OverviewCardSkeleton />
-            <OverviewCardSkeleton />
-            <OverviewCardSkeleton />
-          </>
-        ) : (
-          <>
-            {overviewCardsConfigR2.map(card => {
-              const Icon = card.icon;
-              return (
-                <StaticCard
-                  key={card.id}
-                  classess="border-ws-border-secondary"
-                  title={card.title}
-                  titleClass="text-ws-text-tertiary text-sm"
-                  countIcon={<Icon className="size-5 text-ws-gray-500" />}
-                  count={benefitsGlanceData[card.id] ?? card.count}
-                  countClass="text-ws-light-teal-900 text-3xl xl:text-4xl font-medium mt-6"
-                  infoIcon={card.infoIcon}
-                  infoCircleClass={card.infoIcon ? "text-ws-text-secondary0 size-4" : undefined}
-                  tooltipText={card.tooltipText}
-                  descriptionText={card.descriptionText}
-                  placements={card.placements}
-                />
-              );
-            })}
-          </>
-        )}
-      </div>
-      <p className="text-base text-ws-text-primary inline-block">
-        Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut
-        labore et dolore.{" "}
-        <Link to="#" className="text-base underline text-ws-light-teal-850 font-bold">
-          Learn more about your workforce
-        </Link>
-      </p>
+
+      {isConnected && (
+        <>
+          <h4 className="text-2xl font-medium text-ws-text-primary">Benefits Overview</h4>
+          <div className="grid grid-cols-2 xl:grid-cols-3 gap-8 w-full">
+            {isLoading ? (
+              <>
+                <OverviewCardSkeleton />
+                <OverviewCardSkeleton />
+                <OverviewCardSkeleton />
+                <OverviewCardSkeleton />
+              </>
+            ) : (
+              <>
+                {overviewCardsConfigR2.map(card => {
+                  const Icon = card.icon;
+                  return (
+                    <StaticCard
+                      key={card.id}
+                      classess="border-ws-border-secondary"
+                      title={card.title}
+                      titleClass="text-ws-text-tertiary text-sm"
+                      countIcon={<Icon className="size-5 text-ws-gray-500" />}
+                      count={benefitsGlanceData[card.id] ?? card.count}
+                      countClass="text-ws-light-teal-900 text-3xl xl:text-4xl font-medium mt-6"
+                      infoIcon={card.infoIcon}
+                      infoCircleClass={card.infoIcon ? "text-ws-text-secondary0 size-4" : undefined}
+                      tooltipText={card.tooltipText}
+                      descriptionText={card.descriptionText}
+                      placements={card.placements}
+                    />
+                  );
+                })}
+              </>
+            )}
+          </div>
+
+          <p className="text-base text-ws-text-primary inline-block">
+            Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor
+            incididunt ut labore et dolore.{" "}
+            <Link to="#" className="text-base underline text-ws-light-teal-850 font-bold">
+              Learn more about your workforce
+            </Link>
+          </p>
+        </>
+      )}
     </div>
   );
 }
