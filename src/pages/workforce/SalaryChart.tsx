@@ -123,11 +123,11 @@ const SalaryRangeChart: React.FC<SalaryRangeChartProps> = ({ data }) => {
           ctx.textAlign = "center";
           ctx.font = "14px Inter Regular, sans-serif";
 
-          // top label
-          ctx.fillText(`$${item.boxEnd}`, x, maxY - 15);
+          // top label (box end)
+          ctx.fillText(`$${item.boxEnd}`, x, maxY - 8);
 
-          // bottom label
-          ctx.fillText(`$${item.min}`, x, minY + 30);
+          // bottom label (box start)
+          ctx.fillText(`$${item.boxStart}`, x, minY + 18);
 
           // range label
           ctx.font = "14px Inter Regular, sans-serif";
