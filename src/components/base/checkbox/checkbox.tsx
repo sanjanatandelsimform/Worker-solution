@@ -139,11 +139,7 @@ export const Checkbox = ({
                 <p className={cx("text-secondary select-none question-text hover:cursor-pointer", sizes[size].label)}>
                   {label}
                   {tooltipText && (
-                    <Tooltip
-                      title={tooltipText}
-                      placement="top"
-                      arrow={true}
-                    >
+                    <Tooltip title={tooltipText} placement="top" arrow={true}>
                       <TooltipTrigger
                         isDisabled={false}
                         className="cursor-pointer text-ws-gray-400 transition duration-200 hover:text-ws-gray-600 ml-1 inline-flex align-middle"

@@ -74,9 +74,7 @@ export const DynamicQuestionRenderer = ({
       sanitized = endsWithPercent ? `${withoutPercent}%` : withoutPercent;
 
       const currentObj =
-        currentAnswer &&
-        typeof currentAnswer === "object" &&
-        !Array.isArray(currentAnswer)
+        currentAnswer && typeof currentAnswer === "object" && !Array.isArray(currentAnswer)
           ? (currentAnswer as Record<string, unknown>)
           : {};
 
@@ -952,11 +950,7 @@ export const DynamicQuestionRenderer = ({
           <Label isRequired={question.isRequired} className="text-base custom-label">
             {displayOrder}. {question.questionText}
             {QUESTION_TOOLTIPS[question.key] && (
-              <Tooltip
-                title={QUESTION_TOOLTIPS[question.key]}
-                placement="top"
-                arrow={true}
-              >
+              <Tooltip title={QUESTION_TOOLTIPS[question.key]} placement="top" arrow={true}>
                 <TooltipTrigger
                   isDisabled={false}
                   className="cursor-pointer text-ws-gray-400 transition duration-200 hover:text-ws-gray-600 ml-1 inline-flex align-middle"
@@ -1131,14 +1125,11 @@ export const DynamicQuestionRenderer = ({
           <div className="flex flex-col gap-2 custom-question-options mt-2">
             {question.subFields?.map(subField => {
               const subFieldValue =
-                currentAnswer &&
-                typeof currentAnswer === "object" &&
-                !Array.isArray(currentAnswer)
+                currentAnswer && typeof currentAnswer === "object" && !Array.isArray(currentAnswer)
                   ? (currentAnswer as Record<string, unknown>)[subField.key]
                   : undefined;
 
-              const subFieldError =
-                errors?.[`${question.key}.${subField.key}`] ?? "";
+              const subFieldError = errors?.[`${question.key}.${subField.key}`] ?? "";
 
               return (
                 <div key={subField.key} className="flex items-start justify-between gap-6 flex-col md:flex-row">
@@ -1152,9 +1143,7 @@ export const DynamicQuestionRenderer = ({
                       placeholder="Percentage"
                       size="md"
                       value={
-                        subFieldValue != null && subFieldValue !== ""
-                          ? String(subFieldValue)
-                          : ""
+                        subFieldValue != null && subFieldValue !== "" ? String(subFieldValue) : ""
                       }
                       onChange={(value: string) => handlePercentageChange(value, subField.key)}
                       isInvalid={!!subFieldError}
