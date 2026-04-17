@@ -202,6 +202,16 @@ const retirementQuestions = [
     ],
   },
   {
+    id: "retirement-employer-match",
+    question: "Does your retirement plan feature an employer match?",
+    required: true,
+    hasConditional: true,
+    options: [
+      { id: "yes-match", label: "Yes" },
+      { id: "no-match", label: "No" },
+    ],
+  },
+  {
     id: "retirement-auto-enroll",
     question: "Does your company auto-enroll employees in retirement benefits?",
     required: true,
@@ -234,6 +244,7 @@ export default function AdditionalQuestions() {
   const [annualRaiseMonth, setAnnualRaiseMonth] = useState<string>("");
   const [payrollProvider, setPayrollProvider] = useState<string>("");
   const [benefitsEnrollmentMonth, setBenefitsEnrollmentMonth] = useState<string>("");
+  const [retirementMatchPercentage, setRetirementMatchPercentage] = useState<string>("");
   // T015: Hook + validation state
   const { isSubmitting, error, success, submit, clearError } = useSubmitFinchAssessment();
   const [fieldErrors, setFieldErrors] = useState<Record<string, string>>({});
@@ -289,6 +300,17 @@ export default function AdditionalQuestions() {
     if (!answers["retirement-vesting-period"]) {
       newErrors["retirement-vesting-period"] = "Select an option";
     }
+    if (!answers["retirement-employer-match"]) {
+      newErrors["retirement-employer-match"] = "Select an option";
+    }
+    if (answers["retirement-employer-match"] === "yes-match" && !retirementMatchPercentage) {
+      newErrors["retirementMatchPercentage"] = "Please enter a percentage.";
+    } else if (
+      answers["retirement-employer-match"] === "yes-match" &&
+      Number(retirementMatchPercentage) > 100
+    ) {
+      newErrors["retirementMatchPercentage"] = "Percentage must be 100 or less.";
+    }
     if (!answers["retirement-auto-enroll"]) {
       newErrors["retirement-auto-enroll"] = "Select an option";
     }
@@ -307,7 +329,9 @@ export default function AdditionalQuestions() {
       goalsAnswers,
       annualRaiseMonth,
       payrollProvider,
-      benefitsEnrollmentMonth
+      benefitsEnrollmentMonth,
+      answers["retirement-employer-match"] === "yes-match",
+      retirementMatchPercentage
     );
     await submit(payload);
   };
@@ -324,6 +348,9 @@ export default function AdditionalQuestions() {
       ...prev,
       [questionId]: value,
     }));
+    if (questionId === "retirement-employer-match" && value === "no-match") {
+      setRetirementMatchPercentage("");
+    }
     if (fieldErrors[questionId]) {
       setFieldErrors(prev => ({ ...prev, [questionId]: "" }));
     }
@@ -724,25 +751,54 @@ export default function AdditionalQuestions() {
                       </div>
                     )}
 
-                    {
-                      <RadioGroup
-                        value={(answers[question.id] as string) || ""}
-                        onChange={value => handleAnswerChange(question.id, value)}
-                        className="flex flex-col gap-3"
-                      >
-                        {question.options.map(option => (
-                          <label key={option.id} className="flex items-center gap-3 cursor-pointer">
-                            <RadioButton
-                              value={option.id}
-                              className="border border-ws-border-primary rounded-full"
-                            />
-                            <span className="text-sm font-normal text-ws-text-secondary">
-                              {option.label}
+                    <RadioGroup
+                      value={(answers[question.id] as string) || ""}
+                      onChange={value => handleAnswerChange(question.id, value)}
+                      className="flex flex-col gap-3"
+                    >
+                      {question.options.map(option => (
+                        <label key={option.id} className="flex items-center gap-3 cursor-pointer">
+                          <RadioButton
+                            value={option.id}
+                            className="border border-ws-border-primary rounded-full"
+                          />
+                          <span className="text-sm font-normal text-ws-text-secondary">
+                            {option.label}
+                          </span>
+                        </label>
+                      ))}
+                    </RadioGroup>
+
+                    {question.hasConditional && answers[question.id] === "yes-match" && (
+                      <div className="ml-6 space-y-2 pt-2">
+                        <Label className="text-sm font-normal text-ws-text-secondary">
+                          If yes, What is the percentage?
+                        </Label>
+                        <input
+                          type="number"
+                          min="0"
+                          max="100"
+                          value={retirementMatchPercentage}
+                          onWheel={e => e.currentTarget.blur()}
+                          onChange={e => {
+                            setRetirementMatchPercentage(e.target.value);
+                            if (fieldErrors["retirementMatchPercentage"]) {
+                              setFieldErrors(prev => ({ ...prev, retirementMatchPercentage: "" }));
+                            }
+                          }}
+                          className="w-full max-w-xs rounded-lg border border-ws-border-primary px-3 py-2 text-sm text-ws-text-primary bg-ws-base-white focus:outline-none focus:ring-2 focus:ring-ws-primary appearance-none [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none"
+                          placeholder="e.g. 3"
+                        />
+                        {fieldErrors["retirementMatchPercentage"] && (
+                          <div className="flex items-center gap-2">
+                            <InputInfo className="text-ws-error-600" />
+                            <span className="text-sm text-ws-error-600">
+                              {fieldErrors["retirementMatchPercentage"]}
                             </span>
-                          </label>
-                        ))}
-                      </RadioGroup>
-                    }
+                          </div>
+                        )}
+                      </div>
+                    )}
                   </div>
                 ))}
               </div>

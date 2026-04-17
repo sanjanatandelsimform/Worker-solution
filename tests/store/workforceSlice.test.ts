@@ -13,7 +13,7 @@ import workforceReducer, {
   clearWorkforceError,
   resetWorkforce,
 } from "@/store/slices/workforceSlice";
-import type { WorkforceState } from "@/types/workforceTypes";
+import type { WorkforceState, WorkforceApiResponse } from "@/types/workforceTypes";
 
 // Mock the API service
 vi.mock("@/services/api/workforceApi");
@@ -42,44 +42,48 @@ describe("workforceSlice", () => {
     });
 
     it("should set data, isLoaded, and clear loading on fulfilled", () => {
-      const mockData = {
+      const mockData: WorkforceApiResponse = {
+        assessmentType: "finch",
         workforce: {
-          totalWorkforce: 3120,
-          enrolledBenefits: 2450,
-          avgEmployeeCost: 2254,
-          employerCostPerEmployee: 44000,
-        },
-        participation: {
-          totalWorkforce: 3120,
-          enrolledBenefits: 2450,
-          retirementEnrollment: "64%",
-          healthcareEnrollment: "78%",
-          benefits: [
-            { name: "FSA", enrollment: "31%" },
-            { name: "Wellness", enrollment: "N/A" },
-            { name: "EAP", enrollment: "N/A" },
-          ],
-          retirement: [{ name: "401k", enrollment: "64%" }],
-          insurance: [
-            { name: "Health", enrollment: "78%" },
-            { name: "Dental", enrollment: "65%" },
-            { name: "Vision", enrollment: "60%" },
-            { name: "Life", enrollment: "45%" },
-          ],
-        },
-        demographics: {
-          employmentType: [],
-          gender: { men: "55%", women: "40%" },
-          employmentBreakdownByAge: [],
-        },
-        compensation: {
-          salaryBreakdown: { medianSalary: 60000, avgSalary: 65000, avgHourlyRate: 30 },
-          workforceBreakdown: { departments: [] },
-          benefitsCost: {
-            employeeContribution: 468,
-            employerCost: "$11000/yr",
-            graph: [],
-            table: [],
+          dataStatus: "available",
+          workforce: {
+            totalWorkforce: 3120,
+            enrolledBenefits: 2450,
+            avgEmployeeCost: 2254,
+            employerCostPerEmployee: 44000,
+          },
+          participation: {
+            totalWorkforce: 3120,
+            enrolledBenefits: 2450,
+            retirementEnrollment: "64%",
+            healthcareEnrollment: "78%",
+            benefits: [
+              { name: "FSA", enrollment: "31%" },
+              { name: "Wellness", enrollment: "N/A" },
+              { name: "EAP", enrollment: "N/A" },
+            ],
+            retirement: [{ name: "401k", enrollment: "64%" }],
+            insurance: [
+              { name: "Health", enrollment: "78%" },
+              { name: "Dental", enrollment: "65%" },
+              { name: "Vision", enrollment: "60%" },
+              { name: "Life", enrollment: "45%" },
+            ],
+          },
+          demographics: {
+            employmentType: [],
+            gender: { men: "55%", women: "40%" },
+            employmentBreakdownByAge: [],
+          },
+          compensation: {
+            salaryBreakdown: { medianSalary: 60000, avgSalary: 65000, avgHourlyRate: 30 },
+            workforceBreakdown: { departments: [] },
+            benefitsCost: {
+              employeeContribution: 468,
+              employerCost: "$11000/yr",
+              graph: [],
+              table: [],
+            },
           },
         },
       };
@@ -106,39 +110,43 @@ describe("workforceSlice", () => {
       const loadedState: WorkforceState = {
         ...initialState,
         data: {
+          assessmentType: "finch",
           workforce: {
-            totalWorkforce: 1,
-            enrolledBenefits: 1,
-            avgEmployeeCost: 1,
-            employerCostPerEmployee: 1,
-          },
-          participation: {
-            totalWorkforce: 1,
-            enrolledBenefits: 1,
-            retirementEnrollment: "0%",
-            healthcareEnrollment: "0%",
-            benefits: [
-              { name: "FSA", enrollment: "0%" },
-              { name: "Wellness", enrollment: "N/A" },
-              { name: "EAP", enrollment: "N/A" },
-            ],
-            retirement: [{ name: "401k", enrollment: "0%" }],
-            insurance: [
-              { name: "Health", enrollment: "0%" },
-              { name: "Dental", enrollment: "0%" },
-              { name: "Vision", enrollment: "0%" },
-              { name: "Life", enrollment: "0%" },
-            ],
-          },
-          demographics: {
-            employmentType: [],
-            gender: { men: "0%", women: "0%" },
-            employmentBreakdownByAge: [],
-          },
-          compensation: {
-            salaryBreakdown: { medianSalary: 0, avgSalary: 0, avgHourlyRate: 0 },
-            workforceBreakdown: { departments: [] },
-            benefitsCost: { employeeContribution: 0, employerCost: "$0", graph: [], table: [] },
+            dataStatus: "available",
+            workforce: {
+              totalWorkforce: 1,
+              enrolledBenefits: 1,
+              avgEmployeeCost: 1,
+              employerCostPerEmployee: 1,
+            },
+            participation: {
+              totalWorkforce: 1,
+              enrolledBenefits: 1,
+              retirementEnrollment: "0%",
+              healthcareEnrollment: "0%",
+              benefits: [
+                { name: "FSA", enrollment: "0%" },
+                { name: "Wellness", enrollment: "N/A" },
+                { name: "EAP", enrollment: "N/A" },
+              ],
+              retirement: [{ name: "401k", enrollment: "0%" }],
+              insurance: [
+                { name: "Health", enrollment: "0%" },
+                { name: "Dental", enrollment: "0%" },
+                { name: "Vision", enrollment: "0%" },
+                { name: "Life", enrollment: "0%" },
+              ],
+            },
+            demographics: {
+              employmentType: [],
+              gender: { men: "0%", women: "0%" },
+              employmentBreakdownByAge: [],
+            },
+            compensation: {
+              salaryBreakdown: { medianSalary: 0, avgSalary: 0, avgHourlyRate: 0 },
+              workforceBreakdown: { departments: [] },
+              benefitsCost: { employeeContribution: 0, employerCost: "$0", graph: [], table: [] },
+            },
           },
         },
         isLoaded: true,

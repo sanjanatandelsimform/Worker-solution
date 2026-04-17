@@ -1,20 +1,30 @@
 /**
  * Workforce API Types
  *
- * TypeScript interfaces for the GET /api/v1/dashboard/workforce API response.
+ * TypeScript interfaces for the GET /dashboard/workforce API response.
  * Based on: specs/009-workforce-tab-api/data-model.md
- * Contract: specs/009-workforce-tab-api/contracts/workforce-get.md
- * Updated: specs/012-participation-dynamic-items/contracts/workforce-participation-update.md
+ * Contract: specs/014-fix-workforce-rec-api/contracts/workforce-get.md
+ * Updated: specs/014-fix-workforce-rec-api/data-model.md
  */
 
 /**
- * Complete response from GET /api/v1/dashboard/workforce endpoint
+ * The envelope body nested under the `workforce` key in the API response.
+ * Contains dataStatus plus all workforce data sections.
  */
-export interface WorkforceResponse {
+export interface WorkforceEnvelope {
+  dataStatus: string;
   workforce: WorkforceOverview;
   participation: Participation;
   demographics: Demographics;
   compensation: Compensation;
+}
+
+/**
+ * Full response from GET /dashboard/workforce endpoint
+ */
+export interface WorkforceApiResponse {
+  assessmentType: string;
+  workforce: WorkforceEnvelope;
 }
 
 /**
@@ -151,7 +161,7 @@ export interface BenefitsCostTableRow {
  * Redux slice state shape for workforce data
  */
 export interface WorkforceState {
-  data: WorkforceResponse | null;
+  data: WorkforceApiResponse | null;
   loading: boolean;
   error: string | null;
   lastFetched: number | null;

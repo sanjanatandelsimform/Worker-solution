@@ -1,24 +1,24 @@
 /**
  * Workforce API Service
  *
- * API service for retrieving workforce data from GET /api/v1/dashboard/workforce endpoint.
+ * API service for retrieving workforce data from GET /dashboard/workforce endpoint.
  * Follows the same pattern as dashboardApi.ts.
  *
  * Based on: specs/009-workforce-tab-api/research.md
- * Contract: specs/009-workforce-tab-api/contracts/workforce-get.md
+ * Contract: specs/014-fix-workforce-rec-api/contracts/workforce-get.md
  */
 
-import type { WorkforceResponse } from "@/types/workforceTypes";
+import type { WorkforceApiResponse } from "@/types/workforceTypes";
 import apiClient from "@/services/api/authApi";
 import { getAuthToken, getErrorMessage } from "@/services/api/apiUtils";
 
 /**
- * Fetch workforce data from GET /api/v1/dashboard/workforce endpoint
+ * Fetch workforce data from GET /dashboard/workforce endpoint
  *
- * @returns Promise resolving to WorkforceResponse
+ * @returns Promise resolving to WorkforceApiResponse
  * @throws Error with user-friendly message on failure
  */
-export const getWorkforce = async (): Promise<WorkforceResponse> => {
+export const getWorkforce = async (): Promise<WorkforceApiResponse> => {
   try {
     const token = getAuthToken();
 
@@ -26,7 +26,7 @@ export const getWorkforce = async (): Promise<WorkforceResponse> => {
       throw new Error("Authentication required. Please log in again.");
     }
 
-    const response = await apiClient.get<WorkforceResponse>("/api/v1/dashboard/workforce", {
+    const response = await apiClient.get<WorkforceApiResponse>("/dashboard/workforce", {
       headers: {
         Authorization: `Bearer ${token}`,
       },

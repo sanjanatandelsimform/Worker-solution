@@ -161,11 +161,10 @@ export const DashboardPage = () => {
   };
 
   useEffect(() => {
-    if (isConnected) {
-      dispatch(fetchWorkforce());
+    if (isConnected) dispatch(fetchWorkforce());
+    if (isConnected || assessmentData?.data?.status === "completed")
       dispatch(fetchRecommendations());
-    }
-  }, [isConnected, dispatch]);
+  }, [isConnected, dispatch, assessmentData?.data?.status]);
 
   useEffect(() => {
     if (

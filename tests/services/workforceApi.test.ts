@@ -33,42 +33,46 @@ vi.mock("@/services/api/authApi", () => {
 
 import apiClient from "@/services/api/authApi";
 import { getWorkforce } from "@/services/api/workforceApi";
-import type { WorkforceResponse } from "@/types/workforceTypes";
+import type { WorkforceApiResponse } from "@/types/workforceTypes";
 
-const mockWorkforceResponse: WorkforceResponse = {
+const mockWorkforceResponse: WorkforceApiResponse = {
+  assessmentType: "finch",
   workforce: {
-    totalWorkforce: 3120,
-    enrolledBenefits: 2450,
-    avgEmployeeCost: 2254,
-    employerCostPerEmployee: 44000,
-  },
-  participation: {
-    totalWorkforce: 3120,
-    enrolledBenefits: 2450,
-    retirementEnrollment: "64%",
-    healthcareEnrollment: "78%",
-    benefits: [
-      { name: "FSA", enrollment: "31%" },
-      { name: "Wellness", enrollment: "N/A" },
-      { name: "EAP", enrollment: "N/A" },
-    ],
-    retirement: [{ name: "401k", enrollment: "64%" }],
-    insurance: [
-      { name: "Health", enrollment: "78%" },
-      { name: "Dental", enrollment: "65%" },
-      { name: "Vision", enrollment: "60%" },
-      { name: "Life", enrollment: "45%" },
-    ],
-  },
-  demographics: {
-    employmentType: [],
-    gender: { men: "55%", women: "40%" },
-    employmentBreakdownByAge: [],
-  },
-  compensation: {
-    salaryBreakdown: { medianSalary: 60000, avgSalary: 65000, avgHourlyRate: 30 },
-    workforceBreakdown: { departments: [] },
-    benefitsCost: { employeeContribution: 468, employerCost: "$11000/yr", graph: [], table: [] },
+    dataStatus: "available",
+    workforce: {
+      totalWorkforce: 3120,
+      enrolledBenefits: 2450,
+      avgEmployeeCost: 2254,
+      employerCostPerEmployee: 44000,
+    },
+    participation: {
+      totalWorkforce: 3120,
+      enrolledBenefits: 2450,
+      retirementEnrollment: "64%",
+      healthcareEnrollment: "78%",
+      benefits: [
+        { name: "FSA", enrollment: "31%" },
+        { name: "Wellness", enrollment: "N/A" },
+        { name: "EAP", enrollment: "N/A" },
+      ],
+      retirement: [{ name: "401k", enrollment: "64%" }],
+      insurance: [
+        { name: "Health", enrollment: "78%" },
+        { name: "Dental", enrollment: "65%" },
+        { name: "Vision", enrollment: "60%" },
+        { name: "Life", enrollment: "45%" },
+      ],
+    },
+    demographics: {
+      employmentType: [],
+      gender: { men: "55%", women: "40%" },
+      employmentBreakdownByAge: [],
+    },
+    compensation: {
+      salaryBreakdown: { medianSalary: 60000, avgSalary: 65000, avgHourlyRate: 30 },
+      workforceBreakdown: { departments: [] },
+      benefitsCost: { employeeContribution: 468, employerCost: "$11000/yr", graph: [], table: [] },
+    },
   },
 };
 
@@ -85,11 +89,11 @@ afterEach(() => {
 });
 
 describe("workforceApi", () => {
-  it("calls GET /api/v1/dashboard/workforce with Bearer token", async () => {
+  it("calls GET /dashboard/workforce with Bearer token", async () => {
     vi.mocked(apiClient.get).mockResolvedValue({ data: mockWorkforceResponse });
     await getWorkforce();
     expect(apiClient.get).toHaveBeenCalledWith(
-      "/api/v1/dashboard/workforce",
+      "/dashboard/workforce",
       expect.objectContaining({
         headers: { Authorization: "Bearer test-token-123" },
       })
