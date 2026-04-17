@@ -107,53 +107,63 @@ Do this first when editing code:
 - Open `src/routes/index.tsx` to follow the lazy-load + Suspense pattern (helper: `lazyLoad(Component)`).
 - Use barrel exports (feature `index.ts`) and the `@/` alias for imports (never relative `../..` for src files).
 
-## Active Feature: 014-fix-workforce-rec-api (2026-04-17)
+## Active Feature: 016-refactor-additional-questions (2026-04-17)
 
 <!-- specify:agent:start -->
 
-**Branch**: `014-fix-workforce-rec-api` | **Spec**: `specs/014-fix-workforce-rec-api/spec.md` | **Plan**: `specs/014-fix-workforce-rec-api/plan.md`
+**Branch**: `016-refactor-additional-questions` | **Spec**: `specs/016-refactor-additional-questions/spec.md` | **Plan**: `specs/016-refactor-additional-questions/plan.md`
 
-### Context: Previous features (009–013) are complete
+### Context: Previous features (009–015) are complete
 
-All files from features 009–013 are already implemented. Feature 010 refactored WorkforcePage into sub-components. The Redux store, selectors, and hooks are all wired up. Both Workforce and Recommendations pages currently use **static data** — this feature switches them to live APIs.
+Features 009–015 fully implemented. Feature 010 already refactored WorkforcePage into sub-components (`src/pages/workforce/`) — that is the **key architectural precedent** for this feature.
+
+Feature 015 added the retirement employer-match Yes/No question with conditional percentage input to `AdditionalQuestions.tsx`. The file is now ~930 lines with repeated patterns and ESLint cognitive-complexity violations.
 
 ### What this feature does
 
-Endpoint + interface fix — switches `workforceSlice` and `recommendationsSlice` from static data to real API calls, updates endpoint paths, and updates TypeScript types to match the new response envelopes. **Zero UI/visual changes.**
+Pure UI refactor — zero user-observable changes. Decomposes `AdditionalQuestions.tsx` into:
 
-### Files to change
+- 4 section components (Workforce, Compensation, BenefitsRetirement, Goals) in `src/pages/additionalQuestions/`
+- 3 shared primitives (FieldError, QuestionRadioGroup, QuestionCheckboxGroup) in `src/components/common/`
+- 1 shared types file in `src/types/additionalQuestionsTypes.ts`
+- Parent orchestrator trimmed from ~930 to ~150 lines
+
+### Files to create
 
 **Types:**
 
-- `src/types/workforceTypes.ts` — rename `WorkforceResponse` → `WorkforceEnvelope`; add `dataStatus: string` field; add `WorkforceApiResponse { assessmentType: string; workforce: WorkforceEnvelope }`; update `WorkforceState.data` to `WorkforceApiResponse | null`
-- `src/types/recommendationsTypes.ts` — add `assessmentType: string` to `RecommendationsApiResponse`; remove `companyAtGlance` from `RecommendationData`; delete `RecommendationCompanyAtGlance` interface
+- `src/types/additionalQuestionsTypes.ts` — `QuestionAnswer`, `GoalsAnswer`, `QuestionOption`, `QuestionTooltip`, `QuestionDefinition`
 
-**API service:**
+**Shared primitives:**
 
-- `src/services/api/workforceApi.ts` — change endpoint `/api/v1/dashboard/workforce` → `/dashboard/workforce`; update return type to `WorkforceApiResponse`
+- `src/components/common/FieldError.tsx` — renders `<InputInfo> + <span>` error; returns null if no message
+- `src/components/common/QuestionRadioGroup.tsx` — label + error + RadioGroup with mapped RadioButtons
+- `src/components/common/QuestionCheckboxGroup.tsx` — label + error + mapped Checkboxes
 
-**Slices (remove static, enable live):**
+**Section components (co-located siblings):**
 
-- `src/store/slices/workforceSlice.ts` — delete `STATIC_WORKFORCE_DATA`; uncomment `import { getWorkforce }` and live API call; update types
-- `src/store/slices/recommendationsSlice.ts` — delete `STATIC_RECOMMENDATIONS_DATA`; uncomment `import { getRecommendations }` and live API call
+- `src/pages/additionalQuestions/WorkforceSection.tsx` — owns `questions` array
+- `src/pages/additionalQuestions/CompensationSection.tsx` — owns `compensationQuestions`, `monthOptions`
+- `src/pages/additionalQuestions/BenefitsRetirementSection.tsx` — owns `benefitsQuestions`, `retirementQuestions`
+- `src/pages/additionalQuestions/GoalsSection.tsx` — imports `goalsData` from `@/data/goalsData`
+- `src/pages/additionalQuestions/index.ts` — barrel: `export { default } from "./AdditionalQuestions"`
 
-**Selectors (access path update):**
+**Optionally:**
 
-- `src/store/selectors/workforceSelectors.ts` — update 4 selectors: `data?.workforce` → `data?.workforce.workforce`, `data?.participation` → `data?.workforce.participation`, etc.
+- `src/data/monthOptions.ts` — month options array (shared by Compensation + Benefits sections)
 
-**Tests (mock shape updates):**
+### Files to modify
 
-- `tests/services/workforceApi.test.ts`, `tests/store/workforceSlice.test.ts`, `tests/store/workforceSelectors.test.ts`
-- `tests/store/recommendationsSlice.test.ts`, `tests/store/recommendationsSelectors.test.ts`
+- `src/pages/additionalQuestions/AdditionalQuestions.tsx` — replace 4 JSX section blocks with section component calls; keep all state, hooks, validation, and handlers; update imports
 
 ### Key patterns
 
-- **New response envelope**: `WorkforceApiResponse = { assessmentType, workforce: WorkforceEnvelope }` — workforce data is one level deeper than before
-- **Selector path change**: All 4 workforce data-section selectors now read `state.workforce.data?.workforce.<section>` instead of `state.workforce.data?.<section>`
-- **Consumer hooks unchanged**: The 4 `useWorkforceXxxConfig` hooks just call the selectors — no changes needed there
-- **`recommendationsApi.ts` is already correct**: The endpoint path in that file was already `/dashboard/recommendation` — only the slice needs the live-call enabled
-- See full implementation guide: `specs/014-fix-workforce-rec-api/quickstart.md`
-- See type contracts: `specs/014-fix-workforce-rec-api/data-model.md`
+- **State ownership**: All state (`answers`, `goalsAnswers`, `annualRaiseMonth`, `payrollProvider`, `benefitsEnrollmentMonth`, `retirementMatchPercentage`, `fieldErrors`) stays in parent
+- **Narrow callbacks**: Sections receive `onClearFieldError(key: string)` not the raw `setFieldErrors` setter
+- **Section props pattern**: See `data-model.md` for each section's full props interface
+- **Tests unchanged**: `tests/pages/AdditionalQuestions.test.tsx` requires zero changes — default export path preserved
+- See full implementation guide: `specs/016-refactor-additional-questions/quickstart.md`
+- See type contracts: `specs/016-refactor-additional-questions/data-model.md`
 <!-- specify:agent:end -->
 
 Essential files to reference in PRs or fixes:
