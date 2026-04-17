@@ -1,11 +1,10 @@
 import { useEffect, useState, useCallback, useRef } from "react";
-import { useNavigate, useLocation } from "react-router-dom";
+import { useNavigate, useLocation, Link } from "react-router-dom";
 import { DashboardSidebar } from "@/components/dashboard/DashboardSidebar";
 import emailIcon from "@/assets/mail-icon.svg";
 import checkIcon from "@/assets/file-check.svg";
 import finchLogo from "@/assets/finch-logo.svg";
 import DashboardCard from "./DashboardCard";
-import { Link } from "react-router-dom";
 import { useAppSelector, useAppDispatch } from "@/store/hooks";
 import { selectUser } from "@/store/selectors/authSelectors";
 import { InProgressModal } from "@/components/modals/InProgressModal";
@@ -173,7 +172,7 @@ export const DashboardPage = () => {
       dispatch(fetchWorkforce());
       dispatch(fetchRecommendations());
     }
-  }, [isConnected]);
+  }, [isConnected, dispatch]);
 
   useEffect(() => {
     if (
@@ -645,7 +644,7 @@ export const DashboardPage = () => {
                   ]}
                 />
 
-                {/* TODO : Once the SSE API Is ready We'll utilize this component */}
+                {/* TO DO : Once the SSE API Is ready We'll utilize this component */}
                 {/* <Tabs.Panel id="recommendations" className="pt-0">
                     <RecommendationsPage />
                   </Tabs.Panel> */}
