@@ -1128,7 +1128,7 @@ export const DynamicQuestionRenderer = ({
           <Label isRequired={question.isRequired} className="text-base custom-label">
             {displayOrder}. {question.questionText}
           </Label>
-          <div className="flex flex-col gap-6 custom-question-options mt-2">
+          <div className="flex flex-col gap-2 custom-question-options mt-2">
             {question.subFields?.map(subField => {
               const subFieldValue =
                 currentAnswer &&
@@ -1141,8 +1141,8 @@ export const DynamicQuestionRenderer = ({
                 errors?.[`${question.key}.${subField.key}`] ?? "";
 
               return (
-                <div key={subField.key} className="flex items-start gap-6">
-                  <span className="text-sm font-normal text-ws-text-secondary min-w-60 pt-2.5">
+                <div key={subField.key} className="flex items-start justify-between gap-6 flex-col md:flex-row">
+                  <span className="text-sm font-medium text-ws-text-primary">
                     {subField.label}
                   </span>
                   <div className="flex flex-col gap-1 w-full max-w-xs">
@@ -1159,10 +1159,11 @@ export const DynamicQuestionRenderer = ({
                       onChange={(value: string) => handlePercentageChange(value, subField.key)}
                       isInvalid={!!subFieldError}
                       tooltip={subFieldError || undefined}
+                      hint="i.e. 30%"
                     />
-                    {!subFieldError && (
+                    {/* {!subFieldError && (
                       <span className="text-xs text-ws-text-tertiary">i.e. 30%</span>
-                    )}
+                    )} */}
                     {subFieldError && (
                       <div className="flex items-center gap-1">
                         {/* <InputInfo className="text-ws-error-600" /> */}
