@@ -3,7 +3,7 @@ import { sortCx } from "@/utils/cx";
 /**
  * Gates LSI Component Library - Button Styles
  * Based on Figma design: https://www.figma.com/design/oz9eI1EjTUu3cwm1NuOirJ/-Component-Library--Gates-LSI
- * 
+ *
  * Button Variants:
  * - Sizes: xs (small), sm, md, lg (large), xl
  * - Types: primary, secondary, tertiary, subtle, link, warning
@@ -96,7 +96,7 @@ export const styles = sortCx({
     subtle: {
       root: [
         "bg-ws-base-white text-ws-navy-800 border border-ws-gray-200",
-       "hover:bg-ws-navy-600 hover:text-ws-base-white hover:border-ws-navy-800",
+        "hover:bg-ws-navy-600 hover:text-ws-base-white hover:border-ws-navy-800",
         "active:bg-ws-base-white active:border-ws-gray-200",
         "disabled:bg-ws-gray-100 disabled:border-ws-gray-200 disabled:text-ws-gray-400",
         "*:data-icon:text-ws-navy-800 hover:*:data-icon:text-ws-navy-800",

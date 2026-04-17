@@ -1,11 +1,10 @@
 import { useEffect, useState, useCallback, useRef } from "react";
-import { useNavigate, useLocation } from "react-router-dom";
+import { useNavigate, useLocation, Link } from "react-router-dom";
 import { DashboardSidebar } from "@/components/dashboard/DashboardSidebar";
 import emailIcon from "@/assets/mail-icon.svg";
 import checkIcon from "@/assets/file-check.svg";
 import finchLogo from "@/assets/finch-logo.svg";
 import DashboardCard from "./DashboardCard";
-import { Link } from "react-router-dom";
 import { useAppSelector, useAppDispatch } from "@/store/hooks";
 import { selectUser } from "@/store/selectors/authSelectors";
 import { InProgressModal } from "@/components/modals/InProgressModal";
@@ -21,7 +20,6 @@ import { useAssessmentStatus } from "@/hooks/useAssessmentStatus";
 import { useFinchConnect } from "@/hooks/useFinchConnect";
 import { useFinchStatus } from "@/hooks/useFinchStatus";
 import { Tabs } from "@/components/base/tabs/tabs";
-import RecommendationsPage from "../recommendations/RecommendationsPage";
 import BenchmarkPage from "../benchmark/BenchmarkPage";
 import { fetchDashboard } from "@/store/slices/dashboardSlice";
 import { fetchWorkforce } from "@/store/slices/workforceSlice";
@@ -34,6 +32,16 @@ import RecommendationsFinchPage from "../recommendations/RecommendationsFinchPag
 import BenchmarkFinchPage from "../benchmark/BenchmarkFinchPage";
 import WorkforcePage from "../workforce/WorkforcePage";
 import { AssessmentIcon } from "@/assets/icons/AssessmentIcon";
+import { fetchRecommendations } from "@/store/slices/recommendationsSlice";
+
+const BASE_TAB_ITEMS = [{ id: "finchRecommendations", label: "Recommendations" }];
+
+const FINCH_CONNECTED_TAB_ITEMS = [
+  { id: "finchIndustry", label: "Industry" },
+  { id: "finchWorkforce", label: "Workforce" },
+];
+
+const BASIC_TAB_ITEMS = [{ id: "industry", label: "Industry" }];
 
 export const DashboardPage = () => {
   const navigate = useNavigate();
@@ -160,6 +168,13 @@ export const DashboardPage = () => {
   };
 
   useEffect(() => {
+    if (isConnected) {
+      dispatch(fetchWorkforce());
+      dispatch(fetchRecommendations());
+    }
+  }, [isConnected, dispatch]);
+
+  useEffect(() => {
     if (
       assessmentData?.data?.status === "completed" &&
       !dashboardLoading &&
@@ -178,7 +193,6 @@ export const DashboardPage = () => {
           setShowInProgressModal(false);
         }
         try {
-          dispatch(fetchWorkforce());
           const resultAction = await dispatch(fetchDashboard());
           setShowInProgressModal(false);
           setShowLoadingModal(false);
@@ -332,6 +346,9 @@ export const DashboardPage = () => {
       navigate("/assessment");
     },
   });
+
+  const isDashboardVisible =
+    (assessmentData?.data?.status === "completed" && isDashboardReady) || isConnected;
 
   if (isLoadingAssessment) {
     return (
@@ -615,45 +632,23 @@ export const DashboardPage = () => {
               onClick={() => navigate("/additional-questions")}
             />
           )}
-          {emailVerify && assessmentData?.data?.status === "completed" && isDashboardReady && (
+          {emailVerify && isDashboardVisible && (
             <div className="mt-10">
-              {/* <Tabs>
-                <Tabs.List
-                  size="md"
-                  type="button-brand"
-                  items={[
-                    { id: "recommendations", label: "Recommendations" },
-                    { id: "benchmark", label: "Benchmark" },
-                  ]}
-                />
-                <Tabs.Panel id="recommendations" className="pt-12">
-                  <RecommendationsPage />
-                </Tabs.Panel>
-                <Tabs.Panel id="benchmark" className="pt-12">
-                  <BenchmarkPage />
-                </Tabs.Panel>
-              </Tabs> */}
               <Tabs>
                 <Tabs.List
                   className="bg-ws-light-teal-50 pt-9 pl-6 pr-6 rounded-t-lg text-ws-light-teal-900 overflow-auto"
                   type="underline"
                   items={[
-                    ...(isFinchCompleted
-                      ? [
-                          { id: "finchRecommendations", label: "Recommendations" },
-                          { id: "finchIndustry", label: "Industry" },
-                          { id: "finchWorkforce", label: "Workforce" },
-                        ]
-                      : [
-                          { id: "industry", label: "Industry" },
-                          { id: "recommendations", label: "Recommendations" },
-                        ]),
+                    ...BASE_TAB_ITEMS,
+                    ...(isConnected ? FINCH_CONNECTED_TAB_ITEMS : BASIC_TAB_ITEMS),
                   ]}
                 />
-                <Tabs.Panel id="recommendations" className="pt-0">
-                  <RecommendationsPage />
-                </Tabs.Panel>
-                {!isFinchCompleted && (
+
+                {/* TO DO : Once the SSE API Is ready We'll utilize this component */}
+                {/* <Tabs.Panel id="recommendations" className="pt-0">
+                    <RecommendationsPage />
+                  </Tabs.Panel> */}
+                {!isConnected && (
                   <Tabs.Panel id="industry" className="pt-0">
                     <BenchmarkPage />
                   </Tabs.Panel>
@@ -661,12 +656,12 @@ export const DashboardPage = () => {
                 <Tabs.Panel id="finchRecommendations" className="pt-0">
                   <RecommendationsFinchPage />
                 </Tabs.Panel>
-                {isFinchCompleted && (
+                {isConnected && (
                   <Tabs.Panel id="finchIndustry" className="pt-0">
                     <BenchmarkFinchPage />
                   </Tabs.Panel>
                 )}
-                {isFinchCompleted && (
+                {isConnected && (
                   <Tabs.Panel id="finchWorkforce" className="pt-0">
                     <WorkforcePage />
                   </Tabs.Panel>

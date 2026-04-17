@@ -22,7 +22,7 @@ description: "Task list for 010-refactor-workforce-page"
 **Purpose**: Extract shared utility before any section file imports it.  
 No blockers — start immediately.
 
-- [ ] T001 Create `src/pages/workforce/workforceUtils.ts` with exported `parsePercentage(value: string): number` function (move exact implementation from `WorkforcePage.tsx`; add JSDoc `@example` comments per data-model.md §1)
+- [x] T001 Create `src/pages/workforce/workforceUtils.ts` with exported `parsePercentage(value: string): number` function (move exact implementation from `WorkforcePage.tsx`; add JSDoc `@example` comments per data-model.md §1)
 
 **Checkpoint ✅ T001 done**: Run `pnpm run type-check` — must pass with zero errors.
 
@@ -37,7 +37,7 @@ No blockers — start immediately.
 
 **Independent Test for US2**: Open `src/pages/workforce/WorkforceSkeletons.tsx` and confirm 8 named exports: `OverviewCardSkeleton`, `WagesCardSkeleton`, `ProgressCardSkeleton`, `ProgressCardSkeletonOne`, `ProgressCardSkeletonFour`, `DonutChartSkeleton`, `BreakDownCardSkeleton`, `BreakDownChartSkeleton`. Each renders the same animated-pulse JSX as currently in `WorkforcePage.tsx`.
 
-- [ ] T002 [US2] Create `src/pages/workforce/WorkforceSkeletons.tsx`: move all 8 skeleton components verbatim from `WorkforcePage.tsx`, converting them from local `const` declarations to named `export const` declarations (data-model.md §2); no `"use client"` directive; all imports use `@/` alias
+- [x] T002 [US2] Create `src/pages/workforce/WorkforceSkeletons.tsx`: move all 8 skeleton components verbatim from `WorkforcePage.tsx`, converting them from local `const` declarations to named `export const` declarations (data-model.md §2); no `"use client"` directive; all imports use `@/` alias
 
 **Checkpoint ✅ T002 done**: Run `pnpm run type-check` — must pass. Verify `WorkforcePage.tsx` still builds (skeletons are still defined there until Phase 4; T002 only adds the new file).
 
@@ -51,13 +51,13 @@ No blockers — start immediately.
 
 > All T003–T006 tasks are independent of each other and can be worked in parallel after T002.
 
-- [ ] T003 [P] [US1] Create `src/pages/workforce/WorkforceOverview.tsx`: define `OverviewCardConfig` + `WorkforceOverviewProps` interfaces inline; render 4-column overview cards grid, 3-column employee cards grid, and "Did you know?" banner; import skeletons from `@/pages/workforce/WorkforceSkeletons`; import `StaticCard` from `@/pages/recommendations/StaticCard`; import `didHeroImg` from `@/assets/employees-reported.jpg`; default export with one-line JSDoc; all imports use `@/` alias (data-model.md §3)
+- [x] T003 [P] [US1] Create `src/pages/workforce/WorkforceOverview.tsx`: define `OverviewCardConfig` + `WorkforceOverviewProps` interfaces inline; render 4-column overview cards grid, 3-column employee cards grid, and "Did you know?" banner; import skeletons from `@/pages/workforce/WorkforceSkeletons`; import `StaticCard` from `@/pages/recommendations/StaticCard`; import `didHeroImg` from `@/assets/employees-reported.jpg`; default export with one-line JSDoc; all imports use `@/` alias (data-model.md §3)
 
-- [ ] T004 [P] [US1] Create `src/pages/workforce/WorkforceParticipation.tsx`: define `ParticipationCardConfig` + `WorkforceParticipationProps` interfaces inline (accepts `participationCardsConfig`, `benefitsItems`, `retirementItems`, `insuranceItems` as typed props); render section heading + description, 2×4 participation count grid, three `<ProgressCard>` rows (Benefits / Retirement / Insurance) with skeleton fallbacks; import `ProgressItem` type from `@/pages/benchmark/ProgressCard`; import skeletons from `@/pages/workforce/WorkforceSkeletons`; default export with one-line JSDoc (data-model.md §4)
+- [x] T004 [P] [US1] Create `src/pages/workforce/WorkforceParticipation.tsx`: define `ParticipationCardConfig` + `WorkforceParticipationProps` interfaces inline (accepts `participationCardsConfig`, `benefitsItems`, `retirementItems`, `insuranceItems` as typed props); render section heading + description, 2×4 participation count grid, three `<ProgressCard>` rows (Benefits / Retirement / Insurance) with skeleton fallbacks; import `ProgressItem` type from `@/pages/benchmark/ProgressCard`; import skeletons from `@/pages/workforce/WorkforceSkeletons`; default export with one-line JSDoc (data-model.md §4)
 
-- [ ] T005 [P] [US1] Create `src/pages/workforce/WorkforceDemographics.tsx`: define `DemographicsCardConfig`, `DonutChartConfig`, `AgeBreakdownConfig`, `DropdownItem`, `WorkforceDemographicsProps` interfaces inline; define `employmentTypeItems` static array as module-level constant; render section heading + department `<Select>`, 2-column gender card grid, "Employment Type" card with 3 `<DonutChart>` rings, "Employment Breakdown by Age" card with employment-type `<Select>` and `<ProgressBar>` rows; import `DonutChart` from `@/pages/workforce/EmployTypeChart`; import skeletons from `@/pages/workforce/WorkforceSkeletons`; accepts filter state pairs as props (`selectedDepartment`/`setSelectedDepartment`, `selectedEmploymentType`/`setSelectedEmploymentType`); default export with one-line JSDoc (data-model.md §5)
+- [x] T005 [P] [US1] Create `src/pages/workforce/WorkforceDemographics.tsx`: define `DemographicsCardConfig`, `DonutChartConfig`, `AgeBreakdownConfig`, `DropdownItem`, `WorkforceDemographicsProps` interfaces inline; define `employmentTypeItems` static array as module-level constant; render section heading + department `<Select>`, 2-column gender card grid, "Employment Type" card with 3 `<DonutChart>` rings, "Employment Breakdown by Age" card with employment-type `<Select>` and `<ProgressBar>` rows; import `DonutChart` from `@/pages/workforce/EmployTypeChart`; import skeletons from `@/pages/workforce/WorkforceSkeletons`; accepts filter state pairs as props (`selectedDepartment`/`setSelectedDepartment`, `selectedEmploymentType`/`setSelectedEmploymentType`); default export with one-line JSDoc (data-model.md §5)
 
-- [ ] T006 [P] [US1] Create `src/pages/workforce/WorkforceCompensation.tsx`: define `CompensationCardConfig`, `SalaryBreakdownCardConfig`, `DropdownItem`, `ChartItem`, `WorkforceCompensationProps` interfaces inline; render section heading, 3-column compensation cards grid, "Workforce Breakdown" sub-section with department `<Select>` + `<Table>` (or empty-state image), "Benefits Cost Breakdown" heading, 2-column salary breakdown cards, `<SalaryChart>`, and benefits cost `<Table>`; import `Table` + `TableColumn` from `@/components/base/table`; import `SalaryChart` from `@/pages/workforce/SalaryChart`; import `emptyStateWorkforce` from `@/assets/placeholder.svg`; import skeletons from `@/pages/workforce/WorkforceSkeletons`; accepts `selectedWorkforceDept`/`setSelectedWorkforceDept` + all pre-computed table and chart arrays as props; default export with one-line JSDoc (data-model.md §6)
+- [x] T006 [P] [US1] Create `src/pages/workforce/WorkforceCompensation.tsx`: define `CompensationCardConfig`, `SalaryBreakdownCardConfig`, `DropdownItem`, `ChartItem`, `WorkforceCompensationProps` interfaces inline; render section heading, 3-column compensation cards grid, "Workforce Breakdown" sub-section with department `<Select>` + `<Table>` (or empty-state image), "Benefits Cost Breakdown" heading, 2-column salary breakdown cards, `<SalaryChart>`, and benefits cost `<Table>`; import `Table` + `TableColumn` from `@/components/base/table`; import `SalaryChart` from `@/pages/workforce/SalaryChart`; import `emptyStateWorkforce` from `@/assets/placeholder.svg`; import skeletons from `@/pages/workforce/WorkforceSkeletons`; accepts `selectedWorkforceDept`/`setSelectedWorkforceDept` + all pre-computed table and chart arrays as props; default export with one-line JSDoc (data-model.md §6)
 
 **Checkpoint ✅ T003–T006 done**: Run `pnpm run type-check` — must pass. Each of the four new files compiles independently.
 
@@ -69,11 +69,11 @@ No blockers — start immediately.
 
 **Independent Test for US3**: (a) `wc -l WorkforcePage.tsx` (or line-count check) shows < 150 lines. (b) Load `/dashboard` → Workforce tab in the running app. (c) Exercise all dropdowns and confirm no visual/behavioral change. (d) `pnpm run type-check` passes.
 
-- [ ] T007 [US3] Trim `src/pages/workforce/WorkforcePage.tsx`: (1) remove the 8 inline skeleton `const` definitions (now in `WorkforceSkeletons.tsx`); (2) remove the `parsePercentage` local definition and add `import { parsePercentage } from "@/pages/workforce/workforceUtils"`; (3) remove the `employmentTypeItems` array definition; (4) add imports for `WorkforceOverview`, `WorkforceParticipation`, `WorkforceDemographics`, `WorkforceCompensation` from `@/pages/workforce/`; (5) in the JSX `return`, replace the four section JSX blocks with the four section component calls passing all pre-computed config arrays and state as typed props; (6) keep all `useState`, all `useAppSelector` calls, all config array computations, page header h2/p, `<ErrorMessage>`, footer disclaimer, and `<GetInTouchModal>` exactly as-is (spec FR-008, FR-015, quickstart.md Step 7); target: < 150 lines
+- [x] T007 [US3] Trim `src/pages/workforce/WorkforcePage.tsx`: (1) remove the 8 inline skeleton `const` definitions (now in `WorkforceSkeletons.tsx`); (2) remove the `parsePercentage` local definition and add `import { parsePercentage } from "@/pages/workforce/workforceUtils"`; (3) remove the `employmentTypeItems` array definition; (4) add imports for `WorkforceOverview`, `WorkforceParticipation`, `WorkforceDemographics`, `WorkforceCompensation` from `@/pages/workforce/`; (5) in the JSX `return`, replace the four section JSX blocks with the four section component calls passing all pre-computed config arrays and state as typed props; (6) keep all `useState`, all `useAppSelector` calls, all config array computations, page header h2/p, `<ErrorMessage>`, footer disclaimer, and `<GetInTouchModal>` exactly as-is (spec FR-008, FR-015, quickstart.md Step 7); target: < 150 lines
 
-- [ ] T008 [US3] Run `pnpm run type-check` in the terminal and confirm zero TypeScript errors across all 7 modified/created files in `src/pages/workforce/` (SC-004)
+- [x] T008 [US3] Run `pnpm run type-check` in the terminal and confirm zero TypeScript errors across all 7 modified/created files in `src/pages/workforce/` (SC-004)
 
-- [ ] T009 [US3] Smoke test: run `pnpm dev`, navigate to the Workforce page, verify (a) all four sections render with correct layout, (b) Demographics department dropdown updates donut charts and age breakdown, (c) Demographics employment type dropdown updates age bars, (d) Compensation workforce breakdown dropdown switches table between department and job-title views, (e) loading skeletons appear on first load (SC-003, US3 acceptance scenarios 1–3)
+- [x] T009 [US3] Smoke test: run `pnpm dev`, navigate to the Workforce page, verify (a) all four sections render with correct layout, (b) Demographics department dropdown updates donut charts and age breakdown, (c) Demographics employment type dropdown updates age bars, (d) Compensation workforce breakdown dropdown switches table between department and job-title views, (e) loading skeletons appear on first load (SC-003, US3 acceptance scenarios 1–3)
 
 **Checkpoint ✅ T007–T009 done**: All US3 acceptance criteria met. Page is visually and functionally identical to pre-refactoring state.
 
@@ -83,8 +83,8 @@ No blockers — start immediately.
 
 **Purpose**: Code quality gate and final SC-001 line-count verification.
 
-- [ ] T010 [P] Run `pnpm lint:fix` then `pnpm format` — resolve any ESLint warnings or Prettier formatting issues introduced by the new files; commit clean
-- [ ] T011 [P] Verify `src/pages/workforce/WorkforcePage.tsx` line count is ≤ 150 (SC-001); if over, identify and move any remaining inline JSX blocks to their appropriate section file
+- [x] T010 [P] Run `pnpm lint:fix` then `pnpm format` — resolve any ESLint warnings or Prettier formatting issues introduced by the new files; commit clean
+- [x] T011 [P] Verify `src/pages/workforce/WorkforcePage.tsx` line count is ≤ 150 (SC-001); if over, identify and move any remaining inline JSX blocks to their appropriate section file
 
 ---
 

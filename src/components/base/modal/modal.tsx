@@ -86,7 +86,11 @@ export const ModalTitle = ({
   children: ReactNode;
   className?: string;
 }) => {
-  return <h2 className={cx("text-2xl font-semibold text-ws-text-primary mb-2", className)}>{children}</h2>;
+  return (
+    <h2 className={cx("text-2xl font-semibold text-ws-text-primary mb-2", className)}>
+      {children}
+    </h2>
+  );
 };
 
 export const ModalDescription = ({
