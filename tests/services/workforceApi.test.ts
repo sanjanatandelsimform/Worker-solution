@@ -61,7 +61,7 @@ const mockWorkforceResponse: WorkforceResponse = {
     ],
   },
   demographics: {
-    employementType: [],
+    employmentType: [],
     gender: { men: "55%", women: "40%" },
     employmentBreakdownByAge: [],
   },

@@ -54,11 +54,8 @@ export interface Participation {
  * Workforce demographic breakdown
  */
 export interface Demographics {
-  /**
-   * Employment type split by department.
-   * @note "employementType" spelling intentionally mirrors the backend schema typo.
-   */
-  employementType: EmploymentTypeEntry[];
+  /** Employment type split by department. */
+  employmentType: EmploymentTypeEntry[];
   gender: GenderBreakdown;
   employmentBreakdownByAge: AgeBreakdownEntry[];
 }
