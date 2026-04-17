@@ -32,14 +32,16 @@ export default function StaticCard({
   countIcon,
 }: Readonly<StaticCardProps>) {
   return (
-    <div className={`bg-ws-base-white w-full ring ring-ws-border-secondary rounded-xl py-5 px-6 ${classess}`}>
+    <div
+      className={`bg-ws-base-white w-full ring ring-ws-border-secondary rounded-xl py-5 px-6 ${classess}`}
+    >
       <div className="flex items-start justify-between">
-      <p
-        className={`text-ws-text-tertiary flex items-center, text-base gap-2 justify-${itemAlign || "start"} ${titleClass}`}
-      >
-        {title}
-      </p>
-      <span className="ml-1">
+        <p
+          className={`text-ws-text-tertiary flex items-center, text-base gap-2 justify-${itemAlign || "start"} ${titleClass}`}
+        >
+          {title}
+        </p>
+        <span className="ml-1">
           {infoIcon ? (
             <Tooltip
               title={tooltipText || ""}

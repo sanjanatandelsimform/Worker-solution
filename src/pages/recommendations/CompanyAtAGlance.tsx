@@ -12,11 +12,18 @@ import { HeartLineIcon } from "@/assets/icons/HeartLineIcon";
 import { formatNumber, formatCurrency, formatCurrencyWithCents } from "@/utils/formatters";
 import { useFinchStatus } from "@/hooks/useFinchStatus";
 
-interface CardConfig {
+interface CompanyGlanceData {
+  totalWorkforce: number | null;
+  averageHourlyWage: number | null;
+  averageSalary: number | null;
+  industryAverageWage: null;
+}
+
+interface CardConfig<TData> {
   id: string;
   title: string;
   icon: ComponentType<{ className?: string }>;
-  format: (data: unknown) => string;
+  format: (data: TData) => string;
   infoIcon?: boolean;
   count?: string;
   tooltipText?: string;
@@ -24,19 +31,15 @@ interface CardConfig {
   placements?: "top" | "bottom" | "left" | "right";
 }
 
-const overviewCardsConfig: CardConfig[] = [
+const overviewCardsConfig: CardConfig<CompanyGlanceData>[] = [
   {
     id: "total-workforce",
     title: "Total Workforce",
     icon: GlobeIcon,
-    format: (data: unknown) => {
-      const typedData = data as Record<string, unknown>;
-      const workforce = typedData?.totalWorkforce;
+    format: data => {
+      const workforce = data.totalWorkforce;
       if (typeof workforce === "number") {
         return formatNumber(workforce);
-      }
-      if (typeof workforce === "string") {
-        return workforce;
       }
       return "N/A";
     },
@@ -45,14 +48,10 @@ const overviewCardsConfig: CardConfig[] = [
     id: "average-hourly-wage",
     title: "Average Hourly Wage",
     icon: ClockIcon,
-    format: (data: unknown) => {
-      const typedData = data as Record<string, unknown>;
-      const wage = typedData?.averageHourlyWage;
+    format: data => {
+      const wage = data.averageHourlyWage;
       if (typeof wage === "number") {
         return formatCurrencyWithCents(wage);
-      }
-      if (typeof wage === "string") {
-        return wage;
       }
       return "N/A";
     },
@@ -67,12 +66,8 @@ const overviewCardsConfig: CardConfig[] = [
     id: "industry-avg-wage",
     title: "National Industry Average Wage",
     icon: DollarIcon,
-    format: (data: unknown) => {
-      const typedData = data as Record<string, unknown>;
-      return typedData?.industryAverageWage
-        ? formatCurrency(Number(typedData.industryAverageWage))
-        : "N/A";
-    },
+    format: data =>
+      data.industryAverageWage === null ? "N/A" : formatCurrency(Number(data.industryAverageWage)),
     // infoIcon: true,
     tooltipText: "How is this calculated",
     descriptionText: "This is calculated based on LMI.",
@@ -80,17 +75,13 @@ const overviewCardsConfig: CardConfig[] = [
   },
 ];
 
-const overviewCardsConfigR2: CardConfig[] = [
+const overviewCardsConfigR2: CardConfig<Record<string, string | null>>[] = [
   {
     id: "enrolled-employees",
     title: "Enrolled Employees",
     icon: EnrolledIcon,
-    format: (data: unknown) => {
-      const typedData = data as Record<string, unknown>;
-      return typedData?.industryAverageWage
-        ? formatCurrency(Number(typedData.industryAverageWage))
-        : "N/A";
-    },
+    format: data =>
+      data.industryAverageWage == null ? "N/A" : formatCurrency(Number(data.industryAverageWage)),
     infoIcon: true,
     count: "2,254",
     tooltipText: "How is this calculated",
@@ -101,12 +92,8 @@ const overviewCardsConfigR2: CardConfig[] = [
     id: "enrolled-in-retirement",
     title: "Enrolled in Retirement",
     icon: SavingIcon,
-    format: (data: unknown) => {
-      const typedData = data as Record<string, unknown>;
-      return typedData?.industryAverageWage
-        ? formatCurrency(Number(typedData.industryAverageWage))
-        : "N/A";
-    },
+    format: data =>
+      data.industryAverageWage == null ? "N/A" : formatCurrency(Number(data.industryAverageWage)),
     infoIcon: true,
     count: "64%",
     tooltipText: "How is this calculated",
@@ -117,12 +104,8 @@ const overviewCardsConfigR2: CardConfig[] = [
     id: "enrolled-in-healthcare",
     title: "Enrolled in Healthcare",
     icon: HeartLineIcon,
-    format: (data: unknown) => {
-      const typedData = data as Record<string, unknown>;
-      return typedData?.industryAverageWage
-        ? formatCurrency(Number(typedData.industryAverageWage))
-        : "N/A";
-    },
+    format: data =>
+      data.industryAverageWage == null ? "N/A" : formatCurrency(Number(data.industryAverageWage)),
     infoIcon: true,
     count: "92%",
     tooltipText: "How is this calculated",
@@ -130,13 +113,6 @@ const overviewCardsConfigR2: CardConfig[] = [
     placements: "top",
   },
 ];
-
-interface CompanyGlanceData {
-  totalWorkforce: number | null;
-  averageHourlyWage: number | null;
-  averageSalary: number | null;
-  industryAverageWage: null;
-}
 
 interface CompanyAtAGlanceProps {
   readonly isLoading: boolean;
