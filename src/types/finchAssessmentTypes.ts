@@ -29,6 +29,9 @@ export interface BenefitsPayload {
   benefitEnrollmentMonth: string | null;
   /** API values: "<6m" | "6m_1yr" | "1yr_2yr" | "2yr_4yr" | ">4yr" */
   retirementVestingPeriod: string;
+  retirementPlanHasMatch: boolean;
+  /** Present only when retirementPlanHasMatch is true */
+  retirementMatchPercentage?: number;
   retirementAutoEnroll: boolean;
   retirementHardshipWithdrawals: boolean;
 }
