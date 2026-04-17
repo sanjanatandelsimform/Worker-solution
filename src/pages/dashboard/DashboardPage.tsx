@@ -21,7 +21,6 @@ import { useAssessmentStatus } from "@/hooks/useAssessmentStatus";
 import { useFinchConnect } from "@/hooks/useFinchConnect";
 import { useFinchStatus } from "@/hooks/useFinchStatus";
 import { Tabs } from "@/components/base/tabs/tabs";
-import RecommendationsPage from "../recommendations/RecommendationsPage";
 import BenchmarkPage from "../benchmark/BenchmarkPage";
 import { fetchDashboard } from "@/store/slices/dashboardSlice";
 import { fetchWorkforce } from "@/store/slices/workforceSlice";
