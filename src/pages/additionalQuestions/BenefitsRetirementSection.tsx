@@ -200,8 +200,8 @@ export default function BenefitsRetirementSection({
                     min="0"
                     max="100"
                     value={retirementMatchPercentage}
-                    onWheel={e => e.currentTarget.blur()}
-                    onChange={e => {
+                    onWheel={(e: React.WheelEvent<HTMLInputElement>) => e.currentTarget.blur()}
+                    onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
                       onRetirementMatchPercentageChange(e.target.value);
                       onClearFieldError("retirementMatchPercentage");
                     }}

@@ -32,6 +32,16 @@ export const filledColors: Record<
     addonButton:
       "hover:bg-utility-success-100 text-utility-success-400 hover:text-utility-success-500",
   },
+  slate: {
+    root: "bg-utility-slate-50 text-utility-slate-700 ring-utility-slate-200",
+    addon: "text-utility-slate-500",
+    addonButton: "hover:bg-utility-slate-100 text-utility-slate-400 hover:text-utility-slate-500",
+  },
+  sky: {
+    root: "bg-utility-sky-50 text-utility-sky-700 ring-utility-sky-200",
+    addon: "text-utility-sky-500",
+    addonButton: "hover:bg-utility-sky-100 text-utility-sky-400 hover:text-utility-sky-500",
+  },
   "gray-blue": {
     root: "bg-utility-gray-blue-50 text-utility-gray-blue-700 ring-utility-gray-blue-200",
     addon: "text-utility-gray-blue-500",
