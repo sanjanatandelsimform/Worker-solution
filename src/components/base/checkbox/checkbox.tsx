@@ -4,6 +4,8 @@ import {
   type CheckboxProps as AriaCheckboxProps,
 } from "react-aria-components";
 import { cx } from "@/utils/cx";
+import { Tooltip, TooltipTrigger } from "@/components/base/tooltip/tooltip";
+import { InfoCircle } from "@untitledui/icons";
 
 export interface CheckboxBaseProps {
   size?: "sm" | "md";
@@ -83,11 +85,13 @@ interface CheckboxProps extends AriaCheckboxProps {
   size?: "sm" | "md";
   label?: ReactNode;
   hint?: ReactNode;
+  tooltipText?: string;
 }
 
 export const Checkbox = ({
   label,
   hint,
+  tooltipText,
   size = "sm",
   className,
   ...ariaCheckboxProps
@@ -134,6 +138,20 @@ export const Checkbox = ({
               {label && (
                 <p className={cx("text-secondary select-none question-text", sizes[size].label)}>
                   {label}
+                  {tooltipText && (
+                    <Tooltip
+                      title={tooltipText}
+                      placement="top"
+                      arrow={true}
+                    >
+                      <TooltipTrigger
+                        isDisabled={false}
+                        className="cursor-pointer text-ws-gray-400 transition duration-200 hover:text-ws-gray-600 ml-1 inline-flex align-middle"
+                      >
+                        <InfoCircle className="size-4" />
+                      </TooltipTrigger>
+                    </Tooltip>
+                  )}
                 </p>
               )}
               {hint && (
