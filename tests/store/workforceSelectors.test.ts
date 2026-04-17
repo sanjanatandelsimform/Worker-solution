@@ -18,42 +18,46 @@ import {
   selectCompensationSection,
 } from "@/store/selectors/workforceSelectors";
 import type { RootState } from "@/store/store";
-import type { WorkforceResponse } from "@/types/workforceTypes";
+import type { WorkforceApiResponse } from "@/types/workforceTypes";
 
-const mockWorkforceData: WorkforceResponse = {
+const mockWorkforceData: WorkforceApiResponse = {
+  assessmentType: "finch",
   workforce: {
-    totalWorkforce: 3120,
-    enrolledBenefits: 2450,
-    avgEmployeeCost: 2254,
-    employerCostPerEmployee: 44000,
-  },
-  participation: {
-    totalWorkforce: 3120,
-    enrolledBenefits: 2450,
-    retirementEnrollment: "64%",
-    healthcareEnrollment: "78%",
-    benefits: [
-      { name: "FSA", enrollment: "31%" },
-      { name: "Wellness", enrollment: "N/A" },
-      { name: "EAP", enrollment: "N/A" },
-    ],
-    retirement: [{ name: "401k", enrollment: "64%" }],
-    insurance: [
-      { name: "Health", enrollment: "78%" },
-      { name: "Dental", enrollment: "65%" },
-      { name: "Vision", enrollment: "60%" },
-      { name: "Life", enrollment: "45%" },
-    ],
-  },
-  demographics: {
-    employmentType: [{ department: "all", fullTime: "80%", partTime: "20%", seasonal: "5%" }],
-    gender: { men: "55%", women: "40%" },
-    employmentBreakdownByAge: [],
-  },
-  compensation: {
-    salaryBreakdown: { medianSalary: 60000, avgSalary: 65000, avgHourlyRate: 30 },
-    workforceBreakdown: { departments: [] },
-    benefitsCost: { employeeContribution: 468, employerCost: "$11000/yr", graph: [], table: [] },
+    dataStatus: "available",
+    workforce: {
+      totalWorkforce: 3120,
+      enrolledBenefits: 2450,
+      avgEmployeeCost: 2254,
+      employerCostPerEmployee: 44000,
+    },
+    participation: {
+      totalWorkforce: 3120,
+      enrolledBenefits: 2450,
+      retirementEnrollment: "64%",
+      healthcareEnrollment: "78%",
+      benefits: [
+        { name: "FSA", enrollment: "31%" },
+        { name: "Wellness", enrollment: "N/A" },
+        { name: "EAP", enrollment: "N/A" },
+      ],
+      retirement: [{ name: "401k", enrollment: "64%" }],
+      insurance: [
+        { name: "Health", enrollment: "78%" },
+        { name: "Dental", enrollment: "65%" },
+        { name: "Vision", enrollment: "60%" },
+        { name: "Life", enrollment: "45%" },
+      ],
+    },
+    demographics: {
+      employmentType: [{ department: "all", fullTime: "80%", partTime: "20%", seasonal: "5%" }],
+      gender: { men: "55%", women: "40%" },
+      employmentBreakdownByAge: [],
+    },
+    compensation: {
+      salaryBreakdown: { medianSalary: 60000, avgSalary: 65000, avgHourlyRate: 30 },
+      workforceBreakdown: { departments: [] },
+      benefitsCost: { employeeContribution: 468, employerCost: "$11000/yr", graph: [], table: [] },
+    },
   },
 };
 
@@ -141,16 +145,22 @@ describe("workforceSelectors", () => {
     const stateWithData = makeState({ data: mockWorkforceData }) as RootState;
 
     it("selectWorkforceSection returns workforce sub-object", () => {
-      expect(selectWorkforceSection(stateWithData)).toEqual(mockWorkforceData.workforce);
+      expect(selectWorkforceSection(stateWithData)).toEqual(mockWorkforceData.workforce.workforce);
     });
     it("selectParticipationSection returns participation sub-object", () => {
-      expect(selectParticipationSection(stateWithData)).toEqual(mockWorkforceData.participation);
+      expect(selectParticipationSection(stateWithData)).toEqual(
+        mockWorkforceData.workforce.participation
+      );
     });
     it("selectDemographicsSection returns demographics sub-object", () => {
-      expect(selectDemographicsSection(stateWithData)).toEqual(mockWorkforceData.demographics);
+      expect(selectDemographicsSection(stateWithData)).toEqual(
+        mockWorkforceData.workforce.demographics
+      );
     });
     it("selectCompensationSection returns compensation sub-object", () => {
-      expect(selectCompensationSection(stateWithData)).toEqual(mockWorkforceData.compensation);
+      expect(selectCompensationSection(stateWithData)).toEqual(
+        mockWorkforceData.workforce.compensation
+      );
     });
   });
 });

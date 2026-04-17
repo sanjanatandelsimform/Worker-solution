@@ -9,7 +9,7 @@
 
 import type { RootState } from "@/store/store";
 import type {
-  WorkforceResponse,
+  WorkforceApiResponse,
   Participation,
   Demographics,
   Compensation,
@@ -19,7 +19,7 @@ import type {
 export const selectWorkforceState = (state: RootState) => state.workforce;
 
 /** Select the full workforce API response (null until loaded) */
-export const selectWorkforceData = (state: RootState): WorkforceResponse | null =>
+export const selectWorkforceData = (state: RootState): WorkforceApiResponse | null =>
   state.workforce.data;
 
 /** Select workforce loading flag */
@@ -39,25 +39,26 @@ export const selectWorkforceIsLoaded = (state: RootState): boolean => state.work
  * Select the top-level `workforce` section of the API response.
  * Contains totalWorkforce, enrolledBenefits, avgEmployeeCost, employerCostPerEmployee.
  */
-export const selectWorkforceSection = (state: RootState) => state.workforce.data?.workforce ?? null;
+export const selectWorkforceSection = (state: RootState) =>
+  state.workforce.data?.workforce.workforce ?? null;
 
 /**
  * Select the `participation` section of the API response.
  * Contains enrollment rates, benefits breakdown.
  */
 export const selectParticipationSection = (state: RootState): Participation | null =>
-  state.workforce.data?.participation ?? null;
+  state.workforce.data?.workforce.participation ?? null;
 
 /**
  * Select the `demographics` section of the API response.
  * Contains employmentType, gender, age breakdown.
  */
 export const selectDemographicsSection = (state: RootState): Demographics | null =>
-  state.workforce.data?.demographics ?? null;
+  state.workforce.data?.workforce.demographics ?? null;
 
 /**
  * Select the `compensation` section of the API response.
  * Contains salaryBreakdown, workforceBreakdown (departments), benefitsCost.
  */
 export const selectCompensationSection = (state: RootState): Compensation | null =>
-  state.workforce.data?.compensation ?? null;
+  state.workforce.data?.workforce.compensation ?? null;

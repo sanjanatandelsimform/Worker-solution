@@ -25,15 +25,12 @@ export const getRecommendations = async (): Promise<RecommendationsApiResponse> 
       throw new Error("Authentication required. Please log in again.");
     }
 
-    const response = await apiClient.get<RecommendationsApiResponse>(
-      "/api/v1/dashboard/recommendations",
-      {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-        timeout: 600000,
-      }
-    );
+    const response = await apiClient.get<RecommendationsApiResponse>("/dashboard/recommendation", {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+      timeout: 600000,
+    });
 
     return response.data;
   } catch (error) {
