@@ -8,6 +8,7 @@ import { FieldError } from "@/components/common/FieldError";
 import { QuestionRadioGroup } from "@/components/common/QuestionRadioGroup";
 import { monthOptions } from "@/data/monthOptions";
 import type { QuestionAnswer, QuestionDefinition } from "@/types/additionalQuestionsTypes";
+import { JSX } from "react";
 
 const benefitsQuestions: QuestionDefinition[] = [
   {

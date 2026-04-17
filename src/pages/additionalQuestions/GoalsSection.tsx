@@ -4,6 +4,7 @@ import { RankingList } from "@/components/common/RankList";
 import { FieldError } from "@/components/common/FieldError";
 import { goalsData } from "@/data/goalsData";
 import type { GoalsAnswer } from "@/types/additionalQuestionsTypes";
+import { JSX } from "react";
 
 interface GoalsSectionProps {
   goalsAnswers: GoalsAnswer;

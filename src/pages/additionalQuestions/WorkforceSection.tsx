@@ -1,6 +1,7 @@
 import { QuestionRadioGroup } from "@/components/common/QuestionRadioGroup";
 import { QuestionCheckboxGroup } from "@/components/common/QuestionCheckboxGroup";
 import type { QuestionAnswer, QuestionDefinition } from "@/types/additionalQuestionsTypes";
+import { JSX } from "react";
 
 const questions: QuestionDefinition[] = [
   {

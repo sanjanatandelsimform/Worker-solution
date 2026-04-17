@@ -2,6 +2,7 @@ import { RadioButton, RadioGroup } from "@/components/base/radio-buttons/radio-b
 import { Label } from "@/components/base/input/label";
 import { FieldError } from "@/components/common/FieldError";
 import type { QuestionDefinition } from "@/types/additionalQuestionsTypes";
+import { JSX } from "react";
 
 interface QuestionRadioGroupProps {
   question: QuestionDefinition;

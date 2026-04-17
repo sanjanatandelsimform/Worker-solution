@@ -6,6 +6,7 @@ import { QuestionRadioGroup } from "@/components/common/QuestionRadioGroup";
 import { QuestionCheckboxGroup } from "@/components/common/QuestionCheckboxGroup";
 import { monthOptions } from "@/data/monthOptions";
 import type { QuestionAnswer, QuestionDefinition } from "@/types/additionalQuestionsTypes";
+import { JSX } from "react";
 
 const compensationQuestions: QuestionDefinition[] = [
   {

@@ -2,6 +2,7 @@ import { Checkbox } from "@/components/base/checkbox/checkbox";
 import { Label } from "@/components/base/input/label";
 import { FieldError } from "@/components/common/FieldError";
 import type { QuestionDefinition } from "@/types/additionalQuestionsTypes";
+import { JSX } from "react";
 
 interface QuestionCheckboxGroupProps {
   question: QuestionDefinition;
