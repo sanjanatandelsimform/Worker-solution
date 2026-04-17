@@ -59,12 +59,12 @@ export default function RecommendationsFinchPage() {
   const provenStrategiesPercent = Math.round((provenStrategiesCount / 3) * 100);
 
   // Combined loading guard
-  const isAnyLoading = workforceIsLoading || recommendationsIsLoading;
+  const isLoading = workforceIsLoading || recommendationsIsLoading;
 
   return (
     <div className="bg-ws-base-white space-y-6 py-10 px-6 shadow-xl rounded-b-xl">
       <CompanyAtAGlance
-        isLoading={isAnyLoading}
+        isLoading={isLoading}
         companyGlanceData={companyGlanceData}
         benefitsGlanceData={benefitsGlanceData}
       />
@@ -74,7 +74,7 @@ export default function RecommendationsFinchPage() {
 
       {!isFinchAssessmentIncomplete && (
         <CoreBenefitsEnhancement
-          isLoading={isAnyLoading}
+          isLoading={isLoading}
           provenStrategiesCount={provenStrategiesCount}
           provenStrategiesPercent={provenStrategiesPercent}
           provenStrategyFlags={provenStrategyFlags}
@@ -83,7 +83,7 @@ export default function RecommendationsFinchPage() {
 
       {!isFinchAssessmentIncomplete && (
         <StrategicSolutions
-          isLoading={isAnyLoading}
+          isLoading={isLoading}
           strategicRecommendations={strategicRecommendations}
         />
       )}
