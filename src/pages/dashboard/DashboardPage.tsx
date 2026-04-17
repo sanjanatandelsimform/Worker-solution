@@ -340,6 +340,9 @@ export const DashboardPage = () => {
     },
   });
 
+  const isDashboardVisible =
+    (assessmentData?.data?.status === "completed" && isDashboardReady) || isConnected;
+
   if (isLoadingAssessment) {
     return (
       <div className="flex min-h-screen items-center justify-center bg-secondary">
@@ -622,10 +625,9 @@ export const DashboardPage = () => {
               onClick={() => navigate("/additional-questions")}
             />
           )}
-          {emailVerify &&
-            ((assessmentData?.data?.status === "completed" && isDashboardReady) || isConnected) && (
-              <div className="mt-10">
-                {/* <Tabs>
+          {emailVerify && isDashboardVisible && (
+            <div className="mt-10">
+              {/* <Tabs>
                 <Tabs.List
                   size="md"
                   type="button-brand"
@@ -641,46 +643,46 @@ export const DashboardPage = () => {
                   <BenchmarkPage />
                 </Tabs.Panel>
               </Tabs> */}
-                <Tabs>
-                  <Tabs.List
-                    className="bg-ws-light-teal-50 pt-9 pl-6 pr-6 rounded-t-lg text-ws-light-teal-900 overflow-auto"
-                    type="underline"
-                    items={[
-                      { id: "finchRecommendations", label: "Recommendations" },
-                      ...(isConnected
-                        ? [
-                            { id: "finchIndustry", label: "Industry" },
-                            { id: "finchWorkforce", label: "Workforce" },
-                          ]
-                        : [{ id: "industry", label: "Industry" }]),
-                    ]}
-                  />
+              <Tabs>
+                <Tabs.List
+                  className="bg-ws-light-teal-50 pt-9 pl-6 pr-6 rounded-t-lg text-ws-light-teal-900 overflow-auto"
+                  type="underline"
+                  items={[
+                    { id: "finchRecommendations", label: "Recommendations" },
+                    ...(isConnected
+                      ? [
+                          { id: "finchIndustry", label: "Industry" },
+                          { id: "finchWorkforce", label: "Workforce" },
+                        ]
+                      : [{ id: "industry", label: "Industry" }]),
+                  ]}
+                />
 
-                  {/* TODO : Once the SSE API Is ready We'll utilize this component */}
-                  {/* <Tabs.Panel id="recommendations" className="pt-0">
+                {/* TODO : Once the SSE API Is ready We'll utilize this component */}
+                {/* <Tabs.Panel id="recommendations" className="pt-0">
                     <RecommendationsPage />
                   </Tabs.Panel> */}
-                  {!isConnected && (
-                    <Tabs.Panel id="industry" className="pt-0">
-                      <BenchmarkPage />
-                    </Tabs.Panel>
-                  )}
-                  <Tabs.Panel id="finchRecommendations" className="pt-0">
-                    <RecommendationsFinchPage />
+                {!isConnected && (
+                  <Tabs.Panel id="industry" className="pt-0">
+                    <BenchmarkPage />
                   </Tabs.Panel>
-                  {isConnected && (
-                    <Tabs.Panel id="finchIndustry" className="pt-0">
-                      <BenchmarkFinchPage />
-                    </Tabs.Panel>
-                  )}
-                  {isConnected && (
-                    <Tabs.Panel id="finchWorkforce" className="pt-0">
-                      <WorkforcePage />
-                    </Tabs.Panel>
-                  )}
-                </Tabs>
-              </div>
-            )}
+                )}
+                <Tabs.Panel id="finchRecommendations" className="pt-0">
+                  <RecommendationsFinchPage />
+                </Tabs.Panel>
+                {isConnected && (
+                  <Tabs.Panel id="finchIndustry" className="pt-0">
+                    <BenchmarkFinchPage />
+                  </Tabs.Panel>
+                )}
+                {isConnected && (
+                  <Tabs.Panel id="finchWorkforce" className="pt-0">
+                    <WorkforcePage />
+                  </Tabs.Panel>
+                )}
+              </Tabs>
+            </div>
+          )}
         </main>
         {/* <div className="w-full relative lg:-top-8">
           <p className="text-xs color-base-black">
