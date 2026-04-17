@@ -19,6 +19,7 @@ import type { RootState } from "@/store/store";
 import type { RecommendationsApiResponse } from "@/types/recommendationsTypes";
 
 const mockRecommendationsData: RecommendationsApiResponse = {
+  assessmentType: "finch",
   recommendation: {
     strategicRecommendations: [
       {
@@ -62,11 +63,6 @@ const mockRecommendationsData: RecommendationsApiResponse = {
     nonElectiveMatch: false,
     healthcareAffordability: true,
     dataStatus: "available",
-    companyAtGlance: {
-      totalWorkforce: null,
-      averageHourlyWage: null,
-      averageSalary: null,
-    },
   },
 };
 

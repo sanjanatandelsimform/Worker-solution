@@ -82,7 +82,7 @@ export const DashboardPage = () => {
   const [showInProgressModal, setShowInProgressModal] = useState(false);
   const [showGoalsSuccessModal, setShowGoalsSuccessModal] = useState(false);
   const [showGoalsEmptyWarning, setShowGoalsEmptyWarning] = useState(false);
-  const [isDashboardReady, setIsDashboardReady] = useState(false);
+  const [isDashboardReady, setIsDashboardReady] = useState(true);
   const [showLoadingModal, setShowLoadingModal] = useState(false);
   const hasRunDashboardFetchRef = useRef(false);
   const fromGoalsCompletionRef = useRef(false);
@@ -168,11 +168,10 @@ export const DashboardPage = () => {
   };
 
   useEffect(() => {
-    if (isConnected) {
-      dispatch(fetchWorkforce());
+    if (isConnected) dispatch(fetchWorkforce());
+    if (isConnected || assessmentData?.data?.status === "completed")
       dispatch(fetchRecommendations());
-    }
-  }, [isConnected, dispatch]);
+  }, [isConnected, dispatch, assessmentData?.data?.status]);
 
   useEffect(() => {
     if (

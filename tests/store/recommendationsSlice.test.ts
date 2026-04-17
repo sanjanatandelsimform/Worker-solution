@@ -27,6 +27,7 @@ const initialState: RecommendationsState = {
 };
 
 const mockData = {
+  assessmentType: "finch",
   recommendation: {
     strategicRecommendations: [
       {
@@ -46,11 +47,6 @@ const mockData = {
     nonElectiveMatch: false,
     healthcareAffordability: false,
     dataStatus: "available",
-    companyAtGlance: {
-      totalWorkforce: null,
-      averageHourlyWage: null,
-      averageSalary: null,
-    },
   },
 };
 

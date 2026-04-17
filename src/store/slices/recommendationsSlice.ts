@@ -1,25 +1,15 @@
-/**
+﻿/**
  * Recommendations Redux Slice
  *
  * Manages recommendations data state including loading, error, and cached response.
  * Follows patterns from workforceSlice.ts.
  *
  * Based on: specs/011-recommendations-api/plan.md
- *
- * STATIC DATA MODE:
- * The fetchRecommendations thunk currently returns STATIC_RECOMMENDATIONS_DATA because the
- * backend endpoint is not yet deployed. The real API call is present but
- * commented out directly below the return statement.
- *
- * TO MIGRATE TO LIVE API:
- * 1. Remove the STATIC_RECOMMENDATIONS_DATA constant and the `return STATIC_RECOMMENDATIONS_DATA;` line
- * 2. Uncomment the `// const response = await getRecommendations();` and `// return response;` lines
- * 3. Uncomment the import of getRecommendations at the top of this file
+ * Updated: specs/014-fix-workforce-rec-api/plan.md
  */
 
 import { createSlice, createAsyncThunk, PayloadAction } from "@reduxjs/toolkit";
-// TODO: Uncomment when backend is live:
-// import { getRecommendations } from "@/services/api/recommendationsApi";
+import { getRecommendations } from "@/services/api/recommendationsApi";
 import type {
   RecommendationsState,
   RecommendationsApiResponse,
@@ -34,65 +24,8 @@ const initialState: RecommendationsState = {
   isLoaded: false,
 };
 
-// TODO: Remove STATIC_RECOMMENDATIONS_DATA block when backend is live
-const STATIC_RECOMMENDATIONS_DATA: RecommendationsApiResponse = {
-  recommendation: {
-    strategicRecommendations: [
-      {
-        order: 1,
-        title: "Emergency Savings",
-        category: "General",
-        matchScore: 1.83,
-        description:
-          "A financial safety net that helps frontline workers manage everyday expenses and unexpected costs.",
-        keyFeatures: ["Reduces turnover", "Reduces absenteeism"],
-        matchedGoals: ["Reduce Absenteeism", "Retain Talent", "Attract Talent"],
-        providerName: "Sunny Day Fund",
-        workerRanking: 1,
-        priorityLevelUsed: 1,
-      },
-      {
-        order: 2,
-        title: "Medical Financing",
-        category: "General",
-        matchScore: 1.33,
-        description: "On-demand access to funds for high-cost medical expenses.",
-        keyFeatures: ["Reduces financial strain", "Helps employees stay focused at work"],
-        matchedGoals: ["Reduce Absenteeism", "Retain Talent"],
-        providerName: "medZERO",
-        workerRanking: 3,
-        priorityLevelUsed: 1,
-      },
-      {
-        order: 3,
-        title: "Financial Coaching",
-        category: "General",
-        matchScore: 1.33,
-        description: "Financial coaching that lowers employee stress.",
-        keyFeatures: ["Improves productivity", "Supports a more resilient workforce"],
-        matchedGoals: ["Reduce Absenteeism", "Retain Talent"],
-        providerName: "TrustPlus",
-        workerRanking: 4,
-        priorityLevelUsed: 1,
-      },
-    ],
-    autoEnroll: true,
-    nonElectiveMatch: false,
-    healthcareAffordability: false,
-    dataStatus: "available",
-    companyAtGlance: {
-      totalWorkforce: null,
-      averageHourlyWage: null,
-      averageSalary: null,
-    },
-  },
-};
-
 /**
- * Async thunk to fetch recommendations data
- *
- * Currently returns static data while the backend endpoint is not yet deployed.
- * See migration instructions at the top of this file.
+ * Async thunk to fetch recommendations data from GET /dashboard/recommendation
  */
 export const fetchRecommendations = createAsyncThunk<
   RecommendationsApiResponse,
@@ -100,12 +33,8 @@ export const fetchRecommendations = createAsyncThunk<
   { rejectValue: string }
 >("recommendations/fetchRecommendations", async (_, { rejectWithValue }) => {
   try {
-    // Static data — remove this block when backend is live:
-    return STATIC_RECOMMENDATIONS_DATA;
-
-    // TODO: Uncomment when backend is live (and remove static block above):
-    // const response = await getRecommendations();
-    // return response;
+    const response = await getRecommendations();
+    return response;
   } catch (error) {
     const errorMessage =
       error instanceof Error ? error.message : "Failed to fetch recommendations data";

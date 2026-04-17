@@ -1,9 +1,9 @@
 /**
  * Recommendations API Types
  *
- * TypeScript interfaces for the GET /api/v1/dashboard/recommendations API response.
+ * TypeScript interfaces for the GET /dashboard/recommendation API response.
  * Based on: specs/011-recommendations-api/data-model.md
- * Contract: specs/011-recommendations-api/contracts/recommendations-get.md
+ * Contract: specs/014-fix-workforce-rec-api/contracts/recommendation-get.md
  */
 
 /**
@@ -33,17 +33,7 @@ export interface StrategicRecommendation {
 }
 
 /**
- * Company-at-a-glance summary included in the recommendations response.
- * Fields may be null when data is not yet available from Finch.
- */
-export interface RecommendationCompanyAtGlance {
-  totalWorkforce: number | null;
-  averageHourlyWage: number | null;
-  averageSalary: number | null;
-}
-
-/**
- * Core recommendation data: flags, strategic items, and company summary.
+ * Core recommendation data: flags, strategic items.
  */
 export interface RecommendationData {
   /** Sorted list of tailored benefit solutions */
@@ -56,14 +46,13 @@ export interface RecommendationData {
   healthcareAffordability: boolean;
   /** Data availability status, e.g. "available" | "pending" */
   dataStatus: string;
-  /** Company workforce summary (may contain nulls while data syncs) */
-  companyAtGlance: RecommendationCompanyAtGlance;
 }
 
 /**
- * Top-level response from GET /api/v1/dashboard/recommendations
+ * Top-level response from GET /dashboard/recommendation
  */
 export interface RecommendationsApiResponse {
+  assessmentType: string;
   recommendation: RecommendationData;
 }
 

@@ -36,7 +36,7 @@ export const selectRecommendationsIsLoaded = (state: RootState): boolean =>
 
 /**
  * Select the inner `recommendation` object from the API response.
- * Contains flags, strategicRecommendations array, and companyAtGlance.
+ * Contains flags and strategicRecommendations array.
  */
 export const selectRecommendationItem = (state: RootState): RecommendationData | null =>
   state.recommendations.data?.recommendation ?? null;
