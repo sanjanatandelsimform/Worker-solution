@@ -7,7 +7,6 @@ import finchLogo from "@/assets/finch-logo.svg";
 import DashboardCard from "./DashboardCard";
 import { useAppSelector, useAppDispatch } from "@/store/hooks";
 import { selectUser } from "@/store/selectors/authSelectors";
-import { InProgressModal } from "@/components/modals/InProgressModal";
 import { BaseModalWithIcon } from "@/components/modals/BaseModalWithIcon";
 import ErrorMessage from "@/components/common/ErrorMessage";
 import { AlertCircle, ChevronRight } from "@untitledui/icons";
@@ -22,16 +21,15 @@ import { useFinchStatus } from "@/hooks/useFinchStatus";
 import { Tabs } from "@/components/base/tabs/tabs";
 import BenchmarkPage from "../benchmark/BenchmarkPage";
 import { fetchDashboard } from "@/store/slices/dashboardSlice";
+// import { fetchIndustry } from "@/store/slices/industrySlice";
 import { fetchWorkforce } from "@/store/slices/workforceSlice";
 import { CircleCheckIcon } from "@/assets/icons/CircleCheckIcon";
+import { AssessmentIcon } from "@/assets/icons/AssessmentIcon";
 import { Oval } from "react-loader-spinner";
-import { selectDashboardLoading, selectDashboardError } from "@/store/selectors/dashboardSelectors";
 import { Button } from "@/components/base/buttons/button";
-import { ConnectIcon } from "@/assets/icons/ConnectIcon";
 import RecommendationsFinchPage from "../recommendations/RecommendationsFinchPage";
 import BenchmarkFinchPage from "../benchmark/BenchmarkFinchPage";
 import WorkforcePage from "../workforce/WorkforcePage";
-import { AssessmentIcon } from "@/assets/icons/AssessmentIcon";
 import { fetchRecommendations } from "@/store/slices/recommendationsSlice";
 
 const BASE_TAB_ITEMS = [{ id: "finchRecommendations", label: "Recommendations" }];
@@ -74,16 +72,11 @@ export const DashboardPage = () => {
   const {
     completionCount,
     assessmentData,
-    isFinchCompleted,
     isLoading: isLoadingAssessment,
+    isFinchCompleted,
   } = useAssessmentStatus({ enabled: emailVerify });
-  const dashboardLoading = useAppSelector(selectDashboardLoading);
-  const dashboardError = useAppSelector(selectDashboardError);
-  const [showInProgressModal, setShowInProgressModal] = useState(false);
   const [showGoalsSuccessModal, setShowGoalsSuccessModal] = useState(false);
   const [showGoalsEmptyWarning, setShowGoalsEmptyWarning] = useState(false);
-  const [isDashboardReady, setIsDashboardReady] = useState(true);
-  const [showLoadingModal, setShowLoadingModal] = useState(false);
   const hasRunDashboardFetchRef = useRef(false);
   const fromGoalsCompletionRef = useRef(false);
 
@@ -175,8 +168,7 @@ export const DashboardPage = () => {
 
   useEffect(() => {
     if (
-      assessmentData?.data?.status === "completed" &&
-      !dashboardLoading &&
+      assessmentData?.data?.status === "completed"  &&
       !hasRunDashboardFetchRef.current
     ) {
       hasRunDashboardFetchRef.current = true;
@@ -184,20 +176,9 @@ export const DashboardPage = () => {
 
       const fetchWithModal = async () => {
         setErrorMessage(null);
-        if (isFromAssessment) {
-          setShowInProgressModal(true);
-          setShowLoadingModal(false);
-        } else {
-          setShowLoadingModal(true);
-          setShowInProgressModal(false);
-        }
         try {
           const resultAction = await dispatch(fetchDashboard());
-          setShowInProgressModal(false);
-          setShowLoadingModal(false);
-
           if (fetchDashboard.fulfilled.match(resultAction)) {
-            setIsDashboardReady(true);
             if (isFromAssessment) {
               setShowGoalsSuccessModal(true);
               fromGoalsCompletionRef.current = false;
@@ -221,8 +202,6 @@ export const DashboardPage = () => {
           }
         } catch (error) {
           console.error("error:", error);
-          setShowInProgressModal(false);
-          setShowLoadingModal(false);
           if (isFromAssessment) {
             setShowGoalsEmptyWarning(true);
             fromGoalsCompletionRef.current = false;
@@ -234,50 +213,7 @@ export const DashboardPage = () => {
 
       fetchWithModal();
     }
-  }, [assessmentData?.data?.status, dashboardLoading, dispatch]);
-
-  const handleFetchDashboardWithModals = useCallback(async () => {
-    setErrorMessage(null);
-
-    const isFromAssessment = fromGoalsCompletionRef.current;
-
-    if (isFromAssessment) {
-      setShowInProgressModal(true);
-      setShowLoadingModal(false);
-    } else {
-      setShowLoadingModal(true);
-      setShowInProgressModal(false);
-    }
-
-    try {
-      dispatch(fetchWorkforce());
-      const resultAction = await dispatch(fetchDashboard());
-      setShowInProgressModal(false);
-
-      if (fetchDashboard.fulfilled.match(resultAction)) {
-        setIsDashboardReady(true);
-        setShowGoalsSuccessModal(true);
-      } else if (fetchDashboard.rejected.match(resultAction)) {
-        const errorMsg = resultAction.payload as string;
-        if (
-          errorMsg?.toLowerCase().includes("empty") ||
-          errorMsg?.toLowerCase().includes("incomplete") ||
-          errorMsg?.toLowerCase().includes("no data")
-        ) {
-          setShowGoalsEmptyWarning(true);
-        } else {
-          setErrorMessage(errorMsg || "Failed to load dashboard data");
-        }
-      }
-    } catch (_error) {
-      setShowInProgressModal(false);
-      setShowGoalsEmptyWarning(true);
-    }
-  }, [dispatch]);
-
-  const handleRetryDashboard = () => {
-    handleFetchDashboardWithModals();
-  };
+  }, [assessmentData?.data?.status, dispatch]);
 
   const handleVerifyEmail = async () => {
     if (emailVerify) return;
@@ -347,7 +283,7 @@ export const DashboardPage = () => {
   });
 
   const isDashboardVisible =
-    (assessmentData?.data?.status === "completed" && isDashboardReady) || isConnected;
+    (assessmentData?.data?.status === "completed" ) || isConnected;
 
   if (isLoadingAssessment) {
     return (
@@ -414,27 +350,6 @@ export const DashboardPage = () => {
                 />
               </div>
             )}
-
-            {/* Dashboard Error with Retry */}
-            {assessmentData?.data?.status === "completed" &&
-              dashboardError &&
-              !showInProgressModal && (
-                <div className="mt-6">
-                  <ErrorMessage
-                    errorType="danger"
-                    textColor="text-red-700"
-                    alertIcon={AlertCircle}
-                    errorMessage={dashboardError}
-                  />
-                  <button
-                    onClick={handleRetryDashboard}
-                    className="mt-4 px-4 py-2 bg-ws-primary text-ws-base-white rounded-lg hover:bg-ws-primary-dark transition-colors"
-                    disabled={dashboardLoading}
-                  >
-                    {dashboardLoading ? "Retrying..." : "Retry"}
-                  </button>
-                </div>
-              )}
 
             {completionCount > 0 && emailVerify && assessmentData?.data?.status !== "completed" && (
               <div className="mt-6 border border-ws-border-primary rounded-xl p-4 bg-ws-light-teal-50 flex gap-4 justify-between flex-col lg:flex-row">
@@ -599,8 +514,8 @@ export const DashboardPage = () => {
             </div>
           )}
 
-          {/* Tabs — only render after dashboard data is confirmed ready */}
-          {emailVerify && assessmentData?.data?.status === "completed" && !isFinchCompleted && (
+          {/* This code is require in next sprint*/}
+          {/* {emailVerify && assessmentData?.data?.status === "completed" && !isFinchCompleted && (
             <DashboardCard
               classes="bg-ws-base-white border-ws-border-primary mt-10 shadow-none"
               toggleAvatar={true}
@@ -615,7 +530,7 @@ export const DashboardPage = () => {
               onClick={connectWithFinch}
               buttonIsDisabled={isFinchLoading}
             />
-          )}
+          )} */}
           {emailVerify && isConnected && !isFinchCompleted && (
             <DashboardCard
               classes="bg-ws-navy-100 border-ws-primary-100 mt-10 shadow-none"
@@ -699,21 +614,6 @@ export const DashboardPage = () => {
         onClose={() => setShowCooldownModal(false)}
         {...cooldownModal}
       />
-
-      <InProgressModal
-        isOpen={showInProgressModal}
-        onClose={() => setShowInProgressModal(false)}
-        title="Preparing..."
-        subtitle="One moment while we prepare your results and recommendations."
-      />
-
-      <InProgressModal
-        isOpen={showLoadingModal}
-        onClose={() => setShowLoadingModal(false)}
-        title="Loading..."
-        subtitle="This won't take long."
-      />
-
       <BaseModalWithIcon
         isOpen={showGoalsSuccessModal}
         onClose={() => setShowGoalsSuccessModal(false)}

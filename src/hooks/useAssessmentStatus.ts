@@ -78,7 +78,6 @@ export const useAssessmentStatus = ({
   };
 
   const completionCount = Object.values(sectionCompletion).filter(Boolean).length;
-
   const isFinchCompleted =
     assessmentData?.assessmentType === "finch" && assessmentData?.data?.status === "completed";
 

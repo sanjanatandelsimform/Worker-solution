@@ -10,3 +10,6 @@ export const selectFinchLatestSyncJob = (state: RootState): FinchSyncJob | null 
 export const selectFinchStatusLoading = (state: RootState): boolean => state.finchStatus.loading;
 
 export const selectFinchStatusError = (state: RootState): string | null => state.finchStatus.error;
+
+export const selectFinchIndustryStatus = (state: RootState): "fetch" | null =>
+  state.finchStatus.connection?.industry ?? null;
