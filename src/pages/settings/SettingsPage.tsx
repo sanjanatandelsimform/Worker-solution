@@ -506,14 +506,14 @@ export const SettingsPage = () => {
                           </div>
                         </div>
                       </InputGroup> */}
-                       <Button
+                      <Button
                         color="link"
                         className="text-ws-navy-800 font-semibold shadow-none"
                         onClick={() => setIsChangePasswordModalOpen(true)}
                         isDisabled={profileLoading || !firstName || !lastName}
-                        >
+                      >
                         Change password
-                        </Button>
+                      </Button>
                     </div>
                   </div>
                 </div>

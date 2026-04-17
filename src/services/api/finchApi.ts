@@ -80,26 +80,4 @@ export const getFinchStatus = async (): Promise<FinchStatusData> => {
     throw new Error("Failed to fetch Finch status");
   }
   return response.data.data;
-   // Static response for testing
-  // const mockData: FinchStatusData = {
-  //   connection: {
-  //     id: "598aca7f-b806-4100-8edc-84a4f25a14cd",
-  //     status: "connected",
-  //     providerId: "adp_run",
-  //     lastSyncedAt: null,
-  //     industry: "fetch",
-  //     // worforce: null,
-  //     createdAt: "2026-04-14T10:02:24.239Z"
-  //   },
-  //   latestSyncJob: {
-  //     id: "fc3ce4f8-9786-430d-a3e8-07afc621faa2",
-  //     status: "completed",
-  //     errorMessage: null,
-  //     startedAt: null,
-  //     completedAt: "2026-04-14T10:03:04.908Z",
-  //     createdAt: "2026-04-14T10:02:24.249Z"
-  //   }
-  // };
-
-  // return mockData;
 };

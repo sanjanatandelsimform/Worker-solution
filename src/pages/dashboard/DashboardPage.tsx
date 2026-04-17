@@ -1,14 +1,12 @@
 import { useEffect, useState, useCallback, useRef } from "react";
-import { useNavigate, useLocation } from "react-router-dom";
+import { useNavigate, useLocation, Link } from "react-router-dom";
 import { DashboardSidebar } from "@/components/dashboard/DashboardSidebar";
 import emailIcon from "@/assets/mail-icon.svg";
 import checkIcon from "@/assets/file-check.svg";
 import finchLogo from "@/assets/finch-logo.svg";
 import DashboardCard from "./DashboardCard";
-import { Link } from "react-router-dom";
 import { useAppSelector, useAppDispatch } from "@/store/hooks";
 import { selectUser } from "@/store/selectors/authSelectors";
-import { InProgressModal } from "@/components/modals/InProgressModal";
 import { BaseModalWithIcon } from "@/components/modals/BaseModalWithIcon";
 import ErrorMessage from "@/components/common/ErrorMessage";
 import { AlertCircle, ChevronRight } from "@untitledui/icons";
@@ -21,19 +19,27 @@ import { useAssessmentStatus } from "@/hooks/useAssessmentStatus";
 import { useFinchConnect } from "@/hooks/useFinchConnect";
 import { useFinchStatus } from "@/hooks/useFinchStatus";
 import { Tabs } from "@/components/base/tabs/tabs";
-import RecommendationsPage from "../recommendations/RecommendationsPage";
 import BenchmarkPage from "../benchmark/BenchmarkPage";
 import { fetchDashboard } from "@/store/slices/dashboardSlice";
+// import { fetchIndustry } from "@/store/slices/industrySlice";
 import { fetchWorkforce } from "@/store/slices/workforceSlice";
 import { CircleCheckIcon } from "@/assets/icons/CircleCheckIcon";
+import { AssessmentIcon } from "@/assets/icons/AssessmentIcon";
 import { Oval } from "react-loader-spinner";
-import { selectDashboardLoading, selectDashboardError } from "@/store/selectors/dashboardSelectors";
 import { Button } from "@/components/base/buttons/button";
-import { ConnectIcon } from "@/assets/icons/ConnectIcon";
 import RecommendationsFinchPage from "../recommendations/RecommendationsFinchPage";
 import BenchmarkFinchPage from "../benchmark/BenchmarkFinchPage";
 import WorkforcePage from "../workforce/WorkforcePage";
-import { AssessmentIcon } from "@/assets/icons/AssessmentIcon";
+import { fetchRecommendations } from "@/store/slices/recommendationsSlice";
+
+const BASE_TAB_ITEMS = [{ id: "finchRecommendations", label: "Recommendations" }];
+
+const FINCH_CONNECTED_TAB_ITEMS = [
+  { id: "finchIndustry", label: "Industry" },
+  { id: "finchWorkforce", label: "Workforce" },
+];
+
+const BASIC_TAB_ITEMS = [{ id: "industry", label: "Industry" }];
 
 export const DashboardPage = () => {
   const navigate = useNavigate();
@@ -69,13 +75,8 @@ export const DashboardPage = () => {
     isLoading: isLoadingAssessment,
     isFinchCompleted,
   } = useAssessmentStatus({ enabled: emailVerify });
-  const dashboardLoading = useAppSelector(selectDashboardLoading);
-  const dashboardError = useAppSelector(selectDashboardError);
-  const [showInProgressModal, setShowInProgressModal] = useState(false);
   const [showGoalsSuccessModal, setShowGoalsSuccessModal] = useState(false);
   const [showGoalsEmptyWarning, setShowGoalsEmptyWarning] = useState(false);
-  const [isDashboardReady, setIsDashboardReady] = useState(false);
-  const [showLoadingModal, setShowLoadingModal] = useState(false);
   const hasRunDashboardFetchRef = useRef(false);
   const fromGoalsCompletionRef = useRef(false);
 
@@ -160,9 +161,15 @@ export const DashboardPage = () => {
   };
 
   useEffect(() => {
+    if (isConnected) {
+      dispatch(fetchWorkforce());
+      dispatch(fetchRecommendations());
+    }
+  }, [isConnected, dispatch]);
+
+  useEffect(() => {
     if (
-      assessmentData?.data?.status === "completed" &&
-      !dashboardLoading &&
+      assessmentData?.data?.status === "completed"  &&
       !hasRunDashboardFetchRef.current
     ) {
       hasRunDashboardFetchRef.current = true;
@@ -170,21 +177,9 @@ export const DashboardPage = () => {
 
       const fetchWithModal = async () => {
         setErrorMessage(null);
-        if (isFromAssessment) {
-          setShowInProgressModal(true);
-          setShowLoadingModal(false);
-        } else {
-          setShowLoadingModal(true);
-          setShowInProgressModal(false);
-        }
         try {
-          dispatch(fetchWorkforce());
           const resultAction = await dispatch(fetchDashboard());
-          setShowInProgressModal(false);
-          setShowLoadingModal(false);
-
           if (fetchDashboard.fulfilled.match(resultAction)) {
-            setIsDashboardReady(true);
             if (isFromAssessment) {
               setShowGoalsSuccessModal(true);
               fromGoalsCompletionRef.current = false;
@@ -208,8 +203,6 @@ export const DashboardPage = () => {
           }
         } catch (error) {
           console.error("error:", error);
-          setShowInProgressModal(false);
-          setShowLoadingModal(false);
           if (isFromAssessment) {
             setShowGoalsEmptyWarning(true);
             fromGoalsCompletionRef.current = false;
@@ -221,50 +214,7 @@ export const DashboardPage = () => {
 
       fetchWithModal();
     }
-  }, [assessmentData?.data?.status, dashboardLoading, dispatch]);
-
-  const handleFetchDashboardWithModals = useCallback(async () => {
-    setErrorMessage(null);
-
-    const isFromAssessment = fromGoalsCompletionRef.current;
-
-    if (isFromAssessment) {
-      setShowInProgressModal(true);
-      setShowLoadingModal(false);
-    } else {
-      setShowLoadingModal(true);
-      setShowInProgressModal(false);
-    }
-
-    try {
-      dispatch(fetchWorkforce());
-      const resultAction = await dispatch(fetchDashboard());
-      setShowInProgressModal(false);
-
-      if (fetchDashboard.fulfilled.match(resultAction)) {
-        setIsDashboardReady(true);
-        setShowGoalsSuccessModal(true);
-      } else if (fetchDashboard.rejected.match(resultAction)) {
-        const errorMsg = resultAction.payload as string;
-        if (
-          errorMsg?.toLowerCase().includes("empty") ||
-          errorMsg?.toLowerCase().includes("incomplete") ||
-          errorMsg?.toLowerCase().includes("no data")
-        ) {
-          setShowGoalsEmptyWarning(true);
-        } else {
-          setErrorMessage(errorMsg || "Failed to load dashboard data");
-        }
-      }
-    } catch (_error) {
-      setShowInProgressModal(false);
-      setShowGoalsEmptyWarning(true);
-    }
-  }, [dispatch]);
-
-  const handleRetryDashboard = () => {
-    handleFetchDashboardWithModals();
-  };
+  }, [assessmentData?.data?.status, dispatch]);
 
   const handleVerifyEmail = async () => {
     if (emailVerify) return;
@@ -333,6 +283,9 @@ export const DashboardPage = () => {
     },
   });
 
+  const isDashboardVisible =
+    (assessmentData?.data?.status === "completed" ) || isConnected;
+
   if (isLoadingAssessment) {
     return (
       <div className="flex min-h-screen items-center justify-center bg-secondary">
@@ -399,27 +352,6 @@ export const DashboardPage = () => {
                 />
               </div>
             )}
-
-            {/* Dashboard Error with Retry */}
-            {assessmentData?.data?.status === "completed" &&
-              dashboardError &&
-              !showInProgressModal && (
-                <div className="mt-6">
-                  <ErrorMessage
-                    errorType="danger"
-                    textColor="text-red-700"
-                    alertIcon={AlertCircle}
-                    errorMessage={dashboardError}
-                  />
-                  <button
-                    onClick={handleRetryDashboard}
-                    className="mt-4 px-4 py-2 bg-ws-primary text-ws-base-white rounded-lg hover:bg-ws-primary-dark transition-colors"
-                    disabled={dashboardLoading}
-                  >
-                    {dashboardLoading ? "Retrying..." : "Retry"}
-                  </button>
-                </div>
-              )}
 
             {completionCount > 0 && emailVerify && assessmentData?.data?.status !== "completed" && (
               <div className="mt-6 border border-ws-border-primary rounded-xl p-4 bg-ws-light-teal-50 flex gap-4 justify-between flex-col lg:flex-row">
@@ -584,8 +516,8 @@ export const DashboardPage = () => {
             </div>
           )}
 
-          {/* Tabs — only render after dashboard data is confirmed ready */}
-          {emailVerify && assessmentData?.data?.status === "completed" && !isFinchCompleted && (
+          {/* This code is require in next sprint*/}
+          {/* {emailVerify && assessmentData?.data?.status === "completed" && !isFinchCompleted && (
             <DashboardCard
               classes="bg-ws-base-white border-ws-border-primary mt-10 shadow-none"
               toggleAvatar={true}
@@ -600,8 +532,8 @@ export const DashboardPage = () => {
               onClick={connectWithFinch}
               buttonIsDisabled={isFinchLoading}
             />
-          )}
-          {/* {emailVerify && isConnected && !isFinchCompleted && (
+          )} */}
+          {emailVerify && isConnected && !isFinchCompleted && (
             <DashboardCard
               classes="bg-ws-navy-100 border-ws-primary-100 mt-10 shadow-none"
               toggleAvatar={true}
@@ -615,79 +547,37 @@ export const DashboardPage = () => {
               buttonLabel="Continue"
               onClick={() => navigate("/additional-questions")}
             />
-          )} */}
-          {emailVerify && assessmentData?.data?.status === "completed" && isDashboardReady && (
+          )}
+          {emailVerify && isDashboardVisible && (
             <div className="mt-10">
-              {/* <Tabs>
-                <Tabs.List
-                  size="md"
-                  type="button-brand"
-                  items={[
-                    { id: "recommendations", label: "Recommendations" },
-                    { id: "benchmark", label: "Benchmark" },
-                  ]}
-                />
-                <Tabs.Panel id="recommendations" className="pt-12">
-                  <RecommendationsPage />
-                </Tabs.Panel>
-                <Tabs.Panel id="benchmark" className="pt-12">
-                  <BenchmarkPage />
-                </Tabs.Panel>
-              </Tabs> */}
               <Tabs>
-                {/* <Tabs.List
-                  className="bg-ws-light-teal-50 pt-9 pl-6 pr-6 rounded-t-lg text-ws-light-teal-900 overflow-auto"
-                  type="underline"
-                  items={[
-                    ...(isFinchCompleted
-                      ? [
-                          { id: "finchRecommendations", label: "Recommendations" },
-                          { id: "finchIndustry", label: "Industry" },
-                          { id: "finchWorkforce", label: "Workforce" },
-                        ]
-                      : [
-                          { id: "industry", label: "Industry" },
-                          { id: "recommendations", label: "Recommendations" },
-                        ]),
-                  ]}
-                /> */}
                 <Tabs.List
                   className="bg-ws-light-teal-50 pt-9 pl-6 pr-6 rounded-t-lg text-ws-light-teal-900 overflow-auto"
                   type="underline"
                   items={[
-                    { id: "recommendations", label: "Recommendations" },
-                    { id: "industry", label: "Industry" },
-                    { id: "finchIndustry", label: "Finch Industry" },
-
-                    ...(isFinchCompleted
-                      ? [
-                          { id: "finchRecommendations", label: "Finch Recommendations" },
-                          // { id: "finchIndustry", label: "Finch Industry" },
-                          { id: "finchWorkforce", label: "Finch Workforce" },
-                        ]
-                      : []),
+                    ...BASE_TAB_ITEMS,
+                    ...(isConnected ? FINCH_CONNECTED_TAB_ITEMS : BASIC_TAB_ITEMS),
                   ]}
                 />
-                <Tabs.Panel id="recommendations" className="pt-0">
-                  <RecommendationsPage />
-                </Tabs.Panel>
-                <Tabs.Panel id="industry" className="pt-0">
-                  <BenchmarkPage />
-                </Tabs.Panel>
-                {isFinchCompleted && (
-                  <Tabs.Panel id="finchRecommendations" className="pt-0">
-                    <RecommendationsFinchPage />
+
+                {/* TO DO : Once the SSE API Is ready We'll utilize this component */}
+                {/* <Tabs.Panel id="recommendations" className="pt-0">
+                    <RecommendationsPage />
+                  </Tabs.Panel> */}
+                {!isConnected && (
+                  <Tabs.Panel id="industry" className="pt-0">
+                    <BenchmarkPage />
                   </Tabs.Panel>
                 )}
-                {/* {isFinchCompleted && (
+                <Tabs.Panel id="finchRecommendations" className="pt-0">
+                  <RecommendationsFinchPage />
+                </Tabs.Panel>
+                {isConnected && (
                   <Tabs.Panel id="finchIndustry" className="pt-0">
                     <BenchmarkFinchPage />
                   </Tabs.Panel>
-                )} */}
-                  <Tabs.Panel id="finchIndustry" className="pt-0">
-                    <BenchmarkFinchPage />
-                  </Tabs.Panel>
-                {isFinchCompleted && (
+                )}
+                {isConnected && (
                   <Tabs.Panel id="finchWorkforce" className="pt-0">
                     <WorkforcePage />
                   </Tabs.Panel>
@@ -726,21 +616,6 @@ export const DashboardPage = () => {
         onClose={() => setShowCooldownModal(false)}
         {...cooldownModal}
       />
-
-      {/* <InProgressModal
-        isOpen={showInProgressModal}
-        onClose={() => setShowInProgressModal(false)}
-        title="Preparing..."
-        subtitle="One moment while we prepare your results and recommendations."
-      />
-
-      <InProgressModal
-        isOpen={showLoadingModal}
-        onClose={() => setShowLoadingModal(false)}
-        title="Loading..."
-        subtitle="This won't take long."
-      /> */}
-
       <BaseModalWithIcon
         isOpen={showGoalsSuccessModal}
         onClose={() => setShowGoalsSuccessModal(false)}

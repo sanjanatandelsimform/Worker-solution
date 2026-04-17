@@ -9,8 +9,8 @@
  */
 
 import axios from "axios";
-import type { IndustryData, IndustryApiResponse } from "@/types/industryTypes";
-import apiClient from "@/services/api/authApi";
+// import type { IndustryData, IndustryApiResponse } from "@/types/industryTypes";
+import type { IndustryData } from "@/types/industryTypes";
 
 const STORAGE_KEY = "userDetail";
 
@@ -64,7 +64,7 @@ export const getIndustry = async (): Promise<IndustryData> => {
       throw new Error("Authentication required");
     }
 
-    // const response = await apiClient.get<IndustryApiResponse>("/industry", {
+    // const response = await apiClient.get<IndustryApiResponse>("/dashboard/industry", {
     //   headers: {
     //     Authorization: `Bearer ${token}`,
     //   },
@@ -76,270 +76,6 @@ export const getIndustry = async (): Promise<IndustryData> => {
     // }
 
     // return response.data.data;
-// const response = {
-//   "industryOverview": {
-//     "turnoverRate": {
-//       "rate": "$4.46M",
-//       "month": "Dec",
-//       "year": 2024
-//     },
-//     "avgTurnover": {
-//       "rate": 5.32,
-//       "sinceYear": 2020
-//     },
-//     "industryWideCostOfTurnover": {
-//       "amount": 1714381066.6667,
-//       "formatted": "$1.7B",
-//       "year": 2024
-//     },
-//     "rates": {
-//       "hire": 31,
-//       "seperation": 40
-//     }
-//   },
-//   "industry": {
-//     "turnOverRate": {
-//       "industry": {
-//         "involuntary": 39,
-//         "voluntary": 60
-//       },
-//       "company": {
-//         "involuntary": 20,
-//         "voluntary": 80
-//       }
-//     },
-//     "seperationRate": {
-//       "industry": {
-//         "seperation": 7.7,
-//         "hiring": 11.1
-//       },
-//       "company": {
-//         "seperation": 2.7,
-//         "hiring": 8.1
-//       }
-//     }
-//   },
-//   "areaMedianWage": {
-//     "availableZipcodes": ["03301", "90001", "10001"],
-//     "nationalAvgSalary": 83227,
-//     "companyMedianHourlyWage": 14.03,
-//     "companyGraph": {
-//       "salary": 40000,
-//       "hourly": 26.0
-//     },
-//     "stateData": [
-//       {
-//         "zipcode": "03301",
-//         "city": "Manchester, NH",
-//         "medianLivingWage": 24.03,
-//         "graph": {
-//           "state": {
-//             "salary": 45000,
-//             "hourly": 21.63
-//           },
-//           "national": {
-//             "salary": 83245,
-//             "hourly": 29.76
-//           }
-//         },
-//         "avgSalary": {
-//           "salary": 40000,
-//           "year": 2024
-//         }
-//       },
-//       {
-//         "zipcode": "90001",
-//         "city": "Los Angeles, CA",
-//         "medianLivingWage": 28.5,
-//         "graph": {
-//           "state": {
-//             "salary": 55000,
-//             "hourly": 26.44
-//           },
-//           "national": {
-//             "salary": 83245,
-//             "hourly": 29.76
-//           }
-//         },
-//         "avgSalary": {
-//           "salary": 45000,
-//           "year": 2024
-//         }
-//       },
-//       {
-//         "zipcode": "10001",
-//         "city": "New York, NY",
-//         "medianLivingWage": 30.0,
-//         "graph": {
-//           "state": {
-//             "salary": 60000,
-//             "hourly": 28.85
-//           },
-//           "national": {
-//             "salary": 83245,
-//             "hourly": 29.76
-//           }
-//         },
-//         "avgSalary": {
-//           "salary": 50000,
-//           "year": 2024
-//         }
-//       }
-//     ]
-//   },
-//   "housingBurden": {
-//     "availableZipcodes": ["03301", "90001", "10001"],
-//     "data": [
-//       {
-//         "zipcode": "03301",
-//         "city": "Manchester, NH",
-//         "owners": {
-//           "period": { "quarter": 4, "year": 2023 },
-//           "burdened": { "metroArea": 10.2, "yourEmployees": 3.1 },
-//           "severelyBurdened": { "metroArea": 3.3, "yourEmployees": 1.6 }
-//         },
-//         "renters": {
-//           "period": { "quarter": 4, "year": 2023 },
-//           "burdened": { "metroArea": 12.2, "yourEmployees": 8.1 },
-//           "severelyBurdened": { "metroArea": 6.7, "yourEmployees": 1.6 }
-//         },
-//         "workingClass": {
-//           "homeOwnershipRate": 72,
-//           "medianHomeValue": 367200,
-//           "medianRent": 1423,
-//           "graph": [
-//             {
-//               "incomeCategory": "lowIncome",
-//               "label": "Low income",
-//               "range": "$55,250 or less",
-//               "burdened": 74,
-//               "severelyBurdened": 44
-//             },
-//             {
-//               "incomeCategory": "moderateIncome",
-//               "label": "Moderate income",
-//               "range": "$55,250 - $88,400",
-//               "burdened": 40,
-//               "severelyBurdened": 4
-//             },
-//             {
-//               "incomeCategory": "medianIncome",
-//               "label": "Median income",
-//               "range": "$88,400 - $132,600",
-//               "burdened": 10,
-//               "severelyBurdened": 1
-//             },
-//             {
-//               "incomeCategory": "upperIncome",
-//               "label": "Upper income",
-//               "range": "$132,600 or more",
-//               "burdened": 1,
-//               "severelyBurdened": 0
-//             }
-//           ]
-//         }
-//       },
-//       {
-//         "zipcode": "90001",
-//         "city": "Los Angeles, CA",
-//         "owners": {
-//           "period": { "quarter": 4, "year": 2023 },
-//           "burdened": { "metroArea": 18.5, "yourEmployees": 6.2 },
-//           "severelyBurdened": { "metroArea": 9.1, "yourEmployees": 3.4 }
-//         },
-//         "renters": {
-//           "period": { "quarter": 4, "year": 2023 },
-//           "burdened": { "metroArea": 24.3, "yourEmployees": 14.7 },
-//           "severelyBurdened": { "metroArea": 13.8, "yourEmployees": 5.2 }
-//         },
-//         "workingClass": {
-//           "homeOwnershipRate": 48,
-//           "medianHomeValue": 742000,
-//           "medianRent": 2150,
-//           "graph": [
-//             {
-//               "incomeCategory": "lowIncome",
-//               "label": "Low income",
-//               "range": "$66,250 or less",
-//               "burdened": 82,
-//               "severelyBurdened": 58
-//             },
-//             {
-//               "incomeCategory": "moderateIncome",
-//               "label": "Moderate income",
-//               "range": "$66,250 - $106,000",
-//               "burdened": 55,
-//               "severelyBurdened": 12
-//             },
-//             {
-//               "incomeCategory": "medianIncome",
-//               "label": "Median income",
-//               "range": "$106,000 - $159,000",
-//               "burdened": 22,
-//               "severelyBurdened": 3
-//             },
-//             {
-//               "incomeCategory": "upperIncome",
-//               "label": "Upper income",
-//               "range": "$159,000 or more",
-//               "burdened": 5,
-//               "severelyBurdened": 1
-//             }
-//           ]
-//         }
-//       },
-//       {
-//         "zipcode": "10001",
-//         "city": "New York, NY",
-//         "owners": {
-//           "period": { "quarter": 4, "year": 2023 },
-//           "burdened": { "metroArea": 21.4, "yourEmployees": 7.8 },
-//           "severelyBurdened": { "metroArea": 11.2, "yourEmployees": 4.1 }
-//         },
-//         "renters": {
-//           "period": { "quarter": 4, "year": 2023 },
-//           "burdened": { "metroArea": 31.6, "yourEmployees": 18.3 },
-//           "severelyBurdened": { "metroArea": 17.4, "yourEmployees": 7.9 }
-//         },
-//         "workingClass": {
-//           "homeOwnershipRate": 32,
-//           "medianHomeValue": 680000,
-//           "medianRent": 2450,
-//           "graph": [
-//             {
-//               "incomeCategory": "lowIncome",
-//               "label": "Low income",
-//               "range": "$72,100 or less",
-//               "burdened": 88,
-//               "severelyBurdened": 63
-//             },
-//             {
-//               "incomeCategory": "moderateIncome",
-//               "label": "Moderate income",
-//               "range": "$72,100 - $115,360",
-//               "burdened": 61,
-//               "severelyBurdened": 18
-//             },
-//             {
-//               "incomeCategory": "medianIncome",
-//               "label": "Median income",
-//               "range": "$115,360 - $173,040",
-//               "burdened": 28,
-//               "severelyBurdened": 5
-//             },
-//             {
-//               "incomeCategory": "upperIncome",
-//               "label": "Upper income",
-//               "range": "$173,040 or more",
-//               "burdened": 7,
-//               "severelyBurdened": 1
-//             }
-//           ]
-//         }
-//       }
-//     ]
-//   }
-// }
  
 const response =
 {
@@ -420,24 +156,24 @@ const response =
     {
       "zipcode": "12207",
       "state": "New York",
-      "medianHourlyWages": 28.16,
-      "medianLivingWage": 29.89,
-      "nationalAverage": 44587,
+      "medianHourlyWages": 10.16,
+      "medianLivingWage": 12.89,
+      "nationalAverage": 5000,
       "graph": {
         "stateAverage": {
-          "salary": 58560,
-          "hourly": 28.16
+          "salary": 48560,
+          "hourly": 18.16
         },
         "yourCompany": {
-          "salary": 87500,
-          "hourly": 17.5
+          "salary": 57500,
+          "hourly": 27.5
         },
         "nationalAverage": {
-          "salary": 44710,
-          "hourly": 21.5
+          "salary": 24710,
+          "hourly": 11.5
         }
       },
-      "year": 2023
+      "year": 2026
     },
     {
       "zipcode": "12205",
@@ -467,7 +203,7 @@ const response =
       "zipcode": "10012",
       "housingCostBurdenedOwners": [
         {
-          "year": 2024,
+          "year": 2025,
           "burdened": 42.4782,
           "severelyBurdened": 26.0105
         }
@@ -645,7 +381,7 @@ const response =
     }
   ]
 } 
-    return  response
+    return response
   } catch (error) {
     if (error instanceof Error && error.message === "Authentication required") {
       throw error;

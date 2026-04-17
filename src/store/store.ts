@@ -7,6 +7,7 @@ import dashboardReducer from "./slices/dashboardSlice";
 import finchStatusReducer from "./slices/finchStatusSlice";
 import workforceReducer from "./slices/workforceSlice";
 import industryReducer from "./slices/industrySlice";
+import recommendationsReducer from "./slices/recommendationsSlice";
 import type { AuthState } from "./slices/authSlice";
 import type { ProfileState } from "@/types/profileTypes";
 import type { UserState } from "@/types/userTypes";
@@ -15,6 +16,7 @@ import type { DashboardState } from "@/types/dashboardTypes";
 import type { FinchStatusState } from "@/types/finchStatusTypes";
 import type { WorkforceState } from "@/types/workforceTypes";
 import type { IndustryState } from "@/types/industryTypes";
+import type { RecommendationsState } from "@/types/recommendationsTypes";
 
 // Use consistent localStorage key
 const STORAGE_KEY = "userDetail";
@@ -58,6 +60,7 @@ const rootReducer = combineReducers({
   finchStatus: finchStatusReducer,
   workforce: workforceReducer,
   industry: industryReducer,
+  recommendations: recommendationsReducer,
 });
 
 export const store = configureStore({
@@ -105,6 +108,7 @@ export type RootState = {
   finchStatus: FinchStatusState;
   workforce: WorkforceState;
   industry: IndustryState;
+  recommendations: RecommendationsState;
 };
 export type AppDispatch = typeof store.dispatch;
 

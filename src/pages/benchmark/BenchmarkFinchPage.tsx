@@ -7,15 +7,12 @@ import { GetInTouchModal } from "@/components/modals/GetInTouchModal";
 import { useAppSelector } from "@/store/hooks";
 import {
   selectIndustryOverviewData,
-  selectIndustryZipCodes,
+  // selectIndustryZipCodes,
   selectIndustryData,
   selectIndustryHousingData,
   selectIndustryAreaMedianWage,
   selectIndustryTurnOverRate,
 } from "@/store/selectors/industrySelectors";
-import {
-  selectDashboardData,
-} from "@/store/selectors/dashboardSelectors";
 import { useIndustry } from "@/hooks/useIndustry";
 import {
   formatCurrency,
@@ -139,6 +136,48 @@ const ProgressCardSkeleton = () => (
     </div>
   </div>
 );
+
+const CostBurdenChartSkeleton = () => (
+  <div className="border border-ws-border-secondary rounded-lg p-5 bg-ws-base-white animate-pulse shadow-sm">
+    <div className="flex items-end w-full gap-4">
+      <div className="w-full h-80 flex items-center justify-end flex-col gap-4">
+        <div className="flex items-end justify-center gap-4">
+          <div className="w-15 h-40 bg-ws-gray-200"></div>
+        </div>
+        <div className="h-2 w-30 bg-ws-gray-200 rounded"></div>
+        <div className="h-2 w-30 bg-ws-gray-200 rounded"></div>
+      </div>
+      <div className="w-full h-80 flex items-center justify-end flex-col gap-4">
+        <div className="flex items-end justify-center gap-4">
+          <div className="w-15 h-25 bg-ws-gray-200"></div>
+        </div>
+        <div className="h-2 w-30 bg-ws-gray-200 rounded"></div>
+        <div className="h-2 w-30 bg-ws-gray-200 rounded"></div>
+      </div>
+      <div className="w-full h-80 flex items-center justify-end flex-col gap-4">
+        <div className="flex items-end justify-center gap-4">
+          <div className="w-15 h-15 bg-ws-gray-200"></div>
+        </div>
+        <div className="h-2 w-30 bg-ws-gray-200 rounded"></div>
+        <div className="h-2 w-30 bg-ws-gray-200 rounded"></div>
+      </div>
+      <div className="w-full h-80 flex items-center justify-end flex-col gap-4">
+        <div className="flex items-end justify-center gap-4">
+          <div className="w-15 h-10 bg-ws-gray-200"></div>
+        </div>
+        <div className="h-2 w-30 bg-ws-gray-200 rounded"></div>
+        <div className="h-2 w-30 bg-ws-gray-200 rounded"></div>
+      </div>
+    </div>
+    <div className="flex items-center justify-center gap-4 mt-8">
+      <div className="h-4 bg-ws-gray-200 w-30"></div>
+      <div className="h-4 bg-ws-gray-200 w-30"></div>
+    </div>
+  </div>
+);
+
+// ── Static config interfaces ──
+
 interface BenchmarkCardConfig {
   id: string;
   title: (industryOverview: unknown) => string;
@@ -151,39 +190,72 @@ interface BenchmarkCardConfig {
 const benchmarkCardsConfig: BenchmarkCardConfig[] = [
   {
     id: "turnover-rate",
-    title: (_io: unknown) => "Turnover Rate",
-    count: (io: unknown) => {
-      const overview = io as Record<string, unknown> | null;
-      const rate = (overview?.turnoverRate as Record<string, unknown>)?.rate;
-      // return rate != null ? formatPercentage(rate as number) : "N/A";
+    title: (data: unknown) => {
+      const d = data as Record<string, unknown> | null;
+      const tr = d?.turnoverRate as Record<string, unknown> | null;
+      return !tr?.month || !tr?.year
+        ? "Turnover rate"
+        : `Turnover rate since ${tr.month} ${tr.year}`;
     },
-    tooltipText: "Industry average employee turnover rate",
-    descriptionText: (_io: unknown) => "Industry Average",
-    countClass: (_io: unknown) => "text-3xl font-semibold text-ws-text-primary",
+    count: (data: unknown) => {
+      const d = data as Record<string, unknown> | null;
+      const tr = d?.turnoverRate as Record<string, unknown> | null;
+      const value = tr?.rate;
+      return typeof value === "number" ? formatPercentage(value) : (value as string) || "N/A";
+    },
+    tooltipText: "Turnover Rate",
+    descriptionText: () =>
+      "Industry specific turnover metrics are calculated from US Census Bureau QWI data sources",
+    countClass: (data: unknown) => {
+      const d = data as Record<string, unknown> | null;
+      const tr = d?.turnoverRate as Record<string, unknown> | null;
+      return tr?.rate == null
+        ? "mt-2 text-sm font-medium text-ws-text-primary"
+        : "mt-2 text-3xl font-semibold text-ws-text-primary";
+    },
   },
   {
     id: "avg-turnover",
-    title: (_io: unknown) => "Average Turnover",
-    count: (io: unknown) => {
-      const overview = io as Record<string, unknown> | null;
-      const avg = overview?.avgTurnover;
-      return avg != null ? String(avg) : "N/A";
+    title: () => "Industry-wide Cost of Turnover",
+    count: (data: unknown) => {
+      const d = data as Record<string, unknown> | null;
+      const icot = d?.industryWideCostOfTurnover as Record<string, unknown> | null;
+      const value = icot?.formatted;
+      return typeof value === "number" ? formatPercentage(value) : (value as string) || "N/A";
     },
-    tooltipText: "Average number of employees who leave annually",
-    descriptionText: (_io: unknown) => "Industry Average",
-    countClass: (_io: unknown) => "text-3xl font-semibold text-ws-text-primary",
+    tooltipText: "Average Turnover",
+    descriptionText: () =>
+      "Average turnover metrics are calculated from US Census Bureau QWI data sources",
+    countClass: (data: unknown) => {
+      const d = data as Record<string, unknown> | null;
+      const icot = d?.industryWideCostOfTurnover as Record<string, unknown> | null;
+      return icot?.formatted == null
+        ? "mt-2 text-sm font-medium text-ws-text-primary"
+        : "mt-2 text-3xl font-semibold text-ws-text-primary";
+    },
   },
   {
-    id: "avg-cost-of-turnover",
-    title: (_io: unknown) => "Avg. Cost of Turnover",
-    count: (io: unknown) => {
-      const overview = io as Record<string, unknown> | null;
-      const cost = overview?.avgCostOfTurnover;
-      return cost != null ? formatCurrency(cost as number) : "N/A";
+    id: "avg-cost-turnover",
+    title: () => "Average Cost of Turnover",
+    count: (data: unknown) => {
+      const d = data as Record<string, unknown> | null;
+      const at = d?.avgTurnover as Record<string, unknown> | null;
+      const value = at?.rate;
+      return typeof value === "number" ? `${value}%` : value != null ? `${value}%` : "N/A";
     },
-    tooltipText: "Average cost per employee turnover event",
-    descriptionText: (_io: unknown) => "Industry Average",
-    countClass: (_io: unknown) => "text-3xl font-semibold text-ws-text-primary",
+    tooltipText: "Average Cost of Turnover",
+    descriptionText: (data: unknown) => {
+      const d = data as Record<string, unknown> | null;
+      const at = d?.avgTurnover as Record<string, unknown> | null;
+      return `Industry specific cost of turnover is calculated from ${at?.sinceYear || " "}`;
+    },
+    countClass: (data: unknown) => {
+      const d = data as Record<string, unknown> | null;
+      const at = d?.avgTurnover as Record<string, unknown> | null;
+      return at?.rate == null
+        ? "mt-2 text-sm font-medium text-ws-text-primary"
+        : "mt-2 text-3xl font-semibold text-ws-text-primary";
+    },
   },
 ];
 
@@ -192,14 +264,16 @@ const benchmarkCardsConfigR2: BenchmarkCardConfig[] = [
     id: "hire-rate-y-o-y",
     title: (data: unknown) => {
       const d = data as Record<string, unknown> | null;
-      const rates = d?.rates as Record<string, unknown> | null;
-      return rates?.hire != null ? "Hire Rate y-o-y" : "Hire Rate y-o-y";
+      const tr = d?.turnoverRate as Record<string, unknown> | null;
+      return !tr?.month || !tr?.year
+        ? "Hire Rate Year-over-Year"
+        : `Hire Rate since ${tr.month} ${tr.year}`;
     },
     count: (data: unknown) => {
       const d = data as Record<string, unknown> | null;
       const rates = d?.rates as Record<string, unknown> | null;
       const hire = rates?.hire;
-      // return hire != null ? formatPercentage(hire as number) : "N/A";
+      return hire != null ? formatPercentage(hire as number) : "N/A";
     },
     tooltipText: "Hire Rate",
     descriptionText: () =>
@@ -216,14 +290,16 @@ const benchmarkCardsConfigR2: BenchmarkCardConfig[] = [
     id: "separation-rate-y-o-y",
     title: (data: unknown) => {
       const d = data as Record<string, unknown> | null;
-      const rates = d?.rates as Record<string, unknown> | null;
-      return rates?.seperation != null ? "Separation Rate y-o-y" : "Separation Rate y-o-y";
+      const at = d?.avgTurnover as Record<string, unknown> | null;
+      return !at?.sinceYear
+        ? "Separation Rate Year-over-Year"
+        : `Separation Rate since ${at.sinceYear}`;
     },
     count: (data: unknown) => {
       const d = data as Record<string, unknown> | null;
       const rates = d?.rates as Record<string, unknown> | null;
       const sep = rates?.seperation;
-      // return sep != null ? formatPercentage(sep as number) : "N/A";
+      return sep != null ? formatPercentage(sep as number) : "N/A";
     },
     tooltipText: "Separation Rate",
     descriptionText: () =>
@@ -293,252 +369,6 @@ interface ProgressCardFinchConfig {
   }>;
 }
 
-const turnoverCardsConfigFinch: TurnoverRateCardConfig[] = [
-  {
-    id: "turnover-rate",
-    title: "Industry Turnover Rate",
-    titleQatar: "Q4 2023",
-    sections: [
-      {
-        sectionTitle: "INDUSTRY AVERAGE",
-        columnsCount: 2 as const,
-        cardsData: [
-          {
-            title: "Involuntary",
-            statics: formatPercentage(39.8),
-            progressValue: 39.8,
-            customBarColor: "bg-ws-light-teal-400",
-          },
-          {
-            title: "Voluntary",
-            statics: formatPercentage(60.1),
-            progressValue: 60.1,
-            customBarColor: "bg-ws-navy-600",
-          },
-        ],
-      },
-      {
-        sectionTitle: "YOUR COMPANY",
-        columnsCount: 2 as const,
-        cardsData: [
-          {
-            title: "Voluntary",
-            statics: formatPercentage(16.8),
-            staticsPoints: "+23pts",
-            staticsPointsState: true,
-            progressValue: 16.8,
-            customBarColor: "bg-ws-light-teal-400",
-          },
-          {
-            title: "Company Average",
-            statics: formatPercentage(83.2),
-            staticsPoints: "-23pts",
-            staticsPointsState: true,
-            progressValue: 83.2,
-            customBarColor: "bg-ws-navy-600",
-          },
-        ],
-      },
-    ],
-    industryText: undefined,
-    industryBoldText: "$4,149.2M",
-    sourceText: "Source: ",
-    sourceBoldText: "Lorem ipsum sit amet dolor",
-    className: "col-span-1",
-    sourceClass: "mt-0",
-  },
-  {
-    id: "separation-rate",
-    title: "Industry Separation Rate",
-    titleQatar: "Q4 2023",
-    sections: [
-      {
-        sectionTitle: "INDUSTRY AVERAGE",
-        columnsCount: 2 as const,
-        cardsData: [
-          {
-            title: "Separation",
-            statics: formatPercentage(7.7),
-            progressValue: 7.7,
-            customBarColor: "bg-ws-light-teal-400",
-          },
-          {
-            title: "Hiring Rate",
-            statics: formatPercentage(11.1),
-            progressValue: 11.1,
-            customBarColor: "bg-ws-navy-600",
-          },
-        ],
-      },
-      {
-        sectionTitle: "YOUR COMPANY",
-        columnsCount: 2 as const,
-        cardsData: [
-          {
-            title: "Separation",
-            statics: formatPercentage(2.7),
-            staticsPoints: "+5pts",
-            staticsPointsState: true,
-            progressValue: 2.7,
-            customBarColor: "bg-ws-light-teal-400",
-          },
-          {
-            title: "Hiring Rate",
-            statics: formatPercentage(8.1),
-            staticsPoints: "-3pts",
-            staticsPointsState: true,
-            progressValue: 8.1,
-            customBarColor: "bg-ws-navy-600",
-          },
-        ],
-      },
-    ],
-    industryText: undefined,
-    industryBoldText: "$4,149.2M",
-    sourceText: "Source: ",
-    sourceBoldText: "Lorem ipsum sit amet dolor",
-    className: "col-span-1",
-    sourceClass: "mt-0",
-  },
-];
-
-const housingBurdenOwnersConfigFinch: ProgressCardFinchConfig[] = [
-  {
-    id: "burdened-owners",
-    title: "Burdened Owners",
-    showInfoIcon: true,
-    tooltipText: "Households spending 30% or more of gross income on housing costs",
-    sections: [
-      {
-        columnsCount: 1 as const,
-        items: [
-          {
-            label: "Metro Area",
-            percentage: 16.2,
-            progressColor: "bg-ws-navy-600",
-          },
-          {
-            label: "Your employees",
-            percentage: 19.5,
-            progressColor: "bg-ws-navy-200",
-          },
-        ],
-      },
-    ],
-  },
-  {
-    id: "severely-burdened-owners",
-    title: "Severely Burdened Owners",
-    showInfoIcon: true,
-    tooltipText: "Households spending 30% or more of gross income on housing costs",
-    sections: [
-      {
-        columnsCount: 1 as const,
-        items: [
-          {
-            label: "Metro Area",
-            percentage: 16.2,
-            progressColor: "bg-ws-navy-600",
-          },
-          {
-            label: "Your employees",
-            percentage: 19.5,
-            progressColor: "bg-ws-navy-200",
-          },
-        ],
-      },
-    ],
-  },
-];
-
-const housingBurdenRentersConfigFinch: ProgressCardFinchConfig[] = [
-  {
-    id: "burdened-renters",
-    title: "Burdened Renters",
-    showInfoIcon: true,
-    tooltipText: "Households spending 30% or more of gross income on housing costs",
-    sections: [
-      {
-        columnsCount: 1 as const,
-        items: [
-          {
-            label: "Metro Area",
-            percentage: 16.2,
-            progressColor: "bg-ws-light-teal-600",
-          },
-          {
-            label: "Your employees",
-            percentage: 19.5,
-            progressColor: "bg-ws-light-teal-400",
-          },
-        ],
-      },
-    ],
-  },
-  {
-    id: "severely-burdened-renters",
-    title: "Severely Burdened Renters",
-    showInfoIcon: true,
-    tooltipText: "Households spending 30% or more of gross income on housing costs",
-    sections: [
-      {
-        columnsCount: 1 as const,
-        items: [
-          {
-            label: "Metro Area",
-            percentage: 16.2,
-            progressColor: "bg-ws-light-teal-600",
-          },
-          {
-            label: "Your employees",
-            percentage: 19.5,
-            progressColor: "bg-ws-light-teal-400",
-          },
-        ],
-      },
-    ],
-  },
-];
-
-const CostBurdenChartSkeleton = () => (
-  <div className="border border-ws-border-secondary rounded-lg p-5 bg-ws-base-white animate-pulse shadow-sm">
-    <div className="flex items-end w-full gap-4">
-      <div className="w-full h-80 flex items-center justify-end flex-col gap-4">
-        <div className="flex items-end justify-center gap-4">
-          <div className="w-15 h-40 bg-ws-gray-200"></div>
-        </div>
-        <div className="h-2 w-30 bg-ws-gray-200 rounded"></div>
-        <div className="h-2 w-30 bg-ws-gray-200 rounded"></div>
-      </div>
-      <div className="w-full h-80 flex items-center justify-end flex-col gap-4">
-        <div className="flex items-end justify-center gap-4">
-          <div className="w-15 h-25 bg-ws-gray-200"></div>
-        </div>
-        <div className="h-2 w-30 bg-ws-gray-200 rounded"></div>
-        <div className="h-2 w-30 bg-ws-gray-200 rounded"></div>
-      </div>
-      <div className="w-full h-80 flex items-center justify-end flex-col gap-4">
-        <div className="flex items-end justify-center gap-4">
-          <div className="w-15 h-15 bg-ws-gray-200"></div>
-        </div>
-        <div className="h-2 w-30 bg-ws-gray-200 rounded"></div>
-        <div className="h-2 w-30 bg-ws-gray-200 rounded"></div>
-      </div>
-      <div className="w-full h-80 flex items-center justify-end flex-col gap-4">
-        <div className="flex items-end justify-center gap-4">
-          <div className="w-15 h-10 bg-ws-gray-200"></div>
-        </div>
-        <div className="h-2 w-30 bg-ws-gray-200 rounded"></div>
-        <div className="h-2 w-30 bg-ws-gray-200 rounded"></div>
-      </div>
-    </div>
-    <div className="flex items-center justify-center gap-4 mt-8">
-      <div className="h-4 bg-ws-gray-200 w-30"></div>
-      <div className="h-4 bg-ws-gray-200 w-30"></div>
-    </div>
-  </div>
-);
-
 export default function BenchmarkFinchPage() {
   const [isGetInTouchModalOpen, setIsGetInTouchModalOpen] = useState(false);
   const [selectedGraphType, setSelectedGraphType] = useState<"owners" | "renters">("renters");
@@ -550,38 +380,39 @@ export default function BenchmarkFinchPage() {
 
   // Get industry data from Redux store via industry selectors
   const industryOverview = useAppSelector(selectIndustryOverviewData);
-  const zipCodes = useAppSelector(selectIndustryZipCodes);
+  // const zipCodes = useAppSelector(selectIndustryZipCodes);
   const industry = useAppSelector(selectIndustryData);
-  const housingBurdenData = useAppSelector(selectIndustryHousingData);
+  const housingCostData = useAppSelector(selectIndustryHousingData);
   const areaMedianWage = useAppSelector(selectIndustryAreaMedianWage);
   const industryTurnOverRate = useAppSelector(selectIndustryTurnOverRate);
 
-  // Get company-specific data from dashboard store (Finch page shows company comparison)
-  const dashboardData = useAppSelector(selectDashboardData);
+  // areaMedianWage is a flat array from the industry API
+  const wageZipItems = (areaMedianWage ?? []).map(
+    (w: { zipcode: string; state: string }) => ({
+      label: w.zipcode,
+      id: w.zipcode,
+    })
+  );
 
-  // ── Area Median Wage: derive zip select items and selected state data ──
-  const wageZipItems = (areaMedianWage?.stateData ?? []).map(s => ({
-    label: s.city,
-    id: s.zipcode,
-  }));
-
-  const activeWageZip = selectedWageZip ?? areaMedianWage?.stateData?.[0]?.zipcode ?? null;
+  const activeWageZip = selectedWageZip ?? areaMedianWage?.[0]?.zipcode ?? null;
 
   const selectedWageState =
-    areaMedianWage?.stateData?.find(s => s.zipcode === activeWageZip) ??
-    areaMedianWage?.stateData?.[0] ??
+    areaMedianWage?.find(
+      (w: { zipcode: string }) => w.zipcode === activeWageZip
+    ) ??
+    areaMedianWage?.[0] ??
     null;
 
-  // Salary and Hourly comparison data (Finch page includes yourCompanyAverage from dashboard)
+  // Salary and Hourly comparison data (Finch page includes yourCompanyAverage)
   const salaryData = {
-    industryAverage: selectedWageState?.graph?.state?.salary ?? 0,
-    yourCompanyAverage: areaMedianWage?.companyGraph?.salary ?? 0,
-    nationalAverage: selectedWageState?.graph?.national?.salary ?? 0,
+    industryAverage: selectedWageState?.graph?.stateAverage?.salary ?? 0,
+    yourCompanyAverage: selectedWageState?.graph?.yourCompany?.salary ?? 0,
+    nationalAverage: selectedWageState?.graph?.nationalAverage?.salary ?? 0,
   };
   const hourlyData = {
-    industryAverage: selectedWageState?.graph?.state?.hourly ?? 0,
-    yourCompanyAverage: areaMedianWage?.companyGraph?.hourly ?? 0,
-    nationalAverage: selectedWageState?.graph?.national?.hourly ?? 0,
+    industryAverage: selectedWageState?.graph?.stateAverage?.hourly ?? 0,
+    yourCompanyAverage: selectedWageState?.graph?.yourCompany?.hourly ?? 0,
+    nationalAverage: selectedWageState?.graph?.nationalAverage?.hourly ?? 0,
   };
 
   // Dynamic salary cards config based on selected state (Finch page has 4 cards including company median)
@@ -590,14 +421,14 @@ export default function BenchmarkFinchPage() {
       id: "company-median-hourly-wages",
       title: "Company's Median Hourly Wages",
       icon: <TimerIcon className="size-5 text-ws-gray-500" />,
-      count: areaMedianWage?.companyMedianHourlyWage != null
-        ? formatCurrencyWithCents(areaMedianWage.companyMedianHourlyWage)
+      count: selectedWageState?.medianHourlyWages != null
+        ? formatCurrencyWithCents(selectedWageState.medianHourlyWages)
         : "N/A",
     },
     {
       id: "median-living-wage",
       title: selectedWageState
-        ? `${selectedWageState.city} Median Living Wage`
+        ? `${selectedWageState.state} Median Living Wage`
         : "Median Living Wage",
       icon: <DollarIcon className="size-5 text-ws-gray-500" />,
       count: selectedWageState
@@ -607,19 +438,19 @@ export default function BenchmarkFinchPage() {
     {
       id: "average-salary",
       title: selectedWageState
-        ? `${selectedWageState.city} Average Salary, ${selectedWageState.avgSalary?.year ?? ""}`
+        ? `${selectedWageState.state} Average Salary, ${selectedWageState.year ?? ""}`
         : "Average Salary",
       icon: <CurrencyStackIcon className="size-5 text-ws-gray-500" />,
-      count: selectedWageState?.avgSalary?.salary
-        ? formatCurrency(selectedWageState.avgSalary.salary)
+      count: selectedWageState?.graph?.stateAverage?.salary
+        ? formatCurrency(selectedWageState.graph.stateAverage.salary)
         : "N/A",
     },
     {
       id: "national-average",
       title: "National Average Salary",
       icon: <GlobeIcon className="size-5 text-ws-gray-500" />,
-      count: areaMedianWage?.nationalAvgSalary
-        ? formatCurrency(areaMedianWage.nationalAvgSalary)
+      count: selectedWageState?.nationalAverage
+        ? formatCurrency(selectedWageState.nationalAverage)
         : "N/A",
     },
   ];
@@ -629,7 +460,7 @@ export default function BenchmarkFinchPage() {
     {
       id: "turnover-rate",
       title: "Industry Turnover Rate",
-      titleQatar: "Q2 2024",
+      titleQatar: `${industryTurnOverRate?.turnOverRate?.industryAvg?.quarter ?? "Q4"} ${industryTurnOverRate?.turnOverRate?.industryAvg?.year ?? ""}`,
       sections: [
         {
           sectionTitle: "INDUSTRY AVERAGE",
@@ -637,14 +468,20 @@ export default function BenchmarkFinchPage() {
           cardsData: [
             {
               title: "Involuntary",
-              statics: formatPercentage(industryTurnOverRate?.turnOverRate?.industry?.involuntary ?? 0),
-              progressValue: industryTurnOverRate?.turnOverRate?.industry?.involuntary ?? 0,
+              statics: industryTurnOverRate?.turnOverRate?.industryAvg?.involuntary ? formatPercentage(
+                industryTurnOverRate?.turnOverRate?.industryAvg?.involuntary
+              ): "No data",
+              progressValue:
+                industryTurnOverRate?.turnOverRate?.industryAvg?.involuntary ?? 0,
               customBarColor: "bg-ws-light-teal-400",
             },
             {
               title: "Voluntary",
-              statics: formatPercentage(industryTurnOverRate?.turnOverRate?.industry?.voluntary ?? 0),
-              progressValue: industryTurnOverRate?.turnOverRate?.industry?.voluntary ?? 0,
+              statics: industryTurnOverRate?.turnOverRate?.industryAvg?.voluntary ? formatPercentage(
+                industryTurnOverRate?.turnOverRate?.industryAvg?.voluntary
+              ) : "No data",
+              progressValue:
+                industryTurnOverRate?.turnOverRate?.industryAvg?.voluntary ?? 0,
               customBarColor: "bg-ws-navy-600",
             },
           ],
@@ -654,45 +491,39 @@ export default function BenchmarkFinchPage() {
           columnsCount: 2 as const,
           cardsData: [
             {
-              title: "Voluntary",
-              statics: formatPercentage(industryTurnOverRate?.turnOverRate?.company?.voluntary ?? 0),
-              staticsPoints: (() => {
-                const ind = industryTurnOverRate?.turnOverRate?.industry?.voluntary ?? 0;
-                const comp = industryTurnOverRate?.turnOverRate?.company?.voluntary ?? 0;
-                const diff = comp - ind;
-                return diff >= 0 ? `+${Math.abs(Math.round(diff))}pts` : `-${Math.abs(Math.round(diff))}pts`;
-              })(),
+              title: "Industry",
+              statics: industryTurnOverRate?.turnOverRate?.company?.industry ? formatPercentage(
+                industryTurnOverRate?.turnOverRate?.company?.industry
+              ): "No data",
               staticsPointsState: true,
-              progressValue: industryTurnOverRate?.turnOverRate?.company?.voluntary ?? 0,
+              progressValue:
+                industryTurnOverRate?.turnOverRate?.company?.industry ?? 0,
               customBarColor: "bg-ws-light-teal-400",
             },
             {
-              title: "Company Average",
-              statics: formatPercentage(industryTurnOverRate?.turnOverRate?.company?.involuntary ?? 0),
-              staticsPoints: (() => {
-                const ind = industryTurnOverRate?.turnOverRate?.industry?.involuntary ?? 0;
-                const comp = industryTurnOverRate?.turnOverRate?.company?.involuntary ?? 0;
-                const diff = comp - ind;
-                return diff >= 0 ? `+${Math.abs(Math.round(diff))}pts` : `-${Math.abs(Math.round(diff))}pts`;
-              })(),
+              title: "Company",
+              statics: industryTurnOverRate?.turnOverRate?.company?.company ? formatPercentage(
+                industryTurnOverRate?.turnOverRate?.company?.company
+              ) : "No data",
               staticsPointsState: true,
-              progressValue: industryTurnOverRate?.turnOverRate?.company?.involuntary ?? 0,
+              progressValue:
+                industryTurnOverRate?.turnOverRate?.company?.company ?? 0,
               customBarColor: "bg-ws-navy-600",
             },
           ],
         },
       ],
       industryText: undefined,
-      industryBoldText: "$4,149.2M",
+      industryBoldText: industryOverview?.industryWideCostOfTurnover?.formatted ?? "$4,149.2M",
       sourceText: "Source: ",
-      sourceBoldText: "Lorem ipsum sit amet dolor",
+      sourceBoldText: "Bureau of Labor Statistics Job Openings and Labor Turnover Survey",
       className: "col-span-1",
       sourceClass: "mt-0",
     },
     {
       id: "separation-rate",
       title: "Industry Separation Rate",
-      titleQatar: "Q2 2024",
+      titleQatar: `${industryTurnOverRate?.seperationRate?.industryAvg?.quarter ?? "Q4"} ${industryTurnOverRate?.seperationRate?.industryAvg?.year ?? ""}`,
       sections: [
         {
           sectionTitle: "INDUSTRY AVERAGE",
@@ -700,14 +531,20 @@ export default function BenchmarkFinchPage() {
           cardsData: [
             {
               title: "Separation",
-              statics: formatPercentage(industryTurnOverRate?.seperationRate?.industry?.seperation ?? 0),
-              progressValue: industryTurnOverRate?.seperationRate?.industry?.seperation ?? 0,
+              statics: industryTurnOverRate?.seperationRate?.industryAvg?.seperation ? formatPercentage(
+                industryTurnOverRate?.seperationRate?.industryAvg?.seperation
+              ): "No data",
+              progressValue:
+                industryTurnOverRate?.seperationRate?.industryAvg?.seperation ?? 0,
               customBarColor: "bg-ws-light-teal-400",
             },
             {
               title: "Hiring Rate",
-              statics: formatPercentage(industryTurnOverRate?.seperationRate?.industry?.hiring ?? 0),
-              progressValue: industryTurnOverRate?.seperationRate?.industry?.hiring ?? 0,
+              statics: industryTurnOverRate?.seperationRate?.industryAvg?.hiring  ? formatPercentage(
+                industryTurnOverRate?.seperationRate?.industryAvg?.hiring
+              ): "No data",
+              progressValue:
+                industryTurnOverRate?.seperationRate?.industryAvg?.hiring ?? 0,
               customBarColor: "bg-ws-navy-600",
             },
           ],
@@ -718,54 +555,85 @@ export default function BenchmarkFinchPage() {
           cardsData: [
             {
               title: "Separation",
-              statics: formatPercentage(industryTurnOverRate?.seperationRate?.company?.seperation ?? 0),
+              statics: industryTurnOverRate?.seperationRate?.company?.seperation ? formatPercentage(
+                industryTurnOverRate?.seperationRate?.company?.seperation
+              ) : "No data",
               staticsPoints: (() => {
-                const ind = industryTurnOverRate?.seperationRate?.industry?.seperation ?? 0;
-                const comp = industryTurnOverRate?.seperationRate?.company?.seperation ?? 0;
+                const ind =
+                  industryTurnOverRate?.seperationRate?.industryAvg?.seperation;
+                const comp =
+                  industryTurnOverRate?.seperationRate?.company?.seperation;
+                  if (ind == null || comp == null) {
+                    return "";
+                  }
                 const diff = comp - ind;
-                return diff >= 0 ? `+${Math.abs(Math.round(diff))}pts` : `-${Math.abs(Math.round(diff))}pts`;
+                return diff >= 0
+                  ? `+${Math.abs(Math.round(diff))}pts`
+                  : `-${Math.abs(Math.round(diff))}pts`;
               })(),
               staticsPointsState: true,
-              progressValue: industryTurnOverRate?.seperationRate?.company?.seperation ?? 0,
+              progressValue:
+                industryTurnOverRate?.seperationRate?.company?.seperation ?? 0,
               customBarColor: "bg-ws-light-teal-400",
             },
             {
               title: "Hiring Rate",
-              statics: formatPercentage(industryTurnOverRate?.seperationRate?.company?.hiring ?? 0),
+              statics: industryTurnOverRate?.seperationRate?.company?.hiring ? formatPercentage(
+                industryTurnOverRate?.seperationRate?.company?.hiring
+              ): "No data",
               staticsPoints: (() => {
-                const ind = industryTurnOverRate?.seperationRate?.industry?.hiring ?? 0;
-                const comp = industryTurnOverRate?.seperationRate?.company?.hiring ?? 0;
+                const ind =
+                  industryTurnOverRate?.seperationRate?.industryAvg?.hiring;
+                const comp =
+                  industryTurnOverRate?.seperationRate?.company?.hiring;
+                  if (ind == null || comp == null) {
+                    return "";
+                  }
                 const diff = comp - ind;
-                return diff >= 0 ? `+${Math.abs(Math.round(diff))}pts` : `-${Math.abs(Math.round(diff))}pts`;
+                return diff >= 0
+                  ? `+${Math.abs(Math.round(diff))}pts`
+                  : `-${Math.abs(Math.round(diff))}pts`;
               })(),
               staticsPointsState: true,
-              progressValue: industryTurnOverRate?.seperationRate?.company?.hiring ?? 0,
+              progressValue:
+                industryTurnOverRate?.seperationRate?.company?.hiring ?? 0,
               customBarColor: "bg-ws-navy-600",
             },
           ],
         },
       ],
       industryText: undefined,
-      industryBoldText: "$4,149.2M",
+      industryBoldText: industryOverview?.industryWideCostOfTurnover?.formatted ?? "$4,149.2M",
       sourceText: "Source: ",
-      sourceBoldText: "Lorem ipsum sit amet dolor",
+      sourceBoldText: "Bureau of Labor Statistics Job Openings and Labor Turnover Survey",
       className: "col-span-1",
       sourceClass: "mt-0",
     },
   ];
 
-  // ── Housing Burden: zip items, selection, and derived data ──
-  const housingZipItems = (housingBurdenData ?? []).map(h => ({
-    label: h.city,
-    id: h.zipcode,
-  }));
+  // ── Housing Cost: zip items, selection, and derived data ──
+  const housingZipItems = (housingCostData ?? []).map(
+    (h: { zipcode: string }) => ({
+      label: h.zipcode,
+      id: h.zipcode,
+    })
+  );
 
-  const activeHousingZip = selectedHousingZipState ?? housingBurdenData?.[0]?.zipcode ?? null;
+  const activeHousingZip =
+    selectedHousingZipState ?? housingCostData?.[0]?.zipcode ?? null;
 
   const selectedHousingData =
-    housingBurdenData?.find(h => h.zipcode === activeHousingZip) ??
-    housingBurdenData?.[0] ??
+    housingCostData?.find(
+      (h: { zipcode: string }) => h.zipcode === activeHousingZip
+    ) ??
+    housingCostData?.[0] ??
     null;
+
+  // Get latest year's burden data from arrays
+  const latestOwnersBurden =
+    selectedHousingData?.housingCostBurdenedOwners?.[0] ?? null;
+  const latestRentersBurden =
+    selectedHousingData?.housingCostBurdenedRenters?.[0] ?? null;
 
   // Dynamic owners progress cards (Finch page has Metro Area + Your employees)
   const dynamicHousingBurdenOwnersConfig: ProgressCardFinchConfig[] = [
@@ -779,14 +647,9 @@ export default function BenchmarkFinchPage() {
           columnsCount: 1 as const,
           items: [
             {
-              label: "Metro Area",
-              percentage: selectedHousingData?.owners?.burdened?.metroArea ?? 0,
+              label: "Burdened",
+              percentage: latestOwnersBurden?.burdened ?? 0,
               progressColor: "bg-ws-navy-600",
-            },
-            {
-              label: "Your employees",
-              percentage: selectedHousingData?.owners?.burdened?.yourEmployees ?? 0,
-              progressColor: "bg-ws-navy-200",
             },
           ],
         },
@@ -802,14 +665,9 @@ export default function BenchmarkFinchPage() {
           columnsCount: 1 as const,
           items: [
             {
-              label: "Metro Area",
-              percentage: selectedHousingData?.owners?.severelyBurdened?.metroArea ?? 0,
+              label: "Severely Burdened",
+              percentage: latestOwnersBurden?.severelyBurdened ?? 0,
               progressColor: "bg-ws-navy-600",
-            },
-            {
-              label: "Your employees",
-              percentage: selectedHousingData?.owners?.severelyBurdened?.yourEmployees ?? 0,
-              progressColor: "bg-ws-navy-200",
             },
           ],
         },
@@ -829,14 +687,9 @@ export default function BenchmarkFinchPage() {
           columnsCount: 1 as const,
           items: [
             {
-              label: "Metro Area",
-              percentage: selectedHousingData?.renters?.burdened?.metroArea ?? 0,
+              label: "Burdened",
+              percentage: latestRentersBurden?.burdened ?? 0,
               progressColor: "bg-ws-light-teal-600",
-            },
-            {
-              label: "Your employees",
-              percentage: selectedHousingData?.renters?.burdened?.yourEmployees ?? 0,
-              progressColor: "bg-ws-light-teal-400",
             },
           ],
         },
@@ -852,14 +705,9 @@ export default function BenchmarkFinchPage() {
           columnsCount: 1 as const,
           items: [
             {
-              label: "Metro Area",
-              percentage: selectedHousingData?.renters?.severelyBurdened?.metroArea ?? 0,
+              label: "Severely Burdened",
+              percentage: latestRentersBurden?.severelyBurdened ?? 0,
               progressColor: "bg-ws-light-teal-600",
-            },
-            {
-              label: "Your employees",
-              percentage: selectedHousingData?.renters?.severelyBurdened?.yourEmployees ?? 0,
-              progressColor: "bg-ws-light-teal-400",
             },
           ],
         },
@@ -868,14 +716,12 @@ export default function BenchmarkFinchPage() {
   ];
 
   // Dynamic cost burden cards (working class data)
+  const wcb = selectedHousingData?.workingClassHousingCostBurden;
   const dynamicCostBurdenCardsConfig: CostBurdenCardConfig[] = [
     {
       id: "home-ownership-rate",
       title: "Home Ownership Rate",
-      count:
-        selectedHousingData?.workingClass?.homeOwnershipRate != null
-          ? `${selectedHousingData.workingClass.homeOwnershipRate}%`
-          : "N/A",
+      count: wcb?.homeOwnershipRate != null ? `${wcb.homeOwnershipRate}%` : "N/A",
       tooltipText: "Home Ownership Rate",
       descriptionText: "U.S. Census Bureau, 5-Year American Community Survey",
       countClass: "mt-2 text-3xl font-semibold text-ws-text-primary",
@@ -883,10 +729,7 @@ export default function BenchmarkFinchPage() {
     {
       id: "median-home-value",
       title: "Median Home Value",
-      count:
-        selectedHousingData?.workingClass?.medianHomeValue != null
-          ? formatCurrency(selectedHousingData.workingClass.medianHomeValue)
-          : "N/A",
+      count: wcb?.medianHomeValue != null ? formatCurrency(Number(wcb.medianHomeValue)) : "N/A",
       tooltipText: "Median Home Value",
       descriptionText: "U.S. Census Bureau, 5-Year American Community Survey",
       countClass: "mt-2 text-3xl font-semibold text-ws-text-primary",
@@ -894,10 +737,7 @@ export default function BenchmarkFinchPage() {
     {
       id: "median-rent",
       title: "Median Rent",
-      count:
-        selectedHousingData?.workingClass?.medianRent != null
-          ? formatCurrency(selectedHousingData.workingClass.medianRent)
-          : "N/A",
+      count: wcb?.medianRent != null ? formatCurrency(Number(wcb.medianRent)) : "N/A",
       tooltipText: "Median Rent",
       descriptionText: "U.S. Census Bureau, 5-Year American Community Survey",
       countClass: "mt-2 text-3xl font-semibold text-ws-text-primary",
@@ -905,32 +745,40 @@ export default function BenchmarkFinchPage() {
   ];
 
   // Transform working class graph data for IncomeDistributionChart
+  // API returns workingClassHousingGraph as Record<string, { burdened, severelyBurdened }>
   const workingClassHousingGraph = (() => {
     try {
-      const graphData = selectedHousingData?.workingClass?.graph;
-      if (!graphData || !Array.isArray(graphData)) return [];
+      const graphData = selectedHousingData?.workingClassHousingGraph;
+      if (!graphData) return [];
 
-      return graphData.map(item => ({
-        incomeCategory: item.incomeCategory,
-        label: item.label,
-        range: item.range,
-        burdened: typeof item.burdened === "number" ? item.burdened : 0,
-        severelyBurdened: typeof item.severelyBurdened === "number" ? item.severelyBurdened : 0,
+      const graphType = selectedGraphType; // "owners" or "renters"
+      const typeData = graphData[graphType];
+      if (!typeData || typeof typeData !== "object") return [];
+
+      const labelMap: Record<string, { label: string; range: string }> = {
+        lowIncome: { label: "Low income", range: "$55,250 or less" },
+        moderateIncome: { label: "Moderate income", range: "$55,250 - $88,400" },
+        medianIncome: { label: "Median income", range: "$88,400 - $132,600" },
+        upperIncome: { label: "Upper income", range: "$132,600 or more" },
+      };
+
+      return Object.entries(typeData).map(([key, value]) => ({
+        incomeCategory: key,
+        label: labelMap[key]?.label ?? key,
+        range: labelMap[key]?.range ?? key,
+        burdened: typeof value.burdened === "number" ? value.burdened : 0,
+        severelyBurdened: typeof value.severelyBurdened === "number" ? value.severelyBurdened : 0,
       }));
     } catch {
       return [];
     }
   })();
 
-  // Derive period string from housing data
-  const ownersPeriod = selectedHousingData?.owners?.period;
-  const rentersPeriod = selectedHousingData?.renters?.period;
-  const ownersPeriodLabel = ownersPeriod
-    ? `Q${ownersPeriod.quarter} ${ownersPeriod.year}`
-    : "Q4 2023";
-  const rentersPeriodLabel = rentersPeriod
-    ? `Q${rentersPeriod.quarter} ${rentersPeriod.year}`
-    : "Q4 2023";
+  // Derive period labels from housing data
+  const ownersBurdenYear = latestOwnersBurden?.year;
+  const rentersBurdenYear = latestRentersBurden?.year;
+  const ownersPeriodLabel = ownersBurdenYear ? `${ownersBurdenYear}` : "";
+  const rentersPeriodLabel = rentersBurdenYear ? `${rentersBurdenYear}` : "";
 
   return (
     <div className="bg-ws-base-white py-10 px-6 space-y-6 shadow-xl rounded-b-xl">
@@ -1030,11 +878,6 @@ export default function BenchmarkFinchPage() {
                     title={card.title}
                     titleQatar={card.titleQatar}
                     sections={card.sections}
-                    industryText={
-                      industryOverview?.turnoverRate?.rate
-                        ? "Industry-wide cost of turnover:"
-                        : undefined
-                    }
                     industryBoldText={card.industryBoldText}
                     sourceText={card.sourceText}
                     sourceBoldText={card.sourceBoldText}
@@ -1058,7 +901,7 @@ export default function BenchmarkFinchPage() {
           <div className="space-y-1">
             <h3 className="text-2xl lg:text-4xl font-medium text-ws-text-primary">
               {selectedWageState
-                ? `Area Median Wage: ${selectedWageState.city}`
+                ? `Area Median Wage: ${selectedWageState.state}`
                 : "Area Median Wage"}
             </h3>
             <p className="text-base text-ws-text-primary w-full mt-2">
@@ -1085,7 +928,6 @@ export default function BenchmarkFinchPage() {
             >
               {item => <Select.Item id={item.id}>{item.label}</Select.Item>}
             </Select>
-            <p className="text-xs text-ws-text-tertiary mt-1">This is a hint text to help user.</p>
           </div>
         </div>
         <div className="w-full mt-8">
@@ -1094,7 +936,7 @@ export default function BenchmarkFinchPage() {
               <SalaryHourlySkeleton />
             </>
           ) : (
-            <SalaryHourlyFinchChart salaryData={salaryData} hourlyData={hourlyData} />
+            <SalaryHourlyFinchChart salaryData={salaryData} hourlyData={hourlyData} sourceAttribution={`Source: BLS, ${selectedWageState?.year}`}/>
           )}
           <div className="grid grid-cols-2 xl:grid-cols-4 gap-6 w-full mt-4">
             {isLoadingCards ? (
@@ -1150,14 +992,12 @@ export default function BenchmarkFinchPage() {
             >
               {item => <Select.Item id={item.id}>{item.label}</Select.Item>}
             </Select>
-            <p className="text-xs text-ws-text-tertiary mt-1">This is a hint text to help user.</p>
           </div>
         </div>
         <div className="w-full mt-8">
           <h3 className="text-base font-bold text-ws-text-primary">
-            {selectedHousingData
-              ? `Your workers residing in ${selectedHousingData.city} are likely financially burdened - meaning workers likely spend a large portion of their wages on housing and transportation`
-              : "Your workers are likely financially burdened - meaning workers likely spend a large portion of their wages on housing and transportation"}
+            Your workers are likely financially burdened - meaning workers likely spend a large
+            portion of their wages on housing and transportation
           </h3>
           <p className="text-base mt-4 text-ws-text-primary">
             The concept of rent (or housing cost) burden applies to both renters and homeowners, but
@@ -1220,7 +1060,7 @@ export default function BenchmarkFinchPage() {
         </div>
         <div>
           <p className="text-xs text-ws-text-tertiary mt-6">
-            <span className="font-semibold">Source:</span> Lorem Ipsum dolor
+            <span className="font-semibold">Source:</span> U.S. Census Bureau, 5-Year American Community Survey
           </p>
           <div className="w-full flex items-center justify-between mt-8 flex-col xl:flex-row">
             <div className="space-y-1 w-full">
@@ -1228,12 +1068,12 @@ export default function BenchmarkFinchPage() {
                 Working Class Housing Cost Burden
               </h3>
               <p className="max-w-3xl text-base text-ws-text-secondary mt-2">
-                {selectedHousingData
-                  ? `In ${selectedHousingData.city}, working class residents are increasingly stretched by rising rents that have outpaced wage growth, with many households spending well above the recommended 30 percent of their income just to keep a roof over their heads.`
-                  : "Working class residents are increasingly stretched by rising rents that have outpaced wage growth, with many households spending well above the recommended 30 percent of their income just to keep a roof over their heads."}
+                Working class residents are increasingly stretched by rising rents that have outpaced
+                wage growth, with many households spending well above the recommended 30 percent of
+                their income just to keep a roof over their heads.
               </p>
               <p className="text-xs text-ws-text-tertiary mt-6">
-                <span className="font-semibold">Source:</span> Lorem Ipsum dolor
+                <span className="font-semibold">Source:</span> U.S. Census Bureau, 5-Year American Community Survey
               </p>
             </div>
             <div className="flex flex-col items-start w-full lg:w-auto shrink-0 mt-4 xl:mt-0">
@@ -1258,9 +1098,6 @@ export default function BenchmarkFinchPage() {
               >
                 {item => <Select.Item id={item.id}>{item.label}</Select.Item>}
               </Select>
-              <p className="text-xs text-ws-text-tertiary mt-1">
-                This is a hint text to help user.
-              </p>
             </div>
           </div>
           <div className="grid xl:grid-cols-3 gap-4 mt-6 flex-col lg:flex-row">

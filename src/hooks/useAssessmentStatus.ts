@@ -8,9 +8,10 @@ interface UseAssessmentStatusOptions {
 interface UseAssessmentStatusReturn {
   completionCount: number;
   isLoading: boolean;
-  isFinchCompleted: boolean;
   error: string | null;
   assessmentData: AssessmentData | null;
+  isFinchCompleted: boolean;
+  isFinchAssessmentIncomplete: boolean;
   sectionCompletion: {
     workforce: boolean;
     compensation: boolean;
@@ -80,12 +81,16 @@ export const useAssessmentStatus = ({
   const isFinchCompleted =
     assessmentData?.assessmentType === "finch" && assessmentData?.data?.status === "completed";
 
+  const isFinchAssessmentIncomplete =
+    assessmentData?.assessmentType === "finch" && assessmentData?.data?.status !== "completed";
+
   return {
     completionCount,
     isLoading,
     error,
     assessmentData,
     isFinchCompleted,
+    isFinchAssessmentIncomplete,
     sectionCompletion,
     refetch: fetchAssessmentStatus,
   };

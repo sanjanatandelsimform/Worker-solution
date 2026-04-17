@@ -332,7 +332,7 @@
         {
           "key": "medianAnnualEarnings",
           "questionNumber": 1,
-          "questionText": "What range best describes your employees' median annual earnings?",
+          "questionText": "Which range best describes your employees' median annual earnings?",
           "questionType": "SINGLE_SELECT",
           "displayOrder": 1,
           "isRequired": true,
@@ -378,7 +378,7 @@
         {
           "key": "salariedMedianAnnualEarnings",
           "questionNumber": 3,
-          "questionText": "What range best describes your SALARIED employees' median annual earnings?",
+          "questionText": "Which range best describes your SALARIED employees' median annual earnings?",
           "questionType": "SINGLE_SELECT",
           "displayOrder": 3,
           "isRequired": true,
@@ -578,37 +578,44 @@
             {
               "groupName": "Retirement and Savings",
               "options": [
-                { "label": "Earned Wage Access", "value": "Earned Wage Access", "displayOrder": 1 },
-                { "label": "Loans for employees", "value": "Employee Loans", "displayOrder": 2 },
+                { "label": "401K", "value": "401K", "displayOrder": 1 },
+                { "label": "IRA", "value": "IRA", "displayOrder": 2 },
+                { "label": "Earned Wage Access", "value": "Earned Wage Access", "displayOrder": 3 },
+                { "label": "Loans for employees", "value": "Employee Loans", "displayOrder": 4 },
                 {
                   "label": "Employee hardship grants",
                   "value": "Hardship Grants",
-                  "displayOrder": 3
+                  "displayOrder": 5
                 },
                 {
                   "label": "Financial coaching and/or education",
                   "value": "Financial Coaching",
-                  "displayOrder": 4
+                  "displayOrder": 6
                 },
                 {
                   "label": "Emergency savings benefits",
                   "value": "Emergency Savings",
-                  "displayOrder": 5
+                  "displayOrder": 7
                 },
                 {
                   "label": "Student loan support",
                   "value": "Student Loan Support",
-                  "displayOrder": 6
+                  "displayOrder": 8
                 },
                 {
                   "label": "Credit building services",
                   "value": "Credit Building",
-                  "displayOrder": 7
+                  "displayOrder": 9
                 },
                 {
                   "label": "Retirement account migration and consolidation",
                   "value": "Retirement Migration",
-                  "displayOrder": 8
+                  "displayOrder": 10
+                },
+                {
+                  "label": "My company does not offer retirement/savings benefits",
+                  "value": "My company does not offer retirement/savings benefits",
+                  "displayOrder": 11
                 }
               ]
             },
@@ -659,6 +666,11 @@
                   "label": "Mental health support",
                   "value": "Mental Health",
                   "displayOrder": 17
+                },
+                {
+                  "label": "My company does not offer health and wellness benefit",
+                  "value": "My company does not offer health and wellness benefit",
+                  "displayOrder": 18
                 }
               ]
             },
@@ -1276,7 +1288,7 @@
             },
             {
               "key": "employeeSpouse",
-              "label": "Employee + Spouse",
+              "label": "Employee + Spouse/Domestic partner",
               "options": [
                 { "label": "Less than 25%", "value": "<25%", "displayOrder": 1 },
                 { "label": "26% - 50%", "value": "26-50%", "displayOrder": 2 },
@@ -1286,7 +1298,7 @@
             },
             {
               "key": "employeeChildren",
-              "label": "Employee + Children",
+              "label": "Employee + Children (not spouse)",
               "options": [
                 { "label": "Less than 25%", "value": "<25%", "displayOrder": 1 },
                 { "label": "26% - 50%", "value": "26-50%", "displayOrder": 2 },
@@ -1296,7 +1308,7 @@
             },
             {
               "key": "employeeFamily",
-              "label": "Employee + Family",
+              "label": "Employee + Family (not spouse)",
               "options": [
                 { "label": "Less than 25%", "value": "<25%", "displayOrder": 1 },
                 { "label": "26% - 50%", "value": "26-50%", "displayOrder": 2 },

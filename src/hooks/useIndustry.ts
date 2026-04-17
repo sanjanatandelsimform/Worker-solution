@@ -15,15 +15,17 @@
 import { useEffect } from "react";
 import { useAppDispatch, useAppSelector } from "@/store/hooks";
 import { fetchIndustry } from "@/store/slices/industrySlice";
-import { selectFinchIndustryStatus } from "@/store/selectors/finchStatusSelectors";
+// import { selectFinchIndustryStatus } from "@/store/selectors/finchStatusSelectors";
 import {
-  selectIndustryData,
+  // selectIndustryData,
   selectIndustryLoading,
   selectIndustryError,
   selectIndustryIsLoaded,
   selectIndustryFullData
 } from "@/store/selectors/industrySelectors";
 import type { IndustryData } from "@/types/industryTypes";
+import { useFinchStatus } from "@/hooks/useFinchStatus";
+
 
 export interface UseIndustryReturn {
   data: IndustryData | null;
@@ -34,21 +36,27 @@ export interface UseIndustryReturn {
 
 export function useIndustry(): UseIndustryReturn {
   const dispatch = useAppDispatch();
-  const industryStatus = useAppSelector(selectFinchIndustryStatus);
+  // const industryStatus = useAppSelector(selectFinchIndustryStatus);
   const data = useAppSelector(selectIndustryFullData);
   const isLoading = useAppSelector(selectIndustryLoading);
-  // const isLoading = true;
   const error = useAppSelector(selectIndustryError);
   const isLoaded = useAppSelector(selectIndustryIsLoaded);
-  // const isLoaded = true;
+  const { isConnected } = useFinchStatus();
 
-  useEffect(() => {
-    // if (industryStatus === "fetch" && !isLoaded && !isLoading) {
-    if (true && !isLoaded && !isLoading) {
+  // Require when status api integrated
+  // useEffect(() => {
+  //   if (industryStatus === "fetch" && !isLoaded && !isLoading) {
+  //     dispatch(fetchIndustry());
+  //   }
+  // }, [dispatch, industryStatus, isLoaded, isLoading]);
+  
+    useEffect(() => {
+    if (!isConnected) {
       dispatch(fetchIndustry());
     }
-  }, [dispatch, industryStatus, isLoaded, isLoading]);
+  }, [!isConnected]);
   
+
   return {
     data,
     isLoading,

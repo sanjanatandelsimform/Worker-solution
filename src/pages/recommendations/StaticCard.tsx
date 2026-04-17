@@ -1,5 +1,5 @@
-import { Tooltip, TooltipTrigger } from "@/components/base/tooltip/tooltip";
-import { InfoCircle } from "@untitledui/icons";
+// import { Tooltip, TooltipTrigger } from "@/components/base/tooltip/tooltip";
+// import { InfoCircle } from "@untitledui/icons";
 
 export interface StaticCardProps {
   title: string;
@@ -19,27 +19,29 @@ export interface StaticCardProps {
 export default function StaticCard({
   title,
   count,
-  infoIcon = false,
+  // infoIcon = false,
   classess,
   titleClass,
-  infoCircleClass,
+  // infoCircleClass,
   countClass,
-  tooltipText,
-  descriptionText,
+  // tooltipText,
+  // descriptionText,
   countWrap,
   itemAlign,
-  placements,
+  // placements,
   countIcon,
 }: Readonly<StaticCardProps>) {
   return (
-    <div className={`bg-ws-base-white w-full ring ring-ws-border-secondary rounded-xl py-5 px-6 ${classess}`}>
+    <div
+      className={`bg-ws-base-white w-full ring ring-ws-border-secondary rounded-xl py-5 px-6 ${classess}`}
+    >
       <div className="flex items-start justify-between">
       <p
         className={`text-ws-text-tertiary flex items-center, text-base gap-2 justify-${itemAlign || "start"} ${titleClass}`}
       >
         {title}
       </p>
-      <span className="ml-1">
+      {/* <span className="ml-1">
           {infoIcon ? (
             <Tooltip
               title={tooltipText || ""}
@@ -54,7 +56,7 @@ export default function StaticCard({
           ) : (
             ""
           )}
-        </span>
+        </span> */}
       </div>
       <div className={`flex items-end gap-2 justify-between`}>
         <h2 className={`w-full ${countClass}`}>

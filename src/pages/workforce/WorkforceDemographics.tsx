@@ -165,7 +165,10 @@ export default function WorkforceDemographics({
           </div>
           <div className="flex flex-col items-start w-full lg:w-auto shrink-0 mt-4 xl:mt-0 lg:min-w-71">
             <Label className="text-sm font-medium text-ws-text-secondary flex mb-1.5">
-              Employment Type <span className="text-ws-error-600">* <ArrowDown className="inline-block ml-1" /></span> 
+              Employment Type{" "}
+              <span className="text-ws-error-600">
+                * <ArrowDown className="inline-block ml-1" />
+              </span>
             </Label>
             <Select
               className="w-full flex items-start min-w-xl md:min-w-full lg:min-w-50"
@@ -191,14 +194,18 @@ export default function WorkforceDemographics({
             <>
               {ageBreakdownConfig.map(item => (
                 <div key={item.id} className="flex items-center justify-between gap-4">
-                  <div className="text-base font-normal text-ws-text-secondary min-w-30">{item.label}</div>
+                  <div className="text-base font-normal text-ws-text-secondary min-w-30">
+                    {item.label}
+                  </div>
                   <ProgressBar
                     value={item.value}
                     max={100}
                     className="h-6 rounded-none"
                     customColor={item.customColor}
                   />
-                  <div className="flex min-w-8 text-base font-normal text-ws-base-black">{item.value}%</div>
+                  <div className="flex min-w-8 text-base font-normal text-ws-base-black">
+                    {item.value}%
+                  </div>
                 </div>
               ))}
             </>

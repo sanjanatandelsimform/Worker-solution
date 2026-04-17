@@ -7,17 +7,18 @@
 
 import { describe, it, expect } from "vitest";
 import {
-  selectIndustryData,
+  selectIndustryFullData,
   selectIndustryLoading,
   selectIndustryError,
   selectIndustryIsLoaded,
   selectIndustryOverviewData,
-  selectIndustryTurnoverComparison,
+  selectIndustryTurnOverRate,
   selectIndustryAreaMedianWage,
-  selectIndustryHousingBurden,
+  selectIndustryHousingData,
+  selectIndustryData,
 } from "@/store/selectors/industrySelectors";
 import type { RootState } from "@/store/store";
-import type { IndustryData } from "@/types/industryTypes";
+import type { IndustryState, IndustryData } from "@/types/industryTypes";
 
 const mockIndustryData: IndustryData = {
   industryOverview: {
@@ -26,96 +27,92 @@ const mockIndustryData: IndustryData = {
     industryWideCostOfTurnover: { amount: 1714381066.6667, formatted: "$1.7B", year: 2024 },
     rates: { hire: 31, seperation: 40 },
   },
-  industry: {
+  industry: { code: "81", name: "Other Services (except Public Administration)" },
+  industryTurnover: {
     turnOverRate: {
-      industry: { involuntary: 39, voluntary: 60 },
-      company: { involuntary: 20, voluntary: 80 },
+      industryAvg: { involuntary: 39, voluntary: 60, quarter: "Q4", year: 2024 },
+      company: { industry: 2, company: 5, year: 2024 },
     },
     seperationRate: {
-      industry: { seperation: 7.7, hiring: 11.1 },
+      industryAvg: { seperation: 7.7, hiring: 11.1, quarter: "Q4", year: 2024 },
       company: { seperation: 2.7, hiring: 8.1 },
     },
   },
-  areaMedianWage: {
-    availableZipcodes: ["03301"],
-    nationalAvgSalary: 83227,
-    companyMedianHourlyWage: 14.03,
-    companyGraph: { salary: 40000, hourly: 26.0 },
-    stateData: [
-      {
-        zipcode: "03301",
-        city: "Manchester, NH",
-        medianLivingWage: 24.03,
-        graph: {
-          state: { salary: 45000, hourly: 21.63 },
-          national: { salary: 83245, hourly: 29.76 },
-        },
-        avgSalary: { salary: 40000, year: 2024 },
+  areaMedianWage: [
+    {
+      zipcode: "10012",
+      state: "New York",
+      medianHourlyWages: 28.16,
+      medianLivingWage: 29.89,
+      nationalAverage: 44587,
+      year: 2023,
+      graph: {
+        stateAverage: { salary: 58560, hourly: 28.16 },
+        yourCompany: { salary: 87500, hourly: 17.5 },
+        nationalAverage: { salary: 44710, hourly: 21.5 },
       },
-    ],
-  },
-  housingBurden: {
-    availableZipcodes: ["03301"],
-    data: [
-      {
-        zipcode: "03301",
-        city: "Manchester, NH",
+    },
+  ],
+  housingCost: [
+    {
+      zipcode: "10012",
+      housingCostBurdenedOwners: [{ year: 2025, burdened: 42.4782, severelyBurdened: 26.0105 }],
+      housingCostBurdenedRenters: [{ year: 2024, burdened: 39.6756, severelyBurdened: 19.2329 }],
+      workingClassHousingCostBurden: {
+        homeOwnershipRate: 22.5,
+        medianHomeValue: "1602800",
+        medianRent: "2895",
+      },
+      workingClassHousingGraph: {
         owners: {
-          period: { quarter: 4, year: 2023 },
-          burdened: { metroArea: 10.2, yourEmployees: 3.1 },
-          severelyBurdened: { metroArea: 3.3, yourEmployees: 1.6 },
+          lowIncome: { burdened: 3.939, severelyBurdened: 3.7519 },
+          moderateIncome: { burdened: 6.25, severelyBurdened: 4.3413 },
+          medianIncome: { burdened: 2.1707, severelyBurdened: 0.8608 },
+          upperIncome: { burdened: 8.8885, severelyBurdened: 2.9005 },
         },
         renters: {
-          period: { quarter: 4, year: 2023 },
-          burdened: { metroArea: 12.2, yourEmployees: 8.1 },
-          severelyBurdened: { metroArea: 6.7, yourEmployees: 1.6 },
-        },
-        workingClass: {
-          homeOwnershipRate: 72,
-          medianHomeValue: 367200,
-          medianRent: 1423,
-          graph: [
-            {
-              incomeCategory: "lowIncome",
-              label: "Low income",
-              range: "$55,250 or less",
-              burdened: 74,
-              severelyBurdened: 44,
-            },
-          ],
+          lowIncome: { burdened: 68.1284, severelyBurdened: 2.8931 },
+          moderateIncome: { burdened: 64.8235, severelyBurdened: 3.9549 },
+          medianIncome: { burdened: 64.4531, severelyBurdened: 2.2971 },
+          upperIncome: { burdened: 22.4214, severelyBurdened: 1.4086 },
         },
       },
-    ],
-  },
+    },
+  ],
 };
 
-const buildState = (industry: Partial<RootState["industry"]> = {}): RootState =>
-  ({
+function buildState(overrides: Partial<IndustryState> = {}): RootState {
+  return {
     industry: {
       data: null,
       loading: false,
       error: null,
       isLoaded: false,
-      ...industry,
+      ...overrides,
     },
-  }) as unknown as RootState;
+  } as unknown as RootState;
+}
 
 describe("industrySelectors", () => {
+  describe("selectIndustryFullData", () => {
+    it("returns null when data is null", () => {
+      expect(selectIndustryFullData(buildState())).toBeNull();
+    });
+    it("returns full industry data when set", () => {
+      expect(selectIndustryFullData(buildState({ data: mockIndustryData }))).toEqual(mockIndustryData);
+    });
+  });
+
   describe("selectIndustryData", () => {
     it("returns null when data is null", () => {
       expect(selectIndustryData(buildState())).toBeNull();
-    });
-
-    it("returns industry data when set", () => {
-      expect(selectIndustryData(buildState({ data: mockIndustryData }))).toEqual(mockIndustryData);
     });
   });
 
   describe("selectIndustryLoading", () => {
     it("returns false when not loading", () => {
-      expect(selectIndustryLoading(buildState({ loading: false }))).toBe(false);
+      expect(selectIndustryLoading(buildState())).toBe(false);
     });
-
     it("returns true when loading", () => {
       expect(selectIndustryLoading(buildState({ loading: true }))).toBe(true);
     });
@@ -123,19 +120,17 @@ describe("industrySelectors", () => {
 
   describe("selectIndustryError", () => {
     it("returns null when no error", () => {
-      expect(selectIndustryError(buildState({ error: null }))).toBeNull();
+      expect(selectIndustryError(buildState())).toBeNull();
     });
-
     it("returns the error string when set", () => {
-      expect(selectIndustryError(buildState({ error: "Network Error" }))).toBe("Network Error");
+      expect(selectIndustryError(buildState({ error: "fail" }))).toBe("fail");
     });
   });
 
   describe("selectIndustryIsLoaded", () => {
     it("returns false when not loaded", () => {
-      expect(selectIndustryIsLoaded(buildState({ isLoaded: false }))).toBe(false);
+      expect(selectIndustryIsLoaded(buildState())).toBe(false);
     });
-
     it("returns true when loaded", () => {
       expect(selectIndustryIsLoaded(buildState({ isLoaded: true }))).toBe(true);
     });
@@ -145,7 +140,6 @@ describe("industrySelectors", () => {
     it("returns null when data is null", () => {
       expect(selectIndustryOverviewData(buildState())).toBeNull();
     });
-
     it("returns industryOverview from data", () => {
       expect(selectIndustryOverviewData(buildState({ data: mockIndustryData }))).toEqual(
         mockIndustryData.industryOverview
@@ -153,23 +147,21 @@ describe("industrySelectors", () => {
     });
   });
 
-  describe("selectIndustryTurnoverComparison", () => {
+  describe("selectIndustryTurnOverRate", () => {
     it("returns null when data is null", () => {
-      expect(selectIndustryTurnoverComparison(buildState())).toBeNull();
+      expect(selectIndustryTurnOverRate(buildState())).toBeNull();
     });
-
-    it("returns industry turnover comparison from data", () => {
-      expect(selectIndustryTurnoverComparison(buildState({ data: mockIndustryData }))).toEqual(
-        mockIndustryData.industry
+    it("returns industry turnover from data", () => {
+      expect(selectIndustryTurnOverRate(buildState({ data: mockIndustryData }))).toEqual(
+        mockIndustryData.industryTurnover
       );
     });
   });
 
   describe("selectIndustryAreaMedianWage", () => {
-    it("returns null when data is null", () => {
-      expect(selectIndustryAreaMedianWage(buildState())).toBeNull();
+    it("returns empty array when data is null", () => {
+      expect(selectIndustryAreaMedianWage(buildState())).toEqual([]);
     });
-
     it("returns area median wage from data", () => {
       expect(selectIndustryAreaMedianWage(buildState({ data: mockIndustryData }))).toEqual(
         mockIndustryData.areaMedianWage
@@ -177,14 +169,13 @@ describe("industrySelectors", () => {
     });
   });
 
-  describe("selectIndustryHousingBurden", () => {
-    it("returns null when data is null", () => {
-      expect(selectIndustryHousingBurden(buildState())).toBeNull();
+  describe("selectIndustryHousingData", () => {
+    it("returns empty array when data is null", () => {
+      expect(selectIndustryHousingData(buildState())).toEqual([]);
     });
-
-    it("returns housing burden from data", () => {
-      expect(selectIndustryHousingBurden(buildState({ data: mockIndustryData }))).toEqual(
-        mockIndustryData.housingBurden
+    it("returns housing cost from data", () => {
+      expect(selectIndustryHousingData(buildState({ data: mockIndustryData }))).toEqual(
+        mockIndustryData.housingCost
       );
     });
   });

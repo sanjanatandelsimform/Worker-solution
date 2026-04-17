@@ -50,7 +50,7 @@ export const selectParticipationSection = (state: RootState): Participation | nu
 
 /**
  * Select the `demographics` section of the API response.
- * Contains employementType (note: intentional typo matching backend schema), gender, age breakdown.
+ * Contains employmentType, gender, age breakdown.
  */
 export const selectDemographicsSection = (state: RootState): Demographics | null =>
   state.workforce.data?.demographics ?? null;

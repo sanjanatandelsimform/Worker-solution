@@ -6,14 +6,12 @@
  * Contract: specs/009-industry-status-api/contracts/industry-api.yaml
  */
 
-// ── Nested value types ─────────────────────────────────────────────────────
 
 export interface SalaryHourly {
   salary: number;
   hourly: number;
 }
 
-// ── Industry Overview ──────────────────────────────────────────────────────
 
 export interface IndustryOverview {
   turnoverRate: {
@@ -36,7 +34,48 @@ export interface IndustryOverview {
   };
 }
 
-// ── Turnover Comparison ────────────────────────────────────────────────────
+export interface IndustryInfo {
+  code: string;
+  name: string;
+}
+
+export interface IndustryAvgTurnover {
+  involuntary: number;
+  voluntary: number;
+  quarter: string;
+  year: number;
+}
+
+export interface CompanyTurnover {
+  industry: number;
+  company: number;
+  year: number;
+}
+
+export interface IndustryAvgSeparation {
+  seperation: number;
+  hiring: number;
+  quarter: string;
+  year: number;
+}
+
+export interface CompanySeparation {
+  seperation: number;
+  hiring: number;
+}
+
+export interface IndustryTurnoverData {
+  turnOverRate: {
+    industryAvg: IndustryAvgTurnover;
+    company: CompanyTurnover;
+  };
+  seperationRate: {
+    industryAvg: IndustryAvgSeparation;
+    company: CompanySeparation;
+  };
+}
+
+// ── Turnover Comparison (legacy — keep for BenchmarkFinchPage compatibility) ──
 
 export interface VoluntaryInvoluntary {
   involuntary: number;
@@ -59,7 +98,19 @@ export interface IndustryTurnoverComparison {
   };
 }
 
-// ── Area Median Wage ───────────────────────────────────────────────────────
+export interface AreaMedianWageEntry {
+  zipcode: string;
+  state: string;
+  medianHourlyWages: number;
+  medianLivingWage: number;
+  nationalAverage: number;
+  graph: {
+    stateAverage: SalaryHourly;
+    yourCompany: SalaryHourly;
+    nationalAverage: SalaryHourly;
+  };
+  year: number;
+}
 
 export interface StateWageData {
   zipcode: string;
@@ -76,14 +127,51 @@ export interface StateWageData {
 }
 
 export interface AreaMedianWage {
-  availableZipcodes: string[];
   nationalAvgSalary: number;
   companyMedianHourlyWage: number;
   companyGraph: SalaryHourly;
   stateData: StateWageData[];
 }
 
-// ── Housing Burden ─────────────────────────────────────────────────────────
+
+export interface HousingCostBurdenYear {
+  year: number;
+  burdened: number;
+  severelyBurdened: number;
+}
+
+export interface IncomeLevelBurden {
+  burdened: number;
+  severelyBurdened: number;
+}
+
+export interface WorkingClassHousingGraph {
+  renters: {
+    lowIncome: IncomeLevelBurden;
+    moderateIncome: IncomeLevelBurden;
+    medianIncome: IncomeLevelBurden;
+    upperIncome: IncomeLevelBurden;
+  };
+  owners: {
+    lowIncome: IncomeLevelBurden;
+    moderateIncome: IncomeLevelBurden;
+    medianIncome: IncomeLevelBurden;
+    upperIncome: IncomeLevelBurden;
+  };
+}
+
+export interface HousingCostEntry {
+  zipcode: string;
+  housingCostBurdenedOwners: HousingCostBurdenYear[];
+  housingCostBurdenedRenters: HousingCostBurdenYear[];
+  workingClassHousingCostBurden: {
+    homeOwnershipRate: number;
+    medianHomeValue: string;
+    medianRent: string;
+  };
+  workingClassHousingGraph: WorkingClassHousingGraph;
+}
+
 
 export interface BurdenMetrics {
   metroArea: number;
@@ -127,23 +215,21 @@ export interface HousingBurden {
   data: HousingBurdenEntry[];
 }
 
-// ── Root Industry Data ─────────────────────────────────────────────────────
 
 export interface IndustryData {
   industryOverview: IndustryOverview;
-  industry: IndustryTurnoverComparison;
-  areaMedianWage: AreaMedianWage;
-  housingBurden: HousingBurden;
+  industry: IndustryInfo;
+  industryTurnover: IndustryTurnoverData;
+  areaMedianWage: AreaMedianWageEntry[];
+  housingCost: HousingCostEntry[];
+  housingBurden?: HousingBurden;
 }
 
-// ── API Envelope ───────────────────────────────────────────────────────────
 
 export interface IndustryApiResponse {
   status: boolean;
   data: IndustryData;
 }
-
-// ── Redux Slice State ──────────────────────────────────────────────────────
 
 export interface IndustryState {
   data: IndustryData | null;
