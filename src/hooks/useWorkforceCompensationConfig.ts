@@ -117,10 +117,10 @@ export function useWorkforceCompensationConfig(selectedWorkforceDept: string) {
     () =>
       (compensationSection?.benefitsCost.graph ?? []).map(g => ({
         label: g.salaryRange,
-        min: g.min,
+        min: Math.max(0, g.min - 40),
         boxStart: g.min,
         boxEnd: g.max,
-        max: g.max,
+        max: Math.max(0, g.max + 40),
       })),
     [compensationSection]
   );
