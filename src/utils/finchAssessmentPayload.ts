@@ -41,7 +41,9 @@ export function buildFinchAssessmentPayload(
   goalsAnswers: GoalsAnswer,
   annualRaiseMonth: string,
   payrollProvider: string,
-  benefitsEnrollmentMonth: string
+  benefitsEnrollmentMonth: string,
+  retirementPlanHasMatch: boolean = false,
+  retirementMatchPercentage: string = ""
 ): FinchAssessmentPayload {
   const offersAnnualRaises = answers["annual-raises"] === "yes-raises";
 
@@ -74,6 +76,10 @@ export function buildFinchAssessmentPayload(
     workWithBenefitsBroker: brokerRaw ? (brokerMap[brokerRaw] ?? null) : null,
     benefitEnrollmentMonth: benefitsEnrollmentMonth ? capitalise(benefitsEnrollmentMonth) : null,
     retirementVestingPeriod: (answers["retirement-vesting-period"] as string) ?? "",
+    retirementPlanHasMatch,
+    ...(retirementPlanHasMatch && retirementMatchPercentage
+      ? { retirementMatchPercentage: Number(retirementMatchPercentage) }
+      : {}),
     retirementAutoEnroll: answers["retirement-auto-enroll"] === "yes-autoenroll",
     retirementHardshipWithdrawals: answers["retirement-hardship-withdrawals"] === "yes-hardship",
   };
