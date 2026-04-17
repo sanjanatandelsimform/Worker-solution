@@ -720,7 +720,7 @@ export const DynamicQuestionRenderer = ({
                       )}
                       {currentItems.length > 1 && (
                         <Button
-                          color="secondary"
+                          color="tertiary"
                           size="md"
                           iconLeading={Trash01}
                           onClick={() => removeArrayItem(conditionalKey, item.id)}
@@ -732,7 +732,7 @@ export const DynamicQuestionRenderer = ({
                   ))}
                   {canAddMore && (
                     <Button
-                      color="secondary"
+                      color="tertiary"
                       size="md"
                       iconLeading={Plus}
                       onClick={() => addArrayItem(conditionalKey)}
@@ -1089,7 +1089,7 @@ export const DynamicQuestionRenderer = ({
               )}
               {currentItems.length > 1 && (
                 <Button
-                  color="secondary"
+                  color="tertiary"
                   size="md"
                   iconLeading={Trash01}
                   onClick={() => removeArrayItem(question.key, (item as { id: number }).id)}
@@ -1102,7 +1102,7 @@ export const DynamicQuestionRenderer = ({
 
           {canAddMore && (
             <Button
-              color="secondary"
+              color="tertiary"
               size="md"
               iconLeading={Plus}
               onClick={() => addArrayItem(question.key)}

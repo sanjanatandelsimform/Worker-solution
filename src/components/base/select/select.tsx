@@ -75,9 +75,9 @@ const SelectValue = ({
       type="button"
       className={cx(
         "relative flex w-full cursor-pointer items-center rounded-lg bg-ws-base-white shadow-xs ring-1 ring-ws-border-primary outline-hidden transition duration-100 ease-linear ring-inset text-ws-text-primary",
-        (isFocused || isOpen) && "ring-2 ring-brand font-normal",
+        (isFocused || isOpen) && "ring-2 ring-ws-light-teal-850 font-normal",
         isDisabled && "cursor-not-allowed bg-disabled_subtle text-disabled",
-        isInvalid && "ring-1 ring-red-500"
+        isInvalid && "ring-1 ring-ws-error-600",
       )}
     >
       <AriaSelectValue<SelectItemType>
@@ -85,7 +85,7 @@ const SelectValue = ({
           "flex h-max w-full items-center justify-start gap-2 truncate text-left align-middle",
 
           // Icon styles
-          "*:data-icon:size-5 *:data-icon:shrink-0 *:data-icon:text-ws-gray-70 in-disabled:*:data-icon:text-ws-gray-70",
+          "*:data-icon:size-5 *:data-icon:shrink-0 *:data-icon:text-ws-gray-400 in-disabled:*:data-icon:text-ws-gray-400",
 
           sizes[size].root
         )}
@@ -108,7 +108,7 @@ const SelectValue = ({
 
               {state.selectedItem ? (
                 <section className="flex w-full gap-2 truncate">
-                  <p className="truncate text-md font-medium text-ws-text-primary question-text">
+                  <p className="truncate text-md font-medium text-ws-base-black question-text">
                     {state.selectedItem?.label}
                   </p>
                   {state.selectedItem?.supportingText && (
@@ -120,18 +120,18 @@ const SelectValue = ({
               ) : (
                 <p
                   className={cx(
-                    "text-md text-placeholder question-text",
+                    "text-md text-ws-text-tertiary question-text",
                     isDisabled && "text-disabled"
                   )}
                 >
-                  {placeholder}
+                  <span className="text-ws-gray-500">{placeholder}</span>
                 </p>
               )}
 
               <ChevronDown
                 aria-hidden="true"
                 className={cx(
-                  "ml-auto shrink-0 text-ws-gray-70",
+                  "ml-auto shrink-0 text-ws-gray-400",
                   size === "sm" ? "size-4 stroke-[2.5px]" : "size-5"
                 )}
               />

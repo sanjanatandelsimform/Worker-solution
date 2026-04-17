@@ -781,7 +781,7 @@ export default function AdditionalQuestions() {
                           value={retirementMatchPercentage}
                           onWheel={e => e.currentTarget.blur()}
                           onChange={e => {
-                            setRetirementMatchPercentage(e.target.value);
+                            setRetirementMatchPercentage((e.target as HTMLInputElement).value);
                             if (fieldErrors["retirementMatchPercentage"]) {
                               setFieldErrors(prev => ({ ...prev, retirementMatchPercentage: "" }));
                             }

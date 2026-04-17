@@ -346,14 +346,14 @@
 /* =========================
     SHADOW COLORS
   ========================= */
-  --ws-color-shadow-xs: rgba(10,13,18,0.05);
-  --ws-color-shadow-sm: rgba(10,13,18,0.10);
-  --ws-color-shadow-md: rgba(10,13,18,0.10);
-  --ws-color-shadow-lg: rgba(10,13,18,0.08);
-  --ws-color-shadow-xl: rgba(10,13,18,0.08);
-  --ws-color-shadow-2xl: rgba(10,13,18,0.18);
-  --ws-color-shadow-3xl: rgba(10,13,18,0.14);
-  --ws-color-shadow-inner: rgba(10,13,18,0.05);
+  --ws-color-shadow-xs: 0px 1px 2px 0px rgba(10,13,18,0.05);
+  --ws-color-shadow-sm: 0px 1px 3px 0px rgba(10,13,18,0.10), 0px 1px 2px -1px rgba(10,13,18,0.10);
+  --ws-color-shadow-md: 0px 4px 6px -1px rgba(10,13,18,0.10), 0px 2px 4px -2px rgba(10,13,18,0.10);
+  --ws-color-shadow-lg: 0px 10px 15px -3px rgba(10,13,18,0.08), 0px 4px 6px -4px rgba(10,13,18,0.08);
+  --ws-color-shadow-xl: 0px 20px 25px -5px rgba(10,13,18,0.08), 0px 8px 10px -6px rgba(10,13,18,0.08);
+  --ws-color-shadow-2xl: 0px 25px 50px -12px rgba(10,13,18,0.18);
+  --ws-color-shadow-3xl: 0px 35px 60px -15px rgba(10,13,18,0.14);
+  --ws-color-shadow-inner: inset 0px 2px 4px 0px rgba(10,13,18,0.05);
 
 /* =========================
     FONT SIZES
@@ -389,16 +389,11 @@
   height: 450px;
 }
 
-/* .myClass {
-  box-shadow: inset 2px 0 0 var(--color-white);
-  border: 1px solid var(--color-gray-300);
-  border-left: none;
-} */
 .warning {
   border-radius: 12px;
-  background-color: var(--color-yellow-50);
-  border: 1px solid var(--color-yellow-500);
-  color: var(--color-yellow-500);
+  background-color: var(--ws-color-warning-200);
+  border: 1px solid var(--ws-color-warning-500);
+  color: var(--ws-color-warning-500);
   padding: 8px 16px;
   position: absolute;
   top: 8px;
@@ -407,16 +402,16 @@
   max-width: 445px;
 }
 .warning .closeIconColor {
-  color: var(--color-yellow-500);
-  fill: var(--color-yellow-500);
-  stroke: var(--color-yellow-500);
+  color: var(--ws-color-warning-500);
+  fill: var(--ws-color-warning-200);
+  stroke: var(--ws-color-warning-500);
   cursor: pointer;
 }
 .danger {
   border-radius: 12px;
-  background-color: var(--color-red-50);
-  border: 1px solid var(--color-red-500);
-  color: var(--color-red-500);
+  background-color: var(--ws-color-error-200);
+  border: 1px solid var(--ws-color-error-500);
+  color: var(--ws-color-error-500);
   padding: 8px 16px;
   position: absolute;
   top: 8px;
@@ -425,16 +420,16 @@
   max-width: 445px;
 }
 .danger .closeIconColor {
-  color: var(--color-red-500);
-  fill: var(--color-red-500);
-  stroke: var(--color-red-500);
+  color: var(--ws-color-error-500);
+  fill: var(--ws-color-error-50);
+  stroke: var(--ws-color-error-500);
   cursor: pointer;
 }
 .success {
   border-radius: 12px;
-  background-color: var(--color-green-50);
-  border: 1px solid var(--color-green-500);
-  color: var(--color-green-500);
+  background-color: var(--ws-color-success-200);
+  border: 1px solid var(--ws-color-success-500);
+  color: var(--ws-color-success-500);
   padding: 8px 16px;
   position: absolute;
   top: 8px;
@@ -443,9 +438,9 @@
   max-width: 445px;
 }
 .success .closeIconColor {
-  color: var(--color-green-500);
-  fill: var(--color-green-500);
-  stroke: var(--color-green-500);
+  color: var(--ws-color-success-500);
+  fill: var(--ws-color-success-50);
+  stroke: var(--ws-color-success-500);
   cursor: pointer;
 }
 .custom-label {
@@ -462,8 +457,4 @@
   color: var(--ws-color-text-secondary);
   font-size: 14px;
   font-weight: 400;
-}
-.box-shadow {
-  box-shadow: 0px 2px 10px 0px #0000001A;
-
 }

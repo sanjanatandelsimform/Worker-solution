@@ -174,7 +174,7 @@ export function Table<T extends Record<string, unknown>>({
                   onChange={e => {
                     if (!onRowSelectionChange || data.length === 0) return;
                     const newSelected = new Set<number>();
-                    if (e.target.checked) {
+                    if ((e.target as HTMLInputElement).checked) {
                       data.forEach((_, index) => {
                         newSelected.add(index);
                       });

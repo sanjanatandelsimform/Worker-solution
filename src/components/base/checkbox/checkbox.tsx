@@ -136,7 +136,7 @@ export const Checkbox = ({
           {(label || hint) && (
             <div className={cx("inline-flex flex-col items-start", sizes[size].textWrapper)}>
               {label && (
-                <p className={cx("text-secondary select-none question-text", sizes[size].label)}>
+                <p className={cx("text-secondary select-none question-text hover:cursor-pointer", sizes[size].label)}>
                   {label}
                   {tooltipText && (
                     <Tooltip

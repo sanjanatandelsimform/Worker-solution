@@ -46,7 +46,7 @@ interface UpdateYourEmailModalProps {
 }
 
 export const GetInTouchModal = ({ isOpen, onClose }: UpdateYourEmailModalProps) => {
-  const [phoneNumber, setPhoneNumber] = useState("");
+  const [phoneNumber] = useState("");
   const [countryCode, setCountryCode] = useState("US");
   const {
     handleSubmit,
@@ -142,7 +142,7 @@ export const GetInTouchModal = ({ isOpen, onClose }: UpdateYourEmailModalProps) 
                   type="tel"
                   size="sm"
                   value={phoneNumber}
-                  onChange={setPhoneNumber}
+                  //onChange={setPhoneNumber}
                 />
               </InputGroup>
               <InputGroup className="relative">
