@@ -17,6 +17,7 @@ import { useAssessmentStatus } from "@/hooks/useAssessmentStatus";
 import CompanyAtAGlance from "./CompanyAtAGlance";
 import CoreBenefitsEnhancement from "./CoreBenefitsEnhancement";
 import StrategicSolutions from "./StrategicSolutions";
+import { useIndustry } from "@/hooks/useIndustry";
 
 export default function RecommendationsFinchPage() {
   const { isFinchAssessmentIncomplete } = useAssessmentStatus();
@@ -31,13 +32,16 @@ export default function RecommendationsFinchPage() {
   const strategicRecommendations = useAppSelector(selectRecommStrategicRecommendations);
   const provenStrategyFlags = useAppSelector(selectProvenStrategiesFlags);
   const recommendationsIsLoading = useAppSelector(selectRecommendationsLoading);
+  const { isLoading: isIndustryLoading, data: industryData } = useIndustry();
+
+  const industryAverageWage = industryData?.industryTurnover.seperationRate.industryAvg.hiring;
 
   // Synthetic Company Overview shape (maps workforce fields to existing format fn expectations)
   const companyGlanceData = {
     totalWorkforce: workforceSection?.totalWorkforce ?? null,
     averageHourlyWage: compensationSection?.salaryBreakdown?.avgHourlyRate ?? null,
     averageSalary: compensationSection?.salaryBreakdown?.avgSalary ?? null,
-    industryAverageWage: null,
+    industryAverageWage: industryAverageWage ?? null,
   };
 
   // Synthetic Benefits Overview shape (maps participation fields to card counts)
@@ -59,7 +63,7 @@ export default function RecommendationsFinchPage() {
   const provenStrategiesPercent = Math.round((provenStrategiesCount / 3) * 100);
 
   // Combined loading guard
-  const isLoading = workforceIsLoading || recommendationsIsLoading;
+  const isLoading = workforceIsLoading || recommendationsIsLoading || isIndustryLoading;
 
   return (
     <div className="bg-ws-base-white space-y-6 py-10 px-6 shadow-xl rounded-b-xl">

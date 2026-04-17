@@ -15,7 +15,7 @@ interface SalaryHourlyComparisonChartProps {
 export const SalaryHourlyComparisonChart = ({
   salaryData,
   hourlyData,
-  sourceAttribution = "Source: BLS, 2023",
+  sourceAttribution = "Source: BLS, 2029",
 }: SalaryHourlyComparisonChartProps) => {
   return (
     <div className="w-full rounded-lg border border-ws-border-primary bg-ws-base-white p-6">

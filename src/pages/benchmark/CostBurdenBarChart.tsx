@@ -65,8 +65,9 @@ export default function CostBurdenBarChart({ data, width, height = 400 }: Canvas
     const chartWidth = canvasWidth - padding.left - padding.right;
     const chartHeight = height - padding.top - padding.bottom;
 
-    // Calculate max value for scaling
-    const maxValue = Math.max(...data.map(item => item.value1 + item.value2));
+    // Calculate max value for scaling — default to 100 when data is empty or all zeros
+    const rawMax = data.length > 0 ? Math.max(...data.map(item => item.value1 + item.value2)) : 0;
+    const maxValue = rawMax > 0 ? rawMax : 100;
     const yScale = chartHeight / maxValue;
 
     // Bar configuration

@@ -12,6 +12,7 @@ export interface FinchConnection {
   providerId: string;
   lastSyncedAt: string | null;
   createdAt: string;
+  industry: "fetch" | null;
 }
 
 export interface FinchSyncJob {

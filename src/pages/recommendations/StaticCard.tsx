@@ -1,5 +1,5 @@
-import { Tooltip, TooltipTrigger } from "@/components/base/tooltip/tooltip";
-import { InfoCircle } from "@untitledui/icons";
+// import { Tooltip, TooltipTrigger } from "@/components/base/tooltip/tooltip";
+// import { InfoCircle } from "@untitledui/icons";
 
 export interface StaticCardProps {
   title: string;
@@ -19,16 +19,16 @@ export interface StaticCardProps {
 export default function StaticCard({
   title,
   count,
-  infoIcon = false,
+  // infoIcon = false,
   classess,
   titleClass,
-  infoCircleClass,
+  // infoCircleClass,
   countClass,
-  tooltipText,
-  descriptionText,
+  // tooltipText,
+  // descriptionText,
   countWrap,
   itemAlign,
-  placements,
+  // placements,
   countIcon,
 }: Readonly<StaticCardProps>) {
   return (
@@ -41,7 +41,7 @@ export default function StaticCard({
         >
           {title}
         </p>
-        <span className="ml-1">
+        {/* <span className="ml-1">
           {infoIcon ? (
             <Tooltip
               title={tooltipText || ""}
@@ -56,7 +56,7 @@ export default function StaticCard({
           ) : (
             ""
           )}
-        </span>
+        </span> */}
       </div>
       <div className={`flex items-end gap-2 justify-between`}>
         <h2 className={`w-full ${countClass}`}>
