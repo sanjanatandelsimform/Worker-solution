@@ -307,7 +307,6 @@ export const DashboardPage = () => {
     navigate("/assessment");
   };
 
-  console.log("isFinchCompleted", isFinchCompleted);
   return (
     <div className="flex h-screen overflow-hidden bg-ws-base-white">
       {/* Sidebar */}

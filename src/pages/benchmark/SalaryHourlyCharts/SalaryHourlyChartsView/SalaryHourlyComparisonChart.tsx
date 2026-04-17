@@ -17,7 +17,6 @@ export const SalaryHourlyComparisonChart = ({
   hourlyData,
   sourceAttribution = "Source: BLS, 2029",
 }: SalaryHourlyComparisonChartProps) => {
-  console.log("salaryData",salaryData)
   return (
     <div className="w-full rounded-lg border border-ws-border-primary bg-ws-base-white p-6">
       {/* Title */}

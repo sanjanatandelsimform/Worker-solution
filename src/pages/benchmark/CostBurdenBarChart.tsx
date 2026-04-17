@@ -310,7 +310,6 @@ export function IncomeDistributionChart({
     severelyBurdened: number;
   }> | null;
 }) {
-  console.log("data====>>>",data)
   const chartData: ChartDataItem[] = data
     ? data.map(item => ({
         label: item.label,

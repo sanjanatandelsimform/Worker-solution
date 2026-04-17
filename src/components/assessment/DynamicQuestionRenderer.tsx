@@ -1065,7 +1065,6 @@ export const DynamicQuestionRenderer = ({
       const currentItems = (answers[question.key] as Array<{ id: number }>) || [];
       const maxItems = question.validationRules?.maxItems || 5;
       const canAddMore = currentItems.length < maxItems;
-      console.log("question====", question.key);
       if (!question.validationRules?.fields) return null;
 
       if (currentItems.length === 0) {
