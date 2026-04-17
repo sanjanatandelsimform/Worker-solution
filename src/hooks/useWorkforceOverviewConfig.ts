@@ -53,7 +53,8 @@ export function useWorkforceOverviewConfig() {
 
   const employeeCardsConfig = useMemo(
     () => [] as typeof overviewCardsConfig,
-    [overviewCardsConfig]
+
+    []
   );
 
   return { overviewCardsConfig, employeeCardsConfig };

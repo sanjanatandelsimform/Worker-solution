@@ -14,6 +14,7 @@ import {
   selectDashboardData,
 } from "@/store/selectors/dashboardSelectors";
 import { formatCurrency, formatPercentage } from "@/utils/formatters";
+import type { IndustryOverview } from "@/types/dashboardTypes";
 import { Label } from "@/components/base/input/label";
 import TurnoverRateCard from "./TurnoverRateCard";
 import { GlobeIcon } from "@/assets/icons/Globe";
@@ -133,40 +134,40 @@ const ProgressCardSkeleton = () => (
 );
 interface BenchmarkCardConfig {
   id: string;
-  title: (industryOverview: unknown) => string;
-  count: (industryOverview: unknown) => string;
+  title: (data: IndustryOverview | null) => string;
+  count: (data: IndustryOverview | null) => string;
   tooltipText: string;
-  descriptionText: (industryOverview: unknown) => string;
-  countClass: (industryOverview: unknown) => string;
+  descriptionText: (data: IndustryOverview | null) => string;
+  countClass: (data: IndustryOverview | null) => string;
 }
 
 const benchmarkCardsConfig: BenchmarkCardConfig[] = [
   {
     id: "turnover-rate",
-    title: (data: any) =>
+    title: (data: IndustryOverview | null) =>
       !data?.turnoverRate?.month || !data?.turnoverRate?.year
         ? "Turnover rate"
         : `Turnover rate since ${data?.turnoverRate?.month} ${data?.turnoverRate?.year}`,
-    count: (data: any) => formatPercentage(data?.turnoverRate?.rate),
+    count: (data: IndustryOverview | null) => formatPercentage(data?.turnoverRate?.rate),
     tooltipText: "Turnover Rate",
     descriptionText: () =>
       "Industry specific turnover metrics are calculated from US Census Bureau QWI data sources",
-    countClass: (data: any) =>
+    countClass: (data: IndustryOverview | null) =>
       data?.turnoverRate?.rate == null
         ? "mt-2 text-sm font-medium text-ws-text-primary"
         : "mt-2 text-3xl font-semibold text-ws-text-primary",
   },
   {
     id: "avg-turnover",
-    title: (data: any) =>
+    title: (data: IndustryOverview | null) =>
       !data?.avgTurnover?.sinceYear
         ? "Avg Turnover"
         : `Avg Turnover since  ${data?.avgTurnover?.sinceYear}`,
-    count: (data: any) => formatPercentage(data?.avgTurnover?.rate),
+    count: (data: IndustryOverview | null) => formatPercentage(data?.avgTurnover?.rate),
     tooltipText: "Average Turnover",
     descriptionText: () =>
       "Average turnover metrics are calculated from US Census Bureau QWI data sources",
-    countClass: (data: any) =>
+    countClass: (data: IndustryOverview | null) =>
       data?.avgTurnover?.rate == null
         ? "mt-2 text-sm font-medium text-ws-text-primary"
         : "mt-2 text-3xl font-semibold text-ws-text-primary",
@@ -174,12 +175,12 @@ const benchmarkCardsConfig: BenchmarkCardConfig[] = [
   {
     id: "avg-cost-turnover",
     title: () => "Avg. Cost of Turnover",
-    count: (data: any) =>
+    count: (data: IndustryOverview | null) =>
       data?.avgCostOfTurnover?.formatted || formatCurrency(data?.avgCostOfTurnover?.amount),
     tooltipText: "Average Cost of Turnover",
-    descriptionText: (data: any) =>
+    descriptionText: (data: IndustryOverview | null) =>
       `Industry specific cost of turnover is calculated from ${data?.avgCostOfTurnover?.year || " "}`,
-    countClass: (data: any) =>
+    countClass: (data: IndustryOverview | null) =>
       data?.avgCostOfTurnover?.amount == null
         ? "mt-2 text-sm font-medium text-ws-text-primary"
         : "mt-2 text-3xl font-semibold text-ws-text-primary",
@@ -189,30 +190,30 @@ const benchmarkCardsConfig: BenchmarkCardConfig[] = [
 const benchmarkCardsConfigR2: BenchmarkCardConfig[] = [
   {
     id: "hire-rate-y-o-y",
-    title: (data: any) =>
+    title: (data: IndustryOverview | null) =>
       !data?.turnoverRate?.month || !data?.turnoverRate?.year
         ? "Hire Rate y-o-y"
         : `Hire Rate since ${data?.turnoverRate?.month} ${data?.turnoverRate?.year}`,
-    count: (data: any) => formatPercentage(data?.turnoverRate?.rate),
+    count: (data: IndustryOverview | null) => formatPercentage(data?.turnoverRate?.rate),
     tooltipText: "Hire Rate",
     descriptionText: () =>
       "Industry specific hire rate metrics are calculated from US Census Bureau QWI data sources",
-    countClass: (data: any) =>
+    countClass: (data: IndustryOverview | null) =>
       data?.turnoverRate?.rate == null
         ? "mt-2 text-sm font-medium text-ws-text-primary"
         : "mt-2 text-3xl font-semibold text-ws-text-primary",
   },
   {
     id: "separation-rate-y-o-y",
-    title: (data: any) =>
+    title: (data: IndustryOverview | null) =>
       !data?.avgTurnover?.sinceYear
         ? "Separation Rate y-o-y"
         : `Separation Rate since  ${data?.avgTurnover?.sinceYear}`,
-    count: (data: any) => formatPercentage(data?.avgTurnover?.rate),
+    count: (data: IndustryOverview | null) => formatPercentage(data?.avgTurnover?.rate),
     tooltipText: "Separation Rate",
     descriptionText: () =>
       "Industry specific separation rate metrics are calculated from US Census Bureau QWI data sources",
-    countClass: (data: any) =>
+    countClass: (data: IndustryOverview | null) =>
       data?.avgTurnover?.rate == null
         ? "mt-2 text-sm font-medium text-ws-text-primary"
         : "mt-2 text-3xl font-semibold text-ws-text-primary",

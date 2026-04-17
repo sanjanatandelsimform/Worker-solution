@@ -92,42 +92,42 @@ export default function ResetPasswordForm() {
             >
               {/* New Password Input Field */}
               <InputGroup className="relative">
-                  <Input
-                    name="newPassword"
-                    label="Password"
-                    placeholder="Password"
-                    size="md"
-                    type="password"
-                    hint={errors.newPassword?.message}
-                    isInvalid={!!errors.newPassword}
-                    value={getValues("newPassword")}
-                    tooltip={errors.newPassword ? errors.newPassword.message : undefined}
-                    onChange={value => {
-                      const sanitized = value.replace(/^\s+/, "");
-                      setValue("newPassword", sanitized);
-                      trigger("newPassword");
-                    }}
-                  />
+                <Input
+                  name="newPassword"
+                  label="Password"
+                  placeholder="Password"
+                  size="md"
+                  type="password"
+                  hint={errors.newPassword?.message}
+                  isInvalid={!!errors.newPassword}
+                  value={getValues("newPassword")}
+                  tooltip={errors.newPassword ? errors.newPassword.message : undefined}
+                  onChange={value => {
+                    const sanitized = value.replace(/^\s+/, "");
+                    setValue("newPassword", sanitized);
+                    trigger("newPassword");
+                  }}
+                />
               </InputGroup>
 
               {/* Confirm Password Input Field */}
               <InputGroup className="relative">
                 <Input
-                    name="confirmPassword"
-                    label="Confirm Password"
-                    placeholder="Confirm Password"
-                    size="md"
-                    type="password"
-                    hint={errors.confirmPassword?.message}
-                    isInvalid={!!errors.confirmPassword}
-                    value={getValues("confirmPassword")}
-                    tooltip={errors.confirmPassword ? errors.confirmPassword.message : undefined}
-                    onChange={value => {
-                      const sanitized = value.replace(/^\s+/, "");
-                      setValue("confirmPassword", sanitized);
-                      trigger("confirmPassword");
-                    }}
-                  />
+                  name="confirmPassword"
+                  label="Confirm Password"
+                  placeholder="Confirm Password"
+                  size="md"
+                  type="password"
+                  hint={errors.confirmPassword?.message}
+                  isInvalid={!!errors.confirmPassword}
+                  value={getValues("confirmPassword")}
+                  tooltip={errors.confirmPassword ? errors.confirmPassword.message : undefined}
+                  onChange={value => {
+                    const sanitized = value.replace(/^\s+/, "");
+                    setValue("confirmPassword", sanitized);
+                    trigger("confirmPassword");
+                  }}
+                />
               </InputGroup>
 
               {/* Error and Success Messages */}
@@ -160,7 +160,10 @@ export default function ResetPasswordForm() {
             <p className="text-sm font-normal leading-5 text-ws-text-tertiary">
               Remember your password?
             </p>
-            <Link to="/sign-in" className="text-sm font-normal text-ws-light-teal-850 hover:text-ws-light-teal-800">
+            <Link
+              to="/sign-in"
+              className="text-sm font-normal text-ws-light-teal-850 hover:text-ws-light-teal-800"
+            >
               Sign in
             </Link>
           </div>

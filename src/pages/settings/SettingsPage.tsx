@@ -64,7 +64,7 @@ export const SettingsPage = () => {
       setFirstName(userData.firstName ?? "");
       setLastName(userData.lastName ?? "");
     }
-  }, [userData?.firstName, userData?.lastName]);
+  }, [userData]);
 
   const { completionCount, isFinchCompleted } = useAssessmentStatus();
 

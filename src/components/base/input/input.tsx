@@ -171,7 +171,7 @@ export const InputBase = ({
               "absolute cursor-pointer transition-colors duration-100 ease-linear text-ws-gray-400 hover:text-ws-gray-500 focus:text-ws-gray-500",
               sizes[inputSize].iconTrailing,
               context?.tooltipClassName,
-              tooltipClassName,
+              tooltipClassName
             )}
           >
             <HelpCircle className={cx("size-4")} />
@@ -184,7 +184,7 @@ export const InputBase = ({
         <InfoCircle
           className={cx(
             "pointer-events-none absolute size-4 text-ws-error-600",
-            sizes[inputSize].iconTrailing,
+            sizes[inputSize].iconTrailing
           )}
         />
       )}
@@ -232,7 +232,12 @@ InputBase.displayName = "InputBase";
 type TextFieldContextProps = Partial<
   Pick<
     InputBaseProps,
-    "size" | "wrapperClassName" | "inputClassName" | "iconClassName" | "tooltipClassName" | "helperTooltip"
+    | "size"
+    | "wrapperClassName"
+    | "inputClassName"
+    | "iconClassName"
+    | "tooltipClassName"
+    | "helperTooltip"
   >
 >;
 
@@ -252,7 +257,14 @@ export const TextField = ({
 }: TextFieldProps) => {
   return (
     <TextFieldContext.Provider
-      value={{ inputClassName, wrapperClassName, iconClassName, tooltipClassName, helperTooltip, size }}
+      value={{
+        inputClassName,
+        wrapperClassName,
+        iconClassName,
+        tooltipClassName,
+        helperTooltip,
+        size,
+      }}
     >
       <AriaTextField
         {...props}

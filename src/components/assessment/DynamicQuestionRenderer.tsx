@@ -1132,10 +1132,11 @@ export const DynamicQuestionRenderer = ({
               const subFieldError = errors?.[`${question.key}.${subField.key}`] ?? "";
 
               return (
-                <div key={subField.key} className="flex items-start justify-between gap-6 flex-col md:flex-row">
-                  <span className="text-sm font-medium text-ws-text-primary">
-                    {subField.label}
-                  </span>
+                <div
+                  key={subField.key}
+                  className="flex items-start justify-between gap-6 flex-col md:flex-row"
+                >
+                  <span className="text-sm font-medium text-ws-text-primary">{subField.label}</span>
                   <div className="flex flex-col gap-1 w-full max-w-xs">
                     <Input
                       type="text"

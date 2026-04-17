@@ -6,9 +6,9 @@ export const filledColors: Record<
   { root: string; addon: string; addonButton: string }
 > = {
   gray: {
-    root: "bg-gray-50 text-ws-text-primary ring-gray-200",
+    root: "bg-ws-gray-50 text-ws-text-primary ring-ws-gray-200",
     addon: "text-ws-gray-100",
-    addonButton: "hover:bg-gray-100 text-ws-gray-70 hover:text-ws-gray-100",
+    addonButton: "hover:bg-ws-gray-100 text-ws-gray-70 hover:text-ws-gray-100",
   },
   brand: {
     root: "bg-ws-base-white text-ws-text-primary ring-ws-border-primary",
