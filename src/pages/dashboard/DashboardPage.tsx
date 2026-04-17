@@ -36,6 +36,15 @@ import WorkforcePage from "../workforce/WorkforcePage";
 import { AssessmentIcon } from "@/assets/icons/AssessmentIcon";
 import { fetchRecommendations } from "@/store/slices/recommendationsSlice";
 
+const BASE_TAB_ITEMS = [{ id: "finchRecommendations", label: "Recommendations" }];
+
+const FINCH_CONNECTED_TAB_ITEMS = [
+  { id: "finchIndustry", label: "Industry" },
+  { id: "finchWorkforce", label: "Workforce" },
+];
+
+const BASIC_TAB_ITEMS = [{ id: "industry", label: "Industry" }];
+
 export const DashboardPage = () => {
   const navigate = useNavigate();
   const location = useLocation();
@@ -627,34 +636,13 @@ export const DashboardPage = () => {
           )}
           {emailVerify && isDashboardVisible && (
             <div className="mt-10">
-              {/* <Tabs>
-                <Tabs.List
-                  size="md"
-                  type="button-brand"
-                  items={[
-                    { id: "recommendations", label: "Recommendations" },
-                    { id: "benchmark", label: "Benchmark" },
-                  ]}
-                />
-                <Tabs.Panel id="recommendations" className="pt-12">
-                  <RecommendationsPage />
-                </Tabs.Panel>
-                <Tabs.Panel id="benchmark" className="pt-12">
-                  <BenchmarkPage />
-                </Tabs.Panel>
-              </Tabs> */}
               <Tabs>
                 <Tabs.List
                   className="bg-ws-light-teal-50 pt-9 pl-6 pr-6 rounded-t-lg text-ws-light-teal-900 overflow-auto"
                   type="underline"
                   items={[
-                    { id: "finchRecommendations", label: "Recommendations" },
-                    ...(isConnected
-                      ? [
-                          { id: "finchIndustry", label: "Industry" },
-                          { id: "finchWorkforce", label: "Workforce" },
-                        ]
-                      : [{ id: "industry", label: "Industry" }]),
+                    ...BASE_TAB_ITEMS,
+                    ...(isConnected ? FINCH_CONNECTED_TAB_ITEMS : BASIC_TAB_ITEMS),
                   ]}
                 />
 
