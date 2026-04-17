@@ -43,13 +43,9 @@ export default function RecommendationsFinchPage() {
   // Synthetic Benefits Overview shape (maps participation fields to card counts)
   const benefitsGlanceData: Record<string, string | null> = {
     "eligible-employees":
-      participationSection?.totalWorkforce == null
-        ? null
-        : String(participationSection.totalWorkforce),
+      participationSection === null ? null : String(participationSection.totalWorkforce),
     "enrolled-employees":
-      participationSection?.enrolledBenefits == null
-        ? null
-        : String(participationSection.enrolledBenefits),
+      participationSection === null ? null : String(participationSection.enrolledBenefits),
     "enrolled-in-retirement": participationSection?.retirementEnrollment ?? null,
     "enrolled-in-healthcare": participationSection?.healthcareEnrollment ?? null,
   };
