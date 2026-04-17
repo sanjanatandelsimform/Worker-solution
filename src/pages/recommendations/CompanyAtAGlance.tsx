@@ -16,7 +16,7 @@ interface CompanyGlanceData {
   totalWorkforce: number | null;
   averageHourlyWage: number | null;
   averageSalary: number | null;
-  industryAverageWage: null;
+  industryAverageWage: number | null;
 }
 
 interface CardConfig<TData> {

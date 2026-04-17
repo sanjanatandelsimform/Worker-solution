@@ -3,6 +3,8 @@
 Auto-generated from all feature plans. Last updated: 2026-04-07
 
 ## Active Technologies
+- TypeScript 5.x + React 19 + React Router v7, Redux Toolkit (createAsyncThunk, createSlice), Axios (via `apiClient`), Tailwind CSS v4 (009-industry-status-api)
+- Redux store (session-scoped, not persisted to localStorage) (009-industry-status-api)
 
 - TypeScript (strict mode) + React 19.2.0 + Redux Toolkit 2.11.2, axios 1.13.2 via shared apiClient (finchApi.ts) — polling hook (useFinchStatus) with setInterval/clearInterval lifecycle (006-finch-status)
 - TypeScript (strict mode) + React 19.2.0 + @tryfinch/react-connect (Finch Connect SDK), axios 1.13.2 via shared apiClient (from authApi.ts), react-router-dom 7 — **sonner removed in 007-replace-sonner-toast** (005-finch-integration, 007-replace-sonner-toast)
@@ -46,14 +48,10 @@ npm test && npm run lint
 TypeScript with React 19+, strict mode enabled: Follow standard conventions
 
 ## Recent Changes
+- 009-industry-status-api: Added TypeScript 5.x + React 19 + React Router v7, Redux Toolkit (createAsyncThunk, createSlice), Axios (via `apiClient`), Tailwind CSS v4
 
 - 007-replace-sonner-toast (2026-04-07): Removed sonner toast library from Finch integration. useFinchConnect hook now exposes `error: string | null` and `clearError: () => void` instead of calling toast.error(). DashboardPage renders `<ErrorMessage />` co-located inside each Finch connect section. App.tsx Toaster mount removed. src/components/ui/sonner.tsx deleted. pnpm remove sonner. Tests updated to assert result.current.error instead of mockToastError.
 - 006-finch-status (2026-04-02): Added GET /api/v1/finch/status polling (15s interval) to Dashboard. New files: finchStatusTypes.ts, finchStatusSlice.ts, finchStatusSelectors.ts (in src/store/selectors/), useFinchStatus.ts hook. Modified: finchApi.ts (getFinchStatus), store.ts (register finchStatus reducer), DashboardPage.tsx (isConnected hides onboarding cards + Connect button wired to connectWithFinch). Polling unconditional — no stop condition implemented (deferred optimisation). Selector convention: separate src/store/selectors/ file (NOT co-located in slice).
-- 005-finch-integration (update 2026-04-01): Replaced stub finchApi service functions with real apiClient calls (POST /api/v1/finch/connect-session + POST /api/v1/finch/callback). Removed Finch flow from GetMore.tsx. Updated FinchSessionResponse and FinchConnectResponse types. Dashboard-only Finch entry point enforced.
-- 005-finch-integration: Added @tryfinch/react-connect (Finch Connect SDK), sonner (toast notifications via shadcn/ui), custom useFinchConnect hook, stub finchApi service (getFinchSessionId, exchangeFinchCode)
-- 006-signup-flow-enhancements: Added TypeScript 5.x / React 19 + React Router v7, Redux Toolkit, Tailwind CSS v4, Vite, shadcn/ui primitives
-- 002-profile-settings: Added TypeScript 5.9.3, React 19.2.0 + React Router v7, Redux Toolkit 2.11.2, Axios (via `profileApi.ts` apiClient), @untitledui/icons
-- 001-zipcode-api-integration: Added TypeScript ~5.9.3, React 19.2, JSX transform `react-jsx` + Vite (rolldown-vite 7.2.5), Axios 1.13.2, Redux Toolkit 2.11.2, react-hook-form 7.71.1, Zod 4.3.5, React Router 7.12.0
 
 <!-- MANUAL ADDITIONS START -->
 
