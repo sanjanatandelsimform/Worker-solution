@@ -168,7 +168,7 @@ export const DashboardPage = () => {
   };
 
   useEffect(() => {
-    if (isConnected) {
+    if (isConnected || assessmentData?.data?.status === "completed") {
       dispatch(fetchWorkforce());
       dispatch(fetchRecommendations());
     }
