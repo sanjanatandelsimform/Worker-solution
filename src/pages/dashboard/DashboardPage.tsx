@@ -20,8 +20,6 @@ import { useFinchConnect } from "@/hooks/useFinchConnect";
 import { useFinchStatus } from "@/hooks/useFinchStatus";
 import { Tabs } from "@/components/base/tabs/tabs";
 import BenchmarkPage from "../benchmark/BenchmarkPage";
-import { fetchDashboard } from "@/store/slices/dashboardSlice";
-// import { fetchIndustry } from "@/store/slices/industrySlice";
 import { fetchWorkforce } from "@/store/slices/workforceSlice";
 import { CircleCheckIcon } from "@/assets/icons/CircleCheckIcon";
 import { AssessmentIcon } from "@/assets/icons/AssessmentIcon";
@@ -77,7 +75,6 @@ export const DashboardPage = () => {
   } = useAssessmentStatus({ enabled: emailVerify });
   const [showGoalsSuccessModal, setShowGoalsSuccessModal] = useState(false);
   const [showGoalsEmptyWarning, setShowGoalsEmptyWarning] = useState(false);
-  const hasRunDashboardFetchRef = useRef(false);
   const fromGoalsCompletionRef = useRef(false);
 
   const refetchUserData = useCallback(async () => {
@@ -166,55 +163,7 @@ export const DashboardPage = () => {
       dispatch(fetchRecommendations());
   }, [isConnected, dispatch, assessmentData?.data?.status]);
 
-  useEffect(() => {
-    if (
-      assessmentData?.data?.status === "completed"  &&
-      !hasRunDashboardFetchRef.current
-    ) {
-      hasRunDashboardFetchRef.current = true;
-      const isFromAssessment = fromGoalsCompletionRef.current;
-
-      const fetchWithModal = async () => {
-        setErrorMessage(null);
-        try {
-          const resultAction = await dispatch(fetchDashboard());
-          if (fetchDashboard.fulfilled.match(resultAction)) {
-            if (isFromAssessment) {
-              setShowGoalsSuccessModal(true);
-              fromGoalsCompletionRef.current = false;
-            }
-          } else if (fetchDashboard.rejected.match(resultAction)) {
-            const errorMsg = resultAction.payload as string;
-            if (
-              errorMsg?.toLowerCase().includes("empty") ||
-              errorMsg?.toLowerCase().includes("incomplete") ||
-              errorMsg?.toLowerCase().includes("no data")
-            ) {
-              if (isFromAssessment) {
-                setShowGoalsEmptyWarning(true);
-                fromGoalsCompletionRef.current = false;
-              } else {
-                setErrorMessage(errorMsg || "Failed to load dashboard data");
-              }
-            } else {
-              setErrorMessage(errorMsg || "Failed to load dashboard data");
-            }
-          }
-        } catch (error) {
-          console.error("error:", error);
-          if (isFromAssessment) {
-            setShowGoalsEmptyWarning(true);
-            fromGoalsCompletionRef.current = false;
-          } else {
-            setErrorMessage("Failed to load dashboard data");
-          }
-        }
-      };
-
-      fetchWithModal();
-    }
-  }, [assessmentData?.data?.status, dispatch]);
-
+ 
   const handleVerifyEmail = async () => {
     if (emailVerify) return;
 

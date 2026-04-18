@@ -14,9 +14,17 @@ export const selectIndustryOverviewData = (state: RootState) =>
 export const selectIndustryData = (state: RootState) =>
   state.industry.data?.industry ?? null;
 
-// industryTurnover → { turnOverRate, seperationRate } with new nested structure
-export const selectIndustryTurnOverRate = (state: RootState) =>
+// industryTurnover (full object)
+export const selectIndustryTurnover = (state: RootState) =>
   state.industry.data?.industryTurnover ?? null;
+
+// industryTurnover → turnOverRate → industryAvg
+export const selectIndustryTurnOverRate = (state: RootState) =>
+  state.industry.data?.turnoverVoluntaryVsInvoluntary ?? null;
+
+// industryTurnover → separationRate → industryAvg
+export const selectIndustrySeparationRate = (state: RootState) =>
+  state.industry.data?.rateOfSeparation ?? null;
 
 // areaMedianWage → flat array
 export const selectIndustryAreaMedianWage = (state: RootState) =>

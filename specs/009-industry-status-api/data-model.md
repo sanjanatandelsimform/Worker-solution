@@ -45,7 +45,7 @@ Root entity returned by the Industry API. Contains all industry benchmark data.
 | Field | Type | Description |
 |-------|------|-------------|
 | turnOverRate | `TurnoverBreakdown` | Voluntary/involuntary turnover (industry + company) |
-| seperationRate | `SeparationBreakdown` | Separation/hiring rates (industry + company) |
+| separationRate | `SeparationBreakdown` | Separation/hiring rates (industry + company) |
 
 **TurnoverBreakdown**:
 

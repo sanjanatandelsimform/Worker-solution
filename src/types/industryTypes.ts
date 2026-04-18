@@ -53,14 +53,14 @@ export interface CompanyTurnover {
 }
 
 export interface IndustryAvgSeparation {
-  seperation: number;
+  separation: number;
   hiring: number;
   quarter: string;
   year: number;
 }
 
 export interface CompanySeparation {
-  seperation: number;
+  separation: number;
   hiring: number;
 }
 
@@ -69,7 +69,7 @@ export interface IndustryTurnoverData {
     industryAvg: IndustryAvgTurnover;
     company: CompanyTurnover;
   };
-  seperationRate: {
+  separationRate: {
     industryAvg: IndustryAvgSeparation;
     company: CompanySeparation;
   };
@@ -92,7 +92,7 @@ export interface IndustryTurnoverComparison {
     industry: VoluntaryInvoluntary;
     company: VoluntaryInvoluntary;
   };
-  seperationRate: {
+  separationRate: {
     industry: SeparationHiring;
     company: SeparationHiring;
   };
@@ -160,10 +160,27 @@ export interface WorkingClassHousingGraph {
   };
 }
 
+export interface Period {
+  quarter: number;
+  year: number;
+}
+
+export interface BurdenSplit {
+  metroArea: number;
+  yourEmployees: number;
+}
+
+export interface HousingGroup {
+  period: Period;
+  burdened: BurdenSplit;
+  severelyBurdened: BurdenSplit;
+}
 export interface HousingCostEntry {
   zipcode: string;
   housingCostBurdenedOwners: HousingCostBurdenYear[];
   housingCostBurdenedRenters: HousingCostBurdenYear[];
+  owners: HousingGroup;
+  renters: HousingGroup;
   workingClassHousingCostBurden: {
     homeOwnershipRate: number;
     medianHomeValue: string;
@@ -215,6 +232,18 @@ export interface HousingBurden {
   data: HousingBurdenEntry[];
 }
 
+export interface TurnoverVoluntaryVsInvoluntary  {
+  quarter: string;
+  year: number;
+  voluntary: number;
+  involuntary: number;
+};
+export interface RateOfSeparation  {
+  quarter: string;
+  year: number;
+  hiringRate: number;
+  separationRate: number;
+};
 
 export interface IndustryData {
   industryOverview: IndustryOverview;
@@ -223,12 +252,14 @@ export interface IndustryData {
   areaMedianWage: AreaMedianWageEntry[];
   housingCost: HousingCostEntry[];
   housingBurden?: HousingBurden;
+  turnoverVoluntaryVsInvoluntary?: TurnoverVoluntaryVsInvoluntary;
+  rateOfSeparation:RateOfSeparation
 }
 
 
 export interface IndustryApiResponse {
   status: boolean;
-  data: IndustryData;
+  industry: IndustryData;
 }
 
 export interface IndustryState {
