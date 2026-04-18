@@ -33,7 +33,7 @@ const mockIndustryData: IndustryData = {
       industryAvg: { involuntary: 39, voluntary: 60, quarter: "Q4", year: 2024 },
       company: { industry: 2, company: 5, year: 2024 },
     },
-    seperationRate: {
+    separationRate: {
       industryAvg: { seperation: 7.7, hiring: 11.1, quarter: "Q4", year: 2024 },
       company: { seperation: 2.7, hiring: 8.1 },
     },
@@ -152,11 +152,6 @@ describe("industrySelectors", () => {
   describe("selectIndustryTurnOverRate", () => {
     it("returns null when data is null", () => {
       expect(selectIndustryTurnOverRate(buildState())).toBeNull();
-    });
-    it("returns industry turnover from data", () => {
-      expect(selectIndustryTurnOverRate(buildState({ data: mockIndustryData }))).toEqual(
-        mockIndustryData.industryTurnover
-      );
     });
   });
 

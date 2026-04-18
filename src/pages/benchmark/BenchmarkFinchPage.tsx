@@ -11,7 +11,7 @@ import {
   selectIndustryData,
   selectIndustryHousingData,
   selectIndustryAreaMedianWage,
-  selectIndustryTurnOverRate,
+  selectIndustryTurnover,
 } from "@/store/selectors/industrySelectors";
 import { useIndustry } from "@/hooks/useIndustry";
 import {
@@ -262,13 +262,7 @@ const benchmarkCardsConfig: BenchmarkCardConfig[] = [
 const benchmarkCardsConfigR2: BenchmarkCardConfig[] = [
   {
     id: "hire-rate-y-o-y",
-    title: (data: unknown) => {
-      const d = data as Record<string, unknown> | null;
-      const tr = d?.turnoverRate as Record<string, unknown> | null;
-      return !tr?.month || !tr?.year
-        ? "Hire Rate Year-over-Year"
-        : `Hire Rate since ${tr.month} ${tr.year}`;
-    },
+    title: () => "Hire Rate Year-over-Year",
     count: (data: unknown) => {
       const d = data as Record<string, unknown> | null;
       const rates = d?.rates as Record<string, unknown> | null;
@@ -288,17 +282,11 @@ const benchmarkCardsConfigR2: BenchmarkCardConfig[] = [
   },
   {
     id: "separation-rate-y-o-y",
-    title: (data: unknown) => {
-      const d = data as Record<string, unknown> | null;
-      const at = d?.avgTurnover as Record<string, unknown> | null;
-      return !at?.sinceYear
-        ? "Separation Rate Year-over-Year"
-        : `Separation Rate since ${at.sinceYear}`;
-    },
+    title: () => "Separation Rate Year-over-Year",
     count: (data: unknown) => {
       const d = data as Record<string, unknown> | null;
       const rates = d?.rates as Record<string, unknown> | null;
-      const sep = rates?.seperation;
+      const sep = rates?.separation;
       return sep != null ? formatPercentage(sep as number) : "N/A";
     },
     tooltipText: "Separation Rate",
@@ -377,14 +365,13 @@ export default function BenchmarkFinchPage() {
 
   // Use industry hook for conditional API fetch and loading state
   const { isLoading: isLoadingCards, error: industryError } = useIndustry();
-
   // Get industry data from Redux store via industry selectors
   const industryOverview = useAppSelector(selectIndustryOverviewData);
   // const zipCodes = useAppSelector(selectIndustryZipCodes);
   const industry = useAppSelector(selectIndustryData);
   const housingCostData = useAppSelector(selectIndustryHousingData);
   const areaMedianWage = useAppSelector(selectIndustryAreaMedianWage);
-  const industryTurnOverRate = useAppSelector(selectIndustryTurnOverRate);
+  const industryTurnOver = useAppSelector(selectIndustryTurnover);
 
   // areaMedianWage is a flat array from the industry API
   const wageZipItems = (areaMedianWage ?? []).map(
@@ -460,7 +447,7 @@ export default function BenchmarkFinchPage() {
     {
       id: "turnover-rate",
       title: "Industry Turnover Rate",
-      titleQatar: `${industryTurnOverRate?.turnOverRate?.industryAvg?.quarter ?? "Q4"} ${industryTurnOverRate?.turnOverRate?.industryAvg?.year ?? ""}`,
+      titleQatar: `${industryTurnOver?.turnOverRate?.industryAvg?.quarter ?? "Q4"} ${industryTurnOver?.turnOverRate?.industryAvg?.year ?? ""}`,
       sections: [
         {
           sectionTitle: "INDUSTRY AVERAGE",
@@ -468,46 +455,46 @@ export default function BenchmarkFinchPage() {
           cardsData: [
             {
               title: "Involuntary",
-              statics: industryTurnOverRate?.turnOverRate?.industryAvg?.involuntary ? formatPercentage(
-                industryTurnOverRate?.turnOverRate?.industryAvg?.involuntary
+              statics: industryTurnOver?.turnOverRate?.industryAvg?.involuntary ? formatPercentage(
+                industryTurnOver?.turnOverRate?.industryAvg?.involuntary
               ): "No data",
               progressValue:
-                industryTurnOverRate?.turnOverRate?.industryAvg?.involuntary ?? 0,
+                industryTurnOver?.turnOverRate?.industryAvg?.involuntary ?? 0,
               customBarColor: "bg-ws-light-teal-400",
             },
             {
               title: "Voluntary",
-              statics: industryTurnOverRate?.turnOverRate?.industryAvg?.voluntary ? formatPercentage(
-                industryTurnOverRate?.turnOverRate?.industryAvg?.voluntary
+              statics: industryTurnOver?.turnOverRate?.industryAvg?.voluntary ? formatPercentage(
+                industryTurnOver?.turnOverRate?.industryAvg?.voluntary
               ) : "No data",
               progressValue:
-                industryTurnOverRate?.turnOverRate?.industryAvg?.voluntary ?? 0,
+                industryTurnOver?.turnOverRate?.industryAvg?.voluntary ?? 0,
               customBarColor: "bg-ws-navy-600",
             },
           ],
         },
         {
-          sectionTitle: "YOUR COMPANY",
+          sectionTitle: `TURNOVER FOR ${industryTurnOver?.turnOverRate?.company?.year ?? ""}`,
           columnsCount: 2 as const,
           cardsData: [
             {
               title: "Industry",
-              statics: industryTurnOverRate?.turnOverRate?.company?.industry ? formatPercentage(
-                industryTurnOverRate?.turnOverRate?.company?.industry
+              statics: industryTurnOver?.turnOverRate?.company?.industry ? formatPercentage(
+                industryTurnOver?.turnOverRate?.company?.industry
               ): "No data",
               staticsPointsState: true,
               progressValue:
-                industryTurnOverRate?.turnOverRate?.company?.industry ?? 0,
+                industryTurnOver?.turnOverRate?.company?.industry ?? 0,
               customBarColor: "bg-ws-light-teal-400",
             },
             {
               title: "Company",
-              statics: industryTurnOverRate?.turnOverRate?.company?.company ? formatPercentage(
-                industryTurnOverRate?.turnOverRate?.company?.company
+              statics: industryTurnOver?.turnOverRate?.company?.company ? formatPercentage(
+                industryTurnOver?.turnOverRate?.company?.company
               ) : "No data",
               staticsPointsState: true,
               progressValue:
-                industryTurnOverRate?.turnOverRate?.company?.company ?? 0,
+                industryTurnOver?.turnOverRate?.company?.company ?? 0,
               customBarColor: "bg-ws-navy-600",
             },
           ],
@@ -523,7 +510,7 @@ export default function BenchmarkFinchPage() {
     {
       id: "separation-rate",
       title: "Industry Separation Rate",
-      titleQatar: `${industryTurnOverRate?.seperationRate?.industryAvg?.quarter ?? "Q4"} ${industryTurnOverRate?.seperationRate?.industryAvg?.year ?? ""}`,
+      titleQatar: `${industryTurnOver?.separationRate?.industryAvg?.quarter ?? ""} ${industryTurnOver?.separationRate?.industryAvg?.year ?? ""}`,
       sections: [
         {
           sectionTitle: "INDUSTRY AVERAGE",
@@ -531,20 +518,20 @@ export default function BenchmarkFinchPage() {
           cardsData: [
             {
               title: "Separation",
-              statics: industryTurnOverRate?.seperationRate?.industryAvg?.seperation ? formatPercentage(
-                industryTurnOverRate?.seperationRate?.industryAvg?.seperation
+              statics: industryTurnOver?.separationRate?.industryAvg?.separation ? formatPercentage(
+                industryTurnOver?.separationRate?.industryAvg?.separation
               ): "No data",
               progressValue:
-                industryTurnOverRate?.seperationRate?.industryAvg?.seperation ?? 0,
+                industryTurnOver?.separationRate?.industryAvg?.separation ?? 0,
               customBarColor: "bg-ws-light-teal-400",
             },
             {
               title: "Hiring Rate",
-              statics: industryTurnOverRate?.seperationRate?.industryAvg?.hiring  ? formatPercentage(
-                industryTurnOverRate?.seperationRate?.industryAvg?.hiring
+              statics: industryTurnOver?.separationRate?.industryAvg?.hiring  ? formatPercentage(
+                industryTurnOver?.separationRate?.industryAvg?.hiring
               ): "No data",
               progressValue:
-                industryTurnOverRate?.seperationRate?.industryAvg?.hiring ?? 0,
+                industryTurnOver?.separationRate?.industryAvg?.hiring ?? 0,
               customBarColor: "bg-ws-navy-600",
             },
           ],
@@ -555,14 +542,14 @@ export default function BenchmarkFinchPage() {
           cardsData: [
             {
               title: "Separation",
-              statics: industryTurnOverRate?.seperationRate?.company?.seperation ? formatPercentage(
-                industryTurnOverRate?.seperationRate?.company?.seperation
+              statics: industryTurnOver?.separationRate?.company?.separation ? formatPercentage(
+                industryTurnOver?.separationRate?.company?.separation
               ) : "No data",
               staticsPoints: (() => {
                 const ind =
-                  industryTurnOverRate?.seperationRate?.industryAvg?.seperation;
+                  industryTurnOver?.separationRate?.industryAvg?.separation;
                 const comp =
-                  industryTurnOverRate?.seperationRate?.company?.seperation;
+                  industryTurnOver?.separationRate?.company?.separation;
                   if (ind == null || comp == null) {
                     return "";
                   }
@@ -573,19 +560,19 @@ export default function BenchmarkFinchPage() {
               })(),
               staticsPointsState: true,
               progressValue:
-                industryTurnOverRate?.seperationRate?.company?.seperation ?? 0,
+                industryTurnOver?.separationRate?.company?.separation ?? 0,
               customBarColor: "bg-ws-light-teal-400",
             },
             {
               title: "Hiring Rate",
-              statics: industryTurnOverRate?.seperationRate?.company?.hiring ? formatPercentage(
-                industryTurnOverRate?.seperationRate?.company?.hiring
+              statics: industryTurnOver?.separationRate?.company?.hiring ? formatPercentage(
+                industryTurnOver?.separationRate?.company?.hiring
               ): "No data",
               staticsPoints: (() => {
                 const ind =
-                  industryTurnOverRate?.seperationRate?.industryAvg?.hiring;
+                  industryTurnOver?.separationRate?.industryAvg?.hiring;
                 const comp =
-                  industryTurnOverRate?.seperationRate?.company?.hiring;
+                  industryTurnOver?.separationRate?.company?.hiring;
                   if (ind == null || comp == null) {
                     return "";
                   }
@@ -596,7 +583,7 @@ export default function BenchmarkFinchPage() {
               })(),
               staticsPointsState: true,
               progressValue:
-                industryTurnOverRate?.seperationRate?.company?.hiring ?? 0,
+                industryTurnOver?.separationRate?.company?.hiring ?? 0,
               customBarColor: "bg-ws-navy-600",
             },
           ],
@@ -629,11 +616,10 @@ export default function BenchmarkFinchPage() {
     housingCostData?.[0] ??
     null;
 
-  // Get latest year's burden data from arrays
   const latestOwnersBurden =
-    selectedHousingData?.housingCostBurdenedOwners?.[0] ?? null;
+    selectedHousingData?.owners ?? null;
   const latestRentersBurden =
-    selectedHousingData?.housingCostBurdenedRenters?.[0] ?? null;
+    selectedHousingData?.renters ?? null;
 
   // Dynamic owners progress cards (Finch page has Metro Area + Your employees)
   const dynamicHousingBurdenOwnersConfig: ProgressCardFinchConfig[] = [
@@ -641,14 +627,14 @@ export default function BenchmarkFinchPage() {
       id: "burdened-owners",
       title: "Burdened Owners",
       showInfoIcon: true,
-      tooltipText: "Households spending 30% or more of gross income on housing costs",
+      tooltipText: "Spend 30% or more of its gross income on rent and utilities",
       sections: [
         {
           columnsCount: 1 as const,
           items: [
             {
-              label: "Burdened",
-              percentage: latestOwnersBurden?.burdened ?? 0,
+              label: "Metro Area",
+              percentage: latestOwnersBurden?.burdened?.metroArea ?? 0,
               progressColor: "bg-ws-navy-600",
             },
           ],
@@ -659,14 +645,14 @@ export default function BenchmarkFinchPage() {
       id: "severely-burdened-owners",
       title: "Severely Burdened Owners",
       showInfoIcon: true,
-      tooltipText: "Spends 50% or more of its gross income on rent and utilities.",
+      tooltipText: "Spend 50% or more of its gross income on rent and utilities.",
       sections: [
         {
           columnsCount: 1 as const,
           items: [
             {
-              label: "Severely Burdened",
-              percentage: latestOwnersBurden?.severelyBurdened ?? 0,
+              label: "Metro Area",
+              percentage: latestOwnersBurden?.severelyBurdened?.metroArea ?? 0,
               progressColor: "bg-ws-navy-600",
             },
           ],
@@ -681,14 +667,14 @@ export default function BenchmarkFinchPage() {
       id: "burdened-renters",
       title: "Burdened Renters",
       showInfoIcon: true,
-      tooltipText: "Households spending 30% or more of gross income on housing costs",
+      tooltipText: "Spend 30% or more of its gross income on rent and utilities",
       sections: [
         {
           columnsCount: 1 as const,
           items: [
             {
-              label: "Burdened",
-              percentage: latestRentersBurden?.burdened ?? 0,
+              label: "Metro Area",
+              percentage: latestRentersBurden?.burdened?.metroArea ?? 0,
               progressColor: "bg-ws-light-teal-600",
             },
           ],
@@ -699,14 +685,14 @@ export default function BenchmarkFinchPage() {
       id: "severely-burdened-renters",
       title: "Severely Burdened Renters",
       showInfoIcon: true,
-      tooltipText: "Spends 50% or more of its gross income on rent and utilities.",
+      tooltipText: "Spend 50% or more of its gross income on rent and utilities.",
       sections: [
         {
           columnsCount: 1 as const,
           items: [
             {
-              label: "Severely Burdened",
-              percentage: latestRentersBurden?.severelyBurdened ?? 0,
+              label: "Metro Area",
+              percentage: latestRentersBurden?.severelyBurdened?.metroArea ?? 0,
               progressColor: "bg-ws-light-teal-600",
             },
           ],
@@ -775,10 +761,12 @@ export default function BenchmarkFinchPage() {
   })();
 
   // Derive period labels from housing data
-  const ownersBurdenYear = latestOwnersBurden?.year;
-  const rentersBurdenYear = latestRentersBurden?.year;
-  const ownersPeriodLabel = ownersBurdenYear ? `${ownersBurdenYear}` : "";
-  const rentersPeriodLabel = rentersBurdenYear ? `${rentersBurdenYear}` : "";
+  const ownersBurdenYear = latestOwnersBurden?.period?.year;
+  const rentersBurdenYear = latestRentersBurden?.period?.year;
+  const ownersBurdenQuarter = latestOwnersBurden?.period?.quarter;
+  const rentersBurdenQuarter = latestRentersBurden?.period?.quarter;
+  const ownersPeriodLabel = ownersBurdenYear ? `Q${ownersBurdenQuarter} ${ownersBurdenYear}` : "";
+  const rentersPeriodLabel = rentersBurdenYear ? `Q${rentersBurdenQuarter} ${rentersBurdenYear}` : "";
 
   return (
     <div className="bg-ws-base-white py-10 px-6 space-y-6 shadow-xl rounded-b-xl">
@@ -905,8 +893,8 @@ export default function BenchmarkFinchPage() {
                 : "Area Median Wage"}
             </h3>
             <p className="text-base text-ws-text-primary w-full mt-2">
-              Compare your wages with median wages for salaried and hourly employees for the selected
-              geography.
+              Compare your wages with median wages for salaried and hourly employees for the 
+              selected geography.
             </p>
           </div>
           <div className="flex flex-col items-start w-full lg:w-auto shrink-0 mt-4 xl:mt-0">
@@ -1068,9 +1056,10 @@ export default function BenchmarkFinchPage() {
                 Working Class Housing Cost Burden
               </h3>
               <p className="max-w-3xl text-base text-ws-text-secondary mt-2">
-                Working class residents are increasingly stretched by rising rents that have outpaced
-                wage growth, with many households spending well above the recommended 30 percent of
-                their income just to keep a roof over their heads.
+               In Manchester, New Hampshire, working class residents are increasingly stretched 
+               by rising rents that have outpaced wage growth, with many households spending 
+               well above the recommended 30 percent of their income just to keep a roof over 
+               their heads. 
               </p>
               <p className="text-xs text-ws-text-tertiary mt-6">
                 <span className="font-semibold">Source:</span> U.S. Census Bureau, 5-Year American Community Survey

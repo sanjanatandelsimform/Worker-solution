@@ -11,6 +11,7 @@ import {
   selectIndustryHousingData,
   selectIndustryAreaMedianWage,
   selectIndustryTurnOverRate,
+  selectIndustrySeparationRate
 } from "@/store/selectors/industrySelectors";
 import { useIndustry } from "@/hooks/useIndustry";
 import { formatCurrency, formatCurrencyWithCents, formatPercentage } from "@/utils/formatters";
@@ -183,7 +184,7 @@ const benchmarkCardsConfig: BenchmarkCardConfig[] = [
       const d = data as Record<string, unknown> | null;
       const tr = d?.turnoverRate as Record<string, unknown> | null;
       const value = tr?.rate;
-      return typeof value === "number" ? formatPercentage(value) : (value as string) || "No data";
+      return typeof value === "number" ? formatCurrency(value) : (value as string) || "No data";
     },
     tooltipText: "Turnover Rate",
     descriptionText: () =>
@@ -201,7 +202,7 @@ const benchmarkCardsConfig: BenchmarkCardConfig[] = [
     title: () => "Industry-wide Cost of Turnover",
     count: (data: unknown) => {
       const d = data as Record<string, unknown> | null;
-      const icot = d?.industryWideCostOfTurnover as Record<string, unknown> | null;
+      const icot = d?.avgCostOfTurnover as Record<string, unknown> | null;
       const value = icot?.formatted;
       return typeof value === "number" ? formatPercentage(value) : (value as string) || "No data";
     },
@@ -210,7 +211,7 @@ const benchmarkCardsConfig: BenchmarkCardConfig[] = [
       "Average turnover metrics are calculated from US Census Bureau QWI data sources",
     countClass: (data: unknown) => {
       const d = data as Record<string, unknown> | null;
-      const icot = d?.industryWideCostOfTurnover as Record<string, unknown> | null;
+      const icot = d?.avgCostOfTurnover as Record<string, unknown> | null;
       return icot?.formatted == null
         ? "mt-2 text-sm font-medium text-ws-text-primary"
         : "mt-2 text-3xl font-semibold text-ws-text-primary";
@@ -298,15 +299,17 @@ export default function BenchmarkPage() {
   const housingCostData = useAppSelector(selectIndustryHousingData);
   const areaMedianWage = useAppSelector(selectIndustryAreaMedianWage);
   const industryTurnOverRate = useAppSelector(selectIndustryTurnOverRate);
+  const industrySeparationRate = useAppSelector(selectIndustrySeparationRate);
 
   // ── Turnover cards (dynamic from new industryTurnover structure) ──
   const turnoverCardsConfig = (
-    turnover: typeof industryTurnOverRate
+    turnover: typeof industryTurnOverRate,
+    rateOfSeparation: typeof industrySeparationRate,
   ): TurnoverCardConfig[] => [
     {
       id: "turnover-rate",
       title: "Industry Turnover Rate",
-      titleQatar: `${turnover?.turnOverRate?.industryAvg?.quarter ?? ""} ${turnover?.turnOverRate?.industryAvg?.year ?? ""}`,
+      titleQatar: `${turnover?.quarter ?? ""} ${turnover?.year ?? ""}`,
       sections: [
         {
           sectionTitle: "INDUSTRY AVERAGE",
@@ -314,20 +317,20 @@ export default function BenchmarkPage() {
           cardsData: [
             {
               title: "Involuntary",
-              statics: turnover?.turnOverRate?.industryAvg?.involuntary ? formatPercentage(
-                turnover?.turnOverRate?.industryAvg?.involuntary
+              statics: turnover?.involuntary ? formatPercentage(
+                turnover?.involuntary
               ): "No data",
               progressValue:
-                turnover?.turnOverRate?.industryAvg?.involuntary ?? 0,
+              turnover?.involuntary ?? 0,
               customBarColor: "bg-ws-light-teal-400",
             },
             {
               title: "Voluntary",
-              statics: turnover?.turnOverRate?.industryAvg?.voluntary ? formatPercentage(
-                turnover?.turnOverRate?.industryAvg?.voluntary
+              statics: turnover?.voluntary ? formatPercentage(
+                turnover?.voluntary
               ): "No data",
               progressValue:
-                turnover?.turnOverRate?.industryAvg?.voluntary ?? 0,
+                turnover?.voluntary ?? 0,
               customBarColor: "bg-ws-navy-600",
             },
           ],
@@ -337,7 +340,7 @@ export default function BenchmarkPage() {
     {
       id: "separation-rate",
       title: "Industry Separation Rate",
-      titleQatar: `${turnover?.seperationRate?.industryAvg?.quarter ?? ""} ${turnover?.seperationRate?.industryAvg?.year ?? ""}`,
+      titleQatar: `${rateOfSeparation?.quarter ?? ""} ${rateOfSeparation?.year ?? ""}`,
       sections: [
         {
           sectionTitle: "INDUSTRY AVERAGE",
@@ -345,20 +348,20 @@ export default function BenchmarkPage() {
           cardsData: [
             {
               title: "Separation",
-              statics: turnover?.seperationRate?.industryAvg?.seperation ? formatPercentage(
-                turnover?.seperationRate?.industryAvg?.seperation
+              statics: rateOfSeparation?.separationRate ? formatPercentage(
+                rateOfSeparation.separationRate
               ): "No data",
               progressValue:
-                turnover?.seperationRate?.industryAvg?.seperation ?? 0,
+                rateOfSeparation?.separationRate ?? 0,
               customBarColor: "bg-ws-light-teal-400",
             },
             {
               title: "Hiring Rate",
-              statics: turnover?.seperationRate?.industryAvg?.hiring ? formatPercentage(
-                turnover?.seperationRate?.industryAvg?.hiring
+              statics: rateOfSeparation?.hiringRate ? formatPercentage(
+                rateOfSeparation.hiringRate
               ): "No data",
               progressValue:
-                turnover?.seperationRate?.industryAvg?.hiring ?? 0,
+                rateOfSeparation?.hiringRate ?? 0,
               customBarColor: "bg-ws-navy-600",
             },
           ],
@@ -459,8 +462,8 @@ export default function BenchmarkPage() {
       title: "Burdened Owners",
       showInfoIcon: true,
       tooltipText:
-        "Households spending 30% or more of gross income on housing costs",
-      progressLabel: "Burdened",
+        "Spend 30% or more of its gross income on rent and utilities.",
+      progressLabel: "Metro Area",
       percentage: latestOwnersBurden?.burdened ?? 0,
       progressColor: "bg-ws-navy-600",
     },
@@ -469,8 +472,8 @@ export default function BenchmarkPage() {
       title: "Severely Burdened Owners",
       showInfoIcon: true,
       tooltipText:
-        "Spends 50% or more of its gross income on rent and utilities.",
-      progressLabel: "Severely Burdened",
+        "Spend 50% or more of its gross income on rent and utilities.",
+      progressLabel: "Metro Area",
       percentage: latestOwnersBurden?.severelyBurdened ?? 0,
       progressColor: "bg-ws-navy-600",
     },
@@ -483,8 +486,8 @@ export default function BenchmarkPage() {
       title: "Burdened Renters",
       showInfoIcon: true,
       tooltipText:
-        "Households spending 30% or more of gross income on housing costs",
-      progressLabel: "Burdened",
+        "Spend 30% or more of its gross income on rent and utilities",
+      progressLabel: "Metro Area",
       percentage: latestRentersBurden?.burdened ?? 0,
       progressColor: "bg-ws-light-teal-600",
     },
@@ -493,8 +496,8 @@ export default function BenchmarkPage() {
       title: "Severely Burdened Renters",
       showInfoIcon: true,
       tooltipText:
-        "Spends 50% or more of its gross income on rent and utilities.",
-      progressLabel: "Severely Burdened",
+        "Spend 50% or more of its gross income on rent and utilities.",
+      progressLabel: "Metro Area",
       percentage: latestRentersBurden?.severelyBurdened ?? 0,
       progressColor: "bg-ws-light-teal-600",
     },
@@ -670,7 +673,7 @@ export default function BenchmarkPage() {
               </>
             ) : (
               <>
-                {turnoverCardsConfig(industryTurnOverRate).map(card => (
+                {turnoverCardsConfig(industryTurnOverRate, industrySeparationRate).map(card => (
                   <TurnoverRateCard
                     key={card.id}
                     title={card.title}
@@ -769,9 +772,6 @@ export default function BenchmarkPage() {
               {/* Housing Cost Burden: {selectedHousingData?.zipcode ?? ""} */}
               Housing Burden
             </h3>
-            <p className="text-base text-ws-text-primary w-full mt-2">
-              Housing cost burden analysis for the selected geography.
-            </p>
           </div>
           <div className="flex flex-col items-start w-full lg:w-auto shrink-0 mt-4 lg:mt-0">
             <Label className="text-sm font-medium text-ws-text-secondary flex mb-1.5">
@@ -797,13 +797,13 @@ export default function BenchmarkPage() {
         <div className="w-full mt-8">
           <h3 className="text-base font-bold text-ws-text-primary">
             {selectedHousingData
-              ? "Your workers are likely financially burdened - meaning workers likely spend a large portion of their wages on housing and transportation"
+              ? "Your workers residing in Manchester, New Hampshire are likely financially burdened - meaning workers likely spend a large portion of their wages on housing and transportation"
               : "No housing data available for the selected area"}
           </h3>
           <p className="text-base mt-4 text-ws-text-primary">
-            The concept of rent (or housing cost) burden applies to both renters
-            and homeowners, but it's calculated a bit differently for each. Both
-            renters and homeowners can be housing-cost burdened; the main
+            The concept of housing cost burden applies to both renters 
+            and homeowners, but it’s calculated differently for each. Both r
+            enters and homeowners can be housing-cost burdened; the main 
             difference is what expenses are counted, not the income thresholds.
           </p>
         </div>
@@ -879,10 +879,10 @@ export default function BenchmarkPage() {
                 Working Class Housing Cost Burden
               </h3>
               <p className="max-w-3xl text-base text-ws-text-secondary mt-2">
-                Working class residents are increasingly stretched by rising
-                rents that have outpaced wage growth, with many households
-                spending well above the recommended 30 percent of their income
-                just to keep a roof over their heads.
+                In Manchester, New Hampshire, working class residents are increasingly stretched 
+                by rising rents that have outpaced wage growth, with many households spending 
+                well above the recommended 30 percent of their income just to keep a roof over 
+                their heads.
               </p>
               <p className="text-xs text-ws-text-tertiary mt-4">
                 <span className="font-semibold">Source:</span> U.S. Census Bureau, 5-Year American Community Survey
@@ -890,7 +890,7 @@ export default function BenchmarkPage() {
             </div>
             <div className="flex flex-col items-start w-full lg:w-auto shrink-0 mt-4 lg:mt-0">
               <Label className="text-ws-text-secondary flex mb-1.5">
-                Household type <span className="text-ws-error-600">*</span>
+                Household type
               </Label>
               <Select
                 className="w-full flex items-start min-w-50 md:min-w-full lg:min-w-50"
