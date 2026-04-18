@@ -26,16 +26,13 @@ describe("industryApi", () => {
     vi.clearAllMocks();
     vi.resetModules();
     // Set up auth token in localStorage
-    localStorage.setItem(
-      STORAGE_KEY,
-      JSON.stringify({ token: "test-token-123" })
-    );
+    localStorage.setItem(STORAGE_KEY, JSON.stringify({ token: "test-token-123" }));
   });
 
   afterEach(() => {
     localStorage.clear();
   });
-  
+
   // Require when api is integrated
   // it("should fetch industry data successfully", async () => {
   //   // industryApi currently returns static data without calling apiClient.get
@@ -56,15 +53,15 @@ describe("industryApi", () => {
   //   expect(result.housingCost).toBeInstanceOf(Array);
   // });
 
-   // Require when api is integrated
+  // Require when api is integrated
   it("should throw error when auth token is missing", async () => {
     localStorage.clear();
 
     const { getIndustry } = await import("@/services/api/industryApi");
     await expect(getIndustry()).rejects.toThrow();
   });
-  
- // Require when api is integrated
+
+  // Require when api is integrated
   // it("should return data with correct housing cost structure", async () => {
   //   const { getIndustry } = await import("@/services/api/industryApi");
   //   const result = await getIndustry();

@@ -6,12 +6,10 @@
  * Contract: specs/009-industry-status-api/contracts/industry-api.yaml
  */
 
-
 export interface SalaryHourly {
   salary: number;
   hourly: number;
 }
-
 
 export interface IndustryOverview {
   turnoverRate: {
@@ -133,7 +131,6 @@ export interface AreaMedianWage {
   stateData: StateWageData[];
 }
 
-
 export interface HousingCostBurdenYear {
   year: number;
   burdened: number;
@@ -171,7 +168,6 @@ export interface HousingCostEntry {
   };
   workingClassHousingGraph: WorkingClassHousingGraph;
 }
-
 
 export interface BurdenMetrics {
   metroArea: number;
@@ -215,7 +211,6 @@ export interface HousingBurden {
   data: HousingBurdenEntry[];
 }
 
-
 export interface IndustryData {
   industryOverview: IndustryOverview;
   industry: IndustryInfo;
@@ -224,7 +219,6 @@ export interface IndustryData {
   housingCost: HousingCostEntry[];
   housingBurden?: HousingBurden;
 }
-
 
 export interface IndustryApiResponse {
   status: boolean;

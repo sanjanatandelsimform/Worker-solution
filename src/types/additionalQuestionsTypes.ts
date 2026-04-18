@@ -30,5 +30,6 @@ export interface QuestionDefinition {
   isMultiSelect?: boolean;
   isDropdown?: boolean;
   hasConditional?: boolean;
+  isNumericInput?: boolean;
   tooltip?: QuestionTooltip;
 }

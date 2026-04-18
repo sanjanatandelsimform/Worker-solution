@@ -33,6 +33,14 @@ const benefitsQuestions: QuestionDefinition[] = [
     isDropdown: true,
     options: monthOptions,
   },
+  {
+    id: "health-plan-monthly-premium",
+    question:
+      "What is the employee-only monthly premium for the lowest-cost health plan your company offers?",
+    required: true,
+    isNumericInput: true,
+    options: [],
+  },
 ];
 
 const retirementQuestions: QuestionDefinition[] = [
@@ -83,9 +91,11 @@ interface BenefitsRetirementSectionProps {
   fieldErrors: Record<string, string>;
   benefitsEnrollmentMonth: string;
   retirementMatchPercentage: string;
+  healthPremiumMonthly: string;
   onAnswerChange: (questionId: string, value: string) => void;
   onBenefitsEnrollmentMonthChange: (month: string) => void;
   onRetirementMatchPercentageChange: (value: string) => void;
+  onHealthPremiumMonthlyChange: (value: string) => void;
   onClearFieldError: (key: string) => void;
 }
 
@@ -94,9 +104,11 @@ export default function BenefitsRetirementSection({
   fieldErrors,
   benefitsEnrollmentMonth,
   retirementMatchPercentage,
+  healthPremiumMonthly,
   onAnswerChange,
   onBenefitsEnrollmentMonthChange,
   onRetirementMatchPercentageChange,
+  onHealthPremiumMonthlyChange,
   onClearFieldError,
 }: BenefitsRetirementSectionProps): JSX.Element {
   return (
@@ -129,11 +141,11 @@ export default function BenefitsRetirementSection({
               )}
             </div>
 
-            {question.required && !question.isDropdown && (
+            {question.required && !question.isDropdown && !question.isNumericInput && (
               <FieldError message={fieldErrors[question.id]} />
             )}
 
-            {!question.isDropdown ? (
+            {!question.isDropdown && !question.isNumericInput ? (
               <RadioGroup
                 value={(answers[question.id] as string) || ""}
                 onChange={value => onAnswerChange(question.id, value)}
@@ -151,7 +163,7 @@ export default function BenefitsRetirementSection({
                   </label>
                 ))}
               </RadioGroup>
-            ) : (
+            ) : question.isDropdown ? (
               <>
                 <FieldError message={fieldErrors[question.id]} />
                 <Select
@@ -167,6 +179,24 @@ export default function BenefitsRetirementSection({
                 >
                   {item => <SelectItem id={item.id} label={item.label} />}
                 </Select>
+              </>
+            ) : (
+              <>
+                <FieldError message={fieldErrors[question.id]} />
+                <input
+                  type="number"
+                  min="0"
+                  step="1"
+                  placeholder="Enter amount"
+                  value={healthPremiumMonthly}
+                  onWheel={e => e.currentTarget.blur()}
+                  onChange={e => {
+                    onHealthPremiumMonthlyChange(e.target.value);
+                    onClearFieldError(question.id);
+                  }}
+                  className="w-full max-w-xs rounded-lg border border-ws-border-primary bg-ws-base-white px-3 py-2 text-sm text-ws-text-primary placeholder:text-ws-gray-40 focus:border-ws-navy-800 focus:outline-none [appearance:textfield] [&::-webkit-inner-spin-button]:appearance-none [&::-webkit-outer-spin-button]:appearance-none"
+                />
+                <p className="text-sm text-ws-text-tertiary">i.e. $300</p>
               </>
             )}
           </div>
