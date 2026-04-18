@@ -35,8 +35,8 @@ import { fetchRecommendations } from "@/store/slices/recommendationsSlice";
 const BASE_TAB_ITEMS = [{ id: "finchRecommendations", label: "Recommendations" }];
 
 const FINCH_CONNECTED_TAB_ITEMS = [
-  { id: "finchIndustry", label: "Industry" },
   { id: "finchWorkforce", label: "Workforce" },
+  { id: "finchIndustry", label: "Industry" },
 ];
 
 const BASIC_TAB_ITEMS = [{ id: "industry", label: "Industry" }];
@@ -167,10 +167,7 @@ export const DashboardPage = () => {
   }, [isConnected, dispatch, assessmentData?.data?.status]);
 
   useEffect(() => {
-    if (
-      assessmentData?.data?.status === "completed"  &&
-      !hasRunDashboardFetchRef.current
-    ) {
+    if (assessmentData?.data?.status === "completed" && !hasRunDashboardFetchRef.current) {
       hasRunDashboardFetchRef.current = true;
       const isFromAssessment = fromGoalsCompletionRef.current;
 
@@ -282,8 +279,7 @@ export const DashboardPage = () => {
     },
   });
 
-  const isDashboardVisible =
-    (assessmentData?.data?.status === "completed" ) || isConnected;
+  const isDashboardVisible = assessmentData?.data?.status === "completed" || isConnected;
 
   if (isLoadingAssessment) {
     return (
