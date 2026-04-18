@@ -15,6 +15,7 @@ const didYouKnowSlides = [
     title: "Did you know?",
     content:
       "Lower-income earners with access to retirement benefits are 37% less likely to participate than thigher-income earners. ",
+    source: "U.S. Bureau of Labor Statistics",
   },
   {
     id: 2,
@@ -22,6 +23,7 @@ const didYouKnowSlides = [
     title: "Did you know?",
     content:
       "Lower income earners with access to medical benefits are 26% less likely to participate than top earners.",
+    source: "U.S. Bureau of Labor Statistics",
   },
   {
     id: 3,
@@ -29,6 +31,7 @@ const didYouKnowSlides = [
     title: "Did you know?",
     content:
       "Enrollment in a non-high deductible health insurance plan is associated with higher financial health.",
+    source: "Financial Health Network",
   },
   {
     id: 4,
@@ -36,19 +39,23 @@ const didYouKnowSlides = [
     title: "Did you know?",
     content:
       "The cost of replacing an individual employee can range from .5x-2x the employee's annual salary.",
+    source: "Gallup",
   },
   {
     id: 5,
     icon: <ChartIcon className="text-ws-gray-700" />,
     title: "Did you know?",
     content:
-      "78% of employees reported they’re more likely to stay with an employer because of their benefits program.",
+      "78% of employees reported they're more likely to stay with an employer because of their benefits program.",
+    source:
+      "2018 Willis Towers Watson Employee and Employer Experience on a Benefit Marketplace Survey",
   },
   {
     id: 6,
     icon: <ChartIcon className="text-ws-gray-700" />,
     title: "Did you know?",
     content: "1 in 3 (32%) of Americans have no emergency savings set aside.",
+    source: "Empower",
   },
 ];
 
@@ -79,6 +86,11 @@ export default function CarouselSection() {
                     <p className="text-base font-normal text-ws-navy-900 leading-6">
                       {slide.content}
                     </p>
+                    {slide.source && (
+                      <p className="text-sm font-normal text-ws-gray-500 leading-5">
+                        <span className="font-medium">Source:</span> {slide.source}
+                      </p>
+                    )}
                   </div>
                 </Carousel.Item>
               ))}
