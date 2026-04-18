@@ -203,10 +203,9 @@ export default function CompanyAtAGlance({
           </div>
 
           <p className="text-base text-ws-text-primary inline-block">
-            Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor
-            incididunt ut labore et dolore.{" "}
+            Your workforce data is connected via Finch.{" "}
             <Link to="#" className="text-base underline text-ws-light-teal-850 font-bold">
-              Learn more about your workforce
+              Explore salaries, benefits, and more in the Workforce tab
             </Link>
           </p>
         </>

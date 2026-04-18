@@ -14,28 +14,48 @@ const didYouKnowSlides = [
     icon: <SmileFace className="text-ws-gray-700" />,
     title: "Did you know?",
     content:
-      "Workers in low-wage jobs report spending an average of 1.3 hours per week dealing with personal finance-related issues when they are at work, adding up to 66 hours of lost productivity each year due to financial stress.",
+      "Lower-income earners with access to retirement benefits are 37% less likely to participate than thigher-income earners. ",
+    source: "U.S. Bureau of Labor Statistics",
   },
   {
     id: 2,
     icon: <KeyIcon className="text-ws-gray-700" />,
     title: "Did you know?",
     content:
-      "Emergency savings benefits are ranked as the top emerging benefit for improving employee financial health",
+      "Lower income earners with access to medical benefits are 26% less likely to participate than top earners.",
+    source: "U.S. Bureau of Labor Statistics",
   },
   {
     id: 3,
     icon: <ChartIcon className="text-ws-gray-700" />,
     title: "Did you know?",
     content:
-      "73% of employees agreed that a comprehensive and personalized benefits program would increase the likelihood they would stay with their  current organization.",
+      "Enrollment in a non-high deductible health insurance plan is associated with higher financial health.",
+    source: "Financial Health Network",
   },
   {
     id: 4,
     icon: <ChartIcon className="text-ws-gray-700" />,
     title: "Did you know?",
     content:
-      "Workers who are offered employer matching were 21% more likely to participate in their retirement plan than those who are not offered a match.",
+      "The cost of replacing an individual employee can range from .5x-2x the employee's annual salary.",
+    source: "Gallup",
+  },
+  {
+    id: 5,
+    icon: <ChartIcon className="text-ws-gray-700" />,
+    title: "Did you know?",
+    content:
+      "78% of employees reported they're more likely to stay with an employer because of their benefits program.",
+    source:
+      "2018 Willis Towers Watson Employee and Employer Experience on a Benefit Marketplace Survey",
+  },
+  {
+    id: 6,
+    icon: <ChartIcon className="text-ws-gray-700" />,
+    title: "Did you know?",
+    content: "1 in 3 (32%) of Americans have no emergency savings set aside.",
+    source: "Empower",
   },
 ];
 
@@ -66,6 +86,11 @@ export default function CarouselSection() {
                     <p className="text-base font-normal text-ws-navy-900 leading-6">
                       {slide.content}
                     </p>
+                    {slide.source && (
+                      <p className="text-sm font-normal text-ws-gray-500 leading-5">
+                        <span className="font-medium">Source:</span> {slide.source}
+                      </p>
+                    )}
                   </div>
                 </Carousel.Item>
               ))}
