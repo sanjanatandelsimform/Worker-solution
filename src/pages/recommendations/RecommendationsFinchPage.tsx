@@ -19,7 +19,11 @@ import CoreBenefitsEnhancement from "./CoreBenefitsEnhancement";
 import StrategicSolutions from "./StrategicSolutions";
 import { useIndustry } from "@/hooks/useIndustry";
 
-export default function RecommendationsFinchPage() {
+export default function RecommendationsFinchPage({
+  onNavigateToWorkforce,
+}: {
+  readonly onNavigateToWorkforce?: () => void;
+}) {
   const { isFinchAssessmentIncomplete } = useAssessmentStatus();
 
   // Workforce slice — Company Overview & Benefits Overview
@@ -71,6 +75,7 @@ export default function RecommendationsFinchPage() {
         isLoading={isLoading}
         companyGlanceData={companyGlanceData}
         benefitsGlanceData={benefitsGlanceData}
+        onNavigateToWorkforce={onNavigateToWorkforce}
       />
 
       {/* Carousel Section */}

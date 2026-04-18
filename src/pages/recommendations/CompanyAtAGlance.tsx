@@ -118,12 +118,14 @@ interface CompanyAtAGlanceProps {
   readonly isLoading: boolean;
   readonly companyGlanceData: CompanyGlanceData;
   readonly benefitsGlanceData: Record<string, string | null>;
+  readonly onNavigateToWorkforce?: () => void;
 }
 
 export default function CompanyAtAGlance({
   isLoading,
   companyGlanceData,
   benefitsGlanceData,
+  onNavigateToWorkforce,
 }: CompanyAtAGlanceProps) {
   const { isConnected } = useFinchStatus();
 
@@ -204,7 +206,14 @@ export default function CompanyAtAGlance({
 
           <p className="text-base text-ws-text-primary inline-block">
             Your workforce data is connected via Finch.{" "}
-            <Link to="#" className="text-base underline text-ws-light-teal-850 font-bold">
+            <Link
+              to="#"
+              className="text-base underline text-ws-light-teal-850 font-bold"
+              onClick={e => {
+                e.preventDefault();
+                onNavigateToWorkforce?.();
+              }}
+            >
               Explore salaries, benefits, and more in the Workforce tab
             </Link>
           </p>
