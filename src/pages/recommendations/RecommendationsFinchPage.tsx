@@ -37,9 +37,8 @@ export default function RecommendationsFinchPage({
   const provenStrategyFlags = useAppSelector(selectProvenStrategiesFlags);
   const recommendationsIsLoading = useAppSelector(selectRecommendationsLoading);
   const { isLoading: isIndustryLoading, data: industryData } = useIndustry();
-  const industryAverageWage = 10;
-  //temporary added log, it will remove once the implementation done
-  console.log("industryData", industryData);
+  const industryAverageWage = industryData?.industryOverview.industryAverageWage;
+
   // Synthetic Company Overview shape (maps workforce fields to existing format fn expectations)
   const companyGlanceData = {
     totalWorkforce: workforceSection?.totalWorkforce ?? null,
