@@ -26,6 +26,7 @@ export default function AdditionalQuestions() {
   const [payrollProvider, setPayrollProvider] = useState<string>("");
   const [benefitsEnrollmentMonth, setBenefitsEnrollmentMonth] = useState<string>("");
   const [retirementMatchPercentage, setRetirementMatchPercentage] = useState<string>("");
+  const [healthPremiumMonthly, setHealthPremiumMonthly] = useState<string>("");
   const { isSubmitting, error, success, submit, clearError } = useSubmitFinchAssessment();
   const [fieldErrors, setFieldErrors] = useState<Record<string, string>>({});
 
@@ -121,6 +122,9 @@ export default function AdditionalQuestions() {
     if (!benefitsEnrollmentMonth) {
       newErrors["benefits-enrollment-period"] = "Select an option";
     }
+    if (!healthPremiumMonthly) {
+      newErrors["health-plan-monthly-premium"] = "Enter an amount";
+    }
     if (!answers["retirement-vesting-period"]) {
       newErrors["retirement-vesting-period"] = "Select an option";
     }
@@ -155,7 +159,8 @@ export default function AdditionalQuestions() {
       payrollProvider,
       benefitsEnrollmentMonth,
       answers["retirement-employer-match"] === "yes-match",
-      retirementMatchPercentage
+      retirementMatchPercentage,
+      healthPremiumMonthly
     );
     await submit(payload);
   };
@@ -217,9 +222,11 @@ export default function AdditionalQuestions() {
             fieldErrors={fieldErrors}
             benefitsEnrollmentMonth={benefitsEnrollmentMonth}
             retirementMatchPercentage={retirementMatchPercentage}
+            healthPremiumMonthly={healthPremiumMonthly}
             onAnswerChange={handleAnswerChange}
             onBenefitsEnrollmentMonthChange={setBenefitsEnrollmentMonth}
             onRetirementMatchPercentageChange={setRetirementMatchPercentage}
+            onHealthPremiumMonthlyChange={setHealthPremiumMonthly}
             onClearFieldError={handleClearFieldError}
           />
 

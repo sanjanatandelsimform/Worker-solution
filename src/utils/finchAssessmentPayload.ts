@@ -43,7 +43,8 @@ export function buildFinchAssessmentPayload(
   payrollProvider: string,
   benefitsEnrollmentMonth: string,
   retirementPlanHasMatch: boolean = false,
-  retirementMatchPercentage: string = ""
+  retirementMatchPercentage: string = "",
+  healthPremiumMonthly: string = ""
 ): FinchAssessmentPayload {
   const offersAnnualRaises = answers["annual-raises"] === "yes-raises";
 
@@ -82,6 +83,7 @@ export function buildFinchAssessmentPayload(
       : {}),
     retirementAutoEnroll: answers["retirement-auto-enroll"] === "yes-autoenroll",
     retirementHardshipWithdrawals: answers["retirement-hardship-withdrawals"] === "yes-hardship",
+    ...(healthPremiumMonthly ? { lowestHealthPlanPremium: Number(healthPremiumMonthly) } : {}),
   };
 
   // goal IDs are API values — send them directly, no label lookup needed

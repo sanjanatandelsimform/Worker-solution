@@ -99,7 +99,9 @@ describe("industrySelectors", () => {
       expect(selectIndustryFullData(buildState())).toBeNull();
     });
     it("returns full industry data when set", () => {
-      expect(selectIndustryFullData(buildState({ data: mockIndustryData }))).toEqual(mockIndustryData);
+      expect(selectIndustryFullData(buildState({ data: mockIndustryData }))).toEqual(
+        mockIndustryData
+      );
     });
   });
 
