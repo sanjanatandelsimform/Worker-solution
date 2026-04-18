@@ -19,7 +19,11 @@ import CoreBenefitsEnhancement from "./CoreBenefitsEnhancement";
 import StrategicSolutions from "./StrategicSolutions";
 import { useIndustry } from "@/hooks/useIndustry";
 
-export default function RecommendationsFinchPage() {
+export default function RecommendationsFinchPage({
+  onNavigateToWorkforce,
+}: {
+  readonly onNavigateToWorkforce?: () => void;
+}) {
   const { isFinchAssessmentIncomplete } = useAssessmentStatus();
 
   // Workforce slice — Company Overview & Benefits Overview
@@ -33,9 +37,8 @@ export default function RecommendationsFinchPage() {
   const provenStrategyFlags = useAppSelector(selectProvenStrategiesFlags);
   const recommendationsIsLoading = useAppSelector(selectRecommendationsLoading);
   const { isLoading: isIndustryLoading, data: industryData } = useIndustry();
-  const industryAverageWage = 10;
-  //temporary added log, it will remove once the implementation done
-  console.log("industryData", industryData);
+  const industryAverageWage = industryData?.industryOverview.industryAverageWage;
+
   // Synthetic Company Overview shape (maps workforce fields to existing format fn expectations)
   const companyGlanceData = {
     totalWorkforce: workforceSection?.totalWorkforce ?? null,
@@ -71,6 +74,7 @@ export default function RecommendationsFinchPage() {
         isLoading={isLoading}
         companyGlanceData={companyGlanceData}
         benefitsGlanceData={benefitsGlanceData}
+        onNavigateToWorkforce={onNavigateToWorkforce}
       />
 
       {/* Carousel Section */}

@@ -75,6 +75,7 @@ export const DashboardPage = () => {
   } = useAssessmentStatus({ enabled: emailVerify });
   const [showGoalsSuccessModal, setShowGoalsSuccessModal] = useState(false);
   const [showGoalsEmptyWarning, setShowGoalsEmptyWarning] = useState(false);
+  const [activeTab, setActiveTab] = useState("finchRecommendations");
   const fromGoalsCompletionRef = useRef(false);
 
   const refetchUserData = useCallback(async () => {
@@ -163,7 +164,6 @@ export const DashboardPage = () => {
       dispatch(fetchRecommendations());
   }, [isConnected, dispatch, assessmentData?.data?.status]);
 
- 
   const handleVerifyEmail = async () => {
     if (emailVerify) return;
 
@@ -496,7 +496,7 @@ export const DashboardPage = () => {
           )}
           {emailVerify && isDashboardVisible && (
             <div className="mt-10">
-              <Tabs>
+              <Tabs selectedKey={activeTab} onSelectionChange={key => setActiveTab(String(key))}>
                 <Tabs.List
                   className="bg-ws-light-teal-50 pt-9 pl-6 pr-6 rounded-t-lg text-ws-light-teal-900 overflow-auto"
                   type="underline"
@@ -516,7 +516,9 @@ export const DashboardPage = () => {
                   </Tabs.Panel>
                 )}
                 <Tabs.Panel id="finchRecommendations" className="pt-0">
-                  <RecommendationsFinchPage />
+                  <RecommendationsFinchPage
+                    onNavigateToWorkforce={() => setActiveTab("finchWorkforce")}
+                  />
                 </Tabs.Panel>
                 {isConnected && (
                   <Tabs.Panel id="finchIndustry" className="pt-0">
