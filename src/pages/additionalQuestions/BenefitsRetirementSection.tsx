@@ -1,4 +1,5 @@
 import { InfoCircle } from "@untitledui/icons";
+import { Input } from "@/components/base/input/input";
 import { Label } from "@/components/base/input/label";
 import { RadioButton, RadioGroup } from "@/components/base/radio-buttons/radio-buttons";
 import { Select } from "@/components/base/select/select";
@@ -181,23 +182,20 @@ export default function BenefitsRetirementSection({
                 </Select>
               </>
             ) : (
-              <>
-                <FieldError message={fieldErrors[question.id]} />
-                <input
-                  type="number"
-                  min="0"
-                  step="1"
-                  placeholder="Enter amount"
-                  value={healthPremiumMonthly}
-                  onWheel={e => e.currentTarget.blur()}
-                  onChange={e => {
-                    onHealthPremiumMonthlyChange(e.target.value);
-                    onClearFieldError(question.id);
-                  }}
-                  className="w-full max-w-xs rounded-lg border border-ws-border-primary bg-ws-base-white px-3 py-2 text-sm text-ws-text-primary placeholder:text-ws-gray-40 focus:border-ws-navy-800 focus:outline-none [appearance:textfield] [&::-webkit-inner-spin-button]:appearance-none [&::-webkit-outer-spin-button]:appearance-none"
-                />
-                <p className="text-sm text-ws-text-tertiary">i.e. $300</p>
-              </>
+              <Input
+                type="number"
+                size="md"
+                placeholder="Enter amount"
+                value={healthPremiumMonthly}
+                onChange={value => {
+                  onHealthPremiumMonthlyChange(value);
+                  onClearFieldError(question.id);
+                }}
+                isInvalid={!!fieldErrors[question.id]}
+                hint={fieldErrors[question.id] || "i.e. $300"}
+                className="w-full max-w-xs"
+                inputClassName="[appearance:textfield] [&::-webkit-inner-spin-button]:appearance-none [&::-webkit-outer-spin-button]:appearance-none"
+              />
             )}
           </div>
         ))}
@@ -225,20 +223,20 @@ export default function BenefitsRetirementSection({
                   <Label className="text-sm font-normal text-ws-text-secondary">
                     If yes, What is the percentage?
                   </Label>
-                  <input
+                  <Input
                     type="number"
-                    min="0"
-                    max="100"
+                    size="md"
+                    placeholder="e.g. 3"
                     value={retirementMatchPercentage}
-                    onWheel={e => e.currentTarget.blur()}
-                    onChange={e => {
-                      onRetirementMatchPercentageChange(e.target.value);
+                    onChange={value => {
+                      onRetirementMatchPercentageChange(value);
                       onClearFieldError("retirementMatchPercentage");
                     }}
-                    className="w-full max-w-xs rounded-lg border border-ws-border-primary px-3 py-2 text-sm text-ws-text-primary bg-ws-base-white focus:outline-none focus:ring-2 focus:ring-ws-primary appearance-none [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none"
-                    placeholder="e.g. 3"
+                    isInvalid={!!fieldErrors["retirementMatchPercentage"]}
+                    hint={fieldErrors["retirementMatchPercentage"]}
+                    className="w-full max-w-xs"
+                    inputClassName="[appearance:textfield] [&::-webkit-inner-spin-button]:appearance-none [&::-webkit-outer-spin-button]:appearance-none"
                   />
-                  <FieldError message={fieldErrors["retirementMatchPercentage"]} />
                 </div>
               )}
             </div>
