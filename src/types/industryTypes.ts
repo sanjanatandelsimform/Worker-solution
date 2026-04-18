@@ -30,6 +30,7 @@ export interface IndustryOverview {
     hire: number;
     seperation: number;
   };
+  industryAverageWage: number;
 }
 
 export interface IndustryInfo {
@@ -254,6 +255,7 @@ export interface IndustryData {
 
 export interface IndustryApiResponse {
   status: boolean;
+  assessmentType: string;
   industry: IndustryData;
 }
 
