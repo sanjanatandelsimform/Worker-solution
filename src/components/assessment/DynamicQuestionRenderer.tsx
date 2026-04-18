@@ -23,7 +23,7 @@ import { InfoCircle } from "@untitledui/icons";
 const OPTION_TOOLTIPS: Record<string, string> = {
   "Earned Wage Access":
     "Earned Wage Access (EWA) is a financial benefit allowing employees to access a portion of their already-earned wages before their scheduled payday.",
-  "Education Support":
+  "Student loan support":
     "Education support includes benefits such as tuition reimbursement, scholarships, and education stipends.",
 };
 /** Tooltips for specific question keys */

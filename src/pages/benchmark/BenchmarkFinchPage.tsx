@@ -639,6 +639,16 @@ export default function BenchmarkFinchPage() {
             },
           ],
         },
+        {
+          columnsCount: 1 as const,
+          items: [
+            {
+              label: "Your Employees",
+              percentage: latestOwnersBurden?.burdened?.yourEmployees ?? 0,
+              progressColor: "bg-ws-navy-200",
+            },
+          ],
+        },
       ],
     },
     {
@@ -654,6 +664,16 @@ export default function BenchmarkFinchPage() {
               label: "Metro Area",
               percentage: latestOwnersBurden?.severelyBurdened?.metroArea ?? 0,
               progressColor: "bg-ws-navy-600",
+            },
+          ],
+        },
+        {
+          columnsCount: 1 as const,
+          items: [
+            {
+              label: "Your Employees",
+              percentage: latestOwnersBurden?.severelyBurdened?.yourEmployees ?? 0,
+              progressColor: "bg-ws-navy-200",
             },
           ],
         },
@@ -679,6 +699,16 @@ export default function BenchmarkFinchPage() {
             },
           ],
         },
+        {
+          columnsCount: 1 as const,
+          items: [
+            {
+              label: "Your Employees",
+              percentage: latestRentersBurden?.burdened?.yourEmployees ?? 0,
+              progressColor: "bg-ws-navy-200",
+            },
+          ],
+        },
       ],
     },
     {
@@ -694,6 +724,16 @@ export default function BenchmarkFinchPage() {
               label: "Metro Area",
               percentage: latestRentersBurden?.severelyBurdened?.metroArea ?? 0,
               progressColor: "bg-ws-light-teal-600",
+            },
+          ],
+        },
+        {
+          columnsCount: 1 as const,
+          items: [
+            {
+              label: "Your Employees",
+              percentage: latestRentersBurden?.severelyBurdened?.yourEmployees ?? 0,
+              progressColor: "bg-ws-navy-200",
             },
           ],
         },
