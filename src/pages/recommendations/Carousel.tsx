@@ -14,7 +14,7 @@ const didYouKnowSlides = [
     icon: <SmileFace className="text-ws-gray-700" />,
     title: "Did you know?",
     content:
-      "Lower-income earners with access to retirement benefits are 37% less likely to participate than thigher-income earners. ",
+      "Lower-income earners with access to retirement benefits are 37% less likely to participate than higher-income earners. ",
     source: "U.S. Bureau of Labor Statistics",
   },
   {

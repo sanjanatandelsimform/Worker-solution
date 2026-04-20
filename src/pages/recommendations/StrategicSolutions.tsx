@@ -74,8 +74,8 @@ export default function StrategicSolutions({
           <div className="p-4 overflow-auto">
             <h4 className="text-base font-semibold mb-2 text-ws-light-teal-950">Did you know?</h4>
             <p className="text-lg text-ws-light-teal-950">
-              The cost of replacing an individual employee can range from one-half to two times the
-              employee's annual salary.
+              The cost of replacing an individual employee can range from <strong>1.5-2x</strong>{" "}
+              the employee's annual salary.
             </p>
           </div>
         </div>
