@@ -1,5 +1,5 @@
 import { useEffect, useState, useCallback, useRef } from "react";
-import { useNavigate, useLocation, Link } from "react-router-dom";
+import { useNavigate, useLocation } from "react-router-dom";
 import { DashboardSidebar } from "@/components/dashboard/DashboardSidebar";
 import emailIcon from "@/assets/mail-icon.svg";
 import checkIcon from "@/assets/file-check.svg";
@@ -275,14 +275,8 @@ export const DashboardPage = () => {
             </h2>
             {!emailVerify && (
               <p className="text-base font-normal text-ws-text-primary mt-4">
-                BeneStats provides an overview of your workforce, industry, and some recommended
-                solutions that can add more value to your benefits packages and employee support.
-              </p>
-            )}
-            {assessmentData?.data?.status === "completed" && (
-              <p className="text-base font-normal text-ws-text-primary">
-                Here's an overview of your workforce, industry, and some recommendations with
-                partners that can add more value to your benefits packages and employee support.
+                Here's an overview of your workforce, industry, and some recommendations with partners that can add more value to your benefits
+                packages and employee support.
               </p>
             )}
 
@@ -318,22 +312,12 @@ export const DashboardPage = () => {
 
             {!emailVerify && (
               <DashboardCard
-                classes="bg-ws-primary-50 border-ws-border-primary" // Custom styles for email verification card
+                classes="bg-ws-light-teal-50 bg-ws-primary-50 border-ws-border-primary" // Custom styles for email verification card
                 title="Verify your email"
                 description={
                   <div className="max-w-2xl text-ws-primary-900">
                     Verify your email to unlock all BeneStats features and secure your account.
                     Didn’t recieve an email? Click the button to resend
-                    <Link
-                      to="#"
-                      onClick={e => {
-                        e.preventDefault();
-                        if (!emailVerify) handleVerifyEmail();
-                      }}
-                      className="underline ml-2 text-sm text-ws-primary-500"
-                    >
-                      Resend verification
-                    </Link>
                   </div>
                 }
                 avatarIconSrc={emailIcon}
@@ -346,7 +330,7 @@ export const DashboardPage = () => {
 
             {emailVerify && assessmentData?.data?.status !== "completed" && !isConnected && (
               <DashboardCard
-                classes="bg-ws-light-teal-50 border-ws-border-primary"
+                classes={completionCount > 0 ? "border-ws-border-primary" :"bg-ws-light-teal-50 border-ws-border-primary" }
                 title="Take the Assessment"
                 titleClass="text-ws-navy-900"
                 description={

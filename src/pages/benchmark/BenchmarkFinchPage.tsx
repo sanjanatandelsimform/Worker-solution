@@ -295,7 +295,7 @@ const benchmarkCardsConfigR2: BenchmarkCardConfig[] = [
     countClass: (data: unknown) => {
       const d = data as Record<string, unknown> | null;
       const rates = d?.rates as Record<string, unknown> | null;
-      return rates?.seperation == null
+      return rates?.separation == null
         ? "mt-2 text-sm font-medium text-ws-text-primary"
         : "mt-2 text-3xl font-semibold text-ws-text-primary";
     },
@@ -801,12 +801,13 @@ export default function BenchmarkFinchPage() {
   })();
 
   // Derive period labels from housing data
-  const ownersBurdenYear = latestOwnersBurden?.period?.year;
-  const rentersBurdenYear = latestRentersBurden?.period?.year;
-  const ownersBurdenQuarter = latestOwnersBurden?.period?.quarter;
-  const rentersBurdenQuarter = latestRentersBurden?.period?.quarter;
-  const ownersPeriodLabel = ownersBurdenYear ? `Q${ownersBurdenQuarter} ${ownersBurdenYear}` : "";
-  const rentersPeriodLabel = rentersBurdenYear ? `Q${rentersBurdenQuarter} ${rentersBurdenYear}` : "";
+  {/* This is require if client want to add quarter and year */}
+  // const ownersBurdenYear = latestOwnersBurden?.period?.year;
+  // const rentersBurdenYear = latestRentersBurden?.period?.year;
+  // const ownersBurdenQuarter = latestOwnersBurden?.period?.quarter;
+  // const rentersBurdenQuarter = latestRentersBurden?.period?.quarter;
+  // const ownersPeriodLabel = ownersBurdenYear ? `Q${ownersBurdenQuarter} ${ownersBurdenYear}` : "";
+  // const rentersPeriodLabel = rentersBurdenYear ? `Q${rentersBurdenQuarter} ${rentersBurdenYear}` : "";
 
   return (
     <div className="bg-ws-base-white py-10 px-6 space-y-6 shadow-xl rounded-b-xl">
@@ -1024,13 +1025,12 @@ export default function BenchmarkFinchPage() {
         </div>
         <div className="w-full mt-8">
           <h3 className="text-base font-bold text-ws-text-primary">
-            Your workers are likely financially burdened - meaning workers likely spend a large
-            portion of their wages on housing and transportation
+           Your workers residing in Manchester, New Hampshire are likely financially burdened - meaning workers likely spend a large 
+           portion of their wages on housing and transportation
           </h3>
           <p className="text-base mt-4 text-ws-text-primary">
-            The concept of rent (or housing cost) burden applies to both renters and homeowners, but
-            it's calculated a bit differently for each. Both renters and homeowners can be
-            housing-cost burdened; the main difference is what expenses are counted, not the income
+            The concept of rent (or housing cost) burden applies to both renters and homeowners, but it's calculated a bit differently for each. Both 
+            renters and homeowners can be housing-cost burdened; the main difference is what expenses are counted, not the income 
             thresholds.
           </p>
         </div>
@@ -1038,7 +1038,8 @@ export default function BenchmarkFinchPage() {
           <h2 className="text-xl font-semibold text-ws-text-primary mb-1">
             Housing Cost Burdened Owners
           </h2>
-          <p className="text-sm font-medium text-ws-text-primary">{ownersPeriodLabel}</p>
+          {/* This is require if client want to add quarter and year */}
+          {/* <p className="text-sm font-medium text-ws-text-primary">{ownersPeriodLabel}</p> */}
         </div>
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 w-full">
           {isLoadingCards ? (
@@ -1064,7 +1065,8 @@ export default function BenchmarkFinchPage() {
           <h2 className="text-xl font-semibold text-ws-text-primary mb-1">
             Housing Cost Burdened Renters
           </h2>
-          <p className="text-sm font-medium text-ws-text-primary">{rentersPeriodLabel}</p>
+          {/* This is require if client want to add quarter and year */}
+          {/* <p className="text-sm font-medium text-ws-text-primary">{rentersPeriodLabel}</p> */}
         </div>
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 w-full">
           {isLoadingCards ? (
@@ -1107,7 +1109,7 @@ export default function BenchmarkFinchPage() {
             </div>
             <div className="flex flex-col items-start w-full lg:w-auto shrink-0 mt-4 xl:mt-0">
               <Label className="text-ws-text-secondary flex mb-1.5">
-                Household type <span className="text-ws-error-600">*</span>
+                Household type
               </Label>
               <Select
                 className="w-full flex items-start min-w-50 md:min-w-full lg:min-w-50"
