@@ -177,8 +177,8 @@ const benchmarkCardsConfig: BenchmarkCardConfig[] = [
       const d = data as Record<string, unknown> | null;
       const tr = d?.turnoverRate as Record<string, unknown> | null;
       return !tr?.month || !tr?.year
-        ? "Turnover rate"
-        : `Turnover rate since ${tr.month} ${tr.year}`;
+        ? "Turnover Rate"
+        : `Turnover Rate since ${tr.month} ${tr.year}`;
     },
     count: (data: unknown) => {
       const d = data as Record<string, unknown> | null;
@@ -600,12 +600,13 @@ export default function BenchmarkPage() {
     }
   })();
 
-  const ownersPeriodLabel = latestOwnersBurden?.year
-    ? `${latestOwnersBurden.year}`
-    : "";
-  const rentersPeriodLabel = latestRentersBurden?.year
-    ? `${latestRentersBurden.year}`
-    : "";
+  {/* This is require if client want to add year */}
+  // const ownersPeriodLabel = latestOwnersBurden?.year
+  //   ? `${latestOwnersBurden.year}`
+  //   : "";
+  // const rentersPeriodLabel = latestRentersBurden?.year
+  //   ? `${latestRentersBurden.year}`
+  //   : "";
 
   return (
     <div className="bg-ws-base-white py-10 px-6 space-y-6 shadow-xl rounded-b-xl">
@@ -659,8 +660,7 @@ export default function BenchmarkPage() {
               Industry Turnover
             </h3>
             <p className="text-base text-ws-text-primary w-full xl:w-3/4 mt-2">
-              Industry-level turnover and separation trends to help you measure
-              retention risk.
+              Industry-level turnover and separation trends to help you measure retention risk.
             </p>
           </div>
         </div>
@@ -801,19 +801,19 @@ export default function BenchmarkPage() {
               : "No housing data available for the selected area"}
           </h3>
           <p className="text-base mt-4 text-ws-text-primary">
-            The concept of housing cost burden applies to both renters 
-            and homeowners, but it’s calculated differently for each. Both r
-            enters and homeowners can be housing-cost burdened; the main 
-            difference is what expenses are counted, not the income thresholds.
+            The concept of housing cost burden applies to both renters and homeowners, but it’s calculated differently for each. Both 
+            renters and homeowners can be housing-cost burdened; the main difference is what expenses are counted, not the income 
+            thresholds.
           </p>
         </div>
         <div className="my-4">
           <h2 className="text-xl font-semibold text-ws-text-primary mb-1">
             Housing Cost Burdened Owners
           </h2>
-          <p className="text-sm font-medium text-ws-text-primary">
+          {/* This is require if client want to add year */}
+          {/* <p className="text-sm font-medium text-ws-text-primary">
             {ownersPeriodLabel}
-          </p>
+          </p> */}
         </div>
         <div className="grid grid-cols-1 xl:grid-cols-2 gap-4 w-full">
           {isLoadingCards ? (
@@ -841,9 +841,10 @@ export default function BenchmarkPage() {
           <h2 className="text-xl font-semibold text-ws-text-primary mb-1">
             Housing Cost Burdened Renters
           </h2>
-          <p className="text-sm font-medium text-ws-text-primary">
+          {/* This is require if client want to add year */}
+          {/* <p className="text-sm font-medium text-ws-text-primary">
             {rentersPeriodLabel}
-          </p>
+          </p> */}
         </div>
         <div className="grid grid-cols-1 xl:grid-cols-2 gap-4 w-full">
           {isLoadingCards ? (
