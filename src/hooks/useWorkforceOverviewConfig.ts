@@ -13,25 +13,19 @@ export function useWorkforceOverviewConfig() {
         id: "total-workforce",
         title: "Total Workforce",
         count: workforceSection?.totalWorkforce?.toLocaleString() ?? "--",
-        tooltipText: "",
-        getDescriptionText: () => "",
-        getCountClass: () => COUNT_CLASS,
+        getCountClass: (): string => COUNT_CLASS,
       },
       {
         id: "enrolled-benefits",
         title: "Enrolled in Benefits",
         count: workforceSection?.enrolledBenefits?.toLocaleString() ?? "--",
-        tooltipText: "",
-        getDescriptionText: () => "",
-        getCountClass: () => COUNT_CLASS,
+        getCountClass: (): string => COUNT_CLASS,
       },
       {
         id: "avg-employee-cost",
         title: "Avg. Employee Cost Per Pay Period",
         count: workforceSection ? `$${workforceSection.avgEmployeeCost.toLocaleString()}` : "--",
-        tooltipText: "",
-        getDescriptionText: () => "",
-        getCountClass: () => COUNT_CLASS,
+        getCountClass: (): string => COUNT_CLASS,
       },
       {
         id: "employer-cost",
@@ -39,11 +33,9 @@ export function useWorkforceOverviewConfig() {
         count: workforceSection
           ? `$${workforceSection.employerCostPerEmployee.toLocaleString()}/yr`
           : "--",
-        tooltipText: "",
-
-        getDescriptionText: () =>
+        getDescriptionText: (): string =>
           "The average amount each employee costs the company across benefits",
-        getCountClass: () => COUNT_CLASS,
+        getCountClass: (): string => COUNT_CLASS,
       },
     ],
     [workforceSection]

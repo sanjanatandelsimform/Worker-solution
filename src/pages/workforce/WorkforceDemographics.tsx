@@ -121,7 +121,6 @@ export default function WorkforceDemographics({
                   infoIcon={!!card.tooltipText}
                   infoCircleClass="text-ws-gray-70 size-5"
                   tooltipText={card.tooltipText}
-                  descriptionText=""
                   placements="top"
                   countWrap="text-3xl font-semibold text-ws-text-primary"
                 />
