@@ -68,9 +68,9 @@ const overviewCardsConfig: CardConfig<CompanyGlanceData>[] = [
     icon: DollarIcon,
     format: data =>
       data.industryAverageWage === null ? "N/A" : formatCurrency(Number(data.industryAverageWage)),
-    // infoIcon: true,
-    tooltipText: "How is this calculated",
-    descriptionText: "This is calculated based on LMI.",
+    infoIcon: true,
+    tooltipText: "",
+    descriptionText: "The average amount each employee costs the company across benefits",
     placements: "top",
   },
 ];
@@ -82,7 +82,7 @@ const overviewCardsConfigR2: CardConfig<Record<string, string | null>>[] = [
     icon: EnrolledIcon,
     format: data =>
       data.industryAverageWage == null ? "N/A" : formatCurrency(Number(data.industryAverageWage)),
-    infoIcon: true,
+    infoIcon: false,
     count: "2,254",
     tooltipText: "How is this calculated",
     descriptionText: "This is calculated based on LMI.",
@@ -94,7 +94,7 @@ const overviewCardsConfigR2: CardConfig<Record<string, string | null>>[] = [
     icon: SavingIcon,
     format: data =>
       data.industryAverageWage == null ? "N/A" : formatCurrency(Number(data.industryAverageWage)),
-    infoIcon: true,
+    infoIcon: false,
     count: "64%",
     tooltipText: "How is this calculated",
     descriptionText: "This is calculated based on LMI.",
@@ -106,7 +106,7 @@ const overviewCardsConfigR2: CardConfig<Record<string, string | null>>[] = [
     icon: HeartLineIcon,
     format: data =>
       data.industryAverageWage == null ? "N/A" : formatCurrency(Number(data.industryAverageWage)),
-    infoIcon: true,
+    infoIcon: false,
     count: "92%",
     tooltipText: "How is this calculated",
     descriptionText: "This is calculated based on LMI.",
