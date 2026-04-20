@@ -60,7 +60,7 @@ export function useWorkforceCompensationConfig(selectedWorkforceDept: string) {
         id: "average-salary",
         title: "Average Salary",
         count: compensationSection
-          ? `$${compensationSection.salaryBreakdown.avgSalary.toLocaleString()}/yr`
+          ? `$${compensationSection.salaryBreakdown.avgSalary.toLocaleString()}`
           : "--",
         tooltipText: "Median Home Value",
         getCountClass: () => COUNT_CLASS,
