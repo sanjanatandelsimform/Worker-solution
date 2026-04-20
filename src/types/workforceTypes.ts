@@ -137,8 +137,12 @@ export interface JobTitle {
 
 export interface BenefitsCost {
   employeeContribution: number;
-  /** Pre-formatted string, e.g. "$11000/yr" */
-  employerCost: string;
+  /**
+   * Raw annual employer cost in whole dollars (e.g., 11240).
+   * Null when the API cannot compute a cost for this employer.
+   * Formatted for display via `formatEmployerCostPerYear()` in formatters.ts.
+   */
+  employerCost: number | null;
   graph: BenefitsCostGraphEntry[];
   table: BenefitsCostTableRow[];
 }
