@@ -118,10 +118,10 @@ export default function WorkforceDemographics({
                   itemAlign="between"
                   count={card.count}
                   countClass={card.getCountClass()}
-                  infoIcon={true}
+                  infoIcon={!!card.tooltipText}
                   infoCircleClass="text-ws-gray-70 size-5"
                   tooltipText={card.tooltipText}
-                  descriptionText="Industry specific turnover metrics are calculated from US Census Bureau QWI data sources"
+                  descriptionText=""
                   placements="top"
                   countWrap="text-3xl font-semibold text-ws-text-primary"
                 />

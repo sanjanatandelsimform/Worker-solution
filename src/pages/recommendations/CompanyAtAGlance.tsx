@@ -68,9 +68,9 @@ const overviewCardsConfig: CardConfig<CompanyGlanceData>[] = [
     icon: DollarIcon,
     format: data =>
       data.industryAverageWage === null ? "N/A" : formatCurrency(Number(data.industryAverageWage)),
-    infoIcon: true,
+    infoIcon: false,
     tooltipText: "",
-    descriptionText: "The average amount each employee costs the company across benefits",
+    descriptionText: "",
     placements: "top",
   },
 ];
