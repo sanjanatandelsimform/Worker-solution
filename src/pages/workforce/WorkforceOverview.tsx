@@ -6,8 +6,8 @@ interface OverviewCardConfig {
   id: string;
   title: string;
   count: string;
-  tooltipText: string;
-  getDescriptionText: () => string;
+  tooltipText?: string;
+  getDescriptionText?: () => string;
   getCountClass: () => string;
 }
 
@@ -45,10 +45,10 @@ export default function WorkforceOverview({
                 itemAlign="between"
                 count={card.count}
                 countClass={card.getCountClass()}
-                infoIcon={!!(card.tooltipText || card.getDescriptionText())}
+                infoIcon={!!(card.tooltipText || card.getDescriptionText?.())}
                 infoCircleClass="text-ws-gray-400 size-5"
                 tooltipText={card.tooltipText}
-                descriptionText={card.getDescriptionText()}
+                descriptionText={card.getDescriptionText?.()}
                 placements="top"
                 countWrap="text-3xl font-semibold text-ws-text-primary"
               />
@@ -73,10 +73,10 @@ export default function WorkforceOverview({
                 itemAlign="between"
                 count={card.count}
                 countClass={card.getCountClass()}
-                infoIcon={!!(card.tooltipText || card.getDescriptionText())}
+                infoIcon={!!(card.tooltipText || card.getDescriptionText?.())}
                 infoCircleClass="text-ws-gray-400 size-5"
                 tooltipText={card.tooltipText}
-                descriptionText={card.getDescriptionText()}
+                descriptionText={card.getDescriptionText?.()}
                 placements="top"
               />
             ))}

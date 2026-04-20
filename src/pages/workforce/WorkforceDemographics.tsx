@@ -20,7 +20,7 @@ interface DemographicsCardConfig {
   id: string;
   title: string;
   count: string;
-  tooltipText: string;
+  tooltipText?: string;
   getCountClass: () => string;
 }
 
