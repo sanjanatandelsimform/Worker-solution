@@ -46,7 +46,7 @@ const overviewCardsConfig: CardConfig<CompanyGlanceData>[] = [
   },
   {
     id: "average-hourly-wage",
-    title: "Average Hourly Wage",
+    title: "Average Hourly Wages",
     icon: ClockIcon,
     format: data => {
       const wage = data.averageHourlyWage;
@@ -64,7 +64,7 @@ const overviewCardsConfig: CardConfig<CompanyGlanceData>[] = [
   },
   {
     id: "industry-avg-wage",
-    title: "National Industry Average Wage",
+    title: "National Industry Median Wage",
     icon: DollarIcon,
     format: data =>
       data.industryAverageWage === null ? "N/A" : formatCurrency(Number(data.industryAverageWage)),
@@ -132,7 +132,7 @@ export default function CompanyAtAGlance({
   return (
     <div className="space-y-6 mb-6">
       <h2 className="text-2xl lg:text-4xl font-medium text-ws-text-primary leading-10">
-        Your Company at a Glance
+        Your Company At A Glance
       </h2>
       <h4 className="text-2xl font-medium text-ws-text-primary">Company Overview</h4>
       <div className="grid grid-cols-2 xl:grid-cols-4 gap-6 w-full">
