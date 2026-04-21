@@ -194,8 +194,8 @@ const benchmarkCardsConfig: BenchmarkCardConfig[] = [
       const d = data as Record<string, unknown> | null;
       const tr = d?.turnoverRate as Record<string, unknown> | null;
       return !tr?.month || !tr?.year
-        ? "Turnover rate"
-        : `Turnover rate since ${tr.month} ${tr.year}`;
+        ? "Turnover Rate"
+        : `Turnover Rate Since ${tr.month} ${tr.year}`;
     },
     count: (data: unknown) => {
       const d = data as Record<string, unknown> | null;
@@ -842,8 +842,8 @@ export default function BenchmarkFinchPage() {
                 itemAlign="between"
                 count={card.count(industryOverview)}
                 countClass={card.countClass(industryOverview)}
-                infoIcon={true}
-                infoCircleClass="text-ws-gray-400 size-4"
+                infoIcon={false}
+                infoCircleClass=""
                 tooltipText={card.tooltipText}
                 descriptionText={card.descriptionText(industryOverview)}
                 placements="top"
@@ -869,7 +869,7 @@ export default function BenchmarkFinchPage() {
                 itemAlign="between"
                 count={card.count(industryOverview)}
                 countClass={card.countClass(industryOverview)}
-                infoIcon={true}
+                infoIcon={false}
                 infoCircleClass="text-ws-gray-400 size-4"
                 tooltipText={card.tooltipText}
                 descriptionText={card.descriptionText(industryOverview)}
@@ -940,7 +940,7 @@ export default function BenchmarkFinchPage() {
           </div>
           <div className="flex flex-col items-start w-full lg:w-auto shrink-0 mt-4 xl:mt-0">
             <Label className="text-sm font-medium text-ws-text-secondary flex mb-1.5">
-              Metropolitan Area <span className="text-ws-error-600">*</span>
+              Zip Code
             </Label>
             <Select
               className="w-full flex items-start min-w-50 md:min-w-full lg:min-w-50"
@@ -1004,7 +1004,7 @@ export default function BenchmarkFinchPage() {
           </div>
           <div className="flex flex-col items-start w-full lg:w-auto shrink-0 mt-4 xl:mt-0">
             <Label className="text-sm font-medium text-ws-text-secondary flex mb-1.5">
-              Metropolitan Area <span className="text-ws-error-600">*</span>
+              Zip Code
             </Label>
             <Select
               className="w-full flex items-start min-w-50 md:min-w-full lg:min-w-50"
@@ -1148,9 +1148,9 @@ export default function BenchmarkFinchPage() {
                     itemAlign="between"
                     count={card.count}
                     countClass="mt-2 text-3xl font-semibold text-ws-text-primary"
-                    infoIcon={true}
+                    infoIcon={false}
                     infoCircleClass="text-ws-gray-400 size-4"
-                    tooltipText={card.tooltipText}
+                    tooltipText={""}
                     descriptionText={card.descriptionText}
                     placements="top"
                   />

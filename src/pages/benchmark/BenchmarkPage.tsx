@@ -641,9 +641,9 @@ export default function BenchmarkPage() {
                 itemAlign="between"
                 count={card.count(industryOverview)}
                 countClass={card.countClass(industryOverview)}
-                infoIcon={true}
+                infoIcon={false}
                 infoCircleClass="text-ws-gray-400 size-4"
-                // tooltipText={card.tooltipText}
+                tooltipText={""}
                 descriptionText={card.descriptionText(industryOverview)}
                 placements="top"
               />
@@ -707,7 +707,7 @@ export default function BenchmarkPage() {
           </div>
           <div className="flex flex-col items-start w-full lg:w-auto shrink-0 mt-4 lg:mt-0">
             <Label className="text-sm font-medium text-ws-text-secondary flex mb-1.5">
-              Metropolitan Area <span className="text-ws-error-600">*</span>
+              Zip Code
             </Label>
             <Select
               className="w-full flex items-start min-w-50 md:min-w-full lg:min-w-50"
@@ -775,7 +775,7 @@ export default function BenchmarkPage() {
           </div>
           <div className="flex flex-col items-start w-full lg:w-auto shrink-0 mt-4 lg:mt-0">
             <Label className="text-sm font-medium text-ws-text-secondary flex mb-1.5">
-              Metropolitan Area <span className="text-ws-error-600">*</span>
+              Zip Code
             </Label>
             <Select
               className="w-full flex items-start min-w-50 md:min-w-full lg:min-w-50"
@@ -932,10 +932,10 @@ export default function BenchmarkPage() {
                     itemAlign="between"
                     count={card.count}
                     countClass="mt-2 text-3xl font-semibold text-ws-text-primary"
-                    infoIcon={true}
+                    infoIcon={false}
                     infoCircleClass="text-ws-gray-400 size-4"
-                    tooltipText={card.tooltipText}
-                    descriptionText={card.descriptionText}
+                    tooltipText={""}
+                    descriptionText={""}
                     placements="top"
                   />
                 ))}
