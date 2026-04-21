@@ -38,6 +38,37 @@ const HEALTH_WELLNESS_VALUES = new Set([
   "Mental Health",
 ]);
 
+// Retirement & Savings option values. If any selected, the Retirement subsection is shown.
+const RETIREMENT_SAVINGS_VALUES = new Set([
+  "401K",
+  "IRA",
+  "Roth 401K",
+  "Earned Wage Access",
+  "Employee Loans",
+  "Hardship Grants",
+  "Financial Coaching",
+  "Emergency Savings",
+  "Student Loan Support",
+  "Credit Building",
+  "Retirement Migration",
+]);
+
+// "Does not offer" exclusion values — selecting these hides the corresponding subsection
+const RETIREMENT_NOT_OFFERED = "My company does not offer retirement/savings benefits";
+const HEALTHCARE_NOT_OFFERED = "My company does not offer healthcare/wellness benefits";
+
+/** Check if Retirement subsection should be visible based on supplementalBenefits selections */
+const isRetirementVisible = (selectedBenefits: string[]): boolean => {
+  if (selectedBenefits.includes(RETIREMENT_NOT_OFFERED)) return false;
+  return selectedBenefits.some(v => RETIREMENT_SAVINGS_VALUES.has(v));
+};
+
+/** Check if HealthCare subsection should be visible based on supplementalBenefits selections */
+const isHealthCareVisibleCheck = (selectedBenefits: string[]): boolean => {
+  if (selectedBenefits.includes(HEALTHCARE_NOT_OFFERED)) return false;
+  return selectedBenefits.some(v => HEALTH_WELLNESS_VALUES.has(v));
+};
+
 export const DynamicTab = forwardRef<
   {
     submit: () => Promise<{
@@ -134,17 +165,26 @@ export const DynamicTab = forwardRef<
       const newErrors: Record<string, string> = {};
       let isValid = true;
 
-      // Derive HealthCare visibility at validation time so hidden questions are skipped
+      // Derive subsection visibility at validation time so hidden questions are skipped
       const selectedBenefits = Array.isArray(answers["supplementalBenefits"])
         ? (answers["supplementalBenefits"] as string[])
         : [];
-      const isHealthCareVisible = selectedBenefits.some(v => HEALTH_WELLNESS_VALUES.has(v));
+      const isHealthCareVisible = isHealthCareVisibleCheck(selectedBenefits);
+      const isRetirementSectionVisible = isRetirementVisible(selectedBenefits);
 
       questions.forEach(question => {
         // ── Skip HealthCare subsection questions when the section is hidden ──
         if (
           (question as Question & { subsection?: string }).subsection === "HealthCare" &&
           !isHealthCareVisible
+        ) {
+          return;
+        }
+
+        // ── Skip Retirement subsection questions when the section is hidden ──
+        if (
+          (question as Question & { subsection?: string }).subsection === "Retirement" &&
+          !isRetirementSectionVisible
         ) {
           return;
         }
@@ -459,17 +499,26 @@ export const DynamicTab = forwardRef<
           return true;
         });
 
-      // Derive HealthCare visibility at clean time so hidden answers are excluded
+      // Derive subsection visibility at clean time so hidden answers are excluded
       const selectedBenefits = Array.isArray(answers["supplementalBenefits"])
         ? (answers["supplementalBenefits"] as string[])
         : [];
-      const isHealthCareVisible = selectedBenefits.some(v => HEALTH_WELLNESS_VALUES.has(v));
+      const isHealthCareVisible = isHealthCareVisibleCheck(selectedBenefits);
+      const isRetirementSectionVisible = isRetirementVisible(selectedBenefits);
 
       questions.forEach(question => {
         // ── Exclude HealthCare subsection answers when the section is hidden ──
         if (
           (question as Question & { subsection?: string }).subsection === "HealthCare" &&
           !isHealthCareVisible
+        ) {
+          return;
+        }
+
+        // ── Exclude Retirement subsection answers when the section is hidden ──
+        if (
+          (question as Question & { subsection?: string }).subsection === "Retirement" &&
+          !isRetirementSectionVisible
         ) {
           return;
         }
@@ -906,16 +955,28 @@ export const DynamicTab = forwardRef<
           const next = { ...prev };
           const question = questions.find(q => q.key === key);
 
-          // ── When supplementalBenefits changes, clear all HealthCare errors
-          //    if no Health & Wellness option is now selected ─────────────────
+          // ── When supplementalBenefits changes, clear errors for hidden subsections ──
           if (key === "supplementalBenefits" && Array.isArray(value)) {
-            const stillVisible = (value as string[]).some(v => HEALTH_WELLNESS_VALUES.has(v));
-            if (!stillVisible) {
+            const selections = value as string[];
+
+            // Clear HealthCare errors if no longer visible
+            if (!isHealthCareVisibleCheck(selections)) {
               Object.keys(next).forEach(errorKey => {
-                // Remove errors belonging to any HealthCare-subsection question key
                 const matchingQuestion = questions.find(
                   q =>
                     (q as Question & { subsection?: string }).subsection === "HealthCare" &&
+                    (errorKey === q.key || errorKey.startsWith(`${q.key}.`))
+                );
+                if (matchingQuestion) delete next[errorKey];
+              });
+            }
+
+            // Clear Retirement errors if no longer visible
+            if (!isRetirementVisible(selections)) {
+              Object.keys(next).forEach(errorKey => {
+                const matchingQuestion = questions.find(
+                  q =>
+                    (q as Question & { subsection?: string }).subsection === "Retirement" &&
                     (errorKey === q.key || errorKey.startsWith(`${q.key}.`))
                 );
                 if (matchingQuestion) delete next[errorKey];
@@ -1150,9 +1211,8 @@ export const DynamicTab = forwardRef<
     const selectedSupplementalBenefits = Array.isArray(answers["supplementalBenefits"])
       ? (answers["supplementalBenefits"] as string[])
       : [];
-    const isHealthCareVisible = selectedSupplementalBenefits.some(v =>
-      HEALTH_WELLNESS_VALUES.has(v)
-    );
+    const isHealthCareVisible = isHealthCareVisibleCheck(selectedSupplementalBenefits);
+    const isRetirementSectionVisible = isRetirementVisible(selectedSupplementalBenefits);
 
     const renderQuestion = (question: Question, idx: number, subsectionQuestions?: Question[]) => {
       const displayOrderValue = subsectionQuestions
@@ -1232,6 +1292,7 @@ export const DynamicTab = forwardRef<
         {/* One card per subsection — HealthCare is hidden unless a Health & Wellness benefit is selected */}
         {Array.from(subsectionMap.entries()).map(([subsection, subsectionQuestions]) => {
           if (subsection === "HealthCare" && !isHealthCareVisible) return null;
+          if (subsection === "Retirement" && !isRetirementSectionVisible) return null;
 
           return (
             <div
