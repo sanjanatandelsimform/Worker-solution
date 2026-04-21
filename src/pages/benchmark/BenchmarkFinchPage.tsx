@@ -842,8 +842,8 @@ export default function BenchmarkFinchPage() {
                 itemAlign="between"
                 count={card.count(industryOverview)}
                 countClass={card.countClass(industryOverview)}
-                infoIcon={true}
-                infoCircleClass="text-ws-gray-400 size-4"
+                infoIcon={false}
+                infoCircleClass=""
                 tooltipText={card.tooltipText}
                 descriptionText={card.descriptionText(industryOverview)}
                 placements="top"
@@ -869,7 +869,7 @@ export default function BenchmarkFinchPage() {
                 itemAlign="between"
                 count={card.count(industryOverview)}
                 countClass={card.countClass(industryOverview)}
-                infoIcon={true}
+                infoIcon={false}
                 infoCircleClass="text-ws-gray-400 size-4"
                 tooltipText={card.tooltipText}
                 descriptionText={card.descriptionText(industryOverview)}
@@ -1148,9 +1148,9 @@ export default function BenchmarkFinchPage() {
                     itemAlign="between"
                     count={card.count}
                     countClass="mt-2 text-3xl font-semibold text-ws-text-primary"
-                    infoIcon={true}
+                    infoIcon={false}
                     infoCircleClass="text-ws-gray-400 size-4"
-                    tooltipText={card.tooltipText}
+                    tooltipText={""}
                     descriptionText={card.descriptionText}
                     placements="top"
                   />
