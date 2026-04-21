@@ -105,13 +105,13 @@ export default function CompensationSection({
   onClearFieldError,
 }: CompensationSectionProps): JSX.Element {
   return (
-    <div className="bg-ws-base-white rounded-lg border border-ws-border-primary shadow-sm p-6 space-y-6">
-      <h2 className="text-3xl font-semibold mb-2">Compensation </h2>
-      <p className="text-base text-ws-gray-90">
+    <div className="bg-ws-base-white rounded-lg border border-ws-border-primary p-6 space-y-6">
+      <h2 className="text-3xl font-medium text-ws-text-primary mb-2">Compensation </h2>
+      <p className="text-base font-normal text-ws-text-secondary">
         Select salary that apply best to your workforce. This doesn't have to be exact.
       </p>
 
-      <div className="space-y-8">
+      <div className="space-y-6">
         {compensationQuestions.map((question, index) => {
           if (question.isMultiSelect) {
             return (
@@ -129,7 +129,7 @@ export default function CompensationSection({
           if (question.isDropdown) {
             return (
               <div key={question.id} className="space-y-3">
-                <Label isRequired={question.required} className="text-base text-ws-text-primary">
+                <Label isRequired={question.required} className="text-base font-normal text-ws-text-primary">
                   {index + 1}. {question.question}
                 </Label>
                 <FieldError message={fieldErrors["payroll-provider"]} />
@@ -165,7 +165,7 @@ export default function CompensationSection({
 
               {question.hasConditional && answers[question.id] === "yes-raises" && (
                 <div className="ml-6 space-y-2 pt-2">
-                  <Label className="text-sm font-normal text-ws-text-secondary">
+                  <Label className="text-base font-normal text-ws-text-primary">
                     If yes, when?
                   </Label>
                   <Select

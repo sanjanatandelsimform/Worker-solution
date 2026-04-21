@@ -243,7 +243,7 @@ export function RankingList({
           </div>
         </SortableContext>
       </DndContext>
-      {error && <span className="text-sm text-red-600">{error}</span>}
+      {error && <span className="text-sm text-ws-error-600">{error}</span>}
     </div>
   );
 }

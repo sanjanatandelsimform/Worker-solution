@@ -224,7 +224,11 @@ const benchmarkCardsConfig: BenchmarkCardConfig[] = [
       const d = data as Record<string, unknown> | null;
       const at = d?.avgTurnover as Record<string, unknown> | null;
       const value = at?.rate;
-      return typeof value === "number" ? `${formatCurrency(value)}%` : value !== undefined  ? `${value}%` : "No data";
+      return typeof value === "number"
+        ? `${formatCurrency(value)}%`
+        : value !== undefined
+          ? `${value}%`
+          : "No data";
     },
     tooltipText: "Average Cost of Turnover",
     descriptionText: (data: unknown) => {
@@ -371,21 +375,16 @@ export default function BenchmarkPage() {
   ];
 
   // ── Area Median Wage: zip items and selection (new flat array) ──
-  const wageZipItems = (areaMedianWage ?? []).map(
-    (w: { state: string; zipcode: string }) => ({
-      // label: `${w.state} (${w.zipcode})`,
-      label: `${w.zipcode}`,
-      id: w.zipcode,
-    })
-  );
+  const wageZipItems = (areaMedianWage ?? []).map((w: { state: string; zipcode: string }) => ({
+    // label: `${w.state} (${w.zipcode})`,
+    label: `${w.zipcode}`,
+    id: w.zipcode,
+  }));
 
-  const activeWageZip =
-    selectedWageZip ?? areaMedianWage?.[0]?.zipcode ?? null;
+  const activeWageZip = selectedWageZip ?? areaMedianWage?.[0]?.zipcode ?? null;
 
   const selectedWageState =
-    areaMedianWage?.find(
-      (w: { zipcode: string }) => w.zipcode === activeWageZip
-    ) ??
+    areaMedianWage?.find((w: { zipcode: string }) => w.zipcode === activeWageZip) ??
     areaMedianWage?.[0] ??
     null;
 
@@ -407,9 +406,7 @@ export default function BenchmarkPage() {
         ? `${selectedWageState.state} Median Living Wage`
         : "Median Living Wage",
       icon: <DollarIcon className="size-5 text-ws-gray-500" />,
-      count: selectedWageState
-        ? formatCurrencyWithCents(selectedWageState.medianLivingWage)
-        : "--",
+      count: selectedWageState ? formatCurrencyWithCents(selectedWageState.medianLivingWage) : "--",
     },
     {
       id: "average-salary",
@@ -432,28 +429,21 @@ export default function BenchmarkPage() {
   ];
 
   // ── Housing Cost: zip items, selection, and derived data (new structure) ──
-  const housingZipItems = (housingCostData ?? []).map(
-    (h: { zipcode: string }) => ({
-      label: h.zipcode,
-      id: h.zipcode,
-    })
-  );
+  const housingZipItems = (housingCostData ?? []).map((h: { zipcode: string }) => ({
+    label: h.zipcode,
+    id: h.zipcode,
+  }));
 
-  const activeHousingZip =
-    selectedHousingZipState ?? housingCostData?.[0]?.zipcode ?? null;
+  const activeHousingZip = selectedHousingZipState ?? housingCostData?.[0]?.zipcode ?? null;
 
   const selectedHousingData =
-    housingCostData?.find(
-      (h: { zipcode: string }) => h.zipcode === activeHousingZip
-    ) ??
+    housingCostData?.find((h: { zipcode: string }) => h.zipcode === activeHousingZip) ??
     housingCostData?.[0] ??
     null;
 
   // Get latest year's burden data
-  const latestOwnersBurden =
-    selectedHousingData?.housingCostBurdenedOwners?.[0] ?? null;
-  const latestRentersBurden =
-    selectedHousingData?.housingCostBurdenedRenters?.[0] ?? null;
+  const latestOwnersBurden = selectedHousingData?.housingCostBurdenedOwners?.[0] ?? null;
+  const latestRentersBurden = selectedHousingData?.housingCostBurdenedRenters?.[0] ?? null;
 
   // Dynamic owners progress cards
   const dynamicHousingBurdenOwnersConfig: ProgressCardConfig[] = [
@@ -509,10 +499,7 @@ export default function BenchmarkPage() {
     {
       id: "home-ownership-rate",
       title: "Home Ownership Rate",
-      count:
-        wcb?.homeOwnershipRate != null
-          ? `${wcb.homeOwnershipRate}%`
-          : "No data available",
+      count: wcb?.homeOwnershipRate != null ? `${wcb.homeOwnershipRate}%` : "No data available",
       tooltipText: "Home Ownership Rate",
       descriptionText: "U.S. Census Bureau, 5-Year American Community Survey",
       countClass: "mt-2 text-3xl font-semibold text-ws-text-primary",
@@ -531,10 +518,7 @@ export default function BenchmarkPage() {
     {
       id: "median-rent",
       title: "Median Rent",
-      count:
-        wcb?.medianRent != null
-          ? formatCurrency(Number(wcb.medianRent))
-          : "No data available",
+      count: wcb?.medianRent != null ? formatCurrency(Number(wcb.medianRent)) : "No data available",
       tooltipText: "Median Rent",
       descriptionText: "U.S. Census Bureau, 5-Year American Community Survey",
       countClass: "mt-2 text-3xl font-semibold text-ws-text-primary",
@@ -547,8 +531,7 @@ export default function BenchmarkPage() {
       const graphData = selectedHousingData?.workingClassHousingGraph;
       if (!graphData) return [];
 
-      const tenureType =
-        selectedGraphType === "owners" ? graphData.owners : graphData.renters;
+      const tenureType = selectedGraphType === "owners" ? graphData.owners : graphData.renters;
       if (!tenureType) return [];
 
       const incomeLabels: Array<{
@@ -562,23 +545,23 @@ export default function BenchmarkPage() {
           key: "moderateIncome",
           category: "moderateIncome",
           label: "Moderate income",
-          range: "$55,250 - $88,400"
+          range: "$55,250 - $88,400",
         },
         {
           key: "medianIncome",
           category: "medianIncome",
           label: "Median income",
-          range: "$88,400 - $132,600"
+          range: "$88,400 - $132,600",
         },
         {
           key: "upperIncome",
           category: "upperIncome",
           label: "Upper income",
-          range: "$132,600 or more"
+          range: "$132,600 or more",
         },
       ];
 
-      return incomeLabels.map(({ key, category, label,range }) => {
+      return incomeLabels.map(({ key, category, label, range }) => {
         const levelData = tenureType[key] as {
           burdened: number;
           severelyBurdened: number;
@@ -587,12 +570,9 @@ export default function BenchmarkPage() {
           incomeCategory: category,
           label,
           range: range,
-          burdened:
-            typeof levelData?.burdened === "number" ? levelData.burdened : 0,
+          burdened: typeof levelData?.burdened === "number" ? levelData.burdened : 0,
           severelyBurdened:
-            typeof levelData?.severelyBurdened === "number"
-              ? levelData.severelyBurdened
-              : 0,
+            typeof levelData?.severelyBurdened === "number" ? levelData.severelyBurdened : 0,
         };
       });
     } catch {
@@ -686,8 +666,8 @@ export default function BenchmarkPage() {
           </div>
         </div>
         <div className="text-xs w-full flex items-start mt-8 text-ws-text-tertiary">
-          <span className="text-ws-text-primary mr-1">Source:</span> Bureau of
-          Labor Statistics Job Openings and Labor Turnover Survey
+          <span className="text-ws-text-primary mr-1">Source:</span> Bureau of Labor Statistics Job
+          Openings and Labor Turnover Survey
         </div>
       </div>
 
@@ -701,8 +681,8 @@ export default function BenchmarkPage() {
                 : "Area Median Wage"}
             </h3>
             <p className="text-base text-ws-text-primary w-full mt-2">
-              Compare your wages with median wages for salaried and hourly
-              employees for the selected geography.
+              Compare your wages with median wages for salaried and hourly employees for the
+              selected geography.
             </p>
           </div>
           <div className="flex flex-col items-start w-full lg:w-auto shrink-0 mt-4 lg:mt-0">
@@ -733,8 +713,7 @@ export default function BenchmarkPage() {
             <SalaryHourlyComparisonChart
               salaryData={salaryData}
               hourlyData={hourlyData}
-              sourceAttribution={`Source: BLS, ${ selectedWageState?.year ? selectedWageState?.year : ""}`}
-
+              sourceAttribution={`Source: BLS, ${selectedWageState?.year ? selectedWageState?.year : ""}`}
             />
           )}
           <div className="grid grid-cols-1 xl:grid-cols-3 gap-6 w-full mt-4">
@@ -886,7 +865,8 @@ export default function BenchmarkPage() {
                 their heads.
               </p>
               <p className="text-xs text-ws-text-tertiary mt-4">
-                <span className="font-semibold">Source:</span> U.S. Census Bureau, 5-Year American Community Survey
+                <span className="font-semibold">Source:</span> U.S. Census Bureau, 5-Year American
+                Community Survey
               </p>
             </div>
             <div className="flex flex-col items-start w-full lg:w-auto shrink-0 mt-4 lg:mt-0">
@@ -948,29 +928,24 @@ export default function BenchmarkPage() {
               <CostBurdenChartSkeleton />
             ) : (
               <IncomeDistributionChart
-                data={
-                  Array.isArray(workingClassHousingGraph)
-                    ? workingClassHousingGraph
-                    : []
-                }
+                data={Array.isArray(workingClassHousingGraph) ? workingClassHousingGraph : []}
               />
             )}
           </div>
         </div>
         <p className="text-xs text-ws-text-tertiary mt-6">
-          <span className="font-semibold">Source:</span> U.S. Census Bureau,
-          5-Year American Community Survey
+          <span className="font-semibold">Source:</span> U.S. Census Bureau, 5-Year American
+          Community Survey
         </p>
       </div>
 
       <div className="w-full">
         <p className="text-xs text-ws-text-primary">
-          This product provides informational insights and recommendations based
-          on the data you share and industry benchmarks. It does not provide
-          legal, financial, tax, or benefits advice, and recommendations are not
-          guarantees of outcomes or results. Actual results may vary based on
-          your unique business circumstances. Always consult qualified
-          professionals for specific legal, tax, or financial advice.
+          This product provides informational insights and recommendations based on the data you
+          share and industry benchmarks. It does not provide legal, financial, tax, or benefits
+          advice, and recommendations are not guarantees of outcomes or results. Actual results may
+          vary based on your unique business circumstances. Always consult qualified professionals
+          for specific legal, tax, or financial advice.
         </p>
       </div>
 

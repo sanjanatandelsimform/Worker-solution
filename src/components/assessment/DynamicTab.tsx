@@ -860,6 +860,7 @@ export const DynamicTab = forwardRef<
       onEmptySubmission,
       onApiError,
       section,
+      stateOptions,
     ]);
 
     const saveWithoutValidation = useCallback(async () => {

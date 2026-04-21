@@ -98,7 +98,7 @@ export const MultiSelect: React.FC<MultiSelectProps> = ({
               </span>
             ))
           ) : (
-            <span className="text-gray-700">{placeholder}</span>
+            <span className="text-ws-gray-700">{placeholder}</span>
           )}
         </div>
         <SelectArrow className="h-full flex items-center justify-center" />
@@ -122,7 +122,7 @@ export const MultiSelect: React.FC<MultiSelectProps> = ({
                   >
                     {checked && <CheckIcon className="right-1 bottom-1" />}
                   </div>
-                  <span className="text-gray-700">{option.label}</span>
+                  <span className="text-ws-gray-700">{option.label}</span>
                 </li>
               );
             })}

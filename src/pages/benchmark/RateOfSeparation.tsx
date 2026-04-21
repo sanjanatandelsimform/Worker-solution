@@ -51,7 +51,7 @@ export default function CostCard({
       {/* Middle content */}
       <div className="flex flex-col flex-1 mt-4">
         {isNoData ? (
-          <div className="flex items-center h-[110px] text-sm text-ws-text-tertiary">
+          <div className="flex items-center h-28 text-sm text-ws-text-tertiary">
             No data available
           </div>
         ) : (

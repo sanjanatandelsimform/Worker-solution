@@ -1,14 +1,14 @@
 import { cx } from "@/utils/cx";
 
 const sizes = {
-  xs: { root: "size-2.5", tick: "size-[4.38px" },
-  sm: { root: "size-3", tick: "size-[5.25px]" },
-  md: { root: "size-3.5", tick: "size-[6.13px]" },
-  lg: { root: "size-4", tick: "size-[7px]" },
-  xl: { root: "size-4.5", tick: "size-[7.88px]" },
-  "2xl": { root: "size-5", tick: "size-[8.75px]" },
-  "3xl": { root: "size-6", tick: "size-[10.5px]" },
-  "4xl": { root: "size-8", tick: "size-[14px]" },
+  xs: "size-2.5",
+  sm: "size-3",
+  md: "size-3.5",
+  lg: "size-4",
+  xl: "size-4.5",
+  "2xl": "size-5",
+  "3xl": "size-6",
+  "4xl": "size-8",
 };
 
 interface VerifiedTickProps {
@@ -18,8 +18,7 @@ interface VerifiedTickProps {
 
 export const VerifiedTick = ({ size, className }: VerifiedTickProps) => (
   <svg
-    data-verified
-    className={cx("z-10 text-utility-blue-500", sizes[size].root, className)}
+    className={cx("z-10 text-utility-blue-500", sizes[size], className)}
     viewBox="0 0 10 10"
     fill="none"
   >

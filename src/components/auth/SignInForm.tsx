@@ -7,7 +7,7 @@ import { Input } from "@/components/base/input/input";
 import { InputGroup } from "@/components/base/input/input-group";
 import { Checkbox } from "@/components/base/checkbox/checkbox";
 // import { GoogleSSOButton } from "./GoogleSSOButton";
-import { Eye, EyeOff, AlertCircle } from "@untitledui/icons";
+import { AlertCircle } from "@untitledui/icons";
 import type { SignInData } from "@/types/auth";
 import { signin } from "@/services/api/authApi";
 // import checkmarkIcon from "@/assets/finch-checkmark.svg";
@@ -18,10 +18,8 @@ import { signInSchema, type SignInFormData } from "@/services/validation/authSch
 import { getErrorState, type ErrorState } from "@/utils/errorHandler";
 import ErrorMessage from "@/components/common/ErrorMessage";
 import { ChangePasswordModal } from "@/components/modals";
-import { Label } from "../base/input/label";
 
 export const SignInForm = () => {
-  const [showPassword, setShowPassword] = useState(false);
   const [errorMessage, setErrorMessage] = useState<ErrorState | null>(null);
   const [isChangePasswordModalOpen, setIsChangePasswordModalOpen] = useState(false);
   const navigate = useNavigate();
@@ -136,77 +134,50 @@ export const SignInForm = () => {
 
           {/* Form Content */}
           <div className="flex w-full flex-col items-center gap-6 rounded-xl">
-            <form
-              onSubmit={handleSubmit(onSubmit)}
-              className="flex w-full cursor-pointer flex-col gap-5"
-            >
+            <form onSubmit={handleSubmit(onSubmit)} className="flex w-full flex-col gap-5">
               {/* Email Input Field */}
               <InputGroup>
-                <div className="flex flex-col gap-1.5 w-full">
-                  <Label className="text-sm font-medium text-ws-text-secondary">
-                    Email <span className="text-ws-error-600">*</span>
-                  </Label>
-                  <Input
-                    name="email"
-                    size="md"
-                    hint={errors.email?.message}
-                    placeholder="Enter your email"
-                    isInvalid={!!errors.email}
-                    value={email}
-                    tooltip={errors.email ? errors.email.message : undefined}
-                    onChange={value => {
-                      const sanitized = value.replace(/^\s+/, "");
-                      setValue("email", sanitized);
-                      if (errors.email) trigger("email");
-                    }}
-                    onBlur={() => trigger("email")}
-                  />
-                </div>
+                <Input
+                  name="email"
+                  size="md"
+                  label="Email"
+                  hint={errors.email?.message}
+                  placeholder="Enter your email"
+                  isInvalid={!!errors.email}
+                  value={email}
+                  tooltip={errors.email ? errors.email.message : undefined}
+                  onChange={value => {
+                    const sanitized = value.replace(/^\s+/, "");
+                    setValue("email", sanitized);
+                    if (errors.email) trigger("email");
+                  }}
+                  onBlur={() => trigger("email")}
+                  isRequired
+                  helperTooltip="Use your business email associated with BeneStats®"
+                />
               </InputGroup>
 
               {/* Password Input Field */}
               <InputGroup className="relative">
-                <div className="flex flex-col gap-1.5 w-full">
-                  <Label className="text-sm font-medium text-ws-text-secondary">
-                    Password <span className="text-ws-error-600">*</span>
-                  </Label>
-                  <Input
-                    name="password"
-                    hint={errors.password?.message}
-                    placeholder="Password"
-                    size="md"
-                    type={showPassword ? "text" : "password"}
-                    isInvalid={!!errors.password}
-                    value={password}
-                    minLength={8}
-                    maxLength={20}
-                    tooltip={errors.password ? errors.password.message : undefined}
-                    onChange={value => {
-                      const sanitized = value.replace(/^\s+/, "");
-                      setValue("password", sanitized);
-                      if (errors.password) trigger("password");
-                    }}
-                    onBlur={() => trigger("password")}
-                  />
-                </div>
-                <Button
-                  color="link"
-                  size="sm"
-                  type="button"
-                  onClick={() => setShowPassword(!showPassword)}
-                  aria-label={showPassword ? "Hide password" : "Show password"}
-                  className="absolute right-0 top-8"
-                >
-                  {!errors.password && (
-                    <>
-                      {showPassword ? (
-                        <Eye className="size-5 text-ws-gray-400" />
-                      ) : (
-                        <EyeOff className="size-5 text-ws-gray-400" />
-                      )}
-                    </>
-                  )}
-                </Button>
+                <Input
+                  name="password"
+                  label="Password"
+                  hint={errors.password?.message}
+                  placeholder="Password"
+                  size="md"
+                  type="password"
+                  isInvalid={!!errors.password}
+                  value={password}
+                  minLength={8}
+                  maxLength={20}
+                  tooltip={errors.password ? errors.password.message : undefined}
+                  onChange={value => {
+                    const sanitized = value.replace(/^\s+/, "");
+                    setValue("password", sanitized);
+                    if (errors.password) trigger("password");
+                  }}
+                  onBlur={() => trigger("password")}
+                />
               </InputGroup>
 
               {/* Error Message Display */}

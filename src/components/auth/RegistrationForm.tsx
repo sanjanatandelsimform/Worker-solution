@@ -13,18 +13,15 @@ import checkmarkIcon from "@/assets/finch-checkmark.svg";
 import { InputGroup } from "@/components/base/input/input-group";
 import { Input } from "@/components/base/input/input";
 import { Select } from "@/components/base/select/select";
-import { AlertCircle, Eye, EyeOff, Mail01 } from "@untitledui/icons";
+import { AlertCircle, Mail01 } from "@untitledui/icons";
 import { Button } from "@/components/base/buttons/button";
 import ErrorMessage from "@/components/common/ErrorMessage";
-import { Label } from "../base/input/label";
 
 export function RegistrationForm() {
   const dispatch = useAppDispatch();
   const navigate = useNavigate();
   const savedFormData = useAppSelector(selectRegistrationFormData);
 
-  const [showPassword, setShowPassword] = useState(false);
-  const [showConfirmPassword, setShowConfirmPassword] = useState(false);
   const [phoneNumber, setPhoneNumber] = useState(savedFormData?.businessPhone || "");
   const [submitError, setSubmitError] = useState<ErrorState | null>(null);
   const [industries, setIndustries] = useState<Industry[]>([]);
@@ -203,88 +200,79 @@ export function RegistrationForm() {
             <div className="grid w-full grid-cols-2 gap-x-4 gap-y-4">
               {/* Row 1 - First Name & Last Name */}
               <InputGroup>
-                <div className="flex flex-col gap-1.5 w-full">
-                  <Label className="text-sm font-medium text-ws-text-secondary">
-                    First Name <span className="text-ws-error-600">*</span>
-                  </Label>
-                  <Input
-                    name="firstName"
-                    size="md"
-                    hint={errors.firstName?.message}
-                    placeholder="First Name"
-                    isInvalid={!!errors.firstName}
-                    value={firstName}
-                    maxLength={20}
-                    className={errors.firstName ? "error-ring" : ""}
-                    tooltip={errors.firstName ? errors.firstName.message : undefined}
-                    onChange={value => {
-                      const sanitized = value.replace(/^\s+/, "");
-                      setValue("firstName", sanitized);
-                      trigger("firstName");
-                    }}
-                  />
-                </div>
+                <Input
+                  name="firstName"
+                  label="First Name"
+                  isRequired
+                  size="md"
+                  hint={errors.firstName?.message}
+                  placeholder="First Name"
+                  isInvalid={!!errors.firstName}
+                  value={firstName}
+                  maxLength={20}
+                  className={errors.firstName ? "error-ring" : ""}
+                  tooltip={errors.firstName ? errors.firstName.message : undefined}
+                  onChange={value => {
+                    const sanitized = value.replace(/^\s+/, "");
+                    setValue("firstName", sanitized);
+                    trigger("firstName");
+                  }}
+                  helperTooltip={"Enter the first name of the primary account holder"}
+                />
               </InputGroup>
               <InputGroup>
-                <div className="flex flex-col gap-1.5 w-full">
-                  <Label className="text-sm font-medium text-ws-text-secondary">
-                    Last Name <span className="text-ws-error-600">*</span>
-                  </Label>
-                  <Input
-                    name="lastName"
-                    size="md"
-                    hint={errors.lastName?.message}
-                    placeholder="Last Name"
-                    value={lastName}
-                    isInvalid={!!errors.lastName}
-                    maxLength={20}
-                    className={errors.lastName ? "error-ring" : ""}
-                    tooltip={errors.lastName ? errors.lastName.message : undefined}
-                    onChange={value => {
-                      const sanitized = value.replace(/^\s+/, "");
-                      setValue("lastName", sanitized);
-                      trigger("lastName");
-                    }}
-                  />
-                </div>
+                <Input
+                  name="lastName"
+                  label="Last Name"
+                  isRequired
+                  size="md"
+                  hint={errors.lastName?.message}
+                  placeholder="Last Name"
+                  value={lastName}
+                  isInvalid={!!errors.lastName}
+                  maxLength={20}
+                  className={errors.lastName ? "error-ring" : ""}
+                  tooltip={errors.lastName ? errors.lastName.message : undefined}
+                  onChange={value => {
+                    const sanitized = value.replace(/^\s+/, "");
+                    setValue("lastName", sanitized);
+                    trigger("lastName");
+                  }}
+                  helperTooltip={"Enter the last name of the primary account holder"}
+                />
               </InputGroup>
 
               {/* Row 2 - Legal Business Name & Industry */}
               <InputGroup>
-                <div className="flex flex-col gap-1.5 w-full">
-                  <Label className="text-sm font-medium text-ws-text-secondary">
-                    Legal Business Name <span className="text-ws-error-600">*</span>
-                  </Label>
-                  <Input
-                    name="legalBusinessName"
-                    size="md"
-                    hint={errors.legalBusinessName?.message}
-                    placeholder="Legal Business Name"
-                    isInvalid={!!errors.legalBusinessName}
-                    value={legalBusinessName}
-                    maxLength={50}
-                    className={errors.legalBusinessName ? "error-ring" : ""}
-                    tooltip={
-                      errors.legalBusinessName ? errors.legalBusinessName.message : undefined
-                    }
-                    onChange={value => {
-                      const sanitized = value.replace(/^\s+/, "");
-                      setValue("legalBusinessName", sanitized);
-                      trigger("legalBusinessName");
-                    }}
-                  />
-                </div>
-              </InputGroup>
-              <div className="flex flex-col gap-1.5 w-full">
-                <Label className="text-sm font-medium text-ws-text-secondary">
-                  Business Phone Number <span className="text-ws-error-600">*</span>
-                </Label>
                 <Input
-                  //className={errors.businessPhone ? "error-ring" : "col-start-2"}
+                  name="legalBusinessName"
+                  label="Legal Business Name"
+                  isRequired
+                  size="md"
+                  hint={errors.legalBusinessName?.message}
+                  placeholder="Legal Business Name"
+                  isInvalid={!!errors.legalBusinessName}
+                  value={legalBusinessName}
+                  maxLength={50}
+                  className={errors.legalBusinessName ? "error-ring" : ""}
+                  tooltip={errors.legalBusinessName ? errors.legalBusinessName.message : undefined}
+                  onChange={value => {
+                    const sanitized = value.replace(/^\s+/, "");
+                    setValue("legalBusinessName", sanitized);
+                    trigger("legalBusinessName");
+                  }}
+                  helperTooltip={"Enter the legal business name of the primary account holder"}
+                />
+              </InputGroup>
+              <InputGroup>
+                <Input
+                  name="businessPhone"
+                  label="Business Phone Number"
+                  isRequired
                   placeholder="(555) 000-0000"
                   type="tel"
-                  size="sm"
-                  prefix="+1"
+                  size="md"
+                  //prefix="+1"
                   hint={errors.businessPhone?.message}
                   isInvalid={!!errors.businessPhone}
                   value={phoneNumber}
@@ -298,6 +286,7 @@ export function RegistrationForm() {
                     trigger("businessPhone");
                   }}
                   tooltip={errors.businessPhone ? errors.businessPhone.message : undefined}
+                  helperTooltip={"Enter the business phone number of the primary account holder"}
                 />
                 {/* <InputGroup
                   className={errors.businessPhone ? "error-ring" : "col-start-2"}
@@ -329,75 +318,70 @@ export function RegistrationForm() {
                     tooltip={errors.businessPhone ? errors.businessPhone.message : undefined}
                   />
                 </InputGroup> */}
-              </div>
+              </InputGroup>
 
               {/* Row 3 - Zip Code & (empty space for layout) */}
               <InputGroup>
-                <div className="flex flex-col gap-1.5 w-full">
-                  <Label className="text-sm font-medium text-ws-text-secondary">
-                    Zip Code <span className="text-ws-error-600">*</span>
-                  </Label>
-                  <Input
-                    name="zipCode"
-                    size="md"
-                    hint={errors.zipCode?.message}
-                    placeholder="01234"
-                    isInvalid={!!errors.zipCode}
-                    value={zipCode}
-                    maxLength={5}
-                    type="text"
-                    inputMode="numeric"
-                    pattern="[0-9]*"
-                    className={errors.zipCode ? "error-ring" : ""}
-                    tooltip={errors.zipCode ? errors.zipCode.message : undefined}
-                    onChange={value => {
-                      // Only allow numeric input
-                      const numericValue = value.replace(/\D/g, "");
-                      setValue("zipCode", numericValue);
-                      trigger("zipCode");
-                    }}
-                  />
-                </div>
+                <Input
+                  name="zipCode"
+                  label="Zip Code"
+                  isRequired
+                  size="md"
+                  hint={errors.zipCode?.message}
+                  placeholder="01234"
+                  isInvalid={!!errors.zipCode}
+                  value={zipCode}
+                  maxLength={5}
+                  type="text"
+                  inputMode="numeric"
+                  pattern="[0-9]*"
+                  className={errors.zipCode ? "error-ring" : ""}
+                  tooltip={errors.zipCode ? errors.zipCode.message : undefined}
+                  onChange={value => {
+                    // Only allow numeric input
+                    const numericValue = value.replace(/\D/g, "");
+                    setValue("zipCode", numericValue);
+                    trigger("zipCode");
+                  }}
+                  helperTooltip={"Enter the zip code of the primary account holder"}
+                />
               </InputGroup>
               <InputGroup isRequired>
-                <div className="flex flex-col gap-1.5 w-full">
-                  <Label className="text-sm font-medium text-ws-text-secondary">
-                    Select Your Industry <span className="text-ws-error-600">*</span>
-                  </Label>
-                  <Select
-                    className="w-full flex items-start"
-                    size="md"
-                    placeholder="Select Option"
-                    items={industries.map(i => ({
-                      id: i.industry_code, // Changed from i.id.toString()
-                      label: i.industry_name,
-                    }))}
-                    selectedKey={industry || null}
-                    onSelectionChange={key => {
-                      const stringKey = key ? String(key) : "";
-                      setValue("industry", stringKey);
-                      // This prevents popover positioning from resetting
-                      // setTimeout(() => {
-                      trigger("industry");
-                      // }, 0);
-                    }}
-                    isDisabled={isLoadingIndustries || !!industryError}
-                    isInvalid={!!errors.industry || !!industryError}
-                    hint={industryError || errors.industry?.message}
-                  >
-                    {item => (
-                      <Select.Item
-                        id={item.id}
-                        supportingText={item.supportingText}
-                        isDisabled={item.isDisabled}
-                        icon={item.icon}
-                        avatarUrl={item.avatarUrl}
-                      >
-                        {item.label}
-                      </Select.Item>
-                    )}
-                  </Select>
-                </div>
+                <Select
+                  label="Select Your Industry"
+                  isRequired
+                  className="w-full flex items-start"
+                  size="sm"
+                  placeholder="Select Option"
+                  items={industries.map(i => ({
+                    id: i.industry_code, // Changed from i.id.toString()
+                    label: i.industry_name,
+                  }))}
+                  selectedKey={industry || null}
+                  onSelectionChange={key => {
+                    const stringKey = key ? String(key) : "";
+                    setValue("industry", stringKey);
+                    // This prevents popover positioning from resetting
+                    // setTimeout(() => {
+                    trigger("industry");
+                    // }, 0);
+                  }}
+                  isDisabled={isLoadingIndustries || !!industryError}
+                  isInvalid={!!errors.industry || !!industryError}
+                  hint={industryError || errors.industry?.message}
+                >
+                  {item => (
+                    <Select.Item
+                      id={item.id}
+                      supportingText={item.supportingText}
+                      isDisabled={item.isDisabled}
+                      icon={item.icon}
+                      avatarUrl={item.avatarUrl}
+                    >
+                      {item.label}
+                    </Select.Item>
+                  )}
+                </Select>
               </InputGroup>
               {isLoadingIndustries && (
                 <p className="text-sm text-gray-600 mt-1.5">Loading industries...</p>
@@ -407,121 +391,75 @@ export function RegistrationForm() {
             <div className="grid w-full grid-cols-1 my-4">
               {/* Row 4 - Business Email & Business Phone */}
               <InputGroup className="col-start-1 w-full block">
-                <div className="flex flex-col gap-1.5 w-full">
-                  <Label className="text-sm font-medium text-ws-text-secondary">
-                    Work Email Address <span className="text-ws-error-600">*</span>
-                  </Label>
-                  <Input
-                    name="businessEmail"
-                    size="md"
-                    hint={errors.businessEmail?.message}
-                    placeholder="email@email.com"
-                    icon={Mail01}
-                    iconClassName="text-ws-gray-400"
-                    isInvalid={!!errors.businessEmail}
-                    value={businessEmail}
-                    className={errors.businessEmail ? "error-ring" : ""}
-                    tooltip={errors.businessEmail ? errors.businessEmail.message : undefined}
-                    onChange={value => {
-                      const sanitized = value.replace(/^\s+/, "");
-                      setValue("businessEmail", sanitized);
-                      trigger("businessEmail");
-                    }}
-                  />
-                </div>
+                <Input
+                  name="businessEmail"
+                  label="Work Email Address"
+                  isRequired
+                  size="md"
+                  hint={errors.businessEmail?.message}
+                  placeholder="email@email.com"
+                  icon={Mail01}
+                  iconClassName="text-ws-gray-400"
+                  isInvalid={!!errors.businessEmail}
+                  value={businessEmail}
+                  className={errors.businessEmail ? "error-ring" : ""}
+                  tooltip={errors.businessEmail ? errors.businessEmail.message : undefined}
+                  helperTooltip={"Enter the business email address of the primary account holder"}
+                  onChange={value => {
+                    const sanitized = value.replace(/^\s+/, "");
+                    setValue("businessEmail", sanitized);
+                    trigger("businessEmail");
+                  }}
+                />
               </InputGroup>
             </div>
 
             <div className="grid w-full grid-cols-2 gap-x-4 gap-y-4">
               {/* Row 5 - Password & Confirm Password */}
               <InputGroup className="relative">
-                <div className="flex flex-col gap-1.5 w-full">
-                  <Label className="text-sm font-medium text-ws-text-secondary">
-                    Password <span className="text-ws-error-600">*</span>
-                  </Label>
-                  <Input
-                    name="password"
-                    hint={errors.password?.message}
-                    placeholder="Password"
-                    size="md"
-                    type={showPassword ? "text" : "password"}
-                    tooltip={errors.password ? errors.password.message : undefined}
-                    isInvalid={!!errors.password}
-                    value={password}
-                    className="relative"
-                    onChange={value => {
-                      const sanitized = value.replace(/^\s+/, "");
-                      setValue("password", sanitized);
-                      trigger("password");
-                    }}
-                    onCopy={(e: React.ClipboardEvent<HTMLInputElement>) => e.preventDefault()}
-                    onContextMenu={(e: React.MouseEvent<HTMLInputElement>) => e.preventDefault()}
-                  />
-                </div>
-                <Button
-                  color="link"
-                  size="sm"
-                  type="button"
-                  onClick={() => (!errors.password ? setShowPassword(!showPassword) : "")}
-                  aria-label={showPassword ? "Hide password" : "Show password"}
-                  className="absolute right-0 top-8"
-                >
-                  {!errors.password && (
-                    <>
-                      {showPassword ? (
-                        <Eye className="size-5 text-ws-gray-400" />
-                      ) : (
-                        <EyeOff className="size-5 text-ws-gray-400" />
-                      )}
-                    </>
-                  )}
-                </Button>
+                <Input
+                  name="password"
+                  label="Password"
+                  isRequired
+                  hint={errors.password?.message}
+                  placeholder="Password"
+                  size="md"
+                  type="password"
+                  tooltip={errors.password ? errors.password.message : undefined}
+                  isInvalid={!!errors.password}
+                  value={password}
+                  className="relative"
+                  onChange={value => {
+                    const sanitized = value.replace(/^\s+/, "");
+                    setValue("password", sanitized);
+                    trigger("password");
+                  }}
+                  onCopy={(e: React.ClipboardEvent<HTMLInputElement>) => e.preventDefault()}
+                  onContextMenu={(e: React.MouseEvent<HTMLInputElement>) => e.preventDefault()}
+                />
               </InputGroup>
 
               <InputGroup className="relative">
-                <div className="flex flex-col gap-1.5 w-full">
-                  <Label className="text-sm font-medium text-ws-text-secondary">
-                    Confirm Password <span className="text-ws-error-600">*</span>
-                  </Label>
-                  <Input
-                    name="confirmPassword"
-                    hint={errors.confirmPassword?.message}
-                    placeholder="Confirm Password"
-                    size="md"
-                    type={showConfirmPassword ? "text" : "password"}
-                    isInvalid={!!errors.confirmPassword}
-                    tooltip={errors.confirmPassword ? errors.confirmPassword.message : undefined}
-                    value={confirmPassword}
-                    className="relative"
-                    onChange={value => {
-                      const sanitized = value.replace(/^\s+/, "");
-                      setValue("confirmPassword", sanitized);
-                      trigger("confirmPassword");
-                    }}
-                    onPaste={(e: React.ClipboardEvent<HTMLInputElement>) => e.preventDefault()}
-                    onContextMenu={(e: React.MouseEvent<HTMLInputElement>) => e.preventDefault()}
-                  />
-                </div>
-                <Button
-                  color="link"
-                  size="sm"
-                  type="button"
-                  onClick={() =>
-                    !errors.confirmPassword ? setShowConfirmPassword(!showConfirmPassword) : ""
-                  }
-                  aria-label={showConfirmPassword ? "Hide password" : "Show password"}
-                  className="absolute right-0 top-8"
-                >
-                  {!errors.confirmPassword && (
-                    <>
-                      {showConfirmPassword ? (
-                        <Eye className="size-5 text-ws-gray-400" />
-                      ) : (
-                        <EyeOff className="size-5 text-ws-gray-400" />
-                      )}
-                    </>
-                  )}
-                </Button>
+                <Input
+                  name="confirmPassword"
+                  label="Confirm Password"
+                  isRequired
+                  hint={errors.confirmPassword?.message}
+                  placeholder="Confirm Password"
+                  size="md"
+                  type="password"
+                  isInvalid={!!errors.confirmPassword}
+                  tooltip={errors.confirmPassword ? errors.confirmPassword.message : undefined}
+                  value={confirmPassword}
+                  className="relative"
+                  onChange={value => {
+                    const sanitized = value.replace(/^\s+/, "");
+                    setValue("confirmPassword", sanitized);
+                    trigger("confirmPassword");
+                  }}
+                  onPaste={(e: React.ClipboardEvent<HTMLInputElement>) => e.preventDefault()}
+                  onContextMenu={(e: React.MouseEvent<HTMLInputElement>) => e.preventDefault()}
+                />
               </InputGroup>
             </div>
 

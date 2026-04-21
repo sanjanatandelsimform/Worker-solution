@@ -65,7 +65,7 @@ export const styles = sortCx({
         "bg-ws-navy-900 text-ws-base-white border border-ws-gray-950/18",
         "hover:bg-ws-navy-600 hover:text-ws-base-white hover:border-ws-gray-950/18",
         "active:bg-ws-navy-900 active:border-ws-gray-950/18",
-        "disabled:bg-ws-gray-100 disabled:border-ws-gray-200 disabled:text-ws-gray-400",
+        "disabled:bg-ws-gray-100 disabled:border-ws-gray-200 disabled:text-ws-gray-400 shadow-ws-shadow-xs",
         "*:data-icon:text-ws-base-white hover:*:data-icon:text-ws-base-white",
       ].join(" "),
     },

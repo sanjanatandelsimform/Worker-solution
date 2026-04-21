@@ -65,14 +65,14 @@ export default function WorkforceSection({
   onMultiSelectToggle,
 }: WorkforceSectionProps): JSX.Element {
   return (
-    <div className="bg-ws-base-white rounded-lg border border-ws-border-primary shadow-sm p-6 space-y-6">
-      <h2 className="text-3xl font-semibold mb-2">Workforce</h2>
-      <p className="text-base text-ws-gray-90">
+    <div className="bg-ws-base-white rounded-lg border border-ws-border-primary p-6 space-y-6">
+      <h2 className="text-3xl font-medium text-ws-text-primary mb-2">Workforce</h2>
+      <p className="text-base font-normal text-ws-text-secondary">
         We'd like to get a better understanding of your workforce and how they're structured. This
         will help us customize relevant solution providers.
       </p>
 
-      <div className="space-y-8">
+      <div className="space-y-6">
         {questions.map((question, index) =>
           question.isMultiSelect ? (
             <QuestionCheckboxGroup

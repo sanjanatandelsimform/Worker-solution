@@ -303,7 +303,7 @@ const InnerMultiSelect = ({
             key={value.id}
             className="flex items-center rounded-md bg-primary py-0.5 pr-1 pl-1.25 ring-1 ring-ws-border-primary ring-inset"
           >
-            {value?.avatarUrl && <Avatar size="xxs" alt={value?.label} src={value?.avatarUrl} />}
+            {value?.avatarUrl && <Avatar size="xs" alt={value?.label} src={value?.avatarUrl} />}
 
             <p
               className={cx(

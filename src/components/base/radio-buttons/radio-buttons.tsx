@@ -31,10 +31,11 @@ export const RadioButtonBase = ({
   return (
     <div
       className={cx(
-        "flex size-4 min-h-4 min-w-4 cursor-pointer appearance-none items-center justify-center rounded-full bg-ws-base-white ring-1 ring-ws-border-primary ring-inset",
-        size === "md" && "size-5 min-h-5 min-w-5",
-        isSelected && !isDisabled && "bg-ws-light-teal-900 ring-ws-light-teal-900",
-        isDisabled && "cursor-not-allowed border-disabled bg-disabled_subtle",
+        "flex size-4 shrink-0 cursor-pointer appearance-none items-center justify-center rounded-full bg-ws-base-white ring-1 ring-ws-border-primary ring-inset",
+        size === "md" && "size-5",
+        isSelected && "bg-ws-light-teal-900 ring-ws-light-teal-900",
+        isDisabled && "cursor-not-allowed opacity-50",
+        isDisabled && !isSelected && "bg-tertiary",
         isFocusVisible && "outline-2 outline-offset-2 outline-focus-ring",
         className
       )}
@@ -43,7 +44,6 @@ export const RadioButtonBase = ({
         className={cx(
           "size-1.5 rounded-full bg-ws-base-white opacity-0 transition-inherit-all",
           size === "md" && "size-2",
-          isDisabled && "bg-fg-disabled_subtle",
           isSelected && "opacity-100"
         )}
       />
@@ -74,13 +74,13 @@ export const RadioButton = ({
     sm: {
       root: "gap-2",
       textWrapper: "",
-      label: "text-sm font-medium",
+      label: "text-sm",
       hint: "text-sm",
     },
     md: {
       root: "gap-3",
       textWrapper: "gap-0.5",
-      label: "text-md font-medium",
+      label: "text-md",
       hint: "text-md",
     },
   };
@@ -88,12 +88,12 @@ export const RadioButton = ({
   return (
     <AriaRadio
       {...ariaRadioProps}
-      className={renderProps =>
+      className={state =>
         cx(
           "flex items-start",
-          renderProps.isDisabled && "cursor-not-allowed",
+          state.isDisabled && "cursor-not-allowed",
           sizes[size].root,
-          typeof className === "function" ? className(renderProps) : className
+          typeof className === "function" ? className(state) : className
         )
       }
     >
@@ -104,18 +104,16 @@ export const RadioButton = ({
             isSelected={isSelected}
             isDisabled={isDisabled}
             isFocusVisible={isFocusVisible}
-            className={label || hint ? "mt-0.5" : ""}
+            className={label || hint ? "mt-0.5" : `${className}`}
           />
           {(label || hint) && (
-            <div className={cx("inline-flex flex-col", sizes[size].textWrapper)}>
+            <div className={cx(`inline-flex flex-col, ${className}`, sizes[size].textWrapper)}>
               {label && (
-                <p className={cx("text-secondary select-none question-text", sizes[size].label)}>
-                  {label}
-                </p>
+                <p className={cx("text-secondary select-none", sizes[size].label)}>{label}</p>
               )}
               {hint && (
                 <span
-                  className={cx("text-ws-text-tertiary", sizes[size].hint)}
+                  className={cx("text-tertiary", sizes[size].hint)}
                   onClick={event => event.stopPropagation()}
                 >
                   {hint}

@@ -191,7 +191,7 @@ function DesignReference() {
                     type="tel"
                     size="sm"
                     value={phoneNumber}
-                    onChange={setPhoneNumber}
+                    onChange={e => setPhoneNumber((e.target as HTMLInputElement).value)}
                   />
                 </InputGroup>
               </div>
@@ -222,7 +222,7 @@ function DesignReference() {
                     type="tel"
                     size="md"
                     value={phoneNumber}
-                    onChange={setPhoneNumber}
+                    //onChange={setPhoneNumber}
                   />
                 </InputGroup>
               </div>

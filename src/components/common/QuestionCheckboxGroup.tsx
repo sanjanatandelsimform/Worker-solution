@@ -20,8 +20,8 @@ export function QuestionCheckboxGroup({
   error,
 }: QuestionCheckboxGroupProps): JSX.Element {
   return (
-    <div className="space-y-3">
-      <Label isRequired={question.required} className="text-base text-ws-text-primary">
+    <div className="space-y-2">
+      <Label isRequired={question.required} className="text-base font-normal text-ws-text-primary">
         {displayIndex}. {question.question}
       </Label>
       <FieldError message={error} />
@@ -34,8 +34,6 @@ export function QuestionCheckboxGroup({
             <Checkbox
               isSelected={selectedValues.includes(option.id)}
               onChange={() => onToggle(question.id, option.id)}
-              size="sm"
-              className="border border-ws-border-primary rounded-sm"
             />
             <span className="text-sm font-normal text-ws-text-secondary">{option.label}</span>
           </label>

@@ -20,25 +20,25 @@ export default function GoalsSection({
   onTopThreeGoalsChange,
 }: GoalsSectionProps): JSX.Element {
   return (
-    <div className="bg-ws-base-white rounded-lg border border-ws-border-primary shadow-sm p-6 space-y-6">
-      <h2 className="text-3xl font-semibold mb-2">Goals </h2>
-      <p className="text-base text-ws-gray-90">
+    <div className="bg-ws-base-white rounded-lg border border-ws-border-primary p-6 space-y-6">
+      <h2 className="text-3xl font-medium text-ws-text-primary mb-2">Goals </h2>
+      <p className="text-base font-normal text-ws-text-secondary">
         Pick the goal that best reflects your company's workforce priorities. This helps us share
         insights and tips that fit your team's needs.
       </p>
 
-      <div className="space-y-6">
-        <div className="flex flex-col gap-6">
-          <Label className="text-base font-medium">1. Please select your workforce goals.</Label>
+      <div className="space-y-2">
+        <div className="flex flex-col gap-2">
+          <Label className="text-base font-normal text-ws-text-primary">1. Please select your workforce goals.</Label>
           <FieldError message={fieldErrors["selectedGoals"]} />
 
           {/* Goals by Category */}
           {goalsData.map(categoryGroup => (
-            <div key={categoryGroup.category} className="space-y-3">
-              <h3 className="text-sm font-semibold text-ws-text-secondary">
+            <div key={categoryGroup.category} className="space-y-2">
+              <h3 className="text-sm font-medium text-ws-base-black">
                 {categoryGroup.category}
               </h3>
-              <div className="space-y-2 ml-0">
+              <div className="space-y-4 ml-0">
                 {categoryGroup.goals.map(goal => (
                   <label
                     key={goal.id}
@@ -47,8 +47,6 @@ export default function GoalsSection({
                     <Checkbox
                       isSelected={goalsAnswers.selectedGoals.includes(goal.id)}
                       onChange={() => onGoalToggle(goal.id)}
-                      size="sm"
-                      className="border border-ws-border-primary rounded-sm"
                     />
                     <span className="text-sm font-normal text-ws-text-secondary">{goal.label}</span>
                   </label>

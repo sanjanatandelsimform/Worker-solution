@@ -60,9 +60,9 @@ export const SelectItem = ({
         <div
           className={cx(
             "flex cursor-pointer items-center gap-2 rounded-md outline-hidden select-none",
-            state.isSelected && "bg-cyan-400",
+            state.isSelected && "bg-ws-gray-50",
             state.isDisabled && "cursor-not-allowed",
-            state.isFocused && "bg-gray-50",
+            state.isFocused && "bg-ws-gray-50",
             state.isFocusVisible && "ring-2 ring-focus-ring ring-inset",
 
             // Icon styles
@@ -84,7 +84,7 @@ export const SelectItem = ({
             <AriaText
               slot="label"
               className={cx(
-                "truncate text-sm font-normal whitespace-nowrap text-ws-color-black-20",
+                "truncate text-sm font-normal whitespace-nowrap text-ws-base-black",
                 state.isDisabled && "text-disabled"
               )}
             >
@@ -95,8 +95,8 @@ export const SelectItem = ({
               <AriaText
                 slot="description"
                 className={cx(
-                  "text-md whitespace-nowrap text-ws-text-tertiary",
-                  state.isDisabled && "text-disabled"
+                  "text-md whitespace-nowrap text-ws-base-black",
+                  state.isDisabled && "text-ws-gray-500"
                 )}
               >
                 {supportingText}
@@ -108,9 +108,9 @@ export const SelectItem = ({
             <Check
               aria-hidden="true"
               className={cx(
-                "ml-auto text-fg-brand-primary",
+                "ml-auto text-ws-light-teal-850",
                 size === "sm" ? "size-4 stroke-[2.5px]" : "size-5",
-                state.isDisabled && "text-fg-disabled"
+                state.isDisabled && "text-ws-gray-400"
               )}
             />
           )}
