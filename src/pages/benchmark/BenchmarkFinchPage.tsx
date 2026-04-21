@@ -940,7 +940,7 @@ export default function BenchmarkFinchPage() {
           </div>
           <div className="flex flex-col items-start w-full lg:w-auto shrink-0 mt-4 xl:mt-0">
             <Label className="text-sm font-medium text-ws-text-secondary flex mb-1.5">
-              Metropolitan Area <span className="text-ws-error-600">*</span>
+              Zip Code
             </Label>
             <Select
               className="w-full flex items-start min-w-50 md:min-w-full lg:min-w-50"
@@ -1004,7 +1004,7 @@ export default function BenchmarkFinchPage() {
           </div>
           <div className="flex flex-col items-start w-full lg:w-auto shrink-0 mt-4 xl:mt-0">
             <Label className="text-sm font-medium text-ws-text-secondary flex mb-1.5">
-              Metropolitan Area <span className="text-ws-error-600">*</span>
+              Zip Code
             </Label>
             <Select
               className="w-full flex items-start min-w-50 md:min-w-full lg:min-w-50"
