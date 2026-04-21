@@ -194,8 +194,8 @@ const benchmarkCardsConfig: BenchmarkCardConfig[] = [
       const d = data as Record<string, unknown> | null;
       const tr = d?.turnoverRate as Record<string, unknown> | null;
       return !tr?.month || !tr?.year
-        ? "Turnover rate"
-        : `Turnover rate since ${tr.month} ${tr.year}`;
+        ? "Turnover Rate"
+        : `Turnover Rate Since ${tr.month} ${tr.year}`;
     },
     count: (data: unknown) => {
       const d = data as Record<string, unknown> | null;
