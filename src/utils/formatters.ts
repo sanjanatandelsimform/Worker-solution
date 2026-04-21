@@ -116,3 +116,27 @@ export const formatCompactNumber = (value: number | null | undefined): string =>
     compactDisplay: "short",
   }).format(value);
 };
+
+/**
+ * Format an annual employer cost number as a dollar-per-year string.
+ *
+ * Returns "--" for null, undefined, or negative values (guard against bad API data).
+ * Returns "$0/yr" for zero (valid data; distinct from missing).
+ * Uses locale-aware thousands separators (e.g., 11240 → "$11,240/yr").
+ *
+ * @param value - Annual cost in whole dollars, or null/undefined
+ * @returns Formatted string e.g. "$11,240/yr", or "--"
+ *
+ * @example
+ * ```typescript
+ * formatEmployerCostPerYear(11240)     // "$11,240/yr"
+ * formatEmployerCostPerYear(0)         // "$0/yr"
+ * formatEmployerCostPerYear(null)      // "--"
+ * formatEmployerCostPerYear(undefined) // "--"
+ * formatEmployerCostPerYear(-500)      // "--"
+ * ```
+ */
+export const formatEmployerCostPerYear = (value: number | null | undefined): string => {
+  if (value === null || value === undefined || value < 0) return "--";
+  return `$${value.toLocaleString("en-US")}/yr`;
+};

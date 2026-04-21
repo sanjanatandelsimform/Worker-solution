@@ -1,6 +1,7 @@
 import { useMemo } from "react";
 import { useAppSelector } from "@/store/hooks";
 import { selectCompensationSection } from "@/store/selectors/workforceSelectors";
+import { formatEmployerCostPerYear } from "@/utils/formatters";
 import type { TableColumn } from "@/components/base/table";
 import {
   WORKFORCE_COLUMNS_ALL,
@@ -60,7 +61,7 @@ export function useWorkforceCompensationConfig(selectedWorkforceDept: string) {
         id: "average-salary",
         title: "Average Salary",
         count: compensationSection
-          ? `$${compensationSection.salaryBreakdown.avgSalary.toLocaleString()}/yr`
+          ? `$${compensationSection.salaryBreakdown.avgSalary.toLocaleString()}`
           : "--",
         tooltipText: "Median Home Value",
         getCountClass: () => COUNT_CLASS,
@@ -84,7 +85,7 @@ export function useWorkforceCompensationConfig(selectedWorkforceDept: string) {
         id: "employee-contribution",
         title: "Employee Contribution Per Paycheck (All benefits)",
         count: compensationSection
-          ? `$${compensationSection.benefitsCost.employeeContribution.toLocaleString()}`
+          ? `$${compensationSection.benefitsCost.employeeContribution.toLocaleString("en-US", { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`
           : "--",
         tooltipText: "The average amount your employees contribute per paycheck across benefits",
         getCountClass: () => COUNT_CLASS,
@@ -92,7 +93,7 @@ export function useWorkforceCompensationConfig(selectedWorkforceDept: string) {
       {
         id: "employer-cost",
         title: "Employer Cost Per Employee (Avg)",
-        count: compensationSection?.benefitsCost.employerCost ?? "--",
+        count: formatEmployerCostPerYear(compensationSection?.benefitsCost.employerCost),
         tooltipText: "The average amount each employee costs the company across benefits",
         getCountClass: () => COUNT_CLASS,
       },

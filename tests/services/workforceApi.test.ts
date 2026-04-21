@@ -71,7 +71,7 @@ const mockWorkforceResponse: WorkforceApiResponse = {
     compensation: {
       salaryBreakdown: { medianSalary: 60000, avgSalary: 65000, avgHourlyRate: 30 },
       workforceBreakdown: { departments: [] },
-      benefitsCost: { employeeContribution: 468, employerCost: "$11000/yr", graph: [], table: [] },
+      benefitsCost: { employeeContribution: 468, employerCost: 11000, graph: [], table: [] },
     },
   },
 };

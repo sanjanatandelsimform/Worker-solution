@@ -23,10 +23,10 @@ export const AGE_COLORS = [
 
 export const WORKFORCE_COLUMNS_ALL: TableColumn[] = [
   { key: "department", header: "Department" },
-  { key: "employeeNumber", header: "Employee number" },
-  { key: "partTime", header: "Part time" },
-  { key: "fullTime", header: "Full time" },
-  { key: "salaryRange", header: "Salary range" },
+  { key: "employeeNumber", header: "Employee Number" },
+  { key: "partTime", header: "Part Time" },
+  { key: "fullTime", header: "Full Time" },
+  { key: "salaryRange", header: "Salary Range" },
 ];
 
 export const WORKFORCE_COLUMNS_BY_DEPT: TableColumn[] = [

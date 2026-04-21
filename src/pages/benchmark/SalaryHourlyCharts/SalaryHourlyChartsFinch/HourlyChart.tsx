@@ -153,7 +153,7 @@ export default function HourlyChart({ data, width = 500, height = 350 }: HourlyC
         height: industryHeight,
         value: data.industryAverage,
         color: colors.industryAverage,
-        label: "Industry average",
+        label: "State average",
       },
       yourCompanyBar: {
         x: yourCompanyX,

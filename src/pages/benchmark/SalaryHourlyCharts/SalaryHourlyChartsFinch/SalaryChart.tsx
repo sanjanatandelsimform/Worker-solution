@@ -153,7 +153,7 @@ export default function SalaryChart({ data, width = 500, height = 350 }: SalaryC
         height: industryHeight,
         value: data.industryAverage,
         color: colors.industryAverage,
-        label: "Industry average",
+        label: "State average",
       },
       yourCompanyBar: {
         x: yourCompanyX,

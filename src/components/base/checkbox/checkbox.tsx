@@ -98,13 +98,13 @@ export const Checkbox = ({
     sm: {
       root: "gap-2",
       textWrapper: "",
-      label: "text-sm font-medium",
+      label: "text-sm",
       hint: "text-sm",
     },
     md: {
       root: "gap-3",
       textWrapper: "gap-0.5",
-      label: "text-md font-medium",
+      label: "text-md",
       hint: "text-md",
     },
   };
@@ -129,13 +129,13 @@ export const Checkbox = ({
             isIndeterminate={isIndeterminate}
             isDisabled={isDisabled}
             isFocusVisible={isFocusVisible}
-            className={label || hint ? "mt-0.5" : ""}
+            className={label || hint ? "mt-0.5" : `${className}`}
           />
           {(label || hint) && (
             <div className={cx("inline-flex flex-col", sizes[size].textWrapper)}>
               {label && (
                 <div className="flex items-center gap-1">
-                  <p className={cx("text-secondary select-none", sizes[size].label)}>{label}</p>
+                  <p className={cx(`text-secondary select-none, ${className}`, sizes[size].label)}>{label}</p>
                   {tooltipText && (
                     <Tooltip title={tooltipText} placement="top">
                       <TooltipTrigger>

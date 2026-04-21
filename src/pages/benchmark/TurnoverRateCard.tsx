@@ -1,4 +1,3 @@
-import { cx } from "@/utils/cx";
 import AverageCard from "./AverageCard";
 
 export interface AverageCardData {
@@ -45,12 +44,7 @@ export default function TurnoverRateCard({
   title,
   titleQatar,
   sections,
-  industryText,
-  industryBoldText,
-  sourceBoldText,
-  sourceText,
   className,
-  sourceClass,
 }: Readonly<TurnoverRateCardProps>) {
   // Map column count to grid class
   const gridClassMap = {
@@ -104,7 +98,7 @@ export default function TurnoverRateCard({
       )}
 
       {/* Footer Text */}
-      {industryText && (
+      {/* {industryText && (
         <p className="text-xs text-ws-gray-300 mt-4">
           {industryText}
           <span className="text-xs font-medium text-ws-text-primary">{industryBoldText}</span>
@@ -115,7 +109,7 @@ export default function TurnoverRateCard({
           {sourceText}{" "}
           <span className="text-xs font-medium text-ws-text-primary">{sourceBoldText}</span>
         </p>
-      )}
+      )} */}
     </div>
   );
 }

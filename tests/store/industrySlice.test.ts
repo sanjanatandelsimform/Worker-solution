@@ -28,7 +28,7 @@ const mockIndustryData: IndustryData = {
       industry: { involuntary: 39, voluntary: 60 },
       company: { involuntary: 20, voluntary: 80 },
     },
-    seperationRate: {
+    separationRate: {
       industry: { seperation: 7.7, hiring: 11.1 },
       company: { seperation: 2.7, hiring: 8.1 },
     },

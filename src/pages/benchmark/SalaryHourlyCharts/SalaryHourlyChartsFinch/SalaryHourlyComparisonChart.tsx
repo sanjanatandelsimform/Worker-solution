@@ -46,7 +46,7 @@ export const SalaryHourlyFinchChart = ({
       <div className="flex flex-wrap items-center justify-start gap-8">
         <div className="flex items-center gap-2">
           <div className="h-3.5 w-3.5 bg-ws-light-teal-400" />
-          <span className="text-lg font-normal text-ws-text-primary">Industry average</span>
+          <span className="text-lg font-normal text-ws-text-primary">State average</span>
         </div>
         <div className="flex items-center gap-2">
           <div className="h-3.5 w-3.5 bg-ws-navy-600" />

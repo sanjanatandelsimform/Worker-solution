@@ -74,15 +74,16 @@ export default function CoreBenefitsEnhancement({
             Consider strengthening core benefits by modifying policies to increase access and
             participation with these options:
           </p>
-          <h4 className="text-2xl font-medium text-ws-text-primary my-6">Proven strategies</h4>
+          <h4 className="text-2xl font-medium text-ws-text-primary my-6">Proven Strategies</h4>
           <div className="bg-ws-navy-25 border border-ws-border-primary rounded-lg p-3.5">
             <h4 className="text-lg font-medium text-ws-text-primary">
               Strategies Impemented: {provenStrategiesCount}/3
             </h4>
             <p className="my-4 text-base text-ws-text-primary">
-              You have already implemented {provenStrategiesCount} of 3 proven strategies! Keep
-              going to see lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod
-              tempor incididunt ut labore et dolore magna aliqua.{" "}
+              You're already leveraging {provenStrategiesCount} of 3 benefits best practices linked
+              to stronger outcomes. Adopting the full set has been shown to boost participation,
+              improve retention, and increase employee satisfaction with their benefits
+              package.{" "}
             </p>
             {isLoading ? (
               <ProvenStrategiesSkeleton />

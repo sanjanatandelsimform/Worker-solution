@@ -7,6 +7,7 @@ export interface AverageCardProps {
   staticsPoints?: string;
   progressValue?: number | null;
   className?: string;
+  countWrap?: string;
   customBarColor?: string;
   staticsPointsState?: boolean; // New prop to control badge visibility
 }
@@ -40,8 +41,14 @@ export default function AverageCard({
     <div className={`bg-ws-base-white ring ring-ws-border-secondary rounded-lg p-3 ${className}`}>
       <h2 className="text-xs text-ws-text-primary mb-2">{title}</h2>
       <div className="flex items-center justify-between">
-        <h3 className="text-2xl font-semibold text-ws-text-primary">
-          {cardStatics == "N/A" ? "No data" : cardStatics}
+        <h3 className="text-ws-text-primary">
+          {cardStatics === "No data" ? (
+            <span className="mt-4 text-base font-medium">
+              No data available
+            </span>
+          ) : (
+            <span className="text-2xl font-semibold">{cardStatics}</span>
+          )}
         </h3>
         {staticsPointsState && badgeColor && (
           <Badge

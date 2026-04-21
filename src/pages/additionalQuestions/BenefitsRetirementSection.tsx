@@ -1,4 +1,5 @@
 import { InfoCircle } from "@untitledui/icons";
+import { Input } from "@/components/base/input/input";
 import { Label } from "@/components/base/input/label";
 import { RadioButton, RadioGroup } from "@/components/base/radio-buttons/radio-buttons";
 import { Select } from "@/components/base/select/select";
@@ -32,6 +33,14 @@ const benefitsQuestions: QuestionDefinition[] = [
     required: true,
     isDropdown: true,
     options: monthOptions,
+  },
+  {
+    id: "health-plan-monthly-premium",
+    question:
+      "What is the employee-only monthly premium for the lowest-cost health plan your company offers?",
+    required: true,
+    isNumericInput: true,
+    options: [],
   },
 ];
 
@@ -83,9 +92,11 @@ interface BenefitsRetirementSectionProps {
   fieldErrors: Record<string, string>;
   benefitsEnrollmentMonth: string;
   retirementMatchPercentage: string;
+  healthPremiumMonthly: string;
   onAnswerChange: (questionId: string, value: string) => void;
   onBenefitsEnrollmentMonthChange: (month: string) => void;
   onRetirementMatchPercentageChange: (value: string) => void;
+  onHealthPremiumMonthlyChange: (value: string) => void;
   onClearFieldError: (key: string) => void;
 }
 
@@ -94,25 +105,27 @@ export default function BenefitsRetirementSection({
   fieldErrors,
   benefitsEnrollmentMonth,
   retirementMatchPercentage,
+  healthPremiumMonthly,
   onAnswerChange,
   onBenefitsEnrollmentMonthChange,
   onRetirementMatchPercentageChange,
+  onHealthPremiumMonthlyChange,
   onClearFieldError,
 }: BenefitsRetirementSectionProps): JSX.Element {
   return (
-    <div className="bg-ws-base-white rounded-lg border border-ws-border-primary shadow-sm p-6 space-y-6">
-      <h2 className="text-3xl font-semibold mb-2">Benefits </h2>
-      <p className="text-base text-ws-gray-90">
+    <div className="bg-ws-base-white rounded-lg border border-ws-border-primary p-6 space-y-6">
+      <h2 className="text-3xl font-medium text-ws-text-primary mb-2">Benefits </h2>
+      <p className="text-base font-normal text-ws-text-secondary">
         To understand what gaps may exist in your current benefits offerings, please select all
-        relevant options that you currently offer.{" "}
+        relevant options that you currently offer.
       </p>
 
       {/* Benefits questions */}
-      <div className="space-y-8">
+      <div className="space-y-6">
         {benefitsQuestions.map((question, index) => (
           <div key={question.id} className="space-y-3">
             <div className="flex items-center gap-2">
-              <Label isRequired={question.required} className="text-base text-ws-text-primary">
+              <Label isRequired={question.required} className="text-base font-normal text-ws-text-primary">
                 {index + 1}. {question.question}
               </Label>
               {question.tooltip && (
@@ -123,17 +136,17 @@ export default function BenefitsRetirementSection({
                   arrow={true}
                 >
                   <TooltipTrigger className="group relative flex cursor-pointer flex-col items-center gap-2 text-fg-quaternary transition duration-100 ease-linear hover:text-fg-quaternary_hover focus:text-fg-quaternary_hover">
-                    <InfoCircle className="size-5 text-ws-gray-70" />
+                    <InfoCircle className="size-5 text-ws-gray-400" />
                   </TooltipTrigger>
                 </Tooltip>
               )}
             </div>
 
-            {question.required && !question.isDropdown && (
+            {question.required && !question.isDropdown && !question.isNumericInput && (
               <FieldError message={fieldErrors[question.id]} />
             )}
 
-            {!question.isDropdown ? (
+            {!question.isDropdown && !question.isNumericInput ? (
               <RadioGroup
                 value={(answers[question.id] as string) || ""}
                 onChange={value => onAnswerChange(question.id, value)}
@@ -143,7 +156,6 @@ export default function BenefitsRetirementSection({
                   <label key={option.id} className="flex items-center gap-3 cursor-pointer">
                     <RadioButton
                       value={option.id}
-                      className="border border-ws-border-primary rounded-full"
                     />
                     <span className="text-sm font-normal text-ws-text-secondary">
                       {option.label}
@@ -151,7 +163,7 @@ export default function BenefitsRetirementSection({
                   </label>
                 ))}
               </RadioGroup>
-            ) : (
+            ) : question.isDropdown ? (
               <>
                 <FieldError message={fieldErrors[question.id]} />
                 <Select
@@ -168,18 +180,33 @@ export default function BenefitsRetirementSection({
                   {item => <SelectItem id={item.id} label={item.label} />}
                 </Select>
               </>
+            ) : (
+              <Input
+                type="number"
+                size="md"
+                placeholder="Enter amount"
+                value={healthPremiumMonthly}
+                onChange={value => {
+                  onHealthPremiumMonthlyChange(value);
+                  onClearFieldError(question.id);
+                }}
+                isInvalid={!!fieldErrors[question.id]}
+                hint={fieldErrors[question.id] || "i.e. $300"}
+                className="w-full max-w-xs"
+                inputClassName="[appearance:textfield] [&::-webkit-inner-spin-button]:appearance-none [&::-webkit-outer-spin-button]:appearance-none"
+              />
             )}
           </div>
         ))}
       </div>
 
       {/* Retirement subsection within Benefits */}
-      <div className="pt-8">
-        <h3 className="text-2xl font-medium pb-2 mb-6 border-b border-ws-border-primary">
+      <div className="w-full">
+        <h3 className="text-2xl font-medium text-ws-text-primary pb-2 mb-6 border-b border-ws-border-primary">
           Retirement
         </h3>
 
-        <div className="space-y-8 pt-4">
+        <div className="space-y-6">
           {retirementQuestions.map((question, index) => (
             <div key={question.id} className="space-y-3">
               <QuestionRadioGroup
@@ -195,20 +222,20 @@ export default function BenefitsRetirementSection({
                   <Label className="text-sm font-normal text-ws-text-secondary">
                     If yes, What is the percentage?
                   </Label>
-                  <input
+                  <Input
                     type="number"
-                    min="0"
-                    max="100"
+                    size="md"
+                    placeholder="e.g. 3"
                     value={retirementMatchPercentage}
-                    onWheel={(e: React.WheelEvent<HTMLInputElement>) => e.currentTarget.blur()}
-                    onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
-                      onRetirementMatchPercentageChange(e.target.value);
+                    onChange={value => {
+                      onRetirementMatchPercentageChange(value);
                       onClearFieldError("retirementMatchPercentage");
                     }}
-                    className="w-full max-w-xs rounded-lg border border-ws-border-primary px-3 py-2 text-sm text-ws-text-primary bg-ws-base-white focus:outline-none focus:ring-2 focus:ring-ws-primary appearance-none [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none"
-                    placeholder="e.g. 3"
+                    isInvalid={!!fieldErrors["retirementMatchPercentage"]}
+                    hint={fieldErrors["retirementMatchPercentage"]}
+                    className="w-full max-w-xs"
+                    inputClassName="[appearance:textfield] [&::-webkit-inner-spin-button]:appearance-none [&::-webkit-outer-spin-button]:appearance-none"
                   />
-                  <FieldError message={fieldErrors["retirementMatchPercentage"]} />
                 </div>
               )}
             </div>

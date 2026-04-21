@@ -26,6 +26,7 @@ export default function AdditionalQuestions() {
   const [payrollProvider, setPayrollProvider] = useState<string>("");
   const [benefitsEnrollmentMonth, setBenefitsEnrollmentMonth] = useState<string>("");
   const [retirementMatchPercentage, setRetirementMatchPercentage] = useState<string>("");
+  const [healthPremiumMonthly, setHealthPremiumMonthly] = useState<string>("");
   const { isSubmitting, error, success, submit, clearError } = useSubmitFinchAssessment();
   const [fieldErrors, setFieldErrors] = useState<Record<string, string>>({});
 
@@ -121,6 +122,9 @@ export default function AdditionalQuestions() {
     if (!benefitsEnrollmentMonth) {
       newErrors["benefits-enrollment-period"] = "Select an option";
     }
+    if (!healthPremiumMonthly) {
+      newErrors["health-plan-monthly-premium"] = "Enter an amount";
+    }
     if (!answers["retirement-vesting-period"]) {
       newErrors["retirement-vesting-period"] = "Select an option";
     }
@@ -155,7 +159,8 @@ export default function AdditionalQuestions() {
       payrollProvider,
       benefitsEnrollmentMonth,
       answers["retirement-employer-match"] === "yes-match",
-      retirementMatchPercentage
+      retirementMatchPercentage,
+      healthPremiumMonthly
     );
     await submit(payload);
   };
@@ -163,7 +168,7 @@ export default function AdditionalQuestions() {
   return (
     <div className="flex min-h-screen flex-col bg-ws-navy-25">
       {/* Top Navigation Bar */}
-      <div className="flex h-14 items-center justify-end border-b border-ws-navy-800 px-6 py-4">
+      <div className="flex h-14 items-center justify-end border-b border-ws-navy-700 px-6 py-4">
         <Button
           onClick={handleClose}
           color="link"
@@ -217,9 +222,11 @@ export default function AdditionalQuestions() {
             fieldErrors={fieldErrors}
             benefitsEnrollmentMonth={benefitsEnrollmentMonth}
             retirementMatchPercentage={retirementMatchPercentage}
+            healthPremiumMonthly={healthPremiumMonthly}
             onAnswerChange={handleAnswerChange}
             onBenefitsEnrollmentMonthChange={setBenefitsEnrollmentMonth}
             onRetirementMatchPercentageChange={setRetirementMatchPercentage}
+            onHealthPremiumMonthlyChange={setHealthPremiumMonthly}
             onClearFieldError={handleClearFieldError}
           />
 
@@ -238,7 +245,6 @@ export default function AdditionalQuestions() {
             color="primary"
             size="md"
             iconTrailing={<ChevronRight data-icon />}
-            className="text-base font-semibold min-w-30 bg-ws-navy-800 text-ws-base-white hover:bg-ws-navy-800 focus:bg-ws-navy-800 active:bg-ws-navy-800"
             onClick={handleSubmit}
             isDisabled={isSubmitting}
           >

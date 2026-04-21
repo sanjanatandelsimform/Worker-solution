@@ -1,5 +1,5 @@
 import { useEffect, useState, useCallback, useRef } from "react";
-import { useNavigate, useLocation, Link } from "react-router-dom";
+import { useNavigate, useLocation } from "react-router-dom";
 import { DashboardSidebar } from "@/components/dashboard/DashboardSidebar";
 import emailIcon from "@/assets/mail-icon.svg";
 import checkIcon from "@/assets/file-check.svg";
@@ -20,8 +20,6 @@ import { useFinchConnect } from "@/hooks/useFinchConnect";
 import { useFinchStatus } from "@/hooks/useFinchStatus";
 import { Tabs } from "@/components/base/tabs/tabs";
 import BenchmarkPage from "../benchmark/BenchmarkPage";
-import { fetchDashboard } from "@/store/slices/dashboardSlice";
-// import { fetchIndustry } from "@/store/slices/industrySlice";
 import { fetchWorkforce } from "@/store/slices/workforceSlice";
 import { CircleCheckIcon } from "@/assets/icons/CircleCheckIcon";
 import { AssessmentIcon } from "@/assets/icons/AssessmentIcon";
@@ -35,8 +33,8 @@ import { fetchRecommendations } from "@/store/slices/recommendationsSlice";
 const BASE_TAB_ITEMS = [{ id: "finchRecommendations", label: "Recommendations" }];
 
 const FINCH_CONNECTED_TAB_ITEMS = [
-  { id: "finchIndustry", label: "Industry" },
   { id: "finchWorkforce", label: "Workforce" },
+  { id: "finchIndustry", label: "Industry" },
 ];
 
 const BASIC_TAB_ITEMS = [{ id: "industry", label: "Industry" }];
@@ -77,7 +75,7 @@ export const DashboardPage = () => {
   } = useAssessmentStatus({ enabled: emailVerify });
   const [showGoalsSuccessModal, setShowGoalsSuccessModal] = useState(false);
   const [showGoalsEmptyWarning, setShowGoalsEmptyWarning] = useState(false);
-  const hasRunDashboardFetchRef = useRef(false);
+  const [activeTab, setActiveTab] = useState("finchRecommendations");
   const fromGoalsCompletionRef = useRef(false);
 
   const refetchUserData = useCallback(async () => {
@@ -165,52 +163,6 @@ export const DashboardPage = () => {
     if (isConnected || assessmentData?.data?.status === "completed")
       dispatch(fetchRecommendations());
   }, [isConnected, dispatch, assessmentData?.data?.status]);
-
-  useEffect(() => {
-    if (assessmentData?.data?.status === "completed" && !hasRunDashboardFetchRef.current) {
-      hasRunDashboardFetchRef.current = true;
-      const isFromAssessment = fromGoalsCompletionRef.current;
-
-      const fetchWithModal = async () => {
-        setErrorMessage(null);
-        try {
-          const resultAction = await dispatch(fetchDashboard());
-          if (fetchDashboard.fulfilled.match(resultAction)) {
-            if (isFromAssessment) {
-              setShowGoalsSuccessModal(true);
-              fromGoalsCompletionRef.current = false;
-            }
-          } else if (fetchDashboard.rejected.match(resultAction)) {
-            const errorMsg = resultAction.payload as string;
-            if (
-              errorMsg?.toLowerCase().includes("empty") ||
-              errorMsg?.toLowerCase().includes("incomplete") ||
-              errorMsg?.toLowerCase().includes("no data")
-            ) {
-              if (isFromAssessment) {
-                setShowGoalsEmptyWarning(true);
-                fromGoalsCompletionRef.current = false;
-              } else {
-                setErrorMessage(errorMsg || "Failed to load dashboard data");
-              }
-            } else {
-              setErrorMessage(errorMsg || "Failed to load dashboard data");
-            }
-          }
-        } catch (error) {
-          console.error("error:", error);
-          if (isFromAssessment) {
-            setShowGoalsEmptyWarning(true);
-            fromGoalsCompletionRef.current = false;
-          } else {
-            setErrorMessage("Failed to load dashboard data");
-          }
-        }
-      };
-
-      fetchWithModal();
-    }
-  }, [assessmentData?.data?.status, dispatch]);
 
   const handleVerifyEmail = async () => {
     if (emailVerify) return;
@@ -323,14 +275,8 @@ export const DashboardPage = () => {
             </h2>
             {!emailVerify && (
               <p className="text-base font-normal text-ws-text-primary mt-4">
-                BeneStats provides an overview of your workforce, industry, and some recommended
-                solutions that can add more value to your benefits packages and employee support.
-              </p>
-            )}
-            {assessmentData?.data?.status === "completed" && (
-              <p className="text-base font-normal text-ws-text-primary">
-                Here's an overview of your workforce, industry, and some recommendations with
-                partners that can add more value to your benefits packages and employee support.
+                Here's an overview of your workforce, industry, and some recommendations with partners that can add more value to your benefits
+                packages and employee support.
               </p>
             )}
 
@@ -366,22 +312,12 @@ export const DashboardPage = () => {
 
             {!emailVerify && (
               <DashboardCard
-                classes="bg-ws-primary-50 border-ws-border-primary" // Custom styles for email verification card
+                classes="bg-ws-light-teal-50 bg-ws-primary-50 border-ws-border-primary" // Custom styles for email verification card
                 title="Verify your email"
                 description={
                   <div className="max-w-2xl text-ws-primary-900">
                     Verify your email to unlock all BeneStats features and secure your account.
                     Didn’t recieve an email? Click the button to resend
-                    <Link
-                      to="#"
-                      onClick={e => {
-                        e.preventDefault();
-                        if (!emailVerify) handleVerifyEmail();
-                      }}
-                      className="underline ml-2 text-sm text-ws-primary-500"
-                    >
-                      Resend verification
-                    </Link>
                   </div>
                 }
                 avatarIconSrc={emailIcon}
@@ -394,7 +330,7 @@ export const DashboardPage = () => {
 
             {emailVerify && assessmentData?.data?.status !== "completed" && !isConnected && (
               <DashboardCard
-                classes="bg-ws-light-teal-50 border-ws-border-primary"
+                classes={completionCount > 0 ? "border-ws-border-primary" :"bg-ws-light-teal-50 border-ws-border-primary" }
                 title="Take the Assessment"
                 titleClass="text-ws-navy-900"
                 description={
@@ -544,7 +480,7 @@ export const DashboardPage = () => {
           )}
           {emailVerify && isDashboardVisible && (
             <div className="mt-10">
-              <Tabs>
+              <Tabs selectedKey={activeTab} onSelectionChange={key => setActiveTab(String(key))}>
                 <Tabs.List
                   className="bg-ws-light-teal-50 pt-9 pl-6 pr-6 rounded-t-lg text-ws-light-teal-900 overflow-auto"
                   type="underline"
@@ -564,7 +500,9 @@ export const DashboardPage = () => {
                   </Tabs.Panel>
                 )}
                 <Tabs.Panel id="finchRecommendations" className="pt-0">
-                  <RecommendationsFinchPage />
+                  <RecommendationsFinchPage
+                    onNavigateToWorkforce={() => setActiveTab("finchWorkforce")}
+                  />
                 </Tabs.Panel>
                 {isConnected && (
                   <Tabs.Panel id="finchIndustry" className="pt-0">

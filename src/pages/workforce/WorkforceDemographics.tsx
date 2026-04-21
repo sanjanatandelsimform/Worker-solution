@@ -20,7 +20,7 @@ interface DemographicsCardConfig {
   id: string;
   title: string;
   count: string;
-  tooltipText: string;
+  tooltipText?: string;
   getCountClass: () => string;
 }
 
@@ -118,10 +118,9 @@ export default function WorkforceDemographics({
                   itemAlign="between"
                   count={card.count}
                   countClass={card.getCountClass()}
-                  infoIcon={true}
+                  infoIcon={!!card.tooltipText}
                   infoCircleClass="text-ws-gray-70 size-5"
                   tooltipText={card.tooltipText}
-                  descriptionText="Industry specific turnover metrics are calculated from US Census Bureau QWI data sources"
                   placements="top"
                   countWrap="text-3xl font-semibold text-ws-text-primary"
                 />
@@ -157,7 +156,7 @@ export default function WorkforceDemographics({
         </div>
       </div>
       <div className="bg-ws-base-white p-5 border border-ws-border-primary rounded-xl w-full flex flex-col relative">
-        <div className="w-full flex items-start justify-between flex-col xl:flex-row">
+        <div className="w-full flex items-start xl:items-center justify-between flex-col xl:flex-row">
           <div className="space-y-1 ">
             <h3 className="text-2xl font-medium text-ws-text-primary">
               Employment Breakdown by Age

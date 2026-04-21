@@ -80,7 +80,7 @@ describe("workforceSlice", () => {
             workforceBreakdown: { departments: [] },
             benefitsCost: {
               employeeContribution: 468,
-              employerCost: "$11000/yr",
+              employerCost: 11000,
               graph: [],
               table: [],
             },
@@ -145,7 +145,7 @@ describe("workforceSlice", () => {
             compensation: {
               salaryBreakdown: { medianSalary: 0, avgSalary: 0, avgHourlyRate: 0 },
               workforceBreakdown: { departments: [] },
-              benefitsCost: { employeeContribution: 0, employerCost: "$0", graph: [], table: [] },
+              benefitsCost: { employeeContribution: 0, employerCost: 0, graph: [], table: [] },
             },
           },
         },

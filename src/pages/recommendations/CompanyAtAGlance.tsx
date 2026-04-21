@@ -46,7 +46,7 @@ const overviewCardsConfig: CardConfig<CompanyGlanceData>[] = [
   },
   {
     id: "average-hourly-wage",
-    title: "Average Hourly Wage",
+    title: "Average Hourly Wages",
     icon: ClockIcon,
     format: data => {
       const wage = data.averageHourlyWage;
@@ -64,13 +64,13 @@ const overviewCardsConfig: CardConfig<CompanyGlanceData>[] = [
   },
   {
     id: "industry-avg-wage",
-    title: "National Industry Average Wage",
+    title: "National Industry Median Wage",
     icon: DollarIcon,
     format: data =>
       data.industryAverageWage === null ? "N/A" : formatCurrency(Number(data.industryAverageWage)),
-    // infoIcon: true,
-    tooltipText: "How is this calculated",
-    descriptionText: "This is calculated based on LMI.",
+    infoIcon: false,
+    tooltipText: "",
+    descriptionText: "",
     placements: "top",
   },
 ];
@@ -82,7 +82,7 @@ const overviewCardsConfigR2: CardConfig<Record<string, string | null>>[] = [
     icon: EnrolledIcon,
     format: data =>
       data.industryAverageWage == null ? "N/A" : formatCurrency(Number(data.industryAverageWage)),
-    infoIcon: true,
+    infoIcon: false,
     count: "2,254",
     tooltipText: "How is this calculated",
     descriptionText: "This is calculated based on LMI.",
@@ -94,7 +94,7 @@ const overviewCardsConfigR2: CardConfig<Record<string, string | null>>[] = [
     icon: SavingIcon,
     format: data =>
       data.industryAverageWage == null ? "N/A" : formatCurrency(Number(data.industryAverageWage)),
-    infoIcon: true,
+    infoIcon: false,
     count: "64%",
     tooltipText: "How is this calculated",
     descriptionText: "This is calculated based on LMI.",
@@ -106,7 +106,7 @@ const overviewCardsConfigR2: CardConfig<Record<string, string | null>>[] = [
     icon: HeartLineIcon,
     format: data =>
       data.industryAverageWage == null ? "N/A" : formatCurrency(Number(data.industryAverageWage)),
-    infoIcon: true,
+    infoIcon: false,
     count: "92%",
     tooltipText: "How is this calculated",
     descriptionText: "This is calculated based on LMI.",
@@ -118,19 +118,21 @@ interface CompanyAtAGlanceProps {
   readonly isLoading: boolean;
   readonly companyGlanceData: CompanyGlanceData;
   readonly benefitsGlanceData: Record<string, string | null>;
+  readonly onNavigateToWorkforce?: () => void;
 }
 
 export default function CompanyAtAGlance({
   isLoading,
   companyGlanceData,
   benefitsGlanceData,
+  onNavigateToWorkforce,
 }: CompanyAtAGlanceProps) {
   const { isConnected } = useFinchStatus();
 
   return (
     <div className="space-y-6 mb-6">
       <h2 className="text-2xl lg:text-4xl font-medium text-ws-text-primary leading-10">
-        Your Company at a Glance
+        Your Company At A Glance
       </h2>
       <h4 className="text-2xl font-medium text-ws-text-primary">Company Overview</h4>
       <div className="grid grid-cols-2 xl:grid-cols-4 gap-6 w-full">
@@ -203,10 +205,16 @@ export default function CompanyAtAGlance({
           </div>
 
           <p className="text-base text-ws-text-primary inline-block">
-            Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor
-            incididunt ut labore et dolore.{" "}
-            <Link to="#" className="text-base underline text-ws-light-teal-850 font-bold">
-              Learn more about your workforce
+            Your workforce data is connected via Finch.{" "}
+            <Link
+              to="#"
+              className="text-base underline text-ws-light-teal-850 font-bold"
+              onClick={e => {
+                e.preventDefault();
+                onNavigateToWorkforce?.();
+              }}
+            >
+              Explore salaries, benefits, and more in the Workforce tab
             </Link>
           </p>
         </>

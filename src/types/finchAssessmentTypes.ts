@@ -34,6 +34,8 @@ export interface BenefitsPayload {
   retirementMatchPercentage?: number;
   retirementAutoEnroll: boolean;
   retirementHardshipWithdrawals: boolean;
+  /** Employee-only monthly premium for the lowest-cost health plan; omitted when not provided */
+  healthPremiumMonthly?: number;
 }
 
 export interface GoalsPayload {

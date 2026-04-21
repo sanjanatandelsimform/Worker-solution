@@ -184,7 +184,7 @@ components:
               $ref: "#/components/schemas/VoluntaryInvoluntary"
             company:
               $ref: "#/components/schemas/VoluntaryInvoluntary"
-        seperationRate:
+        separationRate:
           type: object
           properties:
             industry:
