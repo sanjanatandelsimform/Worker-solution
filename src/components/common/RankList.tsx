@@ -216,11 +216,6 @@ export function RankingList({
         <div className="flex items-center gap-1.5 text-sm text-gray-500">
           <span>[You can drag and drop to reorder your selections.]</span>
         </div>
-        <div className="rounded-lg border border-ws-border-primary bg-gray-50 px-4 py-6 text-center">
-          <p className="text-sm text-gray-500">
-            Select at least {maxItems} goals from the list above to rank them
-          </p>
-        </div>
       </div>
     );
   }
