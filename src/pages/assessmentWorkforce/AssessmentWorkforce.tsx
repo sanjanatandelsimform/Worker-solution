@@ -246,7 +246,7 @@ export default function AssessmentWorkforcePage() {
               iconLeading={<ChevronLeft data-icon />}
               onClick={handleBack}
               isDisabled={isLoadingGet}
-              className={`flex items-center gap-1 text-base font-semibold text-ws-navy-800 transition-opacity ${
+              className={`flex items-center gap-1 text-base font-semibold text-ws-navy-800 transition-opacity no-underline ${
                 isLoadingGet ? "cursor-not-allowed opacity-40" : "hover:opacity-80"
               }`}
             >

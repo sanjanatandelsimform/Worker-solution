@@ -56,15 +56,22 @@ export default function ProgressCard({
   const renderProgressItem = (item: ProgressItem, index: number) => (
     <div key={`progress-${index}`} className="flex gap-3">
       <div className="text-base font-normal text-ws-text-primary min-w-40">{item.label}</div>
-      <div className="w-full bg-ws-light-teal-25 overflow-hidden relative">
+      <div className="w-full bg-ws-light-teal-25 relative flex items-center">
         <div
-          className={`h-7 flex items-center justify-center ${item.progressColor || "bg-ws-light-teal-25"} transition-all duration-300`}
+          className={`h-7 flex-shrink-0 ${item.progressColor || "bg-ws-light-teal-25"} transition-all duration-300`}
           style={{ width: `${item.percentage}%` }}
         >
-          <span className="text-base font-normal text-ws-base-black drop-shadow-md flex items-center justify-end w-full pr-2">
+          {item.percentage >= 12 && (
+            <span className="text-base font-normal text-ws-base-black drop-shadow-md flex items-center justify-end w-full h-full pr-2">
+              {item.percentage.toFixed(1)}%
+            </span>
+          )}
+        </div>
+        {item.percentage < 12 && (
+          <span className="text-base font-normal text-ws-base-black drop-shadow-md pl-2 whitespace-nowrap">
             {item.percentage.toFixed(1)}%
           </span>
-        </div>
+        )}
       </div>
     </div>
   );
@@ -132,15 +139,22 @@ export default function ProgressCard({
         // Single item layout (backward compatibility)
         <div className="flex gap-3">
           <div className="text-base font-normal text-ws-text-primary min-w-40">{progressLabel}</div>
-          <div className="w-full bg-ws-light-teal-25 overflow-hidden relative">
+          <div className="w-full bg-ws-light-teal-25 relative flex items-center">
             <div
-              className={`h-7 flex items-center justify-center ${progressColor || "bg-ws-light-teal-25"} transition-all duration-300`}
+              className={`h-7 flex-shrink-0 ${progressColor || "bg-ws-light-teal-25"} transition-all duration-300`}
               style={{ width: `${percentage}%` }}
             >
-              <span className="text-base font-normal text-ws-base-black drop-shadow-md flex items-center justify-end w-full pr-2">
+              {percentage >= 12 && (
+                <span className="text-base font-normal text-ws-base-black drop-shadow-md flex items-center justify-end w-full h-full pr-2">
+                  {percentage.toFixed(1)}%
+                </span>
+              )}
+            </div>
+            {percentage < 12 && (
+              <span className="text-base font-normal text-ws-base-black drop-shadow-md pl-2 whitespace-nowrap">
                 {percentage.toFixed(1)}%
               </span>
-            </div>
+            )}
           </div>
         </div>
       ) : // Comment code is require
