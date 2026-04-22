@@ -154,7 +154,7 @@ export default function WorkforceCompensation({
             </div>
           </div>
         ) : (
-          <div className="bg-ws-base-white border border-ws-border-primary rounded-xl w-full mt-4">
+          <div className="bg-ws-base-white border border-ws-border-primary w-full mt-4 rounded-lg">
             <Table data={users} columns={columns} variant="striped" size="md" />
           </div>
         )}
@@ -162,7 +162,7 @@ export default function WorkforceCompensation({
           <div className="w-full flex items-center justify-between mt-8">
             <div className="space-y-1 w-full">
               <h3 className="text-2xl font-medium text-ws-text-primary">Benefits Cost Breakdown</h3>
-              <p className="max-w-3xl text-base font-normal text-ws-text-primary">
+              <p className="w-full text-base font-normal text-ws-text-primary">
                 See how benefits costs are distributed across salary bands, including what employees
                 contribute per paycheck and what it costs you as the employer.
               </p>
@@ -213,7 +213,7 @@ export default function WorkforceCompensation({
             </div>
           </div>
         ) : (
-          <div className="bg-ws-base-white border border-ws-border-primary rounded-xl w-full mt-4">
+          <div className="bg-ws-base-white border border-ws-border-primary w-full mt-4 rounded-lg">
             <Table data={salary} columns={columnsOne} variant="striped" size="md" />
           </div>
         )}

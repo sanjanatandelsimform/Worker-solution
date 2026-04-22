@@ -1149,13 +1149,11 @@ export const DynamicQuestionRenderer = ({
                       onChange={(value: string) => handlePercentageChange(value, subField.key)}
                       isInvalid={!!subFieldError}
                       tooltip={subFieldError || undefined}
-                      
-                      hint="i.e. 30%"
                       helperTooltip={`Expected '<25%' | '26-50%' | '51-75%' | '76%+', received number`}
                     />
-                    {/* {!subFieldError && (
+                    {!subFieldError && (
                       <span className="text-xs text-ws-text-tertiary">i.e. 30%</span>
-                    )} */}
+                    )}
                     {subFieldError && (
                       <div className="flex items-center gap-1">
                         {/* <InputInfo className="text-ws-error-600" /> */}

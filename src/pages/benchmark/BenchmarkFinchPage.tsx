@@ -375,6 +375,8 @@ export default function BenchmarkFinchPage() {
     id: w.zipcode,
   }));
 
+  console.log(setSelectedGraphType, "selectedGraphType in finch page");
+
   const activeWageZip = selectedWageZip ?? areaMedianWage?.[0]?.zipcode ?? null;
 
   const selectedWageState =
@@ -1016,7 +1018,7 @@ export default function BenchmarkFinchPage() {
           </div>
         </div>
         <div className="w-full mt-8">
-          <h3 className="text-base font-bold text-ws-text-primary">
+          <h3 className="text-base font-semibold text-ws-text-primary">
            Your workers residing in Manchester, New Hampshire are likely financially burdened - meaning workers likely spend a large 
            portion of their wages on housing and transportation
           </h3>
@@ -1079,13 +1081,13 @@ export default function BenchmarkFinchPage() {
               ))}
             </>
           )}
-        </div>
-        <div>
-          <p className="text-xs text-ws-text-tertiary mt-6">
+          <p className="text-xs text-ws-text-tertiary mt-2">
             <span className="font-semibold">Source:</span> U.S. Census Bureau, 5-Year American
             Community Survey
           </p>
-          <div className="w-full flex items-start xl:items-center justify-between mt-8 flex-col xl:flex-row">
+        </div>
+        <div className="w-full">
+          <div className="w-full flex items-start xl:items-center justify-between mt-8 flex-col xl:flex-row border-t border-ws-border-primary pt-8">
             <div className="space-y-1 w-full">
               <h3 className="text-2xl font-medium text-ws-text-primary">
                 Working Class Housing Cost Burden
@@ -1096,33 +1098,30 @@ export default function BenchmarkFinchPage() {
                well above the recommended 30 percent of their income just to keep a roof over 
                their heads. 
               </p>
-              <p className="text-xs text-ws-text-tertiary mt-6">
+              <p className="text-xs text-ws-text-tertiary mt-2">
                 <span className="font-semibold">Source:</span> U.S. Census Bureau, 5-Year American
                 Community Survey
               </p>
             </div>
             <div className="flex flex-col items-start w-full lg:w-auto shrink-0 mt-4 xl:mt-0 lg:min-w-71">
               <Label className="text-ws-text-secondary flex mb-1.5">
-                Household type
+                Zip Code
               </Label>
               <Select
-                className="w-full flex items-start min-w-50 md:min-w-full lg:min-w-50"
-                isRequired
-                size="md"
-                placeholder="Select Household Type"
-                items={[
-                  { label: "Owners", id: "owners" },
-                  { label: "Renters", id: "renters" },
-                ]}
-                value={selectedGraphType}
-                onSelectionChange={key => {
-                  if (key) {
-                    setSelectedGraphType(key as "owners" | "renters");
-                  }
-                }}
-              >
-                {item => <Select.Item id={item.id}>{item.label}</Select.Item>}
-              </Select>
+              className="w-full flex items-start min-w-50 md:min-w-full lg:min-w-50"
+              isRequired
+              size="md"
+              placeholder="Select Area"
+              items={housingZipItems}
+              value={activeHousingZip}
+              onSelectionChange={key => {
+                if (key) {
+                  setSelectedHousingZipState(key as string);
+                }
+              }}
+            >
+              {item => <Select.Item id={item.id}>{item.label}</Select.Item>}
+            </Select>
             </div>
           </div>
           <div className="grid xl:grid-cols-3 gap-4 mt-6 flex-col lg:flex-row">

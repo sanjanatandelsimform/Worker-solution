@@ -64,8 +64,8 @@ export default function DashboardCard({
             </div>
           ))}
         <div className="flex flex-col">
-          <h2 className={`text-ws-navy-900 text-xl font-medium ${titleClass}`}>{title}</h2>
-          <p className={`text-ws-navy-900 text-base mt-1 ${descriptionClass}`}>{description}</p>
+          <h2 className={cx(`text-ws-navy-900 text-xl font-medium ${titleClass}`)}>{title}</h2>
+          <p className={cx(`text-ws-navy-900 text-base mt-1 ${descriptionClass}`)}>{description}</p>
         </div>
       </div>
       {toggleButton && (

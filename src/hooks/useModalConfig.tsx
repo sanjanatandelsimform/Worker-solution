@@ -156,7 +156,7 @@ export const useModalConfig = (
           {
             text: "Yes",
             onClick: config.onConfirm || config.onClose,
-            color: "primary-destructive",
+            color: "error",
             isDisabled: config.additionalData?.isDisabled as boolean,
           },
         ],
