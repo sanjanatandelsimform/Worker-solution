@@ -195,7 +195,7 @@ export function RegistrationForm() {
           </div>
 
           {/* Form */}
-          <form onSubmit={handleSubmit(onSubmit)} className="w-full cursor-pointer mt-8">
+          <form onSubmit={handleSubmit(onSubmit)} className="w-full mt-8">
             {/* Fields - Grid Layout */}
             <div className="grid w-full grid-cols-2 gap-x-4 gap-y-4">
               {/* Row 1 - First Name & Last Name */}

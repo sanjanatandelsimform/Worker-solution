@@ -14,7 +14,7 @@ import {
   selectIndustryTurnover,
 } from "@/store/selectors/industrySelectors";
 import { useIndustry } from "@/hooks/useIndustry";
-import { formatCurrency, formatCurrencyWithCents, formatPercentage } from "@/utils/formatters";
+import { formatCurrency, formatCurrencyWithCents, formatPercentage, formatToTwoDecimalPlaces } from "@/utils/formatters";
 import { Label } from "@/components/base/input/label";
 import TurnoverRateCard from "./TurnoverRateCard";
 import { GlobeIcon } from "@/assets/icons/Globe";
@@ -197,7 +197,7 @@ const benchmarkCardsConfig: BenchmarkCardConfig[] = [
       const d = data as Record<string, unknown> | null;
       const tr = d?.turnoverRate as Record<string, unknown> | null;
       const value = tr?.rate;
-      return typeof value === "number" ? formatPercentage(value) : (value as string) || "N/A";
+      return typeof value === "number" ? `${formatToTwoDecimalPlaces(value)}M` : (value as string) || "N/A";
     },
     tooltipText: "Turnover Rate",
     descriptionText: () =>
@@ -237,7 +237,7 @@ const benchmarkCardsConfig: BenchmarkCardConfig[] = [
       const d = data as Record<string, unknown> | null;
       const at = d?.avgTurnover as Record<string, unknown> | null;
       const value = at?.rate;
-      return typeof value === "number" ? `${value}%` : value != null ? `${value}%` : "N/A";
+      return typeof value === "number" && value !== undefined ? `${formatToTwoDecimalPlaces(value)}%` : value != null ? `${value}%` : "N/A";
     },
     tooltipText: "Average Cost of Turnover",
     descriptionText: (data: unknown) => {

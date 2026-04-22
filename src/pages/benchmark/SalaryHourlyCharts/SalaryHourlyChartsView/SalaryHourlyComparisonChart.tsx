@@ -20,7 +20,7 @@ export const SalaryHourlyComparisonChart = ({
   return (
     <div className="w-full rounded-lg border border-ws-border-primary bg-ws-base-white p-6">
       {/* Title */}
-      <h2 className="mb-8 text-2xl font-medium text-ws-text-primary">Salary & Hourly Comparison</h2>
+      <h2 className="mb-8 text-2xl font-medium text-ws-text-primary">Annual Salary & Hourly Comparison</h2>
 
       {/* Charts Grid */}
       <div className="grid grid-cols-1 xl:grid-cols-2 gap-8">

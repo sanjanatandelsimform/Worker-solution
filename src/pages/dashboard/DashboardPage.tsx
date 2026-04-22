@@ -72,6 +72,7 @@ export const DashboardPage = () => {
     assessmentData,
     isLoading: isLoadingAssessment,
     isFinchCompleted,
+    isFinchAssessmentIncomplete,
   } = useAssessmentStatus({ enabled: emailVerify });
   const [showGoalsSuccessModal, setShowGoalsSuccessModal] = useState(false);
   const [showGoalsEmptyWarning, setShowGoalsEmptyWarning] = useState(false);
@@ -267,7 +268,7 @@ export const DashboardPage = () => {
           <div className="space-y-6"></div>
           <div className="w-full">
             <h2 className="text-4xl font-bold text-ws-text-primary">
-              {assessmentData?.data?.status !== "completed" ? (
+              {assessmentData?.data?.status !== "completed" && !isFinchAssessmentIncomplete ? (
                 `Welcome, ${user?.firstName ? `${user.firstName}!` : ""}`
               ) : (
                 <span className="font-bold mb-4 flex">{`Hi ${user?.firstName}!`}</span>

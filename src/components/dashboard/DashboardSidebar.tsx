@@ -4,6 +4,8 @@ import { useAppSelector } from "@/store/hooks";
 import { Settings01, LogOut04, Speedometer03, Menu01, XClose } from "@untitledui/icons";
 import { NavList } from "@/components/application/app-navigation/base-components/nav-list";
 import type { NavItemType } from "@/components/application/app-navigation/config";
+// This is require
+// import { Tooltip, TooltipTrigger } from "@/components/base/tooltip/tooltip";
 import { signout } from "@/services/api/authApi";
 import { BaseModalWithIcon } from "../modals/BaseModalWithIcon";
 import { useBreakpoint } from "@/hooks/use-breakpoint";
@@ -210,6 +212,14 @@ export const DashboardSidebar = ({ activeUrl = "/" }: DashboardSidebarProps) => 
               </Tooltip>
                 
               </p>
+              {/* This is require */}
+                  {/* <p className="text-sm text-ws-text-tertiary mt-1 truncate transition-opacity duration-300">
+                  <Tooltip title={displayEmail} placement="top" arrow>
+                    <TooltipTrigger className="cursor-pointer">
+                      <span className="block truncate">{displayEmail}</span>
+                    </TooltipTrigger>
+                  </Tooltip>
+                </p> */}
             </div>
           </div>
         )}
