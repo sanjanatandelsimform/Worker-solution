@@ -1,6 +1,4 @@
 import React, { useEffect, useRef } from "react";
-import { Tooltip, TooltipTrigger } from "@/components/base/tooltip/tooltip";
-import { InfoCircle } from "@untitledui/icons";
 
 type ChartItem = {
   label: string;
