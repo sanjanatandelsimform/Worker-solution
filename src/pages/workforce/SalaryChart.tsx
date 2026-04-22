@@ -12,11 +12,9 @@ type ChartItem = {
 
 interface SalaryRangeChartProps {
   data: ChartItem[];
-  title?: string;
-  tooltipText?: string;
 }
 
-const SalaryRangeChart: React.FC<SalaryRangeChartProps> = ({ data, title, tooltipText }) => {
+const SalaryRangeChart: React.FC<SalaryRangeChartProps> = ({ data }) => {
   const canvasRef = useRef<HTMLCanvasElement | null>(null);
   const containerRef = useRef<HTMLDivElement | null>(null);
 
@@ -158,19 +156,6 @@ const SalaryRangeChart: React.FC<SalaryRangeChartProps> = ({ data, title, toolti
 
   return (
     <div className="w-full">
-      {/* TO DO 2204 : Need to update the styles of the title and tooltip position */}
-      {title && (
-        <div className="flex items-center gap-2 mb-2 bg-ws-error-600">
-          <h3 className="text-base font-semibold text-ws-text-primary">{title}</h3>
-          {tooltipText && (
-            <Tooltip title={tooltipText} description="" placement="top" arrow={true}>
-              <TooltipTrigger className="group relative flex cursor-pointer flex-col items-center gap-2 text-fg-quaternary transition duration-100 ease-linear hover:text-fg-quaternary_hover focus:text-fg-quaternary_hover">
-                <InfoCircle className="text-ws-gray-400 w-5" />
-              </TooltipTrigger>
-            </Tooltip>
-          )}
-        </div>
-      )}
       <div
         ref={containerRef}
         className="w-full"
