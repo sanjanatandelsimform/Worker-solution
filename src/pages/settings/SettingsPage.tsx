@@ -24,7 +24,6 @@ import { validateName } from "@/utils/validation";
 import { useModalConfig } from "@/hooks/useModalConfig";
 import { useAssessmentStatus } from "@/hooks/useAssessmentStatus";
 import { InputGroup } from "@/components/base/input/input-group";
-import { Label } from "@/components/base/input/label";
 import { ProfileApiResponse } from "@/types/profileTypes";
 
 export const SettingsPage = () => {
@@ -372,9 +371,9 @@ export const SettingsPage = () => {
           )}
 
           <div className="space-y-6 mt-6">
-            <div className="bg-ws-base-white rounded-xl p-6 ml-1 box-shadow">
+            <div className="bg-ws-base-white rounded-xl p-6 ml-1 shadow-md">
               {/* Personal Info Section */}
-              <div className="bg-ws-navy-25 flex gap-2 border border-ws-border-primary rounded-xl py-8 px-6 flex-col">
+              <div className="bg-ws-navy-25 flex gap-2 border border-ws-border-secondary rounded-xl py-8 px-6 flex-col">
                 <div className="flex flex-col">
                   <h2 className="text-3xl font-medium text-ws-text-primary">
                     Personal information
@@ -389,10 +388,9 @@ export const SettingsPage = () => {
                     <div className="flex items-center justify-between gap-6">
                       <div className="w-full xl:w-1/2">
                         <InputGroup>
-                          <div className="flex flex-col gap-1.5 w-full">
-                            <Label htmlFor="firstName">First Name</Label>
                             <Input
                               id="firstName"
+                              label="First Name"
                               name="firstName"
                               size="md"
                               isRequired={true}
@@ -401,19 +399,18 @@ export const SettingsPage = () => {
                               onChange={handleFirstNameChange}
                               // isDisabled={profileLoading}
                               isDisabled={true}
+                               helperTooltip="Your First Name"
                             />
                             {firstNameError && (
                               <p className="text-ws-error-600 text-sm mt-1">{firstNameError}</p>
                             )}
-                          </div>
                         </InputGroup>
                       </div>
                       <div className="w-full xl:w-1/2">
                         <InputGroup>
-                          <div className="flex flex-col gap-1.5 w-full">
-                            <Label htmlFor="lastName">Last Name</Label>
                             <Input
                               id="lastName"
+                              label="Last Name"
                               name="lastName"
                               size="md"
                               isRequired={true}
@@ -422,21 +419,21 @@ export const SettingsPage = () => {
                               onChange={handleLastNameChange}
                               // isDisabled={profileLoading}
                               isDisabled={true}
+                              helperTooltip="Your Last Name"
                             />
                             {lastNameError && (
                               <p className="text-ws-error-600 text-sm mt-1">{lastNameError}</p>
                             )}
-                          </div>
                         </InputGroup>
                       </div>
                     </div>
                     <div className="w-full xl:w-full">
                       <InputGroup>
-                        <div className="flex flex-col gap-1.5 w-full">
-                          <Label htmlFor="email">Email</Label>
+                       
                           <div className="w-full flex flex-col gap-4">
                             <Input
                               id="email"
+                              label="Email"
                               name="email"
                               size="md"
                               icon={Mail01}
@@ -445,6 +442,7 @@ export const SettingsPage = () => {
                               placeholder="medium@untitledui.com"
                               value={userData?.businessEmail || ""}
                               isDisabled={true}
+                              helperTooltip="Your email address"
                             />
                             <Button
                               color="link"
@@ -461,7 +459,7 @@ export const SettingsPage = () => {
                               {"Update your information"}
                             </Button>
                           </div>
-                        </div>
+    
                       </InputGroup>
                     </div>
                     <div className="w-full xl:w-full">
@@ -570,7 +568,7 @@ export const SettingsPage = () => {
                         <Button
                           color="subtle"
                           size="lg"
-                          className="w-full text-base font-semibold text-ws-error-600 hover:text-ws-base-white"
+                          className="w-full text-base font-semibold text-ws-error-600 hover:text-ws-error-600 hover:border-ws-error-600 hover:bg-ws-base-white"
                           onClick={() => setIsAccountDeleteModalOpen(true)}
                         >
                           Delete my account

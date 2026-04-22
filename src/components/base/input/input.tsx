@@ -29,6 +29,8 @@ export interface InputBaseProps extends Omit<AriaInputProps, "size"> {
   tooltip?: string;
   /** Default helper tooltip message when no validation error. */
   helperTooltip?: string;
+  /** Prefix input */
+  prefix?: string;
   /** Whether the input is invalid. */
   isInvalid?: boolean;
   /** Whether the input is disabled. */
@@ -69,6 +71,7 @@ export const InputBase = ({
   isDisabled,
   isRequired,
   icon: Icon,
+  prefix,
   placeholder,
   wrapperClassName,
   tooltipClassName,
@@ -81,7 +84,7 @@ export const InputBase = ({
 
   // Check if the input has a leading icon or tooltip
   const hasTrailingIcon = tooltip || isInvalid;
-  const hasLeadingIcon = Icon;
+  const hasLeadingIcon = Icon || prefix;
 
   // If the input is inside a `TextFieldContext`, use its context to simplify applying styles
   const context = useContext(TextFieldContext);
@@ -146,6 +149,13 @@ export const InputBase = ({
             iconClassName
           )}
         />
+      )}
+
+      {/* Prefix text */}
+      {prefix && (
+        <span className={cx("absolute left-3 my-auto text-md text-ws-text-tertiary", isDisabled && "text-disabled")}>
+          {prefix}
+        </span>
       )}
 
       {/* Input field */}
@@ -300,6 +310,7 @@ export interface InputProps
       | "inputClassName"
       | "iconClassName"
       | "tooltipClassName"
+      | "prefix"
     > {
   /** Label text for the input */
   label?: string;
@@ -316,6 +327,7 @@ export const Input = ({
   label,
   hint,
   shortcut,
+  prefix,
   hideRequiredIndicator,
   className,
   ref,
@@ -351,6 +363,7 @@ export const Input = ({
               groupRef,
               size,
               placeholder,
+              prefix,
               icon: Icon,
               shortcut,
               isInvalid,
