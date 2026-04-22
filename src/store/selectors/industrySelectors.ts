@@ -11,8 +11,7 @@ export const selectIndustryOverviewData = (state: RootState) =>
   state.industry.data?.industryOverview ?? null;
 
 // industry → { code, name }
-export const selectIndustryData = (state: RootState) =>
-  state.industry.data?.industry ?? null;
+export const selectIndustryData = (state: RootState) => state.industry.data?.industry ?? null;
 
 // industryTurnover (full object)
 export const selectIndustryTurnover = (state: RootState) =>

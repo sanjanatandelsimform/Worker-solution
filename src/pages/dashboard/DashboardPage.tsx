@@ -72,6 +72,7 @@ export const DashboardPage = () => {
     assessmentData,
     isLoading: isLoadingAssessment,
     isFinchCompleted,
+    isFinchAssessmentIncomplete,
   } = useAssessmentStatus({ enabled: emailVerify });
   const [showGoalsSuccessModal, setShowGoalsSuccessModal] = useState(false);
   const [showGoalsEmptyWarning, setShowGoalsEmptyWarning] = useState(false);
@@ -267,7 +268,7 @@ export const DashboardPage = () => {
           <div className="space-y-6"></div>
           <div>
             <h2 className="text-4xl font-bold text-ws-text-primary">
-              {assessmentData?.data?.status !== "completed" ? (
+              {assessmentData?.data?.status !== "completed" && !isFinchAssessmentIncomplete ? (
                 `Welcome, ${user?.firstName ? `${user.firstName}!` : ""}`
               ) : (
                 <span className="font-bold mb-4 flex">{`Hi ${user?.firstName}!`}</span>
@@ -275,8 +276,8 @@ export const DashboardPage = () => {
             </h2>
             {!emailVerify && (
               <p className="text-base font-normal text-ws-text-primary mt-4">
-                Here's an overview of your workforce, industry, and some recommendations with partners that can add more value to your benefits
-                packages and employee support.
+                Here's an overview of your workforce, industry, and some recommendations with
+                partners that can add more value to your benefits packages and employee support.
               </p>
             )}
 
@@ -330,8 +331,12 @@ export const DashboardPage = () => {
 
             {emailVerify && assessmentData?.data?.status !== "completed" && !isConnected && (
               <DashboardCard
-                classes={completionCount > 0 ? "border-ws-border-primary" :"bg-ws-light-teal-50 border-ws-border-primary" }
-                title="Take the Assessment"
+                classes={
+                  completionCount > 0
+                    ? "border-ws-border-primary"
+                    : "bg-ws-light-teal-50 border-ws-border-primary"
+                }
+                title="Take the assessment"
                 titleClass="text-ws-navy-900"
                 description={
                   completionCount > 0 ? (

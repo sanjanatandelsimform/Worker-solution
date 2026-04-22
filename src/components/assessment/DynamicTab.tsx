@@ -477,7 +477,7 @@ export const DynamicTab = forwardRef<
         onValidationChange(isValid);
       }
 
-      return isValid;
+      return { isValid, newErrors };
     }, [answers, questions, onValidationChange]);
 
     const cleanAnswers = useCallback(() => {
@@ -742,27 +742,64 @@ export const DynamicTab = forwardRef<
 
     const handleSubmit = useCallback(async () => {
       isExplicitSubmitRef.current = true;
-      const isValid = validateAnswers();
+      const { isValid, newErrors } = validateAnswers();
 
       if (!isValid) {
-        if (isExplicitSubmitRef.current) {
-          setTimeout(() => {
-            const firstErrorKey = Object.keys(errors)[0];
-            if (firstErrorKey) {
-              const errorElement = document.querySelector(`[data-question-key="${firstErrorKey}"]`);
-              if (errorElement) {
-                errorElement.scrollIntoView({
-                  behavior: "smooth",
-                  block: "center",
-                });
+        // Use the validated error keys directly — no stale closure issue
+        const errorKeys = Object.keys(newErrors);
+
+        if (errorKeys.length > 0) {
+          // Wait for React to flush setErrors and re-render error elements
+          requestAnimationFrame(() => {
+            setTimeout(() => {
+              // Try each error key in order until we find one in the DOM
+              let scrolled = false;
+              for (const errorKey of errorKeys) {
+                // First try exact match on data-question-key
+                const baseKey = errorKey.split('.')[0]; // e.g. "topWorkLocations.0.state" → "topWorkLocations"
+                const element = document.querySelector(
+                  `[data-question-key="${errorKey}"], [data-question-key="${baseKey}"]`
+                );
+
+                if (element) {
+                  element.scrollIntoView({
+                    behavior: "smooth",
+                    block: "center",
+                  });
+
+                  // Optionally focus the first input within the errored question
+                  const focusableInput = element.querySelector<HTMLElement>(
+                    'input, select, textarea, [role="radiogroup"], [role="listbox"], button[data-trigger]'
+                  );
+                  if (focusableInput) {
+                    focusableInput.focus({ preventScroll: true });
+                  }
+                  scrolled = true;
+                  break;
+                }
               }
-            }
-            isExplicitSubmitRef.current = false;
-          }, 100);
+
+              // Fallback: if no data-question-key matched, find the first rendered error span
+              if (!scrolled) {
+                const firstErrorSpan = document.querySelector(
+                  '[data-question-key] .text-ws-error-600'
+                );
+                if (firstErrorSpan) {
+                  const parentQuestion = firstErrorSpan.closest('[data-question-key]');
+                  (parentQuestion || firstErrorSpan).scrollIntoView({
+                    behavior: "smooth",
+                    block: "center",
+                  });
+                }
+              }
+
+              isExplicitSubmitRef.current = false;
+            }, 50);
+          });
         } else {
           isExplicitSubmitRef.current = false;
         }
-        return { success: false, errors };
+        return { success: false, errors: newErrors };
       }
 
       isExplicitSubmitRef.current = false;
@@ -867,20 +904,24 @@ export const DynamicTab = forwardRef<
               }
             });
             setErrors(prev => ({ ...prev, ...normalizedFieldErrors }));
-            setTimeout(() => {
-              const firstErrorKey = Object.keys(normalizedFieldErrors)[0];
-              if (firstErrorKey) {
-                const errorElement = document.querySelector(
-                  `[data-question-key="${firstErrorKey}"]`
-                );
-                if (errorElement) {
-                  errorElement.scrollIntoView({
-                    behavior: "smooth",
-                    block: "center",
-                  });
+            requestAnimationFrame(() => {
+              setTimeout(() => {
+                const errorKeys = Object.keys(normalizedFieldErrors);
+                for (const errorKey of errorKeys) {
+                  const baseKey = errorKey.split('.')[0];
+                  const element = document.querySelector(
+                    `[data-question-key="${errorKey}"], [data-question-key="${baseKey}"]`
+                  );
+                  if (element) {
+                    element.scrollIntoView({
+                      behavior: "smooth",
+                      block: "center",
+                    });
+                    break;
+                  }
                 }
-              }
-            }, 100);
+              }, 50);
+            });
           }
         }
         return response;
@@ -909,6 +950,7 @@ export const DynamicTab = forwardRef<
       onEmptySubmission,
       onApiError,
       section,
+      stateOptions,
     ]);
 
     const saveWithoutValidation = useCallback(async () => {
@@ -993,13 +1035,15 @@ export const DynamicTab = forwardRef<
             // if (showWhen === "yes") conditionMet = value === true;
             // else if (showWhen === "no") conditionMet = value === false;
             // else
-            //   conditionMet = String(value || "").toLowerCase() === String(showWhen).toLowerCase();
+            //   conditionMet =
+            //     String(value || "").toLowerCase() === String(showWhen).toLowerCase();
             if (showWhen === "yes")
               conditionMet = value === true || String(value).toLowerCase() === "yes";
             else if (showWhen === "no")
               conditionMet = value === false || String(value).toLowerCase() === "no";
             else
-              conditionMet = String(value || "").toLowerCase() === String(showWhen).toLowerCase();
+              conditionMet =
+                String(value || "").toLowerCase() === String(showWhen).toLowerCase();
             if (!conditionMet) {
               Object.keys(next).forEach(errorKey => {
                 if (errorKey === conditionalKey || errorKey.startsWith(`${conditionalKey}.`)) {
@@ -1116,7 +1160,7 @@ export const DynamicTab = forwardRef<
       ref,
       () => ({
         submit: handleSubmit,
-        validate: validateAnswers,
+        validate: () => validateAnswers().isValid,
         saveWithoutValidation,
         clearErrors,
         getAnswers: () => answers,

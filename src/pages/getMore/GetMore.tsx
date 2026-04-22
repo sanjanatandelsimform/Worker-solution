@@ -76,7 +76,7 @@ export default function GetMore() {
       {/* Chevron Icon - Rotates based on open/close state */}
       <ChevronUp
         data-icon
-        className={`h-5 w-5 shrink-0 text-gray-600 transition-transform duration-300 ${
+        className={`h-5 w-5 shrink-0 text-ws-gray-600 transition-transform duration-300 ${
           selectedPlan === planId ? "rotate-0" : "rotate-180"
         }`}
       />

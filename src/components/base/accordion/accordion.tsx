@@ -23,7 +23,7 @@ function AccordionItem({
         className={cx(
           "flex w-full items-start gap-2 rounded-lg px-4 py-4 text-left transition-all",
           isOpen && "rounded-b-none",
-          "hover:bg-gray-50"
+          "hover:bg-ws-gray-100"
         )}
         data-node-id={`accordion-item-${value}`}
       >
@@ -32,7 +32,7 @@ function AccordionItem({
 
       {isOpen && (
         <>
-          <div className="h-px bg-gray-200" data-node-id={`accordion-divider-${value}`} />
+          <div className="h-px bg-ws-gray-200" data-node-id={`accordion-divider-${value}`} />
           <div className="space-y-4 px-4 py-4" data-node-id={`accordion-body-${value}`}>
             {children}
           </div>
@@ -65,7 +65,7 @@ export function Accordion({ children, defaultValue, value, onChange }: Accordion
   };
 
   return (
-    <div className="space-y-0 rounded-lg border border-ws-border-primary bg-white shadow-sm overflow-hidden">
+    <div className="space-y-0 rounded-lg border border-ws-border-primary bg-ws-base-white shadow-sm overflow-hidden">
       {React.Children.map(children, child => {
         if (React.isValidElement<AccordionItemProps>(child)) {
           const typedChild = child as ReactElement<AccordionItemProps>;

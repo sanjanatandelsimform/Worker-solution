@@ -12,55 +12,55 @@ export default function PrivacyPage() {
           </div>
           <div className="flex w-full flex-col items-start gap-6">
             <div className="prose w-full">
-              <h2 className="text-black">Privacy Policy</h2>
+              <h2 className="text-ws-base-black">Privacy Policy</h2>
               <p className="text-card-subtitle text-lg">Last updated: [January 23, 2026]</p>
             </div>
             <div className="w-full h-110 overflow-y-scroll">
               <div className="prose max-w-none">
-                <p className="text-sm text-black">1. Acceptance of Terms</p>
-                <p className="text-sm text-black">
+                <p className="text-sm text-ws-base-black">1. Acceptance of Terms</p>
+                <p className="text-sm text-ws-base-black">
                   Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor
                   incididunt ut labore et dolore magna aliqua. By accessing or using this service,
                   you agree to be bound by these Terms and Conditions.
                 </p>
-                <p className="text-sm text-black">2. Acceptance of Terms</p>
-                <p className="text-sm text-black">
+                <p className="text-sm text-ws-base-black">2. Acceptance of Terms</p>
+                <p className="text-sm text-ws-base-black">
                   Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor
                   incididunt ut labore et dolore magna aliqua. By accessing or using this service,
                   you agree to be bound by these Terms and Conditions.
                 </p>
-                <p className="text-sm text-black">3. Acceptance of Terms</p>
-                <p className="text-sm text-black">
+                <p className="text-sm text-ws-base-black">3. Acceptance of Terms</p>
+                <p className="text-sm text-ws-base-black">
                   Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor
                   incididunt ut labore et dolore magna aliqua. By accessing or using this service,
                   you agree to be bound by these Terms and Conditions.
                 </p>
-                <p className="text-sm text-black">4. Acceptance of Terms</p>
-                <p className="text-sm text-black">
+                <p className="text-sm text-ws-base-black">4. Acceptance of Terms</p>
+                <p className="text-sm text-ws-base-black">
                   Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor
                   incididunt ut labore et dolore magna aliqua. By accessing or using this service,
                   you agree to be bound by these Terms and Conditions.
                 </p>
-                <p className="text-sm text-black">5. Acceptance of Terms</p>
-                <p className="text-sm text-black">
+                <p className="text-sm text-ws-base-black">5. Acceptance of Terms</p>
+                <p className="text-sm text-ws-base-black">
                   Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor
                   incididunt ut labore et dolore magna aliqua. By accessing or using this service,
                   you agree to be bound by these Terms and Conditions.
                 </p>
-                <p className="text-sm text-black">6. Acceptance of Terms</p>
-                <p className="text-sm text-black">
+                <p className="text-sm text-ws-base-black">6. Acceptance of Terms</p>
+                <p className="text-sm text-ws-base-black">
                   Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor
                   incididunt ut labore et dolore magna aliqua. By accessing or using this service,
                   you agree to be bound by these Terms and Conditions.
                 </p>
-                <p className="text-sm text-black">7. Acceptance of Terms</p>
-                <p className="text-sm text-black">
+                <p className="text-sm text-ws-base-black">7. Acceptance of Terms</p>
+                <p className="text-sm text-ws-base-black">
                   Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor
                   incididunt ut labore et dolore magna aliqua. By accessing or using this service,
                   you agree to be bound by these Terms and Conditions.
                 </p>
-                <p className="text-sm text-black">8. Acceptance of Terms</p>
-                <p className="text-sm text-black">
+                <p className="text-sm text-ws-base-black">8. Acceptance of Terms</p>
+                <p className="text-sm text-ws-base-black">
                   Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor
                   incididunt ut labore et dolore magna aliqua. By accessing or using this service,
                   you agree to be bound by these Terms and Conditions.

@@ -6,9 +6,9 @@ export const filledColors: Record<
   { root: string; addon: string; addonButton: string }
 > = {
   gray: {
-    root: "bg-gray-50 text-ws-text-primary ring-gray-200",
+    root: "bg-ws-gray-50 text-ws-text-primary ring-ws-gray-200",
     addon: "text-ws-gray-100",
-    addonButton: "hover:bg-gray-100 text-ws-gray-70 hover:text-ws-gray-100",
+    addonButton: "hover:bg-ws-gray-100 text-ws-gray-70 hover:text-ws-gray-100",
   },
   brand: {
     root: "bg-ws-base-white text-ws-text-primary ring-ws-border-primary",
@@ -31,6 +31,16 @@ export const filledColors: Record<
     addon: "text-utility-success-500",
     addonButton:
       "hover:bg-utility-success-100 text-utility-success-400 hover:text-utility-success-500",
+  },
+  slate: {
+    root: "bg-utility-slate-50 text-utility-slate-700 ring-utility-slate-200",
+    addon: "text-utility-slate-500",
+    addonButton: "hover:bg-utility-slate-100 text-utility-slate-400 hover:text-utility-slate-500",
+  },
+  sky: {
+    root: "bg-utility-sky-50 text-utility-sky-700 ring-utility-sky-200",
+    addon: "text-utility-sky-500",
+    addonButton: "hover:bg-utility-sky-100 text-utility-sky-400 hover:text-utility-sky-500",
   },
   "gray-blue": {
     root: "bg-utility-gray-blue-50 text-utility-gray-blue-700 ring-utility-gray-blue-200",

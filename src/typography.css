@@ -1,25 +1,25 @@
 .prose:not(:where([class~="not-prose"], [class~="not-prose"] *)) {
-  --tw-prose-body: var(--color-text-ws-text-tertiary);
-  --tw-prose-headings: var(--color-text-ws-text-primary);
-  --tw-prose-lead: var(--color-text-ws-text-tertiary);
-  --tw-prose-links: var(--color-text-ws-text-tertiary);
-  --tw-prose-bold: var(--color-text-ws-text-primary);
-  --tw-prose-counters: var(--color-text-ws-text-tertiary);
-  --tw-prose-bullets: var(--color-text-ws-text-tertiary);
-  --tw-prose-hr: var(--color-border-secondary);
-  --tw-prose-quotes: var(--color-text-ws-text-primary);
-  --tw-prose-quote-borders: var(--color-fg-brand-primary_alt);
-  --tw-prose-captions: var(--color-text-ws-text-tertiary);
-  --tw-prose-code: var(--color-text-ws-text-tertiary);
-  --tw-prose-pre-code: var(--color-text-ws-text-tertiary);
-  --tw-prose-pre-bg: var(--color-bg-ws-base-white);
-  --tw-prose-th-borders: var(--color-border-ws-border-primary);
-  --tw-prose-td-borders: var(--color-border-secondary);
+  --tw-prose-body: var(--ws-color-text-tertiary);
+  --tw-prose-headings: var(--ws-color-text-primary);
+  --tw-prose-lead: var(--ws-color-text-tertiary);
+  --tw-prose-links: var(--ws-color-text-tertiary);
+  --tw-prose-bold: var(--ws-color-text-primary);
+  --tw-prose-counters: var(--ws-color-text-tertiary);
+  --tw-prose-bullets: var(--ws-color-text-tertiary);
+  --tw-prose-hr: var(--ws-color-border-secondary);
+  --tw-prose-quotes: var(--ws-color-text-primary);
+  --tw-prose-quote-borders: var(--ws-color-light-teal-500);
+  --tw-prose-captions: var(--ws-color-text-tertiary);
+  --tw-prose-code: var(--ws-color-text-tertiary);
+  --tw-prose-pre-code: var(--ws-color-text-tertiary);
+  --tw-prose-pre-bg: var(--ws-color-base-white);
+  --tw-prose-th-borders: var(--ws-color-border-primary);
+  --tw-prose-td-borders: var(--ws-color-border-secondary);
 
   /* Base */
   color: var(--tw-prose-body);
-  font-size: var(--text-md);
-  line-height: var(--text-md--line-height);
+  font-size: var(--ws-color-text-md);
+  line-height: var(--ws-color-lh-text-md);
 }
 
 .prose :not(:where([class~="not-prose"], [class~="not-prose"] *)) {
@@ -30,8 +30,8 @@
   }
 
   &:where([class~="lead"]) {
-    font-size: var(--text-md);
-    line-height: var(--text-md--line-height);
+    font-size: var(--ws-color-text-md);
+    line-height: var(--ws-color-lh-text-md);
     margin-top: 1.2em;
     margin-bottom: 1.2em;
   }
@@ -39,25 +39,21 @@
   /* Lists */
   &:where(ol) {
     list-style-type: decimal;
-    margin-top: calc(var(--spacing) * 4);
-    margin-bottom: calc(var(--spacing) * 4);
-    padding-inline-start: calc(var(--spacing) * 5.75);
+    margin-top: 1rem;
+    margin-bottom: 1rem;
+    padding-inline-start: 1.4375rem;
   }
   &:where(ul) {
     list-style-type: disc;
-    margin-top: calc(var(--spacing) * 4);
-    margin-bottom: calc(var(--spacing) * 4);
-    padding-inline-start: calc(var(--spacing) * 5.75);
+    margin-top: 1rem;
+    margin-bottom: 1rem;
+    padding-inline-start: 1.4375rem;
   }
   &:where(li) {
-    margin-top: calc(var(--spacing) * 2);
-    margin-bottom: calc(var(--spacing) * 2);
+    margin-top: 0.5rem;
+    margin-bottom: 0.5rem;
   }
-  &:where(ol > li) {
-    padding-inline-start: 1px;
-    margin-top: 0;
-    margin-bottom: 0;
-  }
+  &:where(ol > li),
   &:where(ul > li) {
     padding-inline-start: 1px;
     margin-top: 0;
@@ -66,8 +62,8 @@
 
   /* Horizontal rules */
   &:where(hr) {
-    margin-top: calc(var(--spacing) * 8);
-    margin-bottom: calc(var(--spacing) * 8);
+    margin-top: 2rem;
+    margin-bottom: 2rem;
   }
 
   /* Quotes */
@@ -76,19 +72,22 @@
     border-left-width: 2px;
     border-left-color: var(--tw-prose-quote-borders);
     padding-inline-start: 0;
-    margin-top: calc(var(--spacing) * 10);
-    margin-bottom: calc(var(--spacing) * 10);
+    margin-top: 2.5rem;
+    margin-bottom: 2.5rem;
   }
+  
   &:where(blockquote p) {
     margin: 0;
     font-weight: 500;
     font-style: italic;
-    font-size: var(--text-xl);
-    line-height: var(--text-xl--line-height);
+    font-size: var(--ws-color-text-xl);
+    line-height: var(--ws-color-lh-text-xl);
   }
+  
   &:where(blockquote p:first-of-type::before) {
     content: open-quote;
   }
+  
   &:where(blockquote p:last-of-type::after) {
     content: close-quote;
   }
@@ -97,42 +96,38 @@
   &:where(h1) {
     color: var(--tw-prose-headings);
     font-weight: 600;
-    font-size: var(--text-display-lg);
-    line-height: var(--text-display-lg--line-height);
-    margin-bottom: calc(var(--spacing) * 5);
-    margin-top: calc(var(--spacing) * 10);
+    font-size: var(--ws-color-display-lg);
+    line-height: var(--ws-color-lh-display-lg);
+    margin-bottom: 1.25rem;
+    margin-top: 2.5rem;
   }
   &:where(h2) {
     color: var(--tw-prose-headings);
     font-weight: 600;
-    font-size: var(--text-display-md);
-    line-height: var(--text-display-md--line-height);
-    margin-bottom: calc(var(--spacing) * 4);
-    margin-top: calc(var(--spacing) * 8);
+    font-size: var(--ws-color-display-md);
+    line-height: var(--ws-color-lh-display-md);
+    margin-bottom: 1rem;
+    margin-top: 2rem;
   }
   &:where(h3) {
     color: var(--tw-prose-headings);
     font-weight: 500;
-    font-size: var(--text-display-xs);
-    line-height: var(--text-display-xs--line-height);
-    margin-bottom: calc(var(--spacing) * 3);
-    margin-top: calc(var(--spacing) * 8);
+    font-size: var(--ws-color-display-xs);
+    line-height: var(--ws-color-lh-display-xs);
+    margin-bottom: 0.75rem;
+    margin-top: 2rem;
   }
   &:where(h4) {
     color: var(--tw-prose-headings);
     font-weight: 600;
-    font-size: var(--text-display-xs);
-    line-height: var(--text-display-xs--line-height);
-    margin-bottom: calc(var(--spacing) * 2);
-    margin-top: calc(var(--spacing) * 5);
+    font-size: var(--ws-color-display-xs);
+    line-height: var(--ws-color-lh-display-xs);
+    margin-bottom: 0.5rem;
+    margin-top: 1.25rem;
   }
 
-  &:where(h2 + *) {
-    margin-top: 0;
-  }
-  &:where(h3 + *) {
-    margin-top: 0;
-  }
+  &:where(h2 + *),
+  &:where(h3 + *),
   &:where(h4 + *) {
     margin-top: 0;
   }
@@ -156,30 +151,31 @@
 
   /* Media */
   &:where(img) {
-    border-radius: var(--radius-xl);
+    border-radius: 12px;
     width: 100%;
     object-fit: cover;
-    margin-top: calc(var(--spacing) * 8);
-    margin-bottom: calc(var(--spacing) * 8);
+    margin-top: 2rem;
+    margin-bottom: 2rem;
   }
   &:where(video) {
-    margin-top: calc(var(--spacing) * 8);
-    margin-bottom: calc(var(--spacing) * 8);
+    margin-top: 2rem;
+    margin-bottom: 2rem;
   }
   &:where(figure) {
-    margin-top: calc(var(--spacing) * 10);
-    margin-bottom: calc(var(--spacing) * 10);
+    margin-top: 2.5rem;
+    margin-bottom: 2.5rem;
   }
   &:where(figure > *) {
     margin-top: 0;
     margin-bottom: 0;
   }
+
   &:where(figure:has(> blockquote)) {
     border-left-width: 2px;
     border-left-color: var(--tw-prose-quote-borders);
-    padding-top: calc(var(--spacing) * 2);
-    padding-bottom: calc(var(--spacing) * 2);
-    padding-inline-start: calc(var(--spacing) * 4);
+    padding-top: 0.5rem;
+    padding-bottom: 0.5rem;
+    padding-inline-start: 1rem;
   }
   &:where(figure:has(> blockquote) blockquote) {
     padding-inline-start: 0;
@@ -188,13 +184,13 @@
   &:where(img + figcaption) {
     display: flex;
     align-items: center;
-    gap: calc(var(--spacing) * 1.5);
+    gap: 0.375rem;
   }
   &:where(figcaption) {
     color: var(--tw-prose-captions);
-    font-size: var(--text-sm);
-    line-height: var(--text-sm--line-height);
-    margin-top: calc(var(--spacing) * 3);
+    font-size: var(--ws-color-text-sm);
+    line-height: var(--ws-color-lh-text-sm);
+    margin-top: 0.75rem;
   }
   &:where(cite) {
     font-style: normal;
@@ -208,15 +204,17 @@
   }
 
   &:where(a:focus-visible) {
-    border-radius: var(--radius-sm);
-    outline: 2px solid var(--color-focus-ring);
+    border-radius: 6px;
+    outline: 2px solid var(--ws-color-border-focus-ring);
     outline-offset: 2px;
   }
+  
   &:where(:is(h1, h2, h3) a) {
     color: var(--tw-prose-headings);
     font-weight: inherit;
     text-decoration: none;
   }
+
 
   /* Inline code element */
   &:where(code:not(pre code)) {
@@ -224,10 +222,10 @@
     line-height: 1.25rem;
     font-weight: 700;
     border-radius: 6px;
-    padding: calc(var(--spacing) * 0.5) calc(var(--spacing) * 1.5);
-    margin: calc(var(--spacing) * -0.5) 0px;
-    background: var(--color-bg-secondary);
-    box-shadow: 0 0 0 1px var(--color-border-secondary);
+    padding: 0.125rem 0.375rem;
+    margin: -0.125rem 0px;
+    background: var(--ws-color-border-tertiary);
+    box-shadow: 0 0 0 1px var(--ws-color-border-secondary);
 
     &::before,
     &::after {
@@ -265,144 +263,84 @@
 .prose.md\:prose-lg:not(:where([class~="not-prose"], [class~="not-prose"] *)) {
   @media (width >= 48rem /* 768px */) {
     /* Base */
-    font-size: var(--text-lg);
-    line-height: var(--text-lg--line-height);
+    font-size: var(--ws-color-text-lg);
+    line-height: var(--ws-color-lh-text-lg);
   }
 }
 
 .prose.md\:prose-lg :not(:where([class~="not-prose"], [class~="not-prose"] *)) {
   @media (width >= 48rem /* 768px */) {
-    /* Text */
+    /* Override only changed values */
     &:where(p) {
-      margin-top: calc(var(--spacing) * 4.5);
-      margin-bottom: calc(var(--spacing) * 4.5);
+      margin-top: 1.125rem;
+      margin-bottom: 1.125rem;
     }
 
     &:where([class~="lead"]) {
-      font-size: var(--text-xl);
-      line-height: var(--text-xl--line-height);
+      font-size: var(--ws-color-text-xl);
+      line-height: var(--ws-color-lh-text-xl);
       margin-top: 1.09em;
       margin-bottom: 1.09em;
     }
 
-    /* Lists */
-    &:where(ol) {
-      margin-top: calc(var(--spacing) * 4.5);
-      margin-bottom: calc(var(--spacing) * 4.5);
-      padding-inline-start: calc(var(--spacing) * 6.5);
-    }
+    &:where(ol),
     &:where(ul) {
-      margin-top: calc(var(--spacing) * 4.5);
-      margin-bottom: calc(var(--spacing) * 4.5);
-      padding-inline-start: calc(var(--spacing) * 6.5);
-    }
-
-    &:where(ol > li) {
-      padding-inline-start: 1px;
-      margin-top: 0;
-      margin-bottom: 0;
-    }
-    &:where(ul > li) {
-      padding-inline-start: 1px;
-      margin-top: 0;
-      margin-bottom: 0;
-    }
-
-    /* Horizontal rules */
-    &:where(hr) {
-      margin-top: calc(var(--spacing) * 8);
-      margin-bottom: calc(var(--spacing) * 8);
+      margin-top: 1.125rem;
+      margin-bottom: 1.125rem;
+      padding-inline-start: 1.625rem;
     }
 
     /* Quotes */
     &:where(blockquote) {
-      padding-inline-start: 0;
-      margin-top: calc(var(--spacing) * 12);
-      margin-bottom: calc(var(--spacing) * 12);
+      margin-top: 3rem;
+      margin-bottom: 3rem;
     }
+    
     &:where(blockquote p) {
-      margin: 0;
-      font-size: var(--text-display-xs);
-      line-height: var(--text-display-xs--line-height);
+      font-size: var(--ws-color-display-xs);
+      line-height: var(--ws-color-lh-display-xs);
     }
 
     /* Headings */
     &:where(h1) {
-      font-size: var(--text-display-md);
-      line-height: var(--text-display-md--line-height);
-      margin-bottom: calc(var(--spacing) * 6);
-      margin-top: calc(var(--spacing) * 12);
+      font-size: var(--ws-color-display-md);
+      line-height: var(--ws-color-lh-display-md);
+      margin-bottom: 1.5rem;
+      margin-top: 3rem;
     }
+    
     &:where(h2) {
-      font-size: var(--text-display-sm);
-      line-height: var(--text-display-sm--line-height);
-      margin-bottom: calc(var(--spacing) * 5);
-      margin-top: calc(var(--spacing) * 10);
+      font-size: var(--ws-color-display-sm);
+      line-height: var(--ws-color-lh-display-sm);
+      margin-bottom: 1.25rem;
+      margin-top: 2.5rem;
     }
+    
     &:where(h3) {
-      font-size: var(--text-display-xs);
-      line-height: var(--text-display-xs--line-height);
-      margin-bottom: calc(var(--spacing) * 4);
-      margin-top: calc(var(--spacing) * 8);
+      margin-bottom: 1rem;
     }
+    
     &:where(h4) {
-      font-size: var(--text-xl);
-      line-height: var(--text-xl--line-height);
-      margin-bottom: calc(var(--spacing) * 3);
-      margin-top: calc(var(--spacing) * 8);
-    }
-    &:where(h2 + *) {
-      margin-top: 0;
-    }
-    &:where(h3 + *) {
-      margin-top: 0;
-    }
-    &:where(h4 + *) {
-      margin-top: 0;
+      font-size: var(--ws-color-text-xl);
+      line-height: var(--ws-color-lh-text-xl);
     }
 
     &:where(figure) {
-      margin-top: calc(var(--spacing) * 12);
-      margin-bottom: calc(var(--spacing) * 12);
+      margin-top: 3rem;
+      margin-bottom: 3rem;
     }
-    &:where(figure > *) {
-      margin-top: 0;
-      margin-bottom: 0;
-    }
+    
     &:where(figure:has(> blockquote)) {
-      padding-inline-start: calc(var(--spacing) * 5);
+      padding-inline-start: 1.25rem;
     }
+    
     &:where(figure > blockquote + figcaption) {
-      font-size: var(--text-md);
-      line-height: var(--text-md--line-height);
+      font-size: var(--ws-color-text-md);
+      line-height: var(--ws-color-lh-text-md);
     }
 
     &:where(figcaption) {
-      margin-top: calc(var(--spacing) * 4);
-    }
-
-    /* Inline elements */
-    &:where(a:not(h1 a, h2 a, h3 a, h4 a, h5 a, h6 a)) {
-      font-weight: 400;
-      text-decoration: underline;
-      text-underline-offset: 3px;
-    }
-    &:where(:is(h1, h2, h3) a) {
-      color: var(--tw-prose-headings);
-      font-weight: inherit;
-      text-decoration: none;
-    }
-
-    /* Inline code element */
-    &:where(code:not(pre code)) {
-      font-size: 0.875rem;
-      line-height: 1.25rem;
-      font-weight: 700;
-      border-radius: 6px;
-      padding: calc(var(--spacing) * 0.5) calc(var(--spacing) * 1.5);
-      margin: calc(var(--spacing) * -0.5) 0px;
-      background: var(--color-bg-secondary);
-      box-shadow: 0 0 0 1px var(--color-border-secondary);
+      margin-top: 1rem;
     }
   }
 }

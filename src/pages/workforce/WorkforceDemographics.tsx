@@ -156,7 +156,7 @@ export default function WorkforceDemographics({
         </div>
       </div>
       <div className="bg-ws-base-white p-5 border border-ws-border-primary rounded-xl w-full flex flex-col relative">
-        <div className="w-full flex items-start justify-between flex-col xl:flex-row">
+        <div className="w-full flex items-start xl:items-center justify-between flex-col xl:flex-row">
           <div className="space-y-1 ">
             <h3 className="text-2xl font-medium text-ws-text-primary">
               Employment Breakdown by Age

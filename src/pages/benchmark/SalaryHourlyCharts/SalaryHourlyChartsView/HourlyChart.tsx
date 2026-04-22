@@ -13,20 +13,32 @@ interface TooltipData {
   label: string;
 }
 
+type HitArea = {
+  x: number;
+  y: number;
+  width: number;
+  height: number;
+  value: number;
+  color: string;
+  label: string;
+};
+
+type CanvasWithHitAreas = HTMLCanvasElement & { hitAreas?: Record<string, HitArea> };
+
 interface HourlyChartProps {
   readonly data: ChartData;
   readonly width?: number;
   readonly height?: number;
 }
 
+const colors = {
+  industryAverage: "#7ECCC4",
+  nationalAverage: "#4B8F87",
+};
+
 export default function HourlyChart({ data, width = 500, height = 350 }: HourlyChartProps) {
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const [tooltip, setTooltip] = useState<TooltipData | null>(null);
-
-  const colors = {
-    industryAverage: "#7ECCC4",
-    nationalAverage: "#4B8F87",
-  };
 
   useEffect(() => {
     const canvas = canvasRef.current;
@@ -120,7 +132,7 @@ export default function HourlyChart({ data, width = 500, height = 350 }: HourlyC
     ctx.strokeRect(nationalX, yBase - nationalHeight, barWidth, nationalHeight);
 
     // Store hit detection data for tooltip
-    (canvas as any).hitAreas = {
+    (canvas as CanvasWithHitAreas).hitAreas = {
       industryBar: {
         x: industryX,
         y: yBase - industryHeight,
@@ -150,12 +162,12 @@ export default function HourlyChart({ data, width = 500, height = 350 }: HourlyC
     const mouseX = e.clientX - rect.left;
     const mouseY = e.clientY - rect.top;
 
-    const hitAreas = (canvas as any).hitAreas;
+    const hitAreas = (canvas as CanvasWithHitAreas).hitAreas;
     if (!hitAreas) return;
 
     let foundTooltip: TooltipData | null = null;
 
-    Object.values(hitAreas).forEach((area: any) => {
+    Object.values(hitAreas).forEach((area: HitArea) => {
       if (
         mouseX >= area.x &&
         mouseX <= area.x + area.width &&

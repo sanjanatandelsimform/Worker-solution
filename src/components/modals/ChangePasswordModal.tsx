@@ -12,7 +12,7 @@ import {
 import { Button } from "@/components/base/buttons/button";
 import { Input } from "@/components/base/input/input";
 import { InputGroup } from "@/components/base/input/input-group";
-import { Eye, EyeOff, X, AlertCircle } from "@untitledui/icons";
+import { X, AlertCircle } from "@untitledui/icons";
 import { ChangePasswordSuccessModal } from "./ChangePasswordSuccessModal";
 import ErrorMessage from "@/components/common/ErrorMessage";
 import { useAppDispatch, useAppSelector } from "@/store/hooks";
@@ -38,10 +38,6 @@ export const ChangePasswordModal = ({ isOpen, onClose }: ChangePasswordModalProp
   const passwordAttempts = useAppSelector(selectPasswordAttempts);
   const isAccountLocked = useAppSelector(selectIsAccountLocked);
   const lockoutExpiry = useAppSelector(selectLockoutExpiry);
-
-  const [showCurrentPassword, setShowCurrentPassword] = useState(false);
-  const [showNewPassword, setShowNewPassword] = useState(false);
-  const [showConfirmPassword, setShowConfirmPassword] = useState(false);
   const [isSuccessModalOpen, setIsSuccessModalOpen] = useState(false);
 
   const [currentPassword, setCurrentPassword] = useState("");
@@ -232,7 +228,7 @@ export const ChangePasswordModal = ({ isOpen, onClose }: ChangePasswordModalProp
                     hint={currentPasswordError}
                     placeholder="Enter current password"
                     size="md"
-                    type={showCurrentPassword ? "text" : "password"}
+                    type="password"
                     isInvalid={!!currentPasswordError}
                     value={currentPassword}
                     className="relative"
@@ -251,20 +247,6 @@ export const ChangePasswordModal = ({ isOpen, onClose }: ChangePasswordModalProp
                       }
                     }}
                   />
-                  <Button
-                    color="link"
-                    size="sm"
-                    type="button"
-                    onClick={() => setShowCurrentPassword(!showCurrentPassword)}
-                    aria-label={showCurrentPassword ? "Hide password" : "Show password"}
-                    className="absolute right-0 top-8"
-                  >
-                    {showCurrentPassword ? (
-                      <Eye className="size-5 text-ws-gray-400" />
-                    ) : (
-                      <EyeOff className="size-5 text-ws-gray-400" />
-                    )}
-                  </Button>
                 </InputGroup>
 
                 {/* New Password */}
@@ -276,7 +258,7 @@ export const ChangePasswordModal = ({ isOpen, onClose }: ChangePasswordModalProp
                     hint={newPasswordError}
                     placeholder="Enter new password"
                     size="md"
-                    type={showNewPassword ? "text" : "password"}
+                    type="password"
                     isInvalid={!!newPasswordError}
                     value={newPassword}
                     className="relative"
@@ -305,20 +287,6 @@ export const ChangePasswordModal = ({ isOpen, onClose }: ChangePasswordModalProp
                       }
                     }}
                   />
-                  <Button
-                    color="link"
-                    size="sm"
-                    type="button"
-                    onClick={() => setShowNewPassword(!showNewPassword)}
-                    aria-label={showNewPassword ? "Hide password" : "Show password"}
-                    className="absolute right-0 top-8"
-                  >
-                    {showNewPassword ? (
-                      <Eye className="size-5 text-ws-gray-400" />
-                    ) : (
-                      <EyeOff className="size-5 text-ws-gray-400" />
-                    )}
-                  </Button>
                 </InputGroup>
 
                 {/* Confirm Password */}
@@ -330,7 +298,7 @@ export const ChangePasswordModal = ({ isOpen, onClose }: ChangePasswordModalProp
                     hint={confirmPasswordError}
                     placeholder="Confirm new password"
                     size="md"
-                    type={showConfirmPassword ? "text" : "password"}
+                    type="password"
                     isInvalid={!!confirmPasswordError}
                     value={confirmPassword}
                     className="relative"
@@ -349,20 +317,6 @@ export const ChangePasswordModal = ({ isOpen, onClose }: ChangePasswordModalProp
                       }
                     }}
                   />
-                  <Button
-                    color="link"
-                    size="sm"
-                    type="button"
-                    onClick={() => setShowConfirmPassword(!showConfirmPassword)}
-                    aria-label={showConfirmPassword ? "Hide password" : "Show password"}
-                    className="absolute right-0 top-8"
-                  >
-                    {showConfirmPassword ? (
-                      <Eye className="size-5 text-ws-gray-400" />
-                    ) : (
-                      <EyeOff className="size-5 text-ws-gray-400" />
-                    )}
-                  </Button>
                 </InputGroup>
               </div>
             </ModalBody>

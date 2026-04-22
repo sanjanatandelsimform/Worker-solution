@@ -21,7 +21,7 @@ export function QuestionRadioGroup({
 }: QuestionRadioGroupProps): JSX.Element {
   return (
     <div className="space-y-3">
-      <Label isRequired={question.required} className="text-base text-ws-text-primary">
+      <Label isRequired={question.required} className="text-base font-normal text-ws-text-primary">
         {displayIndex}. {question.question}
       </Label>
       <FieldError message={error} />
@@ -34,7 +34,6 @@ export function QuestionRadioGroup({
           <label key={option.id} className="flex items-center gap-3 cursor-pointer">
             <RadioButton
               value={option.id}
-              className="border border-ws-border-primary rounded-full"
             />
             <span className="text-sm font-normal text-ws-text-secondary">{option.label}</span>
           </label>

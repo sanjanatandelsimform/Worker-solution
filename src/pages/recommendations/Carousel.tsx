@@ -77,9 +77,9 @@ export default function CarouselSection() {
                 <Carousel.Item key={slide.id}>
                   <div className="flex flex-col gap-2">
                     {/* Header with Icon and Title */}
-                    <div className="flex items-center gap-2 text-lg text-ws-navy-950 font-medium">
+                    <div className="flex items-center gap-2 text-lg font-medium text-ws-navy-950 ">
                       {slide.icon}
-                      <h3 className="text-lg font-medium leading-7 text-ws-navy-950">
+                      <h3 className="text-lg font-medium text-ws-navy-950 leading-7">
                         {slide.title}
                       </h3>
                     </div>
@@ -97,7 +97,7 @@ export default function CarouselSection() {
             </Carousel.Content>
 
             {/* Navigation Controls - Fixed position, doesn't slide */}
-            <div className="bg-ws-navy-25 flex items-center justify-center gap-2 border border-ws-gray-200 rounded-2xl px-3 py-2 w-fit">
+            <div className="bg-ws-navy-25 flex items-center justify-center gap-2 border border-ws-gray-200 rounded-2xl px-3 w-fit">
               {/* Previous Button */}
               <Carousel.PrevTrigger asChild>
                 <Button

@@ -257,7 +257,6 @@ export default function AssessmentWorkforcePage() {
               size="md"
               iconTrailing={<ChevronRight data-icon />}
               onClick={handleNext}
-              className="text-base font-semibold min-w-30 bg-ws-navy-800 text-ws-base-white hover:bg-ws-navy-800 focus:bg-ws-navy-800 active:bg-ws-navy-800"
               // isDisabled={isSaving}
               // isLoading={isSaving}
             >

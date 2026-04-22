@@ -82,7 +82,7 @@ export default function ProgressCard({
   //     </span>
   //   </div>
   // </div>
-// );
+  // );
 
   return (
     <div
@@ -143,7 +143,7 @@ export default function ProgressCard({
             </div>
           </div>
         </div>
-      // Comment code is require
+      ) : // Comment code is require
       //   <div className="flex gap-3">
       //   <div className="text-base font-normal text-ws-text-primary min-w-40">{progressLabel}</div>
       //   <div className="w-full bg-ws-light-teal-25 relative flex items-center">
@@ -156,7 +156,7 @@ export default function ProgressCard({
       //     </span>
       //   </div>
       // </div>
-      ) : null}
+      null}
     </div>
   );
 }

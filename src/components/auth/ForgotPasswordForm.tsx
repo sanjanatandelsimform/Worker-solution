@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { Button } from "../base/buttons/button";
 import { Input } from "../base/input/input";
 import { InputGroup } from "../base/input/input-group";
@@ -15,7 +15,6 @@ import {
 import checkmarkIcon from "@/assets/finch-checkmark.svg";
 import ErrorMessage from "../common/ErrorMessage";
 import { getErrorState, type ErrorState } from "@/utils/errorHandler";
-import { Label } from "../base/input/label";
 
 export default function ForgotPasswordForm() {
   const navigate = useNavigate();
@@ -89,27 +88,25 @@ export default function ForgotPasswordForm() {
             >
               {/* Email Input Field */}
               <InputGroup>
-                <div className="flex flex-col gap-1.5 w-full">
-                  <Label className="text-sm font-medium text-ws-text-secondary">
-                    Business Email Address <span className="text-ws-error-600">*</span>
-                  </Label>
-                  <Input
-                    name="email"
-                    icon={Mail01}
-                    iconClassName="text-ws-gray-400"
-                    size="md"
-                    placeholder="olivia@untitledui.com"
-                    hint={errors.email?.message}
-                    isInvalid={!!errors.email}
-                    value={getValues("email")}
-                    tooltip={errors.email ? errors.email.message : undefined}
-                    onChange={value => {
-                      const sanitized = value.replace(/^\s+/, "");
-                      setValue("email", sanitized);
-                      trigger("email");
-                    }}
-                  />
-                </div>
+                <Input
+                  name="email"
+                  label="Business Email Address"
+                  icon={Mail01}
+                  iconClassName="text-ws-gray-400"
+                  size="md"
+                  placeholder="olivia@untitledui.com"
+                  hint={errors.email?.message}
+                  isInvalid={!!errors.email}
+                  value={getValues("email")}
+                  tooltip={errors.email ? errors.email.message : undefined}
+                  onChange={value => {
+                    const sanitized = value.replace(/^\s+/, "");
+                    setValue("email", sanitized);
+                    trigger("email");
+                  }}
+                  helperTooltip={"Enter the business email address of the primary account holder"}
+                  isRequired
+                />
               </InputGroup>
 
               {/* Error Messages */}
@@ -143,14 +140,12 @@ export default function ForgotPasswordForm() {
             <p className="text-sm font-normal leading-5 text-ws-text-tertiary">
               Don’t have an account?
             </p>
-            <Button
-              href="/sign-up"
-              color="link-color"
-              size="md"
-              className="text-ws-light-teal-850 font-bold"
+            <Link
+              to="/sign-up"
+              className="text-sm font-normal text-ws-light-teal-850 hover:text-ws-light-teal-800"
             >
               Sign up
-            </Button>
+            </Link>
           </div>
         </div>
       </div>

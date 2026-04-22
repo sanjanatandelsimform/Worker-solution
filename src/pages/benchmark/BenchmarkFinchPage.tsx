@@ -14,11 +14,7 @@ import {
   selectIndustryTurnover,
 } from "@/store/selectors/industrySelectors";
 import { useIndustry } from "@/hooks/useIndustry";
-import {
-  formatCurrency,
-  formatCurrencyWithCents,
-  formatPercentage,
-} from "@/utils/formatters";
+import { formatCurrency, formatCurrencyWithCents, formatPercentage, formatToTwoDecimalPlaces } from "@/utils/formatters";
 import { Label } from "@/components/base/input/label";
 import TurnoverRateCard from "./TurnoverRateCard";
 import { GlobeIcon } from "@/assets/icons/Globe";
@@ -201,7 +197,7 @@ const benchmarkCardsConfig: BenchmarkCardConfig[] = [
       const d = data as Record<string, unknown> | null;
       const tr = d?.turnoverRate as Record<string, unknown> | null;
       const value = tr?.rate;
-      return typeof value === "number" ? formatPercentage(value) : (value as string) || "N/A";
+      return typeof value === "number" ? `${formatToTwoDecimalPlaces(value)}M` : (value as string) || "N/A";
     },
     tooltipText: "Turnover Rate",
     descriptionText: () =>
@@ -241,7 +237,7 @@ const benchmarkCardsConfig: BenchmarkCardConfig[] = [
       const d = data as Record<string, unknown> | null;
       const at = d?.avgTurnover as Record<string, unknown> | null;
       const value = at?.rate;
-      return typeof value === "number" ? `${value}%` : value != null ? `${value}%` : "N/A";
+      return typeof value === "number" && value !== undefined ? `${formatToTwoDecimalPlaces(value)}%` : value != null ? `${value}%` : "N/A";
     },
     tooltipText: "Average Cost of Turnover",
     descriptionText: (data: unknown) => {
@@ -374,19 +370,15 @@ export default function BenchmarkFinchPage() {
   const industryTurnOver = useAppSelector(selectIndustryTurnover);
 
   // areaMedianWage is a flat array from the industry API
-  const wageZipItems = (areaMedianWage ?? []).map(
-    (w: { zipcode: string; state: string }) => ({
-      label: w.zipcode,
-      id: w.zipcode,
-    })
-  );
+  const wageZipItems = (areaMedianWage ?? []).map((w: { zipcode: string; state: string }) => ({
+    label: w.zipcode,
+    id: w.zipcode,
+  }));
 
   const activeWageZip = selectedWageZip ?? areaMedianWage?.[0]?.zipcode ?? null;
 
   const selectedWageState =
-    areaMedianWage?.find(
-      (w: { zipcode: string }) => w.zipcode === activeWageZip
-    ) ??
+    areaMedianWage?.find((w: { zipcode: string }) => w.zipcode === activeWageZip) ??
     areaMedianWage?.[0] ??
     null;
 
@@ -408,9 +400,10 @@ export default function BenchmarkFinchPage() {
       id: "company-median-hourly-wages",
       title: "Company's Median Hourly Wages",
       icon: <TimerIcon className="size-5 text-ws-gray-500" />,
-      count: selectedWageState?.medianHourlyWages != null
-        ? formatCurrencyWithCents(selectedWageState.medianHourlyWages)
-        : "N/A",
+      count:
+        selectedWageState?.medianHourlyWages != null
+          ? formatCurrencyWithCents(selectedWageState.medianHourlyWages)
+          : "N/A",
     },
     {
       id: "median-living-wage",
@@ -599,20 +592,15 @@ export default function BenchmarkFinchPage() {
   ];
 
   // ── Housing Cost: zip items, selection, and derived data ──
-  const housingZipItems = (housingCostData ?? []).map(
-    (h: { zipcode: string }) => ({
-      label: h.zipcode,
-      id: h.zipcode,
-    })
-  );
+  const housingZipItems = (housingCostData ?? []).map((h: { zipcode: string }) => ({
+    label: h.zipcode,
+    id: h.zipcode,
+  }));
 
-  const activeHousingZip =
-    selectedHousingZipState ?? housingCostData?.[0]?.zipcode ?? null;
+  const activeHousingZip = selectedHousingZipState ?? housingCostData?.[0]?.zipcode ?? null;
 
   const selectedHousingData =
-    housingCostData?.find(
-      (h: { zipcode: string }) => h.zipcode === activeHousingZip
-    ) ??
+    housingCostData?.find((h: { zipcode: string }) => h.zipcode === activeHousingZip) ??
     housingCostData?.[0] ??
     null;
 
@@ -926,7 +914,7 @@ export default function BenchmarkFinchPage() {
 
       {/* ── Area Median Wage ── */}
       <div className="w-full flex flex-col bg-ws-light-teal-25 border border-ws-border-primary rounded-xl py-8 px-6">
-        <div className="w-full flex items-center justify-between flex-col xl:flex-row">
+        <div className="w-full flex items-start xl:items-center justify-between flex-col xl:flex-row">
           <div className="space-y-1">
             <h3 className="text-2xl lg:text-4xl font-medium text-ws-text-primary">
               {selectedWageState
@@ -938,7 +926,7 @@ export default function BenchmarkFinchPage() {
               selected geography.
             </p>
           </div>
-          <div className="flex flex-col items-start w-full lg:w-auto shrink-0 mt-4 xl:mt-0">
+          <div className="flex flex-col items-start w-full lg:w-auto shrink-0 mt-4 xl:mt-0 lg:min-w-71">
             <Label className="text-sm font-medium text-ws-text-secondary flex mb-1.5">
               Zip Code
             </Label>
@@ -965,7 +953,11 @@ export default function BenchmarkFinchPage() {
               <SalaryHourlySkeleton />
             </>
           ) : (
-            <SalaryHourlyFinchChart salaryData={salaryData} hourlyData={hourlyData} sourceAttribution={`Source: BLS, ${selectedWageState?.year}`}/>
+            <SalaryHourlyFinchChart
+              salaryData={salaryData}
+              hourlyData={hourlyData}
+              sourceAttribution={`Source: BLS, ${selectedWageState?.year}`}
+            />
           )}
           <div className="grid grid-cols-2 xl:grid-cols-4 gap-6 w-full mt-4">
             {isLoadingCards ? (
@@ -996,13 +988,13 @@ export default function BenchmarkFinchPage() {
 
       {/* ── Housing Burden ── */}
       <div className="w-full flex flex-col bg-ws-light-teal-25 border border-ws-border-primary rounded-xl py-8 px-6">
-        <div className="w-full flex items-start justify-between flex-col xl:flex-row">
+        <div className="w-full flex items-start xl:items-center justify-between flex-col xl:flex-row">
           <div className="space-y-1">
             <h3 className="text-2xl lg:text-4xl font-medium text-ws-text-primary">
               Housing Burden
             </h3>
           </div>
-          <div className="flex flex-col items-start w-full lg:w-auto shrink-0 mt-4 xl:mt-0">
+          <div className="flex flex-col items-start w-full lg:w-auto shrink-0 mt-4 xl:mt-0 lg:min-w-71">
             <Label className="text-sm font-medium text-ws-text-secondary flex mb-1.5">
               Zip Code
             </Label>
@@ -1090,9 +1082,10 @@ export default function BenchmarkFinchPage() {
         </div>
         <div>
           <p className="text-xs text-ws-text-tertiary mt-6">
-            <span className="font-semibold">Source:</span> U.S. Census Bureau, 5-Year American Community Survey
+            <span className="font-semibold">Source:</span> U.S. Census Bureau, 5-Year American
+            Community Survey
           </p>
-          <div className="w-full flex items-center justify-between mt-8 flex-col xl:flex-row">
+          <div className="w-full flex items-start xl:items-center justify-between mt-8 flex-col xl:flex-row">
             <div className="space-y-1 w-full">
               <h3 className="text-2xl font-medium text-ws-text-primary">
                 Working Class Housing Cost Burden
@@ -1104,10 +1097,11 @@ export default function BenchmarkFinchPage() {
                their heads. 
               </p>
               <p className="text-xs text-ws-text-tertiary mt-6">
-                <span className="font-semibold">Source:</span> U.S. Census Bureau, 5-Year American Community Survey
+                <span className="font-semibold">Source:</span> U.S. Census Bureau, 5-Year American
+                Community Survey
               </p>
             </div>
-            <div className="flex flex-col items-start w-full lg:w-auto shrink-0 mt-4 xl:mt-0">
+            <div className="flex flex-col items-start w-full lg:w-auto shrink-0 mt-4 xl:mt-0 lg:min-w-71">
               <Label className="text-ws-text-secondary flex mb-1.5">
                 Household type
               </Label>
