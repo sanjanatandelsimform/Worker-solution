@@ -331,7 +331,7 @@ export const DashboardPage = () => {
             {emailVerify && assessmentData?.data?.status !== "completed" && !isConnected && (
               <DashboardCard
                 classes={completionCount > 0 ? "border-ws-border-primary" :"bg-ws-light-teal-50 border-ws-border-primary" }
-                title="Take the Assessment"
+                title="Take the assessment"
                 titleClass="text-ws-navy-900"
                 description={
                   completionCount > 0 ? (
