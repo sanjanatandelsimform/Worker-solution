@@ -13,10 +13,28 @@ export default defineConfig({
     globals: true,
     environment: "jsdom",
     setupFiles: "./tests/setup.ts",
+    passWithNoTests: true,
     server: {
       deps: {
         inline: ["@asamuzakjp/css-color", "cssstyle"],
       },
+    },
+    coverage: {
+      provider: "v8",
+      reporter: ["text", "json", "html"],
+      reportsDirectory: "./coverage",
+      reportOnFailure: true,
+      all: true,
+      include: ["src/**/*.{ts,tsx}"],
+      exclude: [
+        "node_modules/**",
+        "tests/**",
+        "**/*.config.*",
+        "dist/**",
+        "src/main.tsx",
+        "src/vite-env.d.ts",
+        "src/**/*.d.ts",
+      ],
     },
   },
 });
