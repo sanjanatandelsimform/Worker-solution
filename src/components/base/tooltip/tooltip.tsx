@@ -92,7 +92,7 @@ export const Tooltip = ({
             <span className="text-xs font-semibold text-ws-base-white">{title}</span>
 
             {description && (
-              <span className="text-xs font-medium text-tooltip-supporting-text">
+              <span className="text-xs font-medium text-ws-base-white">
                 {description}
               </span>
             )}
