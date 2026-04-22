@@ -200,7 +200,7 @@ export default function WorkforceCompensation({
         {/* Chart */}
         <div className="bg-ws-base-white border border-ws-border-primary flex-1 w-full overflow-x-auto mt-6 rounded-xl">
           <h2 className="flex items-center mb-8 text-2xl font-medium text-ws-text-primary py-8 px-6 pb-0 gap-2">
-            Employee Contribution Per Paycheck Across Salary Bands
+            Employee Contribution Across Salary Bands
             <span>
               <Tooltip
                 title={false}
