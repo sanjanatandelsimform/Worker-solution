@@ -72,7 +72,7 @@ export default function TurnoverRateCard({
               {/* Section Title */}
               <h3 className="flex items-center justify-between text-sm font-semibold text-ws-text-tertiary uppercase mb-3">
                 {section.sectionTitle}
-                 <span className="text-xs font-normal text-ws-text-tertiary uppercase">{titleQatar}</span>
+                 {sectionIndex === 0 && <span className="text-xs font-normal text-ws-text-tertiary uppercase">{titleQatar}</span>}
               </h3>
 
               {/* Cards Grid */}
