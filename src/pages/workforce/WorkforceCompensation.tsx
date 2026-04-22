@@ -7,6 +7,8 @@ import SalaryChart from "@/pages/workforce/SalaryChart";
 import emptyStateWorkforce from "@/assets/placeholder.svg";
 import { OverviewCardSkeleton, BreakDownChartSkeleton } from "@/pages/workforce/WorkforceSkeletons";
 import { ArrowDown } from "@/assets/icons/ArrowDown";
+import { Tooltip, TooltipTrigger } from "@/components/base/tooltip/tooltip";
+import { InfoCircle } from "@untitledui/icons";
 
 interface CompensationCardConfig {
   id: string;
@@ -197,13 +199,22 @@ export default function WorkforceCompensation({
         </div>
         {/* Chart */}
         <div className="bg-ws-base-white border border-ws-border-primary flex-1 w-full overflow-x-auto mt-6 rounded-xl">
+          <h2 className="flex items-center mb-8 text-2xl font-medium text-ws-text-primary py-8 px-6 pb-0 gap-2">Employee Contribution Per Paycheck Across Salary Bands
+            <span>
+              <Tooltip title={false} description="Each bar indicates highest and lowest contribution across employees within a specific salary band per paycheck" placement="top" arrow={true}>
+              <TooltipTrigger className="group relative flex cursor-pointer flex-col items-center gap-2 text-fg-quaternary transition duration-100 ease-linear hover:text-fg-quaternary_hover focus:text-fg-quaternary_hover">
+                <InfoCircle className="text-ws-gray-400 w-5" />
+              </TooltipTrigger>
+            </Tooltip>
+            </span>
+          </h2>
           {isLoading ? (
             <BreakDownChartSkeleton />
           ) : (
             <SalaryChart
               data={salaryChartData}
-              title="Employee Contribution Per Paycheck Across Salary Bands"
-              tooltipText="Shows the range of employee contribution across employees within a specific salary band per paycheck"
+              //title="Employee Contribution Per Paycheck Across Salary Bands"
+              //tooltipText="Shows the range of employee contribution across employees within a specific salary band per paycheck"
             />
           )}
         </div>

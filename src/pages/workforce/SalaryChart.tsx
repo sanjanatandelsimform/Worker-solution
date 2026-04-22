@@ -43,7 +43,7 @@ const SalaryRangeChart: React.FC<SalaryRangeChartProps> = ({ data, title, toolti
       canvas.style.height = `${containerHeight}px`;
 
       // Chart dimensions - responsive
-      const chartHeight = 280;
+      const chartHeight = 380;
       const chartBottom = 350;
       const chartLeft = 80;
       const chartRight = containerWidth - 50;
@@ -160,7 +160,7 @@ const SalaryRangeChart: React.FC<SalaryRangeChartProps> = ({ data, title, toolti
     <div className="w-full">
       {/* TO DO 2204 : Need to update the styles of the title and tooltip position */}
       {title && (
-        <div className="flex items-center gap-2 mb-2">
+        <div className="flex items-center gap-2 mb-2 bg-ws-error-600">
           <h3 className="text-base font-semibold text-ws-text-primary">{title}</h3>
           {tooltipText && (
             <Tooltip title={tooltipText} description="" placement="top" arrow={true}>
