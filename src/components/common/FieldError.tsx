@@ -9,7 +9,7 @@ interface FieldErrorProps {
 export function FieldError({ message }: FieldErrorProps): JSX.Element | null {
   if (!message) return null;
   return (
-    <div className="flex items-center gap-2">
+    <div data-field-error className="flex items-center gap-2">
       <InputInfo className="text-ws-error-600" />
       <span className="text-sm text-ws-error-600">{message}</span>
     </div>

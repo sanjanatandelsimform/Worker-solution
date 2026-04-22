@@ -148,6 +148,11 @@ export default function AdditionalQuestions() {
 
     if (Object.keys(newErrors).length > 0) {
       setFieldErrors(newErrors);
+      setTimeout(() => {
+        document
+          .querySelector("[data-field-error]")
+          ?.scrollIntoView({ behavior: "smooth", block: "center" });
+      }, 0);
       return;
     }
 
