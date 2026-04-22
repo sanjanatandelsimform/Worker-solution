@@ -37,12 +37,12 @@ const variantStyles: Record<TableVariant, { table: string; row: string; header: 
   default: {
     table: "",
     row: "",
-    header: "bg-ws-gray-50",
+    header: "bg-ws-base-white",
   },
   striped: {
     table: "",
-    row: "[&:nth-child(even)]:bg-ws-gray-50",
-    header: "bg-ws-gray-50",
+    row: "[&:nth-child(even)]:bg-ws-base-white",
+    header: "bg-ws-base-white",
   },
   bordered: {
     table: "border border-ws-border-primary",
@@ -95,7 +95,7 @@ export function Table<T extends Record<string, unknown>>({
   };
 
   return (
-    <div className={cx("overflow-x-auto", className)}>
+    <div className={cx("rounded-lg overflow-x-auto", className)}>
       <table
         className={cx(
           "w-full border-collapse",
@@ -137,7 +137,7 @@ export function Table<T extends Record<string, unknown>>({
                 className={cx(
                   cellPadding[size],
                   "text-base text-left font-medium text-ws-text-primary border-r border-ws-border-primary last:border-r-0",
-                  column.sortable && "cursor-pointer hover:bg-ws-gray-100",
+                  column.sortable && "cursor-pointer hover:bg-ws-base-white",
                   column.className
                 )}
                 style={column.width ? { width: column.width } : undefined}
@@ -177,7 +177,7 @@ export function Table<T extends Record<string, unknown>>({
                   key={rowKey}
                   className={cx(
                     variantConfig.row,
-                    "hover:bg-ws-gray-50 transition-colors",
+                    "hover:bg-ws-base-white transition-colors",
                     onRowClick && "cursor-pointer",
                     isSelected && "bg-ws-light-teal-50",
                     "text-ws-text-primary"

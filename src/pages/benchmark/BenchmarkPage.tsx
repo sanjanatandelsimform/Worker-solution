@@ -11,10 +11,10 @@ import {
   selectIndustryHousingData,
   selectIndustryAreaMedianWage,
   selectIndustryTurnOverRate,
-  selectIndustrySeparationRate
+  selectIndustrySeparationRate,
 } from "@/store/selectors/industrySelectors";
 import { useIndustry } from "@/hooks/useIndustry";
-import { formatCurrency, formatCurrencyWithCents, formatPercentage } from "@/utils/formatters";
+import { formatCurrency, formatCurrencyWithCents, formatPercentage,formatToTwoDecimalPlaces } from "@/utils/formatters";
 import { Label } from "@/components/base/input/label";
 import { GlobeIcon } from "@/assets/icons/Globe";
 import { DollarIcon } from "@/assets/icons/DollarIcon";
@@ -184,7 +184,9 @@ const benchmarkCardsConfig: BenchmarkCardConfig[] = [
       const d = data as Record<string, unknown> | null;
       const tr = d?.turnoverRate as Record<string, unknown> | null;
       const value = tr?.rate;
-      return typeof value === "number" ? formatCurrency(value) : (value as string) || "No data";
+      // return typeof value === "number" ? formatCurrency(value) : (value as string) || "No data";
+      return typeof value === "number" ? `${formatToTwoDecimalPlaces(value)}M` : (value as string) || "N/A";
+
     },
     tooltipText: "Turnover Rate",
     descriptionText: () =>
@@ -224,10 +226,8 @@ const benchmarkCardsConfig: BenchmarkCardConfig[] = [
       const d = data as Record<string, unknown> | null;
       const at = d?.avgTurnover as Record<string, unknown> | null;
       const value = at?.rate;
-      return typeof value === "number"
-        ? `${formatCurrency(value)}%`
-        : value !== undefined
-          ? `${value}%`
+      return typeof value === "number" && value !== undefined
+          ? `${formatToTwoDecimalPlaces(value)}%`
           : "No data";
     },
     tooltipText: "Average Cost of Turnover",
@@ -308,7 +308,7 @@ export default function BenchmarkPage() {
   // ── Turnover cards (dynamic from new industryTurnover structure) ──
   const turnoverCardsConfig = (
     turnover: typeof industryTurnOverRate,
-    rateOfSeparation: typeof industrySeparationRate,
+    rateOfSeparation: typeof industrySeparationRate
   ): TurnoverCardConfig[] => [
     {
       id: "turnover-rate",
@@ -321,20 +321,14 @@ export default function BenchmarkPage() {
           cardsData: [
             {
               title: "Involuntary",
-              statics: turnover?.involuntary ? formatPercentage(
-                turnover?.involuntary
-              ): "No data",
-              progressValue:
-              turnover?.involuntary ?? 0,
+              statics: turnover?.involuntary ? formatPercentage(turnover?.involuntary) : "No data",
+              progressValue: turnover?.involuntary ?? 0,
               customBarColor: "bg-ws-light-teal-400",
             },
             {
               title: "Voluntary",
-              statics: turnover?.voluntary ? formatPercentage(
-                turnover?.voluntary
-              ): "No data",
-              progressValue:
-                turnover?.voluntary ?? 0,
+              statics: turnover?.voluntary ? formatPercentage(turnover?.voluntary) : "No data",
+              progressValue: turnover?.voluntary ?? 0,
               customBarColor: "bg-ws-navy-600",
             },
           ],
@@ -352,20 +346,18 @@ export default function BenchmarkPage() {
           cardsData: [
             {
               title: "Separation",
-              statics: rateOfSeparation?.separationRate ? formatPercentage(
-                rateOfSeparation.separationRate
-              ): "No data",
-              progressValue:
-                rateOfSeparation?.separationRate ?? 0,
+              statics: rateOfSeparation?.separationRate
+                ? formatPercentage(rateOfSeparation.separationRate)
+                : "No data",
+              progressValue: rateOfSeparation?.separationRate ?? 0,
               customBarColor: "bg-ws-light-teal-400",
             },
             {
               title: "Hiring Rate",
-              statics: rateOfSeparation?.hiringRate ? formatPercentage(
-                rateOfSeparation.hiringRate
-              ): "No data",
-              progressValue:
-                rateOfSeparation?.hiringRate ?? 0,
+              statics: rateOfSeparation?.hiringRate
+                ? formatPercentage(rateOfSeparation.hiringRate)
+                : "No data",
+              progressValue: rateOfSeparation?.hiringRate ?? 0,
               customBarColor: "bg-ws-navy-600",
             },
           ],
@@ -451,8 +443,7 @@ export default function BenchmarkPage() {
       id: "burdened-owners",
       title: "Burdened Owners",
       showInfoIcon: true,
-      tooltipText:
-        "Spend 30% or more of its gross income on rent and utilities.",
+      tooltipText: "Spend 30% or more of its gross income on rent and utilities.",
       progressLabel: "Metro Area",
       percentage: latestOwnersBurden?.burdened ?? 0,
       progressColor: "bg-ws-navy-600",
@@ -461,8 +452,7 @@ export default function BenchmarkPage() {
       id: "severely-burdened-owners",
       title: "Severely Burdened Owners",
       showInfoIcon: true,
-      tooltipText:
-        "Spend 50% or more of its gross income on rent and utilities.",
+      tooltipText: "Spend 50% or more of its gross income on rent and utilities.",
       progressLabel: "Metro Area",
       percentage: latestOwnersBurden?.severelyBurdened ?? 0,
       progressColor: "bg-ws-navy-600",
@@ -475,8 +465,7 @@ export default function BenchmarkPage() {
       id: "burdened-renters",
       title: "Burdened Renters",
       showInfoIcon: true,
-      tooltipText:
-        "Spend 30% or more of its gross income on rent and utilities",
+      tooltipText: "Spend 30% or more of its gross income on rent and utilities",
       progressLabel: "Metro Area",
       percentage: latestRentersBurden?.burdened ?? 0,
       progressColor: "bg-ws-light-teal-600",
@@ -485,8 +474,7 @@ export default function BenchmarkPage() {
       id: "severely-burdened-renters",
       title: "Severely Burdened Renters",
       showInfoIcon: true,
-      tooltipText:
-        "Spend 50% or more of its gross income on rent and utilities.",
+      tooltipText: "Spend 50% or more of its gross income on rent and utilities.",
       progressLabel: "Metro Area",
       percentage: latestRentersBurden?.severelyBurdened ?? 0,
       progressColor: "bg-ws-light-teal-600",
@@ -580,7 +568,9 @@ export default function BenchmarkPage() {
     }
   })();
 
-  {/* This is require if client want to add year */}
+  {
+    /* This is require if client want to add year */
+  }
   // const ownersPeriodLabel = latestOwnersBurden?.year
   //   ? `${latestOwnersBurden.year}`
   //   : "";
@@ -639,7 +629,7 @@ export default function BenchmarkPage() {
             <h3 className="text-2xl lg:text-4xl font-medium text-ws-text-primary">
               Industry Turnover
             </h3>
-            <p className="text-base text-ws-text-primary w-full xl:w-3/4 mt-2">
+            <p className="text-base text-ws-text-primary w-full mt-2">
               Industry-level turnover and separation trends to help you measure retention risk.
             </p>
           </div>
@@ -685,7 +675,7 @@ export default function BenchmarkPage() {
               selected geography.
             </p>
           </div>
-          <div className="flex flex-col items-start w-full lg:w-auto shrink-0 mt-4 lg:mt-0">
+          <div className="flex flex-col items-start w-full lg:w-auto shrink-0 mt-4 lg:mt-0 lg:min-w-71">
             <Label className="text-sm font-medium text-ws-text-secondary flex mb-1.5">
               Zip Code
             </Label>
@@ -752,7 +742,7 @@ export default function BenchmarkPage() {
               Housing Burden
             </h3>
           </div>
-          <div className="flex flex-col items-start w-full lg:w-auto shrink-0 mt-4 lg:mt-0">
+          <div className="flex flex-col items-start w-full lg:w-auto shrink-0 mt-4 lg:mt-0 lg:min-w-71">
             <Label className="text-sm font-medium text-ws-text-secondary flex mb-1.5">
               Zip Code
             </Label>
@@ -780,9 +770,9 @@ export default function BenchmarkPage() {
               : "No housing data available for the selected area"}
           </h3>
           <p className="text-base mt-4 text-ws-text-primary">
-            The concept of housing cost burden applies to both renters and homeowners, but it’s calculated differently for each. Both 
-            renters and homeowners can be housing-cost burdened; the main difference is what expenses are counted, not the income 
-            thresholds.
+            The concept of housing cost burden applies to both renters and homeowners, but it’s
+            calculated differently for each. Both renters and homeowners can be housing-cost
+            burdened; the main difference is what expenses are counted, not the income thresholds.
           </p>
         </div>
         <div className="my-4">
@@ -859,17 +849,17 @@ export default function BenchmarkPage() {
                 Working Class Housing Cost Burden
               </h3>
               <p className="max-w-3xl text-base text-ws-text-secondary mt-2">
-                In Manchester, New Hampshire, working class residents are increasingly stretched 
-                by rising rents that have outpaced wage growth, with many households spending 
-                well above the recommended 30 percent of their income just to keep a roof over 
-                their heads.
+                In Manchester, New Hampshire, working class residents are increasingly stretched by
+                rising rents that have outpaced wage growth, with many households spending well
+                above the recommended 30 percent of their income just to keep a roof over their
+                heads.
               </p>
               <p className="text-xs text-ws-text-tertiary mt-4">
                 <span className="font-semibold">Source:</span> U.S. Census Bureau, 5-Year American
                 Community Survey
               </p>
             </div>
-            <div className="flex flex-col items-start w-full lg:w-auto shrink-0 mt-4 lg:mt-0">
+            <div className="flex flex-col items-start w-full lg:w-auto shrink-0 mt-4 lg:mt-0 lg:min-w-71">
               <Label className="text-ws-text-secondary flex mb-1.5">
                 Household type
               </Label>

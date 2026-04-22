@@ -202,9 +202,9 @@ export default function WorkforceDemographics({
                     className="h-6 rounded-none"
                     customColor={item.customColor}
                   />
-                  <div className="flex min-w-8 text-base font-normal text-ws-base-black">
+                  {/* <div className="flex min-w-8 text-base font-normal text-ws-base-black">
                     {item.value}%
-                  </div>
+                  </div> */}
                 </div>
               ))}
             </>

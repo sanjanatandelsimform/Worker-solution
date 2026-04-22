@@ -20,24 +20,24 @@ export const SalaryHourlyComparisonChart = ({
   return (
     <div className="w-full rounded-lg border border-ws-border-primary bg-ws-base-white p-6">
       {/* Title */}
-      <h2 className="mb-8 text-2xl font-medium text-ws-text-primary">Salary & Hourly Comparison</h2>
+      <h2 className="mb-8 text-2xl font-medium text-ws-text-primary">Annual Salary & Hourly Comparison</h2>
 
       {/* Charts Grid */}
       <div className="grid grid-cols-1 xl:grid-cols-2 gap-8">
         {/* Salary Card */}
-        <div className="flex flex-col">
-          <h3 className="w-full flex items-center justify-center text-lg font-normal text-ws-text-primary">
+        <div className="flex flex-col w-full">
+          <h3 className="w-full flex items-center justify-center text-lg font-normal text-ws-text-primary mb-4">
             Salary
           </h3>
-          <SalaryChart data={salaryData} width={500} height={350} />
+          <SalaryChart data={salaryData} />
         </div>
 
-        {/* Hourly Card */}
-        <div className="flex flex-col">
-          <h3 className="w-full flex items-center justify-center text-lg font-normal text-ws-text-primary">
+        {/* Hourly Card */} 
+        <div className="flex flex-col w-full">
+          <h3 className="w-full flex items-center justify-center text-lg font-normal text-ws-text-primary mb-4">
             Hourly
           </h3>
-          <HourlyChart data={hourlyData} width={500} height={350} />
+          <HourlyChart data={hourlyData} />
         </div>
       </div>
 

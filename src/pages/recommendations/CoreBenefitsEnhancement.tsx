@@ -1,4 +1,3 @@
-import type { ComponentType } from "react";
 import { ProgressBar } from "@/components/base/progress-indicators/progress-indicators";
 import ProvenStrategiesCard from "./ProvenStrategiesCard";
 import { LikeIcon } from "@/assets/icons/likeIcon";
@@ -11,31 +10,30 @@ import {
 interface ProvenCardConfig {
   id: string;
   title: string;
-  titleIcon: ComponentType<{ className?: string }>;
-  descriptionText?: string;
+  descriptionText: string;
+  descriptionTextFlagTrue?: string;
 }
 
 const provenStrategiesCardsConfig: ProvenCardConfig[] = [
   {
     id: "nonElectiveMatch",
     title: "Non-elective match",
-    titleIcon: LikeIcon,
     descriptionText:
       "Employer contributions are often skewed due to high earners's contribution capacity. Separate the employee contribution from employer contribution.",
   },
   {
     id: "autoEnroll",
     title: "Auto Enrollment",
-    titleIcon: LikeIcon,
     descriptionText:
       "80% of employees automatically enrolled in a 3% 401K match stay within the retirement plan.",
   },
   {
     id: "healthcareAffordability",
     title: "Healthcare affordability",
-    titleIcon: UserGroupIcon,
     descriptionText:
       "Consider adjusting employee premiums to income level. QSEHRA and ICHRA plans can offer more flexibility and savings for employers and employees.",
+    descriptionTextFlagTrue:
+      "Your employee-only premium contribution to earnings average is below 11%, which is a positive indicator of healthcare affordability. (IRS affordability is 9.96%)",
   },
 ];
 
@@ -105,19 +103,22 @@ export default function CoreBenefitsEnhancement({
               </>
             ) : (
               <>
-                {provenStrategiesCardsConfig.map(card => (
-                  <ProvenStrategiesCard
-                    key={card.id}
-                    title={card.title}
-                    titleIcon={<card.titleIcon />}
-                    descriptionText={card.descriptionText}
-                    className={
-                      provenStrategyFlags[card.id as keyof typeof provenStrategyFlags]
-                        ? "bg-ws-success-25"
-                        : "bg-ws-warning-50"
-                    }
-                  />
-                ))}
+                {provenStrategiesCardsConfig.map(card => {
+                  const flag = provenStrategyFlags[card.id as keyof typeof provenStrategyFlags];
+                  return (
+                    <ProvenStrategiesCard
+                      key={card.id}
+                      title={card.title}
+                      titleIcon={flag ? <LikeIcon /> : <UserGroupIcon />}
+                      descriptionText={
+                        flag && card.descriptionTextFlagTrue
+                          ? card.descriptionTextFlagTrue
+                          : card.descriptionText
+                      }
+                      className={flag ? "bg-ws-success-25" : "bg-ws-warning-50"}
+                    />
+                  );
+                })}
               </>
             )}
           </div>

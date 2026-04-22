@@ -1,6 +1,6 @@
 export function LikeIcon({ className }: { readonly className?: string }) {
   return (
-    <span className={`custom-icon ${className ?? ""}`}>
+    <span data-testid="like-icon" className={`custom-icon ${className ?? ""}`}>
       <svg
         width="25"
         height="25"
