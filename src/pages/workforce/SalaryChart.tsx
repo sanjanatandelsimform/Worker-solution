@@ -1,4 +1,6 @@
 import React, { useEffect, useRef } from "react";
+import { Tooltip, TooltipTrigger } from "@/components/base/tooltip/tooltip";
+import { InfoCircle } from "@untitledui/icons";
 
 type ChartItem = {
   label: string;
@@ -10,9 +12,11 @@ type ChartItem = {
 
 interface SalaryRangeChartProps {
   data: ChartItem[];
+  title?: string;
+  tooltipText?: string;
 }
 
-const SalaryRangeChart: React.FC<SalaryRangeChartProps> = ({ data }) => {
+const SalaryRangeChart: React.FC<SalaryRangeChartProps> = ({ data, title, tooltipText }) => {
   const canvasRef = useRef<HTMLCanvasElement | null>(null);
   const containerRef = useRef<HTMLDivElement | null>(null);
 
@@ -153,21 +157,36 @@ const SalaryRangeChart: React.FC<SalaryRangeChartProps> = ({ data }) => {
   }, [data]);
 
   return (
-    <div
-      ref={containerRef}
-      className="w-full"
-      style={{
-        height: "450px",
-      }}
-    >
-      <canvas
-        ref={canvasRef}
+    <div className="w-full">
+      {/* TO DO 2204 : Need to update the styles of the title and tooltip position */}
+      {title && (
+        <div className="flex items-center gap-2 mb-2">
+          <h3 className="text-base font-semibold text-ws-text-primary">{title}</h3>
+          {tooltipText && (
+            <Tooltip title={tooltipText} description="" placement="top" arrow={true}>
+              <TooltipTrigger className="group relative flex cursor-pointer flex-col items-center gap-2 text-fg-quaternary transition duration-100 ease-linear hover:text-fg-quaternary_hover focus:text-fg-quaternary_hover">
+                <InfoCircle className="text-ws-gray-400 w-5" />
+              </TooltipTrigger>
+            </Tooltip>
+          )}
+        </div>
+      )}
+      <div
+        ref={containerRef}
+        className="w-full"
         style={{
-          display: "block",
-          width: "100%",
-          height: "100%",
+          height: "450px",
         }}
-      />
+      >
+        <canvas
+          ref={canvasRef}
+          style={{
+            display: "block",
+            width: "100%",
+            height: "100%",
+          }}
+        />
+      </div>
     </div>
   );
 };

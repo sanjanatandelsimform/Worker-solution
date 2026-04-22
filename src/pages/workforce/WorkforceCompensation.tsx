@@ -197,7 +197,15 @@ export default function WorkforceCompensation({
         </div>
         {/* Chart */}
         <div className="bg-ws-base-white border border-ws-border-primary flex-1 w-full overflow-x-auto mt-6 rounded-xl">
-          {isLoading ? <BreakDownChartSkeleton /> : <SalaryChart data={salaryChartData} />}
+          {isLoading ? (
+            <BreakDownChartSkeleton />
+          ) : (
+            <SalaryChart
+              data={salaryChartData}
+              title="Employee Contribution Per Paycheck Across Salary Bands"
+              tooltipText="Shows the range of employee contribution across employees within a specific salary band per paycheck"
+            />
+          )}
         </div>
         {isLoading ? (
           <div className="bg-ws-base-white border border-ws-border-primary rounded-xl w-full mt-4">
