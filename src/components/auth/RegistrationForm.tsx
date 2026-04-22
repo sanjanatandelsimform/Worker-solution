@@ -272,7 +272,7 @@ export function RegistrationForm() {
                   placeholder="(555) 000-0000"
                   type="tel"
                   size="md"
-                  //prefix="+1"
+                  prefix="+1"
                   hint={errors.businessPhone?.message}
                   isInvalid={!!errors.businessPhone}
                   value={phoneNumber}

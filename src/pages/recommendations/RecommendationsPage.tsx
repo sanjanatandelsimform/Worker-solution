@@ -307,7 +307,7 @@ export default function RecommendationsPage() {
                     <BenefitCard
                       key={recommendation.order}
                       badgeText={recommendation.category}
-                      badgeClassess="bg-ws-light-teal-25 text-xs font-normal ring-1 ring-ws-light-teal-800 px-4 py-1.5 text-ws-light-teal-900"
+                      badgeClassess="bg-ws-light-teal-25 text-xs font-normal ring-1 ring-ws-light-teal-800 px-2 py-1 text-ws-light-teal-900"
                       title={recommendation.title}
                       descriptionText={recommendation.description}
                       listTitle="Key Features"

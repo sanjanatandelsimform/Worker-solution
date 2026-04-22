@@ -58,8 +58,8 @@ export default function ProgressCard({
       <div className="text-base font-normal text-ws-text-primary min-w-40">{item.label}</div>
       <div className="w-full bg-ws-light-teal-25 overflow-hidden relative">
         <div
-          className={`h-7 flex items-center justify-center ${item.progressColor || "bg-ws-light-teal-25"} transition-all duration-300 w-${item.percentage}%`}
-          //style={{ width: `${item.percentage}%` }}
+          className={`h-7 flex items-center justify-center ${item.progressColor || "bg-ws-light-teal-25"} transition-all duration-300`}
+          style={{ width: `${item.percentage}%` }}
         >
           <span className="text-base font-normal text-ws-base-black drop-shadow-md flex items-center justify-end w-full pr-2">
             {item.percentage.toFixed(1)}%

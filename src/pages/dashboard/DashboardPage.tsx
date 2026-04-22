@@ -1,8 +1,7 @@
 import { useEffect, useState, useCallback, useRef } from "react";
-import { useNavigate, useLocation } from "react-router-dom";
+import { useNavigate, useLocation, Link } from "react-router-dom";
 import { DashboardSidebar } from "@/components/dashboard/DashboardSidebar";
 import emailIcon from "@/assets/mail-icon.svg";
-import checkIcon from "@/assets/file-check.svg";
 import finchLogo from "@/assets/finch-logo.svg";
 import DashboardCard from "./DashboardCard";
 import { useAppSelector, useAppDispatch } from "@/store/hooks";
@@ -29,6 +28,7 @@ import RecommendationsFinchPage from "../recommendations/RecommendationsFinchPag
 import BenchmarkFinchPage from "../benchmark/BenchmarkFinchPage";
 import WorkforcePage from "../workforce/WorkforcePage";
 import { fetchRecommendations } from "@/store/slices/recommendationsSlice";
+import { ArrowLeft } from "@/assets/icons/ArrowLeft";
 
 const BASE_TAB_ITEMS = [{ id: "finchRecommendations", label: "Recommendations" }];
 
@@ -265,7 +265,7 @@ export const DashboardPage = () => {
         {/* Main Content */}
         <main className="flex-1 overflow-y-auto p-5 xl:p-10 xl:pl-2">
           <div className="space-y-6"></div>
-          <div>
+          <div className="w-full">
             <h2 className="text-4xl font-bold text-ws-text-primary">
               {assessmentData?.data?.status !== "completed" ? (
                 `Welcome, ${user?.firstName ? `${user.firstName}!` : ""}`
@@ -274,9 +274,9 @@ export const DashboardPage = () => {
               )}
             </h2>
             {!emailVerify && (
-              <p className="text-base font-normal text-ws-text-primary mt-4">
-                Here's an overview of your workforce, industry, and some recommendations with partners that can add more value to your benefits
-                packages and employee support.
+              <p className="text-base font-normal text-ws-text-secondary mt-4">
+                Here's an overview of your workforce, industry, and some recommendations with
+                partners that can add more value to your benefits packages and employee support.
               </p>
             )}
 
@@ -299,13 +299,17 @@ export const DashboardPage = () => {
                   <h2 className="text-ws-navy-900 text-xl font-medium mb-2">
                     Complete your assessment
                   </h2>
-                  <p className="text-ws-navy-900 text-base pr-10">
+                  <p className="text-ws-navy-900 text-base font-normal pr-10">
                     Pick up where you left off and complete your company assessment for results and
                     recommendations.
                   </p>
                 </div>
                 <div className="flex-1 rounded-lg">
-                  <img src={fpoHero} alt="Insight hero" className="w-full" />
+                  <img
+                    src={fpoHero}
+                    alt="Insight hero"
+                    className="w-full h-full max-h-25 object-cover rounded-lg"
+                  />
                 </div>
               </div>
             )}
@@ -330,22 +334,26 @@ export const DashboardPage = () => {
 
             {emailVerify && assessmentData?.data?.status !== "completed" && !isConnected && (
               <DashboardCard
-                classes={completionCount > 0 ? "border-ws-border-primary" :"bg-ws-light-teal-50 border-ws-border-primary" }
-                title="Take the Assessment"
-                titleClass="text-ws-navy-900"
+                classes={
+                  completionCount > 0
+                    ? "border-ws-border-primary"
+                    : "bg-ws-light-teal-50 border-ws-border-primary"
+                }
+                title="Take the assessment"
+                titleClass="text-ws-text-primary"
                 description={
                   completionCount > 0 ? (
                     <div className="text-base max-w-3xl text-ws-navy-900">
                       Complete our quick assessment for customized recommendations and insights.
                     </div>
                   ) : (
-                    <div className="text-base max-w-3xl text-ws-navy-900">
+                    <div className="text-base max-w-4xl text-ws-navy-900">
                       Get started on your assessment. Choose the best plan to achieve your workforce
                       goal at no cost to you.
                     </div>
                   )
                 }
-                avatarIconSrc={checkIcon}
+                avatarIconSrc={<ArrowLeft />}
                 buttonLabel={completionCount > 0 ? "Continue" : "Start assessment"}
                 buttonType={emailVerify ? "primary" : "secondary"}
                 buttonIsDisabled={!emailVerify}
@@ -360,76 +368,95 @@ export const DashboardPage = () => {
             emailVerify &&
             assessmentData?.data?.status !== "completed" &&
             !isConnected && (
-              <div className="flex justify-between gap-4 mt-6 ">
-                <div className="flex-1 py-6 px-7 border border-ws-border-primary rounded-xl relative h-auto">
-                  <div className="flex items-center justify-between border-b border-ws-border-primary pb-4 mb-4">
-                    <h2 className="flex items-center text-ws-text-primary text-2xl font-medium">
-                      Connect with <img src={finchLogo} alt="Finch Logo" className="ml-2" />
-                    </h2>
-                    <p className="text-ws-text-tertiary text-base">Free</p>
+              <div className="flex flex-col mt-6">
+                <div className="flex justify-between gap-4">
+                  <div className="flex-1 py-6 px-7 border border-ws-border-primary rounded-xl flex flex-col">
+                    <div className="flex items-center justify-between border-b border-ws-border-primary pb-4 mb-4">
+                      <h2 className="flex items-center text-ws-text-primary text-2xl font-medium">
+                        Connect with <img src={finchLogo} alt="Finch Logo" className="ml-2" />
+                      </h2>
+                      <p className="text-ws-text-tertiary text-base">Free</p>
+                    </div>
+                    <div className="flex-1">
+                      <p className="text-ws-text-tertiary text-base">
+                        Finch handles the connection for you, syncing all your data automatically so
+                        you get richer insights and expanded dashboard views — without any extra
+                        work on your end.
+                      </p>
+                      <ul className="text-ws-text-tertiary text-base list-disc list-inside my-4">
+                        <li>Results in as little as 3-5 minutes*</li>
+                        <li>Custom workforce data and insights</li>
+                        <li>Additional dashboard views plus everything you get in the free plan</li>
+                      </ul>
+                      <p className="text-ws-text-tertiary text-base">
+                        By connecting with Finch, you'll be redirected to their site to complete the
+                        setup. Please note that any information shared directly with Finch is
+                        subject to their privacy policy and is outside of our responsibility.
+                      </p>
+                      <p className="text-xs text-ws-text-tertiary mt-4">
+                        *Result loading time is payroll provider-specific
+                      </p>
+                    </div>
+                    <div className="mt-5">
+                      <Button
+                        iconTrailing={<ChevronRight />}
+                        size="sm"
+                        color="primary"
+                        className="min-w-30 bg-ws-navy-800"
+                        onClick={connectWithFinch}
+                        isDisabled={isFinchLoading}
+                      >
+                        Start with Finch
+                      </Button>
+                    </div>
                   </div>
-                  <div className="h-auto">
-                    <p className="text-ws-text-tertiary text-base">
-                      Finch handles the connection for you, syncing all your data automatically so
-                      you get richer insights and expanded dashboard views — without any extra work
-                      on your end.
-                    </p>
-                    <ul className="text-ws-text-tertiary text-base list-disc list-inside my-4">
-                      <li>Results in as little as 3-5 minutes*</li>
-                      <li>Custom workforce data and insights</li>
-                      <li>Additional dashboard views plus everything you get in the free plan</li>
-                    </ul>
-                    <p className="text-ws-text-tertiary text-base">
-                      By connecting with Finch, you'll be redirected to their site to complete the
-                      setup. Please note that any information shared directly with Finch is subject
-                      to their privacy policy and is outside of our responsibility.
-                    </p>
-                    <p className="text-xs text-ws-text-tertiary mt-4">
-                      *Result loading time is payroll provider-specific
-                    </p>
-                  </div>
-                  <div className="mt-5">
-                    <Button
-                      iconTrailing={<ChevronRight />}
-                      size="sm"
-                      color="primary"
-                      className="min-w-30 bg-ws-navy-800"
-                      onClick={connectWithFinch}
-                      isDisabled={isFinchLoading}
-                    >
-                      Start with Finch
-                    </Button>
+                  <div className="flex-1 py-6 px-7 border border-ws-border-primary rounded-xl flex flex-col">
+                    <div className="flex items-center justify-between border-b border-ws-border-primary pb-4 mb-4">
+                      <h2 className="text-ws-text-primary text-2xl font-medium">Manual Entry</h2>
+                      <p className="text-ws-text-tertiary text-base">Free</p>
+                    </div>
+                    <div className="flex-1">
+                      <p className="text-ws-text-tertiary text-base">
+                        Fill out a simple assessment form and get high level recommendations to
+                        enhance your benefits program.
+                      </p>
+
+                      <ul className="text-ws-text-tertiary text-base list-disc list-inside my-4">
+                        <li>Results in 10 min</li>
+                        <li>Industry benchmarks</li>
+                        <li>Placed-based insights</li>
+                        <li>Annual data updates</li>
+                      </ul>
+                    </div>
+                    <div className="mt-5">
+                      <Button
+                        iconTrailing={<ChevronRight />}
+                        size="sm"
+                        color="primary"
+                        className="min-w-30 bg-ws-navy-800"
+                        onClick={handleGetStarted}
+                      >
+                        Let’s get started
+                      </Button>
+                    </div>
                   </div>
                 </div>
-                <div className="flex-1 py-6 px-7 border border-ws-border-primary rounded-xl relative">
-                  <div className="flex items-center justify-between border-b border-ws-border-primary pb-4 mb-4">
-                    <h2 className="text-ws-text-primary text-2xl font-medium">Basic Plan</h2>
-                    <p className="text-ws-text-tertiary text-base">Free</p>
-                  </div>
-                  <div className="h-auto">
-                    <p className="text-ws-text-tertiary text-base">
-                      Fill out a simple assessment form and get high level recommendations to
-                      enhance your benefits program.
-                    </p>
-
-                    <ul className="text-ws-text-tertiary text-base list-disc list-inside my-4">
-                      <li>Results in 10 min</li>
-                      <li>Industry benchmarks</li>
-                      <li>Placed-based insights</li>
-                      <li>Annual data updates</li>
-                    </ul>
-                  </div>
-                  <div className="absolute bottom-6 left-7">
-                    <Button
-                      iconTrailing={<ChevronRight />}
-                      size="sm"
-                      color="primary"
-                      className="min-w-30 bg-ws-navy-800"
-                      onClick={handleGetStarted}
-                    >
-                      Let’s Get Started
-                    </Button>
-                  </div>
+                <div className="w-full mt-15">
+                  <p className="text-xs text-ws-text-primary">
+                    This product provides informational insights and recommendations based on the
+                    data you share and industry benchmarks. It does not provide legal, financial,
+                    tax, or benefits advice, and recommendations are not guarantees of outcomes or
+                    results. Actual results may vary, and you are responsible for evaluating and
+                    implementing any recommendations based on your organization’s specific
+                    circumstances. Read our{" "}
+                    <Link to="/terms-page" className="text-ws-light-teal-850 underline">
+                      Terms & Conditions
+                    </Link>{" "}
+                    and{" "}
+                    <Link to="/privacy-policy" className="text-ws-light-teal-850 underline">
+                      Privacy Policy
+                    </Link>
+                  </p>
                 </div>
               </div>
             )}
@@ -482,7 +509,7 @@ export const DashboardPage = () => {
             <div className="mt-10">
               <Tabs selectedKey={activeTab} onSelectionChange={key => setActiveTab(String(key))}>
                 <Tabs.List
-                  className="bg-ws-light-teal-50 pt-9 pl-6 pr-6 rounded-t-lg text-ws-light-teal-900 overflow-auto"
+                  className="bg-ws-light-teal-50 pt-0 pl-6 pr-6 rounded-t-lg text-ws-light-teal-900 overflow-auto"
                   type="underline"
                   items={[
                     ...BASE_TAB_ITEMS,
@@ -518,22 +545,6 @@ export const DashboardPage = () => {
             </div>
           )}
         </main>
-        {/* <div className="w-full relative lg:-top-8">
-          <p className="text-xs color-base-black">
-            This product provides informational insights and recommendations based on the data you
-            share and industry benchmarks. It does not provide legal, financial, tax, or benefits
-            advice, and recommendations are not guarantees of outcomes or results. Actual results
-            may vary, and you are responsible for evaluating and implementing any recommendations
-            based on your organization’s specific circumstances. Read our{" "}
-            <Link to="/terms-page" className="text-ws-primary-500 underline">
-              Terms & Conditions
-            </Link>{" "}
-            and{" "}
-            <Link to="/privacy-policy" className="text-ws-primary-500 underline">
-              Privacy Policy
-            </Link>
-          </p>
-        </div> */}
       </div>
 
       {/* Modals */}
