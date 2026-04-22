@@ -78,6 +78,7 @@ export const DashboardPage = () => {
   const [showGoalsEmptyWarning, setShowGoalsEmptyWarning] = useState(false);
   const [activeTab, setActiveTab] = useState("finchRecommendations");
   const fromGoalsCompletionRef = useRef(false);
+  const mainRef = useRef<HTMLElement>(null);
 
   const refetchUserData = useCallback(async () => {
     if (user?.id) {
@@ -264,7 +265,7 @@ export const DashboardPage = () => {
       {/* Main Content Area */}
       <div className="flex flex-1 flex-col overflow-hidden">
         {/* Main Content */}
-        <main className="flex-1 overflow-y-auto p-5 xl:p-10 xl:pl-2">
+        <main ref={mainRef} className="flex-1 overflow-y-auto p-5 xl:p-10 xl:pl-2">
           <div className="space-y-6"></div>
           <div className="w-full">
             <h2 className="text-4xl font-bold text-ws-text-primary">
@@ -280,23 +281,26 @@ export const DashboardPage = () => {
                 partners that can add more value to your benefits packages and employee support.
               </p>
             )}
-            {emailVerify && assessmentData?.data?.status == "completed"  && assessmentData?.assessmentType === "manual" && (
+            {emailVerify &&
+              assessmentData?.data?.status == "completed" &&
+              assessmentData?.assessmentType === "manual" && (
+                <p className="text-base font-normal text-ws-text-primary mt-4">
+                  Here's an overview of your workforce, industry, and some recommendations with
+                  partners that can add more value to your benefits packages and employee support.
+                </p>
+              )}
+            {emailVerify && assessmentData?.assessmentType == "finch" && isConnected && (
               <p className="text-base font-normal text-ws-text-primary mt-4">
                 Here's an overview of your workforce, industry, and some recommendations with
                 partners that can add more value to your benefits packages and employee support.
               </p>
             )}
-            {emailVerify && assessmentData?.assessmentType == "finch"  && isConnected && (
-              <p className="text-base font-normal text-ws-text-primary mt-4">
-                Here's an overview of your workforce, industry, and some recommendations with
-                partners that can add more value to your benefits packages and employee support.
-              </p>
-            )}
-            
+
             {emailVerify && assessmentData?.data?.status !== "completed" && !isConnected && (
               <p className="text-base font-normal text-ws-text-primary mt-4">
-               Connect your payroll to BeneStats with Finch or manually answer a few questions to receive an overview of your workforce, industry, 
-               and some recommendations with partners that can add more value to your benefits packages and employee support.
+                Connect your payroll to BeneStats with Finch or manually answer a few questions to
+                receive an overview of your workforce, industry, and some recommendations with
+                partners that can add more value to your benefits packages and employee support.
               </p>
             )}
             {/* Error Message */}
@@ -547,7 +551,10 @@ export const DashboardPage = () => {
                 )}
                 <Tabs.Panel id="finchRecommendations" className="pt-0">
                   <RecommendationsFinchPage
-                    onNavigateToWorkforce={() => setActiveTab("finchWorkforce")}
+                    onNavigateToWorkforce={() => {
+                      setActiveTab("finchWorkforce");
+                      mainRef.current?.scrollTo({ top: 0, behavior: "smooth" });
+                    }}
                   />
                 </Tabs.Panel>
                 {isConnected && (
