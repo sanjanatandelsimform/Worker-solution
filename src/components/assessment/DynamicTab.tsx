@@ -24,7 +24,6 @@ interface DynamicTabProps {
   stateOptions?: StateOption[];
 }
 
-// Health and Wellness option values from the supplementalBenefits question.
 // If any of these are selected, the HealthCare subsection is shown.
 const HEALTH_WELLNESS_VALUES = new Set([
   "Healthcare",
