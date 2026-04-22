@@ -271,7 +271,7 @@ export const DashboardPage = () => {
               {assessmentData?.data?.status !== "completed" && !isFinchAssessmentIncomplete ? (
                 `Welcome, ${user?.firstName ? `${user.firstName}!` : ""}`
               ) : (
-                <span className="font-bold mb-4 flex">{`Hi ${user?.firstName}!`}</span>
+                <span className="font-bold mb-4 flex">{`Hi, ${user?.firstName}!`}</span>
               )}
             </h2>
             {!emailVerify && (
