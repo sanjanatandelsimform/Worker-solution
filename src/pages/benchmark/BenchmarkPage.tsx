@@ -629,7 +629,7 @@ export default function BenchmarkPage() {
             <h3 className="text-2xl lg:text-4xl font-medium text-ws-text-primary">
               Industry Turnover
             </h3>
-            <p className="text-base text-ws-text-primary w-full xl:w-3/4 mt-2">
+            <p className="text-base text-ws-text-primary w-full mt-2">
               Industry-level turnover and separation trends to help you measure retention risk.
             </p>
           </div>
@@ -675,7 +675,7 @@ export default function BenchmarkPage() {
               selected geography.
             </p>
           </div>
-          <div className="flex flex-col items-start w-full lg:w-auto shrink-0 mt-4 lg:mt-0">
+          <div className="flex flex-col items-start w-full lg:w-auto shrink-0 mt-4 lg:mt-0 lg:min-w-71">
             <Label className="text-sm font-medium text-ws-text-secondary flex mb-1.5">
               Zip Code
             </Label>
@@ -742,7 +742,7 @@ export default function BenchmarkPage() {
               Housing Burden
             </h3>
           </div>
-          <div className="flex flex-col items-start w-full lg:w-auto shrink-0 mt-4 lg:mt-0">
+          <div className="flex flex-col items-start w-full lg:w-auto shrink-0 mt-4 lg:mt-0 lg:min-w-71">
             <Label className="text-sm font-medium text-ws-text-secondary flex mb-1.5">
               Zip Code
             </Label>
@@ -859,8 +859,10 @@ export default function BenchmarkPage() {
                 Community Survey
               </p>
             </div>
-            <div className="flex flex-col items-start w-full lg:w-auto shrink-0 mt-4 lg:mt-0">
-              <Label className="text-ws-text-secondary flex mb-1.5">Household type</Label>
+            <div className="flex flex-col items-start w-full lg:w-auto shrink-0 mt-4 lg:mt-0 lg:min-w-71">
+              <Label className="text-ws-text-secondary flex mb-1.5">
+                Household type
+              </Label>
               <Select
                 className="w-full flex items-start min-w-50 md:min-w-full lg:min-w-50"
                 isRequired

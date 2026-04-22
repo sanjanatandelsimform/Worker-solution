@@ -58,7 +58,7 @@ export default function SalaryChart({ data, width = 500, height = 350 }: SalaryC
 
     ctx.clearRect(0, 0, width, height);
 
-    const padding = { top: 20, right: 30, bottom: 80, left: 50 };
+    const padding = { top: 20, right: 10, bottom: 80, left: 70 };
     const chartWidth = width - padding.left - padding.right;
     const chartHeight = height - padding.top - padding.bottom;
 

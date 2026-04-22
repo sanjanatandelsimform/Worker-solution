@@ -13,6 +13,7 @@ import { Button } from "../base/buttons/button";
 import { useModalConfig } from "@/hooks/useModalConfig";
 import signoutIcon from "@/assets/signout-icon.svg";
 import siteLogo from "@/assets/logo.svg";
+import { Tooltip, TooltipTrigger } from "../base/tooltip/tooltip";
 
 interface DashboardSidebarProps {
   activeUrl?: string;
@@ -204,7 +205,12 @@ export const DashboardSidebar = ({ activeUrl = "/" }: DashboardSidebarProps) => 
                 {displayName}
               </p>
               <p className="text-sm text-ws-text-tertiary mt-1 truncate transition-opacity duration-300">
-                {displayEmail}
+                <Tooltip title={displayEmail}>
+                <TooltipTrigger className="group relative flex cursor-pointer flex-col items-center gap-2 text-fg-quaternary transition duration-100 ease-linear hover:text-fg-quaternary_hover focus:text-fg-quaternary_hover">
+                    {displayEmail}
+                </TooltipTrigger>
+              </Tooltip>
+                
               </p>
               {/* This is require */}
                   {/* <p className="text-sm text-ws-text-tertiary mt-1 truncate transition-opacity duration-300">
@@ -236,7 +242,7 @@ export const DashboardSidebar = ({ activeUrl = "/" }: DashboardSidebarProps) => 
             </div>
             <button
               onClick={() => setLogoutError(null)}
-              className="flex-shrink-0 text-red-400 hover:text-ws-error-600"
+              className="flex-shrink-0 text-ws-error-400 hover:text-ws-error-600"
             >
               <svg className="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
                 <path

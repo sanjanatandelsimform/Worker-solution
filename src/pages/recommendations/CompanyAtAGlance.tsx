@@ -152,12 +152,12 @@ export default function CompanyAtAGlance({
                   key={card.id}
                   classess="border-ws-border-secondary"
                   title={card.title}
-                  titleClass="text-ws-text-tertiary text-sm"
+                  titleClass="text-ws-text-tertiary text-sm font-normal"
                   countIcon={<Icon className="size-5 text-ws-gray-500" />}
                   count={String(card.format(companyGlanceData))}
-                  countClass="text-ws-light-teal-900 text-3xl xl:text-4xl font-medium mt-6"
+                  countClass="text-ws-light-teal-900 text-3xl font-medium mt-6"
                   infoIcon={card.infoIcon}
-                  infoCircleClass={card.infoIcon ? "text-ws-text-secondary0 size-4" : undefined}
+                  infoCircleClass={card.infoIcon ? "text-ws-text-secondary size-4" : undefined}
                   tooltipText={card.tooltipText}
                   descriptionText={card.descriptionText}
                   placements={card.placements}

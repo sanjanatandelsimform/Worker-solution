@@ -63,10 +63,10 @@ export const styles = sortCx({
     primary: {
       root: [
         "bg-ws-navy-900 text-ws-base-white border border-ws-gray-950/18",
-        "hover:bg-ws-navy-600 hover:text-ws-base-white hover:border-ws-gray-950/18",
+        "hover:bg-ws-navy-600 hover:text-ws-base-white hover:border-ws-gray-950/18 transition-all duration-200",
         "active:bg-ws-navy-900 active:border-ws-gray-950/18",
         "disabled:bg-ws-gray-100 disabled:border-ws-gray-200 disabled:text-ws-gray-400 shadow-ws-shadow-xs",
-        "*:data-icon:text-ws-base-white hover:*:data-icon:text-ws-base-white",
+        "*:data-icon:text-ws-base-white hover:*:data-icon:text-ws-base-white transition-all duration-200",
       ].join(" "),
     },
 
@@ -74,10 +74,10 @@ export const styles = sortCx({
     secondary: {
       root: [
         "bg-ws-navy-800 text-ws-base-white border border-ws-gray-950/18",
-        "hover:bg-ws-navy-600 hover:text-ws-base-white hover:border-ws-gray-950/18",
+        "hover:bg-ws-navy-600 hover:text-ws-base-white hover:border-ws-gray-950/18 transition-all duration-200",
         "active:bg-ws-navy-800 active:border-ws-gray-950/18",
         "disabled:bg-ws-gray-100 disabled:border-ws-gray-200 disabled:text-ws-gray-400",
-        "*:data-icon:text-ws-base-white hover:*:data-icon:text-ws-base-white",
+        "*:data-icon:text-ws-base-white hover:*:data-icon:text-ws-base-white transition-all duration-200",
       ].join(" "),
     },
 
@@ -85,10 +85,10 @@ export const styles = sortCx({
     tertiary: {
       root: [
         "bg-ws-base-white text-ws-navy-800 border border-ws-navy-800",
-        "hover:bg-ws-navy-600 hover:text-ws-base-white hover:border-ws-navy-800",
+        "hover:bg-ws-navy-600 hover:text-ws-base-white hover:border-ws-navy-800 transition-all duration-200",
         "active:bg-ws-base-white active:border-ws-navy-800",
         "disabled:bg-ws-gray-100 disabled:border-ws-gray-200 disabled:text-ws-gray-400",
-        "*:data-icon:text-ws-navy-900 hover:*:data-icon:text-ws-navy-800",
+        "*:data-icon:text-ws-navy-900 hover:*:data-icon:text-ws-base-white transition-all duration-200",
       ].join(" "),
     },
 
@@ -96,10 +96,10 @@ export const styles = sortCx({
     subtle: {
       root: [
         "bg-ws-base-white text-ws-navy-800 border border-ws-gray-200",
-        "hover:bg-ws-navy-600 hover:text-ws-base-white hover:border-ws-navy-800",
+        "hover:bg-ws-navy-600 hover:text-ws-base-white hover:border-ws-navy-800 transition-all duration-200",
         "active:bg-ws-base-white active:border-ws-gray-200",
         "disabled:bg-ws-gray-100 disabled:border-ws-gray-200 disabled:text-ws-gray-400",
-        "*:data-icon:text-ws-navy-800 hover:*:data-icon:text-ws-navy-800",
+        "*:data-icon:text-ws-navy-800 hover:*:data-icon:text-ws-navy-800 transition-all duration-200",
       ].join(" "),
     },
 
@@ -107,19 +107,19 @@ export const styles = sortCx({
     link: {
       root: [
         "bg-transparent border-none text-ws-navy-800 underline",
-        "hover:text-ws-navy-600 hover:text-ws-navy-800 hover:no-underline",
+        "hover:text-ws-navy-600 hover:text-ws-navy-800 hover:no-underline transition-all duration-200",
         "active:text-ws-navy-800",
         "disabled:text-ws-gray-400 disabled:no-underline",
-        "*:data-icon:text-ws-navy-800 hover:*:data-icon:text-ws-navy-800",
+        "*:data-icon:text-ws-navy-800 hover:*:data-icon:text-ws-navy-800 transition-all duration-200",
       ].join(" "),
     },
     error: {
       root: [
         "bg-ws-error-600 text-ws-base-white border border-ws-error-600",
-        "hover:bg-ws-error-700 hover:border-ws-error-700",
+        "hover:bg-ws-error-200 hover:border-ws-error-700 transition-all duration-200 hover:text-ws-error-700",
         "active:bg-ws-error-800 active:border-ws-error-800",
         "disabled:bg-ws-gray-100 disabled:border-ws-gray-100 disabled:text-ws-gray-400",
-        "*:data-icon:text-ws-base-white hover:*:data-icon:text-ws-base-white",
+        "*:data-icon:text-ws-base-white hover:*:data-icon:text-ws-base-white transition-all duration-200",
       ].join(" "),
     },
 
