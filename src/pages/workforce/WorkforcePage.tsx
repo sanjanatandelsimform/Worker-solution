@@ -3,7 +3,6 @@ import { GetInTouchModal } from "@/components/modals/GetInTouchModal";
 import { useAppSelector } from "@/store/hooks";
 import { selectWorkforceLoading, selectWorkforceError } from "@/store/selectors/workforceSelectors";
 import ErrorMessage from "@/components/common/ErrorMessage";
-import { Link } from "react-router-dom";
 import WorkforceOverview from "@/pages/workforce/WorkforceOverview";
 import WorkforceParticipation from "@/pages/workforce/WorkforceParticipation";
 import WorkforceDemographics from "@/pages/workforce/WorkforceDemographics";
@@ -12,6 +11,7 @@ import { useWorkforceOverviewConfig } from "@/hooks/useWorkforceOverviewConfig";
 import { useWorkforceParticipationConfig } from "@/hooks/useWorkforceParticipationConfig";
 import { useWorkforceDemographicsConfig } from "@/hooks/useWorkforceDemographicsConfig";
 import { useWorkforceCompensationConfig } from "@/hooks/useWorkforceCompensationConfig";
+import Declarations from "@/components/common/Declarations";
 
 export default function WorkforcePage() {
   const [isGetInTouchModalOpen, setIsGetInTouchModalOpen] = useState(false);
@@ -100,7 +100,7 @@ export default function WorkforcePage() {
         salaryChartData={salaryChartData}
       />
 
-      <div className="w-full">
+      {/* <div className="w-full">
         <p className="text-ws-text-secondary text-sm mb-4">
           All data metrics provided through Finch are based on the most current information
           accessible at the time of reporting, as of September 2025.
@@ -119,7 +119,9 @@ export default function WorkforcePage() {
             Privacy Policy
           </Link>
         </p>
-      </div>
+      </div> */}
+      <Declarations className="mt-4" />
+
       {/* Get In Touch Modal */}
       <GetInTouchModal
         isOpen={isGetInTouchModalOpen}

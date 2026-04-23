@@ -14,7 +14,7 @@ import { X } from "@untitledui/icons";
 export interface BaseFormModalButton {
   text: string;
   onClick: () => void;
-  color?: "primary" | "secondary" | "tertiary" | "primary-destructive";
+  color?: "primary" | "secondary" | "tertiary" | "error";
   type?: "button" | "submit";
   isDisabled?: boolean;
   className?: string;

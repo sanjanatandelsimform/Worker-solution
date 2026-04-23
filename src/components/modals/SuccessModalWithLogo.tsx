@@ -11,7 +11,7 @@ import { X } from "@untitledui/icons";
 export interface SuccessModalWithLogoButton {
   text: string;
   onClick: () => void;
-  color?: "primary" | "secondary" | "tertiary" | "primary-destructive";
+  color?: "primary" | "secondary" | "tertiary" | "error";
   isDisabled?: boolean;
 }
 

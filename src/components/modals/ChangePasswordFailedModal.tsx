@@ -39,7 +39,7 @@ export const ChangePasswordFailedModal = ({
         {
           text: "Continue",
           onClick: handleContinue,
-          color: "primary-destructive",
+          color: "error",
         },
       ]}
     />

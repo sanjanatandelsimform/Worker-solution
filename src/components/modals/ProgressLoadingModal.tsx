@@ -8,25 +8,23 @@ import {
 } from "@/components/base/modal/modal";
 import { Button } from "@/components/base/buttons/button";
 import { X } from "@untitledui/icons";
-import featuredIcon from "@/assets/featured-icon.svg";
+import { LandingProgress } from "@/assets/icons/LoadingProgress";
 
 export interface BaseModalWithIconButton {
   text: string;
   onClick: () => void;
-  color?: "primary" | "secondary" | "tertiary" | "error" | "warning";
+  color?: "primary" | "secondary" | "tertiary" | "warning" | "error";
   isDisabled?: boolean;
 }
 
 export interface BaseModalWithIconProps {
   isOpen: boolean;
-  messageImg?: string;
   onClose: () => void;
   size?: "sm" | "md" | "lg" | "xl" | "full";
   title: string;
   subtitle?: string;
-  subtitleOne?: string;
   contentTitle?: string;
-  contentDescription?: string | ReactNode;
+  contentDescription?: string;
   contentNote?: string;
   icon?: ReactNode;
   buttons: BaseModalWithIconButton[];
@@ -35,14 +33,12 @@ export interface BaseModalWithIconProps {
   backgroundPattern?: "success" | "unsuccess";
 }
 
-export const BaseModalWithIcon = ({
+export const ProgressLoadingModal = ({
   isOpen,
-  messageImg,
   onClose,
   size = "sm",
   title,
   subtitle,
-  subtitleOne,
   contentTitle,
   contentDescription,
   contentNote,
@@ -61,11 +57,22 @@ export const BaseModalWithIcon = ({
         <ModalHeader className="relative flex flex-col items-start border-0 pb-0 pt-6 px-6">
           {/* Featured Icon */}
           {icon && (
-            <img
-              alt="Success checkmark"
-              className="block max-w-12 w-full"
-              src={messageImg || featuredIcon}
-            />
+            <div className="flex items-center gap-3 w-full">
+              <div className="p-3 rounded-full bg-ws-navy-200 flex items-center justify-center">
+                <LandingProgress />
+              </div>
+              {/* Text and Supporting Text */}
+              <div className="flex w-full flex-col">
+                <ModalTitle className="font-display text-2xl font-semibold leading-8 text-ws-text-primary mb-0">
+                  {title}
+                </ModalTitle>
+                {subtitle && (
+                  <p className="font-body text-sm font-normal leading-5 text-ws-text-tertiary">
+                    {subtitle}
+                  </p>
+                )}
+              </div>
+            </div>
           )}
           {/* Close Button */}
           {showCloseButton && (
@@ -81,37 +88,18 @@ export const BaseModalWithIcon = ({
             </Button>
           )}
 
-          {/* Text and Supporting Text */}
-          <div className="flex w-full flex-col gap-2">
-            <ModalTitle className="font-display text-2xl font-semibold leading-8 text-ws-text-primary mb-0 mt-4">
-              {title}
-            </ModalTitle>
-            {subtitle && (
-              <>
-                <p className="font-body text-sm font-normal leading-5 text-ws-text-tertiary">
-                  {subtitle}
-                </p>
-                <p className="font-body text-sm font-normal leading-5 text-ws-text-tertiary">
-                  {subtitleOne}
-                </p>
-              </>
-            )}
-            {contentTitle && (
-              <h3 className="text-lg font-medium text-ws-navy-950 mb-2">{contentTitle}</h3>
-            )}
-            {contentDescription && (
-              <p className="text-base font-normal text-ws-navy-900">{contentDescription}</p>
-            )}
-            {contentNote && (
-              <p className="text-sm font-normal text-ws-text-tertiary mt-4">
-                <span className="text-ws-text-primary">Source:</span> {contentNote}
-              </p>
-            )}
-          </div>
-
           {/* Padding Bottom */}
           <div className={`${paddingBottom} w-full shrink-0`} />
         </ModalHeader>
+        <ModalContent className="border-0 px-6 pt-2 pb-0">
+          <div className="bg-ws-light-teal-25 border border-ws-border-primary rounded-xl p-4">
+            <h3 className="text-lg font-medium text-ws-navy-950 mb-2">{contentTitle}</h3>
+            <p className="text-base font-normal text-ws-navy-900">{contentDescription}</p>
+            <p className="text-sm font-normal text-ws-text-tertiary mt-4">
+              <span className="text-ws-text-primary">Source:</span> {contentNote}
+            </p>
+          </div>
+        </ModalContent>
 
         {/* Modal Footer with Buttons */}
         <ModalFooter className="flex items-start gap-3 border-0 pb-6 px-6 pt-0">
@@ -134,4 +122,4 @@ export const BaseModalWithIcon = ({
   );
 };
 
-export default BaseModalWithIcon;
+export default ProgressLoadingModal;

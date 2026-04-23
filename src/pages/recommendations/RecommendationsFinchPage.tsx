@@ -1,6 +1,5 @@
 // import { Badge } from "@/components/base/badges/badges";
 import CarouselSection from "./Carousel";
-import { Link } from "react-router-dom";
 import { useAppSelector } from "@/store/hooks";
 import {
   selectWorkforceSection,
@@ -18,6 +17,7 @@ import CompanyAtAGlance from "./CompanyAtAGlance";
 import CoreBenefitsEnhancement from "./CoreBenefitsEnhancement";
 import StrategicSolutions from "./StrategicSolutions";
 import { useIndustry } from "@/hooks/useIndustry";
+import Declarations from "@/components/common/Declarations";
 
 export default function RecommendationsFinchPage({
   onNavigateToWorkforce,
@@ -96,7 +96,7 @@ export default function RecommendationsFinchPage({
         />
       )}
 
-      <div className="w-full">
+      {/* <div className="w-full">
         <p className="text-xs text-ws-text-primary">
           This product provides informational insights and recommendations based on the data you
           share and industry benchmarks. It does not provide legal, financial, tax, or benefits
@@ -111,7 +111,8 @@ export default function RecommendationsFinchPage({
             Privacy Policy
           </Link>
         </p>
-      </div>
+      </div> */}
+      <Declarations className="mt-4" />
     </div>
   );
 }

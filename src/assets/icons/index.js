@@ -17,6 +17,7 @@ export * from "./HeartLineIcon";
 export * from "./GlobeIcon";
 export * from "./KeyIcon";
 export * from "./LikeIcon";
+export * from "./LandingProgress"
 export * from "./RefreshIcon";
 export * from "./SelectArrow";
 // export * from "./SmileFaceIcon";

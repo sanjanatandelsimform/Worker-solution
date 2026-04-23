@@ -217,7 +217,7 @@ export function RegistrationForm() {
                     setValue("firstName", sanitized);
                     trigger("firstName");
                   }}
-                  helperTooltip={"Enter the first name of the primary account holder"}
+                  //helperTooltip={"Enter the first name of the primary account holder"}
                 />
               </InputGroup>
               <InputGroup>

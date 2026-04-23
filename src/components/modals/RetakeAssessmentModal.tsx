@@ -40,7 +40,7 @@ export const RetakeAssessmentModal = ({
         {
           text: "Yes, Retake assessment",
           onClick: handleContinue,
-          color: "primary-destructive",
+          color: "error",
         },
       ]}
     />
