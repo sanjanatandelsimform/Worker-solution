@@ -23,7 +23,7 @@ import { CurrencyStackIcon } from "@/assets/icons/CurrencyStackIcon";
 import ProgressCard from "./ProgressCard";
 import SalaryHourlyFinchChart from "./SalaryHourlyCharts/SalaryHourlyChartsFinch/SalaryHourlyComparisonChart";
 import { TimerIcon } from "@/assets/icons/TimerIcon";
-import { Link } from "react-router-dom";
+import Declarations from "@/components/common/Declarations";
 
 const OverviewCardSkeleton = () => (
   <div className="border border-ws-border-secondary rounded-lg p-4 bg-ws-base-white animate-pulse shadow-sm">
@@ -1167,7 +1167,7 @@ export default function BenchmarkFinchPage() {
           Community Survey
         </p>
       </div>
-      <div className="w-full">
+      {/* <div className="w-full">
         <p className="text-xs text-ws-text-primary">
           This product provides informational insights and recommendations based on the data you
           share and industry benchmarks. It does not provide legal, financial, tax, or benefits
@@ -1182,7 +1182,8 @@ export default function BenchmarkFinchPage() {
             Privacy Policy
           </Link>
         </p>
-      </div>
+      </div> */}
+      <Declarations className="mt-4" />
       <GetInTouchModal
         isOpen={isGetInTouchModalOpen}
         onClose={() => setIsGetInTouchModalOpen(false)}

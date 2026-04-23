@@ -8,7 +8,7 @@ import {
   useContext,
   useState,
 } from "react";
-import { Eye, EyeOff, HelpCircle, InfoCircle } from "@untitledui/icons";
+import { Eye, EyeOff, InfoCircle } from "@untitledui/icons";
 import type {
   InputProps as AriaInputProps,
   TextFieldProps as AriaTextFieldProps,
@@ -21,7 +21,6 @@ import {
 } from "react-aria-components";
 import { HintText } from "@/components/base/input/hint-text";
 import { Label } from "@/components/base/input/label";
-import { Tooltip, TooltipTrigger } from "@/components/base/tooltip/tooltip";
 import { cx, sortCx } from "@/utils/cx";
 
 export interface InputBaseProps extends Omit<AriaInputProps, "size"> {
@@ -174,7 +173,7 @@ export const InputBase = ({
       />
 
       {/* Tooltip and help icon - always interactive */}
-      {type !== "password" && !isInvalid && (
+      {/* {type !== "password" && !isInvalid && (
         <Tooltip title={tooltip || helperTooltip || "More information"} placement="top" arrow>
           <TooltipTrigger
             className={cx(
@@ -187,7 +186,7 @@ export const InputBase = ({
             <HelpCircle className={cx("size-4")} />
           </TooltipTrigger>
         </Tooltip>
-      )}
+      )} */}
 
       {/* Invalid icon */}
       {type !== "password" && isInvalid && (

@@ -221,7 +221,7 @@ export const styles = sortCx({
     "primary-destructive": {
       root: [
         "bg-ws-error-600 text-ws-base-white border border-ws-error-600",
-        "hover:bg-ws-error-700 hover:border-ws-error-700",
+        "hover:bg-ws-error-200 hover:border-ws-error-700 transition-all duration-200 hover:text-ws-error-700",
         "active:bg-ws-error-800 active:border-ws-error-800",
         "disabled:bg-ws-gray-100 disabled:border-ws-gray-100 disabled:text-ws-gray-400",
         "*:data-icon:text-ws-base-white hover:*:data-icon:text-ws-base-white",

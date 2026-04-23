@@ -78,10 +78,9 @@ export default function CostBurdenBarChart({ data, width, height = 400 }: Canvas
     const barGap = 0; // Gap between stacked bars
 
     // Colors from Figma
-    const color1 = "#006C68"; // Darker cyan
-    const color2 = "#73A09B"; // Lighter cyan
+    const color1 = "#006C68"; // Darker Teal
+    const color2 = "#D2F1EF"; // Lighter Teal
     const textColor = "#000000";
-    //const labelColorBottom = "#f00";
     const gridLineColor = "#D5D7DA";
 
     // Draw horizontal grid lines and Y-axis labels
@@ -349,7 +348,7 @@ export function IncomeDistributionChart({
       <CostBurdenBarChart data={chartData} height={400} />
       <div className="flex gap-6 items-center justify-center">
         <div className="flex gap-4 items-center">
-          <div className="size-4.5 rounded-xs bg-ws-light-teal-500" />
+          <div className="size-4.5 rounded-xs bg-ws-light-teal-100" />
           <p className="font-normal text-lg leading-7 text-ws-text-primary">Burdened</p>
         </div>
         <div className="flex gap-4 items-center">

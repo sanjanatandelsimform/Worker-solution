@@ -179,7 +179,7 @@ retakeAssessment: {
     {
       text: config.additionalData?.loading ? "Retaking..." : "Yes, Retake assessment",
       onClick: config.onConfirm || config.onClose,
-      color: "primary-destructive",
+      color: "error",
       isDisabled: !!config.additionalData?.loading,
     },
   ],

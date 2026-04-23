@@ -405,19 +405,19 @@ function DesignReference() {
             <div className="space-y-2 flex flex-col items-start">
               <h3 className="font-semibold">Destructive Buttons</h3>
               <div className="flex flex-wrap gap-2">
-                <Button color="primary-destructive" size="sm">
+                <Button color="error" size="sm">
                   Small
                 </Button>
-                <Button color="primary-destructive" size="md">
+                <Button color="error" size="md">
                   Medium
                 </Button>
-                <Button color="primary-destructive" size="lg">
+                <Button color="error" size="lg">
                   Large
                 </Button>
-                <Button color="primary-destructive" size="xl">
+                <Button color="error" size="xl">
                   Extra Large
                 </Button>
-                <Button color="primary-destructive" size="xl" isDisabled>
+                <Button color="error" size="xl" isDisabled>
                   Disabled
                 </Button>
               </div>

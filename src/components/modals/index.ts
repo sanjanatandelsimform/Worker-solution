@@ -7,6 +7,7 @@ export { BaseFormModal } from "./BaseFormModal";
 export { ChangePasswordSuccessModal } from "./ChangePasswordSuccessModal";
 export { ChangePasswordFailedModal } from "./ChangePasswordFailedModal";
 export { InProgressModal } from "./InProgressModal";
+export { ProgressLoadingModal } from "./ProgressLoadingModal";
 
 // Modal Type 2: Form modals (without top icon)
 export { ChangePasswordModal } from "./ChangePasswordModal";

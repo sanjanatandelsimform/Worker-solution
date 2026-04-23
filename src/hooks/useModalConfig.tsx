@@ -4,6 +4,7 @@ import checkmarkIcon from "@/assets/finch-checkmark.svg";
 import alertIcon from "@/assets/alert-icon.svg";
 import type { BaseModalWithIconProps } from "@/components/modals/BaseModalWithIcon";
 import { CheckLineIcon } from "@/assets/icons/CheckLineIcon";
+import { LandingProgress } from "@/assets/icons/LoadingProgress";
 
 type ModalType =
   | "updateComplete"
@@ -16,7 +17,10 @@ type ModalType =
   | "goalsComplete"
   | "goalsEmptyWarning"
   | "goalsApiError"
-  | "emailVerified";
+  | "emailVerified"
+  | "updateDeclarationTerms"
+  | "updateDeclarationPrivacy"
+  | "loadingProgressModal";
 
 interface ModalConfig {
   isOpen: boolean;
@@ -81,7 +85,7 @@ export const useModalConfig = (
           {
             text: config.additionalData?.loading ? "Retaking..." : "Yes, Retake assessment",
             onClick: config.onConfirm || config.onClose,
-            color: "primary-destructive",
+            color: "error",
             isDisabled: !!config.additionalData?.loading,
           },
         ],
@@ -230,6 +234,53 @@ export const useModalConfig = (
             color: "primary",
           },
         ],
+      },
+      updateDeclarationTerms: {
+        size: "xl",
+        title: "Terms and Conditions",
+        subtitle: "Last updated: [April 23, 2026]",
+        //messageImg: checkmarkIcon,
+        backgroundPattern: "success",
+        buttons: [
+          {
+            text: "Back",
+            onClick: config.onConfirm || config.onClose,
+            color: "primary",
+          },
+        ],
+      },
+      updateDeclarationPrivacy: {
+        size: "xl",
+        title: "Privacy Policy",
+        subtitle: "Last updated: [April 23, 2026]",
+        //messageImg: checkmarkIcon,
+        backgroundPattern: "success",
+        buttons: [
+          {
+            text: "Back",
+            onClick: config.onConfirm || config.onClose,
+            color: "primary",
+          },
+        ],
+      },
+      loadingProgressModal: {
+        size: "xl",
+        title: "Loading...",
+        subtitle: "This won't take long.",
+        contentTitle: "Please wait",
+        showCloseButton: false,
+        contentDescription: (
+          <>
+            Workers in low-wage jobs report spending an average of <strong>1.3 hours</strong> per
+            week dealing with personal finance-related issues when they are at work, adding up to{" "}
+            <strong>66 hours</strong> of lost productivity each year due to financial stress.
+          </>
+        ),
+        contentNote: "This may take a few moments.",
+        //messageImg: checkmarkIcon,
+        backgroundPattern: "success",
+        icon: <LandingProgress className="size-3" />,
+        buttons: [],
       },
     };
 

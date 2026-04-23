@@ -1,5 +1,5 @@
 import { useEffect, useState, useCallback, useRef } from "react";
-import { useNavigate, useLocation, Link } from "react-router-dom";
+import { useNavigate, useLocation } from "react-router-dom";
 import { DashboardSidebar } from "@/components/dashboard/DashboardSidebar";
 import emailIcon from "@/assets/mail-icon.svg";
 import finchLogo from "@/assets/finch-logo.svg";
@@ -29,6 +29,7 @@ import BenchmarkFinchPage from "../benchmark/BenchmarkFinchPage";
 import WorkforcePage from "../workforce/WorkforcePage";
 import { fetchRecommendations } from "@/store/slices/recommendationsSlice";
 import { ArrowLeft } from "@/assets/icons/ArrowLeft";
+import Declarations from "@/components/common/Declarations";
 
 const BASE_TAB_ITEMS = [{ id: "finchRecommendations", label: "Recommendations" }];
 
@@ -442,7 +443,7 @@ export const DashboardPage = () => {
                     </div>
                   </div>
                 </div>
-                <div className="w-full mt-15">
+                {/* <div className="w-full mt-15">
                   <p className="text-xs text-ws-text-primary">
                     This product provides informational insights and recommendations based on the
                     data you share and industry benchmarks. It does not provide legal, financial,
@@ -458,7 +459,8 @@ export const DashboardPage = () => {
                       Privacy Policy
                     </Link>
                   </p>
-                </div>
+                </div> */}
+                <Declarations className="mt-15" />
               </div>
             )}
 
