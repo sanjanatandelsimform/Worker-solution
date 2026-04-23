@@ -119,7 +119,7 @@ export default function WorkforceCompensation({
             <Label className="text-ws-text-secondary flex mb-1.5">
               Department{" "}
               <span className="text-ws-error-600">
-                * <ArrowDown className="inline-block ml-1" />
+                <ArrowDown className="inline-block ml-1" />
               </span>
             </Label>
             <Select
