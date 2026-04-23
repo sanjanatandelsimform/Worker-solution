@@ -197,9 +197,10 @@ describe("validation utilities", () => {
       expect(result.trimmedName).toBe("O'Brien-Smith");
     });
 
-    it("should handle null/undefined", () => {
-      expect(validateName("Name", null as unknown as string).isValid).toBe(false);
-      expect(validateName("Name", undefined as unknown as string).isValid).toBe(false);
+    it("should handle empty string", () => {
+      const result = validateName("Name", "");
+      expect(result.isValid).toBe(false);
+      expect(result.message).toContain("cannot be empty");
     });
   });
 

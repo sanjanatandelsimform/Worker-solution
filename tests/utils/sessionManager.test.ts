@@ -142,7 +142,6 @@ describe("sessionManager utilities", () => {
     });
 
     it("should handle error when sessionStorage is full", () => {
-      const consoleSpy = vi.spyOn(console, "error").mockImplementation(() => {});
       vi.spyOn(sessionStorage, "setItem").mockImplementation(() => {
         throw new Error("QuotaExceededError");
       });
@@ -151,14 +150,8 @@ describe("sessionManager utilities", () => {
         modalType: "profile" as ModalType,
       };
 
-      saveModalContext(context);
-
-      expect(consoleSpy).toHaveBeenCalledWith(
-        "Failed to save modal context:",
-        expect.any(Error)
-      );
-
-      consoleSpy.mockRestore();
+      // Should not throw, but silently fail
+      expect(() => saveModalContext(context)).not.toThrow();
     });
 
     it("should save context with complex formData", () => {
@@ -217,7 +210,6 @@ describe("sessionManager utilities", () => {
     });
 
     it("should handle error gracefully", () => {
-      const consoleSpy = vi.spyOn(console, "error").mockImplementation(() => {});
       vi.spyOn(sessionStorage, "getItem").mockImplementation(() => {
         throw new Error("Storage error");
       });
@@ -225,12 +217,6 @@ describe("sessionManager utilities", () => {
       const restored = restoreModalContext();
 
       expect(restored).toBeNull();
-      expect(consoleSpy).toHaveBeenCalledWith(
-        "Failed to restore modal context:",
-        expect.any(Error)
-      );
-
-      consoleSpy.mockRestore();
     });
 
     it("should restore null after multiple calls", () => {

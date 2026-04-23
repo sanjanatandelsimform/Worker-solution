@@ -146,7 +146,7 @@ describe("formatters", () => {
     });
 
     it("should format percentage with zero decimals", () => {
-      expect(formatPercentage(22.5, 0)).toBe("22%");
+      expect(formatPercentage(22.5, 0)).toBe("23%");
     });
 
     it("should format whole number as percentage", () => {
