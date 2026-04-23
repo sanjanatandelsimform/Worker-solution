@@ -116,7 +116,7 @@ describe("formatters", () => {
     });
 
     it("should format negative currency with cents", () => {
-      expect(formatCurrencyWithCents(-100.50)).toBe("-$100.50");
+      expect(formatCurrencyWithCents(-100.5)).toBe("-$100.50");
     });
 
     it("should round decimals properly", () => {

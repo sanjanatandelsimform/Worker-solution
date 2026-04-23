@@ -939,7 +939,6 @@ export const DynamicTab = forwardRef<
       }
     }, [
       validateAnswers,
-      errors,
       cleanAnswers,
       submitSection,
       stripHiddenConditionalData,

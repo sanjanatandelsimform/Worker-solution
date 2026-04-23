@@ -266,16 +266,29 @@ describe("monthUtils", () => {
           "december",
         ];
 
-        validMonths.forEach((month) => {
+        validMonths.forEach(month => {
           const result = mapMonthToApiValue(month);
           expect(result).toMatch(/^[A-Z][a-z]{2}$/);
         });
       });
 
       it("all abbreviated inputs should normalize to 3-letter format", () => {
-        const inputs = ["jan", "feb", "mar", "apr", "may", "jun", "jul", "aug", "sep", "oct", "nov", "dec"];
+        const inputs = [
+          "jan",
+          "feb",
+          "mar",
+          "apr",
+          "may",
+          "jun",
+          "jul",
+          "aug",
+          "sep",
+          "oct",
+          "nov",
+          "dec",
+        ];
 
-        inputs.forEach((input) => {
+        inputs.forEach(input => {
           const result = mapMonthToApiValue(input);
           expect(result).toMatch(/^[A-Z][a-z]{2}$/);
         });
