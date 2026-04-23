@@ -111,14 +111,16 @@ export const SuccessPage: React.FC<SuccessCardProps> = ({
                   "Welcome aboard! Start your success journey with BeneStats"}
               </p>
             </div>
-            <Button
-              color="primary"
-              size="lg"
-              className="w-auto bg-ws-navy-800"
-              onClick={handleButtonClick}
-            >
-              {buttonLabel || state.buttonText || "Let's Get Started"}
-            </Button>
+            {buttonLabel && (
+              <Button
+                color="primary"
+                size="lg"
+                className="w-auto bg-ws-navy-800"
+                onClick={handleButtonClick}
+              >
+                {buttonLabel || state.buttonText || "Let's Get Started"}
+              </Button>
+            )}
           </div>
         </div>
       </div>

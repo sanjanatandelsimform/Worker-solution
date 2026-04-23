@@ -29,15 +29,15 @@ export default function GoalsSection({
 
       <div className="space-y-2">
         <div className="flex flex-col gap-2">
-          <Label className="text-base font-normal text-ws-text-primary">1. Please select your workforce goals.</Label>
+          <Label className="text-base font-normal text-ws-text-primary">
+            1. Please select your workforce goals.
+          </Label>
           <FieldError message={fieldErrors["selectedGoals"]} />
 
           {/* Goals by Category */}
           {goalsData.map(categoryGroup => (
             <div key={categoryGroup.category} className="space-y-2">
-              <h3 className="text-sm font-medium text-ws-base-black">
-                {categoryGroup.category}
-              </h3>
+              <h3 className="text-sm font-medium text-ws-base-black">{categoryGroup.category}</h3>
               <div className="space-y-4 ml-0">
                 {categoryGroup.goals.map(goal => (
                   <label

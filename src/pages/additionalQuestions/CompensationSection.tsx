@@ -129,7 +129,10 @@ export default function CompensationSection({
           if (question.isDropdown) {
             return (
               <div key={question.id} className="space-y-3">
-                <Label isRequired={question.required} className="text-base font-normal text-ws-text-primary">
+                <Label
+                  isRequired={question.required}
+                  className="text-base font-normal text-ws-text-primary"
+                >
                   {index + 1}. {question.question}
                 </Label>
                 <FieldError message={fieldErrors["payroll-provider"]} />

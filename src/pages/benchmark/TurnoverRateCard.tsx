@@ -60,9 +60,7 @@ export default function TurnoverRateCard({
 
   return (
     <div className={`bg-ws-base-white ring ring-ws-border-primary rounded-xl p-5 ${className}`}>
-      <h2 className="flex items-center text-lg text-ws-base-black font-medium gap-2">
-        {title}
-      </h2>
+      <h2 className="flex items-center text-lg text-ws-base-black font-medium gap-2">{title}</h2>
 
       {/* Render Multiple Sections */}
       {sections && sections.length > 0 && (
@@ -72,7 +70,11 @@ export default function TurnoverRateCard({
               {/* Section Title */}
               <h3 className="flex items-center justify-between text-sm font-semibold text-ws-text-tertiary uppercase mb-3">
                 {section.sectionTitle}
-                 {sectionIndex === 0 && <span className="text-xs font-normal text-ws-text-tertiary uppercase">{titleQatar}</span>}
+                {sectionIndex === 0 && (
+                  <span className="text-xs font-normal text-ws-text-tertiary uppercase">
+                    {titleQatar}
+                  </span>
+                )}
               </h3>
 
               {/* Cards Grid */}

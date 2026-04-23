@@ -206,14 +206,13 @@ export const DashboardSidebar = ({ activeUrl = "/" }: DashboardSidebarProps) => 
               </p>
               <p className="text-sm text-ws-text-tertiary mt-1 truncate transition-opacity duration-300">
                 <Tooltip title={displayEmail}>
-                <TooltipTrigger className="group relative flex cursor-pointer flex-col items-center gap-2 text-fg-quaternary transition duration-100 ease-linear hover:text-fg-quaternary_hover focus:text-fg-quaternary_hover">
+                  <TooltipTrigger className="group relative flex cursor-pointer flex-col items-center gap-2 text-fg-quaternary transition duration-100 ease-linear hover:text-fg-quaternary_hover focus:text-fg-quaternary_hover">
                     {displayEmail}
-                </TooltipTrigger>
-              </Tooltip>
-                
+                  </TooltipTrigger>
+                </Tooltip>
               </p>
               {/* This is require */}
-                  {/* <p className="text-sm text-ws-text-tertiary mt-1 truncate transition-opacity duration-300">
+              {/* <p className="text-sm text-ws-text-tertiary mt-1 truncate transition-opacity duration-300">
                   <Tooltip title={displayEmail} placement="top" arrow>
                     <TooltipTrigger className="cursor-pointer">
                       <span className="block truncate">{displayEmail}</span>

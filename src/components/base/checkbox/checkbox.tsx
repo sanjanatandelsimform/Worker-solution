@@ -135,7 +135,9 @@ export const Checkbox = ({
             <div className={cx("inline-flex flex-col", sizes[size].textWrapper)}>
               {label && (
                 <div className="flex items-center gap-1">
-                  <p className={cx(`text-secondary select-none, ${className}`, sizes[size].label)}>{label}</p>
+                  <p className={cx(`text-secondary select-none, ${className}`, sizes[size].label)}>
+                    {label}
+                  </p>
                   {tooltipText && (
                     <Tooltip title={tooltipText} placement="top">
                       <TooltipTrigger>

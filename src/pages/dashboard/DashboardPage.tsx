@@ -280,23 +280,26 @@ export const DashboardPage = () => {
                 partners that can add more value to your benefits packages and employee support.
               </p>
             )}
-            {emailVerify && assessmentData?.data?.status == "completed"  && assessmentData?.assessmentType === "manual" && (
+            {emailVerify &&
+              assessmentData?.data?.status == "completed" &&
+              assessmentData?.assessmentType === "manual" && (
+                <p className="text-base font-normal text-ws-text-primary mt-4">
+                  Here's an overview of your workforce, industry, and some recommendations with
+                  partners that can add more value to your benefits packages and employee support.
+                </p>
+              )}
+            {emailVerify && assessmentData?.assessmentType == "finch" && isConnected && (
               <p className="text-base font-normal text-ws-text-primary mt-4">
                 Here's an overview of your workforce, industry, and some recommendations with
                 partners that can add more value to your benefits packages and employee support.
               </p>
             )}
-            {emailVerify && assessmentData?.assessmentType == "finch"  && isConnected && (
-              <p className="text-base font-normal text-ws-text-primary mt-4">
-                Here's an overview of your workforce, industry, and some recommendations with
-                partners that can add more value to your benefits packages and employee support.
-              </p>
-            )}
-            
+
             {emailVerify && assessmentData?.data?.status !== "completed" && !isConnected && (
               <p className="text-base font-normal text-ws-text-primary mt-4">
-               Connect your payroll to BeneStats with Finch or manually answer a few questions to receive an overview of your workforce, industry, 
-               and some recommendations with partners that can add more value to your benefits packages and employee support.
+                Connect your payroll to BeneStats with Finch or manually answer a few questions to
+                receive an overview of your workforce, industry, and some recommendations with
+                partners that can add more value to your benefits packages and employee support.
               </p>
             )}
             {/* Error Message */}
