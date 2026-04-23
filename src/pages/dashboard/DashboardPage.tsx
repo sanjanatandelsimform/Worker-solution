@@ -79,6 +79,7 @@ export const DashboardPage = () => {
   const [showGoalsEmptyWarning, setShowGoalsEmptyWarning] = useState(false);
   const [activeTab, setActiveTab] = useState("finchRecommendations");
   const fromGoalsCompletionRef = useRef(false);
+  const mainRef = useRef<HTMLElement>(null);
 
   const refetchUserData = useCallback(async () => {
     if (user?.id) {
@@ -265,7 +266,7 @@ export const DashboardPage = () => {
       {/* Main Content Area */}
       <div className="flex flex-1 flex-col overflow-hidden">
         {/* Main Content */}
-        <main className="flex-1 overflow-y-auto p-5 xl:p-10 xl:pl-2">
+        <main ref={mainRef} className="flex-1 overflow-y-auto p-5 xl:p-10 xl:pl-2">
           <div className="space-y-6"></div>
           <div className="w-full">
             <h2 className="text-4xl font-bold text-ws-text-primary">
@@ -552,7 +553,10 @@ export const DashboardPage = () => {
                 )}
                 <Tabs.Panel id="finchRecommendations" className="pt-0">
                   <RecommendationsFinchPage
-                    onNavigateToWorkforce={() => setActiveTab("finchWorkforce")}
+                    onNavigateToWorkforce={() => {
+                      setActiveTab("finchWorkforce");
+                      mainRef.current?.scrollTo({ top: 0, behavior: "smooth" });
+                    }}
                   />
                 </Tabs.Panel>
                 {isConnected && (

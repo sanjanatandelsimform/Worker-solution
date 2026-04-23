@@ -63,13 +63,13 @@ export default function ProgressCard({
         >
           {item.percentage >= 12 && (
             <span className="text-base font-normal text-ws-base-black drop-shadow-md flex items-center justify-end w-full h-full pr-2">
-              {item.percentage.toFixed(1)}%
+              {item.percentage}%
             </span>
           )}
         </div>
         {item.percentage < 12 && (
           <span className="text-base font-normal text-ws-base-black drop-shadow-md pl-2 whitespace-nowrap">
-            {item.percentage.toFixed(1)}%
+            {item.percentage}%
           </span>
         )}
       </div>
@@ -146,13 +146,13 @@ export default function ProgressCard({
             >
               {percentage >= 12 && (
                 <span className="text-base font-normal text-ws-base-black drop-shadow-md flex items-center justify-end w-full h-full pr-2">
-                  {percentage.toFixed(1)}%
+                  {percentage}%
                 </span>
               )}
             </div>
             {percentage < 12 && (
               <span className="text-base font-normal text-ws-base-black drop-shadow-md pl-2 whitespace-nowrap">
-                {percentage.toFixed(1)}%
+                {percentage}%
               </span>
             )}
           </div>
