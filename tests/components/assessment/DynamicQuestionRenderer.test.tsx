@@ -7,6 +7,7 @@
  * - T055: should initialize STRUCTURED_ARRAY with empty array when undefined
  */
 
+import { vi } from "vitest";
 import { render, screen, fireEvent, waitFor } from "@testing-library/react";
 import { DynamicQuestionRenderer } from "@/components/assessment/DynamicQuestionRenderer";
 import type { Question } from "@/types/questionTypes";
@@ -35,7 +36,7 @@ describe("DynamicQuestionRenderer Tests (Form Input Reliability)", () => {
       employees: [], // Initially empty array
     };
 
-    const handleAnswerChange = jest.fn();
+    const handleAnswerChange = vi.fn();
 
     const { container: _container } = render(
       <DynamicQuestionRenderer
@@ -93,7 +94,7 @@ describe("DynamicQuestionRenderer Tests (Form Input Reliability)", () => {
       industry: "", // Initially empty
     };
 
-    const handleAnswerChange = jest.fn();
+    const handleAnswerChange = vi.fn();
 
     const { rerender } = render(
       <DynamicQuestionRenderer
@@ -158,7 +159,7 @@ describe("DynamicQuestionRenderer Tests (Form Input Reliability)", () => {
       // benefits key is undefined/missing
     };
 
-    const handleAnswerChange = jest.fn();
+    const handleAnswerChange = vi.fn();
 
     render(
       <DynamicQuestionRenderer
@@ -212,7 +213,7 @@ describe("DynamicQuestionRenderer Tests (Form Input Reliability)", () => {
       departments: null, // Explicitly null
     };
 
-    const handleAnswerChange = jest.fn();
+    const handleAnswerChange = vi.fn();
 
     render(
       <DynamicQuestionRenderer
@@ -260,7 +261,7 @@ describe("DynamicQuestionRenderer Tests (Form Input Reliability)", () => {
       // country is undefined
     };
 
-    const handleAnswerChange = jest.fn();
+    const handleAnswerChange = vi.fn();
 
     render(
       <DynamicQuestionRenderer
