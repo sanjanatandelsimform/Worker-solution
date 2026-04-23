@@ -8,7 +8,9 @@ import { LandingProgress } from "@/assets/icons/LoadingProgress";
 
 type ModalType =
   | "updateComplete"
+  | "updateInfoSuccess"
   | "emailUpdated"
+  | "emailUpdateSuccess"
   | "retakeAssessment"
   | "accountDelete"
   | "resendSuccess"
@@ -50,6 +52,20 @@ export const useModalConfig = (
           },
         ],
       },
+      updateInfoSuccess: {
+        size: "sm",
+        title: "Your Information Has Been Updated.",
+        subtitle: "All set! Your name has been updated.",
+        icon: <CheckCircle className="size-6" />,
+        backgroundPattern: "success",
+        buttons: [
+          {
+            text: "Return to Settings",
+            onClick: config.onClose,
+            color: "primary",
+          },
+        ],
+      },
       emailUpdated: {
         size: "sm",
         title: "Your information has been updated",
@@ -65,6 +81,15 @@ export const useModalConfig = (
             color: "primary",
           },
         ],
+      },
+      emailUpdateSuccess: {
+        size: "sm",
+        title: "Your Information Has Been Updated",
+        subtitle:
+          "We've sent a verification link to your new address. To protect your privacy, you will be logged out. Please verify your email to log back in.",
+        icon: <CheckCircle className="size-6" />,
+        backgroundPattern: "success",
+        buttons: [],
       },
       retakeAssessment: {
         size: "sm",

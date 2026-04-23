@@ -59,7 +59,7 @@ export function useWorkforceCompensationConfig(selectedWorkforceDept: string) {
       },
       {
         id: "average-salary",
-        title: "Average Salary",
+        title: "Annual Average Salary",
         count: compensationSection
           ? `$${compensationSection.salaryBreakdown.avgSalary.toLocaleString()}`
           : "--",

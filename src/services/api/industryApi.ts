@@ -73,7 +73,7 @@ export const getIndustry = async (): Promise<IndustryData> => {
     if (!response.status) {
       throw new Error("Failed to fetch industry data");
     }
-    
+
     return response.data.industry;
   } catch (error) {
     if (error instanceof Error && error.message === "Authentication required") {

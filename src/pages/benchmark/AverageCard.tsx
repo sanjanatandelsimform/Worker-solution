@@ -43,9 +43,7 @@ export default function AverageCard({
       <div className="flex items-center justify-between">
         <h3 className="text-ws-text-primary">
           {cardStatics === "No data" ? (
-            <span className="mt-4 text-base font-medium">
-              No data available
-            </span>
+            <span className="mt-4 text-base font-medium">No data available</span>
           ) : (
             <span className="text-2xl font-semibold">{cardStatics}</span>
           )}

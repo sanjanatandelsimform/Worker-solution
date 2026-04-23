@@ -14,7 +14,12 @@ import {
   selectIndustrySeparationRate,
 } from "@/store/selectors/industrySelectors";
 import { useIndustry } from "@/hooks/useIndustry";
-import { formatCurrency, formatCurrencyWithCents, formatPercentage,formatToTwoDecimalPlaces } from "@/utils/formatters";
+import {
+  formatCurrency,
+  formatCurrencyWithCents,
+  formatPercentage,
+  formatToTwoDecimalPlaces,
+} from "@/utils/formatters";
 import { Label } from "@/components/base/input/label";
 import { GlobeIcon } from "@/assets/icons/Globe";
 import { DollarIcon } from "@/assets/icons/DollarIcon";
@@ -185,8 +190,9 @@ const benchmarkCardsConfig: BenchmarkCardConfig[] = [
       const tr = d?.turnoverRate as Record<string, unknown> | null;
       const value = tr?.rate;
       // return typeof value === "number" ? formatCurrency(value) : (value as string) || "No data";
-      return typeof value === "number" ? `${formatToTwoDecimalPlaces(value)}M` : (value as string) || "N/A";
-
+      return typeof value === "number"
+        ? `${formatToTwoDecimalPlaces(value)}M`
+        : (value as string) || "N/A";
     },
     tooltipText: "Turnover Rate",
     descriptionText: () =>
@@ -227,8 +233,8 @@ const benchmarkCardsConfig: BenchmarkCardConfig[] = [
       const at = d?.avgTurnover as Record<string, unknown> | null;
       const value = at?.rate;
       return typeof value === "number" && value !== undefined
-          ? `${formatToTwoDecimalPlaces(value)}%`
-          : "No data";
+        ? `${formatToTwoDecimalPlaces(value)}%`
+        : "No data";
     },
     tooltipText: "Average Cost of Turnover",
     descriptionText: (data: unknown) => {
@@ -860,9 +866,7 @@ export default function BenchmarkPage() {
               </p>
             </div>
             <div className="flex flex-col items-start w-full lg:w-auto shrink-0 mt-4 lg:mt-0 lg:min-w-71">
-              <Label className="text-ws-text-secondary flex mb-1.5">
-                Household type
-              </Label>
+              <Label className="text-ws-text-secondary flex mb-1.5">Household type</Label>
               <Select
                 className="w-full flex items-start min-w-50 md:min-w-full lg:min-w-50"
                 isRequired

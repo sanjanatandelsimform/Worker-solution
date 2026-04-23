@@ -20,7 +20,8 @@ export interface ProfileUpdatePayload {
 }
 
 export interface EmailUpdatePayload {
-  email: string;
+  newEmail: string;
+  currentEmail: string;
 }
 
 export interface PasswordChangePayload {

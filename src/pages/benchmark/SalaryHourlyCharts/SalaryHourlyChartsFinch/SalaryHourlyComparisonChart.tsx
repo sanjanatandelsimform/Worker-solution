@@ -21,7 +21,9 @@ export const SalaryHourlyFinchChart = ({
   return (
     <div className="w-full rounded-lg border border-ws-border-primary bg-ws-base-white p-6">
       {/* Title */}
-      <h2 className="mb-8 text-2xl font-medium text-ws-text-primary">Annual Salary & Hourly Comparison</h2>
+      <h2 className="mb-8 text-2xl font-medium text-ws-text-primary">
+        Annual Salary & Hourly Comparison
+      </h2>
 
       {/* Charts Grid */}
       <div className="grid grid-cols-1 xl:grid-cols-2 gap-8">
@@ -30,7 +32,7 @@ export const SalaryHourlyFinchChart = ({
           <h3 className="w-full flex items-center justify-center text-lg font-normal text-ws-text-primary mb-4">
             Salary
           </h3>
-          <SalaryChart data={salaryData}/>
+          <SalaryChart data={salaryData} />
         </div>
 
         {/* Hourly Card */}

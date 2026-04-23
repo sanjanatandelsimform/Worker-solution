@@ -39,7 +39,7 @@ const SalaryRangeChart: React.FC<SalaryRangeChartProps> = ({ data }) => {
       canvas.style.height = `${containerHeight}px`;
 
       // Chart dimensions - responsive
-      const chartHeight = 280;
+      const chartHeight = 380;
       const chartBottom = 350;
       const chartLeft = 80;
       const chartRight = containerWidth - 50;
@@ -153,21 +153,23 @@ const SalaryRangeChart: React.FC<SalaryRangeChartProps> = ({ data }) => {
   }, [data]);
 
   return (
-    <div
-      ref={containerRef}
-      className="w-full"
-      style={{
-        height: "450px",
-      }}
-    >
-      <canvas
-        ref={canvasRef}
+    <div className="w-full">
+      <div
+        ref={containerRef}
+        className="w-full"
         style={{
-          display: "block",
-          width: "100%",
-          height: "100%",
+          height: "450px",
         }}
-      />
+      >
+        <canvas
+          ref={canvasRef}
+          style={{
+            display: "block",
+            width: "100%",
+            height: "100%",
+          }}
+        />
+      </div>
     </div>
   );
 };
