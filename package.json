@@ -18,7 +18,8 @@
     "test:pages": "vitest run tests/pages",
     "test:components": "vitest run tests/components",
     "test:ui": "vitest run tests/pages/SignInPage.test.tsx && vitest run tests/pages/RegisterPage.test.tsx && vitest run tests/pages/DashboardPage.test.tsx && vitest run tests/pages/VerifyEmailPage.test.tsx && vitest run tests/components/assessment/WorkforceTab.test.tsx && vitest run tests/components/assessment/CompensationTab.test.tsx && vitest run tests/components/assessment/BenefitsTab.test.tsx && vitest run tests/components/assessment/GoalsTab.test.tsx",
-    "test:watch": "vitest --watch"
+    "test:watch": "vitest --watch",
+    "test:coverage": "vitest run tests/store tests/services tests/hooks tests/utils --coverage"
   },
   "lint-staged": {
     "*.{ts,tsx}": [
@@ -70,6 +71,7 @@
     "@typescript-eslint/eslint-plugin": "^8.53.0",
     "@typescript-eslint/parser": "^8.53.0",
     "@vitejs/plugin-react": "^5.1.1",
+    "@vitest/coverage-v8": "^4.1.5",
     "@vitest/ui": "^4.0.18",
     "eslint": "^9.39.2",
     "eslint-config-prettier": "^10.1.8",
