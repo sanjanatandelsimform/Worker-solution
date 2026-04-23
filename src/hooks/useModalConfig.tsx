@@ -77,7 +77,7 @@ export const useModalConfig = (
             color: "primary",
           },
         ],
-      },      
+      },
       emailUpdateSuccess: {
         size: "sm",
         title: "Your Information Has Been Updated",
@@ -86,7 +86,7 @@ export const useModalConfig = (
         icon: <CheckCircle className="size-6" />,
         backgroundPattern: "success",
         buttons: [],
-      },      
+      },
       retakeAssessment: {
         size: "sm",
         title: "Are you sure?",

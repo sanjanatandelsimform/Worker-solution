@@ -229,18 +229,18 @@ export interface HousingBurden {
   data: HousingBurdenEntry[];
 }
 
-export interface TurnoverVoluntaryVsInvoluntary  {
+export interface TurnoverVoluntaryVsInvoluntary {
   quarter: string;
   year: number;
   voluntary: number;
   involuntary: number;
-};
-export interface RateOfSeparation  {
+}
+export interface RateOfSeparation {
   quarter: string;
   year: number;
   hiringRate: number;
   separationRate: number;
-};
+}
 
 export interface IndustryData {
   industryOverview: IndustryOverview;
@@ -250,7 +250,7 @@ export interface IndustryData {
   housingCost: HousingCostEntry[];
   housingBurden?: HousingBurden;
   turnoverVoluntaryVsInvoluntary?: TurnoverVoluntaryVsInvoluntary;
-  rateOfSeparation:RateOfSeparation
+  rateOfSeparation: RateOfSeparation;
 }
 
 export interface IndustryApiResponse {

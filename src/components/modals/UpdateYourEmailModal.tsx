@@ -49,8 +49,6 @@ export const UpdateYourEmailModal = ({
   const [firstName, setFirstName] = useState(() => userData?.firstName ?? "");
   const [lastName, setLastName] = useState(() => userData?.lastName ?? "");
 
-
-
   const isFormValid = firstName.trim() !== "" && lastName.trim() !== "";
 
   const handleNewEmailChange = (value: string) => {
@@ -108,10 +106,9 @@ export const UpdateYourEmailModal = ({
 
     try {
       const payload = {
-        
-         firstName: firstName.trim(),
+        firstName: firstName.trim(),
         lastName: lastName.trim(),
-        
+
         newEmail: newEmail.trim(),
         currentEmail: userData?.businessEmail?.trim() ?? "",
       };

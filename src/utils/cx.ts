@@ -4,15 +4,7 @@ const twMerge = extendTailwindMerge({
   extend: {
     theme: {
       text: ["display-xs", "display-sm", "display-md", "display-lg", "display-xl", "display-2xl"],
-      shadow: [
-        "xs-top",
-        "sm-top",
-        "md-top",
-        "lg-top",
-        "xl-top",
-        "2xl-top",
-        "3xl-top"
-      ]
+      shadow: ["xs-top", "sm-top", "md-top", "lg-top", "xl-top", "2xl-top", "3xl-top"],
     },
   },
 });

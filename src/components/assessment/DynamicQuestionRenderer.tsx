@@ -548,7 +548,10 @@ export const DynamicQuestionRenderer = ({
 
     return (
       <div className="flex w-full flex-col gap-4 pl-6 mt-4">
-        <Label isRequired={conditionalQuestion.isRequired} className="text-ws-text-primary custom-label">
+        <Label
+          isRequired={conditionalQuestion.isRequired}
+          className="text-ws-text-primary custom-label"
+        >
           {conditionalQuestion.questionText}
         </Label>
 
@@ -858,7 +861,10 @@ export const DynamicQuestionRenderer = ({
     case "MULTIPLE_CHOICE":
       return (
         <div className="flex w-full flex-col gap-2" data-question-key={question.key}>
-          <Label isRequired={question.isRequired} className="text-ws-text-primary font-normal custom-label">
+          <Label
+            isRequired={question.isRequired}
+            className="text-ws-text-primary font-normal custom-label"
+          >
             {displayOrder}. {question.questionText}
           </Label>
           {error && (
@@ -872,9 +878,7 @@ export const DynamicQuestionRenderer = ({
             question.optionGroups
               ? question.optionGroups.map((group: OptionGroup) => (
                   <div key={group.groupName} className="flex flex-col gap-3">
-                    <h3 className="text-sm font-normal text-ws-text-primary">
-                      {group.groupName}
-                    </h3>
+                    <h3 className="text-sm font-normal text-ws-text-primary">{group.groupName}</h3>
                     <div className="flex flex-col gap-4 pl-2 font-normal text-ws-text-secondary">
                       {group.options.map((option: QuestionOption) => (
                         <Checkbox
@@ -1157,7 +1161,9 @@ export const DynamicQuestionRenderer = ({
                     {subFieldError && (
                       <div className="flex items-center gap-1">
                         {/* <InputInfo className="text-ws-error-600" /> */}
-                        <span className="text-sm text-ws-error-600 font-normal">{subFieldError}</span>
+                        <span className="text-sm text-ws-error-600 font-normal">
+                          {subFieldError}
+                        </span>
                       </div>
                     )}
                   </div>

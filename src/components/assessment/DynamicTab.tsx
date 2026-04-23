@@ -755,7 +755,7 @@ export const DynamicTab = forwardRef<
               let scrolled = false;
               for (const errorKey of errorKeys) {
                 // First try exact match on data-question-key
-                const baseKey = errorKey.split('.')[0]; // e.g. "topWorkLocations.0.state" → "topWorkLocations"
+                const baseKey = errorKey.split(".")[0]; // e.g. "topWorkLocations.0.state" → "topWorkLocations"
                 const element = document.querySelector(
                   `[data-question-key="${errorKey}"], [data-question-key="${baseKey}"]`
                 );
@@ -781,10 +781,10 @@ export const DynamicTab = forwardRef<
               // Fallback: if no data-question-key matched, find the first rendered error span
               if (!scrolled) {
                 const firstErrorSpan = document.querySelector(
-                  '[data-question-key] .text-ws-error-600'
+                  "[data-question-key] .text-ws-error-600"
                 );
                 if (firstErrorSpan) {
-                  const parentQuestion = firstErrorSpan.closest('[data-question-key]');
+                  const parentQuestion = firstErrorSpan.closest("[data-question-key]");
                   (parentQuestion || firstErrorSpan).scrollIntoView({
                     behavior: "smooth",
                     block: "center",
@@ -907,7 +907,7 @@ export const DynamicTab = forwardRef<
               setTimeout(() => {
                 const errorKeys = Object.keys(normalizedFieldErrors);
                 for (const errorKey of errorKeys) {
-                  const baseKey = errorKey.split('.')[0];
+                  const baseKey = errorKey.split(".")[0];
                   const element = document.querySelector(
                     `[data-question-key="${errorKey}"], [data-question-key="${baseKey}"]`
                   );
@@ -1041,8 +1041,7 @@ export const DynamicTab = forwardRef<
             else if (showWhen === "no")
               conditionMet = value === false || String(value).toLowerCase() === "no";
             else
-              conditionMet =
-                String(value || "").toLowerCase() === String(showWhen).toLowerCase();
+              conditionMet = String(value || "").toLowerCase() === String(showWhen).toLowerCase();
             if (!conditionMet) {
               Object.keys(next).forEach(errorKey => {
                 if (errorKey === conditionalKey || errorKey.startsWith(`${conditionalKey}.`)) {

@@ -100,7 +100,6 @@ export const SettingsPage = () => {
     onConfirm: handleDeleteAccount,
   });
 
-
   // Real-time validation for first name
   const handleFirstNameChange = (value: string) => {
     const sanitized = value.replace(/^\s+/, "");
@@ -190,7 +189,6 @@ export const SettingsPage = () => {
     dispatch(clearUser());
     navigate("/sign-in", { state: { from: "/settings" } });
   };
-
 
   function handleGetResponse(response: ProfileApiResponse) {
     if (response.success && response.data) {
@@ -320,86 +318,83 @@ export const SettingsPage = () => {
                     <div className="flex items-center justify-between gap-6">
                       <div className="w-full xl:w-1/2">
                         <InputGroup>
-                            <Input
-                              id="firstName"
-                              label="First Name"
-                              name="firstName"
-                              size="md"
-                              isRequired={true}
-                              placeholder="First name"
-                              value={firstName}
-                              onChange={handleFirstNameChange}
-                              // isDisabled={profileLoading}
-                              isDisabled={true}
-                               helperTooltip="Your First Name"
-                            />
-                            {firstNameError && (
-                              <p className="text-ws-error-600 text-sm mt-1">{firstNameError}</p>
-                            )}
+                          <Input
+                            id="firstName"
+                            label="First Name"
+                            name="firstName"
+                            size="md"
+                            isRequired={true}
+                            placeholder="First name"
+                            value={firstName}
+                            onChange={handleFirstNameChange}
+                            // isDisabled={profileLoading}
+                            isDisabled={true}
+                            helperTooltip="Your First Name"
+                          />
+                          {firstNameError && (
+                            <p className="text-ws-error-600 text-sm mt-1">{firstNameError}</p>
+                          )}
                         </InputGroup>
                       </div>
                       <div className="w-full xl:w-1/2">
                         <InputGroup>
-                            <Input
-                              id="lastName"
-                              label="Last Name"
-                              name="lastName"
-                              size="md"
-                              isRequired={true}
-                              placeholder="Last name"
-                              value={lastName}
-                              onChange={handleLastNameChange}
-                              // isDisabled={profileLoading}
-                              isDisabled={true}
-                              helperTooltip="Your Last Name"
-                            />
-                            {lastNameError && (
-                              <p className="text-ws-error-600 text-sm mt-1">{lastNameError}</p>
-                            )}
+                          <Input
+                            id="lastName"
+                            label="Last Name"
+                            name="lastName"
+                            size="md"
+                            isRequired={true}
+                            placeholder="Last name"
+                            value={lastName}
+                            onChange={handleLastNameChange}
+                            // isDisabled={profileLoading}
+                            isDisabled={true}
+                            helperTooltip="Your Last Name"
+                          />
+                          {lastNameError && (
+                            <p className="text-ws-error-600 text-sm mt-1">{lastNameError}</p>
+                          )}
                         </InputGroup>
                       </div>
-    
                     </div>
-                     <Button
-                        color="link"
-                        className="text-ws-navy-800 font-semibold shadow-none max-w-48"
-                        onClick={() => setIsUpdateInfoModalOpen(true)}
-                      >
-                        {"Update information"}
-                      </Button>
+                    <Button
+                      color="link"
+                      className="text-ws-navy-800 font-semibold shadow-none max-w-48"
+                      onClick={() => setIsUpdateInfoModalOpen(true)}
+                    >
+                      {"Update information"}
+                    </Button>
                     <div className="w-full xl:w-full">
                       <InputGroup>
-                       
-                          <div className="w-full flex flex-col gap-4">
-                            <Input
-                              id="email"
-                              label="Email"
-                              name="email"
-                              size="md"
-                              icon={Mail01}
-                              iconClassName="text-ws-gray-400"
-                              isRequired={true}
-                              placeholder="medium@untitledui.com"
-                              value={userData?.businessEmail || ""}
-                              isDisabled={true}
-                              helperTooltip="Your email address"
-                            />
-                            <Button
-                              color="link"
-                              className="text-ws-navy-800 font-semibold shadow-none max-w-48"
-                              // onClick={
-                              //   resendVerification
-                              //     ? handleResendVerification
-                              //     : () => setIsUpdateEmailModalOpen(true)
-                              // }
-                              onClick={() => setIsUpdateEmailModalOpen(true)}
-                              isDisabled={profileLoading || !firstName || !lastName}
-                            >
-                              {/* {resendVerification ? "Resend Verification Email" : "Update email"} */}
-                              {"Update email"}
-                            </Button>
-                          </div>
-    
+                        <div className="w-full flex flex-col gap-4">
+                          <Input
+                            id="email"
+                            label="Email"
+                            name="email"
+                            size="md"
+                            icon={Mail01}
+                            iconClassName="text-ws-gray-400"
+                            isRequired={true}
+                            placeholder="medium@untitledui.com"
+                            value={userData?.businessEmail || ""}
+                            isDisabled={true}
+                            helperTooltip="Your email address"
+                          />
+                          <Button
+                            color="link"
+                            className="text-ws-navy-800 font-semibold shadow-none max-w-48"
+                            // onClick={
+                            //   resendVerification
+                            //     ? handleResendVerification
+                            //     : () => setIsUpdateEmailModalOpen(true)
+                            // }
+                            onClick={() => setIsUpdateEmailModalOpen(true)}
+                            isDisabled={profileLoading || !firstName || !lastName}
+                          >
+                            {/* {resendVerification ? "Resend Verification Email" : "Update email"} */}
+                            {"Update email"}
+                          </Button>
+                        </div>
                       </InputGroup>
                     </div>
                     <div className="w-full xl:w-full">
@@ -518,7 +513,6 @@ export const SettingsPage = () => {
                   </div>
                 </div>
               </div>
-
             </div>
           </div>
         </main>
@@ -526,6 +520,7 @@ export const SettingsPage = () => {
 
       {/* Modals */}
       <UpdateYourInformationModal
+        key={String(isUpdateInfoModalOpen)}
         isOpen={isUpdateInfoModalOpen}
         onClose={() => setIsUpdateInfoModalOpen(false)}
         onSuccess={() => {
@@ -567,7 +562,6 @@ export const SettingsPage = () => {
               title: "You've been logged out.",
               subtitle:
                 "To protect your privacy, you've been logged out. Please verify your email to log back in.",
-              
             },
           });
         }}

@@ -125,7 +125,10 @@ export default function BenefitsRetirementSection({
         {benefitsQuestions.map((question, index) => (
           <div key={question.id} className="space-y-3">
             <div className="flex items-center gap-2">
-              <Label isRequired={question.required} className="text-base font-normal text-ws-text-primary">
+              <Label
+                isRequired={question.required}
+                className="text-base font-normal text-ws-text-primary"
+              >
                 {index + 1}. {question.question}
               </Label>
               {question.tooltip && (
@@ -154,9 +157,7 @@ export default function BenefitsRetirementSection({
               >
                 {question.options.map(option => (
                   <label key={option.id} className="flex items-center gap-3 cursor-pointer">
-                    <RadioButton
-                      value={option.id}
-                    />
+                    <RadioButton value={option.id} />
                     <span className="text-sm font-normal text-ws-text-secondary">
                       {option.label}
                     </span>

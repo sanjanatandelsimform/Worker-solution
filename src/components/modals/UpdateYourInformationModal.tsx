@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import {
   Modal,
   ModalContent,
@@ -43,18 +43,6 @@ export const UpdateYourInformationModal = ({
   const [lastNameError, setLastNameError] = useState("");
   const [showError, setShowError] = useState(false);
   const [apiError, setApiError] = useState("");
-
-  // Sync form state when modal opens or userData changes
-  useEffect(() => {
-    if (isOpen && userData) {
-      setFirstName(userData.firstName ?? "");
-      setLastName(userData.lastName ?? "");
-      setFirstNameError("");
-      setLastNameError("");
-      setShowError(false);
-      setApiError("");
-    }
-  }, [isOpen, userData]);
 
   const handleFirstNameChange = (value: string) => {
     const sanitized = value.replace(/^\s+/, "");
@@ -159,9 +147,7 @@ export const UpdateYourInformationModal = ({
           <div className="flex items-center justify-between w-full relative">
             <div className="flex flex-col gap-1">
               <ModalTitle>Update Your Information</ModalTitle>
-              <ModalDescription>
-                Update your account by entering new information.
-              </ModalDescription>
+              <ModalDescription>Update your account by entering new information.</ModalDescription>
             </div>
             <div className="absolute -right-2 -top-2">
               <Button
@@ -218,9 +204,7 @@ export const UpdateYourInformationModal = ({
                       onChange={handleLastNameChange}
                       isInvalid={!!lastNameError}
                     />
-                    {lastNameError && (
-                      <p className="text-ws-error-600 text-sm">{lastNameError}</p>
-                    )}
+                    {lastNameError && <p className="text-ws-error-600 text-sm">{lastNameError}</p>}
                   </div>
                 </InputGroup>
               </div>
@@ -234,11 +218,7 @@ export const UpdateYourInformationModal = ({
               size="md"
               className="w-full"
               isDisabled={
-                profileLoading ||
-                !isFormValid ||
-                !hasChanges ||
-                !!firstNameError ||
-                !!lastNameError
+                profileLoading || !isFormValid || !hasChanges || !!firstNameError || !!lastNameError
               }
             >
               {profileLoading ? "Updating..." : "Update Information"}

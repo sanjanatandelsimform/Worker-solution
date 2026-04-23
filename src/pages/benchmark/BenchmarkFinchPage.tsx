@@ -14,7 +14,12 @@ import {
   selectIndustryTurnover,
 } from "@/store/selectors/industrySelectors";
 import { useIndustry } from "@/hooks/useIndustry";
-import { formatCurrency, formatCurrencyWithCents, formatPercentage, formatToTwoDecimalPlaces } from "@/utils/formatters";
+import {
+  formatCurrency,
+  formatCurrencyWithCents,
+  formatPercentage,
+  formatToTwoDecimalPlaces,
+} from "@/utils/formatters";
 import { Label } from "@/components/base/input/label";
 import TurnoverRateCard from "./TurnoverRateCard";
 import { GlobeIcon } from "@/assets/icons/Globe";
@@ -197,7 +202,9 @@ const benchmarkCardsConfig: BenchmarkCardConfig[] = [
       const d = data as Record<string, unknown> | null;
       const tr = d?.turnoverRate as Record<string, unknown> | null;
       const value = tr?.rate;
-      return typeof value === "number" ? `${formatToTwoDecimalPlaces(value)}M` : (value as string) || "N/A";
+      return typeof value === "number"
+        ? `${formatToTwoDecimalPlaces(value)}M`
+        : (value as string) || "N/A";
     },
     tooltipText: "Turnover Rate",
     descriptionText: () =>
@@ -237,7 +244,11 @@ const benchmarkCardsConfig: BenchmarkCardConfig[] = [
       const d = data as Record<string, unknown> | null;
       const at = d?.avgTurnover as Record<string, unknown> | null;
       const value = at?.rate;
-      return typeof value === "number" && value !== undefined ? `${formatToTwoDecimalPlaces(value)}%` : value != null ? `${value}%` : "N/A";
+      return typeof value === "number" && value !== undefined
+        ? `${formatToTwoDecimalPlaces(value)}%`
+        : value != null
+          ? `${value}%`
+          : "N/A";
     },
     tooltipText: "Average Cost of Turnover",
     descriptionText: (data: unknown) => {
@@ -450,20 +461,18 @@ export default function BenchmarkFinchPage() {
           cardsData: [
             {
               title: "Involuntary",
-              statics: industryTurnOver?.turnOverRate?.industryAvg?.involuntary ? formatPercentage(
-                industryTurnOver?.turnOverRate?.industryAvg?.involuntary
-              ): "No data",
-              progressValue:
-                industryTurnOver?.turnOverRate?.industryAvg?.involuntary ?? 0,
+              statics: industryTurnOver?.turnOverRate?.industryAvg?.involuntary
+                ? formatPercentage(industryTurnOver?.turnOverRate?.industryAvg?.involuntary)
+                : "No data",
+              progressValue: industryTurnOver?.turnOverRate?.industryAvg?.involuntary ?? 0,
               customBarColor: "bg-ws-light-teal-400",
             },
             {
               title: "Voluntary",
-              statics: industryTurnOver?.turnOverRate?.industryAvg?.voluntary ? formatPercentage(
-                industryTurnOver?.turnOverRate?.industryAvg?.voluntary
-              ) : "No data",
-              progressValue:
-                industryTurnOver?.turnOverRate?.industryAvg?.voluntary ?? 0,
+              statics: industryTurnOver?.turnOverRate?.industryAvg?.voluntary
+                ? formatPercentage(industryTurnOver?.turnOverRate?.industryAvg?.voluntary)
+                : "No data",
+              progressValue: industryTurnOver?.turnOverRate?.industryAvg?.voluntary ?? 0,
               customBarColor: "bg-ws-navy-600",
             },
           ],
@@ -474,22 +483,20 @@ export default function BenchmarkFinchPage() {
           cardsData: [
             {
               title: "Industry",
-              statics: industryTurnOver?.turnOverRate?.company?.industry ? formatPercentage(
-                industryTurnOver?.turnOverRate?.company?.industry
-              ): "No data",
+              statics: industryTurnOver?.turnOverRate?.company?.industry
+                ? formatPercentage(industryTurnOver?.turnOverRate?.company?.industry)
+                : "No data",
               staticsPointsState: true,
-              progressValue:
-                industryTurnOver?.turnOverRate?.company?.industry ?? 0,
+              progressValue: industryTurnOver?.turnOverRate?.company?.industry ?? 0,
               customBarColor: "bg-ws-light-teal-400",
             },
             {
               title: "Company",
-              statics: industryTurnOver?.turnOverRate?.company?.company ? formatPercentage(
-                industryTurnOver?.turnOverRate?.company?.company
-              ) : "No data",
+              statics: industryTurnOver?.turnOverRate?.company?.company
+                ? formatPercentage(industryTurnOver?.turnOverRate?.company?.company)
+                : "No data",
               staticsPointsState: true,
-              progressValue:
-                industryTurnOver?.turnOverRate?.company?.company ?? 0,
+              progressValue: industryTurnOver?.turnOverRate?.company?.company ?? 0,
               customBarColor: "bg-ws-navy-600",
             },
           ],
@@ -513,20 +520,18 @@ export default function BenchmarkFinchPage() {
           cardsData: [
             {
               title: "Separation",
-              statics: industryTurnOver?.separationRate?.industryAvg?.separation ? formatPercentage(
-                industryTurnOver?.separationRate?.industryAvg?.separation
-              ): "No data",
-              progressValue:
-                industryTurnOver?.separationRate?.industryAvg?.separation ?? 0,
+              statics: industryTurnOver?.separationRate?.industryAvg?.separation
+                ? formatPercentage(industryTurnOver?.separationRate?.industryAvg?.separation)
+                : "No data",
+              progressValue: industryTurnOver?.separationRate?.industryAvg?.separation ?? 0,
               customBarColor: "bg-ws-light-teal-400",
             },
             {
               title: "Hiring Rate",
-              statics: industryTurnOver?.separationRate?.industryAvg?.hiring  ? formatPercentage(
-                industryTurnOver?.separationRate?.industryAvg?.hiring
-              ): "No data",
-              progressValue:
-                industryTurnOver?.separationRate?.industryAvg?.hiring ?? 0,
+              statics: industryTurnOver?.separationRate?.industryAvg?.hiring
+                ? formatPercentage(industryTurnOver?.separationRate?.industryAvg?.hiring)
+                : "No data",
+              progressValue: industryTurnOver?.separationRate?.industryAvg?.hiring ?? 0,
               customBarColor: "bg-ws-navy-600",
             },
           ],
@@ -537,48 +542,42 @@ export default function BenchmarkFinchPage() {
           cardsData: [
             {
               title: "Separation",
-              statics: industryTurnOver?.separationRate?.company?.separation ? formatPercentage(
-                industryTurnOver?.separationRate?.company?.separation
-              ) : "No data",
+              statics: industryTurnOver?.separationRate?.company?.separation
+                ? formatPercentage(industryTurnOver?.separationRate?.company?.separation)
+                : "No data",
               staticsPoints: (() => {
-                const ind =
-                  industryTurnOver?.separationRate?.industryAvg?.separation;
-                const comp =
-                  industryTurnOver?.separationRate?.company?.separation;
-                  if (ind == null || comp == null) {
-                    return "";
-                  }
+                const ind = industryTurnOver?.separationRate?.industryAvg?.separation;
+                const comp = industryTurnOver?.separationRate?.company?.separation;
+                if (ind == null || comp == null) {
+                  return "";
+                }
                 const diff = comp - ind;
                 return diff >= 0
                   ? `+${Math.abs(Math.round(diff))}pts`
                   : `-${Math.abs(Math.round(diff))}pts`;
               })(),
               staticsPointsState: true,
-              progressValue:
-                industryTurnOver?.separationRate?.company?.separation ?? 0,
+              progressValue: industryTurnOver?.separationRate?.company?.separation ?? 0,
               customBarColor: "bg-ws-light-teal-400",
             },
             {
               title: "Hiring Rate",
-              statics: industryTurnOver?.separationRate?.company?.hiring ? formatPercentage(
-                industryTurnOver?.separationRate?.company?.hiring
-              ): "No data",
+              statics: industryTurnOver?.separationRate?.company?.hiring
+                ? formatPercentage(industryTurnOver?.separationRate?.company?.hiring)
+                : "No data",
               staticsPoints: (() => {
-                const ind =
-                  industryTurnOver?.separationRate?.industryAvg?.hiring;
-                const comp =
-                  industryTurnOver?.separationRate?.company?.hiring;
-                  if (ind == null || comp == null) {
-                    return "";
-                  }
+                const ind = industryTurnOver?.separationRate?.industryAvg?.hiring;
+                const comp = industryTurnOver?.separationRate?.company?.hiring;
+                if (ind == null || comp == null) {
+                  return "";
+                }
                 const diff = comp - ind;
                 return diff >= 0
                   ? `+${Math.abs(Math.round(diff))}pts`
                   : `-${Math.abs(Math.round(diff))}pts`;
               })(),
               staticsPointsState: true,
-              progressValue:
-                industryTurnOver?.separationRate?.company?.hiring ?? 0,
+              progressValue: industryTurnOver?.separationRate?.company?.hiring ?? 0,
               customBarColor: "bg-ws-navy-600",
             },
           ],
@@ -606,10 +605,8 @@ export default function BenchmarkFinchPage() {
     housingCostData?.[0] ??
     null;
 
-  const latestOwnersBurden =
-    selectedHousingData?.owners ?? null;
-  const latestRentersBurden =
-    selectedHousingData?.renters ?? null;
+  const latestOwnersBurden = selectedHousingData?.owners ?? null;
+  const latestRentersBurden = selectedHousingData?.renters ?? null;
 
   // Dynamic owners progress cards (Finch page has Metro Area + Your employees)
   const dynamicHousingBurdenOwnersConfig: ProgressCardFinchConfig[] = [
@@ -791,7 +788,9 @@ export default function BenchmarkFinchPage() {
   })();
 
   // Derive period labels from housing data
-  {/* This is require if client want to add quarter and year */}
+  {
+    /* This is require if client want to add quarter and year */
+  }
   // const ownersBurdenYear = latestOwnersBurden?.period?.year;
   // const rentersBurdenYear = latestRentersBurden?.period?.year;
   // const ownersBurdenQuarter = latestOwnersBurden?.period?.quarter;
@@ -924,7 +923,7 @@ export default function BenchmarkFinchPage() {
                 : "Area Median Wage"}
             </h3>
             <p className="text-base text-ws-text-primary w-full mt-2">
-              Compare your wages with median wages for salaried and hourly employees for the 
+              Compare your wages with median wages for salaried and hourly employees for the
               selected geography.
             </p>
           </div>
@@ -1019,12 +1018,14 @@ export default function BenchmarkFinchPage() {
         </div>
         <div className="w-full mt-8">
           <h3 className="text-base font-semibold text-ws-text-primary">
-           Your workers residing in Manchester, New Hampshire are likely financially burdened - meaning workers likely spend a large 
-           portion of their wages on housing and transportation
+            Your workers residing in Manchester, New Hampshire are likely financially burdened -
+            meaning workers likely spend a large portion of their wages on housing and
+            transportation
           </h3>
           <p className="text-base mt-4 text-ws-text-primary">
-            The concept of rent (or housing cost) burden applies to both renters and homeowners, but it's calculated a bit differently for each. Both 
-            renters and homeowners can be housing-cost burdened; the main difference is what expenses are counted, not the income 
+            The concept of rent (or housing cost) burden applies to both renters and homeowners, but
+            it's calculated a bit differently for each. Both renters and homeowners can be
+            housing-cost burdened; the main difference is what expenses are counted, not the income
             thresholds.
           </p>
         </div>
@@ -1093,10 +1094,10 @@ export default function BenchmarkFinchPage() {
                 Working Class Housing Cost Burden
               </h3>
               <p className="max-w-3xl text-base text-ws-text-secondary mt-2">
-               In Manchester, New Hampshire, working class residents are increasingly stretched 
-               by rising rents that have outpaced wage growth, with many households spending 
-               well above the recommended 30 percent of their income just to keep a roof over 
-               their heads. 
+                In Manchester, New Hampshire, working class residents are increasingly stretched by
+                rising rents that have outpaced wage growth, with many households spending well
+                above the recommended 30 percent of their income just to keep a roof over their
+                heads.
               </p>
               <p className="text-xs text-ws-text-tertiary mt-2">
                 <span className="font-semibold">Source:</span> U.S. Census Bureau, 5-Year American
@@ -1104,24 +1105,22 @@ export default function BenchmarkFinchPage() {
               </p>
             </div>
             <div className="flex flex-col items-start w-full lg:w-auto shrink-0 mt-4 xl:mt-0 lg:min-w-71">
-              <Label className="text-ws-text-secondary flex mb-1.5">
-                Zip Code
-              </Label>
+              <Label className="text-ws-text-secondary flex mb-1.5">Zip Code</Label>
               <Select
-              className="w-full flex items-start min-w-50 md:min-w-full lg:min-w-50"
-              isRequired
-              size="md"
-              placeholder="Select Area"
-              items={housingZipItems}
-              value={activeHousingZip}
-              onSelectionChange={key => {
-                if (key) {
-                  setSelectedHousingZipState(key as string);
-                }
-              }}
-            >
-              {item => <Select.Item id={item.id}>{item.label}</Select.Item>}
-            </Select>
+                className="w-full flex items-start min-w-50 md:min-w-full lg:min-w-50"
+                isRequired
+                size="md"
+                placeholder="Select Area"
+                items={housingZipItems}
+                value={activeHousingZip}
+                onSelectionChange={key => {
+                  if (key) {
+                    setSelectedHousingZipState(key as string);
+                  }
+                }}
+              >
+                {item => <Select.Item id={item.id}>{item.label}</Select.Item>}
+              </Select>
             </div>
           </div>
           <div className="grid xl:grid-cols-3 gap-4 mt-6 flex-col lg:flex-row">

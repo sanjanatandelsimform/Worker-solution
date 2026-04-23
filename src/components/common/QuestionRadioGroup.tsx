@@ -32,9 +32,7 @@ export function QuestionRadioGroup({
       >
         {question.options.map(option => (
           <label key={option.id} className="flex items-center gap-3 cursor-pointer">
-            <RadioButton
-              value={option.id}
-            />
+            <RadioButton value={option.id} />
             <span className="text-sm font-normal text-ws-text-secondary">{option.label}</span>
           </label>
         ))}
