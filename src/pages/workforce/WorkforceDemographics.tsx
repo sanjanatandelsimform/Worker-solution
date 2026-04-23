@@ -199,7 +199,7 @@ export default function WorkforceDemographics({
                   <InlineProgressBar
                     percentage={item.value}
                     color={item.customColor}
-                    heightClass="h-6"
+                    className="h-6"
                   />
                   {/* <div className="flex min-w-8 text-base font-normal text-ws-base-black">
                     {item.value}%
