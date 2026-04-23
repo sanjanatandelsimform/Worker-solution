@@ -2,9 +2,11 @@ import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { Button } from "@/components/base/buttons/button";
 import { Input } from "@/components/base/input/input";
+import { Label } from "@/components/base/input/label";
 import { Mail01, AlertCircle } from "@untitledui/icons";
 import { ChangePasswordModal } from "@/components/modals/ChangePasswordModal";
 import { UpdateYourEmailModal } from "@/components/modals/UpdateYourEmailModal";
+import { UpdateYourInformationModal } from "@/components/modals/UpdateYourInformationModal";
 import SessionExpiredModal from "@/components/modals/SessionExpiredModal";
 import DashboardSidebar from "@/components/dashboard/DashboardSidebar";
 import ErrorMessage from "@/components/common/ErrorMessage";
@@ -17,7 +19,7 @@ import {
   // resendVerificationEmail,
   retakeAssessmentAction,
 } from "@/store/slices/profileSlice";
-import { clearUser, updateUser } from "@/store/slices/authSlice";
+import { clearUser, updateUser, logoutThunk } from "@/store/slices/authSlice";
 import { selectProfileLoading, selectProfileError } from "@/store/selectors/profileSelectors";
 import { selectUser } from "@/store/selectors/authSelectors";
 import { validateName } from "@/utils/validation";
@@ -40,6 +42,8 @@ export const SettingsPage = () => {
   const [activeUrl] = useState("/settings");
   const [isChangePasswordModalOpen, setIsChangePasswordModalOpen] = useState(false);
   const [isUpdateEmailModalOpen, setIsUpdateEmailModalOpen] = useState(false);
+  const [isUpdateInfoModalOpen, setIsUpdateInfoModalOpen] = useState(false);
+  const [isUpdateInfoSuccessModalOpen, setIsUpdateInfoSuccessModalOpen] = useState(false);
   const [isRetakeAssessmentModalOpen, setIsRetakeAssessmentModalOpen] = useState(false);
   const [isAccountDeleteModalOpen, setIsAccountDeleteModalOpen] = useState(false);
   const [isUpdateCompletedModalOpen, setIsUpdateCompletedModalOpen] = useState(false);
@@ -73,10 +77,14 @@ export const SettingsPage = () => {
     onClose: () => setIsUpdateCompletedModalOpen(false),
   });
 
-  const emailUpdatedModal = useModalConfig("emailUpdated", {
+  const emailUpdatedModal = useModalConfig("emailUpdateSuccess", {
     isOpen: showSuccess,
     onClose: () => setShowSuccess(false),
-    onConfirm: () => setShowSuccess(false),
+  });
+
+  const updateInfoSuccessModal = useModalConfig("updateInfoSuccess", {
+    isOpen: isUpdateInfoSuccessModalOpen,
+    onClose: () => setIsUpdateInfoSuccessModalOpen(false),
   });
 
   const retakeAssessmentModal = useModalConfig("retakeAssessment", {
@@ -92,54 +100,6 @@ export const SettingsPage = () => {
     onConfirm: handleDeleteAccount,
   });
 
-  // Calculate hasChanges
-  // const hasChanges = useMemo(() => {
-  //   if (!userData) return false;
-  //   return firstName !== userData.firstName || lastName !== userData.lastName;
-  // }, [firstName, lastName, userData]);
-
-  // Handler functions
-  // const handleSave = async () => {
-  //   const firstNameValidation = validateName("FirstName", firstName);
-  //   const lastNameValidation = validateName("LastName", lastName);
-
-  //   if (!firstNameValidation.isValid || !lastNameValidation.isValid) {
-  //     setFirstNameError(firstNameValidation.isValid ? "" : firstNameValidation.message || "");
-  //     setLastNameError(lastNameValidation.isValid ? "" : lastNameValidation.message || "");
-  //     return;
-  //   }
-
-  //   try {
-  //     await dispatch(
-  //       updateProfileData({
-  //         firstName: firstName.trim(),
-  //         lastName: lastName.trim(),
-  //       })
-  //     ).unwrap();
-
-  //     dispatch(
-  //       updateUser({
-  //         firstName: firstName.trim(),
-  //         lastName: lastName.trim(),
-  //       })
-  //     );
-
-  //     setIsUpdateCompletedModalOpen(true);
-  //     setShowError(false);
-  //   } catch (_error) {
-  //     setShowError(true);
-  //   }
-  // };
-
-  // const handleCancel = () => {
-  //   if (userData) {
-  //     setFirstName(userData.firstName);
-  //     setLastName(userData.lastName);
-  //     setFirstNameError("");
-  //     setLastNameError("");
-  //     setShowError(false);
-  //   }
-  // };
 
   // Real-time validation for first name
   const handleFirstNameChange = (value: string) => {
@@ -231,34 +191,6 @@ export const SettingsPage = () => {
     navigate("/sign-in", { state: { from: "/settings" } });
   };
 
-  // const handleGetResponse = (response: {
-  //   success: boolean;
-  //   data?: { email?: string; emailVerify?: boolean };
-  //   message?: string;
-  // }) => {
-  //   if (response.success && response.data) {
-  //     dispatch(
-  //       updateUser({
-  //         businessEmail: response.data.email,
-  //         emailVerify: response.data.emailVerify,
-  //       })
-  //     );
-
-  //     const userDetail = localStorage.getItem("userDetail");
-  //     if (userDetail) {
-  //       const parsedUserDetail = JSON.parse(userDetail);
-  //       if (parsedUserDetail.auth?.user) {
-  //         parsedUserDetail.auth.user.businessEmail = response.data.email;
-  //         parsedUserDetail.auth.user.emailVerify = response.data.emailVerify ?? false;
-  //         localStorage.setItem("userDetail", JSON.stringify(parsedUserDetail));
-  //       }
-  //     }
-  //   }
-
-  //   setIsUpdateEmailModalOpen(false);
-  //   setTimeout(() => setShowSuccess(true), 100);
-  //   // setResendVerification(true);
-  // };
 
   function handleGetResponse(response: ProfileApiResponse) {
     if (response.success && response.data) {
@@ -426,7 +358,15 @@ export const SettingsPage = () => {
                             )}
                         </InputGroup>
                       </div>
+    
                     </div>
+                     <Button
+                        color="link"
+                        className="text-ws-navy-800 font-semibold shadow-none max-w-48"
+                        onClick={() => setIsUpdateInfoModalOpen(true)}
+                      >
+                        {"Update information"}
+                      </Button>
                     <div className="w-full xl:w-full">
                       <InputGroup>
                        
@@ -456,14 +396,14 @@ export const SettingsPage = () => {
                               isDisabled={profileLoading || !firstName || !lastName}
                             >
                               {/* {resendVerification ? "Resend Verification Email" : "Update email"} */}
-                              {"Update your information"}
+                              {"Update email"}
                             </Button>
                           </div>
     
                       </InputGroup>
                     </div>
                     <div className="w-full xl:w-full">
-                      {/* <InputGroup>
+                      <InputGroup>
                         <div className="flex flex-col gap-1.5 w-full">
                           <Label htmlFor="changePassword">Change Password</Label>
                           <div className="w-full flex flex-col gap-4">
@@ -477,7 +417,7 @@ export const SettingsPage = () => {
                               value="********"
                               isDisabled={true}
                             />
-                            <Button
+                            {/* <Button
                               color="link"
                               size="sm"
                               type="button"
@@ -492,18 +432,18 @@ export const SettingsPage = () => {
                                   <EyeOff className="size-5 text-ws-gray-400" />
                                 )}
                               </>
-                            </Button>
-                            <Button
+                            </Button> */}
+                            {/* <Button
                               color="link"
                               className="text-ws-navy-800 font-semibold shadow-none max-w-38"
                               onClick={() => setIsChangePasswordModalOpen(true)}
                               isDisabled={profileLoading || !firstName || !lastName}
                             >
                               Change password
-                            </Button>
+                            </Button> */}
                           </div>
                         </div>
-                      </InputGroup> */}
+                      </InputGroup>
                       <Button
                         color="link"
                         className="text-ws-navy-800 font-semibold shadow-none"
@@ -579,215 +519,19 @@ export const SettingsPage = () => {
                 </div>
               </div>
 
-              {/* <div className="bg-ws-base-white border border-ws-border-primary rounded-xl py-8 px-6 mb-6"> */}
-              {/* Name Fields */}
-              {/* <div className="flex mb-6 flex-col xl:flex-row">
-                  <div className="w-full xl:w-1/3 mb-3 xl:mb-0">
-                    <label
-                      htmlFor="firstName"
-                      className="text-ws-text-secondary font-medium text-sm"
-                    >
-                      Name <span className="text-ws-error-600">*</span>
-                    </label>
-                  </div>
-                  <div className="w-full xl:w-2/3 flex flex-col gap-4">
-                    <div className="flex gap-4">
-                      <div className="flex-1">
-                        <Input
-                          id="firstName"
-                          name="firstName"
-                          size="md"
-                          isRequired={true}
-                          placeholder="First name"
-                          value={firstName}
-                          onChange={handleFirstNameChange}
-                          isDisabled={profileLoading}
-                        />
-                        {firstNameError && (
-                          <p className="text-ws-error-600 text-sm mt-1">{firstNameError}</p>
-                        )}
-                      </div>
-                      <div className="flex-1">
-                        <Input
-                          id="lastName"
-                          name="lastName"
-                          size="md"
-                          isRequired={true}
-                          placeholder="Last name"
-                          value={lastName}
-                          onChange={handleLastNameChange}
-                          isDisabled={profileLoading}
-                        />
-                        {lastNameError && (
-                          <p className="text-ws-error-600 text-sm mt-1">{lastNameError}</p>
-                        )}
-                      </div>
-                    </div>
-                  </div>
-                </div> */}
-
-              {/* Email Field */}
-              {/* <div className="flex mb-6 flex-col xl:flex-row">
-                  <div className="w-full xl:w-1/3 mb-3 xl:mb-0">
-                    <label htmlFor="email" className="text-ws-text-secondary font-medium text-sm">
-                      Email address <span className="text-ws-error-600">*</span>
-                    </label>
-                  </div>
-                  <div className="w-full xl:w-2/3 flex flex-col gap-4">
-                    <Input
-                      id="email"
-                      name="email"
-                      size="md"
-                      icon={Mail01}
-                      isRequired={true}
-                      placeholder="medium@untitledui.com"
-                      value={userData?.businessEmail || ""}
-                      isDisabled={true}
-                    />
-                    <Button
-                      color="link-color"
-                      className="max-w-22"
-                      onClick={
-                        resendVerification
-                          ? handleResendVerification
-                          : () => setIsUpdateEmailModalOpen(true)
-                      }
-                      isDisabled={profileLoading || !firstName || !lastName}
-                    >
-                      {resendVerification ? "Resend Verification Email" : "Update email"}
-                    </Button>
-                  </div>
-                </div> */}
-
-              {/* Password Field */}
-              {/* <div className="flex mb-6 flex-col xl:flex-row">
-                  <div className="w-full xl:w-1/3 mb-3 xl:mb-0">
-                    <label
-                      htmlFor="password"
-                      className="text-ws-text-secondary font-medium text-sm"
-                    >
-                      Password <span className="text-ws-error-600">*</span>
-                    </label>
-                  </div>
-                  <div className="w-full xl:w-2/3 flex flex-col gap-4">
-                    <Input
-                      type="password"
-                      id="password"
-                      name="password"
-                      size="md"
-                      isRequired={true}
-                      placeholder="Password"
-                      value="********"
-                      isDisabled={true}
-                    />
-                    <Button
-                      color="link-color"
-                      className="max-w-22"
-                      onClick={() => setIsChangePasswordModalOpen(true)}
-                      isDisabled={profileLoading || !firstName || !lastName}
-                    >
-                      Change password
-                    </Button>
-                  </div>
-                </div> */}
-              {/* </div> */}
-
-              {/* Account Management Section */}
-              {/* <div className="flex items-center justify-between gap-2">
-                <div className="flex flex-col">
-                  <h2 className="text-lg font-semibold text-ws-text-primary">Account Management</h2>
-                  <p className="text-sm text-ws-text-tertiary">
-                    Update your photo and personal details here.
-                  </p>
-                </div>
-              </div>
-              <hr className="border-t border-ws-border-primary mt-5 mb-6" />
-
-              <div className="bg-ws-base-white border border-ws-border-primary rounded-xl py-8 px-6 mb-6"> */}
-              {/* Retake Assessment */}
-              {/* <div className="flex mb-6 flex-col xl:flex-row">
-                  <div className="w-full xl:w-1/2 flex flex-col">
-                    <label
-                      htmlFor="firstName"
-                      className="text-ws-text-secondary font-medium text-sm"
-                    >
-                      Retake the assessment
-                    </label>
-                    <span className="text-ws-text-tertiary text-sm">
-                      Retaking the assessment will result in loss of progress.
-                    </span>
-                  </div>
-                  <div className="w-full xl:w-1/2 flex gap-4 mt-3 xl:mt-0">
-                    <Button
-                      color="secondary"
-                      size="md"
-                      className="w-full"
-                      onClick={() => setIsRetakeAssessmentModalOpen(true)}
-                      isDisabled={completionCount === 0}
-                    >
-                      Retake Assessment
-                    </Button>
-                  </div>
-                </div> */}
-
-              {/* Delete Account */}
-              {/* <div className="flex mb-6 flex-col xl:flex-row">
-                  <div className="w-full xl:w-1/2 flex flex-col">
-                    <label
-                      htmlFor="firstName"
-                      className="text-ws-text-secondary font-medium text-sm"
-                    >
-                      Delete account
-                    </label>
-                    <span className="text-ws-text-tertiary text-sm">This cannot be undone</span>
-                  </div>
-                  <div className="w-full xl:w-1/2 flex gap-4 mt-3 xl:mt-0">
-                    <Button
-                      color="secondary"
-                      size="md"
-                      className="w-full text-red-700"
-                      onClick={() => setIsAccountDeleteModalOpen(true)}
-                    >
-                      Delete Account
-                    </Button>
-                  </div>
-                </div>
-              </div> */}
-
-              {/* Action Buttons */}
-              {/* <div className="flex items-center justify-end gap-3">
-                <Button
-                  color="secondary"
-                  size="sm"
-                  onClick={handleCancel}
-                  isDisabled={!hasChanges || profileLoading}
-                >
-                  Cancel
-                </Button>
-                <Button
-                  color="primary"
-                  size="sm"
-                  onClick={handleSave}
-                  // isDisabled={profileLoading || !firstName || !lastName}
-
-                  isDisabled={
-                    !hasChanges ||
-                    profileLoading ||
-                    !!firstNameError ||
-                    !!lastNameError ||
-                    !firstName ||
-                    !lastName
-                  }
-                >
-                  {profileLoading ? "Saving..." : "Save"}
-                </Button>
-              </div> */}
             </div>
           </div>
         </main>
       </div>
 
       {/* Modals */}
+      <UpdateYourInformationModal
+        isOpen={isUpdateInfoModalOpen}
+        onClose={() => setIsUpdateInfoModalOpen(false)}
+        onSuccess={() => {
+          setTimeout(() => setIsUpdateInfoSuccessModalOpen(true), 100);
+        }}
+      />
       <ChangePasswordModal
         isOpen={isChangePasswordModalOpen}
         onClose={() => setIsChangePasswordModalOpen(false)}
@@ -812,7 +556,21 @@ export const SettingsPage = () => {
       />
       <BaseModalWithIcon
         isOpen={showSuccess}
-        onClose={() => setShowSuccess(false)}
+        onClose={async () => {
+          setShowSuccess(false);
+          await dispatch(logoutThunk())
+            .unwrap()
+            .catch(() => {});
+          navigate("/success", {
+            state: {
+              messageImg: checkmarkIcon,
+              title: "You've been logged out.",
+              subtitle:
+                "To protect your privacy, you've been logged out. Please verify your email to log back in.",
+              
+            },
+          });
+        }}
         {...emailUpdatedModal}
       />
       <BaseModalWithIcon
@@ -824,6 +582,11 @@ export const SettingsPage = () => {
         isOpen={isAccountDeleteModalOpen}
         onClose={() => setIsAccountDeleteModalOpen(false)}
         {...accountDeleteModal}
+      />
+      <BaseModalWithIcon
+        isOpen={isUpdateInfoSuccessModalOpen}
+        onClose={() => setIsUpdateInfoSuccessModalOpen(false)}
+        {...updateInfoSuccessModal}
       />
     </div>
   );
