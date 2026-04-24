@@ -22,7 +22,7 @@ import BenchmarkPage from "../benchmark/BenchmarkPage";
 import { fetchWorkforce } from "@/store/slices/workforceSlice";
 import { CircleCheckIcon } from "@/assets/icons/CircleCheckIcon";
 import { AssessmentIcon } from "@/assets/icons/AssessmentIcon";
-import { Oval } from "react-loader-spinner";
+import { LoadingSpinner } from "@/components/common/LoadingSpinner";
 import { Button } from "@/components/base/buttons/button";
 import RecommendationsFinchPage from "../recommendations/RecommendationsFinchPage";
 import BenchmarkFinchPage from "../benchmark/BenchmarkFinchPage";
@@ -79,6 +79,7 @@ export const DashboardPage = () => {
   const [showGoalsEmptyWarning, setShowGoalsEmptyWarning] = useState(false);
   const [activeTab, setActiveTab] = useState("finchRecommendations");
   const fromGoalsCompletionRef = useRef(false);
+  const mainRef = useRef<HTMLElement>(null);
 
   const refetchUserData = useCallback(async () => {
     if (user?.id) {
@@ -235,21 +236,9 @@ export const DashboardPage = () => {
 
   const isDashboardVisible = assessmentData?.data?.status === "completed" || isConnected;
 
-  if (isLoadingAssessment) {
+  if (isLoadingAssessment || isFinchLoading) {
     return (
-      <div className="flex min-h-screen items-center justify-center bg-secondary">
-        <Oval
-          height={80}
-          width={80}
-          color="#06b6d4"
-          wrapperClass="flex items-center justify-center"
-          visible
-          ariaLabel="oval-loading"
-          secondaryColor="#0891b2"
-          strokeWidth={2}
-          strokeWidthSecondary={2}
-        />
-      </div>
+      <LoadingSpinner height={80} width={80} bgClass="bg-secondary" ariaLabel="oval-loading" />
     );
   }
 
@@ -265,7 +254,7 @@ export const DashboardPage = () => {
       {/* Main Content Area */}
       <div className="flex flex-1 flex-col overflow-hidden">
         {/* Main Content */}
-        <main className="flex-1 overflow-y-auto p-5 xl:p-10 xl:pl-2">
+        <main ref={mainRef} className="flex-1 overflow-y-auto p-5 xl:p-10 xl:pl-2">
           <div className="space-y-6"></div>
           <div className="w-full">
             <h2 className="text-4xl font-bold text-ws-text-primary">
@@ -467,6 +456,7 @@ export const DashboardPage = () => {
                 <Declarations className="mt-15" />
               </div>
             )}
+          {!emailVerify && <Declarations className="mt-15" />}
 
           {finchError && (
             <div className="mb-4">
@@ -535,7 +525,10 @@ export const DashboardPage = () => {
                 )}
                 <Tabs.Panel id="finchRecommendations" className="pt-0">
                   <RecommendationsFinchPage
-                    onNavigateToWorkforce={() => setActiveTab("finchWorkforce")}
+                    onNavigateToWorkforce={() => {
+                      setActiveTab("finchWorkforce");
+                      mainRef.current?.scrollTo({ top: 0, behavior: "smooth" });
+                    }}
                   />
                 </Tabs.Panel>
                 {isConnected && (

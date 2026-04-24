@@ -107,63 +107,33 @@ Do this first when editing code:
 - Open `src/routes/index.tsx` to follow the lazy-load + Suspense pattern (helper: `lazyLoad(Component)`).
 - Use barrel exports (feature `index.ts`) and the `@/` alias for imports (never relative `../..` for src files).
 
-## Active Feature: 016-refactor-additional-questions (2026-04-17)
+## Active Feature: 021-finch-connect-loading (2026-04-24)
 
 <!-- specify:agent:start -->
 
-**Branch**: `016-refactor-additional-questions` | **Spec**: `specs/016-refactor-additional-questions/spec.md` | **Plan**: `specs/016-refactor-additional-questions/plan.md`
+**Branch**: `021-finch-connect-loading` | **Spec**: `specs/021-finch-connect-loading/spec.md` | **Plan**: `specs/021-finch-connect-loading/plan.md`
 
-### Context: Previous features (009–015) are complete
+### Context: Previous features (009–020) are complete
 
-Features 009–015 fully implemented. Feature 010 already refactored WorkforcePage into sub-components (`src/pages/workforce/`) — that is the **key architectural precedent** for this feature.
-
-Feature 015 added the retirement employer-match Yes/No question with conditional percentage input to `AdditionalQuestions.tsx`. The file is now ~930 lines with repeated patterns and ESLint cognitive-complexity violations.
+Features 009–020 fully implemented. Feature 016 refactored `AdditionalQuestions.tsx` into section components. Features 017–018 added formatting and dynamic card content.
 
 ### What this feature does
 
-Pure UI refactor — zero user-observable changes. Decomposes `AdditionalQuestions.tsx` into:
+Minimal UI fix — adds a full-screen loading spinner to `DashboardPage.tsx` during the Finch connection flow. When the user clicks "Start with Finch", there is currently no visible feedback between click and outcome. This adds a `<LoadingSpinner>` guard matching the existing `isLoadingAssessment` pattern.
 
-- 4 section components (Workforce, Compensation, BenefitsRetirement, Goals) in `src/pages/additionalQuestions/`
-- 3 shared primitives (FieldError, QuestionRadioGroup, QuestionCheckboxGroup) in `src/components/common/`
-- 1 shared types file in `src/types/additionalQuestionsTypes.ts`
-- Parent orchestrator trimmed from ~930 to ~150 lines
+### Single file to modify
 
-### Files to create
+- `src/pages/dashboard/DashboardPage.tsx` — add early-return guard `if (isFinchLoading)` immediately after the existing `if (isLoadingAssessment)` guard
 
-**Types:**
+### Key facts
 
-- `src/types/additionalQuestionsTypes.ts` — `QuestionAnswer`, `GoalsAnswer`, `QuestionOption`, `QuestionTooltip`, `QuestionDefinition`
-
-**Shared primitives:**
-
-- `src/components/common/FieldError.tsx` — renders `<InputInfo> + <span>` error; returns null if no message
-- `src/components/common/QuestionRadioGroup.tsx` — label + error + RadioGroup with mapped RadioButtons
-- `src/components/common/QuestionCheckboxGroup.tsx` — label + error + mapped Checkboxes
-
-**Section components (co-located siblings):**
-
-- `src/pages/additionalQuestions/WorkforceSection.tsx` — owns `questions` array
-- `src/pages/additionalQuestions/CompensationSection.tsx` — owns `compensationQuestions`, `monthOptions`
-- `src/pages/additionalQuestions/BenefitsRetirementSection.tsx` — owns `benefitsQuestions`, `retirementQuestions`
-- `src/pages/additionalQuestions/GoalsSection.tsx` — imports `goalsData` from `@/data/goalsData`
-- `src/pages/additionalQuestions/index.ts` — barrel: `export { default } from "./AdditionalQuestions"`
-
-**Optionally:**
-
-- `src/data/monthOptions.ts` — month options array (shared by Compensation + Benefits sections)
-
-### Files to modify
-
-- `src/pages/additionalQuestions/AdditionalQuestions.tsx` — replace 4 JSX section blocks with section component calls; keep all state, hooks, validation, and handlers; update imports
-
-### Key patterns
-
-- **State ownership**: All state (`answers`, `goalsAnswers`, `annualRaiseMonth`, `payrollProvider`, `benefitsEnrollmentMonth`, `retirementMatchPercentage`, `fieldErrors`) stays in parent
-- **Narrow callbacks**: Sections receive `onClearFieldError(key: string)` not the raw `setFieldErrors` setter
-- **Section props pattern**: See `data-model.md` for each section's full props interface
-- **Tests unchanged**: `tests/pages/AdditionalQuestions.test.tsx` requires zero changes — default export path preserved
-- See full implementation guide: `specs/016-refactor-additional-questions/quickstart.md`
-- See type contracts: `specs/016-refactor-additional-questions/data-model.md`
+- `isFinchLoading` is already destructured from `useFinchConnect()` in `DashboardPage.tsx`
+- `LoadingSpinner` is already imported in `DashboardPage.tsx`
+- Spinner props: `height={80} width={80} bgClass="bg-secondary" ariaLabel="oval-loading"`
+- **No hook changes needed** — `useFinchConnect.ts` already tracks full lifecycle via `status !== "idle"`
+- **No new imports** — everything already present
+- **No test changes** — mocks default to `isLoading: false`
+- See full implementation guide: `specs/021-finch-connect-loading/quickstart.md`
 <!-- specify:agent:end -->
 
 Essential files to reference in PRs or fixes:

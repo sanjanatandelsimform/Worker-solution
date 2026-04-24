@@ -12,8 +12,10 @@ export default defineConfig({
   test: {
     globals: true,
     environment: "jsdom",
+    // pool: 'vmThreads',
     setupFiles: "./tests/setup.ts",
     passWithNoTests: true,
+    reporters: ["verbose"],
     server: {
       deps: {
         inline: ["@asamuzakjp/css-color", "cssstyle"],
@@ -22,7 +24,7 @@ export default defineConfig({
     coverage: {
       provider: "v8",
       enabled: true,
-      reporter: ["text", "json", "html", "lcov"],
+      reporter: ["text", "text-summary", "json", "html", "lcov"],
       reportsDirectory: "./coverage",
       reportOnFailure: true,
       all: true,
@@ -35,6 +37,11 @@ export default defineConfig({
         "src/main.tsx",
         "src/vite-env.d.ts",
         "src/**/*.d.ts",
+        "src/**/*Types.ts",
+        "src/**/*types.ts",
+        "src/types/**",
+        "src/assets/**",
+        "src/constants/**",
       ],
     },
   },

@@ -111,7 +111,7 @@ export const SuccessPage: React.FC<SuccessCardProps> = ({
                   "Welcome aboard! Start your success journey with BeneStats"}
               </p>
             </div>
-            {buttonLabel && (
+            {state.buttonText && (
               <Button
                 color="primary"
                 size="lg"

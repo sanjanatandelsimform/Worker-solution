@@ -133,7 +133,7 @@ describe("VerifyEmailPage", () => {
           state: expect.objectContaining({
             title: "Your email has been verified!",
             subtitle: expect.stringContaining("Welcome aboard"),
-            buttonText: "Take the Assessment",
+            buttonLabel: "Take the Assessment",
             buttonPath: "/assessment",
           }),
         });

@@ -19,7 +19,7 @@
     "test:components": "vitest run tests/components",
     "test:ui": "vitest run tests/pages/SignInPage.test.tsx && vitest run tests/pages/RegisterPage.test.tsx && vitest run tests/pages/DashboardPage.test.tsx && vitest run tests/pages/VerifyEmailPage.test.tsx && vitest run tests/components/assessment/WorkforceTab.test.tsx && vitest run tests/components/assessment/CompensationTab.test.tsx && vitest run tests/components/assessment/BenefitsTab.test.tsx && vitest run tests/components/assessment/GoalsTab.test.tsx",
     "test:watch": "vitest --watch",
-    "test:coverage": "vitest run tests/store tests/services tests/hooks tests/utils --coverage"
+    "test:coverage": "vitest run tests/store tests/services tests/hooks tests/utils tests/pages tests/components --coverage"
   },
   "lint-staged": {
     "*.{ts,tsx}": [
@@ -90,6 +90,12 @@
     "vitest": "^4.0.18"
   },
   "overrides": {
-    "vite": "npm:rolldown-vite@7.2.5"
+    "vite": "npm:rolldown-vite@7.2.5",
+    "cssstyle": "4.2.1"
+  },
+  "pnpm": {
+    "overrides": {
+      "cssstyle": "4.2.1"
+    }
   }
 }

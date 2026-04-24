@@ -1,6 +1,7 @@
 import { Tooltip, TooltipTrigger } from "@/components/base/tooltip/tooltip";
 import { InfoCircle } from "@untitledui/icons";
 import { cx } from "@/utils/cx";
+import InlineProgressBar from "@/components/base/progress-indicators/InlineProgressBar";
 
 export interface ProgressItem {
   label: string;
@@ -56,23 +57,7 @@ export default function ProgressCard({
   const renderProgressItem = (item: ProgressItem, index: number) => (
     <div key={`progress-${index}`} className="flex gap-3">
       <div className="text-base font-normal text-ws-text-primary min-w-40">{item.label}</div>
-      <div className="w-full bg-ws-light-teal-25 relative flex items-center">
-        <div
-          className={`h-7 flex-shrink-0 ${item.progressColor || "bg-ws-light-teal-25"} transition-all duration-300`}
-          style={{ width: `${item.percentage}%` }}
-        >
-          {item.percentage >= 12 && (
-            <span className="text-base font-normal text-ws-base-black drop-shadow-md flex items-center justify-end w-full h-full pr-2">
-              {item.percentage.toFixed(1)}%
-            </span>
-          )}
-        </div>
-        {item.percentage < 12 && (
-          <span className="text-base font-normal text-ws-base-black drop-shadow-md pl-2 whitespace-nowrap">
-            {item.percentage.toFixed(1)}%
-          </span>
-        )}
-      </div>
+      <InlineProgressBar percentage={item.percentage} color={item.progressColor} />
     </div>
   );
   // Comment code is require
@@ -146,13 +131,13 @@ export default function ProgressCard({
             >
               {percentage >= 12 && (
                 <span className="text-base font-normal text-ws-base-black drop-shadow-md flex items-center justify-end w-full h-full pr-2">
-                  {percentage.toFixed(1)}%
+                  {percentage}%
                 </span>
               )}
             </div>
             {percentage < 12 && (
               <span className="text-base font-normal text-ws-base-black drop-shadow-md pl-2 whitespace-nowrap">
-                {percentage.toFixed(1)}%
+                {percentage}%
               </span>
             )}
           </div>

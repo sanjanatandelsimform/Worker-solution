@@ -68,11 +68,12 @@ export default function CarouselSection() {
           opts={{
             loop: true,
             align: "start",
+            watchDrag: false,
           }}
         >
           <div className="space-y-6 bg-ws-light-teal-25 border border-ws-border-primary rounded-xl p-4">
             {/* Carousel Content - Only this slides */}
-            <Carousel.Content>
+            <Carousel.Content className="touch-none">
               {didYouKnowSlides.map(slide => (
                 <Carousel.Item key={slide.id}>
                   <div className="flex flex-col gap-2">

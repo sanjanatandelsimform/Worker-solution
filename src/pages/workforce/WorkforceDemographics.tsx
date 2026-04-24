@@ -2,7 +2,7 @@ import StaticCard from "@/pages/recommendations/StaticCard";
 import { Select } from "@/components/base/select/select";
 import { Label } from "@/components/base/input/label";
 import DonutChart from "@/pages/workforce/EmployTypeChart";
-import { ProgressBar } from "@/components/base/progress-indicators/progress-indicators";
+import InlineProgressBar from "@/components/base/progress-indicators/InlineProgressBar";
 import {
   OverviewCardSkeleton,
   DonutChartSkeleton,
@@ -166,7 +166,7 @@ export default function WorkforceDemographics({
             <Label className="text-sm font-medium text-ws-text-secondary flex mb-1.5">
               Employment Type{" "}
               <span className="text-ws-error-600">
-                * <ArrowDown className="inline-block ml-1" />
+                <ArrowDown className="inline-block ml-1" />
               </span>
             </Label>
             <Select
@@ -196,11 +196,10 @@ export default function WorkforceDemographics({
                   <div className="text-base font-normal text-ws-text-secondary min-w-30">
                     {item.label}
                   </div>
-                  <ProgressBar
-                    value={item.value}
-                    max={100}
-                    className="h-6 rounded-none"
-                    customColor={item.customColor}
+                  <InlineProgressBar
+                    percentage={item.value}
+                    color={item.customColor}
+                    className="h-6"
                   />
                   {/* <div className="flex min-w-8 text-base font-normal text-ws-base-black">
                     {item.value}%

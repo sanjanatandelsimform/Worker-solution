@@ -1,5 +1,5 @@
 import { Routes, Route, Navigate } from "react-router-dom";
-import { Oval } from "react-loader-spinner";
+import { LoadingSpinner } from "@/components/common/LoadingSpinner";
 import { AuthErrorBoundary } from "./components/auth/AuthErrorBoundary";
 import { ProtectedRoute } from "./components/routes/ProtectedRoute";
 import { PublicRoute } from "./components/routes/PublicRoute";
@@ -24,21 +24,7 @@ function App() {
   const { isAuthReady } = useAuthInit();
 
   if (!isAuthReady) {
-    return (
-      <div className="flex min-h-screen items-center justify-center bg-gray-50">
-        <Oval
-          height={48}
-          width={48}
-          color="#06b6d4"
-          wrapperClass="flex items-center justify-center"
-          visible
-          ariaLabel="loading"
-          secondaryColor="#0891b2"
-          strokeWidth={2}
-          strokeWidthSecondary={2}
-        />
-      </div>
-    );
+    return <LoadingSpinner />;
   }
 
   return (
