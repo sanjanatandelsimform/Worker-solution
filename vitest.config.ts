@@ -12,6 +12,7 @@ export default defineConfig({
   test: {
     globals: true,
     environment: "jsdom",
+    // pool: 'vmThreads',
     setupFiles: "./tests/setup.ts",
     passWithNoTests: true,
     reporters: ["verbose"],

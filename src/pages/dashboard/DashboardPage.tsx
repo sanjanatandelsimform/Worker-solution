@@ -485,6 +485,7 @@ export const DashboardPage = () => {
                 <Declarations className="mt-15" />
               </div>
             )}
+          {!emailVerify && <Declarations className="mt-15" />}
 
           {finchError && (
             <div className="mb-4">

@@ -88,7 +88,7 @@ describe("useStatesLookup", () => {
         ],
       },
     });
-
+    
     const { result } = renderHook(() => useStatesLookup());
 
     await waitFor(() => {

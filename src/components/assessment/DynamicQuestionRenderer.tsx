@@ -1032,6 +1032,7 @@ export const DynamicQuestionRenderer = ({
         </div>
       );
     }
+
     case "NUMERIC":
     case "NUMBER_INPUT":
       return (

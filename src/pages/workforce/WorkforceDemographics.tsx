@@ -166,7 +166,7 @@ export default function WorkforceDemographics({
             <Label className="text-sm font-medium text-ws-text-secondary flex mb-1.5">
               Employment Type{" "}
               <span className="text-ws-error-600">
-                * <ArrowDown className="inline-block ml-1" />
+                <ArrowDown className="inline-block ml-1" />
               </span>
             </Label>
             <Select
