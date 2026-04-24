@@ -2,7 +2,7 @@ import { useEffect, useRef } from "react";
 import { Navigate, useLocation } from "react-router-dom";
 import { useAppDispatch, useAppSelector } from "@/store/hooks";
 import { syncUserState } from "@/store/slices/authSlice";
-import { Oval } from "react-loader-spinner";
+import { LoadingSpinner } from "@/components/common/LoadingSpinner";
 
 const STORAGE_KEY = "userDetail";
 
@@ -63,21 +63,7 @@ export const ProtectedRoute = ({
   }
 
   if (hasTokens && !user) {
-    return (
-      <div className="flex min-h-screen items-center justify-center bg-gray-50">
-        <Oval
-          height={48}
-          width={48}
-          color="#06b6d4"
-          wrapperClass="flex items-center justify-center"
-          visible
-          ariaLabel="loading"
-          secondaryColor="#0891b2"
-          strokeWidth={2}
-          strokeWidthSecondary={2}
-        />
-      </div>
-    );
+    return <LoadingSpinner />;
   }
 
   if (requireEmailVerified && user && !user.emailVerify) {

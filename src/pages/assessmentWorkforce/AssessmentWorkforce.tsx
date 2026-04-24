@@ -10,7 +10,7 @@ import GoalsTab from "./GoalsTab";
 import { useAppSelector } from "@/store/hooks";
 import { selectUser } from "@/store/selectors/authSelectors";
 import { useAssessmentStatus } from "@/hooks/useAssessmentStatus";
-import { Oval } from "react-loader-spinner";
+import { LoadingSpinner } from "@/components/common/LoadingSpinner";
 
 const steps = [
   { id: "workforce", label: "Workforce" },
@@ -139,19 +139,7 @@ export default function AssessmentWorkforcePage() {
 
   if (isLoading || !isReadyToRender) {
     return (
-      <div className="flex min-h-screen items-center justify-center bg-secondary">
-        <Oval
-          height={80}
-          width={80}
-          color="#06b6d4"
-          wrapperClass="flex items-center justify-center"
-          visible
-          ariaLabel="oval-loading"
-          secondaryColor="#0891b2"
-          strokeWidth={2}
-          strokeWidthSecondary={2}
-        />
-      </div>
+      <LoadingSpinner height={80} width={80} bgClass="bg-secondary" ariaLabel="oval-loading" />
     );
   }
 
