@@ -150,7 +150,7 @@ export default function CompanyAtAGlance({
               return (
                 <StaticCard
                   key={card.id}
-                  classess="border-ws-border-secondary"
+                  classess="border-ws-border-secondary flex flex-col justify-between"
                   title={card.title}
                   titleClass="text-ws-text-tertiary text-sm font-normal"
                   countIcon={<Icon className="size-5 text-ws-gray-500" />}
@@ -161,6 +161,7 @@ export default function CompanyAtAGlance({
                   tooltipText={card.tooltipText}
                   descriptionText={card.descriptionText}
                   placements={card.placements}
+                  staticCountClass="flex items-center justify-between"
                 />
               );
             })}

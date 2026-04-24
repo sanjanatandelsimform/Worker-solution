@@ -347,23 +347,6 @@ export default function RecommendationsPage() {
           </div>
         </div>
       </div>
-
-      {/* <div className="w-full">
-        <p className="text-xs text-ws-text-primary">
-          This product provides informational insights and recommendations based on the data you
-          share and industry benchmarks. It does not provide legal, financial, tax, or benefits
-          advice, and recommendations are not guarantees of outcomes or results. Actual results may
-          vary, and you are responsible for evaluating and implementing any recommendations based on
-          your organization’s specific circumstances. Read our{" "}
-          <Link to="/terms-page" className="text-ws-light-teal-850 underline">
-            Terms & Conditions{" "}
-          </Link>
-          and{" "}
-          <Link to="/privacy-policy" className="text-ws-light-teal-850 underline">
-            Privacy Policy
-          </Link>
-        </p>
-      </div> */}
       <Declarations className="mt-4" />
     </div>
   );

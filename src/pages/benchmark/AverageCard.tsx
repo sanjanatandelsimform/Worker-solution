@@ -54,11 +54,11 @@ export default function AverageCard({
             color={badgeColor}
             className={
               badgeColor === "success"
-                ? "text-xs bg-ws-bg-positive text-ws-text-positive ring-0 rounded-none py-1"
-                : "text-xs bg-ws-bg-negative text-ws-text-negative ring-0 rounded-none py-1"
+                ? "text-xs bg-ws-bg-light-teal-50 text-ws-text-light-teal-900 ring-0 rounded-none py-1"
+                : "text-xs bg-ws-error-50 text-ws-error-900 ring-0 rounded-none py-1"
             }
             size="sm"
-          >
+          > 
             {staticsPoints}
           </Badge>
         )}

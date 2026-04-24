@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useAppSelector } from "@/store/hooks";
-import { Settings01, LogOut04, Speedometer03, Menu01, XClose } from "@untitledui/icons";
+import { Settings01, LogOut04, Menu01, XClose, Home05 } from "@untitledui/icons";
 import { NavList } from "@/components/application/app-navigation/base-components/nav-list";
 import type { NavItemType } from "@/components/application/app-navigation/config";
 // This is require
@@ -93,11 +93,12 @@ export const DashboardSidebar = ({ activeUrl = "/" }: DashboardSidebarProps) => 
     additionalData: { isDisabled: isLogoutButtonDisabled },
   });
 
+  {/* Dashboard left navigation menu items configuration */}
   const navigationItems: NavItemType[] = [
     {
       label: "Dashboard",
       href: "/dashboard",
-      icon: Speedometer03,
+      icon: Home05,
     },
   ];
 
@@ -152,9 +153,6 @@ export const DashboardSidebar = ({ activeUrl = "/" }: DashboardSidebarProps) => 
         {(!isTabletRange || !isCollapsed) && (
           <div className="flex items-center justify-start overflow-hidden flex-1">
             <div className="flex items-center justify-center transition-all duration-300">
-              {/* <h1 className="font-display text-2xl font-bold leading-8 text-black whitespace-nowrap transition-all duration-300">
-                BeneStats
-              </h1> */}
               <img src={siteLogo} alt="BeneStats Logo" className="w-full" />
             </div>
           </div>

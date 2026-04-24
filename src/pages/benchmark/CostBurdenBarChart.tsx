@@ -78,7 +78,7 @@ export default function CostBurdenBarChart({ data, width, height = 400 }: Canvas
     const barGap = 0; // Gap between stacked bars
 
     // Colors from Figma
-    const color1 = "#006C68"; // Darker Teal
+    const color1 = "#55A19E"; // Darker Teal
     const color2 = "#D2F1EF"; // Lighter Teal
     const textColor = "#000000";
     const gridLineColor = "#D5D7DA";
@@ -243,7 +243,7 @@ export default function CostBurdenBarChart({ data, width, height = 400 }: Canvas
             y: mouseY,
             label: item.sublabel,
             value: item.value2,
-            color: "#006C68",
+            color: "#55A19E",
           };
         } else {
           foundTooltip = {
@@ -352,7 +352,7 @@ export function IncomeDistributionChart({
           <p className="font-normal text-lg leading-7 text-ws-text-primary">Burdened</p>
         </div>
         <div className="flex gap-4 items-center">
-          <div className="size-4.5 rounded-xs bg-ws-light-teal-900" />
+          <div className="size-4.5 rounded-xs bg-ws-light-teal-700" />
           <p className="font-normal text-lg leading-7 text-ws-text-primary">Severely Burdened</p>
         </div>
       </div>

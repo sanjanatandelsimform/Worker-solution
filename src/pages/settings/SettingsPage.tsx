@@ -172,7 +172,7 @@ export const SettingsPage = () => {
           messageImg: checkmarkIcon,
           title: "Your account has been deleted",
           subtitle:
-            "Your profile and associated data has been permenantly deleted. This action can’t be reversed. Create a new account to begin.",
+            "Your profile and associated data has been permanently deleted. This action can’t be reversed. Create a new account to begin.",
           buttonText: "Create an account",
           buttonPath: "/sign-up",
           shouldClearUser: true,
@@ -315,85 +315,89 @@ export const SettingsPage = () => {
 
                 <div className="bg-ws-base-white mt-4">
                   <div className="w-full space-y-4">
-                    <div className="flex items-center justify-between gap-6">
-                      <div className="w-full xl:w-1/2">
-                        <InputGroup>
-                          <Input
-                            id="firstName"
-                            label="First Name"
-                            name="firstName"
-                            size="md"
-                            isRequired={true}
-                            placeholder="First name"
-                            value={firstName}
-                            onChange={handleFirstNameChange}
-                            // isDisabled={profileLoading}
-                            isDisabled={true}
-                            helperTooltip="Your First Name"
-                          />
-                          {firstNameError && (
-                            <p className="text-ws-error-600 text-sm mt-1">{firstNameError}</p>
-                          )}
-                        </InputGroup>
+                    <div className="flex items-start justify-between flex-col">
+                      <div className="w-full flex gap-6 ">
+                        <div className="w-full xl:w-1/2">
+                          <InputGroup>
+                            <Input
+                              id="firstName"
+                              label="First Name"
+                              name="firstName"
+                              size="md"
+                              isRequired={false}
+                              placeholder="First name"
+                              value={firstName}
+                              onChange={handleFirstNameChange}
+                              // isDisabled={profileLoading}
+                              isDisabled={true}
+                              helperTooltip="Your First Name"
+                            />
+                            {firstNameError && (
+                              <p className="text-ws-error-600 text-sm mt-1">{firstNameError}</p>
+                            )}
+                          </InputGroup>
+                        </div>
+                        <div className="w-full xl:w-1/2">
+                          <InputGroup>
+                            <Input
+                              id="lastName"
+                              label="Last Name"
+                              name="lastName"
+                              size="md"
+                              isRequired={false}
+                              placeholder="Last name"
+                              value={lastName}
+                              onChange={handleLastNameChange}
+                              // isDisabled={profileLoading}
+                              isDisabled={true}
+                              helperTooltip="Your Last Name"
+                            />
+                            {lastNameError && (
+                              <p className="text-ws-error-600 text-sm mt-1">{lastNameError}</p>
+                            )}
+                          </InputGroup>
+                        </div>
                       </div>
-                      <div className="w-full xl:w-1/2">
-                        <InputGroup>
-                          <Input
-                            id="lastName"
-                            label="Last Name"
-                            name="lastName"
-                            size="md"
-                            isRequired={true}
-                            placeholder="Last name"
-                            value={lastName}
-                            onChange={handleLastNameChange}
-                            // isDisabled={profileLoading}
-                            isDisabled={true}
-                            helperTooltip="Your Last Name"
-                          />
-                          {lastNameError && (
-                            <p className="text-ws-error-600 text-sm mt-1">{lastNameError}</p>
-                          )}
-                        </InputGroup>
+                      <div className="w-full">
+                        <Button
+                          color="link"
+                          className="text-ws-navy-800 font-semibold shadow-none max-w-48 no-underline mt-2"
+                          onClick={() => setIsUpdateInfoModalOpen(true)}
+                        >
+                          {"Update information"}
+                        </Button>
                       </div>
                     </div>
-                    <Button
-                      color="link"
-                      className="text-ws-navy-800 font-semibold shadow-none max-w-48"
-                      onClick={() => setIsUpdateInfoModalOpen(true)}
-                    >
-                      {"Update information"}
-                    </Button>
+
                     <div className="w-full xl:w-full">
                       <InputGroup>
-                        <div className="w-full flex flex-col gap-4">
-                          <Input
-                            id="email"
-                            label="Email"
-                            name="email"
-                            size="md"
-                            icon={Mail01}
-                            iconClassName="text-ws-gray-400"
-                            isRequired={true}
-                            placeholder="medium@untitledui.com"
-                            value={userData?.businessEmail || ""}
-                            isDisabled={true}
-                            helperTooltip="Your email address"
-                          />
-                          <Button
-                            color="link"
-                            className="text-ws-navy-800 font-semibold shadow-none max-w-48"
-                            // onClick={
-                            //   resendVerification
-                            //     ? handleResendVerification
-                            //     : () => setIsUpdateEmailModalOpen(true)
-                            // }
-                            onClick={() => setIsUpdateEmailModalOpen(true)}
-                            isDisabled={profileLoading || !firstName || !lastName}
-                          >
-                            {/* {resendVerification ? "Resend Verification Email" : "Update email"} */}
-                            {"Update email"}
-                          </Button>
+                        <div className="w-full flex items-start flex-col">
+                          <div className="w-full flex flex-col gap-4">
+                            <Input
+                              id="email"
+                              label="Email"
+                              name="email"
+                              size="md"
+                              icon={Mail01}
+                              iconClassName="text-ws-gray-400"
+                              isRequired={false}
+                              placeholder="medium@untitledui.com"
+                              value={userData?.businessEmail || ""}
+                              isDisabled={true}
+                              helperTooltip="Your email address"
+                            />
+                          </div>
+                          <div className="w-full">
+                            <Button
+                              color="link"
+                              className="text-ws-navy-800 font-semibold shadow-none max-w-48 no-underline mt-2"
+                              onClick={() => setIsUpdateEmailModalOpen(true)}
+                              isDisabled={profileLoading || !firstName || !lastName}
+                            >
+                              {/* {resendVerification ? "Resend Verification Email" : "Update email"} */}
+                              {"Update email"}
+                            </Button>
+                          </div>
                         </div>
                       </InputGroup>
                     </div>
@@ -411,37 +415,14 @@ export const SettingsPage = () => {
                               placeholder="Password"
                               value="********"
                               isDisabled={true}
+                              showPasswordToggle={false}
                             />
-                            {/* <Button
-                              color="link"
-                              size="sm"
-                              type="button"
-                              onClick={() => setShowPassword(!showPassword)}
-                              aria-label={showPassword ? "Hide password" : "Show password"}
-                              className="absolute right-0 top-8"
-                            >
-                              <>
-                                {showPassword ? (
-                                  <Eye className="size-5 text-ws-gray-400" />
-                                ) : (
-                                  <EyeOff className="size-5 text-ws-gray-400" />
-                                )}
-                              </>
-                            </Button> */}
-                            {/* <Button
-                              color="link"
-                              className="text-ws-navy-800 font-semibold shadow-none max-w-38"
-                              onClick={() => setIsChangePasswordModalOpen(true)}
-                              isDisabled={profileLoading || !firstName || !lastName}
-                            >
-                              Change password
-                            </Button> */}
                           </div>
                         </div>
                       </InputGroup>
                       <Button
                         color="link"
-                        className="text-ws-navy-800 font-semibold shadow-none"
+                        className="text-ws-navy-800 font-semibold shadow-none no-underline mt-2"
                         onClick={() => setIsChangePasswordModalOpen(true)}
                         isDisabled={profileLoading || !firstName || !lastName}
                       >
@@ -503,7 +484,7 @@ export const SettingsPage = () => {
                         <Button
                           color="subtle"
                           size="lg"
-                          className="w-full text-base font-semibold text-ws-error-600 hover:text-ws-error-600 hover:border-ws-error-600 hover:bg-ws-base-white"
+                          className="w-full text-base font-semibold text-ws-error-600 hover:bg-ws-error-200 hover:border-ws-error-700 transition-all duration-200 hover:text-ws-error-700"
                           onClick={() => setIsAccountDeleteModalOpen(true)}
                         >
                           Delete my account

@@ -246,6 +246,7 @@ export const ChangePasswordModal = ({ isOpen, onClose }: ChangePasswordModalProp
                         setCurrentPasswordError("");
                       }
                     }}
+                    showPasswordToggle={false}
                   />
                 </InputGroup>
 

@@ -167,7 +167,7 @@ export const UpdateYourEmailModal = ({
         <ModalHeader>
           <div className="flex items-center justify-between w-full relative">
             <div className="flex flex-col gap-1">
-              <ModalTitle>Update your information</ModalTitle>
+              <ModalTitle>Update Your Email</ModalTitle>
               <ModalDescription>
                 {showSuccess
                   ? "Check your inbox for a verification link and follow the steps to confirm the update."
