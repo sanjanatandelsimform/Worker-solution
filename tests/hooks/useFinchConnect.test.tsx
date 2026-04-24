@@ -266,4 +266,66 @@ describe("useFinchConnect", () => {
     });
     expect(result.current.error).toBeNull();
   });
+
+  // ── isPageLoading tests (T017a–T017d) — Feature 022 ───────────────────
+
+  // T017a — isPageLoading starts false
+  it("isPageLoading is false on initial render", () => {
+    const { result } = renderHook(() => useFinchConnect(), { wrapper });
+    expect(result.current.isPageLoading).toBe(false);
+  });
+
+  // T017b — isPageLoading is true during fetching-session
+  it("isPageLoading is true immediately after connectWithFinch is called (fetching-session)", async () => {
+    mockGetFinchSessionId.mockReturnValue(new Promise(() => {})); // never resolves
+    const { result } = renderHook(() => useFinchConnect(), { wrapper });
+
+    act(() => {
+      void result.current.connectWithFinch();
+    });
+
+    expect(result.current.isPageLoading).toBe(true);
+  });
+
+  // T017c — isPageLoading is false during connecting (modal open) but isLoading remains true
+  it("isPageLoading is false while Finch modal is open (connecting phase)", async () => {
+    const { result } = renderHook(() => useFinchConnect(), { wrapper });
+
+    // connectWithFinch resolves getFinchSessionId → status transitions to "connecting"
+    await act(async () => {
+      await result.current.connectWithFinch();
+    });
+
+    // Modal is now open: isPageLoading must be false, isLoading must still be true
+    expect(result.current.isPageLoading).toBe(false);
+    expect(result.current.isLoading).toBe(true);
+  });
+
+  // T017d — isPageLoading is true during exchanging-code
+  it("isPageLoading is true during exchanging-code phase", async () => {
+    let resolveExchange!: () => void;
+    mockExchangeFinchCode.mockReturnValue(
+      new Promise<void>(res => {
+        resolveExchange = res;
+      })
+    );
+
+    const { result } = renderHook(() => useFinchConnect(), { wrapper });
+
+    await act(async () => {
+      await result.current.connectWithFinch();
+    });
+
+    // Trigger onSuccess to transition to "exchanging-code"
+    act(() => {
+      capturedOnSuccess!({ code: "auth-code-xyz" });
+    });
+
+    await waitFor(() => {
+      expect(result.current.isPageLoading).toBe(true);
+    });
+
+    // Clean up — resolve the pending exchange
+    act(() => resolveExchange());
+  });
 });

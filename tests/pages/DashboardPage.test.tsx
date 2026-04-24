@@ -29,6 +29,7 @@ const mockClearFinchError = vi.fn();
 const mockUseFinchConnect = vi.fn(() => ({
   connectWithFinch: mockConnectWithFinch,
   isLoading: false,
+  isPageLoading: false,
   error: null,
   clearError: mockClearFinchError,
 }));
@@ -223,6 +224,23 @@ describe("DashboardPage", () => {
     // React Aria Button with isDisabled sets data-disabled attribute
     const btn = screen.getByRole("button", { name: /Start with Finch/i });
     expect(btn).toHaveAttribute("data-disabled");
+  });
+
+  // T022-T018 — Spinner NOT shown when isPageLoading is false but isLoading is true (modal open)
+  it("does not show full-screen spinner when isPageLoading is false (Finch modal-open phase)", async () => {
+    mockUseFinchConnect.mockReturnValue({
+      connectWithFinch: mockConnectWithFinch,
+      isLoading: true,
+      isPageLoading: false,
+      error: null,
+      clearError: mockClearFinchError,
+    });
+    renderDashboardPage(createTestStore({ auth: { user: { ...mockUser, emailVerify: true } } }));
+
+    // Page content renders normally — no early-return spinner
+    await waitFor(() => {
+      expect(screen.getByText(/Welcome|Hi,/i)).toBeInTheDocument();
+    });
   });
 });
 
