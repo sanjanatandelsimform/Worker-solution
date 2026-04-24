@@ -242,6 +242,12 @@ export const DashboardPage = () => {
     );
   }
 
+  if (isFinchLoading) {
+    return (
+      <LoadingSpinner height={80} width={80} bgClass="bg-secondary" ariaLabel="oval-loading" />
+    );
+  }
+
   const handleGetStarted = () => {
     navigate("/assessment");
   };
