@@ -614,7 +614,7 @@
                 },
                 {
                   "label": "My company does not offer retirement/savings benefits",
-                  "value": "My company does not offer retirement/savings benefits",
+                  "value": "None Retirement",
                   "displayOrder": 11
                 }
               ]
@@ -669,7 +669,7 @@
                 },
                 {
                   "label": "My company does not offer health and wellness benefit",
-                  "value": "My company does not offer health and wellness benefit",
+                  "value": "None Health Wellness",
                   "displayOrder": 18
                 }
               ]

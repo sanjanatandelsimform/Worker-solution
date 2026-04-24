@@ -26,6 +26,7 @@ import { InfoCircle } from "@untitledui/icons";
 const EXCLUSIVE_BENEFIT_OPTIONS = new Set([
   "My company does not offer retirement/savings benefits",
   "My company does not offer health and wellness benefit",
+  "My company does not offer any supplemental benefits",
 ]);
 
 /** Tooltips for specific option values */
@@ -888,7 +889,7 @@ export const DynamicQuestionRenderer = ({
               ? question.optionGroups.map((group: OptionGroup) => {
                   // Find the exclusive "does not offer" option for this group (if any)
                   const exclusiveOption = group.options.find((o: QuestionOption) =>
-                    EXCLUSIVE_BENEFIT_OPTIONS.has(o.value)
+                    EXCLUSIVE_BENEFIT_OPTIONS.has(o.label)
                   );
                   const currentSelections = Array.isArray(currentAnswer) ? currentAnswer : [];
                   const isExclusiveSelected =
@@ -901,7 +902,7 @@ export const DynamicQuestionRenderer = ({
                       </h3>
                       <div className="flex flex-col gap-4 pl-2 font-normal text-ws-text-secondary">
                         {group.options.map((option: QuestionOption) => {
-                          const isThisExclusive = EXCLUSIVE_BENEFIT_OPTIONS.has(option.value);
+                          const isThisExclusive = EXCLUSIVE_BENEFIT_OPTIONS.has(option.label);
                           // Disable non-exclusive options when the exclusive one is selected
                           const isOptionDisabled = isExclusiveSelected && !isThisExclusive;
 

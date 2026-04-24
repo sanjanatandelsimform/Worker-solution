@@ -216,4 +216,154 @@ describe("useAssessment Hook", () => {
     // Verify GET was called twice (once per section change)
     expect(getAssessment).toHaveBeenCalledTimes(2);
   });
+
+  // T014: should normalize STRUCTURED_ARRAY items by adding numeric ids
+  it("should normalize STRUCTURED_ARRAY items by adding numeric ids", async () => {
+    const mockResponse: ApiResponse<AssessmentData> = {
+      success: true,
+      data: {
+        assessmentType: "manual",
+        data: {
+          assessmentResponseId: 1,
+          userId: "user-1",
+          createdAt: "2026-02-13T00:00:00Z",
+          updatedAt: "2026-02-13T00:00:00Z",
+          status: "in_progress",
+          sections: {
+            workforce: {
+              commonJobTitles: [
+                { title: "Developer", percentage: 50 },
+                { title: "Designer", percentage: 50 },
+              ],
+            },
+          },
+        },
+      },
+    };
+
+    vi.mocked(getAssessment).mockResolvedValueOnce(mockResponse);
+
+    const { result } = renderHook(() => useAssessment({ section: "workforce" }));
+
+    await waitFor(() => {
+      const common = result.current.answers.commonJobTitles as Array<Record<string, unknown>>;
+      expect(Array.isArray(common)).toBe(true);
+      expect(typeof common[0].id).toBe("number");
+      expect(typeof common[1].id).toBe("number");
+    });
+  });
+
+  // T015: should map commute fields from legacy keys
+  it("should map commuteMethod/commuteTime to normalized keys", async () => {
+    const mockResponse: ApiResponse<AssessmentData> = {
+      success: true,
+      data: {
+        assessmentType: "manual",
+        data: {
+          assessmentResponseId: 1,
+          userId: "user-1",
+          createdAt: "2026-02-13T00:00:00Z",
+          updatedAt: "2026-02-13T00:00:00Z",
+          status: "in_progress",
+          sections: {
+            workforce: {
+              commuteMethod: "Car",
+              commuteTime: "30-1hr",
+            },
+          },
+        },
+      },
+    };
+
+    vi.mocked(getAssessment).mockResolvedValueOnce(mockResponse);
+
+    const { result } = renderHook(() => useAssessment({ section: "workforce" }));
+
+    await waitFor(() => {
+      expect(result.current.answers.employeeCommuteMethod).toBe("Car");
+      expect(result.current.answers.averageCommuteTime).toBe("30-1hr");
+      // original keys should be removed
+      expect((result.current.answers as any).commuteMethod).toBeUndefined();
+      expect((result.current.answers as any).commuteTime).toBeUndefined();
+    });
+  });
+
+  // T016: submitSection should call appropriate API and set completion state on success
+  it("submitSection calls API and sets isCompleted on success", async () => {
+    vi.mocked(getAssessment).mockResolvedValueOnce({
+      success: true,
+      data: { assessmentType: "manual", data: { assessmentResponseId: 1, userId: "u", createdAt: "", updatedAt: "", status: "in_progress", sections: { workforce: {} } } },
+    });
+
+    const mockSubmitResponse = { success: true };
+    const { submitWorkforce } = await import("@/services/api/assessmentApi");
+    vi.mocked(submitWorkforce).mockResolvedValueOnce(mockSubmitResponse as any);
+
+    const { result } = renderHook(() => useAssessment({ section: "workforce" }));
+
+    // wait for initial load
+    await waitFor(() => expect(result.current.isLoadingGet).toBe(false));
+
+    const promise = act(() => result.current.submitSection());
+
+    await waitFor(() => {
+      expect(result.current.isSubmitting).toBe(false);
+      expect(result.current.isCompleted).toBe(true);
+    });
+
+    const resp = await promise;
+    expect(resp.success).toBe(true);
+  });
+
+  // T017: submitSection should set fieldErrors and apiError on failure
+  it("submitSection sets fieldErrors and apiError on API failure", async () => {
+    vi.mocked(getAssessment).mockResolvedValueOnce({
+      success: true,
+      data: { assessmentType: "manual", data: { assessmentResponseId: 1, userId: "u", createdAt: "", updatedAt: "", status: "in_progress", sections: { workforce: {} } } },
+    });
+
+    const failing = { success: false, fieldErrors: { q1: "Invalid" }, message: "Bad" };
+    const { submitWorkforce } = await import("@/services/api/assessmentApi");
+    vi.mocked(submitWorkforce).mockResolvedValueOnce(failing as any);
+
+    const { result } = renderHook(() => useAssessment({ section: "workforce" }));
+
+    await waitFor(() => expect(result.current.isLoadingGet).toBe(false));
+
+    const resp = await act(() => result.current.submitSection());
+
+    expect(resp.success).toBe(false);
+    expect(result.current.errors.q1).toBe("Invalid");
+    expect(result.current.apiError).not.toBeNull();
+  });
+
+  // T018: updateAnswers, clearError, resetSection, retryGetAssessment
+  it("supports updateAnswers, clearError, resetSection and retryGetAssessment", async () => {
+    const initial = { success: true, data: { assessmentType: "manual", data: { assessmentResponseId: 1, userId: "u", createdAt: "", updatedAt: "", status: "in_progress", sections: { workforce: {} } } } } as ApiResponse<AssessmentData>;
+    vi.mocked(getAssessment).mockResolvedValueOnce(initial).mockResolvedValueOnce(initial);
+
+    const { result } = renderHook(() => useAssessment({ section: "workforce" }));
+
+    await waitFor(() => expect(result.current.isLoadingGet).toBe(false));
+
+    act(() => result.current.updateAnswers({ a: 1 }));
+    expect(result.current.answers.a).toBe(1);
+
+    act(() => result.current.setErrors({ e1: "err" }));
+    expect(result.current.errors.e1).toBe("err");
+
+    act(() => result.current.clearError("e1"));
+    expect(result.current.errors.e1).toBeUndefined();
+
+    act(() => result.current.resetSection());
+    expect(result.current.answers).toEqual({});
+    expect(result.current.errors).toEqual({});
+    expect(result.current.isCompleted).toBe(false);
+
+    // retryGetAssessment should call getAssessment again
+    await act(async () => {
+      await result.current.retryGetAssessment();
+    });
+    expect(getAssessment).toHaveBeenCalled();
+  });
 });
