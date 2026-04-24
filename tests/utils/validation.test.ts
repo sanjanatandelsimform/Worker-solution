@@ -112,8 +112,34 @@ describe("validation utilities", () => {
     });
 
     it("should return true for password with various special characters", () => {
-      const specialChars = ['!', '@', '#', '$', '%', '^', '&', '*', '(', ')', '_', '+', '-', '=', '[', ']', '{', '}', '|', ';', ':', ',', '.', '<', '>'];
-      
+      const specialChars = [
+        "!",
+        "@",
+        "#",
+        "$",
+        "%",
+        "^",
+        "&",
+        "*",
+        "(",
+        ")",
+        "_",
+        "+",
+        "-",
+        "=",
+        "[",
+        "]",
+        "{",
+        "}",
+        "|",
+        ";",
+        ":",
+        ",",
+        ".",
+        "<",
+        ">",
+      ];
+
       specialChars.forEach(char => {
         const result = validatePassword(`ValidPass123${char}`);
         expect(result.isValid).toBe(true, `Should accept special char: ${char}`);

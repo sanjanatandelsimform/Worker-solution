@@ -19,6 +19,15 @@ import type { StateOption } from "@/hooks/useStatesLookup";
 import { Tooltip, TooltipTrigger } from "@/components/base/tooltip/tooltip";
 import { InfoCircle } from "@untitledui/icons";
 
+/**
+ * "Does not offer" exclusive options per benefits group.
+ * Selecting one of these deselects and disables every other option in its group.
+ */
+const EXCLUSIVE_BENEFIT_OPTIONS = new Set([
+  "My company does not offer retirement/savings benefits",
+  "My company does not offer health and wellness benefit",
+]);
+
 /** Tooltips for specific option values */
 const OPTION_TOOLTIPS: Record<string, string> = {
   "Earned Wage Access":
@@ -876,37 +885,68 @@ export const DynamicQuestionRenderer = ({
           <div className="flex flex-col gap-4 custom-question-options">
             {(question.key === "workforceGoals" || question.key === "supplementalBenefits") &&
             question.optionGroups
-              ? question.optionGroups.map((group: OptionGroup) => (
-                  <div key={group.groupName} className="flex flex-col gap-3">
-                    <h3 className="text-sm font-normal text-ws-text-primary">{group.groupName}</h3>
-                    <div className="flex flex-col gap-4 pl-2 font-normal text-ws-text-secondary">
-                      {group.options.map((option: QuestionOption) => (
-                        <Checkbox
-                          key={option.value}
-                          className="font-normal"
-                          label={option.label}
-                          tooltipText={OPTION_TOOLTIPS[option.label]}
-                          isSelected={
-                            (Array.isArray(currentAnswer) &&
-                              currentAnswer.includes(option.value)) ||
-                            false
-                          }
-                          onChange={isChecked => {
-                            const current = Array.isArray(currentAnswer) ? currentAnswer : [];
-                            if (isChecked) {
-                              onAnswerChange(question.key, [...current, option.value]);
-                            } else {
-                              onAnswerChange(
-                                question.key,
-                                current.filter((v: string) => v !== option.value)
-                              );
-                            }
-                          }}
-                        />
-                      ))}
+              ? question.optionGroups.map((group: OptionGroup) => {
+                  // Find the exclusive "does not offer" option for this group (if any)
+                  const exclusiveOption = group.options.find((o: QuestionOption) =>
+                    EXCLUSIVE_BENEFIT_OPTIONS.has(o.value)
+                  );
+                  const currentSelections = Array.isArray(currentAnswer) ? currentAnswer : [];
+                  const isExclusiveSelected =
+                    !!exclusiveOption && currentSelections.includes(exclusiveOption.value);
+
+                  return (
+                    <div key={group.groupName} className="flex flex-col gap-3">
+                      <h3 className="text-sm font-normal text-ws-text-primary">
+                        {group.groupName}
+                      </h3>
+                      <div className="flex flex-col gap-4 pl-2 font-normal text-ws-text-secondary">
+                        {group.options.map((option: QuestionOption) => {
+                          const isThisExclusive = EXCLUSIVE_BENEFIT_OPTIONS.has(option.value);
+                          // Disable non-exclusive options when the exclusive one is selected
+                          const isOptionDisabled = isExclusiveSelected && !isThisExclusive;
+
+                          return (
+                            <Checkbox
+                              key={option.value}
+                              className="font-normal"
+                              label={option.label}
+                              tooltipText={OPTION_TOOLTIPS[option.label]}
+                              isDisabled={isOptionDisabled}
+                              isSelected={currentSelections.includes(option.value)}
+                              onChange={isChecked => {
+                                const current = [...currentSelections];
+                                if (isChecked) {
+                                  if (isThisExclusive) {
+                                    // Selecting "does not offer" → remove all other options from this group
+                                    const groupValues = new Set(
+                                      group.options.map((o: QuestionOption) => o.value)
+                                    );
+                                    const filtered = current.filter(v => !groupValues.has(v));
+                                    onAnswerChange(question.key, [...filtered, option.value]);
+                                  } else {
+                                    // Selecting a normal option → remove the exclusive option from this group (if any)
+                                    const withoutExclusive = exclusiveOption
+                                      ? current.filter(v => v !== exclusiveOption.value)
+                                      : current;
+                                    onAnswerChange(question.key, [
+                                      ...withoutExclusive,
+                                      option.value,
+                                    ]);
+                                  }
+                                } else {
+                                  onAnswerChange(
+                                    question.key,
+                                    current.filter((v: string) => v !== option.value)
+                                  );
+                                }
+                              }}
+                            />
+                          );
+                        })}
+                      </div>
                     </div>
-                  </div>
-                ))
+                  );
+                })
               : question.options?.map((option: QuestionOption) => (
                   <Checkbox
                     key={option.value}

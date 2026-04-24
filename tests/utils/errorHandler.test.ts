@@ -264,9 +264,7 @@ describe("errorHandler", () => {
         const result = getErrorState(error);
 
         expect(result.type).toBe("info");
-        expect(result.message).toBe(
-          "Network error. Please check your connection and try again."
-        );
+        expect(result.message).toBe("Network error. Please check your connection and try again.");
       });
 
       it("should handle network error", () => {
@@ -285,9 +283,7 @@ describe("errorHandler", () => {
         const result = getErrorState(error);
 
         expect(result.type).toBe("info");
-        expect(result.message).toBe(
-          "Network error. Please check your connection and try again."
-        );
+        expect(result.message).toBe("Network error. Please check your connection and try again.");
       });
 
       it("should handle timeout error", () => {
@@ -350,7 +346,7 @@ describe("errorHandler", () => {
         expect(result.type).toBe("warning");
       });
 
-      it("should handle Error with \"doesn't exist\" message", () => {
+      it('should handle Error with "doesn\'t exist" message', () => {
         const error = new Error("Item doesn't exist");
 
         (axios.isAxiosError as any).mockReturnValue(false);
@@ -563,8 +559,7 @@ describe("errorHandler", () => {
     });
 
     it("should create info state with long message", () => {
-      const longMessage =
-        "Your request is being processed. This may take a few moments.";
+      const longMessage = "Your request is being processed. This may take a few moments.";
 
       const result = getInfoState(longMessage);
 
@@ -585,7 +580,7 @@ describe("errorHandler", () => {
         "neutral",
       ];
 
-      types.forEach((type) => {
+      types.forEach(type => {
         const state: ErrorState = {
           message: "Test",
           type,
