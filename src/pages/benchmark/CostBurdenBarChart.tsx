@@ -96,13 +96,11 @@ export default function CostBurdenBarChart({ data, width, height = 400 }: Canvas
       const y = padding.top + (chartHeight * i) / gridSteps;
       const value = Math.round(maxValue * (1 - i / gridSteps));
 
-      // Draw grid line
       ctx.beginPath();
       ctx.moveTo(padding.left, y);
       ctx.lineTo(canvasWidth - padding.right, y);
       ctx.stroke();
 
-      // Draw Y-axis label
       ctx.fillText(`${value}%`, padding.left - 10, y);
     }
 
@@ -111,18 +109,17 @@ export default function CostBurdenBarChart({ data, width, height = 400 }: Canvas
       const x =
         data.length > 1
           ? padding.left + barSpacing + index * (barWidth + barSpacing)
-          : padding.left + (chartWidth - barWidth) / 2; // Center single bar
+          : padding.left + (chartWidth - barWidth) / 2;
       const baseY = padding.top + chartHeight;
 
-      // Calculate bar heights
       const bar1Height = item.value1 * yScale;
       const bar2Height = item.value2 * yScale;
 
-      // Draw darker cyan bar (full width, goes up to value1)
+      // Draw darker cyan bar (full width)
       ctx.fillStyle = color1;
       ctx.fillRect(x, baseY - bar1Height, barWidth, bar1Height);
 
-      // Draw lighter cyan bar (narrower, ALSO starts from bottom, nested inside)
+      // Draw lighter cyan bar (narrower, nested inside, from bottom)
       if (item.value2 > 0) {
         ctx.fillStyle = color2;
         const bar2Width = barWidth - barGap * 2;
@@ -130,62 +127,41 @@ export default function CostBurdenBarChart({ data, width, height = 400 }: Canvas
       }
 
       // ── Label drawing ──
-      ctx.fillStyle = textColor;
-      ctx.font = "500 14px Inter, sans-serif";
-      ctx.textAlign = "center";
-
-      const minLabelSpace = 25;
-      const chartTop = padding.top;
+      const bar1TopY = baseY - bar1Height;
+      const bar2TopY = item.value2 > 0 ? baseY - bar2Height : null;
+      const centerX = x + barWidth / 2;
 
       const value1Label = `${item.value1.toFixed(2)}%`;
       const value2Label = item.value2 > 0 ? `${item.value2.toFixed(2)}%` : null;
 
-      const value1Y = baseY - bar1Height - 8;
-      const value2Y = item.value2 > 0 ? baseY - bar2Height - 8 : 0;
+      // value1 → always OUTSIDE the bar, just above its top edge
+      ctx.font = "500 14px Inter, sans-serif";
+      ctx.fillStyle = textColor;
+      ctx.textAlign = "center";
+      ctx.textBaseline = "bottom";
+      ctx.fillText(value1Label, centerX, bar1TopY - 8);
 
-      // Determine if the two labels would overlap (bars are close in height)
-      const heightDiff = Math.abs(bar1Height - bar2Height);
-      const labelsWouldOverlap = heightDiff < 22;
-
-      // Draw value1 label
-      if (value1Y < chartTop + minLabelSpace) {
+      // value2 → always INSIDE the lighter bar, just below its top edge
+      if (value2Label && bar2TopY !== null) {
+        ctx.font = "500 14px Inter, sans-serif";
+        ctx.fillStyle = textColor;
+        ctx.textAlign = "center";
         ctx.textBaseline = "top";
-        ctx.fillText(value1Label, x + barWidth / 2, baseY - bar1Height + 8);
-      } else {
-        ctx.textBaseline = "bottom";
-        // If labels overlap, shift value1 to the right
-        const offsetX = labelsWouldOverlap && value2Label ? 22 : 0;
-        ctx.fillText(value1Label, x + barWidth / 2 + offsetX, value1Y);
+        ctx.fillText(value2Label, centerX, bar2TopY);
       }
 
-      // Draw value2 label
-      if (value2Label) {
-        if (value2Y < chartTop + minLabelSpace) {
-          ctx.textBaseline = "top";
-          ctx.fillText(value2Label, x + barWidth / 2, baseY - bar2Height + 8);
-        } else {
-          ctx.textBaseline = "bottom";
-          // If labels overlap, shift value2 to the left
-          const offsetX = labelsWouldOverlap ? -22 : 0;
-          ctx.fillText(value2Label, x + barWidth / 2 + offsetX, value2Y);
-        }
-      }
-
-      // Draw main label
+      // Draw main label below chart
       ctx.font = "500 14px Inter, sans-serif";
       ctx.fillStyle = textColor;
       ctx.textBaseline = "top";
       ctx.textAlign = "center";
-
       const labelY = baseY + 12;
-      ctx.fillText(item.label, x + barWidth / 2, labelY);
+      ctx.fillText(item.label, centerX, labelY);
 
       // Draw sublabel
       ctx.font = "400 14px Inter, sans-serif";
       ctx.fillStyle = textColor;
-
-      const sublabelY = labelY + 24;
-      ctx.fillText(item.sublabel, x + barWidth / 2, sublabelY);
+      ctx.fillText(item.sublabel, centerX, labelY + 24);
     });
   }, [data, canvasWidth, height]);
 
@@ -198,7 +174,6 @@ export default function CostBurdenBarChart({ data, width, height = 400 }: Canvas
     const mouseX = e.clientX - rect.left;
     const mouseY = e.clientY - rect.top;
 
-    // Chart configuration (same as in useEffect)
     const padding = { top: 60, right: 100, bottom: 80, left: 60 };
     const chartWidth = canvasWidth - padding.left - padding.right;
     const chartHeight = height - padding.top - padding.bottom;
@@ -210,8 +185,8 @@ export default function CostBurdenBarChart({ data, width, height = 400 }: Canvas
     const barSpacing = data.length > 1 ? availableSpaceForGaps / (data.length + 1) : 0;
     const barGap = 18;
 
-    // Check each bar
     let foundTooltip: TooltipData | null = null;
+    const MIN_HIT_PX = 20;
 
     data.forEach((item, index) => {
       const x =
@@ -222,19 +197,20 @@ export default function CostBurdenBarChart({ data, width, height = 400 }: Canvas
       const bar1Height = item.value1 * yScale;
       const bar2Height = item.value2 * yScale;
 
-      // Check if mouse is over darker bar (wider bar)
+      const bar1HitHeight = Math.max(bar1Height, MIN_HIT_PX);
+      const bar2HitHeight = Math.max(bar2Height, MIN_HIT_PX);
+
       if (
         mouseX >= x &&
         mouseX <= x + barWidth &&
-        mouseY >= baseY - bar1Height &&
+        mouseY >= baseY - bar1HitHeight &&
         mouseY <= baseY
       ) {
-        // Check if mouse is specifically over lighter bar (narrower, nested)
         const isOverLighterBar =
           item.value2 > 0 &&
           mouseX >= x + barGap &&
           mouseX <= x + barWidth - barGap &&
-          mouseY >= baseY - bar2Height &&
+          mouseY >= baseY - bar2HitHeight &&
           mouseY <= baseY;
 
         if (isOverLighterBar) {
@@ -280,13 +256,15 @@ export default function CostBurdenBarChart({ data, width, height = 400 }: Canvas
         <div
           className="pointer-events-none absolute rounded-lg border border-ws-border-primary bg-ws-base-white px-3 py-2 shadow-lg"
           style={{
-            left: `${tooltip.x + 10}px`,
+            left: tooltip.x > canvasWidth * 0.65 ? `${tooltip.x - 10}px` : `${tooltip.x + 10}px`,
             top: `${tooltip.y - 10}px`,
-            transform: "translateY(-100%)",
+            transform:
+              tooltip.x > canvasWidth * 0.65 ? "translate(-100%, -100%)" : "translateY(-100%)",
+            minWidth: "max-content",
           }}
         >
           <div className="flex items-center gap-2">
-            <div className="h-3 w-3 rounded" style={{ backgroundColor: tooltip.color }} />
+            <div className="h-3 w-3 shrink-0 rounded" style={{ backgroundColor: tooltip.color }} />
             <div className="text-sm">
               <div className="font-medium text-ws-text-primary">{tooltip.value.toFixed(2)}%</div>
               <div className="text-xs text-ws-gray-100">{tooltip.label}</div>

@@ -57,7 +57,6 @@ install_dependencies:
   script:
     # Configure NPM to use local cache directory
     - npm config set cache $NPM_CACHE_FOLDER --global
-    # Install dependencies (prefer ci for deterministic installs)
     - npm ci || npm install
   artifacts:
     paths:
