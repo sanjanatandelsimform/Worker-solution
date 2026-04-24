@@ -49,6 +49,7 @@ export const DashboardPage = () => {
   const {
     connectWithFinch,
     isLoading: isFinchLoading,
+    isPageLoading: isFinchPageLoading,
     error: finchError,
     clearError: clearFinchError,
   } = useFinchConnect();
@@ -236,7 +237,7 @@ export const DashboardPage = () => {
 
   const isDashboardVisible = assessmentData?.data?.status === "completed" || isConnected;
 
-  if (isLoadingAssessment || isFinchLoading) {
+  if (isLoadingAssessment || isFinchPageLoading) {
     return (
       <LoadingSpinner height={80} width={80} bgClass="bg-secondary" ariaLabel="oval-loading" />
     );

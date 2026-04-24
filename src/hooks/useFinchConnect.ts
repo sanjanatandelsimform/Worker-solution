@@ -8,6 +8,7 @@ type FinchConnectStatus = "idle" | "fetching-session" | "connecting" | "exchangi
 export interface UseFinchConnectReturn {
   connectWithFinch: () => Promise<void>;
   isLoading: boolean;
+  isPageLoading: boolean;
   error: string | null;
   clearError: () => void;
 }
@@ -17,6 +18,7 @@ export function useFinchConnect(): UseFinchConnectReturn {
   const [status, setStatus] = useState<FinchConnectStatus>("idle");
   const [error, setError] = useState<string | null>(null);
   const isLoading = status !== "idle";
+  const isPageLoading = status === "fetching-session" || status === "exchanging-code";
 
   const clearError = useCallback(() => setError(null), []);
 
@@ -67,5 +69,5 @@ export function useFinchConnect(): UseFinchConnectReturn {
     }
   }, [isLoading, open]);
 
-  return { connectWithFinch, isLoading, error, clearError };
+  return { connectWithFinch, isLoading, isPageLoading, error, clearError };
 }
