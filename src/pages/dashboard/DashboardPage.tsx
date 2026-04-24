@@ -236,13 +236,7 @@ export const DashboardPage = () => {
 
   const isDashboardVisible = assessmentData?.data?.status === "completed" || isConnected;
 
-  if (isLoadingAssessment) {
-    return (
-      <LoadingSpinner height={80} width={80} bgClass="bg-secondary" ariaLabel="oval-loading" />
-    );
-  }
-
-  if (isFinchLoading) {
+  if (isLoadingAssessment || isFinchLoading) {
     return (
       <LoadingSpinner height={80} width={80} bgClass="bg-secondary" ariaLabel="oval-loading" />
     );
