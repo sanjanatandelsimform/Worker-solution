@@ -2,6 +2,7 @@
 // import { InfoCircle } from "@untitledui/icons";
 
 import { Tooltip, TooltipTrigger } from "@/components/base/tooltip/tooltip";
+import { cx } from "@/utils/cx";
 import { InfoCircle } from "@untitledui/icons";
 
 export interface StaticCardProps {
@@ -16,6 +17,7 @@ export interface StaticCardProps {
   tooltipText?: string;
   descriptionText?: string;
   countWrap?: string;
+  staticCountClass?: string;
   itemAlign?: "start" | "between" | "end";
   placements?: "top" | "bottom" | "left" | "right";
 }
@@ -30,13 +32,14 @@ export default function StaticCard({
   tooltipText,
   descriptionText,
   countWrap,
+  staticCountClass,
   itemAlign,
   placements,
   countIcon,
 }: Readonly<StaticCardProps>) {
   return (
     <div
-      className={`bg-ws-base-white w-full ring ring-ws-border-secondary rounded-xl py-5 px-6 ${classess}`}
+      className={cx(`bg-ws-base-white w-full ring ring-ws-border-secondary rounded-xl py-5 px-6 relative`, classess)}
     >
       <div className="flex items-start justify-between">
         <p
@@ -61,7 +64,7 @@ export default function StaticCard({
           )}
         </span>
       </div>
-      <div className={`flex items-end gap-2 justify-between`}>
+      <div className={`flex items-end gap-2 justify-between ${staticCountClass}`}>
         <h2 className={`w-full ${countClass}`}>
           {count === "N/A" ? (
             <span className="mt-4 text-base font-medium text-ws-text-tertiary">

@@ -99,27 +99,6 @@ export default function WorkforcePage() {
         salary={salary}
         salaryChartData={salaryChartData}
       />
-
-      {/* <div className="w-full">
-        <p className="text-ws-text-secondary text-sm mb-4">
-          All data metrics provided through Finch are based on the most current information
-          accessible at the time of reporting, as of September 2025.
-        </p>
-        <p className="text-xs/5 text-ws-text-primary">
-          This product provides informational insights and recommendations based on the data you
-          share and industry benchmarks. It does not provide legal, financial, tax, or benefits
-          advice, and recommendations are not guarantees of outcomes or results. Actual results may
-          vary, and you are responsible for evaluating and implementing any recommendations based on
-          your organization's specific circumstances. Read our{" "}
-          <Link to="/terms-page" className="text-ws-light-teal-850 underline">
-            Terms & Conditions{" "}
-          </Link>
-          and{" "}
-          <Link to="/privacy-policy" className="text-ws-light-teal-850 underline">
-            Privacy Policy
-          </Link>
-        </p>
-      </div> */}
       <Declarations className="mt-4" />
 
       {/* Get In Touch Modal */}

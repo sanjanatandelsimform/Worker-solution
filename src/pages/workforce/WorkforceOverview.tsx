@@ -39,7 +39,7 @@ export default function WorkforceOverview({
             {overviewCardsConfig.map(card => (
               <StaticCard
                 key={card.id}
-                classess="flex flex-col justify-between"
+                classess="border-ws-border-secondary flex flex-col justify-between"
                 title={card.title}
                 titleClass="text-sm font-medium text-ws-text-tertiary"
                 itemAlign="between"
@@ -51,6 +51,7 @@ export default function WorkforceOverview({
                 descriptionText={card.getDescriptionText?.()}
                 placements="top"
                 countWrap="text-3xl font-semibold text-ws-text-primary"
+                staticCountClass="flex items-center justify-between mt-6"
               />
             ))}
           </>

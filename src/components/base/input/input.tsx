@@ -53,6 +53,7 @@ export interface InputBaseProps extends Omit<AriaInputProps, "size"> {
   tooltipClassName?: string;
   /** Keyboard shortcut to display. */
   shortcut?: string | boolean;
+  showPasswordToggle?: boolean;
   ref?: Ref<HTMLInputElement>;
   groupRef?: Ref<HTMLDivElement>;
   /** Icon component to display on the left side of the input. */
@@ -76,6 +77,7 @@ export const InputBase = ({
   tooltipClassName,
   inputClassName,
   iconClassName,
+  showPasswordToggle = true,
   type = "text",
   ...inputProps
 }: InputBaseProps) => {
@@ -204,7 +206,7 @@ export const InputBase = ({
       )}
 
       {/* Password visibility toggle */}
-      {type === "password" && (
+      {type === "password" && showPasswordToggle && (
         <AriaButton
           aria-label="Toggle password visibility"
           onClick={() => setIsPasswordVisible(!isPasswordVisible)}
@@ -320,6 +322,8 @@ export interface InputProps
   label?: string;
   /** Helper text displayed below the input */
   hint?: ReactNode;
+  /** Whether to show the password visibility toggle */
+  showPasswordToggle?: boolean;
   /** Whether to hide required indicator from label */
   hideRequiredIndicator?: boolean;
 }
@@ -342,6 +346,7 @@ export const Input = ({
   inputClassName,
   wrapperClassName,
   tooltipClassName,
+  showPasswordToggle = true,
   type = "text",
   ...props
 }: InputProps) => {
@@ -377,6 +382,7 @@ export const Input = ({
               tooltipClassName,
               tooltip,
               helperTooltip,
+              showPasswordToggle,
               type,
             }}
           />
