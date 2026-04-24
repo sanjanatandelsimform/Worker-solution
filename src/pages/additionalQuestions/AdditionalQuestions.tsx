@@ -23,7 +23,6 @@ export default function AdditionalQuestions() {
     topThreeGoals: [],
   });
   const [annualRaiseMonth, setAnnualRaiseMonth] = useState<string>("");
-  const [payrollProvider, setPayrollProvider] = useState<string>("");
   const [benefitsEnrollmentMonth, setBenefitsEnrollmentMonth] = useState<string>("");
   const [retirementMatchPercentage, setRetirementMatchPercentage] = useState<string>("");
   const [healthPremiumMonthly, setHealthPremiumMonthly] = useState<string>("");
@@ -110,9 +109,6 @@ export default function AdditionalQuestions() {
     if (!answers["annual-raises"]) {
       newErrors["annual-raises"] = "Select an option";
     }
-    if (!payrollProvider) {
-      newErrors["payroll-provider"] = "Select an option";
-    }
     if (answers["annual-raises"] === "yes-raises" && !annualRaiseMonth) {
       newErrors["annualRaiseMonth"] = "Please select a month.";
     }
@@ -161,7 +157,6 @@ export default function AdditionalQuestions() {
       answers,
       goalsAnswers,
       annualRaiseMonth,
-      payrollProvider,
       benefitsEnrollmentMonth,
       answers["retirement-employer-match"] === "yes-match",
       retirementMatchPercentage,
@@ -214,11 +209,9 @@ export default function AdditionalQuestions() {
             answers={answers}
             fieldErrors={fieldErrors}
             annualRaiseMonth={annualRaiseMonth}
-            payrollProvider={payrollProvider}
             onAnswerChange={handleAnswerChange}
             onMultiSelectToggle={handleMultiSelectToggle}
             onAnnualRaiseMonthChange={setAnnualRaiseMonth}
-            onPayrollProviderChange={setPayrollProvider}
             onClearFieldError={handleClearFieldError}
           />
 

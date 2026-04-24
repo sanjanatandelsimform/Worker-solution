@@ -107,33 +107,38 @@ Do this first when editing code:
 - Open `src/routes/index.tsx` to follow the lazy-load + Suspense pattern (helper: `lazyLoad(Component)`).
 - Use barrel exports (feature `index.ts`) and the `@/` alias for imports (never relative `../..` for src files).
 
-## Active Feature: 021-finch-connect-loading (2026-04-24)
+## Active Feature: 022-finch-remove-payroll (2026-04-24)
 
 <!-- specify:agent:start -->
 
-**Branch**: `021-finch-connect-loading` | **Spec**: `specs/021-finch-connect-loading/spec.md` | **Plan**: `specs/021-finch-connect-loading/plan.md`
+**Branch**: `022-finch-remove-payroll` | **Spec**: `specs/022-finch-remove-payroll/spec.md` | **Plan**: `specs/022-finch-remove-payroll/plan.md`
 
-### Context: Previous features (009–020) are complete
+### Context: Previous features (009–021) are complete
 
-Features 009–020 fully implemented. Feature 016 refactored `AdditionalQuestions.tsx` into section components. Features 017–018 added formatting and dynamic card content.
+Features 009–021 fully implemented. Feature 021 added a loading spinner to the Finch connection flow in `DashboardPage.tsx`.
 
 ### What this feature does
 
-Minimal UI fix — adds a full-screen loading spinner to `DashboardPage.tsx` during the Finch connection flow. When the user clicks "Start with Finch", there is currently no visible feedback between click and outcome. This adds a `<LoadingSpinner>` guard matching the existing `isLoadingAssessment` pattern.
+Removes the "Who is your company's payroll provider?" question from the Finch Additional Questions form only. The manual assessment flow is untouched. The question, its state, its validation, and its field in the API payload are all removed.
 
-### Single file to modify
+### Files to modify (4 source + 4 test)
 
-- `src/pages/dashboard/DashboardPage.tsx` — add early-return guard `if (isFinchLoading)` immediately after the existing `if (isLoadingAssessment)` guard
+- `src/types/finchAssessmentTypes.ts` — remove `payrollProvider: string | null` from `CompensationPayload`
+- `src/utils/finchAssessmentPayload.ts` — remove `payrollProvider` parameter and field from `buildFinchAssessmentPayload`
+- `src/pages/additionalQuestions/AdditionalQuestions.tsx` — remove state, validation, and props for payroll provider
+- `src/pages/additionalQuestions/CompensationSection.tsx` — remove the question definition, props, and `isDropdown` rendering branch
+- `tests/utils/finchAssessmentPayload.test.ts` — remove `payrollProvider` from call args and assertions
+- `tests/hooks/useSubmitFinchAssessment.test.ts` — remove `payrollProvider: null` from payload fixtures
+- `tests/pages/AdditionalQuestionsHealthPremium.test.tsx` — remove `_payrollProvider` destructuring
+- `tests/services/finchAssessmentApi.test.ts` — remove `payrollProvider: null` from test fixture
 
 ### Key facts
 
-- `isFinchLoading` is already destructured from `useFinchConnect()` in `DashboardPage.tsx`
-- `LoadingSpinner` is already imported in `DashboardPage.tsx`
-- Spinner props: `height={80} width={80} bgClass="bg-secondary" ariaLabel="oval-loading"`
-- **No hook changes needed** — `useFinchConnect.ts` already tracks full lifecycle via `status !== "idle"`
-- **No new imports** — everything already present
-- **No test changes** — mocks default to `isLoading: false`
-- See full implementation guide: `specs/021-finch-connect-loading/quickstart.md`
+- **Do NOT touch** `assessmentSchemas.ts` — that schema is for the manual flow, not Finch
+- **Do NOT touch** `CompensationTab.tsx` or `useWorkforceCompensationConfig.ts` — those reference a Redux selector named `selectCompensationSection`, unrelated to this component
+- `CompensationSection` is only used in `AdditionalQuestions.tsx` — safe to remove question outright
+- No new imports or new components needed
+- See full implementation guide: `specs/022-finch-remove-payroll/quickstart.md`
 <!-- specify:agent:end -->
 
 Essential files to reference in PRs or fixes:

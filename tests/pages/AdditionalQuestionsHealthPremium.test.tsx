@@ -245,7 +245,6 @@ describe("AdditionalQuestions – Health Premium Payload (US2)", () => {
         _answers,
         _goalsAnswers,
         _annualRaiseMonth,
-        _payrollProvider,
         _benefitsEnrollmentMonth,
         _retirementPlanHasMatch,
         _retirementMatchPercentage,
@@ -264,7 +263,6 @@ describe("AdditionalQuestions – Health Premium Payload (US2)", () => {
     const result = mockBuild(
       {},
       { selectedGoals: [], topThreeGoals: [] },
-      "",
       "",
       "",
       false,
