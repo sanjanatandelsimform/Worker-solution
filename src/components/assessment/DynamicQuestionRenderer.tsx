@@ -1,4 +1,4 @@
-import { useCallback } from "react";
+import React, { useEffect,useCallback } from "react";
 import { Input } from "@/components/base/input/input";
 import { Label } from "@/components/base/input/label";
 import { RadioButton, RadioGroup } from "@/components/base/radio-buttons/radio-buttons";
@@ -6,18 +6,16 @@ import { Checkbox } from "@/components/base/checkbox/checkbox";
 import { Select } from "@/components/base/select/select";
 import type { SelectItemType } from "@/components/base/select/select";
 import { Button } from "@/components/base/buttons/button";
-import { Plus, Trash01 } from "@untitledui/icons";
+import { Plus, Trash01, InfoCircle } from "@untitledui/icons";
 import type { Question, OptionGroup, QuestionOption } from "@/types/questionTypes";
 import { cx } from "@/utils/cx";
 import { RankingList } from "../common/RankList";
 import { ZipCodeAutocomplete } from "../common/ZipCodeAutocomplete";
-import React, { useEffect } from "react";
 import questionData from "@/data/assessment/questionData.json";
 import { InputInfo } from "@/assets/icons/inputInfo";
 import type { ZipValidityState } from "@/components/common/ZipCodeAutocomplete";
 import type { StateOption } from "@/hooks/useStatesLookup";
 import { Tooltip, TooltipTrigger } from "@/components/base/tooltip/tooltip";
-import { InfoCircle } from "@untitledui/icons";
 
 /**
  * "Does not offer" exclusive options per benefits group.
@@ -46,6 +44,660 @@ const QUESTION_TOOLTIPS: Record<string, string> = {
 let idCounter = 0;
 const generateId = () => ++idCounter;
 
+// --- Module-level layout constants ---
+const HALF_WIDTH_SELECT_KEYS = new Set(["payrollProvider", "benefitEnrollmentMonth"]);
+const HALF_WIDTH_CONDITIONAL_SELECT_KEYS = new Set(["retirementProvider"]);
+const HALF_WIDTH_NUMERIC_KEYS = new Set(["lowestHealthPlanPremium"]);
+const HALF_WIDTH_CONDITIONAL_NUMERIC_KEYS = new Set(["retirementMatchPercentage"]);
+const HALF_WIDTH_YES_NO_KEYS = new Set(["offersAnnualRaises"]);
+
+/** Returns true when a conditional question should be revealed. */
+function computeShouldShow(showWhen: string, parentValue: unknown): boolean {
+  if (showWhen === "yes") {
+    return parentValue === true || String(parentValue).toLowerCase() === "yes";
+  }
+  if (showWhen === "no") {
+    return parentValue === false || String(parentValue).toLowerCase() === "no";
+  }
+  return String(parentValue || "").toLowerCase() === String(showWhen).toLowerCase();
+}
+
+// ─── StructuredArrayField ─────────────────────────────────────────────────────
+
+interface StructuredArrayFieldDef {
+  name: string;
+  type: string;
+  label: string;
+  placeholder?: string;
+  width?: string;
+  options?: Array<{ id: string; label: string }>;
+  pattern?: string;
+}
+
+interface StructuredArrayFieldProps {
+  field: StructuredArrayFieldDef;
+  index: number;
+  arrayKey: string;
+  answers: Record<string, unknown>;
+  errors: Record<string, string>;
+  onAnswerChange: (key: string, value: unknown) => void;
+  onErrorChange?: (updates: Record<string, string>) => void;
+  stateOptions?: StateOption[];
+}
+
+const StructuredArrayField = ({
+  field,
+  index,
+  arrayKey,
+  answers,
+  errors,
+  onAnswerChange,
+  onErrorChange,
+  stateOptions,
+}: StructuredArrayFieldProps): React.ReactNode => {
+  const currentItems = (answers[arrayKey] as Array<{ id: number }>) || [];
+  const item = currentItems[index] || { id: generateId() };
+  const itemId = (item as { id: number }).id;
+  const widthClass = field.width || "flex-1";
+
+  const fieldErrorKey = `${arrayKey}.${index}.${field.name}`;
+  const fieldError = errors[fieldErrorKey];
+
+  let displayFieldError: string | undefined;
+  if (fieldError) {
+    if (field.name === "state") {
+      displayFieldError = fieldError === "Required" ? "State is required" : fieldError;
+    } else if (field.name === "zipCode") {
+      displayFieldError = fieldError === "" ? undefined : fieldError;
+    } else {
+      displayFieldError = fieldError;
+    }
+  }
+
+  const questionError = errors[arrayKey];
+  const hasError = !!displayFieldError || !!questionError;
+
+  console.debug(`[renderStructuredArrayField] ${fieldErrorKey}:`, {
+    fieldError,
+    questionError,
+    hasError,
+    errors: Object.keys(errors).filter(k => k.startsWith(arrayKey)),
+  });
+
+  const updateField = (fieldName: string, value: string) => {
+    const current = (answers[arrayKey] as Array<Record<string, unknown>>) ?? [];
+    const updated = current.map(i => (i.id === itemId ? { ...i, [fieldName]: value } : i));
+    onAnswerChange(arrayKey, updated);
+    if (value !== "" && value !== null && value !== undefined) {
+      const currentIndex = current.findIndex(i => i.id === itemId);
+      if (currentIndex !== -1) {
+        const errKey = `${arrayKey}.${currentIndex}.${fieldName}`;
+        const pairedKey =
+          fieldName === "zipCode"
+            ? `${arrayKey}.${currentIndex}.state`
+            : fieldName === "state"
+              ? `${arrayKey}.${currentIndex}.zipCode`
+              : null;
+        if (fieldName === "state") return;
+        onErrorChange?.(pairedKey ? { [errKey]: "", [pairedKey]: "" } : { [errKey]: "" });
+      }
+    }
+  };
+
+  if (field.type === "select") {
+    return (
+      <div className={cx("flex flex-col gap-1.5", widthClass)}>
+        <Select
+          className="w-full flex items-start"
+          size="md"
+          label={field.label}
+          placeholder={field.placeholder}
+          items={field.options?.map(opt => ({ id: opt.id, label: opt.label }))}
+          selectedKey={(item as unknown as Record<string, string>)[field.name] || ""}
+          onSelectionChange={key => updateField(field.name, key as string)}
+          isInvalid={hasError}
+        >
+          {(selectItem: SelectItemType) => (
+            <Select.Item id={selectItem.id}>{selectItem.label || ""}</Select.Item>
+          )}
+        </Select>
+        {displayFieldError && (
+          <span className="text-sm text-ws-error-600">{displayFieldError}</span>
+        )}
+      </div>
+    );
+  }
+
+  if (field.name === "state") {
+    return (
+      <div className={cx("flex flex-col gap-1.5", widthClass)}>
+        <Select
+          className="w-full flex items-start"
+          size="md"
+          label={field.label}
+          placeholder={field.placeholder}
+          items={field.options?.map(opt => ({ id: opt.id, label: opt.label }))}
+          selectedKey={(item as unknown as Record<string, string>)[field.name] || ""}
+          onSelectionChange={key => {
+            const selectedState = key as string;
+            const latestItems = (answers[arrayKey] as Array<Record<string, unknown>>) ?? [];
+            const currentItem = latestItems.find(i => i.id === itemId);
+            const currentIndex = latestItems.findIndex(i => i.id === itemId);
+            if (currentIndex === -1) return;
+
+            const currentZipValue = (currentItem?.zipCode as string) ?? "";
+            const currentZipValidityState = currentItem?.__zipValidityState as
+              | ZipValidityState
+              | undefined;
+            const currentZipStateAbbreviation = currentItem?.__zipStateAbbreviation as
+              | string
+              | undefined;
+            const stateFieldKey = `${arrayKey}.${currentIndex}.state`;
+            const zipFieldKey = `${arrayKey}.${currentIndex}.zipCode`;
+            const selectedStateFips =
+              stateOptions?.find(s => s.id.toUpperCase() === selectedState.toUpperCase())
+                ?.stateFips ?? "";
+
+            const hasZipContext =
+              currentZipValue &&
+              currentZipStateAbbreviation &&
+              (currentZipValidityState === "valid" ||
+                currentZipValidityState === "state_mismatch");
+
+            if (hasZipContext) {
+              const isMismatch =
+                currentZipStateAbbreviation!.toUpperCase() !== selectedState.toUpperCase();
+              onAnswerChange(
+                arrayKey,
+                latestItems.map(i =>
+                  i.id === itemId
+                    ? {
+                        ...i,
+                        [field.name]: selectedState,
+                        stateFips: selectedStateFips,
+                        __zipValidityState: (isMismatch
+                          ? "state_mismatch"
+                          : "valid") as ZipValidityState,
+                        __zipIsValid: !isMismatch,
+                      }
+                    : i
+                )
+              );
+              onErrorChange?.(
+                isMismatch
+                  ? { [stateFieldKey]: "State does not match zipcode", [zipFieldKey]: "" }
+                  : { [stateFieldKey]: "", [zipFieldKey]: "" }
+              );
+            } else {
+              onAnswerChange(
+                arrayKey,
+                latestItems.map(i =>
+                  i.id === itemId
+                    ? { ...i, [field.name]: selectedState, stateFips: selectedStateFips }
+                    : i
+                )
+              );
+              onErrorChange?.({ [stateFieldKey]: "" });
+            }
+          }}
+          isInvalid={hasError}
+        >
+          {(selectItem: SelectItemType) => (
+            <Select.Item id={selectItem.id}>{selectItem.label || ""}</Select.Item>
+          )}
+        </Select>
+        {displayFieldError && (
+          <span className="text-sm text-ws-error-600">{displayFieldError}</span>
+        )}
+      </div>
+    );
+  }
+
+  if (field.name === "zipCode") {
+    return (
+      <div className={cx("flex flex-col gap-1.5", widthClass)}>
+        <label className="block text-sm font-normal text-foreground mb-0.2">{field.label}</label>
+        <ZipCodeAutocomplete
+          value={(item as unknown as Record<string, string>)[field.name] ?? ""}
+          onChange={(val: string) => {
+            const latestItems = answers[arrayKey] as Array<Record<string, unknown>>;
+            if (!latestItems || !Array.isArray(latestItems)) return;
+            onAnswerChange(
+              arrayKey,
+              latestItems.map(i =>
+                i.id === itemId
+                  ? {
+                      ...i,
+                      [field.name]: val,
+                      __zipStateAbbreviation: null,
+                      __zipIsValid: false,
+                      __zipValidityState: "pending" as const,
+                    }
+                  : i
+              )
+            );
+          }}
+          placeholder={field.placeholder}
+          isInvalid={
+            !!displayFieldError && displayFieldError !== "State does not match zipcode"
+          }
+          selectedStateAbbreviation={
+            (item as unknown as Record<string, string>)["state"] ?? undefined
+          }
+          onSuggestionSelect={suggestion => {
+            const latestItems = answers[arrayKey] as Array<Record<string, unknown>>;
+            if (!latestItems || !Array.isArray(latestItems)) return;
+            const currentItem = latestItems.find(i => i.id === itemId);
+            const currentState = (currentItem?.state as string) ?? "";
+            const mismatch =
+              currentState !== "" &&
+              suggestion.stateAbbreviation.toUpperCase() !== currentState.toUpperCase();
+            const resolvedStateFips = (() => {
+              if (
+                suggestion.stateAbbreviation &&
+                currentState &&
+                suggestion.stateAbbreviation.toUpperCase() === currentState.toUpperCase()
+              ) {
+                return suggestion.stateFips ?? "";
+              }
+              return (
+                stateOptions?.find(s => s.id.toUpperCase() === currentState.toUpperCase())
+                  ?.stateFips ?? ""
+              );
+            })();
+            onAnswerChange(
+              arrayKey,
+              latestItems.map(i =>
+                i.id === itemId
+                  ? {
+                      ...i,
+                      [field.name]: suggestion.zip,
+                      stateFips: resolvedStateFips,
+                      __zipStateAbbreviation: suggestion.stateAbbreviation,
+                      __zipStateFips: suggestion.stateFips ?? "",
+                      __zipIsValid: !mismatch,
+                      __zipValidityState: (mismatch
+                        ? "state_mismatch"
+                        : "valid") as ZipValidityState,
+                    }
+                  : i
+              )
+            );
+          }}
+          onValidityChange={(isValid: boolean, zipValidityState) => {
+            const latestItems = answers[arrayKey] as Array<Record<string, unknown>>;
+            if (!latestItems || !Array.isArray(latestItems)) return;
+            const current = latestItems.find(i => i.id === itemId);
+            if (
+              !current ||
+              (current.__zipIsValid === isValid &&
+                current.__zipValidityState === zipValidityState)
+            )
+              return;
+            onAnswerChange(
+              arrayKey,
+              latestItems.map(i =>
+                i.id === itemId
+                  ? { ...i, __zipIsValid: isValid, __zipValidityState: zipValidityState }
+                  : i
+              )
+            );
+            const currentIndex = latestItems.findIndex(i => i.id === itemId);
+            if (currentIndex === -1) return;
+            const stateFieldKey = `${arrayKey}.${currentIndex}.state`;
+            const zipFieldKey = `${arrayKey}.${currentIndex}.zipCode`;
+            if (zipValidityState === "state_mismatch") {
+              onErrorChange?.({
+                [stateFieldKey]: "State does not match zipcode",
+                [zipFieldKey]: "",
+              });
+            } else if (zipValidityState === "invalid_zip") {
+              onErrorChange?.({
+                [stateFieldKey]: "State does not match zipcode",
+                [zipFieldKey]: "Incorrect zip code",
+              });
+            } else {
+              onErrorChange?.({ [stateFieldKey]: "", [zipFieldKey]: "" });
+            }
+          }}
+        />
+        {displayFieldError && displayFieldError !== "State does not match zipcode" && (
+          <span className="text-sm text-ws-error-600">{displayFieldError}</span>
+        )}
+      </div>
+    );
+  }
+
+  return (
+    <div className={cx("flex flex-col gap-1.5", widthClass)}>
+      <Input
+        size="md"
+        label={field.label}
+        placeholder={field.placeholder}
+        type="text"
+        value={(item as unknown as Record<string, string>)[field.name] ?? ""}
+        pattern={field.pattern}
+        isInvalid={hasError}
+        tooltip={displayFieldError ?? undefined}
+        onChange={(val: string) => updateField(field.name, val)}
+      />
+      {displayFieldError && (
+        <span className="text-sm text-ws-error-600">{displayFieldError}</span>
+      )}
+    </div>
+  );
+};
+
+// ─── ConditionalQuestion ──────────────────────────────────────────────────────
+
+interface ConditionalQuestionProps {
+  conditionalConfig: NonNullable<Question["conditionalQuestion"]>;
+  parentKey: string;
+  answers: Record<string, unknown>;
+  errors: Record<string, string>;
+  onAnswerChange: (key: string, value: unknown) => void;
+  onErrorChange?: (updates: Record<string, string>) => void;
+  stateOptions?: StateOption[];
+  addArrayItem: (key: string) => void;
+  removeArrayItem: (key: string, itemId: number) => void;
+}
+
+const ConditionalQuestion = ({
+  conditionalConfig,
+  parentKey,
+  answers,
+  errors,
+  onAnswerChange,
+  onErrorChange,
+  stateOptions,
+  addArrayItem,
+  removeArrayItem,
+}: ConditionalQuestionProps): React.ReactNode => {
+  const { showWhen, question: conditionalQuestion } = conditionalConfig;
+  const parentValue = answers[parentKey];
+
+  if (!computeShouldShow(String(showWhen), parentValue)) return null;
+
+  const isArrayAnswer = Array.isArray(answers[conditionalQuestion.key]);
+  const arrayAnswer = isArrayAnswer ? (answers[conditionalQuestion.key] as string[]) : [];
+
+  const sharedProps = {
+    answers,
+    errors,
+    onAnswerChange,
+    onErrorChange,
+    stateOptions,
+    addArrayItem,
+    removeArrayItem,
+  };
+
+  return (
+    <div className="flex w-full flex-col gap-4 pl-6 mt-4">
+      <Label
+        isRequired={conditionalQuestion.isRequired}
+        className="text-ws-text-primary custom-label"
+      >
+        {conditionalQuestion.questionText}
+      </Label>
+
+      {conditionalQuestion.questionType === "TEXT_INPUT" && (
+        <>
+          <Input
+            type="text"
+            placeholder={conditionalQuestion.placeholder}
+            value={String(answers[conditionalQuestion.key] || "")}
+            onChange={value => onAnswerChange(conditionalQuestion.key, value)}
+            size="md"
+            maxLength={conditionalQuestion.validationRules?.maxLength}
+            isInvalid={errors[conditionalQuestion.key] ? true : false}
+            tooltip={
+              errors[conditionalQuestion.key] ? errors[conditionalQuestion.key] : undefined
+            }
+          />
+          {errors[conditionalQuestion.key] && (
+            <span className="text-sm text-ws-error-600">{errors[conditionalQuestion.key]}</span>
+          )}
+        </>
+      )}
+
+      {conditionalQuestion.questionType === "NUMBER_INPUT" && (
+        <>
+          <Input
+            type="text"
+            placeholder={conditionalQuestion.placeholder || "Enter number"}
+            inputMode="numeric"
+            value={String(answers[conditionalQuestion.key] ?? "")}
+            className={
+              HALF_WIDTH_CONDITIONAL_NUMERIC_KEYS.has(conditionalQuestion.key)
+                ? "w-full md:w-1/2"
+                : "w-full"
+            }
+            onChange={value => {
+              const filtered = value.replace(/[^0-9]/g, "");
+              const numValue = filtered === "" ? null : Number(filtered);
+              if (numValue !== null) {
+                if (
+                  conditionalQuestion.validationRules?.min !== undefined &&
+                  numValue < conditionalQuestion.validationRules.min
+                )
+                  return;
+                if (
+                  conditionalQuestion.validationRules?.max !== undefined &&
+                  numValue > conditionalQuestion.validationRules.max
+                )
+                  return;
+              }
+              onAnswerChange(conditionalQuestion.key, numValue);
+            }}
+            size="md"
+            isInvalid={errors[conditionalQuestion.key] ? true : false}
+            tooltip={
+              errors[conditionalQuestion.key] ? errors[conditionalQuestion.key] : undefined
+            }
+          />
+          {errors[conditionalQuestion.key] && (
+            <span className="text-sm text-ws-error-600">{errors[conditionalQuestion.key]}</span>
+          )}
+        </>
+      )}
+
+      {conditionalQuestion.questionType === "SINGLE_SELECT_DROPDOWN" && (
+        <>
+          <Select
+            className={
+              HALF_WIDTH_CONDITIONAL_SELECT_KEYS.has(conditionalQuestion.key)
+                ? "w-full md:w-1/2"
+                : "w-full"
+            }
+            size="md"
+            placeholder={conditionalQuestion.placeholder || "Select an option"}
+            items={conditionalQuestion.options?.map(opt => ({
+              id: opt.value,
+              label: opt.label,
+            }))}
+            selectedKey={
+              answers[conditionalQuestion.key] ? String(answers[conditionalQuestion.key]) : ""
+            }
+            onSelectionChange={key => onAnswerChange(conditionalQuestion.key, key as string)}
+            isInvalid={errors[conditionalQuestion.key] ? true : false}
+          >
+            {(item: SelectItemType) => <Select.Item id={item.id}>{item.label || ""}</Select.Item>}
+          </Select>
+          {errors[conditionalQuestion.key] && (
+            <span className="text-sm text-ws-error-600">{errors[conditionalQuestion.key]}</span>
+          )}
+          {conditionalQuestion.conditionalQuestion && (
+            <ConditionalQuestion
+              conditionalConfig={conditionalQuestion.conditionalQuestion}
+              parentKey={conditionalQuestion.key}
+              {...sharedProps}
+            />
+          )}
+        </>
+      )}
+
+      {conditionalQuestion.questionType === "MULTIPLE_CHOICE" && (
+        <>
+          <div className="flex flex-col gap-4 custom-question-options">
+            {conditionalQuestion.options?.map((option: QuestionOption) => (
+              <Checkbox
+                key={option.value}
+                label={option.label}
+                className="font-normal"
+                isSelected={isArrayAnswer && arrayAnswer.includes(option.value)}
+                onChange={isChecked => {
+                  const current = isArrayAnswer
+                    ? (answers[conditionalQuestion.key] as string[])
+                    : [];
+                  const next = isChecked
+                    ? [...current, option.value]
+                    : current.filter((v: string) => v !== option.value);
+                  onAnswerChange(conditionalQuestion.key, next);
+                }}
+              />
+            ))}
+          </div>
+          {errors[conditionalQuestion.key] && (
+            <span className="text-sm text-ws-error-600">{errors[conditionalQuestion.key]}</span>
+          )}
+        </>
+      )}
+
+      {conditionalQuestion.questionType === "STRUCTURED_ARRAY" &&
+        (() => {
+          const conditionalKey = conditionalQuestion.key;
+          const currentItems = (answers[conditionalKey] as Array<{ id: number }>) || [];
+          const maxItems = conditionalQuestion.validationRules?.maxItems || 5;
+          const canAddMore = currentItems.length < maxItems;
+
+          if (currentItems.length === 0) {
+            const newArray = [{ id: generateId() }];
+            onAnswerChange(conditionalKey, newArray);
+            return null;
+          }
+
+          return (
+            <div className="flex flex-col gap-4">
+              {currentItems.map((item, index) => (
+                <div key={item.id} className="flex w-full gap-4">
+                  {conditionalQuestion.validationRules.fields?.map(
+                    (field: StructuredArrayFieldDef) => (
+                      <StructuredArrayField
+                        key={`${conditionalKey}-${item.id}-${field.name}`}
+                        field={field}
+                        index={index}
+                        arrayKey={conditionalKey}
+                        answers={answers}
+                        errors={errors}
+                        onAnswerChange={onAnswerChange}
+                        onErrorChange={onErrorChange}
+                        stateOptions={stateOptions}
+                      />
+                    )
+                  )}
+                  {currentItems.length > 1 && (
+                    <Button
+                      color="tertiary"
+                      size="md"
+                      iconLeading={Trash01}
+                      onClick={() => removeArrayItem(conditionalKey, item.id)}
+                      className="mt-6 h-10 shrink-0 px-2 bg-tertiary *:data-icon:text-ws-navy-800 border border-ws-navy-800"
+                      aria-label="Remove item"
+                    />
+                  )}
+                </div>
+              ))}
+              {canAddMore && (
+                <Button
+                  color="tertiary"
+                  size="md"
+                  iconLeading={Plus}
+                  onClick={() => addArrayItem(conditionalKey)}
+                  className="max-w-60 text-sm font-semibold text-ws-navy-800 border border-ws-navy-800"
+                >
+                  Add another location
+                </Button>
+              )}
+            </div>
+          );
+        })()}
+    </div>
+  );
+};
+
+// ─── GroupedMultipleChoiceOptions ─────────────────────────────────────────────
+
+interface GroupedMultipleChoiceOptionsProps {
+  optionGroups: OptionGroup[];
+  questionKey: string;
+  currentSelections: string[];
+  onAnswerChange: (key: string, value: unknown) => void;
+}
+
+const GroupedMultipleChoiceOptions = ({
+  optionGroups,
+  questionKey,
+  currentSelections,
+  onAnswerChange,
+}: GroupedMultipleChoiceOptionsProps) => (
+  <>
+    {optionGroups.map((group: OptionGroup) => {
+      const exclusiveOption = group.options.find((o: QuestionOption) =>
+        EXCLUSIVE_BENEFIT_OPTIONS.has(o.label)
+      );
+      const isExclusiveSelected =
+        !!exclusiveOption && currentSelections.includes(exclusiveOption.value);
+
+      return (
+        <div key={group.groupName} className="flex flex-col gap-3">
+          <h3 className="text-sm font-normal text-ws-text-primary">{group.groupName}</h3>
+          <div className="flex flex-col gap-4 pl-2 font-normal text-ws-text-secondary">
+            {group.options.map((option: QuestionOption) => {
+              const isThisExclusive = EXCLUSIVE_BENEFIT_OPTIONS.has(option.label);
+              const isOptionDisabled = isExclusiveSelected && !isThisExclusive;
+
+              return (
+                <Checkbox
+                  key={option.value}
+                  className="font-normal"
+                  label={option.label}
+                  tooltipText={OPTION_TOOLTIPS[option.label]}
+                  isDisabled={isOptionDisabled}
+                  isSelected={currentSelections.includes(option.value)}
+                  onChange={isChecked => {
+                    const current = [...currentSelections];
+                    if (isChecked) {
+                      if (isThisExclusive) {
+                        const groupValues = new Set(
+                          group.options.map((o: QuestionOption) => o.value)
+                        );
+                        onAnswerChange(questionKey, [
+                          ...current.filter(v => !groupValues.has(v)),
+                          option.value,
+                        ]);
+                      } else {
+                        const withoutExclusive = exclusiveOption
+                          ? current.filter(v => v !== exclusiveOption.value)
+                          : current;
+                        onAnswerChange(questionKey, [...withoutExclusive, option.value]);
+                      }
+                    } else {
+                      onAnswerChange(
+                        questionKey,
+                        current.filter((v: string) => v !== option.value)
+                      );
+                    }
+                  }}
+                />
+              );
+            })}
+          </div>
+        </div>
+      );
+    })}
+  </>
+);
+
 interface DynamicQuestionRendererProps {
   question: Question;
   answers: Record<string, unknown>;
@@ -70,12 +722,6 @@ export const DynamicQuestionRenderer = ({
   const error = errors[question.key];
   const displayOrder = subsectionDisplayOrder ?? question.displayOrder;
 
-  const halfWidthSelectKeys = new Set(["payrollProvider", "benefitEnrollmentMonth"]);
-  const halfWidthConditionalSelectKeys = new Set(["retirementProvider"]);
-  const halfWidthNumericKeys = new Set(["lowestHealthPlanPremium"]);
-  const halfWidthConditionalNumericKeys = new Set(["retirementMatchPercentage"]);
-  const halfWidthYesNoKeys = new Set(["offersAnnualRaises"]);
-
   const handlePercentageChange = useCallback(
     (value: string, subFieldKey: string) => {
       const digitsOnly = value.replace(/[^0-9]/g, "");
@@ -95,7 +741,8 @@ export const DynamicQuestionRenderer = ({
 
       const numValue = Number(digitsOnly);
 
-      if (isNaN(numValue) || numValue > 100) return;
+      // if (isNaN(numValue) || numValue > 100) return;
+      if (Number.isNaN(numValue) || numValue > 100) return;
 
       onAnswerChange(question.key, {
         ...currentObj,
@@ -153,613 +800,16 @@ export const DynamicQuestionRenderer = ({
     );
   };
 
-  const updateArrayItemField = useCallback(
-    (key: string, itemId: number, fieldName: string, value: string, _type: string) => {
-      const current = (answers[key] as Array<Record<string, unknown>>) ?? [];
-      const updated = current.map(i => (i.id === itemId ? { ...i, [fieldName]: value } : i));
-      onAnswerChange(key, updated);
-
-      if (value !== "" && value !== null && value !== undefined) {
-        const currentIndex = current.findIndex(i => i.id === itemId);
-        if (currentIndex !== -1) {
-          const fieldErrorKey = `${key}.${currentIndex}.${fieldName}`;
-          const pairedKey =
-            fieldName === "zipCode"
-              ? `${key}.${currentIndex}.state`
-              : fieldName === "state"
-                ? `${key}.${currentIndex}.zipCode`
-                : null;
-
-          if (fieldName === "state") {
-            return;
-          }
-
-          onErrorChange?.(
-            pairedKey ? { [fieldErrorKey]: "", [pairedKey]: "" } : { [fieldErrorKey]: "" }
-          );
-        }
-      }
-    },
-    [answers, onAnswerChange, onErrorChange]
-  );
-
-  const renderStructuredArrayField = (
-    field: {
-      name: string;
-      type: string;
-      label: string;
-      placeholder?: string;
-      width?: string;
-      options?: Array<{ id: string; label: string }>;
-      pattern?: string;
-    },
-    index: number,
-    _showRemoveButton: boolean,
-    _onRemove: () => void,
-    arrayKey?: string
-  ) => {
-    const keyToUse = arrayKey || question.key;
-    const currentItems = (answers[keyToUse] as Array<{ id: number }>) || [];
-    const item = currentItems[index] || { id: generateId() };
-    const itemId = (item as { id: number }).id;
-    const widthClass = field.width || "flex-1";
-
-    const fieldErrorKey = `${keyToUse}.${index}.${field.name}`;
-    const fieldError = errors[fieldErrorKey];
-
-    const displayFieldError = (() => {
-      if (!fieldError) return undefined;
-      if (field.name === "state") {
-        if (fieldError === "Required") return "State is required";
-        return fieldError;
-      }
-      if (field.name === "zipCode") {
-        if (fieldError === "") return undefined;
-        return fieldError;
-      }
-      return fieldError;
-    })();
-
-    const questionError = errors[keyToUse];
-    const hasError = !!displayFieldError || !!questionError;
-
-    console.debug(`[renderStructuredArrayField] ${fieldErrorKey}:`, {
-      fieldError,
-      questionError,
-      hasError,
-      errors: Object.keys(errors).filter(k => k.startsWith(keyToUse)),
-    });
-
-    return (
-      <div
-        key={`${keyToUse}-${(item as { id: number }).id}-${field.name}`}
-        className={cx("flex flex-col gap-1.5", widthClass)}
-      >
-        {field.type === "select" ? (
-          <>
-            <Select
-              className="w-full flex items-start"
-              key={field.name}
-              size="md"
-              label={field.label}
-              placeholder={field.placeholder}
-              items={field.options?.map(opt => ({
-                id: opt.id,
-                label: opt.label,
-              }))}
-              selectedKey={(item as unknown as Record<string, string>)[field.name] || ""}
-              onSelectionChange={key =>
-                updateArrayItemField(keyToUse, itemId, field.name, key as string, "text")
-              }
-              isInvalid={hasError}
-            >
-              {(selectItem: SelectItemType) => (
-                <Select.Item id={selectItem.id}>{selectItem.label || ""}</Select.Item>
-              )}
-            </Select>
-            {displayFieldError && (
-              <span className="text-sm text-ws-error-600">{displayFieldError}</span>
-            )}
-          </>
-        ) : field.name === "state" ? (
-          <>
-            <Select
-              className="w-full flex items-start"
-              key={field.name}
-              size="md"
-              label={field.label}
-              placeholder={field.placeholder}
-              items={field.options?.map(opt => ({
-                id: opt.id,
-                label: opt.label,
-              }))}
-              selectedKey={(item as unknown as Record<string, string>)[field.name] || ""}
-              onSelectionChange={key => {
-                const selectedState = key as string;
-                const currentItems = (answers[keyToUse] as Array<Record<string, unknown>>) ?? [];
-                const currentItem = currentItems.find(i => i.id === itemId);
-                const currentIndex = currentItems.findIndex(i => i.id === itemId);
-                if (currentIndex === -1) return;
-
-                const currentZipValue = (currentItem?.zipCode as string) ?? "";
-                const currentZipValidityState = currentItem?.__zipValidityState as
-                  | ZipValidityState
-                  | undefined;
-                const currentZipStateAbbreviation = currentItem?.__zipStateAbbreviation as
-                  | string
-                  | undefined;
-
-                const stateFieldKey = `${keyToUse}.${currentIndex}.state`;
-                const zipFieldKey = `${keyToUse}.${currentIndex}.zipCode`;
-
-                // Look up stateFips for the selected state from stateOptions
-                const selectedStateFips =
-                  stateOptions?.find(s => s.id.toUpperCase() === selectedState.toUpperCase())
-                    ?.stateFips ?? "";
-
-                if (
-                  currentZipValue &&
-                  currentZipStateAbbreviation &&
-                  (currentZipValidityState === "valid" ||
-                    currentZipValidityState === "state_mismatch")
-                ) {
-                  const isMismatch =
-                    currentZipStateAbbreviation.toUpperCase() !== selectedState.toUpperCase();
-
-                  if (isMismatch) {
-                    onAnswerChange(
-                      keyToUse,
-                      currentItems.map(i =>
-                        i.id === itemId
-                          ? {
-                              ...i,
-                              [field.name]: selectedState,
-                              stateFips: selectedStateFips,
-                              __zipValidityState: "state_mismatch" as ZipValidityState,
-                              __zipIsValid: false,
-                            }
-                          : i
-                      )
-                    );
-                    onErrorChange?.({
-                      [stateFieldKey]: "State does not match zipcode",
-                      [zipFieldKey]: "",
-                    });
-                  } else {
-                    onAnswerChange(
-                      keyToUse,
-                      currentItems.map(i =>
-                        i.id === itemId
-                          ? {
-                              ...i,
-                              [field.name]: selectedState,
-                              stateFips: selectedStateFips,
-                              __zipValidityState: "valid" as ZipValidityState,
-                              __zipIsValid: true,
-                            }
-                          : i
-                      )
-                    );
-                    onErrorChange?.({
-                      [stateFieldKey]: "",
-                      [zipFieldKey]: "",
-                    });
-                  }
-                } else {
-                  onAnswerChange(
-                    keyToUse,
-                    currentItems.map(i =>
-                      i.id === itemId
-                        ? {
-                            ...i,
-                            [field.name]: selectedState,
-                            stateFips: selectedStateFips,
-                          }
-                        : i
-                    )
-                  );
-                  onErrorChange?.({
-                    [stateFieldKey]: "",
-                  });
-                }
-              }}
-              isInvalid={hasError}
-            >
-              {(selectItem: SelectItemType) => (
-                <Select.Item id={selectItem.id}>{selectItem.label || ""}</Select.Item>
-              )}
-            </Select>
-            {displayFieldError && (
-              <span className="text-sm text-ws-error-600">{displayFieldError}</span>
-            )}
-          </>
-        ) : field.name === "zipCode" ? (
-          <>
-            <label className="block text-sm font-normal text-foreground mb-0.2">
-              {field.label}
-            </label>
-            <ZipCodeAutocomplete
-              value={(item as unknown as Record<string, string>)[field.name] ?? ""}
-              // Only fires for keystrokes — never for suggestion selections.
-              // Always resets validity so the next API call re-evaluates.
-              onChange={(val: string) => {
-                const latestItems = answers[keyToUse] as Array<Record<string, unknown>>;
-                if (!latestItems || !Array.isArray(latestItems)) return;
-                onAnswerChange(
-                  keyToUse,
-                  latestItems.map(i =>
-                    i.id === itemId
-                      ? {
-                          ...i,
-                          [field.name]: val,
-                          __zipStateAbbreviation: null,
-                          __zipIsValid: false,
-                          __zipValidityState: "pending" as const,
-                        }
-                      : i
-                  )
-                );
-              }}
-              placeholder={field.placeholder}
-              isInvalid={
-                !!displayFieldError && displayFieldError !== "State does not match zipcode"
-              }
-              selectedStateAbbreviation={
-                (item as unknown as Record<string, string>)["state"] ?? undefined
-              }
-              onSuggestionSelect={suggestion => {
-                const latestItems = answers[keyToUse] as Array<Record<string, unknown>>;
-                if (!latestItems || !Array.isArray(latestItems)) return;
-
-                const currentItem = latestItems.find(i => i.id === itemId);
-                const currentState = (currentItem?.state as string) ?? "";
-
-                const selectedState = currentState;
-                const mismatch =
-                  selectedState !== "" &&
-                  suggestion.stateAbbreviation.toUpperCase() !== selectedState.toUpperCase();
-
-                // Resolve stateFips: prefer suggestion's fips if state matches, else look up from stateOptions
-                const resolvedStateFips = (() => {
-                  if (
-                    suggestion.stateAbbreviation &&
-                    currentState &&
-                    suggestion.stateAbbreviation.toUpperCase() === currentState.toUpperCase()
-                  ) {
-                    return suggestion.stateFips ?? "";
-                  }
-                  return (
-                    stateOptions?.find(s => s.id.toUpperCase() === currentState.toUpperCase())
-                      ?.stateFips ?? ""
-                  );
-                })();
-
-                onAnswerChange(
-                  keyToUse,
-                  latestItems.map(i =>
-                    i.id === itemId
-                      ? {
-                          ...i,
-                          [field.name]: suggestion.zip,
-                          stateFips: resolvedStateFips,
-                          __zipStateAbbreviation: suggestion.stateAbbreviation,
-                          __zipStateFips: suggestion.stateFips ?? "",
-                          __zipIsValid: !mismatch,
-                          __zipValidityState: (mismatch
-                            ? "state_mismatch"
-                            : "valid") as ZipValidityState,
-                        }
-                      : i
-                  )
-                );
-              }}
-              onValidityChange={(isValid: boolean, zipValidityState) => {
-                const latestItems = answers[keyToUse] as Array<Record<string, unknown>>;
-                if (!latestItems || !Array.isArray(latestItems)) return;
-                const current = latestItems.find(i => i.id === itemId);
-                if (
-                  !current ||
-                  (current.__zipIsValid === isValid &&
-                    current.__zipValidityState === zipValidityState)
-                )
-                  return;
-
-                onAnswerChange(
-                  keyToUse,
-                  latestItems.map(i =>
-                    i.id === itemId
-                      ? { ...i, __zipIsValid: isValid, __zipValidityState: zipValidityState }
-                      : i
-                  )
-                );
-                const currentIndex = latestItems.findIndex(i => i.id === itemId);
-                if (currentIndex === -1) return;
-
-                const stateFieldKey = `${keyToUse}.${currentIndex}.state`;
-                const zipFieldKey = `${keyToUse}.${currentIndex}.zipCode`;
-
-                if (zipValidityState === "state_mismatch") {
-                  onErrorChange?.({
-                    [stateFieldKey]: "State does not match zipcode",
-                    [zipFieldKey]: "",
-                  });
-                } else if (zipValidityState === "invalid_zip") {
-                  onErrorChange?.({
-                    [stateFieldKey]: "State does not match zipcode",
-                    [zipFieldKey]: "Incorrect zip code",
-                  });
-                } else if (zipValidityState === "valid") {
-                  onErrorChange?.({
-                    [stateFieldKey]: "",
-                    [zipFieldKey]: "",
-                  });
-                } else if (zipValidityState === "pending" || zipValidityState === "empty") {
-                  onErrorChange?.({
-                    [stateFieldKey]: "",
-                    [zipFieldKey]: "",
-                  });
-                }
-              }}
-            />
-            {displayFieldError && displayFieldError !== "State does not match zipcode" && (
-              <span className="text-sm text-ws-error-600">{displayFieldError}</span>
-            )}
-          </>
-        ) : (
-          <>
-            <Input
-              key={field.name}
-              size="md"
-              label={field.label}
-              placeholder={field.placeholder}
-              type="text"
-              value={(item as unknown as Record<string, string>)[field.name] ?? ""}
-              pattern={field.pattern}
-              isInvalid={hasError}
-              tooltip={displayFieldError ? displayFieldError : undefined}
-              onChange={(val: string) => {
-                updateArrayItemField(keyToUse, itemId, field.name, val, field.type);
-              }}
-            />
-            {displayFieldError && (
-              <span className="text-sm text-ws-error-600">{displayFieldError}</span>
-            )}
-          </>
-        )}
-      </div>
-    );
+  const conditionalProps = {
+    answers,
+    errors,
+    onAnswerChange,
+    onErrorChange,
+    stateOptions,
+    addArrayItem,
+    removeArrayItem,
   };
 
-  const renderConditionalQuestion = (
-    conditionalConfig: Question["conditionalQuestion"],
-    parentKey: string
-  ): React.ReactNode => {
-    if (!conditionalConfig) return null;
-
-    const { showWhen, question: conditionalQuestion } = conditionalConfig;
-    const parentValue = answers[parentKey];
-
-    let shouldShow = false;
-
-    if (showWhen === "yes") {
-      shouldShow = parentValue === true || String(parentValue).toLowerCase() === "yes";
-    } else if (showWhen === "no") {
-      shouldShow = parentValue === false || String(parentValue).toLowerCase() === "no";
-    } else {
-      const showWhenNormalized = String(showWhen).toLowerCase();
-      const parentValueNormalized = String(parentValue || "").toLowerCase();
-      shouldShow = parentValueNormalized === showWhenNormalized;
-    }
-
-    if (!shouldShow) return null;
-
-    const isArrayAnswer = Array.isArray(answers[conditionalQuestion.key]);
-    const arrayAnswer = isArrayAnswer ? (answers[conditionalQuestion.key] as string[]) : [];
-
-    return (
-      <div className="flex w-full flex-col gap-4 pl-6 mt-4">
-        <Label
-          isRequired={conditionalQuestion.isRequired}
-          className="text-ws-text-primary custom-label"
-        >
-          {conditionalQuestion.questionText}
-        </Label>
-
-        {conditionalQuestion.questionType === "TEXT_INPUT" && (
-          <>
-            <Input
-              type="text"
-              placeholder={conditionalQuestion.placeholder}
-              value={String(answers[conditionalQuestion.key] || "")}
-              onChange={value => onAnswerChange(conditionalQuestion.key, value)}
-              size="md"
-              maxLength={conditionalQuestion.validationRules?.maxLength}
-              isInvalid={errors[conditionalQuestion.key] ? true : false}
-              tooltip={
-                errors[conditionalQuestion.key] ? errors[conditionalQuestion.key] : undefined
-              }
-            />
-            {errors[conditionalQuestion.key] && (
-              <span className="text-sm text-ws-error-600">{errors[conditionalQuestion.key]}</span>
-            )}
-          </>
-        )}
-
-        {conditionalQuestion.questionType === "NUMBER_INPUT" && (
-          <>
-            <Input
-              type="text"
-              placeholder={conditionalQuestion.placeholder || "Enter number"}
-              inputMode="numeric"
-              value={String(answers[conditionalQuestion.key] ?? "")}
-              className={
-                halfWidthConditionalNumericKeys.has(conditionalQuestion.key)
-                  ? "w-full md:w-1/2"
-                  : "w-full"
-              }
-              onChange={value => {
-                const filtered = value.replace(/[^0-9]/g, "");
-                const numValue = filtered === "" ? null : Number(filtered);
-                if (numValue !== null) {
-                  if (
-                    conditionalQuestion.validationRules?.min !== undefined &&
-                    numValue < conditionalQuestion.validationRules.min
-                  ) {
-                    return;
-                  }
-                  if (
-                    conditionalQuestion.validationRules?.max !== undefined &&
-                    numValue > conditionalQuestion.validationRules.max
-                  ) {
-                    return;
-                  }
-                }
-                onAnswerChange(conditionalQuestion.key, numValue);
-              }}
-              size="md"
-              isInvalid={errors[conditionalQuestion.key] ? true : false}
-              tooltip={
-                errors[conditionalQuestion.key] ? errors[conditionalQuestion.key] : undefined
-              }
-            />
-            {errors[conditionalQuestion.key] && (
-              <span className="text-sm text-ws-error-600">{errors[conditionalQuestion.key]}</span>
-            )}
-          </>
-        )}
-
-        {conditionalQuestion.questionType === "SINGLE_SELECT_DROPDOWN" && (
-          <>
-            <Select
-              className={
-                halfWidthConditionalSelectKeys.has(conditionalQuestion.key)
-                  ? "w-full md:w-1/2"
-                  : "w-full"
-              }
-              size="md"
-              placeholder={conditionalQuestion.placeholder || "Select an option"}
-              items={conditionalQuestion.options?.map(opt => ({
-                id: opt.value,
-                label: opt.label,
-              }))}
-              selectedKey={
-                answers[conditionalQuestion.key] ? String(answers[conditionalQuestion.key]) : ""
-              }
-              onSelectionChange={key => onAnswerChange(conditionalQuestion.key, key as string)}
-              isInvalid={errors[conditionalQuestion.key] ? true : false}
-            >
-              {(item: SelectItemType) => <Select.Item id={item.id}>{item.label || ""}</Select.Item>}
-            </Select>
-            {errors[conditionalQuestion.key] && (
-              <span className="text-sm text-ws-error-600">{errors[conditionalQuestion.key]}</span>
-            )}
-            {conditionalQuestion.conditionalQuestion &&
-              renderConditionalQuestion(
-                conditionalQuestion.conditionalQuestion,
-                conditionalQuestion.key
-              )}
-          </>
-        )}
-
-        {conditionalQuestion.questionType === "MULTIPLE_CHOICE" && (
-          <>
-            <div className="flex flex-col gap-4 custom-question-options">
-              {conditionalQuestion.options?.map((option: QuestionOption) => (
-                <Checkbox
-                  key={option.value}
-                  label={option.label}
-                  className="font-normal"
-                  isSelected={isArrayAnswer && arrayAnswer.includes(option.value)}
-                  onChange={isChecked => {
-                    const current = isArrayAnswer
-                      ? (answers[conditionalQuestion.key] as string[])
-                      : [];
-                    const next = isChecked
-                      ? [...current, option.value]
-                      : current.filter((v: string) => v !== option.value);
-                    onAnswerChange(conditionalQuestion.key, next);
-                  }}
-                />
-              ))}
-            </div>
-            {errors[conditionalQuestion.key] && (
-              <span className="text-sm text-ws-error-600">{errors[conditionalQuestion.key]}</span>
-            )}
-          </>
-        )}
-
-        {conditionalQuestion.questionType === "STRUCTURED_ARRAY" && (
-          <div className="flex flex-col gap-4">
-            {(() => {
-              const conditionalKey = conditionalQuestion.key;
-              const currentItems = (answers[conditionalKey] as Array<{ id: number }>) || [];
-              const maxItems = conditionalQuestion.validationRules?.maxItems || 5;
-              const canAddMore = currentItems.length < maxItems;
-
-              if (currentItems.length === 0) {
-                const newArray = [{ id: generateId() }];
-                onAnswerChange(conditionalKey, newArray);
-                return null;
-              }
-
-              return (
-                <>
-                  {currentItems.map((item, index) => (
-                    <div key={item.id} className="flex w-full gap-4">
-                      {conditionalQuestion.validationRules.fields?.map(
-                        (field: {
-                          name: string;
-                          type: string;
-                          label: string;
-                          required?: boolean;
-                          pattern?: string;
-                          errorMessage?: string;
-                          width?: string;
-                          placeholder?: string;
-                          options?: Array<{ id: string; label: string }>;
-                        }) =>
-                          renderStructuredArrayField(
-                            field,
-                            index,
-                            currentItems.length > 1,
-                            () => removeArrayItem(conditionalKey, item.id),
-                            conditionalKey
-                          )
-                      )}
-                      {currentItems.length > 1 && (
-                        <Button
-                          color="tertiary"
-                          size="md"
-                          iconLeading={Trash01}
-                          onClick={() => removeArrayItem(conditionalKey, item.id)}
-                          className="mt-6 h-10 shrink-0 px-2 bg-tertiary *:data-icon:text-ws-navy-800 border border-ws-navy-800"
-                          aria-label="Remove item"
-                        />
-                      )}
-                    </div>
-                  ))}
-                  {canAddMore && (
-                    <Button
-                      color="tertiary"
-                      size="md"
-                      iconLeading={Plus}
-                      onClick={() => addArrayItem(conditionalKey)}
-                      className={cx(
-                        "max-w-60 text-sm font-semibold text-ws-navy-800 border border-ws-navy-800",
-                        error && "border-ws-error-600"
-                      )}
-                    >
-                      Add another location
-                    </Button>
-                  )}
-                </>
-              );
-            })()}
-          </div>
-        )}
-      </div>
-    );
-  };
 
   useEffect(() => {
     if (question.questionType === "RANKING" && question.dynamicOptions?.sourceField) {
@@ -814,8 +864,13 @@ export const DynamicQuestionRenderer = ({
                   {/* Render conditional inline after the matching option */}
                   {question.conditionalQuestion &&
                     String(question.conditionalQuestion.showWhen).toLowerCase() ===
-                      option.value.toLowerCase() &&
-                    renderConditionalQuestion(question.conditionalQuestion, question.key)}
+                      option.value.toLowerCase() && (
+                      <ConditionalQuestion
+                        conditionalConfig={question.conditionalQuestion}
+                        parentKey={question.key}
+                        {...conditionalProps}
+                      />
+                    )}
                 </React.Fragment>
               ))}
             </div>
@@ -830,7 +885,7 @@ export const DynamicQuestionRenderer = ({
           </Label>
           <Select
             className={
-              halfWidthSelectKeys.has(question.key)
+              HALF_WIDTH_SELECT_KEYS.has(question.key)
                 ? "w-full md:w-1/2 custom-input"
                 : "w-full custom-input"
             }
@@ -864,8 +919,13 @@ export const DynamicQuestionRenderer = ({
               <span className="text-sm text-ws-error-600">{error}</span>
             </div>
           )}
-          {question.conditionalQuestion &&
-            renderConditionalQuestion(question.conditionalQuestion, question.key)}
+          {question.conditionalQuestion && (
+            <ConditionalQuestion
+              conditionalConfig={question.conditionalQuestion}
+              parentKey={question.key}
+              {...conditionalProps}
+            />
+          )}
         </div>
       );
     case "MULTIPLE_CHOICE":
@@ -885,91 +945,37 @@ export const DynamicQuestionRenderer = ({
           )}
           <div className="flex flex-col gap-4 custom-question-options">
             {(question.key === "workforceGoals" || question.key === "supplementalBenefits") &&
-            question.optionGroups
-              ? question.optionGroups.map((group: OptionGroup) => {
-                  // Find the exclusive "does not offer" option for this group (if any)
-                  const exclusiveOption = group.options.find((o: QuestionOption) =>
-                    EXCLUSIVE_BENEFIT_OPTIONS.has(o.label)
-                  );
-                  const currentSelections = Array.isArray(currentAnswer) ? currentAnswer : [];
-                  const isExclusiveSelected =
-                    !!exclusiveOption && currentSelections.includes(exclusiveOption.value);
-
-                  return (
-                    <div key={group.groupName} className="flex flex-col gap-3">
-                      <h3 className="text-sm font-normal text-ws-text-primary">
-                        {group.groupName}
-                      </h3>
-                      <div className="flex flex-col gap-4 pl-2 font-normal text-ws-text-secondary">
-                        {group.options.map((option: QuestionOption) => {
-                          const isThisExclusive = EXCLUSIVE_BENEFIT_OPTIONS.has(option.label);
-                          // Disable non-exclusive options when the exclusive one is selected
-                          const isOptionDisabled = isExclusiveSelected && !isThisExclusive;
-
-                          return (
-                            <Checkbox
-                              key={option.value}
-                              className="font-normal"
-                              label={option.label}
-                              tooltipText={OPTION_TOOLTIPS[option.label]}
-                              isDisabled={isOptionDisabled}
-                              isSelected={currentSelections.includes(option.value)}
-                              onChange={isChecked => {
-                                const current = [...currentSelections];
-                                if (isChecked) {
-                                  if (isThisExclusive) {
-                                    // Selecting "does not offer" → remove all other options from this group
-                                    const groupValues = new Set(
-                                      group.options.map((o: QuestionOption) => o.value)
-                                    );
-                                    const filtered = current.filter(v => !groupValues.has(v));
-                                    onAnswerChange(question.key, [...filtered, option.value]);
-                                  } else {
-                                    // Selecting a normal option → remove the exclusive option from this group (if any)
-                                    const withoutExclusive = exclusiveOption
-                                      ? current.filter(v => v !== exclusiveOption.value)
-                                      : current;
-                                    onAnswerChange(question.key, [
-                                      ...withoutExclusive,
-                                      option.value,
-                                    ]);
-                                  }
-                                } else {
-                                  onAnswerChange(
-                                    question.key,
-                                    current.filter((v: string) => v !== option.value)
-                                  );
-                                }
-                              }}
-                            />
-                          );
-                        })}
-                      </div>
-                    </div>
-                  );
-                })
-              : question.options?.map((option: QuestionOption) => (
-                  <Checkbox
-                    key={option.value}
-                    label={option.label}
-                    className="font-normal"
-                    isSelected={
-                      (Array.isArray(currentAnswer) && currentAnswer.includes(option.value)) ||
-                      false
+            question.optionGroups ? (
+              <GroupedMultipleChoiceOptions
+                optionGroups={question.optionGroups}
+                questionKey={question.key}
+                currentSelections={Array.isArray(currentAnswer) ? currentAnswer : []}
+                onAnswerChange={onAnswerChange}
+              />
+            ) : (
+              question.options?.map((option: QuestionOption) => (
+                <Checkbox
+                  key={option.value}
+                  label={option.label}
+                  className="font-normal"
+                  isSelected={
+                    (Array.isArray(currentAnswer) && currentAnswer.includes(option.value)) ||
+                    false
+                  }
+                  onChange={isChecked => {
+                    const current = Array.isArray(currentAnswer) ? currentAnswer : [];
+                    if (isChecked) {
+                      onAnswerChange(question.key, [...current, option.value]);
+                    } else {
+                      onAnswerChange(
+                        question.key,
+                        current.filter((v: string) => v !== option.value)
+                      );
                     }
-                    onChange={isChecked => {
-                      const current = Array.isArray(currentAnswer) ? currentAnswer : [];
-                      if (isChecked) {
-                        onAnswerChange(question.key, [...current, option.value]);
-                      } else {
-                        onAnswerChange(
-                          question.key,
-                          current.filter((v: string) => v !== option.value)
-                        );
-                      }
-                    }}
-                  />
-                ))}
+                  }}
+                />
+              ))
+            )}
           </div>
         </div>
       );
@@ -988,7 +994,7 @@ export const DynamicQuestionRenderer = ({
         <div
           className={cx(
             "flex flex-col gap-2",
-            halfWidthYesNoKeys.has(question.key) ? "w-full md:w-1/2" : "w-full"
+            HALF_WIDTH_YES_NO_KEYS.has(question.key) ? "w-full md:w-1/2" : "w-full"
           )}
           data-question-key={question.key}
         >
@@ -1023,13 +1029,30 @@ export const DynamicQuestionRenderer = ({
               }}
             >
               <RadioButton value="true" label="Yes" className="font-normal" />
-              {showAfterYes &&
-                renderConditionalQuestion(question.conditionalQuestion, question.key)}
+              {showAfterYes && (
+                <ConditionalQuestion
+                  conditionalConfig={question.conditionalQuestion!}
+                  parentKey={question.key}
+                  {...conditionalProps}
+                />
+              )}
               <RadioButton value="false" label="No" className="font-normal" />
-              {showAfterNo && renderConditionalQuestion(question.conditionalQuestion, question.key)}
+              {showAfterNo && (
+                <ConditionalQuestion
+                  conditionalConfig={question.conditionalQuestion!}
+                  parentKey={question.key}
+                  {...conditionalProps}
+                />
+              )}
             </RadioGroup>
           </div>
-          {showAfterGroup && renderConditionalQuestion(question.conditionalQuestion, question.key)}
+          {showAfterGroup && (
+            <ConditionalQuestion
+              conditionalConfig={question.conditionalQuestion!}
+              parentKey={question.key}
+              {...conditionalProps}
+            />
+          )}
         </div>
       );
     }
@@ -1043,7 +1066,7 @@ export const DynamicQuestionRenderer = ({
           </Label>
           <Input
             className={
-              halfWidthNumericKeys.has(question.key)
+              HALF_WIDTH_NUMERIC_KEYS.has(question.key)
                 ? "w-full md:w-1/2 custom-input"
                 : "w-full custom-input"
             }
@@ -1122,11 +1145,19 @@ export const DynamicQuestionRenderer = ({
 
           {currentItems.map((item: { id: number }, index: number) => (
             <div key={(item as { id: number }).id} className="flex w-full gap-4 custom-input">
-              {question.validationRules.fields!.map(field =>
-                renderStructuredArrayField(field, index, currentItems.length > 1, () =>
-                  removeArrayItem(question.key, (item as { id: number }).id)
-                )
-              )}
+              {question.validationRules.fields!.map(field => (
+                <StructuredArrayField
+                  key={`${question.key}-${(item as { id: number }).id}-${field.name}`}
+                  field={field}
+                  index={index}
+                  arrayKey={question.key}
+                  answers={answers}
+                  errors={errors}
+                  onAnswerChange={onAnswerChange}
+                  onErrorChange={onErrorChange}
+                  stateOptions={stateOptions}
+                />
+              ))}
               {currentItems.length > 1 && (
                 <Button
                   color="tertiary"
