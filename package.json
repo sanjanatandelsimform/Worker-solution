@@ -13,7 +13,7 @@
     "preview": "vite preview",
     "prepare": "husky",
     "type-check": "tsc --noEmit",
-    "test": "vitest run tests/store tests/services tests/hooks tests/utils tests/pages tests/components",
+    "test": "vitest run tests/store tests/services tests/hooks tests/utils",
     "test:all": "vitest run",
     "test:pages": "vitest run tests/pages",
     "test:components": "vitest run tests/components",
