@@ -50,10 +50,11 @@ export default function GetMore() {
   const navigate = useNavigate();
   const renderAccordionHeader = (planId: string, plan: PlanOption) => (
     <div
-      onClick={e => {
-        e.stopPropagation();
-        setSelectedPlan(planId);
-      }}
+      // we will utilize this if client wants to bring back this screen
+      // onClick={e => {
+      //   e.stopPropagation();
+      //   setSelectedPlan(planId);
+      // }}
       className="flex w-full cursor-pointer items-center gap-3"
     >
       {/* Radio Button */}

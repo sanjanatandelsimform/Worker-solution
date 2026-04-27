@@ -2,6 +2,7 @@ import type { ReactNode } from "react";
 import type { SwitchProps as AriaSwitchProps } from "react-aria-components";
 import { Switch as AriaSwitch } from "react-aria-components";
 import { cx } from "@/utils/cx";
+import { Button } from "../buttons/button";
 
 interface ToggleBaseProps {
   size?: "sm" | "md";
@@ -142,12 +143,13 @@ export const Toggle = ({
                 <p className={cx("text-secondary select-none", styles[size].label)}>{label}</p>
               )}
               {hint && (
-                <span
+                <Button
+                  color="subtle"
                   className={cx("text-tertiary", styles[size].hint)}
-                  onClick={event => event.stopPropagation()}
+                  onClick={(event: React.MouseEvent<HTMLButtonElement>) => event.stopPropagation()}
                 >
                   {hint}
-                </span>
+                </Button>
               )}
             </div>
           )}
