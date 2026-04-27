@@ -10,7 +10,7 @@ interface LoadingSpinnerProps {
 export function LoadingSpinner({
   height = 48,
   width = 48,
-  bgClass = "bg-gray-50",
+  bgClass = "bg-ws-gray-50",
   ariaLabel = "loading",
 }: LoadingSpinnerProps) {
   return (

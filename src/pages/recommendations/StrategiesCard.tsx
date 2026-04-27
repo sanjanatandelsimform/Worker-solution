@@ -12,9 +12,9 @@ export default function StrategiesCard({
 }: Readonly<StrategiesCardProps>) {
   return (
     <div
-      className={`bg-ws-gray-20 ring ring-ws-border-primary rounded-xl p-4 min-h-33 ${className}`}
+      className={`bg-ws-gray-25 ring ring-ws-border-primary rounded-xl p-4 min-h-33 ${className}`}
     >
-      <h2 className="flex items-center text-xl text-ws-cyan-60 font-bold gap-2">
+      <h2 className="flex items-center text-xl text-ws-text-tertiary font-bold gap-2">
         {titleIcon} {title}
       </h2>
       <p className="text-sm text-ws-text-primary mt-3">{descriptionText}</p>

@@ -187,8 +187,8 @@ export const UpdateYourEmailModal = ({
         <form onSubmit={handleSubmit}>
           <ModalBody>
             {showSuccess && (
-              <div className="mb-4 p-4 bg-green-50 border border-green-200 rounded-lg">
-                <p className="text-green-800 text-sm font-medium">
+              <div className="mb-4 p-4 bg-ws-success-50 border border-ws-success-200 rounded-lg">
+                <p className="text-ws-success-700 text-sm font-medium">
                   Verification email sent! Please check your inbox.
                 </p>
               </div>
@@ -198,7 +198,7 @@ export const UpdateYourEmailModal = ({
               <div className="mb-4">
                 <ErrorMessage
                   errorType="danger"
-                  textColor="text-red-700"
+                  textColor="text-ws-error-700"
                   alertIcon={AlertCircle}
                   errorMessage={newEmailError}
                   onClose={() => setShowError(false)}

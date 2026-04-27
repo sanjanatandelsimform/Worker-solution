@@ -118,7 +118,7 @@ export const SuccessPage: React.FC<SuccessCardProps> = ({
                 className="w-auto bg-ws-navy-800"
                 onClick={handleButtonClick}
               >
-                {buttonLabel || state.buttonText || "Let's Get Started"}
+                {buttonLabel || state.buttonText || "Let's get started"}
               </Button>
             )}
           </div>

@@ -201,8 +201,8 @@ export const ChangePasswordModal = ({ isOpen, onClose }: ChangePasswordModalProp
             <ModalBody>
               {/* Account Lockout Message */}
               {isAccountLocked && lockoutMessage && (
-                <div className="mb-4 p-4 bg-red-50 border border-red-200 rounded-lg">
-                  <p className="text-red-800 text-sm font-medium">{lockoutMessage}</p>
+                <div className="mb-4 p-4 bg-ws-error-50 border border-ws-error-200 rounded-lg">
+                  <p className="text-ws-error-800 text-sm font-medium">{lockoutMessage}</p>
                 </div>
               )}
 
@@ -211,7 +211,7 @@ export const ChangePasswordModal = ({ isOpen, onClose }: ChangePasswordModalProp
                 <div className="mb-4">
                   <ErrorMessage
                     errorType="danger"
-                    textColor="text-red-700"
+                    textColor="text-ws-error-700"
                     alertIcon={AlertCircle}
                     errorMessage={`${profileError}${attemptsRemaining > 0 ? ` (${attemptsRemaining} attempts remaining)` : ""}`}
                   />

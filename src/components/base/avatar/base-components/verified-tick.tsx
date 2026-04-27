@@ -18,7 +18,7 @@ interface VerifiedTickProps {
 
 export const VerifiedTick = ({ size, className }: VerifiedTickProps) => (
   <svg
-    className={cx("z-10 text-utility-blue-500", sizes[size], className)}
+    className={cx("z-10 text-ws-light-teal-500", sizes[size], className)}
     viewBox="0 0 10 10"
     fill="none"
   >

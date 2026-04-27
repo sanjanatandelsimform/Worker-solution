@@ -298,7 +298,7 @@ export const DashboardPage = () => {
               <div className="mt-6">
                 <ErrorMessage
                   errorType="danger"
-                  textColor="text-red-700"
+                  textColor="text-ws-error-700"
                   alertIcon={AlertCircle}
                   errorMessage={errorMessage}
                   onClose={() => setErrorMessage(null)}
@@ -392,19 +392,15 @@ export const DashboardPage = () => {
                     </div>
                     <div className="flex-1">
                       <p className="text-ws-text-tertiary text-base">
-                        Finch handles the connection for you, syncing all your data automatically so
-                        you get richer insights and expanded dashboard views — without any extra
-                        work on your end.
+                        Finch handles the connection for you, syncing all your data automatically so you get richer insights and expanded dashboard views, without any extra work on your end.
                       </p>
                       <ul className="text-ws-text-tertiary text-base list-disc list-inside my-4">
                         <li>Results in as little as 3-5 minutes*</li>
                         <li>Custom workforce data and insights</li>
-                        <li>Additional dashboard views plus everything you get in the free plan</li>
+                        <li>Additional dashboard views plus everything you receive in manual entry</li>
                       </ul>
                       <p className="text-ws-text-tertiary text-base">
-                        By connecting with Finch, you'll be redirected to their site to complete the
-                        setup. Please note that any information shared directly with Finch is
-                        subject to their privacy policy and is outside of our responsibility.
+                        “Start with Finch" will open a secure popup window where you'll sign in to your payroll provider through Finch, a trusted third-party data connector. Your payroll and workforce data is securely transmitted to A2B to power the benefits and workforce analytics in your dashboard.
                       </p>
                       <p className="text-xs text-ws-text-tertiary mt-4">
                         *Result loading time is payroll provider-specific
@@ -463,7 +459,7 @@ export const DashboardPage = () => {
             <div className="mb-4">
               <ErrorMessage
                 errorType="danger"
-                textColor="text-red-700"
+                textColor="text-ws-error-700"
                 alertIcon={AlertCircle}
                 errorMessage={finchError}
                 onClose={clearFinchError}

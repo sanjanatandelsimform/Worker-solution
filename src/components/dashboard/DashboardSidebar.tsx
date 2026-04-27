@@ -12,7 +12,7 @@ import { useBreakpoint } from "@/hooks/use-breakpoint";
 import { Button } from "../base/buttons/button";
 import { useModalConfig } from "@/hooks/useModalConfig";
 import signoutIcon from "@/assets/signout-icon.svg";
-import siteLogo from "@/assets/logo.svg";
+import siteLogo from "@/assets/logo-small.svg";
 import { Tooltip, TooltipTrigger } from "../base/tooltip/tooltip";
 
 interface DashboardSidebarProps {
@@ -222,7 +222,7 @@ export const DashboardSidebar = ({ activeUrl = "/" }: DashboardSidebarProps) => 
         )}
       </div>
       {logoutError && (
-        <div className="fixed top-4 right-4 z-50 rounded-lg bg-red-50 p-4 border border-red-200 shadow-lg max-w-md">
+        <div className="fixed top-4 right-4 z-50 rounded-lg bg-ws-error-50 p-4 border border-ws-error-200 shadow-lg max-w-md">
           <div className="flex items-start gap-3">
             <div className="flex-shrink-0">
               <svg className="h-5 w-5 text-ws-error-600" viewBox="0 0 20 20" fill="currentColor">
@@ -234,8 +234,8 @@ export const DashboardSidebar = ({ activeUrl = "/" }: DashboardSidebarProps) => 
               </svg>
             </div>
             <div className="flex-1">
-              <h3 className="text-sm font-semibold text-red-800">Logout Failed</h3>
-              <p className="mt-1 text-sm text-red-700">{logoutError}</p>
+              <h3 className="text-sm font-semibold text-ws-error-800">Logout Failed</h3>
+              <p className="mt-1 text-sm text-ws-error-700">{logoutError}</p>
             </div>
             <button
               onClick={() => setLogoutError(null)}
