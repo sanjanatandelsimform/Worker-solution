@@ -143,12 +143,6 @@ export const Toggle = ({
                 <p className={cx("text-secondary select-none", styles[size].label)}>{label}</p>
               )}
               {hint && (
-                // <span
-                //   className={cx("text-tertiary", styles[size].hint)}
-                //   onClick={event => event.stopPropagation()}
-                // >
-                //   {hint}
-                // </span>
                 <Button
                   color="subtle"
                   className={cx("text-tertiary", styles[size].hint)}
