@@ -675,7 +675,7 @@ function DesignReference() {
                           <div
                             className={cx(
                               "size-2 rounded transition-colors cursor-pointer",
-                              isSelected ? "bg-purple-600" : "bg-gray-300"
+                              isSelected ? "bg-ws-light-teal-800" : "bg-ws-gray-300"
                             )}
                           />
                         )}
@@ -948,15 +948,16 @@ const BenchmarkChart = () => {
       <div className="flex gap-6 items-center justify-center w-full">
         <div className="flex gap-4 items-center">
           <div className="w-4 h-4 rounded-xs bg-cyan-400" />
-          <p className="font-normal text-black text-lg">State average</p>
+
+          <p className="font-normal text-ws-base-black text-lg">State average</p>
         </div>
         <div className="flex gap-4 items-center">
           <div className="w-4 h-4 rounded-xs bg-cyan-400" />
-          <p className="font-normal text-black text-lg">Your company</p>
+          <p className="font-normal text-ws-base-black text-lg">Your company</p>
         </div>
         <div className="flex gap-4 items-center">
-          <div className="w-4 h-4 rounded-xs bg-gray-200" />
-          <p className="font-normal text-black text-lg">National average</p>
+          <div className="w-4 h-4 rounded-xs bg-ws-gray-200" />
+          <p className="font-normal text-ws-base-black text-lg">National average</p>
         </div>
       </div>
     </div>

@@ -60,7 +60,7 @@ export const MultiSelect: React.FC<MultiSelectProps> = ({
       <button
         type="button"
         onClick={() => setOpen(prev => !prev)}
-        className="bg-ws-base-white flex w-full h-11 items-center justify-between rounded-md border border-gray-300 px-4 py-2 text-left gap-2 focus-within:border-ws-black focus-within:border-2"
+        className="bg-ws-base-white flex w-full h-11 items-center justify-between rounded-md border border-ws-gray-300 px-4 py-2 text-left gap-2 focus-within:border-ws-black focus-within:border-2"
       >
         <div className="flex flex-wrap gap-1 flex-1">
           {selectedOptions.length > 0 ? (
@@ -114,11 +114,11 @@ export const MultiSelect: React.FC<MultiSelectProps> = ({
               return (
                 <li
                   key={option.value}
-                  className="flex cursor-pointer items-center gap-3 px-4 py-3 hover:bg-gray-50"
+                  className="flex cursor-pointer items-center gap-3 px-4 py-3 hover:bg-ws-gray-50"
                   onClick={() => toggleOption(option.value)}
                 >
                   <div
-                    className={`flex h-5 w-5 items-center justify-center rounded-md border relative ${checked ? "border-primary bg-primary text-ws-base-white" : "border-gray-300"}`}
+                    className={`flex h-5 w-5 items-center justify-center rounded-md border relative ${checked ? "border-primary bg-primary text-ws-base-white" : "border-ws-gray-300"}`}
                   >
                     {checked && <CheckIcon className="right-1 bottom-1" />}
                   </div>

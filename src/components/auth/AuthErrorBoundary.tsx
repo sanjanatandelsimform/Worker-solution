@@ -39,7 +39,7 @@ export class AuthErrorBoundary extends Component<ErrorBoundaryProps, ErrorBounda
             <div className="rounded-lg bg-ws-base-white p-8 shadow-md">
               {/* Error Icon */}
               <div className="mb-6 flex justify-center">
-                <div className="flex h-16 w-16 items-center justify-center rounded-full bg-red-100">
+                <div className="flex h-16 w-16 items-center justify-center rounded-full bg-ws-error-100">
                   <svg
                     className="h-8 w-8 text-ws-error-600"
                     fill="none"
@@ -67,7 +67,7 @@ export class AuthErrorBoundary extends Component<ErrorBoundaryProps, ErrorBounda
 
               {/* Error Details (Development Only) */}
               {import.meta.env.DEV && this.state.error && (
-                <div className="mb-6 rounded-lg bg-red-50 p-4 text-left text-sm text-red-800">
+                <div className="mb-6 rounded-lg bg-ws-error-50 p-4 text-left text-sm text-ws-error-800">
                   <p className="font-medium">Error Details:</p>
                   <p className="mt-1 font-mono text-xs">{this.state.error.message}</p>
                 </div>

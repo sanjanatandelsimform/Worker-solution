@@ -18,86 +18,31 @@ export const filledColors: Record<
   { root: string; addon: string; addonButton: string }
 > = {
   gray: {
-    root: "bg-utility-neutral-50 text-utility-neutral-700 ring-utility-neutral-200",
-    addon: "text-utility-neutral-500",
+    root: "bg-ws-gray-50 text-ws-gray-700 ring-ws-gray-200",
+    addon: "text-ws-gray-500",
     addonButton:
-      "hover:bg-utility-neutral-100 text-utility-neutral-400 hover:text-utility-neutral-500",
+      "hover:bg-ws-gray-100 text-ws-gray-400 hover:text-ws-gray-500",
   },
   brand: {
-    root: "bg-utility-brand-50 text-utility-brand-700 ring-utility-brand-200",
-    addon: "text-utility-brand-500",
-    addonButton: "hover:bg-utility-brand-100 text-utility-brand-400 hover:text-utility-brand-500",
+    root: "bg-ws-light-teal-50 text-ws-light-teal-700 ring-ws-light-teal-200",
+    addon: "text-ws-light-teal-500",
+    addonButton: "hover:bg-ws-light-teal-25 text-ws-light-teal-600 hover:text-ws-light-teal-500",
   },
   error: {
-    root: "bg-utility-red-50 text-utility-red-700 ring-utility-red-200",
-    addon: "text-utility-red-500",
-    addonButton: "hover:bg-utility-red-100 text-utility-red-400 hover:text-utility-red-500",
+    root: "bg-ws-error-50 text-ws-error-700 ring-ws-error-200",
+    addon: "text-ws-error-500",
+    addonButton: "hover:bg-ws-error-100 text-ws-error-400 hover:text-ws-error-500",
   },
   warning: {
-    root: "bg-utility-yellow-50 text-utility-yellow-700 ring-utility-yellow-200",
-    addon: "text-utility-yellow-500",
+    root: "bg-ws-warning-50 text-ws-warning-700 ring-ws-warning-200",
+    addon: "text-ws-warning-500",
     addonButton:
-      "hover:bg-utility-yellow-100 text-utility-yellow-400 hover:text-utility-yellow-500",
+      "hover:bg-ws-warning-100 text-ws-warning-400 hover:text-ws-warning-500",
   },
   success: {
-    root: "bg-utility-green-50 text-utility-green-700 ring-utility-green-200",
-    addon: "text-utility-green-500",
-    addonButton: "hover:bg-utility-green-100 text-utility-green-400 hover:text-utility-green-500",
-  },
-  slate: {
-    root: "bg-utility-slate-50 text-utility-slate-700 ring-utility-slate-200",
-    addon: "text-utility-slate-500",
-    addonButton: "hover:bg-utility-slate-100 text-utility-slate-400 hover:text-utility-slate-500",
-  },
-  sky: {
-    root: "bg-utility-sky-50 text-utility-sky-700 ring-utility-sky-200",
-    addon: "text-utility-sky-500",
-    addonButton: "hover:bg-utility-sky-100 text-utility-sky-400 hover:text-utility-sky-500",
-  },
-  blue: {
-    root: "bg-utility-blue-50 text-utility-blue-700 ring-utility-blue-200",
-    addon: "text-utility-blue-500",
-    addonButton: "hover:bg-utility-blue-100 text-utility-blue-400 hover:text-utility-blue-500",
-  },
-  indigo: {
-    root: "bg-utility-indigo-50 text-utility-indigo-700 ring-utility-indigo-200",
-    addon: "text-utility-indigo-500",
-    addonButton:
-      "hover:bg-utility-indigo-100 text-utility-indigo-400 hover:text-utility-indigo-500",
-  },
-  purple: {
-    root: "bg-utility-purple-50 text-utility-purple-700 ring-utility-purple-200",
-    addon: "text-utility-purple-500",
-    addonButton:
-      "hover:bg-utility-purple-100 text-utility-purple-400 hover:text-utility-purple-500",
-  },
-  pink: {
-    root: "bg-utility-pink-50 text-utility-pink-700 ring-utility-pink-200",
-    addon: "text-utility-pink-500",
-    addonButton: "hover:bg-utility-pink-100 text-utility-pink-400 hover:text-utility-pink-500",
-  },
-  orange: {
-    root: "bg-utility-orange-50 text-utility-orange-700 ring-utility-orange-200",
-    addon: "text-utility-orange-500",
-    addonButton:
-      "hover:bg-utility-orange-100 text-utility-orange-400 hover:text-utility-orange-500",
-  },
-  "gray-blue": {
-    root: "bg-utility-gray-blue-50 text-utility-gray-blue-700 ring-utility-gray-blue-200",
-    addon: "text-utility-gray-blue-500",
-    addonButton:
-      "hover:bg-utility-gray-blue-100 text-utility-gray-blue-400 hover:text-utility-gray-blue-500",
-  },
-  "blue-light": {
-    root: "bg-utility-blue-light-50 text-utility-blue-light-700 ring-utility-blue-light-200",
-    addon: "text-utility-blue-light-500",
-    addonButton:
-      "hover:bg-utility-blue-light-100 text-utility-blue-light-400 hover:text-utility-blue-light-500",
-  },
-  cyan: {
-    root: "bg-utility-cyan-50 text-utility-cyan-700 ring-utility-cyan-200",
-    addon: "text-utility-cyan-500",
-    addonButton: "hover:bg-utility-cyan-100 text-utility-cyan-400 hover:text-utility-cyan-500",
+    root: "bg-ws-success-50 text-ws-success-700 ring-ws-success-200",
+    addon: "text-ws-success-500",
+    addonButton: "hover:bg-ws-success-100 text-ws-success-400 hover:text-ws-success-500",
   },
 };
 

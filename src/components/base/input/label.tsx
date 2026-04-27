@@ -39,7 +39,7 @@ export const Label = ({
         {props.children}
         <span
           className={cx(
-            "hidden text-brand-tertiary text-ws-error-600",
+            "hidden text-ws-error-600",
             isRequired && "inline",
             typeof isRequired === "undefined" && "group-required:inline"
           )}
