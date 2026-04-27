@@ -3,15 +3,17 @@
  *
  * Covers: redirect to dashboard when isFinchCompleted is true,
  * redirect to dashboard when isConnected is false (and not loading),
- * and no redirect when isFinchCompleted is false and isConnected is true.
+ * no redirect when isFinchCompleted is false and isConnected is true,
+ * redirect when success is true, and redirect on close button click.
  */
 
 import React from "react";
 import { describe, it, expect, vi, beforeEach } from "vitest";
-import { render, waitFor } from "@testing-library/react";
+import { render, screen, waitFor, fireEvent } from "@testing-library/react";
 import { MemoryRouter } from "react-router-dom";
 import { useAssessmentStatus } from "@/hooks/useAssessmentStatus";
 import { useFinchStatus } from "@/hooks/useFinchStatus";
+import { useSubmitFinchAssessment } from "@/hooks/useSubmitFinchAssessment";
 
 // ── Mocks ──────────────────────────────────────────────────────────────────
 
@@ -56,47 +58,30 @@ vi.mock("@/hooks/useSubmitFinchAssessment", () => ({
   })),
 }));
 
-// Stub heavy child components / assets to keep test fast
+// Stub section components — redirect tests only care about navigation
+vi.mock("@/pages/additionalQuestions/WorkforceSection", () => ({
+  default: () => null,
+}));
+vi.mock("@/pages/additionalQuestions/CompensationSection", () => ({
+  default: () => null,
+}));
+vi.mock("@/pages/additionalQuestions/BenefitsRetirementSection", () => ({
+  default: () => null,
+}));
+vi.mock("@/pages/additionalQuestions/GoalsSection", () => ({
+  default: () => null,
+}));
+
 vi.mock("@/components/base/buttons/button", () => ({
   Button: ({ children, onClick }: { children: React.ReactNode; onClick?: () => void }) => (
     <button onClick={onClick}>{children}</button>
   ),
-}));
-vi.mock("@/components/common/RankList", () => ({
-  RankingList: () => null,
-}));
-vi.mock("@/components/base/tooltip/tooltip", () => ({
-  Tooltip: ({ children }: { children: React.ReactNode }) => <>{children}</>,
-  TooltipTrigger: ({ children }: { children: React.ReactNode }) => <>{children}</>,
-}));
-vi.mock("@untitledui/icons", () => ({
-  ChevronRight: () => null,
-  InfoCircle: () => null,
-  XClose: () => null,
-}));
-
-vi.mock("@/components/base/select/select", () => ({
-  Select: () => null,
-}));
-vi.mock("@/components/base/select/select-item", () => ({
-  SelectItem: () => null,
-}));
-vi.mock("@/components/base/radio-buttons/radio-buttons", () => ({
-  RadioButton: () => null,
-  RadioGroup: ({ children }: { children: React.ReactNode }) => <>{children}</>,
-}));
-vi.mock("@/components/base/input/label", () => ({
-  Label: ({ children }: { children: React.ReactNode }) => <label>{children}</label>,
-}));
-vi.mock("@/components/base/checkbox/checkbox", () => ({
-  Checkbox: () => null,
 }));
 vi.mock("@/components/common/ErrorMessage", () => ({
   default: ({ errorMessage }: { errorMessage: string }) => (
     <div data-testid="error-message">{errorMessage}</div>
   ),
 }));
-vi.mock("@/assets/icons/inputInfo", () => ({ InputInfo: () => null }));
 vi.mock("@/data/goalsData", () => ({ goalsData: [] }));
 vi.mock("@/utils/finchAssessmentPayload", () => ({
   buildFinchAssessmentPayload: vi.fn(),
@@ -108,6 +93,7 @@ const { default: AdditionalQuestions } =
 
 const mockUseAssessmentStatus = vi.mocked(useAssessmentStatus);
 const mockUseFinchStatus = vi.mocked(useFinchStatus);
+const mockUseSubmitFinchAssessment = vi.mocked(useSubmitFinchAssessment);
 
 // ── Helpers ────────────────────────────────────────────────────────────────
 
@@ -123,6 +109,13 @@ const renderPage = () =>
 describe("AdditionalQuestions – redirect behaviour", () => {
   beforeEach(() => {
     mockNavigate.mockReset();
+    mockUseSubmitFinchAssessment.mockReturnValue({
+      isSubmitting: false,
+      error: null,
+      success: false,
+      submit: vi.fn(),
+      clearError: vi.fn(),
+    });
     mockUseFinchStatus.mockReturnValue({
       isConnected: true,
       isLoading: false,
@@ -240,6 +233,55 @@ describe("AdditionalQuestions – redirect behaviour", () => {
 
     await waitFor(() => {
       expect(mockNavigate).not.toHaveBeenCalled();
+    });
+  });
+
+  it("navigates to /dashboard when success is true", async () => {
+    mockUseAssessmentStatus.mockReturnValue({
+      isFinchCompleted: false,
+      completionCount: 0,
+      isLoading: false,
+      error: null,
+      assessmentData: null,
+      sectionCompletion: { workforce: false, compensation: false, benefits: false, goals: false },
+      refetch: vi.fn(),
+    });
+    mockUseSubmitFinchAssessment.mockReturnValue({
+      isSubmitting: false,
+      error: null,
+      success: true,
+      submit: vi.fn(),
+      clearError: vi.fn(),
+    });
+
+    renderPage();
+
+    await waitFor(() => {
+      expect(mockNavigate).toHaveBeenCalledWith("/dashboard");
+    });
+  });
+
+  it("navigates to /dashboard when the close button is clicked", async () => {
+    mockUseAssessmentStatus.mockReturnValue({
+      isFinchCompleted: false,
+      completionCount: 0,
+      isLoading: false,
+      error: null,
+      assessmentData: null,
+      sectionCompletion: { workforce: false, compensation: false, benefits: false, goals: false },
+      refetch: vi.fn(),
+    });
+
+    renderPage();
+
+    // The X close button has no text; it's the button that is NOT "Next"
+    const allButtons = screen.getAllByRole("button");
+    const closeButton = allButtons.find(btn => btn.textContent?.trim() === "");
+    expect(closeButton).toBeDefined();
+    fireEvent.click(closeButton!);
+
+    await waitFor(() => {
+      expect(mockNavigate).toHaveBeenCalledWith("/dashboard");
     });
   });
 });
