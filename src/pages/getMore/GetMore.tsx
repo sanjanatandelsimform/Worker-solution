@@ -50,6 +50,7 @@ export default function GetMore() {
   const navigate = useNavigate();
   const renderAccordionHeader = (planId: string, plan: PlanOption) => (
     <div
+      // we will utilize this if client wants to bring back this screen
       // onClick={e => {
       //   e.stopPropagation();
       //   setSelectedPlan(planId);
