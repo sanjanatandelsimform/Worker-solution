@@ -209,18 +209,6 @@ vi.mock("@/pages/additionalQuestions/CompensationSection", () => ({
       >
         set raise month
       </button>
-      <button
-        data-testid="trigger-annual-raises-yes-raises"
-        onClick={() => onAnswerChange("annual-raises", "yes-raises")}
-      >
-        set annual-raises yes (comp)
-      </button>
-      <button
-        data-testid="trigger-annual-raises-no-raises"
-        onClick={() => onAnswerChange("annual-raises", "no-raises")}
-      >
-        set annual-raises no (comp)
-      </button>
     </div>
   ),
 }));
