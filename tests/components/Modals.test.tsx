@@ -67,7 +67,7 @@ import { ChangePasswordModal } from "@/components/modals/ChangePasswordModal";
 describe("ChangePasswordModal", () => {
   it("renders when open", () => {
     render(wrap(<ChangePasswordModal isOpen={true} onClose={vi.fn()} />));
-    expect(screen.getByText("Change your Password")).toBeInTheDocument();
+    expect(screen.getByText("Change Your Password")).toBeInTheDocument();
   });
 
   it("renders password fields", () => {
@@ -84,7 +84,7 @@ describe("ChangePasswordModal", () => {
 
   it("does not render when closed", () => {
     render(wrap(<ChangePasswordModal isOpen={false} onClose={vi.fn()} />));
-    expect(screen.queryByText("Change your Password")).toBeNull();
+    expect(screen.queryByText("Change Your Password")).toBeNull();
   });
 });
 

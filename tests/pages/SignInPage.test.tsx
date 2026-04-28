@@ -43,17 +43,9 @@ describe("SignInPage", () => {
     vi.clearAllMocks();
   });
 
-<<<<<<< HEAD
-  describe("render", () => {
-    it("should render A2B logo and Log in heading", () => {
-      renderSignInPage();
-      expect(screen.getByText("A2B")).toBeInTheDocument();
-      expect(screen.getByText("Log in to your account")).toBeInTheDocument();
-      expect(screen.getByText(/Welcome back! Please enter your details/)).toBeInTheDocument();
-=======
   it("should render log in heading and description", () => {
     renderSignInPage();
-    expect(screen.getByText("Log in to your account")).toBeInTheDocument();
+    expect(screen.getByText("Log in to Your Account")).toBeInTheDocument();
     expect(screen.getByText(/Welcome back! Please enter your details/)).toBeInTheDocument();
   });
 
@@ -91,7 +83,6 @@ describe("SignInPage", () => {
         },
         tokens: { accessToken: "at", refreshToken: "rt" },
       },
->>>>>>> develop1
     });
 
     renderSignInPage();

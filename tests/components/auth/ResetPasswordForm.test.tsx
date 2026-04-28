@@ -32,7 +32,7 @@ describe("ResetPasswordForm", () => {
 
   it("renders the form with heading and password inputs", () => {
     renderWithProviders(<ResetPasswordForm />);
-    expect(screen.getByText("Reset Password")).toBeInTheDocument();
+    expect(screen.getByText("Reset password")).toBeInTheDocument();
     expect(screen.getByText("Save password")).toBeInTheDocument();
     expect(screen.getByText("Sign in")).toBeInTheDocument();
   });
@@ -52,13 +52,13 @@ describe("ResetPasswordForm", () => {
     const passwordInput = screen.getByPlaceholderText("Password");
     const confirmInput = screen.getByPlaceholderText("Confirm Password");
 
-    fireEvent.change(passwordInput, { target: { value: "NewPassword1!" } });
+    fireEvent.input(passwordInput, { target: { value: "NewPassword1!" } });
     fireEvent.blur(passwordInput);
-    fireEvent.change(confirmInput, { target: { value: "NewPassword1!" } });
+    fireEvent.input(confirmInput, { target: { value: "NewPassword1!" } });
     fireEvent.blur(confirmInput);
 
-    const submitBtn = screen.getByText("Save password");
-    fireEvent.click(submitBtn);
+    const form = passwordInput.closest("form")!;
+    fireEvent.submit(form);
 
     await waitFor(() => {
       expect(resetPassword).toHaveBeenCalledWith("test-token", "NewPassword1!");
@@ -74,13 +74,13 @@ describe("ResetPasswordForm", () => {
     const passwordInput = screen.getByPlaceholderText("Password");
     const confirmInput = screen.getByPlaceholderText("Confirm Password");
 
-    fireEvent.change(passwordInput, { target: { value: "NewPassword1!" } });
+    fireEvent.input(passwordInput, { target: { value: "NewPassword1!" } });
     fireEvent.blur(passwordInput);
-    fireEvent.change(confirmInput, { target: { value: "NewPassword1!" } });
+    fireEvent.input(confirmInput, { target: { value: "NewPassword1!" } });
     fireEvent.blur(confirmInput);
 
-    const submitBtn = screen.getByText("Save password");
-    fireEvent.click(submitBtn);
+    const form = passwordInput.closest("form")!;
+    fireEvent.submit(form);
 
     await waitFor(() => {
       expect(resetPassword).toHaveBeenCalled();

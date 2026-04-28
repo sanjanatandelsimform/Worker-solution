@@ -40,7 +40,7 @@ describe("ForgotPasswordForm", () => {
 
     renderWithProviders(<ForgotPasswordForm />);
 
-    const emailInput = screen.getByPlaceholderText("olivia@untitledui.com");
+    const emailInput = screen.getByPlaceholderText("Enter your email");
     fireEvent.input(emailInput, { target: { value: "test@example.com" } });
     fireEvent.blur(emailInput);
 
@@ -58,7 +58,7 @@ describe("ForgotPasswordForm", () => {
 
     renderWithProviders(<ForgotPasswordForm />);
 
-    const emailInput = screen.getByPlaceholderText("olivia@untitledui.com");
+    const emailInput = screen.getByPlaceholderText("Enter your email");
     fireEvent.input(emailInput, { target: { value: "test@example.com" } });
     fireEvent.blur(emailInput);
 
