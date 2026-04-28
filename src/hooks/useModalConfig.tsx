@@ -137,7 +137,6 @@ export const useModalConfig = (
             text: "Yes, Delete my account",
             onClick: config.onConfirm || config.onClose,
             color: "error",
-            
           },
         ],
       },

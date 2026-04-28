@@ -149,8 +149,8 @@ export default function GetMore() {
             Get more from A2B
           </h1>
           <p className="text-lg font-normal text-ws-text-primary mt-2">
-            Save time and unlock deeper insights by integrating your payroll with A2B. Choose
-            the best plan to achieve your workforce goals—at no cost to you.
+            Save time and unlock deeper insights by integrating your payroll with A2B. Choose the
+            best plan to achieve your workforce goals—at no cost to you.
           </p>
         </div>
 

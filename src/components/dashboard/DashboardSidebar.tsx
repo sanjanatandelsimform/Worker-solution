@@ -152,16 +152,16 @@ export const DashboardSidebar = ({ activeUrl = "/" }: DashboardSidebarProps) => 
       {/* Header with Logo and Toggle Button */}
       <div className="flex items-center justify-between">
         {/* Logo - Hidden when collapsed on tablet */}
-        {(!isTabletRange || !isCollapsed) ? (
+        {!isTabletRange || !isCollapsed ? (
           <div className="flex items-center justify-start overflow-hidden flex-1">
             <div className="flex items-center justify-center transition-all duration-300">
               <img src={siteLogo} alt="Logo" className="w-full" />
             </div>
           </div>
         ) : (
-            <div className="flex items-center justify-center overflow-hidden flex-1"> 
-              <img src={tabLogo} alt="Logo" className="w-10" />
-            </div>
+          <div className="flex items-center justify-center overflow-hidden flex-1">
+            <img src={tabLogo} alt="Logo" className="w-10" />
+          </div>
         )}
 
         {/* Toggle Button - Only visible on tablet */}

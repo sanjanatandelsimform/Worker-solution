@@ -173,7 +173,8 @@ export function RegistrationForm() {
         state: {
           messageImg: checkmarkIcon,
           title: "Account created successfully!",
-          subtitle: "Welcome aboard! Start your success journey with A2B by Lafayette Square Institute®",
+          subtitle:
+            "Welcome aboard! Start your success journey with A2B by Lafayette Square Institute®",
           buttonText: "Let's get started",
           buttonPath: "/dashboard",
           user,
@@ -203,8 +204,8 @@ export function RegistrationForm() {
           {/* Header */}
           <div className="flex w-full flex-col items-start gap-2">
             <p className="w-full flex items-center justify-center text-center font-normal text-lg text-ws-text-secondary">
-              We’re excited that you’ve decided to try our A2B platform. Before we begin we’ll
-              need to collect some information about your business.
+              We’re excited that you’ve decided to try our A2B platform. Before we begin we’ll need
+              to collect some information about your business.
             </p>
           </div>
 

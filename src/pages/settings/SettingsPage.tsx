@@ -406,17 +406,17 @@ export const SettingsPage = () => {
                     <div className="w-full xl:w-full">
                       <InputGroup>
                         <Input
-                              type="password"
-                              id="password"
-                              label="Password"
-                              name="password"
-                              size="md"
-                              isRequired={false}
-                              placeholder="Password"
-                              value="********"
-                              isDisabled={true}
-                              showPasswordToggle={false}
-                            />
+                          type="password"
+                          id="password"
+                          label="Password"
+                          name="password"
+                          size="md"
+                          isRequired={false}
+                          placeholder="Password"
+                          value="********"
+                          isDisabled={true}
+                          showPasswordToggle={false}
+                        />
                       </InputGroup>
                       <Button
                         color="link"

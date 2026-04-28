@@ -62,7 +62,11 @@ export const BaseModalWithIcon = ({
         <ModalHeader className="relative flex flex-col items-start border-0 pb-0 pt-6 px-6">
           {/* Featured Icon */}
           {icon ? (
-            <div className={`flex items-center justify-center w-12 h-12 rounded-full ${backgroundPattern === "success" ? "bg-ws-success-100" : "bg-ws-error-100"}`}>{icon}</div>
+            <div
+              className={`flex items-center justify-center w-12 h-12 rounded-full ${backgroundPattern === "success" ? "bg-ws-success-100" : "bg-ws-error-100"}`}
+            >
+              {icon}
+            </div>
           ) : (
             <img
               alt="Success checkmark"
