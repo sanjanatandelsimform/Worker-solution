@@ -74,7 +74,7 @@ export const NavList = ({ activeUrl, items, className, isCollapsed = false }: Na
         }
 
         return (
-          <li key={item.label} className="w-full py-0.5 first:mt-4 text-ws-gray-200">
+          <li key={item.label} className={`py-0.5 first:mt-4 text-ws-gray-200 ${isCollapsed ? 'w-auto' : 'w-full'}`}>
             <NavItemBase
               type="link"
               badge={item.badge}

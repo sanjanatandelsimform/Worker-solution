@@ -9,13 +9,15 @@ import { registrationSchema, type RegistrationFormData } from "@/services/valida
 import { Link, useNavigate } from "react-router-dom";
 import { clearFormData, saveFormData } from "@/store/slices/registrationFormSlice";
 import { getIndustries, signup } from "@/services/api/authApi";
-import checkmarkIcon from "@/assets/finch-checkmark.svg";
+import checkmarkIcon from "@/assets/success-check.svg";
 import { InputGroup } from "@/components/base/input/input-group";
 import { Input } from "@/components/base/input/input";
 import { Select } from "@/components/base/select/select";
 import { AlertCircle, Mail01 } from "@untitledui/icons";
 import { Button } from "@/components/base/buttons/button";
 import ErrorMessage from "@/components/common/ErrorMessage";
+import TermsModal from "../modals/TermsModal";
+import { useModalConfig } from "@/hooks/useModalConfig";
 
 export function RegistrationForm() {
   const dispatch = useAppDispatch();
@@ -27,6 +29,18 @@ export function RegistrationForm() {
   const [industries, setIndustries] = useState<Industry[]>([]);
   const [isLoadingIndustries, setIsLoadingIndustries] = useState(true);
   const [industryError, setIndustryError] = useState<string | null>(null);
+
+  const [isTermsModalOpen, setIsTermsModalOpen] = useState(false);
+  const [isPrivacyModalOpen, setIsPrivacyModalOpen] = useState(false);
+
+  const updateDeclarationTermsModal = useModalConfig("updateDeclarationTerms", {
+    isOpen: isTermsModalOpen,
+    onClose: () => setIsTermsModalOpen(false),
+  });
+  const updateDeclarationPrivacyModal = useModalConfig("updateDeclarationPrivacy", {
+    isOpen: isPrivacyModalOpen,
+    onClose: () => setIsPrivacyModalOpen(false),
+  });
 
   const {
     handleSubmit,
@@ -159,7 +173,7 @@ export function RegistrationForm() {
         state: {
           messageImg: checkmarkIcon,
           title: "Account created successfully!",
-          subtitle: "Welcome aboard! Start your success journey with Lafayette Square Institute®",
+          subtitle: "Welcome aboard! Start your success journey with A2B by Lafayette Square Institute®",
           buttonText: "Let's get started",
           buttonPath: "/dashboard",
           user,
@@ -189,7 +203,7 @@ export function RegistrationForm() {
           {/* Header */}
           <div className="flex w-full flex-col items-start gap-2">
             <p className="w-full flex items-center justify-center text-center font-normal text-lg text-ws-text-secondary">
-              We’re excited that you’ve decided to try our BeneStats platform. Before we begin we’ll
+              We’re excited that you’ve decided to try our A2B platform. Before we begin we’ll
               need to collect some information about your business.
             </p>
           </div>
@@ -469,21 +483,24 @@ export function RegistrationForm() {
               <div className="flex gap-2 items-start">
                 <p className="text-sm font-normal leading-5 text-ws-text-secondary">
                   By clicking Create Account, you are confirming that you have read and agree to the
-                  BeneStats{" "}
-                  <Link
-                    to="/terms-page"
-                    className="cursor-pointer text-ws-light-teal-850 underline"
+                  A2B{" "}
+                  <Button
+                    color="link"
+                    size="sm"
+                    onClick={() => setIsTermsModalOpen(true)}
+                    className="text-xs text-ws-light-teal-850 underline p-0 m-0 h-5"
                   >
-                    Terms
-                  </Link>{" "}
+                    Terms & Conditions
+                  </Button>{" "}
                   and{" "}
-                  <Link
-                    to="/privacy-policy"
-                    className="cursor-pointer text-ws-light-teal-850 underline"
+                  <Button
+                    color="link"
+                    size="sm"
+                    onClick={() => setIsPrivacyModalOpen(true)}
+                    className="text-xs text-ws-light-teal-850 underline p-0 m-0 h-5"
                   >
-                    Privacy Policies
-                  </Link>
-                  {"."}
+                    Privacy Policy
+                  </Button>
                 </p>
               </div>
               {/* {errors.agreeToTerms && (
@@ -525,6 +542,16 @@ export function RegistrationForm() {
           </form>
         </div>
       </div>
+      <TermsModal
+        isOpen={isTermsModalOpen}
+        onClose={() => setIsTermsModalOpen(false)}
+        {...updateDeclarationTermsModal}
+      />
+      <TermsModal
+        isOpen={isPrivacyModalOpen}
+        onClose={() => setIsPrivacyModalOpen(false)}
+        {...updateDeclarationPrivacyModal}
+      />
     </div>
   );
 }

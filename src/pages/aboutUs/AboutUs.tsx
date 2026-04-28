@@ -9,7 +9,7 @@ export default function AboutUs() {
           </div>
           <div className="w-1/2 flex items-center justify-center">
             <div className="flex flex-col max-w-md">
-              <h2 className="text-4xl font-bold text-ws-base-white">Introducing BeneStats</h2>
+              <h2 className="text-4xl font-bold text-ws-base-white">Introducing A2B</h2>
               <p className="text-base text-ws-base-white mt-2">
                 A free assessment tool that delivers tailored benefit recommendations and industry
                 benchmarks based on your company's unique needs.

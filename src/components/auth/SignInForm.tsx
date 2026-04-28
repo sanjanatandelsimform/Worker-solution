@@ -10,7 +10,7 @@ import { Checkbox } from "@/components/base/checkbox/checkbox";
 import { AlertCircle } from "@untitledui/icons";
 import type { SignInData } from "@/types/auth";
 import { signin } from "@/services/api/authApi";
-// import checkmarkIcon from "@/assets/finch-checkmark.svg";
+// import checkmarkIcon from "@/assets/success-check.svg";
 import { useAppDispatch } from "@/store/hooks";
 import { setUser } from "@/store/slices/authSlice";
 import siteLogo from "@/assets/logo.svg";
@@ -124,7 +124,7 @@ export const SignInForm = () => {
             {/* Title and Description */}
             <div className="flex w-full flex-col items-start gap-3 text-center">
               <h2 className="w-full text-3xl font-semibold leading-9.5 text-ws-text-primary">
-                Log in to your account
+                Log in to Your Account
               </h2>
               <p className="w-full text-base font-normal leading-6 text-ws-text-tertiary">
                 Welcome back! Please enter your details.
@@ -170,6 +170,7 @@ export const SignInForm = () => {
                   value={password}
                   minLength={8}
                   maxLength={20}
+                  isRequired
                   tooltip={errors.password ? errors.password.message : undefined}
                   onChange={value => {
                     const sanitized = value.replace(/^\s+/, "");
@@ -177,6 +178,7 @@ export const SignInForm = () => {
                     if (errors.password) trigger("password");
                   }}
                   onBlur={() => trigger("password")}
+                  showPasswordToggle={false}
                 />
               </InputGroup>
 

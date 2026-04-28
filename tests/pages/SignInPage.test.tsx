@@ -15,7 +15,7 @@ vi.mock("@/services/api/authApi", () => ({
   signin: vi.fn(),
 }));
 
-vi.mock("@/assets/finch-checkmark.svg", () => ({ default: "finch-checkmark.svg" }));
+vi.mock("@/assets/success-check.svg", () => ({ default: "success-check.svg" }));
 
 const mockSignin = vi.mocked(signin);
 
@@ -42,9 +42,9 @@ describe("SignInPage", () => {
   });
 
   describe("render", () => {
-    it("should render BeneStats logo and Log in heading", () => {
+    it("should render A2B logo and Log in heading", () => {
       renderSignInPage();
-      expect(screen.getByText("BeneStats")).toBeInTheDocument();
+      expect(screen.getByText("A2B")).toBeInTheDocument();
       expect(screen.getByText("Log in to your account")).toBeInTheDocument();
       expect(screen.getByText(/Welcome back! Please enter your details/)).toBeInTheDocument();
     });

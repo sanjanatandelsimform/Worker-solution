@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useAppSelector } from "@/store/hooks";
-import { Settings01, LogOut04, Menu01, XClose, Home05 } from "@untitledui/icons";
+import { Settings01, LogOut04, Home05 } from "@untitledui/icons";
 import { NavList } from "@/components/application/app-navigation/base-components/nav-list";
 import type { NavItemType } from "@/components/application/app-navigation/config";
 // This is require
@@ -9,10 +9,10 @@ import type { NavItemType } from "@/components/application/app-navigation/config
 import { signout } from "@/services/api/authApi";
 import { BaseModalWithIcon } from "../modals/BaseModalWithIcon";
 import { useBreakpoint } from "@/hooks/use-breakpoint";
-import { Button } from "../base/buttons/button";
 import { useModalConfig } from "@/hooks/useModalConfig";
 import signoutIcon from "@/assets/signout-icon.svg";
 import siteLogo from "@/assets/logo-small.svg";
+import tabLogo from "@/assets/tab-logo.svg";
 import { Tooltip, TooltipTrigger } from "../base/tooltip/tooltip";
 
 interface DashboardSidebarProps {
@@ -137,10 +137,10 @@ export const DashboardSidebar = ({ activeUrl = "/" }: DashboardSidebarProps) => 
     return "U";
   };
 
-  const toggleSidebar = () => {
-    setIsCollapsed(!isCollapsed);
-  };
-
+  // const toggleSidebar = () => {
+  //   setIsCollapsed(!isCollapsed);
+  // };
+  console.log(setIsCollapsed);
   return (
     <div
       className={`flex h-[calc(100vh-40px)] xl:h-[calc(100vh-80px)] flex-col border-0 border-ws-border-primary bg-ws-base-white py-6 lg:py-10 m-5 xl:m-10 rounded-lg inset-shadow-sm shadow-md transition-all duration-300 ease-in-out ${
@@ -150,21 +150,25 @@ export const DashboardSidebar = ({ activeUrl = "/" }: DashboardSidebarProps) => 
       {/* Header with Logo and Toggle Button */}
       <div className="flex items-center justify-between">
         {/* Logo - Hidden when collapsed on tablet */}
-        {(!isTabletRange || !isCollapsed) && (
+        {(!isTabletRange || !isCollapsed) ? (
           <div className="flex items-center justify-start overflow-hidden flex-1">
             <div className="flex items-center justify-center transition-all duration-300">
-              <img src={siteLogo} alt="BeneStats Logo" className="w-full" />
+              <img src={siteLogo} alt="Logo" className="w-full" />
             </div>
           </div>
+        ) : (
+            <div className="flex items-center justify-center overflow-hidden flex-1"> 
+              <img src={tabLogo} alt="Logo" className="w-10" />
+            </div>
         )}
 
         {/* Toggle Button - Only visible on tablet */}
-        {isTabletRange && (
+        {/* {isTabletRange && (
           <Button
             onClick={toggleSidebar}
             color="primary"
             aria-label={isCollapsed ? "Expand sidebar" : "Collapse sidebar"}
-            className={isCollapsed ? "w-full" : ""}
+            className={`bg-ws-light-teal-800 h-11 ${isCollapsed ? "w-full" : ""}`}
           >
             {isCollapsed ? (
               <Menu01 className="size-5 text-ws-base-white" />
@@ -172,7 +176,7 @@ export const DashboardSidebar = ({ activeUrl = "/" }: DashboardSidebarProps) => 
               <XClose className="size-5 text-ws-base-white" />
             )}
           </Button>
-        )}
+        )} */}
       </div>
 
       {/* Navigation */}

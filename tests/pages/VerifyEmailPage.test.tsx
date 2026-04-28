@@ -35,7 +35,7 @@ vi.mock("@/services/api/authApi", () => ({
   verifyEmail: vi.fn(),
 }));
 
-vi.mock("@/assets/finch-checkmark.svg", () => ({ default: "finch-checkmark.svg" }));
+vi.mock("@/assets/success-check.svg", () => ({ default: "success-check.svg" }));
 
 const mockNavigate = vi.mocked(useNavigate);
 const mockUseSearchParams = vi.mocked(useSearchParams);

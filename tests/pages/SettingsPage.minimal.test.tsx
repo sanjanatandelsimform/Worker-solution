@@ -44,7 +44,7 @@ vi.mock("@/components/common/ErrorMessage", () => ({ default: () => null }));
 vi.mock("@/components/modals/BaseModalWithIcon", () => ({ BaseModalWithIcon: () => null }));
 vi.mock("@/components/base/buttons/button", () => ({ Button: () => null }));
 vi.mock("@/components/base/input/input", () => ({ Input: () => null }));
-vi.mock("@/assets/finch-checkmark.svg", () => ({ default: "" }));
+vi.mock("@/assets/success-check.svg", () => ({ default: "" }));
 vi.mock("@/assets/alert-icon.svg", () => ({ default: "" }));
 
 // Test individual imports to find which one hangs

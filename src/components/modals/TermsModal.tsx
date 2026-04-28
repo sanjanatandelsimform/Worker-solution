@@ -71,7 +71,7 @@ export const TermsModal = ({
               aria-label="Close modal"
               className="absolute right-3 top-3 flex size-11 items-center justify-center overflow-clip p-2 rounded-lg"
             >
-              <X className="size-6 text-quaternary text-ws-gray-60" />
+              <X className="size-7 stroke-1 text-ws-gray-400" />
             </Button>
           )}
 
@@ -158,7 +158,7 @@ export const TermsModal = ({
               key={button.text}
               type="button"
               color={button.color || "primary"}
-              size="lg"
+              size="xl"
               onClick={button.onClick}
               className={buttons.length === 1 ? "w-full" : "flex-1"}
               isDisabled={button.isDisabled}

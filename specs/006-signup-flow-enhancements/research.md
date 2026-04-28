@@ -82,8 +82,8 @@ The codebase has an established `BaseModalWithIcon` component and a `useModalCon
 1. Add a new modal type `"emailVerified"` to the `ModalType` union in `useModalConfig.tsx`.
 2. Configure it with:
    - `title`: "Your email has been verified!"
-   - `subtitle`: "Welcome aboard! Start your success journey with BeneStats."
-   - `messageImg`: The existing `checkmarkIcon` (`@/assets/finch-checkmark.svg`) — same green checkmark used elsewhere.
+   - `subtitle`: "Welcome aboard! Start your success journey with A2B."
+   - `messageImg`: The existing `checkmarkIcon` (`@/assets/success-check.svg`) — same green checkmark used elsewhere.
    - `buttons`: Single button `{ text: "Return to dashboard", onClick: onClose, color: "primary" }`
    - `backgroundPattern`: `"success"` (green gradient, same as resend success modal)
 3. In `DashboardPage.tsx`, add a new `isEmailVerifiedModalOpen` state, set it based on `location.state?.emailVerified`, and render `<BaseModalWithIcon {...emailVerifiedModalConfig} isOpen={isEmailVerifiedModalOpen} onClose={handleCloseEmailVerifiedModal} />`.

@@ -25,10 +25,10 @@ interface ModalContentProps extends AriaDialogProps {
 }
 
 const sizeClasses = {
-  sm: "max-w-sm",
-  md: "max-w-md",
-  lg: "max-w-lg",
-  xl: "max-w-xl",
+  sm: "max-w-[400px]",
+  md: "max-w-[544px]",
+  lg: "max-w-[640px]",
+  xl: "max-w-[768px]",
   full: "max-w-full mx-4",
 };
 

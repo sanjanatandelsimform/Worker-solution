@@ -20,7 +20,7 @@ const plans: PlanOption[] = [
     name: "Finch",
     price: "Free",
     description:
-      "Save time and get even more data insights by integrating your payroll with BeneStats and Finch.",
+      "Save time and get even more data insights by integrating your payroll with A2B and Finch.",
     features: [
       "Results in 3-5min",
       "Custom workforce data and insights",
@@ -146,10 +146,10 @@ export default function GetMore() {
         {/* Header Section */}
         <div className="mx-auto w-full max-w-2xl text-center mt-25">
           <h1 className="text-4xl font-semibold tracking-tight text-ws-text-primary">
-            Get more from BeneStats
+            Get more from A2B
           </h1>
           <p className="text-lg font-normal text-ws-text-primary mt-2">
-            Save time and unlock deeper insights by integrating your payroll with BeneStats. Choose
+            Save time and unlock deeper insights by integrating your payroll with A2B. Choose
             the best plan to achieve your workforce goals—at no cost to you.
           </p>
         </div>
