@@ -133,13 +133,15 @@ vi.mock("@/pages/additionalQuestions/WorkforceSection", () => ({
     onMultiSelectToggle: (id: string, optId: string) => void;
   }) => (
     <div data-testid="workforce-section">
-      {Object.entries(fieldErrors).map(([k, v]) =>
-        v ? (
-          <span key={k} data-testid={`field-error-${k}`}>
-            {v}
-          </span>
-        ) : null
-      )}
+      {Object.entries(fieldErrors)
+        .filter(([k]) => ["benefits-updates", "deskless-employees", "annual-raises"].includes(k))
+        .map(([k, v]) =>
+          v ? (
+            <span key={k} data-testid={`field-error-${k}`}>
+              {v}
+            </span>
+          ) : null
+        )}
       <button
         data-testid="trigger-benefits-updates-work_email"
         onClick={() => onMultiSelectToggle("benefits-updates", "work_email")}
@@ -186,13 +188,15 @@ vi.mock("@/pages/additionalQuestions/CompensationSection", () => ({
     onClearFieldError: (key: string) => void;
   }) => (
     <div data-testid="compensation-section">
-      {Object.entries(fieldErrors).map(([k, v]) =>
-        v ? (
-          <span key={k} data-testid={`field-error-${k}`}>
-            {v}
-          </span>
-        ) : null
-      )}
+      {Object.entries(fieldErrors)
+        .filter(([k]) => ["payroll-provider", "annualRaiseMonth"].includes(k))
+        .map(([k, v]) =>
+          v ? (
+            <span key={k} data-testid={`field-error-${k}`}>
+              {v}
+            </span>
+          ) : null
+        )}
       <button
         data-testid="trigger-payroll-provider-ADP"
         onClick={() => onPayrollProviderChange("ADP")}
@@ -242,13 +246,26 @@ vi.mock("@/pages/additionalQuestions/BenefitsRetirementSection", () => ({
     onClearFieldError: (key: string) => void;
   }) => (
     <div data-testid="benefits-section">
-      {Object.entries(fieldErrors).map(([k, v]) =>
-        v ? (
-          <span key={k} data-testid={`field-error-${k}`}>
-            {v}
-          </span>
-        ) : null
-      )}
+      {Object.entries(fieldErrors)
+        .filter(([k]) =>
+          [
+            "benefits-broker",
+            "benefits-enrollment-period",
+            "health-plan-monthly-premium",
+            "retirement-vesting-period",
+            "retirement-employer-match",
+            "retirementMatchPercentage",
+            "retirement-auto-enroll",
+            "retirement-hardship-withdrawals",
+          ].includes(k)
+        )
+        .map(([k, v]) =>
+          v ? (
+            <span key={k} data-testid={`field-error-${k}`}>
+              {v}
+            </span>
+          ) : null
+        )}
       <button
         data-testid="trigger-benefits-broker-yes-broker"
         onClick={() => onAnswerChange("benefits-broker", "yes-broker")}
