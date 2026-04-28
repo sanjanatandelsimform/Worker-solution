@@ -19,7 +19,6 @@ import {
   selectIndustryFullData,
 } from "@/store/selectors/industrySelectors";
 import type { IndustryData } from "@/types/industryTypes";
-import { useFinchStatus } from "@/hooks/useFinchStatus";
 
 export interface UseIndustryReturn {
   data: IndustryData | null;
@@ -34,9 +33,8 @@ export function useIndustry(): UseIndustryReturn {
   const isLoading = useAppSelector(selectIndustryLoading);
   const error = useAppSelector(selectIndustryError);
   const isLoaded = useAppSelector(selectIndustryIsLoaded);
-  const { isConnected } = useFinchStatus();
-  const { assessmentData } = useAssessmentStatus();
-  const isFinch = assessmentData?.assessmentType === "finch";
+  const { isConnected } = useAssessmentStatus();
+  const isFinch = isConnected;
 
   useEffect(() => {
     // Guard: skip if already loaded or currently loading

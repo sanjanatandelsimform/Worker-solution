@@ -10,6 +10,7 @@ interface UseAssessmentStatusReturn {
   isLoading: boolean;
   error: string | null;
   assessmentData: AssessmentData | null;
+  isConnected: boolean;
   isFinchCompleted: boolean;
   isFinchAssessmentIncomplete: boolean;
   sectionCompletion: {
@@ -78,17 +79,17 @@ export const useAssessmentStatus = ({
   };
 
   const completionCount = Object.values(sectionCompletion).filter(Boolean).length;
-  const isFinchCompleted =
-    assessmentData?.assessmentType === "finch" && assessmentData?.data?.status === "completed";
+  const isConnected = assessmentData?.assessmentType === "finch";
+  const isFinchCompleted = isConnected && assessmentData?.data?.status === "completed";
 
-  const isFinchAssessmentIncomplete =
-    assessmentData?.assessmentType === "finch" && assessmentData?.data?.status !== "completed";
+  const isFinchAssessmentIncomplete = isConnected && assessmentData?.data?.status !== "completed";
 
   return {
     completionCount,
     isLoading,
     error,
     assessmentData,
+    isConnected,
     isFinchCompleted,
     isFinchAssessmentIncomplete,
     sectionCompletion,

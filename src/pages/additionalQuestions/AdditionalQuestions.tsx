@@ -5,7 +5,6 @@ import { useNavigate } from "react-router-dom";
 import ErrorMessage from "@/components/common/ErrorMessage";
 import { useSubmitFinchAssessment } from "@/hooks/useSubmitFinchAssessment";
 import { useAssessmentStatus } from "@/hooks/useAssessmentStatus";
-import { useFinchStatus } from "@/hooks/useFinchStatus";
 import { buildFinchAssessmentPayload } from "@/utils/finchAssessmentPayload";
 import type { QuestionAnswer, GoalsAnswer } from "@/types/additionalQuestionsTypes";
 import WorkforceSection from "./WorkforceSection";
@@ -15,8 +14,7 @@ import GoalsSection from "./GoalsSection";
 
 export default function AdditionalQuestions() {
   const navigate = useNavigate();
-  const { isFinchCompleted } = useAssessmentStatus();
-  const { isConnected, isLoading: isFinchStatusLoading } = useFinchStatus();
+  const { isFinchCompleted, isLoading: isAssessmentLoading, isConnected } = useAssessmentStatus();
   const [answers, setAnswers] = useState<QuestionAnswer>({});
   const [goalsAnswers, setGoalsAnswers] = useState<GoalsAnswer>({
     selectedGoals: [],
@@ -37,10 +35,10 @@ export default function AdditionalQuestions() {
   }, [isFinchCompleted, navigate]);
 
   useEffect(() => {
-    if (!isFinchStatusLoading && !isConnected) {
+    if (!isAssessmentLoading && !isConnected) {
       navigate("/dashboard");
     }
-  }, [isConnected, isFinchStatusLoading, navigate]);
+  }, [isConnected, isAssessmentLoading, navigate]);
 
   useEffect(() => {
     if (success) {

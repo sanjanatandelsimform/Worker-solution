@@ -10,7 +10,7 @@ import { EnrolledIcon } from "@/assets/icons/EnrolledIcon";
 import { SavingIcon } from "@/assets/icons/SavingIcon";
 import { HeartLineIcon } from "@/assets/icons/HeartLineIcon";
 import { formatNumber, formatCurrency, formatCurrencyWithCents } from "@/utils/formatters";
-import { useFinchStatus } from "@/hooks/useFinchStatus";
+import { useAssessmentStatus } from "@/hooks/useAssessmentStatus";
 import { ArrowRight } from "@untitledui/icons";
 
 interface CompanyGlanceData {
@@ -128,7 +128,7 @@ export default function CompanyAtAGlance({
   benefitsGlanceData,
   onNavigateToWorkforce,
 }: CompanyAtAGlanceProps) {
-  const { isConnected } = useFinchStatus();
+  const { isConnected } = useAssessmentStatus();
 
   return (
     <div className="space-y-6 mb-6">

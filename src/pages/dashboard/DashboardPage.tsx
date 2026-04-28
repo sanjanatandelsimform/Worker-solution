@@ -16,7 +16,6 @@ import { useModalConfig } from "@/hooks/useModalConfig";
 import fpoHero from "@/assets/fpo-hero-image.png";
 import { useAssessmentStatus } from "@/hooks/useAssessmentStatus";
 import { useFinchConnect } from "@/hooks/useFinchConnect";
-import { useFinchStatus } from "@/hooks/useFinchStatus";
 import { Tabs } from "@/components/base/tabs/tabs";
 import BenchmarkPage from "../benchmark/BenchmarkPage";
 import { fetchWorkforce } from "@/store/slices/workforceSlice";
@@ -53,7 +52,6 @@ export const DashboardPage = () => {
     error: finchError,
     clearError: clearFinchError,
   } = useFinchConnect();
-  const { isConnected } = useFinchStatus();
 
   const emailVerify = user?.emailVerify || false;
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
@@ -72,6 +70,7 @@ export const DashboardPage = () => {
   const {
     completionCount,
     assessmentData,
+    isConnected,
     isLoading: isLoadingAssessment,
     isFinchCompleted,
     isFinchAssessmentIncomplete,

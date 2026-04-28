@@ -41,16 +41,6 @@ vi.mock("@/hooks/useIndustry", () => ({
   useIndustry: vi.fn(),
 }));
 
-vi.mock("@/hooks/useFinchStatus", () => ({
-  useFinchStatus: vi.fn(() => ({
-    isConnected: true,
-    connectionStatus: "connected",
-    syncJobStatus: null,
-    isLoading: false,
-    error: null,
-  })),
-}));
-
 vi.mock("@/hooks/useModalConfig", () => ({
   useModalConfig: vi.fn(() => ({
     title: "",
@@ -176,12 +166,13 @@ function renderPage(store = createTestStore(), onNavigateToWorkforce?: () => voi
 
 beforeEach(() => {
   vi.mocked(useAssessmentStatus).mockReturnValue({
+    isConnected: true,
     isFinchAssessmentIncomplete: false,
     isFinchCompleted: true,
     completionCount: 4,
     isLoading: false,
     error: null,
-    assessmentData: null,
+    assessmentData: { assessmentType: "finch", data: { status: "completed" } } as never,
     sectionCompletion: { workforce: true, compensation: true, benefits: true, goals: true },
     refetch: vi.fn(),
   } as ReturnType<typeof useAssessmentStatus>);
@@ -253,12 +244,13 @@ describe("RecommendationsFinchPage — loading states", () => {
 
 describe("RecommendationsFinchPage — assessment completeness gate", () => {
   const incompleteAssessmentMock = {
+    isConnected: true,
     isFinchAssessmentIncomplete: true,
     isFinchCompleted: false,
     completionCount: 0,
     isLoading: false,
     error: null,
-    assessmentData: null,
+    assessmentData: { assessmentType: "finch", data: { status: "in_progress" } },
     sectionCompletion: { workforce: false, compensation: false, benefits: false, goals: false },
     refetch: vi.fn(),
   } as ReturnType<typeof useAssessmentStatus>;
@@ -486,12 +478,13 @@ describe("RecommendationsFinchPage — static sections always rendered", () => {
 
   it("renders Declarations text when assessment is incomplete", () => {
     vi.mocked(useAssessmentStatus).mockReturnValue({
+      isConnected: true,
       isFinchAssessmentIncomplete: true,
       isFinchCompleted: false,
       completionCount: 0,
       isLoading: false,
       error: null,
-      assessmentData: null,
+      assessmentData: { assessmentType: "finch", data: { status: "in_progress" } } as never,
       sectionCompletion: { workforce: false, compensation: false, benefits: false, goals: false },
       refetch: vi.fn(),
     } as ReturnType<typeof useAssessmentStatus>);
