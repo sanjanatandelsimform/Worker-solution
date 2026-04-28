@@ -1,4 +1,4 @@
-﻿import { Button } from "@/components/base/buttons/button";
+import { Button } from "@/components/base/buttons/button";
 import { ChevronRight, XClose } from "@untitledui/icons";
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
@@ -14,7 +14,12 @@ import GoalsSection from "./GoalsSection";
 
 export default function AdditionalQuestions() {
   const navigate = useNavigate();
-  const { isFinchCompleted, isLoading: isAssessmentLoading, isConnected } = useAssessmentStatus();
+  const {
+    isFinchCompleted,
+    isLoading: isAssessmentLoading,
+    isConnected,
+    isFetched,
+  } = useAssessmentStatus();
   const [answers, setAnswers] = useState<QuestionAnswer>({});
   const [goalsAnswers, setGoalsAnswers] = useState<GoalsAnswer>({
     selectedGoals: [],
@@ -35,10 +40,11 @@ export default function AdditionalQuestions() {
   }, [isFinchCompleted, navigate]);
 
   useEffect(() => {
-    if (!isAssessmentLoading && !isConnected) {
+    console.log("Assessment loading:", isAssessmentLoading, "Connected:", isConnected);
+    if (isFetched && !isAssessmentLoading && !isConnected) {
       navigate("/dashboard");
     }
-  }, [isConnected, isAssessmentLoading, navigate]);
+  }, [isFetched, isConnected, isAssessmentLoading, navigate]);
 
   useEffect(() => {
     if (success) {

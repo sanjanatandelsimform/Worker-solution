@@ -11,6 +11,7 @@ interface UseAssessmentStatusReturn {
   error: string | null;
   assessmentData: AssessmentData | null;
   isConnected: boolean;
+  isFetched: boolean;
   isFinchCompleted: boolean;
   isFinchAssessmentIncomplete: boolean;
   sectionCompletion: {
@@ -27,6 +28,7 @@ export const useAssessmentStatus = ({
 }: UseAssessmentStatusOptions = {}): UseAssessmentStatusReturn => {
   const [assessmentData, setAssessmentData] = useState<AssessmentData | null>(null);
   const [isLoading, setIsLoading] = useState(false);
+  const [isFetched, setIsFetched] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
   const fetchAssessmentStatus = useCallback(async () => {
@@ -50,6 +52,7 @@ export const useAssessmentStatus = ({
       setAssessmentData(null);
     } finally {
       setIsLoading(false);
+      setIsFetched(true);
     }
   }, [enabled]);
 
@@ -83,10 +86,11 @@ export const useAssessmentStatus = ({
   const isFinchCompleted = isConnected && assessmentData?.data?.status === "completed";
 
   const isFinchAssessmentIncomplete = isConnected && assessmentData?.data?.status !== "completed";
-
+  console.log("isLoading:", isLoading);
   return {
     completionCount,
     isLoading,
+    isFetched,
     error,
     assessmentData,
     isConnected,

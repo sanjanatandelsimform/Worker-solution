@@ -29,6 +29,7 @@ vi.mock("@/hooks/useAssessmentStatus", () => ({
   useAssessmentStatus: vi.fn(() => ({
     isFinchCompleted: false,
     isConnected: true,
+    isFetched: true,
     completionCount: 0,
     isLoading: false,
     error: null,
@@ -111,6 +112,7 @@ describe("AdditionalQuestions – redirect behaviour", () => {
     mockUseAssessmentStatus.mockReturnValue({
       isFinchCompleted: true,
       isConnected: true,
+      isFetched: true,
       completionCount: 4,
       isLoading: false,
       error: null,
@@ -130,6 +132,7 @@ describe("AdditionalQuestions – redirect behaviour", () => {
     mockUseAssessmentStatus.mockReturnValue({
       isFinchCompleted: false,
       isConnected: true,
+      isFetched: true,
       completionCount: 0,
       isLoading: false,
       error: null,
@@ -149,6 +152,7 @@ describe("AdditionalQuestions – redirect behaviour", () => {
     mockUseAssessmentStatus.mockReturnValue({
       isFinchCompleted: false,
       isConnected: false,
+      isFetched: true,
       completionCount: 0,
       isLoading: false,
       error: null,
@@ -168,6 +172,7 @@ describe("AdditionalQuestions – redirect behaviour", () => {
     mockUseAssessmentStatus.mockReturnValue({
       isFinchCompleted: false,
       isConnected: false,
+      isFetched: true,
       completionCount: 0,
       isLoading: true,
       error: null,
@@ -187,6 +192,7 @@ describe("AdditionalQuestions – redirect behaviour", () => {
     mockUseAssessmentStatus.mockReturnValue({
       isFinchCompleted: false,
       isConnected: true,
+      isFetched: true,
       completionCount: 0,
       isLoading: false,
       error: null,
@@ -206,6 +212,7 @@ describe("AdditionalQuestions – redirect behaviour", () => {
     mockUseAssessmentStatus.mockReturnValue({
       isFinchCompleted: false,
       isConnected: true,
+      isFetched: true,
       completionCount: 0,
       isLoading: false,
       error: null,
@@ -232,6 +239,7 @@ describe("AdditionalQuestions – redirect behaviour", () => {
     mockUseAssessmentStatus.mockReturnValue({
       isFinchCompleted: false,
       isConnected: true,
+      isFetched: true,
       completionCount: 0,
       isLoading: false,
       error: null,
@@ -246,7 +254,10 @@ describe("AdditionalQuestions – redirect behaviour", () => {
     const allButtons = screen.getAllByRole("button");
     const closeButton = allButtons.find(btn => btn.textContent?.trim() === "");
     expect(closeButton).toBeDefined();
-    fireEvent.click(closeButton!);
+    if (!closeButton) {
+      throw new Error("Close button not found");
+    }
+    fireEvent.click(closeButton);
 
     await waitFor(() => {
       expect(mockNavigate).toHaveBeenCalledWith("/dashboard");
