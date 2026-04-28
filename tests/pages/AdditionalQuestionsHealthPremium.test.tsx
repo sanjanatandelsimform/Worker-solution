@@ -69,37 +69,11 @@ vi.mock("@/components/base/buttons/button", () => ({
     </button>
   ),
 }));
-vi.mock("@/components/common/RankList", () => ({ RankingList: () => null }));
-vi.mock("@/components/base/tooltip/tooltip", () => ({
-  Tooltip: ({ children }: { children: React.ReactNode }) => <>{children}</>,
-  TooltipTrigger: ({ children }: { children: React.ReactNode }) => <>{children}</>,
-}));
-vi.mock("@untitledui/icons", () => ({
-  ChevronRight: () => null,
-  InfoCircle: () => null,
-  XClose: () => null,
-}));
-vi.mock("@/components/base/select/select", () => ({ Select: () => null }));
-vi.mock("@/components/base/select/select-item", () => ({ SelectItem: () => null }));
-vi.mock("@/components/base/radio-buttons/radio-buttons", () => ({
-  RadioButton: () => null,
-  RadioGroup: ({ children }: { children: React.ReactNode }) => <>{children}</>,
-}));
-vi.mock("@/components/base/input/label", () => ({
-  Label: ({ children, isRequired }: { children: React.ReactNode; isRequired?: boolean }) => (
-    <label>
-      {children}
-      {isRequired && <span aria-label="required">*</span>}
-    </label>
-  ),
-}));
-vi.mock("@/components/base/checkbox/checkbox", () => ({ Checkbox: () => null }));
 vi.mock("@/components/common/ErrorMessage", () => ({
   default: ({ errorMessage }: { errorMessage: string }) => (
     <div data-testid="error-message">{errorMessage}</div>
   ),
 }));
-vi.mock("@/assets/icons/inputInfo", () => ({ InputInfo: () => null }));
 vi.mock("@/data/goalsData", () => ({ goalsData: [] }));
 vi.mock("@/utils/finchAssessmentPayload", () => ({
   buildFinchAssessmentPayload: vi.fn(() => ({
@@ -108,6 +82,53 @@ vi.mock("@/utils/finchAssessmentPayload", () => ({
     benefits: {},
     goals: {},
   })),
+}));
+
+// ── Section component mocks ────────────────────────────────────────────────
+// WorkforceSection and CompensationSection are irrelevant for health premium tests
+vi.mock("@/pages/additionalQuestions/WorkforceSection", () => ({
+  default: () => null,
+}));
+vi.mock("@/pages/additionalQuestions/CompensationSection", () => ({
+  default: () => null,
+}));
+// GoalsSection is irrelevant for health premium tests
+vi.mock("@/pages/additionalQuestions/GoalsSection", () => ({
+  default: () => null,
+}));
+// BenefitsRetirementSection stub — renders the health premium input so existing tests work
+vi.mock("@/pages/additionalQuestions/BenefitsRetirementSection", () => ({
+  default: ({
+    healthPremiumMonthly,
+    onHealthPremiumMonthlyChange,
+    onClearFieldError,
+    fieldErrors,
+  }: {
+    healthPremiumMonthly: string;
+    onHealthPremiumMonthlyChange: (v: string) => void;
+    onClearFieldError: (key: string) => void;
+    fieldErrors: Record<string, string>;
+  }) => (
+    <div>
+      <label>
+        What is the employee-only monthly premium for the lowest-cost health plan your company
+        offers? <span aria-label="required">*</span>
+      </label>
+      <input
+        type="number"
+        placeholder="Enter amount"
+        value={healthPremiumMonthly}
+        onChange={e => {
+          onHealthPremiumMonthlyChange(e.target.value);
+          onClearFieldError("health-plan-monthly-premium");
+        }}
+      />
+      <span>i.e. $300</span>
+      {fieldErrors["health-plan-monthly-premium"] && (
+        <span>{fieldErrors["health-plan-monthly-premium"]}</span>
+      )}
+    </div>
+  ),
 }));
 
 // ── Import page after mocks ────────────────────────────────────────────────
