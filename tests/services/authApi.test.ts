@@ -31,7 +31,9 @@ vi.mock("@/services/api/apiUtils", () => ({
 beforeEach(() => {
   vi.clearAllMocks();
   vi.stubGlobal("localStorage", {
-    getItem: vi.fn(() => JSON.stringify({ auth: { tokens: { accessToken: "at", refreshToken: "rt" } } })),
+    getItem: vi.fn(() =>
+      JSON.stringify({ auth: { tokens: { accessToken: "at", refreshToken: "rt" } } })
+    ),
     setItem: vi.fn(),
     removeItem: vi.fn(),
     clear: vi.fn(),
@@ -98,7 +100,11 @@ describe("authApi", () => {
 
   it("signin returns error status on failure", async () => {
     const err = new axios.AxiosError("fail", "ERR", undefined, undefined, {
-      status: 401, data: { message: "Wrong password" }, statusText: "Unauthorized", headers: {}, config: {} as any,
+      status: 401,
+      data: { message: "Wrong password" },
+      statusText: "Unauthorized",
+      headers: {},
+      config: {} as any,
     });
     mockPost.mockRejectedValue(err);
     const { signin } = await import("@/services/api/authApi");
@@ -143,7 +149,10 @@ describe("authApi", () => {
 
   it("verifyEmail returns user and tokens", async () => {
     mockPost.mockResolvedValue({
-      data: { message: "Verified", data: { user: { id: "1", emailVerify: true }, tokens: { accessToken: "at" } } },
+      data: {
+        message: "Verified",
+        data: { user: { id: "1", emailVerify: true }, tokens: { accessToken: "at" } },
+      },
     });
     const { verifyEmail } = await import("@/services/api/authApi");
     const result = await verifyEmail("verify-token");

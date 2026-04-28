@@ -10,7 +10,7 @@ export const validateEmail = (email: string): boolean => {
     return false;
   }
 
-  const emailRegex = /^[^\s@]+@[^.\s@]+\.[^.\s@]+$/;
+  const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
   return emailRegex.test(email) && email.length <= 255;
 };
 

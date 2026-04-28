@@ -114,23 +114,31 @@ import { UpdateYourInformationModal } from "@/components/modals/UpdateYourInform
 
 describe("UpdateYourInformationModal", () => {
   it("renders when open", () => {
-    render(wrap(<UpdateYourInformationModal isOpen={true} onClose={vi.fn()} onSuccess={vi.fn()} />));
+    render(
+      wrap(<UpdateYourInformationModal isOpen={true} onClose={vi.fn()} onSuccess={vi.fn()} />)
+    );
     expect(screen.getByText("Update Your Information")).toBeInTheDocument();
   });
 
   it("renders name fields", () => {
-    render(wrap(<UpdateYourInformationModal isOpen={true} onClose={vi.fn()} onSuccess={vi.fn()} />));
+    render(
+      wrap(<UpdateYourInformationModal isOpen={true} onClose={vi.fn()} onSuccess={vi.fn()} />)
+    );
     expect(screen.getByText(/First Name/)).toBeInTheDocument();
     expect(screen.getByText(/Last Name/)).toBeInTheDocument();
   });
 
   it("renders submit button", () => {
-    render(wrap(<UpdateYourInformationModal isOpen={true} onClose={vi.fn()} onSuccess={vi.fn()} />));
+    render(
+      wrap(<UpdateYourInformationModal isOpen={true} onClose={vi.fn()} onSuccess={vi.fn()} />)
+    );
     expect(screen.getByText("Update Information")).toBeInTheDocument();
   });
 
   it("does not render when closed", () => {
-    render(wrap(<UpdateYourInformationModal isOpen={false} onClose={vi.fn()} onSuccess={vi.fn()} />));
+    render(
+      wrap(<UpdateYourInformationModal isOpen={false} onClose={vi.fn()} onSuccess={vi.fn()} />)
+    );
     expect(screen.queryByText("Update Your Information")).toBeNull();
   });
 });

@@ -5,12 +5,7 @@ export type IconComponentType = React.FunctionComponent<{
 
 export type Sizes = "sm" | "md" | "lg";
 
-export type BadgeColors =
-  | "gray"
-  | "brand"
-  | "error"
-  | "warning"
-  | "success"
+export type BadgeColors = "gray" | "brand" | "error" | "warning" | "success";
 
 export type FlagTypes =
   | "AD"
