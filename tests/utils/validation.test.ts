@@ -50,8 +50,11 @@ describe("validation utilities", () => {
 
     it("should return true for valid email addresses", () => {
       expect(validateEmail("test@example.com")).toBe(true);
-      expect(validateEmail("user.name@example.co.uk")).toBe(true);
       expect(validateEmail("a@b.c")).toBe(true);
+    });
+
+    it("should return true for multi-dot domain", () => {
+      expect(validateEmail("user.name@example.co.uk")).toBe(true);
     });
 
     it("should return true for email with numbers", () => {

@@ -44,7 +44,7 @@ describe("BaseModalWithIcon", () => {
       />
     );
 
-    const btn = screen.getByText("Cant");
+    const btn = screen.getByRole("button", { name: "Cant" });
     expect(btn).toBeDisabled();
   });
 });

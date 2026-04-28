@@ -35,9 +35,7 @@ const minimalStore = configureStore({
 function wrapRouter(ui: React.ReactNode, state?: object) {
   return (
     <Provider store={minimalStore}>
-      <MemoryRouter initialEntries={[{ pathname: "/success", state }]}>
-        {ui}
-      </MemoryRouter>
+      <MemoryRouter initialEntries={[{ pathname: "/success", state }]}>{ui}</MemoryRouter>
     </Provider>
   );
 }
@@ -95,7 +93,9 @@ describe("ErrorMessage", () => {
 
   it("renders with custom AlertIcon", () => {
     const Icon = ({ className }: { className?: string }) => (
-      <span data-testid="alert-icon" className={className}>!</span>
+      <span data-testid="alert-icon" className={className}>
+        !
+      </span>
     );
     render(<ErrorMessage errorMessage="Error" alertIcon={Icon} />);
     expect(screen.getByTestId("alert-icon")).toBeInTheDocument();
@@ -147,7 +147,7 @@ describe("SuccessPage", () => {
         subtitle: "Welcome aboard",
         buttonText: "Go to Dashboard",
         buttonPath: "/dashboard",
-      }),
+      })
     );
     expect(screen.getByText("Account Created")).toBeInTheDocument();
     expect(screen.getByText("Welcome aboard")).toBeInTheDocument();

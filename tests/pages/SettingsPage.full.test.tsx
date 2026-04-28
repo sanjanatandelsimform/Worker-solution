@@ -2,7 +2,7 @@
  * SettingsPage — render + basic interaction tests
  */
 import { describe, it, expect, vi, beforeEach } from "vitest";
-import { render, screen, fireEvent, waitFor } from "@testing-library/react";
+import { render, screen } from "@testing-library/react";
 import { Provider } from "react-redux";
 import { MemoryRouter } from "react-router-dom";
 import { configureStore } from "@reduxjs/toolkit";
@@ -19,8 +19,20 @@ import recommendationsReducer from "@/store/slices/recommendationsSlice";
 // Mock hooks
 vi.mock("@/hooks/useModalConfig", () => ({
   useModalConfig: () => ({
-    retakeAssessmentModal: { title: "Retake", description: "", icon: "", primaryLabel: "Confirm", secondaryLabel: "Cancel" },
-    deleteAccountModal: { title: "Delete", description: "", icon: "", primaryLabel: "Delete", secondaryLabel: "Cancel" },
+    retakeAssessmentModal: {
+      title: "Retake",
+      description: "",
+      icon: "",
+      primaryLabel: "Confirm",
+      secondaryLabel: "Cancel",
+    },
+    deleteAccountModal: {
+      title: "Delete",
+      description: "",
+      icon: "",
+      primaryLabel: "Delete",
+      secondaryLabel: "Cancel",
+    },
     updateCompletedModal: { title: "Updated", description: "", icon: "" },
     updateInfoSuccessModal: { title: "Info Updated", description: "", icon: "" },
   }),
@@ -115,7 +127,7 @@ function renderSettings(store = createStore()) {
       <MemoryRouter>
         <SettingsPage />
       </MemoryRouter>
-    </Provider>,
+    </Provider>
   );
 }
 

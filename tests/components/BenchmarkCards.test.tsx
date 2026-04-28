@@ -15,7 +15,9 @@ vi.mock("@/components/base/progress-indicators/InlineProgressBar", () => ({
 }));
 
 vi.mock("@/components/base/badges/badges", () => ({
-  Badge: ({ children }: { children: React.ReactNode }) => <span data-testid="badge">{children}</span>,
+  Badge: ({ children }: { children: React.ReactNode }) => (
+    <span data-testid="badge">{children}</span>
+  ),
 }));
 
 vi.mock("@/components/base/progress-indicators/progress-indicators", () => ({
@@ -81,7 +83,7 @@ describe("CostCard", () => {
         industryText="Wholesale"
         industryCostText="Industry cost"
         industryTradeText="Trade"
-      />,
+      />
     );
     expect(screen.getByText("$1.5M")).toBeInTheDocument();
     expect(screen.getByText("$980K")).toBeInTheDocument();
@@ -108,14 +110,26 @@ describe("AverageCard", () => {
 
   it("renders with positive staticsPoints and badge", () => {
     render(
-      <AverageCard title="Hire" cardStatics="18%" staticsPoints="+3pts" staticsPointsState progressValue={18} />,
+      <AverageCard
+        title="Hire"
+        cardStatics="18%"
+        staticsPoints="+3pts"
+        staticsPointsState
+        progressValue={18}
+      />
     );
     expect(screen.getByText("+3pts")).toBeInTheDocument();
   });
 
   it("renders with negative staticsPoints", () => {
     render(
-      <AverageCard title="Sep" cardStatics="9%" staticsPoints="-2pts" staticsPointsState progressValue={9} />,
+      <AverageCard
+        title="Sep"
+        cardStatics="9%"
+        staticsPoints="-2pts"
+        staticsPointsState
+        progressValue={9}
+      />
     );
     expect(screen.getByText("-2pts")).toBeInTheDocument();
   });
@@ -131,7 +145,9 @@ describe("AverageCard", () => {
   });
 
   it("renders with customBarColor", () => {
-    render(<AverageCard title="T" cardStatics="5%" progressValue={50} customBarColor="bg-red-500" />);
+    render(
+      <AverageCard title="T" cardStatics="5%" progressValue={50} customBarColor="bg-red-500" />
+    );
     expect(screen.getByText("T")).toBeInTheDocument();
   });
 
@@ -155,9 +171,12 @@ describe("ProgressCard", () => {
         tooltipText="tip"
         sections={[
           { items: [{ label: "Metro Area", percentage: 28.5 }], columnsCount: 1 },
-          { items: [{ label: "Your Employees", percentage: 32.1, progressColor: "bg-navy" }], columnsCount: 1 },
+          {
+            items: [{ label: "Your Employees", percentage: 32.1, progressColor: "bg-navy" }],
+            columnsCount: 1,
+          },
         ]}
-      />,
+      />
     );
     expect(screen.getByText("Burdened")).toBeInTheDocument();
     expect(screen.getByText("Metro Area")).toBeInTheDocument();
@@ -166,7 +185,13 @@ describe("ProgressCard", () => {
 
   it("renders with legacy single-item props", () => {
     render(
-      <ProgressCard title="Legacy" tooltipText="t" percentage={50} progressLabel="50%" progressColor="bg-blue" />,
+      <ProgressCard
+        title="Legacy"
+        tooltipText="t"
+        percentage={50}
+        progressLabel="50%"
+        progressColor="bg-blue"
+      />
     );
     expect(screen.getByText("Legacy")).toBeInTheDocument();
   });
@@ -206,7 +231,7 @@ describe("TurnoverRateCard", () => {
         sourceBoldText="BLS"
         className=""
         sourceClass=""
-      />,
+      />
     );
     expect(screen.getByText("Industry Turnover Rate")).toBeInTheDocument();
     expect(screen.getByText("Q4 2023")).toBeInTheDocument();
@@ -224,7 +249,7 @@ describe("TurnoverRateCard", () => {
         sourceBoldText=""
         className=""
         sourceClass=""
-      />,
+      />
     );
     expect(screen.getByText("Empty")).toBeInTheDocument();
   });
@@ -236,8 +261,20 @@ describe("TurnoverRateCard", () => {
         sectionTitle: "YOUR COMPANY",
         columnsCount: 2 as const,
         cardsData: [
-          { title: "Industry", statics: "14%", staticsPointsState: true, progressValue: 14, customBarColor: "bg-teal" },
-          { title: "Company", statics: "10%", staticsPointsState: true, progressValue: 10, customBarColor: "bg-navy" },
+          {
+            title: "Industry",
+            statics: "14%",
+            staticsPointsState: true,
+            progressValue: 14,
+            customBarColor: "bg-teal",
+          },
+          {
+            title: "Company",
+            statics: "10%",
+            staticsPointsState: true,
+            progressValue: 10,
+            customBarColor: "bg-navy",
+          },
         ],
       },
     ];
@@ -251,7 +288,7 @@ describe("TurnoverRateCard", () => {
         sourceBoldText=""
         className=""
         sourceClass=""
-      />,
+      />
     );
     expect(screen.getByText("YOUR COMPANY")).toBeInTheDocument();
   });

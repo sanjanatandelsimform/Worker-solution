@@ -292,7 +292,17 @@ describe("useAssessment Hook", () => {
   it("submitSection calls API and sets isCompleted on success", async () => {
     vi.mocked(getAssessment).mockResolvedValueOnce({
       success: true,
-      data: { assessmentType: "manual", data: { assessmentResponseId: 1, userId: "u", createdAt: "", updatedAt: "", status: "in_progress", sections: { workforce: {} } } },
+      data: {
+        assessmentType: "manual",
+        data: {
+          assessmentResponseId: 1,
+          userId: "u",
+          createdAt: "",
+          updatedAt: "",
+          status: "in_progress",
+          sections: { workforce: {} },
+        },
+      },
     });
 
     const mockSubmitResponse = { success: true };
@@ -319,7 +329,17 @@ describe("useAssessment Hook", () => {
   it("submitSection sets fieldErrors and apiError on API failure", async () => {
     vi.mocked(getAssessment).mockResolvedValueOnce({
       success: true,
-      data: { assessmentType: "manual", data: { assessmentResponseId: 1, userId: "u", createdAt: "", updatedAt: "", status: "in_progress", sections: { workforce: {} } } },
+      data: {
+        assessmentType: "manual",
+        data: {
+          assessmentResponseId: 1,
+          userId: "u",
+          createdAt: "",
+          updatedAt: "",
+          status: "in_progress",
+          sections: { workforce: {} },
+        },
+      },
     });
 
     const failing = { success: false, fieldErrors: { q1: "Invalid" }, message: "Bad" };
@@ -339,7 +359,20 @@ describe("useAssessment Hook", () => {
 
   // T018: updateAnswers, clearError, resetSection, retryGetAssessment
   it("supports updateAnswers, clearError, resetSection and retryGetAssessment", async () => {
-    const initial = { success: true, data: { assessmentType: "manual", data: { assessmentResponseId: 1, userId: "u", createdAt: "", updatedAt: "", status: "in_progress", sections: { workforce: {} } } } } as ApiResponse<AssessmentData>;
+    const initial = {
+      success: true,
+      data: {
+        assessmentType: "manual",
+        data: {
+          assessmentResponseId: 1,
+          userId: "u",
+          createdAt: "",
+          updatedAt: "",
+          status: "in_progress",
+          sections: { workforce: {} },
+        },
+      },
+    } as ApiResponse<AssessmentData>;
     vi.mocked(getAssessment).mockResolvedValueOnce(initial).mockResolvedValueOnce(initial);
 
     const { result } = renderHook(() => useAssessment({ section: "workforce" }));

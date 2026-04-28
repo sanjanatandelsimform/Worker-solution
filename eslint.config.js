@@ -8,7 +8,7 @@ import prettier from 'eslint-plugin-prettier'
 import prettierConfig from 'eslint-config-prettier'
 
 export default defineConfig([
-  globalIgnores(['dist', 'node_modules', 'build', '.vite', '__MACOSX']),
+  globalIgnores(['dist', 'node_modules', 'build', '.vite', '__MACOSX', 'coverage']),
   {
     files: ['**/*.{ts,tsx}'],
     extends: [
@@ -40,6 +40,12 @@ export default defineConfig([
         { allowConstantExport: true },
       ],
       'prettier/prettier': 'warn',
+    },
+  },
+  {
+    files: ['tests/**/*.{ts,tsx}'],
+    rules: {
+      '@typescript-eslint/no-explicit-any': 'off',
     },
   },
 ])
