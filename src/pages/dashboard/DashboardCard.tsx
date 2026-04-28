@@ -49,14 +49,14 @@ export default function DashboardCard({
               alt="email"
               src={avatarIconSrc}
               className={cx(
-                "min-w-15 h-15 bg-ws-green-30 outline-0 flex items-center justify-center",
+                "min-w-15 h-15 bg-ws-success-50 outline-0 flex items-center justify-center",
                 avatarClassName
               )}
             />
           ) : (
             <div
               className={cx(
-                "min-w-15 h-15 bg-ws-green-30 rounded-full flex items-center justify-center",
+                "min-w-15 h-15 bg-ws-success-50 rounded-full flex items-center justify-center",
                 avatarClassName
               )}
             >

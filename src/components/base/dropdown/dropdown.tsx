@@ -57,7 +57,7 @@ const DropdownItem = ({
           <Check
             aria-hidden="true"
             className={cx(
-              "size-4 shrink-0 stroke-[2.25px] text-fg-brand-primary",
+              "size-4 shrink-0 stroke-[2.25px] text-ws-light-teal-800",
               !state.isSelected && "invisible",
               state.className
             )}

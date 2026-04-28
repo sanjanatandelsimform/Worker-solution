@@ -279,8 +279,8 @@ export const ZipCodeAutocomplete: React.FC<ZipCodeAutocompleteProps> = ({
         placeholder={placeholder}
         className={`h-10 w-full rounded-lg border px-3.5 py-2.5 text-base shadow-xs outline-none transition-colors ${
           hasZipError
-            ? "border-red-500 focus:border-red-500 focus:ring-red-500"
-            : "border-gray-300 focus:border-brand-600 focus:ring-brand-600"
+            ? "border-ws-error-500 focus:border-ws-error-500 focus:ring-ws-error-500"
+            : "border-ws-gray-300 focus:border-ws-light-teal-900 focus:ring-ws-light-teal-900"
         } bg-background text-foreground placeholder:text-muted-foreground ${className ?? ""}`}
       />
 

@@ -268,7 +268,7 @@ export const SettingsPage = () => {
             <div className="mt-6">
               <ErrorMessage
                 errorType="danger"
-                textColor="text-red-700"
+                textColor="text-ws-error-700"
                 alertIcon={AlertCircle}
                 errorMessage={profileError}
                 onClose={() => setShowError(false)}
@@ -280,7 +280,7 @@ export const SettingsPage = () => {
             <div className="mt-6">
               <ErrorMessage
                 errorType="danger"
-                textColor="text-red-700"
+                textColor="text-ws-error-700"
                 alertIcon={AlertCircle}
                 errorMessage={resendError}
                 onClose={() => setResendError(null)}
@@ -292,7 +292,7 @@ export const SettingsPage = () => {
             <div className="mt-6">
               <ErrorMessage
                 errorType="danger"
-                textColor="text-red-700"
+                textColor="text-ws-error-700"
                 alertIcon={AlertCircle}
                 errorMessage={retakeError}
                 onClose={() => setRetakeError(null)}

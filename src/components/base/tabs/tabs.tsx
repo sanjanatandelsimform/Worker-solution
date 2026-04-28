@@ -55,12 +55,12 @@ const getTabStyles = ({ isFocusVisible, isSelected, isHovered }: AriaTabRenderPr
   ),
   underline: cx(
     "rounded-none border-b-2 border-transparent outline-focus-ring px-26 py-3 pt-8 text-base font-semibold text-ws-text-tertiary",
-    (isSelected || isHovered) && "border-fg-brand-primary_alt text-ws-light-teal-900",
+    (isSelected || isHovered) && "border-ws-light-teal-800_alt text-ws-light-teal-900",
     isFocusVisible && "outline-2 -outline-offset-2"
   ),
   line: cx(
     "rounded-none border-l-2 border-transparent outline-focus-ring",
-    (isSelected || isHovered) && "border-fg-brand-primary_alt text-ws-light-teal-900",
+    (isSelected || isHovered) && "border-ws-light-teal-800_alt text-ws-light-teal-900",
     isFocusVisible && "outline-2 -outline-offset-2"
   ),
 });

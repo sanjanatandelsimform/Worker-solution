@@ -808,8 +808,8 @@ export default function BenchmarkFinchPage() {
 
       {/* ── Industry Error ── */}
       {industryError && (
-        <div className="w-full p-4 bg-red-50 border border-red-200 rounded-lg">
-          <p className="text-sm text-red-700">{industryError}</p>
+        <div className="w-full p-4 bg-ws-error-50 border border-ws-error-200 rounded-lg">
+          <p className="text-sm text-ws-error-700">{industryError}</p>
         </div>
       )}
 
@@ -960,7 +960,7 @@ export default function BenchmarkFinchPage() {
               sourceAttribution={`Source: BLS, ${selectedWageState?.year}`}
             />
           )}
-          <div className="grid grid-cols-2 xl:grid-cols-4 gap-6 w-full mt-4">
+          <div className="grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-4 gap-6 w-full mt-4">
             {isLoadingCards ? (
               <>
                 <WagesCardSkeleton />

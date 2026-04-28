@@ -165,7 +165,7 @@ export const UpdateYourInformationModal = ({
               <div className="mb-4">
                 <ErrorMessage
                   errorType="danger"
-                  textColor="text-red-700"
+                  textColor="text-ws-error-700"
                   alertIcon={AlertCircle}
                   errorMessage={apiError}
                   onClose={() => setShowError(false)}
