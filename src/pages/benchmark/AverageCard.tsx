@@ -58,7 +58,7 @@ export default function AverageCard({
                 : "text-xs bg-ws-error-50 text-ws-error-900 ring-0 rounded-none py-1"
             }
             size="sm"
-          > 
+          >
             {staticsPoints}
           </Badge>
         )}

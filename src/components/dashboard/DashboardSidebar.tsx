@@ -93,7 +93,9 @@ export const DashboardSidebar = ({ activeUrl = "/" }: DashboardSidebarProps) => 
     additionalData: { isDisabled: isLogoutButtonDisabled },
   });
 
-  {/* Dashboard left navigation menu items configuration */}
+  {
+    /* Dashboard left navigation menu items configuration */
+  }
   const navigationItems: NavItemType[] = [
     {
       label: "Dashboard",

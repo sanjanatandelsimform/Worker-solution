@@ -90,7 +90,9 @@ export const SettingsPage = () => {
   const retakeAssessmentModal = useModalConfig("retakeAssessment", {
     isOpen: isRetakeAssessmentModalOpen,
     onClose: () => setIsRetakeAssessmentModalOpen(false),
-    onConfirm: () => { handleRetakeAssessment(); },
+    onConfirm: () => {
+      handleRetakeAssessment();
+    },
     additionalData: { loading: retakeLoading },
   });
 

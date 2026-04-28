@@ -20,8 +20,7 @@ export const filledColors: Record<
   gray: {
     root: "bg-ws-gray-50 text-ws-gray-700 ring-ws-gray-200",
     addon: "text-ws-gray-500",
-    addonButton:
-      "hover:bg-ws-gray-100 text-ws-gray-400 hover:text-ws-gray-500",
+    addonButton: "hover:bg-ws-gray-100 text-ws-gray-400 hover:text-ws-gray-500",
   },
   brand: {
     root: "bg-ws-light-teal-50 text-ws-light-teal-700 ring-ws-light-teal-200",
@@ -36,8 +35,7 @@ export const filledColors: Record<
   warning: {
     root: "bg-ws-warning-50 text-ws-warning-700 ring-ws-warning-200",
     addon: "text-ws-warning-500",
-    addonButton:
-      "hover:bg-ws-warning-100 text-ws-warning-400 hover:text-ws-warning-500",
+    addonButton: "hover:bg-ws-warning-100 text-ws-warning-400 hover:text-ws-warning-500",
   },
   success: {
     root: "bg-ws-success-50 text-ws-success-700 ring-ws-success-200",

@@ -42,22 +42,23 @@ describe("GetMore", () => {
   });
 
   // T022 — Manual Entry plan selected → navigates to /assessment
-  it("clicking 'Let's Get Started' with Manual Entry plan navigates to /assessment", async () => {
+  it("clicking 'Let's get started' with Manual Entry plan navigates to /assessment", async () => {
     renderGetMore();
 
+    // The page renders with both plan options
     await waitFor(() => {
       expect(screen.getByText("Manual Entry")).toBeInTheDocument();
     });
 
-    // Select the Manual Entry plan
-    const manualEntryOption = screen.getByText("Manual Entry");
-    fireEvent.click(manualEntryOption);
+    // Select the Manual Entry plan by clicking its radio button
+    const radios = screen.getAllByRole("radio");
+    // The second radio is the manual entry plan
+    const manualRadio = radios[1];
+    fireEvent.click(manualRadio);
 
-    await waitFor(() => {
-      expect(screen.getByText("Let's Get Started")).toBeInTheDocument();
-    });
-
-    fireEvent.click(screen.getByText("Let's Get Started"));
+    // Click the bottom bar button
+    const startButton = screen.getByText(/let's get started/i);
+    fireEvent.click(startButton);
 
     expect(mockNavigate).toHaveBeenCalledWith("/assessment");
   });

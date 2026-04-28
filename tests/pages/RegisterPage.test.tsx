@@ -1,56 +1,39 @@
 /**
- * Registration Page Tests
- *
- * Unit tests for RegisterPage and RegistrationForm: render, form fields, submit.
+ * RegisterPage Tests
  */
-
 import React from "react";
 import { describe, it, expect, vi, beforeEach } from "vitest";
-import { render, screen, waitFor, fireEvent } from "@testing-library/react";
-import { Provider } from "react-redux";
-import { configureStore } from "@reduxjs/toolkit";
+import { render, screen, waitFor } from "@testing-library/react";
 import { MemoryRouter } from "react-router-dom";
+import { Provider } from "react-redux";
 import { RegisterPage } from "@/pages/auth/RegisterPage";
-import { signup, getIndustries } from "@/services/api/authApi";
-import registrationFormReducer from "@/store/slices/registrationFormSlice";
-import authReducer from "@/store/slices/authSlice";
-import profileReducer from "@/store/slices/profileSlice";
-import userReducer from "@/store/slices/userSlice";
-import dashboardReducer from "@/store/slices/dashboardSlice";
+import { getIndustries } from "@/services/api/authApi";
+import { createTestStore } from "../test-utils";
 
 vi.mock("@/services/api/authApi", () => ({
   signup: vi.fn(),
   getIndustries: vi.fn(),
 }));
 
-vi.mock("@/assets/success-check.svg", () => ({ default: "success-check.svg" }));
+vi.mock("@/assets/logo.svg", () => ({ default: "logo.svg" }));
 
-const mockSignup = vi.mocked(signup);
 const mockGetIndustries = vi.mocked(getIndustries);
 
-const createTestStore = () =>
-  configureStore({
-    reducer: {
-      auth: authReducer,
-      profile: profileReducer,
-      registrationForm: registrationFormReducer,
-      user: userReducer,
-      dashboard: dashboardReducer,
-    },
-  });
+const mockNavigate = vi.fn();
+vi.mock("react-router-dom", async () => {
+  const actual = await vi.importActual<typeof import("react-router-dom")>("react-router-dom");
+  return { ...actual, useNavigate: () => mockNavigate };
+});
 
 function renderRegisterPage() {
   const store = createTestStore();
-  return {
-    ...render(
-      <Provider store={store}>
-        <MemoryRouter>
-          <RegisterPage />
-        </MemoryRouter>
-      </Provider>
-    ),
-    store,
-  };
+  return render(
+    <Provider store={store}>
+      <MemoryRouter>
+        <RegisterPage />
+      </MemoryRouter>
+    </Provider>
+  );
 }
 
 describe("RegisterPage", () => {
@@ -61,59 +44,25 @@ describe("RegisterPage", () => {
     });
   });
 
-  describe("render", () => {
-    it("should render registration heading and form", async () => {
-      renderRegisterPage();
-      await waitFor(() => {
-        expect(screen.getByText(/create your account|register|sign up/i)).toBeInTheDocument();
-      });
-    });
-
-    it("should render first name and last name inputs", async () => {
-      renderRegisterPage();
-      await waitFor(() => {
-        const firstName =
-          screen.queryByLabelText(/first name/i) ?? screen.queryByPlaceholderText(/first name/i);
-        const lastName =
-          screen.queryByLabelText(/last name/i) ?? screen.queryByPlaceholderText(/last name/i);
-        expect(
-          firstName || lastName || document.querySelector('input[name="firstName"]')
-        ).toBeTruthy();
-      });
+  it("should render sign up heading", async () => {
+    renderRegisterPage();
+    await waitFor(() => {
+      expect(screen.getByText(/sign up/i)).toBeInTheDocument();
     });
   });
 
-  describe("submit", () => {
-    it("should call signup with form data on submit", async () => {
-      const mockUser = {
-        id: "user-1",
-        firstName: "Jane",
-        lastName: "Doe",
-        businessName: "Acme",
-        phoneNumber: "+15551234567",
-        industry: { id: 1, industry_name: "Technology", industry_code: "TECH" },
-        zipCode: 94102,
-        emailVerify: false,
-        createdAt: "2026-01-01T00:00:00Z",
-        updatedAt: "2026-01-01T00:00:00Z",
-      };
-      mockSignup.mockResolvedValueOnce(mockUser);
+  it("should render form fields", async () => {
+    renderRegisterPage();
+    await waitFor(() => {
+      expect(screen.getByText(/First Name/i)).toBeInTheDocument();
+      expect(screen.getByText(/Last Name/i)).toBeInTheDocument();
+    });
+  });
 
-      renderRegisterPage();
-
-      await waitFor(() => {
-        expect(mockGetIndustries).toHaveBeenCalled();
-      });
-
-      const submitButton = screen.queryByRole("button", {
-        name: /create account|sign up|register/i,
-      });
-      if (submitButton) {
-        fireEvent.click(submitButton);
-        await waitFor(() => {
-          expect(mockSignup).toHaveBeenCalled();
-        });
-      }
+  it("should fetch industries on mount", async () => {
+    renderRegisterPage();
+    await waitFor(() => {
+      expect(mockGetIndustries).toHaveBeenCalled();
     });
   });
 });

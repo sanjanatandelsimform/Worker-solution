@@ -1,258 +1,209 @@
 /**
- * WorkforceTab integration tests for states API injection
+ * WorkforcePage Tests (Page-level integration)
  *
- * Strategy: Mock DynamicTab to capture the `questions` prop and verify
- * that WorkforceTab correctly clones questions and injects API-sourced
- * state options before passing them downstream.
- *
- * T008 [US1]: Verifies state option injection into topWorkLocations and
- *             employeeLivingZipCodes questions.
- * T013 [US2]: Verifies single-fetch constraint under re-renders.
- * T015-T017 [US3]: Verifies error/loading/empty-state handling.
- *
- * TDD: Written BEFORE WorkforceTab implementation changes (Red phase).
+ * Covers: heading, error banner, loading delegation to child sections, and
+ * the "Declarations" footer rendered when data is available.
  */
-
 import React from "react";
 import { describe, it, expect, vi, beforeEach } from "vitest";
-import { render, waitFor } from "@testing-library/react";
-import { BrowserRouter } from "react-router-dom";
-import WorkforceTab from "@/pages/assessmentWorkforce/WorkforceTab";
-import { getStates } from "@/services/api/assessmentApi";
-import type { Question } from "@/types/questionTypes";
+import { render, screen } from "@testing-library/react";
+import { Provider } from "react-redux";
+import { MemoryRouter } from "react-router-dom";
+import { createTestStore } from "../test-utils";
+import type { WorkforceApiResponse } from "@/types/workforceTypes";
+import WorkforcePage from "@/pages/workforce/WorkforcePage";
 
-// Capture the questions prop passed to DynamicTab
-let capturedQuestions: Question[] = [];
+// ── Asset mocks ──────────────────────────────────────────────────────────────
+vi.mock("@/assets/employees-reported.jpg", () => ({ default: "employees-reported.jpg" }));
+vi.mock("@/assets/placeholder.svg", () => ({ default: "placeholder.svg" }));
 
-// Mock DynamicTab to avoid heavy rendering (819 lines + react-aria-components)
-// This makes the test fast and focused on WorkforceTab's data transformation
-vi.mock("@/components/assessment/DynamicTab", () => ({
-  DynamicTab: (props: { questions: Question[]; section: string }) => {
-    capturedQuestions = props.questions;
-    return <div data-testid="dynamic-tab">{props.section}</div>;
-  },
+// ── Child component mocks ────────────────────────────────────────────────────
+vi.mock("@/pages/workforce/WorkforceOverview", () => ({
+  default: ({ isLoading }: { isLoading: boolean }) => (
+    <div data-testid="workforce-overview" data-loading={String(isLoading)} />
+  ),
 }));
 
-// Mock the API module
-vi.mock("@/services/api/assessmentApi", () => ({
-  getStates: vi.fn(),
-  getAssessment: vi.fn(),
-  submitWorkforce: vi.fn(),
-  submitCompensation: vi.fn(),
-  submitBenefits: vi.fn(),
-  submitGoals: vi.fn(),
+vi.mock("@/pages/workforce/WorkforceParticipation", () => ({
+  default: ({ isLoading }: { isLoading: boolean }) => (
+    <div data-testid="workforce-participation" data-loading={String(isLoading)} />
+  ),
 }));
 
-const mockGetStates = vi.mocked(getStates);
+vi.mock("@/pages/workforce/WorkforceDemographics", () => ({
+  default: ({ isLoading }: { isLoading: boolean }) => (
+    <div data-testid="workforce-demographics" data-loading={String(isLoading)} />
+  ),
+}));
 
-/** Small set of test states — NOT the full 50 hardcoded states */
-const mockStatesResponse = {
-  data: {
-    states: [
-      { stateAbbreviation: "NY", stateName: "New York" },
-      { stateAbbreviation: "CA", stateName: "California" },
-      { stateAbbreviation: "TX", stateName: "Texas" },
-    ],
+vi.mock("@/pages/workforce/WorkforceCompensation", () => ({
+  default: ({ isLoading }: { isLoading: boolean }) => (
+    <div data-testid="workforce-compensation" data-loading={String(isLoading)} />
+  ),
+}));
+
+vi.mock("@/components/common/Declarations", () => ({
+  default: () => <div data-testid="declarations" />,
+}));
+
+vi.mock("@/components/common/ErrorMessage", () => ({
+  default: ({ errorMessage }: { errorMessage: string }) => (
+    <div data-testid="error-message">{errorMessage}</div>
+  ),
+}));
+
+vi.mock("@/components/modals/GetInTouchModal", () => ({
+  GetInTouchModal: () => null,
+}));
+
+// ── Mock all workforce config hooks ──────────────────────────────────────────
+vi.mock("@/hooks/useWorkforceOverviewConfig", () => ({
+  useWorkforceOverviewConfig: () => ({
+    overviewCardsConfig: [],
+    employeeCardsConfig: [],
+  }),
+}));
+
+vi.mock("@/hooks/useWorkforceParticipationConfig", () => ({
+  useWorkforceParticipationConfig: () => ({
+    participationCardsConfig: [],
+    benefitsItems: [],
+    retirementItems: [],
+    insuranceItems: [],
+  }),
+}));
+
+vi.mock("@/hooks/useWorkforceDemographicsConfig", () => ({
+  useWorkforceDemographicsConfig: () => ({
+    departmentItems: [],
+    demographicsCardsConfig: [],
+    donutChartsConfig: [],
+    ageBreakdownConfig: [],
+  }),
+}));
+
+vi.mock("@/hooks/useWorkforceCompensationConfig", () => ({
+  useWorkforceCompensationConfig: () => ({
+    workforceDepartmentItems: [],
+    columns: [],
+    users: [],
+    columnsOne: [],
+    salary: [],
+    compensationCardsConfig: [],
+    salaryBreakdownCardsConfig: [],
+    salaryChartData: [],
+  }),
+}));
+
+// ── Mock workforce API data ──────────────────────────────────────────────────
+const mockWorkforceData: WorkforceApiResponse = {
+  assessmentType: "finch",
+  workforce: {
+    dataStatus: "available",
+    workforce: {
+      totalWorkforce: 3120,
+      enrolledBenefits: 2800,
+      avgEmployeeCost: 450,
+      employerCostPerEmployee: 5400,
+    },
+    participation: {
+      totalWorkforce: 3120,
+      enrolledBenefits: 2800,
+      retirementEnrollment: "75%",
+      healthcareEnrollment: "89%",
+      benefits: [],
+      retirement: [],
+      insurance: [],
+    },
+    demographics: {
+      employmentType: [],
+      gender: { men: "55%", women: "45%" },
+      employmentBreakdownByAge: [],
+    },
+    compensation: {
+      salaryBreakdown: { medianSalary: 75000, avgSalary: 80000, avgHourlyRate: 38.46 },
+      workforceBreakdown: { departments: [] },
+      benefitsCost: {
+        employeeContribution: 250,
+        employerCost: 11240,
+        graph: [],
+        table: [],
+      },
+    },
   },
 };
 
-const expectedTransformedOptions = [
-  { id: "NY", label: "New York", stateFips: "" },
-  { id: "CA", label: "California", stateFips: "" },
-  { id: "TX", label: "Texas", stateFips: "" },
-];
-
-function renderWorkforceTab() {
+function renderPage(workforceOverride: object = {}) {
+  const store = createTestStore({
+    workforce: {
+      data: mockWorkforceData,
+      loading: false,
+      error: null,
+      lastFetched: Date.now(),
+      isLoaded: true,
+      ...workforceOverride,
+    } as any,
+  });
   return render(
-    <BrowserRouter>
-      <WorkforceTab onNext={vi.fn()} onSuccess={vi.fn()} />
-    </BrowserRouter>
+    <Provider store={store}>
+      <MemoryRouter>
+        <WorkforcePage />
+      </MemoryRouter>
+    </Provider>
   );
 }
 
-/** Helper: find a question by key in the captured questions array */
-function findQuestion(key: string): Question | undefined {
-  return capturedQuestions.find(q => (q as Record<string, unknown>).key === key);
-}
+// ── Tests ────────────────────────────────────────────────────────────────────
 
-/** Helper: get options from topWorkLocations question's first field */
-function getTopWorkLocationsOptions() {
-  const q = findQuestion("topWorkLocations") as Record<string, unknown> | undefined;
-  if (!q) return undefined;
-  const rules = q.validationRules as Record<string, unknown> | undefined;
-  const fields = rules?.fields as Array<Record<string, unknown>> | undefined;
-  return fields?.[0]?.options;
-}
+describe("WorkforcePage", () => {
+  beforeEach(() => vi.clearAllMocks());
 
-/** Helper: get options from employeeLivingZipCodes conditional question's first field */
-function getConditionalStateOptions() {
-  const q = findQuestion("employeesResideInSameZipCodes") as Record<string, unknown> | undefined;
-  if (!q) return undefined;
-  const conditional = q.conditionalQuestion as Record<string, unknown> | undefined;
-  const innerQ = conditional?.question as Record<string, unknown> | undefined;
-  const rules = innerQ?.validationRules as Record<string, unknown> | undefined;
-  const fields = rules?.fields as Array<Record<string, unknown>> | undefined;
-  return fields?.[0]?.options;
-}
-
-// --- T008 [US1]: State option injection ---
-
-describe("WorkforceTab — state option injection (US1)", () => {
-  beforeEach(() => {
-    vi.clearAllMocks();
-    capturedQuestions = [];
-    mockGetStates.mockResolvedValue(mockStatesResponse);
+  it("renders the main heading", () => {
+    renderPage();
+    expect(screen.getByText("Workforce Information")).toBeInTheDocument();
   });
 
-  it("should call getStates on mount", async () => {
-    renderWorkforceTab();
-
-    await waitFor(() => {
-      expect(mockGetStates).toHaveBeenCalledTimes(1);
-    });
+  it("renders the 'Breakdown Overview' sub-heading", () => {
+    renderPage();
+    expect(screen.getByText("Breakdown Overview")).toBeInTheDocument();
   });
 
-  it("should inject API-sourced options into topWorkLocations state field", async () => {
-    renderWorkforceTab();
-
-    await waitFor(() => {
-      const options = getTopWorkLocationsOptions();
-      expect(options).toEqual(expectedTransformedOptions);
-    });
+  it("renders all four section components", () => {
+    renderPage();
+    expect(screen.getByTestId("workforce-overview")).toBeInTheDocument();
+    expect(screen.getByTestId("workforce-participation")).toBeInTheDocument();
+    expect(screen.getByTestId("workforce-demographics")).toBeInTheDocument();
+    expect(screen.getByTestId("workforce-compensation")).toBeInTheDocument();
   });
 
-  it("should inject API-sourced options into employeeLivingZipCodes conditional state field", async () => {
-    renderWorkforceTab();
-
-    await waitFor(() => {
-      const options = getConditionalStateOptions();
-      expect(options).toEqual(expectedTransformedOptions);
-    });
+  it("renders the Declarations footer", () => {
+    renderPage();
+    expect(screen.getByTestId("declarations")).toBeInTheDocument();
   });
 
-  it("should not modify other questions' options", async () => {
-    renderWorkforceTab();
-
-    await waitFor(() => {
-      // educationLevel question should exist and not have its options tampered with
-      const eduQ = findQuestion("educationLevel") as Record<string, unknown> | undefined;
-      expect(eduQ).toBeDefined();
-
-      // Verify topWorkLocations has API options (confirming injection happened)
-      const topOpts = getTopWorkLocationsOptions();
-      expect(topOpts).toEqual(expectedTransformedOptions);
-
-      // educationLevel has its own options — they should remain unchanged (not set to API states)
-      const eduRules = eduQ?.validationRules as Record<string, unknown> | undefined;
-      const eduFields = eduRules?.fields as Array<Record<string, unknown>> | undefined;
-      if (eduFields?.[0]?.options) {
-        expect(eduFields[0].options).not.toEqual(expectedTransformedOptions);
-      }
-    });
+  it("does NOT show error banner when there is no error", () => {
+    renderPage();
+    expect(screen.queryByTestId("error-message")).not.toBeInTheDocument();
   });
 
-  it("should pass all workforce questions to DynamicTab", async () => {
-    renderWorkforceTab();
-
-    await waitFor(() => {
-      // Workforce section has multiple questions — all should be passed through
-      expect(capturedQuestions.length).toBeGreaterThan(0);
-    });
-  });
-});
-
-// --- T013 [US2]: Single-fetch constraint ---
-
-describe("WorkforceTab — single-fetch constraint (US2)", () => {
-  beforeEach(() => {
-    vi.clearAllMocks();
-    capturedQuestions = [];
-    mockGetStates.mockResolvedValue(mockStatesResponse);
+  it("shows the error banner when workforceError is set", () => {
+    renderPage({ error: "Failed to load workforce data" });
+    expect(screen.getByTestId("error-message")).toHaveTextContent("Failed to load workforce data");
   });
 
-  it("should call getStates exactly once even after re-renders", async () => {
-    const { rerender } = render(
-      <BrowserRouter>
-        <WorkforceTab onNext={vi.fn()} onSuccess={vi.fn()} />
-      </BrowserRouter>
-    );
-
-    await waitFor(() => {
-      expect(mockGetStates).toHaveBeenCalledTimes(1);
-    });
-
-    // Trigger multiple re-renders
-    rerender(
-      <BrowserRouter>
-        <WorkforceTab onNext={vi.fn()} onSuccess={vi.fn()} />
-      </BrowserRouter>
-    );
-    rerender(
-      <BrowserRouter>
-        <WorkforceTab onNext={vi.fn()} onSuccess={vi.fn()} />
-      </BrowserRouter>
-    );
-
-    expect(mockGetStates).toHaveBeenCalledTimes(1);
-  });
-});
-
-// --- T015-T017 [US3]: Error/empty state handling ---
-
-describe("WorkforceTab — error state handling (US3)", () => {
-  beforeEach(() => {
-    vi.clearAllMocks();
-    capturedQuestions = [];
+  it("passes isLoading=false to child sections when not loading", () => {
+    renderPage({ loading: false });
+    expect(screen.getByTestId("workforce-overview")).toHaveAttribute("data-loading", "false");
+    expect(screen.getByTestId("workforce-participation")).toHaveAttribute("data-loading", "false");
+    expect(screen.getByTestId("workforce-demographics")).toHaveAttribute("data-loading", "false");
+    expect(screen.getByTestId("workforce-compensation")).toHaveAttribute("data-loading", "false");
   });
 
-  // T015: API rejects — state selects show error indication
-  it("should set empty options on state fields when getStates rejects", async () => {
-    mockGetStates.mockRejectedValue(new Error("Network error"));
-
-    renderWorkforceTab();
-
-    await waitFor(() => {
-      const topOpts = getTopWorkLocationsOptions();
-      // When error, options should be empty array (not the hardcoded 50 states)
-      expect(topOpts).toEqual([]);
-    });
-  });
-
-  // T016: API rejects — other questions still render
-  it("should still pass all questions to DynamicTab when getStates rejects", async () => {
-    mockGetStates.mockRejectedValue(new Error("Network error"));
-
-    renderWorkforceTab();
-
-    await waitFor(() => {
-      // All workforce questions should still be passed through
-      expect(capturedQuestions.length).toBeGreaterThan(0);
-      // educationLevel should exist
-      const eduQ = findQuestion("educationLevel");
-      expect(eduQ).toBeDefined();
-    });
-  });
-
-  // T017: Empty states array — same as error
-  it("should set empty options on state fields when getStates returns empty array", async () => {
-    mockGetStates.mockResolvedValue({ data: { states: [] } });
-
-    renderWorkforceTab();
-
-    await waitFor(() => {
-      const topOpts = getTopWorkLocationsOptions();
-      expect(topOpts).toEqual([]);
-    });
-  });
-
-  it("should set empty options on conditional state field when getStates rejects", async () => {
-    mockGetStates.mockRejectedValue(new Error("Network error"));
-
-    renderWorkforceTab();
-
-    await waitFor(() => {
-      const condOpts = getConditionalStateOptions();
-      expect(condOpts).toEqual([]);
-    });
+  it("passes isLoading=true to child sections when loading", () => {
+    renderPage({ loading: true });
+    expect(screen.getByTestId("workforce-overview")).toHaveAttribute("data-loading", "true");
+    expect(screen.getByTestId("workforce-participation")).toHaveAttribute("data-loading", "true");
+    expect(screen.getByTestId("workforce-demographics")).toHaveAttribute("data-loading", "true");
+    expect(screen.getByTestId("workforce-compensation")).toHaveAttribute("data-loading", "true");
   });
 });

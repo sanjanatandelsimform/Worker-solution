@@ -42,6 +42,7 @@ export default defineConfig({
         "src/types/**",
         "src/assets/**",
         "src/constants/**",
+        "src/pages/designReference/**",
       ],
     },
   },

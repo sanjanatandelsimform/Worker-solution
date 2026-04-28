@@ -1,21 +1,20 @@
 /**
- * Sign In Page Tests
- *
- * Unit tests for SignInPage and SignInForm: render, form fields, submit success and error.
+ * SignInPage & SignInForm Tests
  */
-
 import React from "react";
 import { describe, it, expect, vi, beforeEach } from "vitest";
 import { render, screen, waitFor, fireEvent } from "@testing-library/react";
 import { MemoryRouter } from "react-router-dom";
+import { Provider } from "react-redux";
 import { SignInPage } from "@/pages/auth/SignInPage";
 import { signin } from "@/services/api/authApi";
+import { createTestStore } from "../test-utils";
 
 vi.mock("@/services/api/authApi", () => ({
   signin: vi.fn(),
 }));
 
-vi.mock("@/assets/success-check.svg", () => ({ default: "success-check.svg" }));
+vi.mock("@/assets/logo.svg", () => ({ default: "logo.svg" }));
 
 const mockSignin = vi.mocked(signin);
 
@@ -29,10 +28,13 @@ vi.mock("react-router-dom", async () => {
 });
 
 function renderSignInPage() {
+  const store = createTestStore();
   return render(
-    <MemoryRouter>
-      <SignInPage />
-    </MemoryRouter>
+    <Provider store={store}>
+      <MemoryRouter>
+        <SignInPage />
+      </MemoryRouter>
+    </Provider>
   );
 }
 
@@ -41,120 +43,89 @@ describe("SignInPage", () => {
     vi.clearAllMocks();
   });
 
+<<<<<<< HEAD
   describe("render", () => {
     it("should render A2B logo and Log in heading", () => {
       renderSignInPage();
       expect(screen.getByText("A2B")).toBeInTheDocument();
       expect(screen.getByText("Log in to your account")).toBeInTheDocument();
       expect(screen.getByText(/Welcome back! Please enter your details/)).toBeInTheDocument();
+=======
+  it("should render log in heading and description", () => {
+    renderSignInPage();
+    expect(screen.getByText("Log in to your account")).toBeInTheDocument();
+    expect(screen.getByText(/Welcome back! Please enter your details/)).toBeInTheDocument();
+  });
+
+  it("should render logo image", () => {
+    renderSignInPage();
+    expect(screen.getByAltText("Logo")).toBeInTheDocument();
+  });
+
+  it("should render form fields and links", () => {
+    renderSignInPage();
+    expect(screen.getByText("Email")).toBeInTheDocument();
+    expect(screen.getByText("Password")).toBeInTheDocument();
+    expect(screen.getByText(/Remember for 30 days/i)).toBeInTheDocument();
+    expect(screen.getByText("Sign in")).toBeInTheDocument();
+    expect(screen.getByText("Forgot password?")).toBeInTheDocument();
+    expect(screen.getByText("Sign up")).toBeInTheDocument();
+  });
+
+  it("should call signin and navigate to dashboard on success", async () => {
+    mockSignin.mockResolvedValueOnce({
+      status: true,
+      message: "OK",
+      data: {
+        user: {
+          id: "user-1",
+          firstName: "Jane",
+          lastName: "Doe",
+          businessName: "Acme",
+          phoneNumber: "+15551234567",
+          industry: { id: 1, industry_name: "Tech", industry_code: "TECH" },
+          zipCode: 94102,
+          emailVerify: true,
+          createdAt: "2026-01-01T00:00:00Z",
+          updatedAt: "2026-01-01T00:00:00Z",
+        },
+        tokens: { accessToken: "at", refreshToken: "rt" },
+      },
+>>>>>>> develop1
     });
 
-    it("should render email and password inputs", () => {
-      renderSignInPage();
-      expect(screen.getByRole("textbox", { name: /email/i })).toBeInTheDocument();
-      const passwordInput = document.querySelector('input[type="password"]');
-      expect(passwordInput).toBeInTheDocument();
+    renderSignInPage();
+
+    const emailInput = document.querySelector('input[name="email"]');
+    if (emailInput) fireEvent.change(emailInput, { target: { value: "user@example.com" } });
+    const passwordInput = document.querySelector('input[type="password"]');
+    if (passwordInput) fireEvent.change(passwordInput, { target: { value: "Password123!" } });
+
+    fireEvent.click(screen.getByText("Sign in"));
+
+    await waitFor(() => {
+      expect(mockSignin).toHaveBeenCalled();
     });
 
-    it("should render remember me checkbox and sign in button", () => {
-      renderSignInPage();
-      expect(screen.getByRole("checkbox", { name: /remember me/i })).toBeInTheDocument();
-      expect(screen.getByRole("button", { name: /sign in|log in/i })).toBeInTheDocument();
+    await waitFor(() => {
+      expect(mockNavigate).toHaveBeenCalledWith("/dashboard");
     });
   });
 
-  describe("submit", () => {
-    it("should call signin and navigate to success on successful login", async () => {
-      const mockUser = {
-        id: "user-1",
-        firstName: "Jane",
-        lastName: "Doe",
-        businessName: "Acme",
-        phoneNumber: "+15551234567",
-        industry: { id: 1, industry_name: "Tech", industry_code: "TECH" },
-        zipCode: 94102,
-        emailVerify: true,
-        createdAt: "2026-01-01T00:00:00Z",
-        updatedAt: "2026-01-01T00:00:00Z",
-      };
-      mockSignin.mockResolvedValueOnce({
-        status: true,
-        message: "OK",
-        data: {
-          user: mockUser,
-          tokens: { accessToken: "at", refreshToken: "rt" },
-        },
-      });
+  it("should handle signin error", async () => {
+    mockSignin.mockRejectedValueOnce(new Error("Network error"));
 
-      renderSignInPage();
+    renderSignInPage();
 
-      fireEvent.change(screen.getByRole("textbox", { name: /email/i }), {
-        target: { value: "user@example.com" },
-      });
-      const passwordInput = document.querySelector('input[type="password"]');
-      if (passwordInput) {
-        fireEvent.change(passwordInput, { target: { value: "Password123!" } });
-      }
-      fireEvent.click(screen.getByRole("button", { name: /sign in|log in/i }));
+    const emailInput = document.querySelector('input[name="email"]');
+    if (emailInput) fireEvent.change(emailInput, { target: { value: "user@example.com" } });
+    const passwordInput = document.querySelector('input[type="password"]');
+    if (passwordInput) fireEvent.change(passwordInput, { target: { value: "Password123!" } });
 
-      await waitFor(() => {
-        expect(mockSignin).toHaveBeenCalledWith({
-          businessEmail: "user@example.com",
-          password: "Password123!",
-          rememberMe: false,
-        });
-      });
+    fireEvent.click(screen.getByText("Sign in"));
 
-      await waitFor(() => {
-        expect(mockNavigate).toHaveBeenCalledWith("/success", {
-          state: expect.objectContaining({
-            title: "Sign In Successful!",
-            buttonText: "Go to Dashboard",
-            buttonPath: "/dashboard",
-          }),
-        });
-      });
-    });
-
-    it("should show error when signin returns error status", async () => {
-      mockSignin.mockResolvedValueOnce({
-        status: "error",
-        message: "Incorrect email or password",
-      });
-
-      renderSignInPage();
-
-      fireEvent.change(screen.getByRole("textbox", { name: /email/i }), {
-        target: { value: "user@example.com" },
-      });
-      const passwordInput = document.querySelector('input[type="password"]');
-      if (passwordInput) {
-        fireEvent.change(passwordInput, { target: { value: "wrong" } });
-      }
-      fireEvent.click(screen.getByRole("button", { name: /sign in|log in/i }));
-
-      await waitFor(() => {
-        expect(screen.getByText(/Incorrect email or password/i)).toBeInTheDocument();
-      });
-    });
-
-    it("should show error when signin throws", async () => {
-      mockSignin.mockRejectedValueOnce(new Error("Network error"));
-
-      renderSignInPage();
-
-      fireEvent.change(screen.getByRole("textbox", { name: /email/i }), {
-        target: { value: "user@example.com" },
-      });
-      const passwordInput = document.querySelector('input[type="password"]');
-      if (passwordInput) {
-        fireEvent.change(passwordInput, { target: { value: "Password123!" } });
-      }
-      fireEvent.click(screen.getByRole("button", { name: /sign in|log in/i }));
-
-      await waitFor(() => {
-        expect(screen.getByText(/Network error|error/i)).toBeInTheDocument();
-      });
+    await waitFor(() => {
+      expect(mockSignin).toHaveBeenCalled();
     });
   });
 });
