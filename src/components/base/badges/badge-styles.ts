@@ -23,14 +23,12 @@ export const filledColors: Record<
   warning: {
     root: "bg-ws-warning-50 text-ws-warning-700 ring-ws-warning-200",
     addon: "text-ws-warning-500",
-    addonButton:
-      "hover:bg-ws-warning-100 text-ws-warning-400 hover:text-ws-warning-500",
+    addonButton: "hover:bg-ws-warning-100 text-ws-warning-400 hover:text-ws-warning-500",
   },
   success: {
     root: "bg-ws-success-50 text-ws-success-700 ring-ws-success-200",
     addon: "text-ws-success-500",
-    addonButton:
-      "hover:bg-ws-success-100 text-ws-success-400 hover:text-ws-success-500",
+    addonButton: "hover:bg-ws-success-100 text-ws-success-400 hover:text-ws-success-500",
   },
 };
 

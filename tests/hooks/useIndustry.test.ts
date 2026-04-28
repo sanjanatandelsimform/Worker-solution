@@ -62,7 +62,7 @@ vi.mock("@/store/slices/industrySlice", async importOriginal => {
 
 // ── Import hook after mocks ────────────────────────────────────────────────
 const { useIndustry } = await import("@/hooks/useIndustry");
-const { fetchIndustry } = await import("@/store/slices/industrySlice");
+const { fetchIndustry: _fetchIndustry } = await import("@/store/slices/industrySlice");
 
 // ── Helpers ────────────────────────────────────────────────────────────────
 

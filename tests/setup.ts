@@ -104,12 +104,14 @@ HTMLCanvasElement.prototype.getContext = vi.fn().mockReturnValue({
 }) as unknown as typeof HTMLCanvasElement.prototype.getContext;
 
 // Mock react-loader-spinner which uses styled-components not compatible with jsdom
-vi.mock("react-loader-spinner", () => ({
-  Oval: (props: Record<string, unknown>) => {
-    const React = require("react");
-    return React.createElement("div", {
-      "data-testid": "loading-spinner",
-      "aria-label": props.ariaLabel || "loading",
-    });
-  },
-}));
+vi.mock("react-loader-spinner", async () => {
+  const React = await import("react");
+  return {
+    Oval: (props: Record<string, unknown>) => {
+      return React.createElement("div", {
+        "data-testid": "loading-spinner",
+        "aria-label": props.ariaLabel || "loading",
+      });
+    },
+  };
+});

@@ -12,7 +12,16 @@ const createStore = () =>
   configureStore({
     reducer: {
       user: userReducer,
-      auth: (state = { user: null, isAuthenticated: false, isLoading: false, authInitAttempted: true, tokens: { accessToken: "", refreshToken: "" } }, action: any) => {
+      auth: (
+        state = {
+          user: null,
+          isAuthenticated: false,
+          isLoading: false,
+          authInitAttempted: true,
+          tokens: { accessToken: "", refreshToken: "" },
+        },
+        action: any
+      ) => {
         if (action.type === "auth/updateUser") {
           return { ...state, user: { ...state.user, ...action.payload } };
         }

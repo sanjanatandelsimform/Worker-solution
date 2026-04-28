@@ -20,13 +20,15 @@ describe("DynamicQuestionRenderer", () => {
     const { container } = render(
       <DynamicQuestionRenderer
         {...baseProps}
-        question={{
-          key: "q1",
-          label: "Test Question",
-          questionType: "TEXT_INPUT",
-          isRequired: false,
-          displayOrder: 1,
-        } as any}
+        question={
+          {
+            key: "q1",
+            label: "Test Question",
+            questionType: "TEXT_INPUT",
+            isRequired: false,
+            displayOrder: 1,
+          } as any
+        }
       />
     );
     expect(container.querySelector('[data-question-key="q1"]')).toBeInTheDocument();
@@ -36,13 +38,15 @@ describe("DynamicQuestionRenderer", () => {
     const { container } = render(
       <DynamicQuestionRenderer
         {...baseProps}
-        question={{
-          key: "num1",
-          label: "Number Q",
-          questionType: "NUMBER_INPUT",
-          isRequired: false,
-          displayOrder: 1,
-        } as any}
+        question={
+          {
+            key: "num1",
+            label: "Number Q",
+            questionType: "NUMBER_INPUT",
+            isRequired: false,
+            displayOrder: 1,
+          } as any
+        }
       />
     );
     expect(container.querySelector('[data-question-key="num1"]')).toBeInTheDocument();
@@ -52,17 +56,19 @@ describe("DynamicQuestionRenderer", () => {
     const { container } = render(
       <DynamicQuestionRenderer
         {...baseProps}
-        question={{
-          key: "mc1",
-          label: "Multi Choice",
-          questionType: "MULTIPLE_CHOICE",
-          isRequired: false,
-          displayOrder: 1,
-          options: [
-            { label: "Option A", value: "a" },
-            { label: "Option B", value: "b" },
-          ],
-        } as any}
+        question={
+          {
+            key: "mc1",
+            label: "Multi Choice",
+            questionType: "MULTIPLE_CHOICE",
+            isRequired: false,
+            displayOrder: 1,
+            options: [
+              { label: "Option A", value: "a" },
+              { label: "Option B", value: "b" },
+            ],
+          } as any
+        }
       />
     );
     expect(container.querySelector('[data-question-key="mc1"]')).toBeInTheDocument();

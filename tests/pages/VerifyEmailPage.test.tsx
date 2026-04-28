@@ -50,9 +50,7 @@ describe("VerifyEmailPage", () => {
     renderVerifyEmailPage();
     await waitFor(() => {
       expect(screen.getByText("Verification Failed")).toBeInTheDocument();
-      expect(
-        screen.getByText(/Invalid or missing verification token/)
-      ).toBeInTheDocument();
+      expect(screen.getByText(/Invalid or missing verification token/)).toBeInTheDocument();
     });
   });
 

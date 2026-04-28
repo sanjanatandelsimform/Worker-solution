@@ -1,4 +1,4 @@
-import React, { useEffect,useCallback } from "react";
+import React, { useEffect, useCallback } from "react";
 import { Input } from "@/components/base/input/input";
 import { Label } from "@/components/base/input/label";
 import { RadioButton, RadioGroup } from "@/components/base/radio-buttons/radio-buttons";
@@ -201,8 +201,7 @@ const StructuredArrayField = ({
             const hasZipContext =
               currentZipValue &&
               currentZipStateAbbreviation &&
-              (currentZipValidityState === "valid" ||
-                currentZipValidityState === "state_mismatch");
+              (currentZipValidityState === "valid" || currentZipValidityState === "state_mismatch");
 
             if (hasZipContext) {
               const isMismatch =
@@ -278,9 +277,7 @@ const StructuredArrayField = ({
             );
           }}
           placeholder={field.placeholder}
-          isInvalid={
-            !!displayFieldError && displayFieldError !== "State does not match zipcode"
-          }
+          isInvalid={!!displayFieldError && displayFieldError !== "State does not match zipcode"}
           selectedStateAbbreviation={
             (item as unknown as Record<string, string>)["state"] ?? undefined
           }
@@ -330,8 +327,7 @@ const StructuredArrayField = ({
             const current = latestItems.find(i => i.id === itemId);
             if (
               !current ||
-              (current.__zipIsValid === isValid &&
-                current.__zipValidityState === zipValidityState)
+              (current.__zipIsValid === isValid && current.__zipValidityState === zipValidityState)
             )
               return;
             onAnswerChange(
@@ -381,9 +377,7 @@ const StructuredArrayField = ({
         tooltip={displayFieldError ?? undefined}
         onChange={(val: string) => updateField(field.name, val)}
       />
-      {displayFieldError && (
-        <span className="text-sm text-ws-error-600">{displayFieldError}</span>
-      )}
+      {displayFieldError && <span className="text-sm text-ws-error-600">{displayFieldError}</span>}
     </div>
   );
 };
@@ -450,9 +444,7 @@ const ConditionalQuestion = ({
             size="md"
             maxLength={conditionalQuestion.validationRules?.maxLength}
             isInvalid={errors[conditionalQuestion.key] ? true : false}
-            tooltip={
-              errors[conditionalQuestion.key] ? errors[conditionalQuestion.key] : undefined
-            }
+            tooltip={errors[conditionalQuestion.key] ? errors[conditionalQuestion.key] : undefined}
           />
           {errors[conditionalQuestion.key] && (
             <span className="text-sm text-ws-error-600">{errors[conditionalQuestion.key]}</span>
@@ -491,9 +483,7 @@ const ConditionalQuestion = ({
             }}
             size="md"
             isInvalid={errors[conditionalQuestion.key] ? true : false}
-            tooltip={
-              errors[conditionalQuestion.key] ? errors[conditionalQuestion.key] : undefined
-            }
+            tooltip={errors[conditionalQuestion.key] ? errors[conditionalQuestion.key] : undefined}
           />
           {errors[conditionalQuestion.key] && (
             <span className="text-sm text-ws-error-600">{errors[conditionalQuestion.key]}</span>
@@ -810,7 +800,6 @@ export const DynamicQuestionRenderer = ({
     removeArrayItem,
   };
 
-
   useEffect(() => {
     if (question.questionType === "RANKING" && question.dynamicOptions?.sourceField) {
       const sourceField = question.dynamicOptions.sourceField;
@@ -959,8 +948,7 @@ export const DynamicQuestionRenderer = ({
                   label={option.label}
                   className="font-normal"
                   isSelected={
-                    (Array.isArray(currentAnswer) && currentAnswer.includes(option.value)) ||
-                    false
+                    (Array.isArray(currentAnswer) && currentAnswer.includes(option.value)) || false
                   }
                   onChange={isChecked => {
                     const current = Array.isArray(currentAnswer) ? currentAnswer : [];

@@ -3,7 +3,7 @@
  */
 import React from "react";
 import { describe, it, expect, vi, beforeEach } from "vitest";
-import { render, screen, fireEvent } from "@testing-library/react";
+import { render, fireEvent } from "@testing-library/react";
 import { ZipCodeAutocomplete } from "@/components/common/ZipCodeAutocomplete";
 import { lookupZipCodes } from "@/services/api/assessmentApi";
 

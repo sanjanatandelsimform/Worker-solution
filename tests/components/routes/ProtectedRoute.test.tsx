@@ -120,7 +120,13 @@ describe("ProtectedRoute", () => {
     renderProtectedRoute({
       auth: {
         tokens: { accessToken: "abc", refreshToken: "def" },
-        user: { id: "1", email: "test@test.com", emailVerify: true, firstName: "Test", lastName: "User" },
+        user: {
+          id: "1",
+          email: "test@test.com",
+          emailVerify: true,
+          firstName: "Test",
+          lastName: "User",
+        },
         isAuthenticated: true,
         loading: false,
         error: null,
@@ -139,7 +145,13 @@ describe("ProtectedRoute", () => {
       {
         auth: {
           tokens: { accessToken: "abc", refreshToken: "def" },
-          user: { id: "1", email: "test@test.com", emailVerify: false, firstName: "Test", lastName: "User" },
+          user: {
+            id: "1",
+            email: "test@test.com",
+            emailVerify: false,
+            firstName: "Test",
+            lastName: "User",
+          },
           isAuthenticated: true,
           loading: false,
           error: null,
@@ -161,7 +173,13 @@ describe("ProtectedRoute", () => {
       {
         auth: {
           tokens: { accessToken: "abc", refreshToken: "def" },
-          user: { id: "1", email: "test@test.com", emailVerify: true, firstName: "Test", lastName: "User" },
+          user: {
+            id: "1",
+            email: "test@test.com",
+            emailVerify: true,
+            firstName: "Test",
+            lastName: "User",
+          },
           isAuthenticated: true,
           loading: false,
           error: null,

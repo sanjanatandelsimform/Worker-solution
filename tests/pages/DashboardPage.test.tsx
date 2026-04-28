@@ -58,8 +58,12 @@ vi.mock("@/components/dashboard/DashboardSidebar", () => ({
   DashboardSidebar: () => <div data-testid="sidebar">Sidebar</div>,
 }));
 vi.mock("@/pages/benchmark/BenchmarkPage", () => ({ default: () => <div>BenchmarkPage</div> }));
-vi.mock("@/pages/recommendations/RecommendationsFinchPage", () => ({ default: () => <div>RecommendationsFinchPage</div> }));
-vi.mock("@/pages/benchmark/BenchmarkFinchPage", () => ({ default: () => <div>BenchmarkFinchPage</div> }));
+vi.mock("@/pages/recommendations/RecommendationsFinchPage", () => ({
+  default: () => <div>RecommendationsFinchPage</div>,
+}));
+vi.mock("@/pages/benchmark/BenchmarkFinchPage", () => ({
+  default: () => <div>BenchmarkFinchPage</div>,
+}));
 vi.mock("@/pages/workforce/WorkforcePage", () => ({ default: () => <div>WorkforcePage</div> }));
 
 vi.mock("@/assets/mail-icon.svg", () => ({ default: "mail-icon.svg" }));
