@@ -77,8 +77,6 @@ vi.mock("@/components/dashboard/DashboardSidebar", () => ({
 
 // Functional Tabs mock — preserves selectedKey on the wrapper and allows tab clicks
 vi.mock("@/components/base/tabs/tabs", () => {
-  let _onSelectionChange: ((key: string) => void) | undefined;
-
   const Tabs = ({
     children,
     selectedKey,
@@ -88,21 +86,36 @@ vi.mock("@/components/base/tabs/tabs", () => {
     selectedKey: string;
     onSelectionChange: (key: string) => void;
   }) => {
-    _onSelectionChange = onSelectionChange;
+    const childrenWithHandler = React.Children.map(children, child => {
+      if (!React.isValidElement(child)) {
+        return child;
+      }
+
+      return React.cloneElement(child, {
+        onSelectionChange,
+      });
+    });
+
     return (
       <div data-testid="tabs" data-selected-key={selectedKey}>
-        {children}
+        {childrenWithHandler}
       </div>
     );
   };
 
-  Tabs.List = ({ items }: { items: { id: string; label: string }[] }) => (
+  Tabs.List = ({
+    items,
+    onSelectionChange,
+  }: {
+    items: { id: string; label: string }[];
+    onSelectionChange?: (key: string) => void;
+  }) => (
     <div data-testid="tabs-list">
       {items?.map(item => (
         <button
           key={item.id}
           data-testid={`tab-${item.id}`}
-          onClick={() => _onSelectionChange?.(item.id)}
+          onClick={() => onSelectionChange?.(item.id)}
         >
           {item.label}
         </button>
