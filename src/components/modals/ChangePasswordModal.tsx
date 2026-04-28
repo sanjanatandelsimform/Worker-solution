@@ -171,12 +171,12 @@ export const ChangePasswordModal = ({ isOpen, onClose }: ChangePasswordModalProp
 
   return (
     <>
-      <Modal isOpen={isOpen} onOpenChange={handleClose} size="lg">
+      <Modal isOpen={isOpen} onOpenChange={handleClose} size="md">
         <ModalContent>
           <ModalHeader>
             <div className="flex items-center justify-between w-full relative">
               <div className="flex flex-col  gap-1">
-                <ModalTitle>Change your Password</ModalTitle>
+                <ModalTitle>Change Your Password</ModalTitle>
                 <ModalDescription>
                   To update your password, enter your current password and choose a new one that
                   meets the security requirements.
@@ -184,7 +184,7 @@ export const ChangePasswordModal = ({ isOpen, onClose }: ChangePasswordModalProp
               </div>
               <div className="absolute -right-2 -top-2">
                 <Button
-                  iconTrailing={<X data-icon className="text-ws-gray-70" />}
+                  iconTrailing={<X className="size-7 stroke-1 text-ws-gray-400" />}
                   onClick={onClose}
                   color="link"
                 />
@@ -326,7 +326,7 @@ export const ChangePasswordModal = ({ isOpen, onClose }: ChangePasswordModalProp
               <Button
                 type="submit"
                 color="primary"
-                size="md"
+                size="xl"
                 className="w-full"
                 isDisabled={
                   profileLoading ||

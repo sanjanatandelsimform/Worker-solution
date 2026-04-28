@@ -162,7 +162,7 @@ export const UpdateYourEmailModal = ({
   };
 
   return (
-    <Modal isOpen={isOpen} onOpenChange={handleClose} size="lg">
+    <Modal isOpen={isOpen} onOpenChange={handleClose} size="md">
       <ModalContent>
         <ModalHeader>
           <div className="flex items-center justify-between w-full relative">
@@ -176,7 +176,7 @@ export const UpdateYourEmailModal = ({
             </div>
             <div className="absolute -right-2 -top-2">
               <Button
-                iconTrailing={<X data-icon className="text-ws-gray-70" />}
+                iconTrailing={<X className="size-7 stroke-1 text-ws-gray-400" />}
                 onClick={handleClose}
                 color="link"
               />
@@ -276,7 +276,7 @@ export const UpdateYourEmailModal = ({
               <Button
                 type="button"
                 color="primary"
-                size="md"
+                size="xl"
                 className="w-full"
                 onClick={handleClose}
               >
@@ -286,7 +286,7 @@ export const UpdateYourEmailModal = ({
               <Button
                 type="submit"
                 color="primary"
-                size="md"
+                size="xl"
                 className="w-full"
                 // isDisabled={profileLoading || !newEmail.trim() || !!newEmailError}
                 isDisabled={profileLoading || !isFormValid || !newEmail.trim() || !!newEmailError}

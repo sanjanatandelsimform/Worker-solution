@@ -1,6 +1,6 @@
-import { AlertOctagon } from "@untitledui/icons";
 import { BaseModalWithIcon } from "./BaseModalWithIcon";
 import alertIcon from "@/assets/alert-icon.svg";
+import { TrashIcon } from "@/assets/icons/TrashIcon";
 
 interface AccountDeleteModalProps {
   isOpen: boolean;
@@ -24,7 +24,7 @@ export const AccountDeleteModal = ({ isOpen, onClose, onContinue }: AccountDelet
       title="Confirm Account Deletion"
       subtitle={`Deleting your account will permanently erase your profile and all associated data. This action can’t be reversed.`}
       subtitleOne={`If you’re certain this is what you want, confirm below to proceed.`}
-      icon={<AlertOctagon className="size-6" />}
+      icon={<TrashIcon className="size-6" />}
       messageImg={alertIcon}
       backgroundPattern="unsuccess"
       buttons={[

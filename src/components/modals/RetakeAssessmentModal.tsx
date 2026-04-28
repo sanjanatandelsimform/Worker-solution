@@ -1,6 +1,6 @@
-import { AlertOctagon } from "@untitledui/icons";
 import { BaseModalWithIcon } from "./BaseModalWithIcon";
 import alertIcon from "@/assets/alert-icon.svg";
+import { TrashIcon } from "@/assets/icons/TrashIcon";
 
 interface RetakeAssessmentModalProps {
   isOpen: boolean;
@@ -28,7 +28,7 @@ export const RetakeAssessmentModal = ({
       title="Are you sure?"
       subtitle={`Retaking the assessment will remove all data from your dashboard and you will need to retake the assessment form. This action can’t be reversed.`}
       subtitleOne={`If you’re certain this is what you want, confirm below to proceed.`}
-      icon={<AlertOctagon className="size-6" />}
+      icon={<TrashIcon className="size-6" />}
       messageImg={alertIcon}
       backgroundPattern="unsuccess"
       buttons={[

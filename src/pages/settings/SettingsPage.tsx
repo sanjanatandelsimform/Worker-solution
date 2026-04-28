@@ -2,7 +2,6 @@ import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { Button } from "@/components/base/buttons/button";
 import { Input } from "@/components/base/input/input";
-import { Label } from "@/components/base/input/label";
 import { Mail01, AlertCircle } from "@untitledui/icons";
 import { ChangePasswordModal } from "@/components/modals/ChangePasswordModal";
 import { UpdateYourEmailModal } from "@/components/modals/UpdateYourEmailModal";
@@ -11,7 +10,8 @@ import SessionExpiredModal from "@/components/modals/SessionExpiredModal";
 import DashboardSidebar from "@/components/dashboard/DashboardSidebar";
 import ErrorMessage from "@/components/common/ErrorMessage";
 import { BaseModalWithIcon } from "@/components/modals/BaseModalWithIcon";
-import checkmarkIcon from "@/assets/finch-checkmark.svg";
+import checkmarkIcon from "@/assets/success-check.svg";
+import trashIcon from "@/assets/trash-confirm.svg";
 import { useAppDispatch, useAppSelector } from "@/store/hooks";
 import {
   deleteUserAccount,
@@ -171,8 +171,8 @@ export const SettingsPage = () => {
       // Redirect to success page with account deletion message
       navigate("/success", {
         state: {
-          messageImg: checkmarkIcon,
-          title: "Your account has been deleted",
+          messageImg: trashIcon,
+          title: "Your Account Was Deleted",
           subtitle:
             "Your profile and associated data has been permanently deleted. This action can’t be reversed. Create a new account to begin.",
           buttonText: "Create an account",
@@ -308,7 +308,7 @@ export const SettingsPage = () => {
               <div className="bg-ws-navy-25 flex gap-2 border border-ws-border-secondary rounded-xl py-8 px-6 flex-col">
                 <div className="flex flex-col">
                   <h2 className="text-3xl font-medium text-ws-text-primary">
-                    Personal information
+                    Personal Information
                   </h2>
                   <p className="text-base text-ws-text-tertiary mt-2">
                     Update your name, email, and personal details.
@@ -405,22 +405,18 @@ export const SettingsPage = () => {
                     </div>
                     <div className="w-full xl:w-full">
                       <InputGroup>
-                        <div className="flex flex-col gap-1.5 w-full">
-                          <Label htmlFor="changePassword">Change Password</Label>
-                          <div className="w-full flex flex-col gap-4">
-                            <Input
-                              type="password"
-                              id="password"
-                              name="password"
-                              size="md"
-                              isRequired={true}
-                              placeholder="Password"
-                              value="********"
-                              isDisabled={true}
-                              showPasswordToggle={false}
-                            />
-                          </div>
-                        </div>
+                        <Input
+                          type="password"
+                          id="password"
+                          label="Password"
+                          name="password"
+                          size="md"
+                          isRequired={false}
+                          placeholder="Password"
+                          value="********"
+                          isDisabled={true}
+                          showPasswordToggle={false}
+                        />
                       </InputGroup>
                       <Button
                         color="link"
@@ -450,7 +446,7 @@ export const SettingsPage = () => {
                       <div className="w-full xl:w-1/2 flex flex-col">
                         <label
                           htmlFor="retakeAssessment"
-                          className="text-ws-text-primary font-medium text-base mt-2"
+                          className="text-ws-text-primary font-normal text-base mt-2"
                         >
                           Retake the assessment
                         </label>
@@ -476,9 +472,9 @@ export const SettingsPage = () => {
                       <div className="w-full xl:w-1/2 flex flex-col">
                         <label
                           htmlFor="deleteAccount"
-                          className="text-ws-text-primary font-medium text-base mt-2"
+                          className="text-ws-text-primary font-normal text-base mt-2"
                         >
-                          Delete my Benestats account
+                          Delete my A2B account
                         </label>
                         {/* <span className="text-ws-text-tertiary text-sm">This cannot be undone</span> */}
                       </div>

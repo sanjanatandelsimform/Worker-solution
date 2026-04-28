@@ -58,14 +58,14 @@ export const SuccessModalWithLogo = ({
               aria-label="Close modal"
               className="absolute right-3 top-3 flex size-11 items-center justify-center overflow-clip p-2 rounded-lg"
             >
-              <X className="size-6 text-quaternary" />
+              <X className="size-7 stroke-1 text-ws-gray-400" />
             </Button>
           )}
           <div className="pt-18 flex flex-col items-center gap-6">
             {showLogo && (
               <div className="flex items-center justify-center px-2 py-1">
                 <h1 className="font-display text-[48px] font-bold leading-15 text-ws-text-primary">
-                  BeneStats
+                  A2B
                 </h1>
               </div>
             )}
@@ -97,7 +97,7 @@ export const SuccessModalWithLogo = ({
           <Button
             type="button"
             color={button.color || "primary"}
-            size="lg"
+            size="xl"
             onClick={button.onClick}
             className="w-auto mb-10 bg-ws-primary-900 text-ws-base-white hover:bg-ws-primary-900-hover focus:bg-ws-primary-900-hover active:bg-ws-primary-900-hover"
             isDisabled={button.isDisabled}

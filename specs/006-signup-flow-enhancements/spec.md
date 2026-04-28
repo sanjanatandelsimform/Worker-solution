@@ -28,7 +28,7 @@ A new user completes the sign-up form and clicks "Create Account." The system cr
 **Acceptance Scenarios**:
 
 1. **Given** a visitor is on the registration page with valid form data, **When** they submit the form and the `/users/create` API returns successfully with user data and tokens, **Then** the system stores the tokens and user in the authenticated session (same mechanism as the existing login flow).
-2. **Given** the registration API has returned successfully, **Then** the user is shown a success page with the title "Account created successfully!", subtitle "Welcome aboard! Start your success journey with BeneStats", and a "Let's Get Started" button.
+2. **Given** the registration API has returned successfully, **Then** the user is shown a success page with the title "Account created successfully!", subtitle "Welcome aboard! Start your success journey with A2B", and a "Let's Get Started" button.
 3. **Given** the user is on the post-registration success page, **When** they click "Let's Get Started", **Then** they are navigated directly to `/dashboard` (not `/sign-in`).
 4. **Given** the registration API returns an error, **When** the error is displayed, **Then** the existing error handling behaviour is preserved unchanged.
 5. **Given** the user has been auto-logged-in after registration, **When** they arrive on the dashboard, **Then** the dashboard shows the "Verify your email" card (since `emailVerify` is `false` for newly registered accounts).
@@ -49,7 +49,7 @@ A registered user clicks the email verification link. Instead of being taken to 
 2. **Given** the user has been redirected to the dashboard after successful email verification, **Then** a modal is displayed with:
    - A green checkmark icon
    - Title: "Your email has been verified!"
-   - Subtitle: "Welcome aboard! Start your success journey with BeneStats."
+   - Subtitle: "Welcome aboard! Start your success journey with A2B."
    - A single "Return to dashboard" button
 3. **Given** the verification modal is displayed, **When** the user clicks "Return to dashboard", **Then** the modal closes and the dashboard is visible with the updated state (no more "Verify your email" card).
 4. **Given** the verification modal has been closed, **When** the user refreshes the page, **Then** the modal does NOT reappear (navigation state is cleared).
@@ -95,7 +95,7 @@ A user registers, does not verify their email, logs out, and later logs back in.
 - **FR-004**: The registration success page UI (title, subtitle, button text) MUST remain unchanged — only the button's destination changes from `/sign-in` to `/dashboard`.
 - **FR-005**: After a successful `verifyEmail` API call, the system MUST redirect the user to `/dashboard` instead of `/success`.
 - **FR-006**: When the dashboard is loaded as a result of successful email verification, the system MUST display a confirmation modal matching the provided design.
-- **FR-007**: The verification modal MUST display: a green checkmark icon, the title "Your email has been verified!", the subtitle "Welcome aboard! Start your success journey with BeneStats.", and a "Return to dashboard" button.
+- **FR-007**: The verification modal MUST display: a green checkmark icon, the title "Your email has been verified!", the subtitle "Welcome aboard! Start your success journey with A2B.", and a "Return to dashboard" button.
 - **FR-008**: Clicking the "Return to dashboard" button MUST close the modal and clear any navigation state that triggered it so the modal does not reopen on page refresh.
 - **FR-009**: The existing "Verify your email" dashboard card, "Verify" button behaviour, send-email API call, and "Email Sent" modal MUST remain unchanged.
 - **FR-010**: The existing VerifyEmailPage error handling (missing token, expired token, API failure) MUST remain unchanged.

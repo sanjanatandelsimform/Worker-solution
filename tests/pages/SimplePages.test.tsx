@@ -49,7 +49,7 @@ describe("TermsPage", () => {
 
   it("renders BeneStats branding", () => {
     render(wrapRouter(<TermsPage />));
-    expect(screen.getByText("BeneStats")).toBeInTheDocument();
+    expect(screen.getByText("A2B")).toBeInTheDocument();
   });
 });
 
@@ -62,7 +62,7 @@ describe("PrivacyPage", () => {
 
   it("renders BeneStats branding", () => {
     render(wrapRouter(<PrivacyPage />));
-    expect(screen.getByText("BeneStats")).toBeInTheDocument();
+    expect(screen.getByText("A2B")).toBeInTheDocument();
   });
 });
 
@@ -75,7 +75,7 @@ describe("AboutUs", () => {
 
   it("renders Introducing BeneStats heading", () => {
     render(<AboutUs />);
-    expect(screen.getByText("Introducing BeneStats")).toBeInTheDocument();
+    expect(screen.getByText("Introducing A2B")).toBeInTheDocument();
   });
 });
 

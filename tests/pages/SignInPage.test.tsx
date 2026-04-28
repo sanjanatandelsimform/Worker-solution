@@ -45,7 +45,7 @@ describe("SignInPage", () => {
 
   it("should render log in heading and description", () => {
     renderSignInPage();
-    expect(screen.getByText("Log in to your account")).toBeInTheDocument();
+    expect(screen.getByText("Log in to Your Account")).toBeInTheDocument();
     expect(screen.getByText(/Welcome back! Please enter your details/)).toBeInTheDocument();
   });
 

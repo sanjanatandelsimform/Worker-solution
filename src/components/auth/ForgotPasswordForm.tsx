@@ -5,14 +5,14 @@ import { Link, useNavigate } from "react-router-dom";
 import { Button } from "../base/buttons/button";
 import { Input } from "../base/input/input";
 import { InputGroup } from "../base/input/input-group";
-import { Mail01, AlertCircle } from "@untitledui/icons";
+import { AlertCircle } from "@untitledui/icons";
 import { forgotPassword } from "@/services/api/authApi";
 import siteLogo from "@/assets/logo.svg";
 import {
   forgotPasswordSchema,
   type ForgotPasswordFormData,
 } from "@/services/validation/authSchemas";
-import checkmarkIcon from "@/assets/finch-checkmark.svg";
+import checkmarkIcon from "@/assets/success-check.svg";
 import ErrorMessage from "../common/ErrorMessage";
 import { getErrorState, type ErrorState } from "@/utils/errorHandler";
 
@@ -60,7 +60,7 @@ export default function ForgotPasswordForm() {
   return (
     <div className="flex min-h-screen items-center justify-center bg-ws-light-teal-50">
       <div className="flex w-2xl items-center justify-center rounded-xl border border-ws-border-primary bg-ws-base-white py-22">
-        <div className="flex w-full max-w-md flex-col items-center gap-8">
+        <div className="flex w-full max-w-sm flex-col items-center gap-8">
           {/* Header */}
           <div className="flex w-full flex-col items-center gap-6">
             {/* Logo */}
@@ -70,10 +70,10 @@ export default function ForgotPasswordForm() {
 
             {/* Title and Description */}
             <div className="flex w-full flex-col items-center gap-3">
-              <h2 className="w-full text-3xl font-semibold leading-9.5 text-ws-text-primary">
+              <h2 className="w-full text-3xl text-center font-semibold leading-9.5 text-ws-text-primary">
                 Forgot your password?
               </h2>
-              <p className="w-full text-medium font-normal leading-6 text-ws-text-secondary">
+              <p className="w-full text-base font-normal leading-6 text-ws-text-tertiary">
                 Enter the email address associated with your account and we'll send you a link to
                 reset your password.
               </p>
@@ -91,10 +91,10 @@ export default function ForgotPasswordForm() {
                 <Input
                   name="email"
                   label="Business Email Address"
-                  icon={Mail01}
+                  //icon={Mail01}
                   iconClassName="text-ws-gray-400"
                   size="md"
-                  placeholder="olivia@untitledui.com"
+                  placeholder="Enter your email"
                   hint={errors.email?.message}
                   isInvalid={!!errors.email}
                   value={getValues("email")}
@@ -127,7 +127,7 @@ export default function ForgotPasswordForm() {
                   color="primary"
                   size="lg"
                   isDisabled={isSubmitting}
-                  className="w-full"
+                  className="w-full mt-2"
                 >
                   {isSubmitting ? "Sending..." : "Reset Password"}
                 </Button>
@@ -142,7 +142,7 @@ export default function ForgotPasswordForm() {
             </p>
             <Link
               to="/sign-up"
-              className="text-sm font-normal text-ws-light-teal-850 hover:text-ws-light-teal-800"
+              className="text-sm font-semibold text-ws-light-teal-850 hover:text-ws-light-teal-800"
             >
               Sign up
             </Link>
