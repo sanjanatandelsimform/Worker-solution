@@ -40,7 +40,6 @@ export default function AdditionalQuestions() {
   }, [isFinchCompleted, navigate]);
 
   useEffect(() => {
-    console.log("Assessment loading:", isAssessmentLoading, "Connected:", isConnected);
     if (isFetched && !isAssessmentLoading && !isConnected) {
       navigate("/dashboard");
     }

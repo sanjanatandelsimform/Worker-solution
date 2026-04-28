@@ -86,7 +86,7 @@ export const useAssessmentStatus = ({
   const isFinchCompleted = isConnected && assessmentData?.data?.status === "completed";
 
   const isFinchAssessmentIncomplete = isConnected && assessmentData?.data?.status !== "completed";
-  console.log("isLoading:", isLoading);
+
   return {
     completionCount,
     isLoading,

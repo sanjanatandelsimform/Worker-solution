@@ -34,23 +34,22 @@ export function useIndustry(): UseIndustryReturn {
   const error = useAppSelector(selectIndustryError);
   const isLoaded = useAppSelector(selectIndustryIsLoaded);
   const { isConnected } = useAssessmentStatus();
-  const isFinch = isConnected;
 
   useEffect(() => {
     // Guard: skip if already loaded or currently loading
     if (isLoaded || isLoading) return;
 
-    if (!isFinch) {
+    if (!isConnected) {
       // Manual assessment: fetch immediately, no finch connection required
       dispatch(fetchIndustry());
       return;
     }
 
-    if (isFinch && isConnected) {
+    if (isConnected) {
       // Finch assessment: only fetch once finch is connected
       dispatch(fetchIndustry());
     }
-  }, [isFinch, isConnected, isLoaded, isLoading, dispatch]);
+  }, [isConnected, isLoaded, isLoading, dispatch]);
 
   return {
     data,
