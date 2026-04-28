@@ -11,6 +11,7 @@ import { SavingIcon } from "@/assets/icons/SavingIcon";
 import { HeartLineIcon } from "@/assets/icons/HeartLineIcon";
 import { formatNumber, formatCurrency, formatCurrencyWithCents } from "@/utils/formatters";
 import { useFinchStatus } from "@/hooks/useFinchStatus";
+import { ArrowRight } from "@untitledui/icons";
 
 interface CompanyGlanceData {
   totalWorkforce: number | null;
@@ -205,7 +206,7 @@ export default function CompanyAtAGlance({
             )}
           </div>
 
-          <p className="text-base text-ws-text-primary inline-block">
+          <p className="text-base text-ws-text-primary flex items-center gap-1 mt-4">
             Your workforce data is connected via Finch.{" "}
             <Link
               to="#"
@@ -215,7 +216,10 @@ export default function CompanyAtAGlance({
                 onNavigateToWorkforce?.();
               }}
             >
+              <span className="flex items-center gap-1">
               Explore salaries, benefits, and more in the Workforce tab
+              <ArrowRight className="size-5" />
+              </span>
             </Link>
           </p>
         </>

@@ -11,7 +11,7 @@ export default function BenefitsTab({ onNext, onSuccess }: BenefitsTabProps) {
   const benefitsSection = questionData.sections.find(s => s.name === "Benefits");
 
   if (!benefitsSection) {
-    return <div className="text-red-600">Benefits section not found in question data</div>;
+    return <div className="text-ws-error-600">Benefits section not found in question data</div>;
   }
 
   const allQuestions = benefitsSection.questions as Question[];

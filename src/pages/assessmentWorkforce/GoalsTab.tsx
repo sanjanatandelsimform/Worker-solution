@@ -11,7 +11,7 @@ export default function GoalsTab({ onNext, onSuccess }: GoalsTabProps) {
   const goalsSection = questionData.sections.find(section => section.name === "Goals");
 
   if (!goalsSection) {
-    return <div className="text-red-600">Goals section not found in question data</div>;
+    return <div className="text-ws-error-600">Goals section not found in question data</div>;
   }
 
   // Only signal success to the parent (AssessmentWorkforce).

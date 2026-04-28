@@ -160,7 +160,7 @@ export const useModalConfig = (
         subtitle: `Email just sent. Please wait ${
           config.additionalData?.cooldown || 0
         } seconds before trying again.`,
-        icon: <AlertOctagon className="size-6 text-yellow-500" />,
+        icon: <AlertOctagon className="size-6 text-ws-warning-500" />,
         backgroundPattern: "unsuccess",
         buttons: [
           {

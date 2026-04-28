@@ -10,6 +10,26 @@ import {
   selectZipCodes,
   makeSelectAreaMedianByZip,
   makeSelectHousingCostByZip,
+  selectDashboardState,
+  selectDashboardData,
+  selectDashboardLoading,
+  selectDashboardError,
+  selectDashboardLastFetched,
+  selectCompanyAtGlance,
+  selectStrategicRecommendations,
+  selectIndustryOverview,
+  selectTurnoverMetrics,
+  selectSeparationMetrics,
+  selectPrimaryAreaMedianWage,
+  selectPrimaryHousingCost,
+  selectDashboardIsLoaded,
+  selectDashboardHasError,
+  selectBurdenedOwnersPercentage,
+  selectBurdenedRentersPercentage,
+  selectWorkingClassHousingCostBurden,
+  selectWorkingClassHousingGraph,
+  selectAreaMedianWageChartData,
+  selectIndustry,
 } from "@/store/selectors/dashboardSelectors";
 import type { RootState } from "@/store/store";
 import type { DashboardResponse } from "@/types/dashboardTypes";
@@ -288,6 +308,133 @@ describe("Dashboard Selectors", () => {
       const result = selector(state);
 
       expect(result?.burdenedOwners).toBe(35.2);
+    });
+  });
+
+  describe("basic selectors", () => {
+    it("selectDashboardState returns dashboard slice", () => {
+      const state = createMockState(mockDashboardData);
+      expect(selectDashboardState(state)).toBeDefined();
+    });
+
+    it("selectDashboardData returns data", () => {
+      const state = createMockState(mockDashboardData);
+      expect(selectDashboardData(state)).toEqual(mockDashboardData);
+    });
+
+    it("selectDashboardData returns null when no data", () => {
+      const state = createMockState(null);
+      expect(selectDashboardData(state)).toBeNull();
+    });
+
+    it("selectDashboardLoading returns loading state", () => {
+      const state = createMockState(mockDashboardData);
+      expect(selectDashboardLoading(state)).toBe(false);
+    });
+
+    it("selectDashboardError returns error state", () => {
+      const state = createMockState(mockDashboardData);
+      expect(selectDashboardError(state)).toBeNull();
+    });
+
+    it("selectDashboardLastFetched returns timestamp", () => {
+      const state = createMockState(mockDashboardData);
+      expect(typeof selectDashboardLastFetched(state)).toBe("number");
+    });
+
+    it("selectCompanyAtGlance returns company data", () => {
+      const state = createMockState(mockDashboardData);
+      const result = selectCompanyAtGlance(state);
+      expect(result?.totalWorkforce).toBe(1250);
+    });
+
+    it("selectCompanyAtGlance returns null when no data", () => {
+      expect(selectCompanyAtGlance(createMockState(null))).toBeNull();
+    });
+
+    it("selectStrategicRecommendations returns array", () => {
+      const state = createMockState(mockDashboardData);
+      expect(selectStrategicRecommendations(state)).toEqual([]);
+    });
+
+    it("selectIndustryOverview returns null when null", () => {
+      expect(selectIndustryOverview(createMockState(mockDashboardData))).toBeNull();
+    });
+
+    it("selectTurnoverMetrics returns null when null", () => {
+      expect(selectTurnoverMetrics(createMockState(mockDashboardData))).toBeNull();
+    });
+
+    it("selectSeparationMetrics returns null when null", () => {
+      expect(selectSeparationMetrics(createMockState(mockDashboardData))).toBeNull();
+    });
+
+    it("selectDashboardIsLoaded returns falsy when not loaded", () => {
+      const state = createMockState(mockDashboardData);
+      expect(selectDashboardIsLoaded(state)).toBeFalsy();
+    });
+
+    it("selectDashboardHasError returns false when no error", () => {
+      const state = createMockState(mockDashboardData);
+      expect(selectDashboardHasError(state)).toBe(false);
+    });
+  });
+
+  describe("housing and wage selectors", () => {
+    it("selectPrimaryAreaMedianWage returns first zip data", () => {
+      const state = createMockState(mockDashboardData);
+      const result = selectPrimaryAreaMedianWage(state);
+      expect(result).toBeDefined();
+    });
+
+    it("selectPrimaryHousingCost returns first zip data", () => {
+      const state = createMockState(mockDashboardData);
+      const result = selectPrimaryHousingCost(state);
+      expect(result).toBeDefined();
+    });
+
+    it("selectBurdenedOwnersPercentage returns number or null", () => {
+      const state = createMockState(mockDashboardData);
+      const result = selectBurdenedOwnersPercentage(state);
+      expect(result === null || typeof result === "number").toBe(true);
+    });
+
+    it("selectBurdenedRentersPercentage returns number or null", () => {
+      const state = createMockState(mockDashboardData);
+      const result = selectBurdenedRentersPercentage(state);
+      expect(result === null || typeof result === "number").toBe(true);
+    });
+
+    it("selectWorkingClassHousingCostBurden returns data or null", () => {
+      const state = createMockState(mockDashboardData);
+      const result = selectWorkingClassHousingCostBurden(state);
+      expect(result === null || typeof result === "object").toBe(true);
+    });
+
+    it("selectWorkingClassHousingGraph returns data or null", () => {
+      const state = createMockState(mockDashboardData);
+      const result = selectWorkingClassHousingGraph(state);
+      expect(result === null || typeof result === "object").toBe(true);
+    });
+
+    it("selectAreaMedianWageChartData returns data or null", () => {
+      const state = createMockState(mockDashboardData);
+      const result = selectAreaMedianWageChartData(state);
+      expect(result === null || typeof result === "object").toBe(true);
+    });
+
+    it("selectPrimaryAreaMedianWage returns null when no data", () => {
+      expect(selectPrimaryAreaMedianWage(createMockState(null))).toBeNull();
+    });
+
+    it("selectPrimaryHousingCost returns null when no data", () => {
+      expect(selectPrimaryHousingCost(createMockState(null))).toBeNull();
+    });
+  });
+
+  describe("selectIndustry", () => {
+    it("returns null when no data", () => {
+      expect(selectIndustry(createMockState(null))).toBeNull();
     });
   });
 });

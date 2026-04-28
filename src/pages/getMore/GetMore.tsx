@@ -50,17 +50,18 @@ export default function GetMore() {
   const navigate = useNavigate();
   const renderAccordionHeader = (planId: string, plan: PlanOption) => (
     <div
-      onClick={e => {
-        e.stopPropagation();
-        setSelectedPlan(planId);
-      }}
+      // we will utilize this if client wants to bring back this screen
+      // onClick={e => {
+      //   e.stopPropagation();
+      //   setSelectedPlan(planId);
+      // }}
       className="flex w-full cursor-pointer items-center gap-3"
     >
       {/* Radio Button */}
       <RadioGroup
         value={selectedPlan}
         onChange={setSelectedPlan}
-        className="flex gap-0 border border-gray-300 rounded-full"
+        className="flex gap-0 border border-ws-gray-300 rounded-full"
       >
         <RadioButton value={planId} />
       </RadioGroup>
@@ -173,7 +174,7 @@ export default function GetMore() {
           onClick={handleGetStarted}
           className="min-w-30 bg-ws-primary-900 text-ws-base-white hover:bg-ws-primary-900-hover focus:bg-ws-primary-900-hover active:bg-ws-primary-900-hover"
         >
-          Let's Get Started
+          Let's get started
         </Button>
       </div>
     </div>

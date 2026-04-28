@@ -11,16 +11,6 @@ export type BadgeColors =
   | "error"
   | "warning"
   | "success"
-  | "slate"
-  | "sky"
-  | "blue"
-  | "indigo"
-  | "purple"
-  | "pink"
-  | "orange"
-  | "gray-blue"
-  | "blue-light"
-  | "cyan";
 
 export type FlagTypes =
   | "AD"

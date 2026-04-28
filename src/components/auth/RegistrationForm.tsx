@@ -160,7 +160,7 @@ export function RegistrationForm() {
           messageImg: checkmarkIcon,
           title: "Account created successfully!",
           subtitle: "Welcome aboard! Start your success journey with Lafayette Square Institute®",
-          buttonText: "Let's Get Started",
+          buttonText: "Let's get started",
           buttonPath: "/dashboard",
           user,
           tokens,
@@ -350,9 +350,10 @@ export function RegistrationForm() {
                 <Select
                   label="Select Your Industry"
                   isRequired
-                  className="w-full flex items-start"
+                  className="w-full flex items-start text-ws-base-black"
                   size="sm"
                   placeholder="Select Option"
+                  //supportingTextColor="text-ws-base-black"
                   items={industries.map(i => ({
                     id: i.industry_code, // Changed from i.id.toString()
                     label: i.industry_name,
@@ -384,7 +385,7 @@ export function RegistrationForm() {
                 </Select>
               </InputGroup>
               {isLoadingIndustries && (
-                <p className="text-sm text-gray-600 mt-1.5">Loading industries...</p>
+                <p className="text-sm text-ws-gray-600 mt-1.5">Loading industries...</p>
               )}
             </div>
 

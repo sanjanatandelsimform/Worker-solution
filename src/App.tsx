@@ -29,7 +29,7 @@ function App() {
 
   return (
     <AuthErrorBoundary>
-      <div className="min-h-screen bg-gray-50">
+      <div className="min-h-screen bg-ws-gray-50">
         <Routes>
           {/* Public routes - only accessible when NOT authenticated */}
           <Route

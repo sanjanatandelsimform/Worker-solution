@@ -13,7 +13,7 @@ export default function CompensationTab({ onNext, onSuccess }: CompensationTabPr
   );
 
   if (!compensationSection) {
-    return <div className="text-red-600">Compensation section not found in question data</div>;
+    return <div className="text-ws-error-600">Compensation section not found in question data</div>;
   }
 
   return (

@@ -40,13 +40,13 @@ function RankingItem({ id, label }: RankingItemProps) {
       style={style}
       {...attributes}
       {...listeners}
-      className="flex items-center gap-3 bg-white px-4 py-3 cursor-move hover:bg-gray-50 transition-colors"
+      className="flex items-center gap-3 bg-white px-4 py-3 cursor-move hover:bg-ws-gray-50 transition-colors"
     >
       <div className="flex flex-col gap-0.5">
-        <div className="h-0.5 w-4 bg-gray-400" />
-        <div className="h-0.5 w-4 bg-gray-400" />
+        <div className="h-0.5 w-4 bg-ws-gray-400" />
+        <div className="h-0.5 w-4 bg-ws-gray-400" />
       </div>
-      <span className="flex-1 text-base font-normal text-gray-900">{label}</span>
+      <span className="flex-1 text-base font-normal text-ws-gray-900">{label}</span>
     </div>
   );
 }
@@ -213,7 +213,7 @@ export function RankingList({
           {displayOrder}. {label}
         </Label>
         {/* Drag hint */}
-        <div className="flex items-center gap-1.5 text-sm text-gray-500">
+        <div className="flex items-center gap-1.5 text-sm text-ws-gray-500">
           <span>[You can drag and drop to reorder your selections.]</span>
         </div>
       </div>
@@ -226,7 +226,7 @@ export function RankingList({
         {displayOrder}. {label}
       </Label>
       {/* Drag hint */}
-      <div className="flex items-center gap-1.5 text-sm text-gray-500">
+      <div className="flex items-center gap-1.5 text-sm text-ws-gray-500">
         <span>[ You can drag and drop to reorder your selections.]</span>
       </div>
       <DndContext sensors={sensors} collisionDetection={closestCenter} onDragEnd={handleDragEnd}>
