@@ -8,6 +8,8 @@
 
 import { describe, it, expect, vi, beforeEach } from "vitest";
 import { renderHook, act } from "@testing-library/react";
+import { useFinchConnect } from "@/hooks/useFinchConnect";
+import * as finchApi from "@/services/api/finchApi";
 
 // ── Mock navigate ──────────────────────────────────────────────────────────
 const mockNavigate = vi.fn();
@@ -41,10 +43,6 @@ vi.mock("@/services/api/finchApi", () => ({
   getFinchSessionId: vi.fn(),
   exchangeFinchCode: vi.fn(),
 }));
-
-// ── Dynamic imports after mocks ────────────────────────────────────────────
-const { useFinchConnect } = await import("@/hooks/useFinchConnect");
-const finchApi = await import("@/services/api/finchApi");
 
 // ── Helpers ────────────────────────────────────────────────────────────────
 

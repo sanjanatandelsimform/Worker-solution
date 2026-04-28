@@ -11,6 +11,7 @@ import { Provider } from "react-redux";
 import { MemoryRouter } from "react-router-dom";
 import { createTestStore } from "../test-utils";
 import type { WorkforceApiResponse } from "@/types/workforceTypes";
+import WorkforcePage from "@/pages/workforce/WorkforcePage";
 
 // ── Asset mocks ──────────────────────────────────────────────────────────────
 vi.mock("@/assets/employees-reported.jpg", () => ({ default: "employees-reported.jpg" }));
@@ -93,8 +94,6 @@ vi.mock("@/hooks/useWorkforceCompensationConfig", () => ({
     salaryChartData: [],
   }),
 }));
-
-const { default: WorkforcePage } = await import("@/pages/workforce/WorkforcePage");
 
 // ── Mock workforce API data ──────────────────────────────────────────────────
 const mockWorkforceData: WorkforceApiResponse = {

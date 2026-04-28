@@ -9,6 +9,7 @@
 import { describe, it, expect, vi, beforeEach } from "vitest";
 import { renderHook } from "@testing-library/react";
 import type { Compensation } from "@/types/workforceTypes";
+import { useWorkforceCompensationConfig } from "@/hooks/useWorkforceCompensationConfig";
 
 // ── Shared mutable mock state ──────────────────────────────────────────────
 
@@ -17,10 +18,6 @@ let mockStoreState: object = { workforce: { data: null } };
 vi.mock("@/store/hooks", () => ({
   useAppSelector: (selector: (state: object) => unknown) => selector(mockStoreState),
 }));
-
-// ── Dynamic import after mocks ─────────────────────────────────────────────
-
-const { useWorkforceCompensationConfig } = await import("@/hooks/useWorkforceCompensationConfig");
 
 // ── Helpers ────────────────────────────────────────────────────────────────
 
