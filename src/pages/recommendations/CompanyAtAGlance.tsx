@@ -217,8 +217,8 @@ export default function CompanyAtAGlance({
               }}
             >
               <span className="flex items-center gap-1">
-              Explore salaries, benefits, and more in the Workforce tab
-              <ArrowRight className="size-5" />
+                Explore salaries, benefits, and more in the Workforce tab
+                <ArrowRight className="size-5" />
               </span>
             </Link>
           </p>

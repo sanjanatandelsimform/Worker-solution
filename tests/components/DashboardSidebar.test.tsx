@@ -2,7 +2,7 @@
  * DashboardSidebar render tests
  */
 import { describe, it, expect, vi } from "vitest";
-import { render, screen, fireEvent } from "@testing-library/react";
+import { render, screen } from "@testing-library/react";
 import { MemoryRouter } from "react-router-dom";
 import { Provider } from "react-redux";
 import { configureStore } from "@reduxjs/toolkit";
@@ -22,7 +22,13 @@ vi.mock("@/services/api/authApi", () => ({
 
 vi.mock("@/hooks/useModalConfig", () => ({
   useModalConfig: () => ({
-    logoutModal: { title: "Logout", description: "Are you sure?", icon: "", primaryLabel: "Yes", secondaryLabel: "No" },
+    logoutModal: {
+      title: "Logout",
+      description: "Are you sure?",
+      icon: "",
+      primaryLabel: "Yes",
+      secondaryLabel: "No",
+    },
   }),
 }));
 
@@ -89,7 +95,7 @@ function renderSidebar(props = {}) {
       <MemoryRouter>
         <DashboardSidebar {...props} />
       </MemoryRouter>
-    </Provider>,
+    </Provider>
   );
 }
 

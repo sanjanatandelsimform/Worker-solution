@@ -32,7 +32,9 @@ describe("registrationSchema", () => {
   });
 
   it("fails with mismatched passwords", () => {
-    expect(registrationSchema.safeParse({ ...validReg(), confirmPassword: "Wrong1!" }).success).toBe(false);
+    expect(
+      registrationSchema.safeParse({ ...validReg(), confirmPassword: "Wrong1!" }).success
+    ).toBe(false);
   });
 
   it("fails with invalid zipCode", () => {
@@ -40,19 +42,31 @@ describe("registrationSchema", () => {
   });
 
   it("fails with invalid email", () => {
-    expect(registrationSchema.safeParse({ ...validReg(), businessEmail: "notanemail" }).success).toBe(false);
+    expect(
+      registrationSchema.safeParse({ ...validReg(), businessEmail: "notanemail" }).success
+    ).toBe(false);
   });
 
   it("fails with weak password (no uppercase)", () => {
-    expect(registrationSchema.safeParse({ ...validReg(), password: "abcdef1!", confirmPassword: "abcdef1!" }).success).toBe(false);
+    expect(
+      registrationSchema.safeParse({
+        ...validReg(),
+        password: "abcdef1!",
+        confirmPassword: "abcdef1!",
+      }).success
+    ).toBe(false);
   });
 
   it("fails with invalid phone", () => {
-    expect(registrationSchema.safeParse({ ...validReg(), businessPhone: "123" }).success).toBe(false);
+    expect(registrationSchema.safeParse({ ...validReg(), businessPhone: "123" }).success).toBe(
+      false
+    );
   });
 
   it("fails with long legalBusinessName", () => {
-    expect(registrationSchema.safeParse({ ...validReg(), legalBusinessName: "A".repeat(51) }).success).toBe(false);
+    expect(
+      registrationSchema.safeParse({ ...validReg(), legalBusinessName: "A".repeat(51) }).success
+    ).toBe(false);
   });
 });
 
@@ -82,10 +96,15 @@ describe("forgotPasswordSchema", () => {
 
 describe("resetPasswordSchema", () => {
   it("passes valid", () => {
-    expect(resetPasswordSchema.safeParse({ newPassword: "Abcdef1!", confirmPassword: "Abcdef1!" }).success).toBe(true);
+    expect(
+      resetPasswordSchema.safeParse({ newPassword: "Abcdef1!", confirmPassword: "Abcdef1!" })
+        .success
+    ).toBe(true);
   });
 
   it("fails mismatch", () => {
-    expect(resetPasswordSchema.safeParse({ newPassword: "Abcdef1!", confirmPassword: "Xyz" }).success).toBe(false);
+    expect(
+      resetPasswordSchema.safeParse({ newPassword: "Abcdef1!", confirmPassword: "Xyz" }).success
+    ).toBe(false);
   });
 });

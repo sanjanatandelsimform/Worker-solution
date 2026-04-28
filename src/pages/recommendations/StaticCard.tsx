@@ -39,7 +39,10 @@ export default function StaticCard({
 }: Readonly<StaticCardProps>) {
   return (
     <div
-      className={cx(`bg-ws-base-white w-full ring ring-ws-border-secondary rounded-xl py-5 px-6 relative`, classess)}
+      className={cx(
+        `bg-ws-base-white w-full ring ring-ws-border-secondary rounded-xl py-5 px-6 relative`,
+        classess
+      )}
     >
       <div className="flex items-start justify-between">
         <p

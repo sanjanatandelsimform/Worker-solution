@@ -392,15 +392,22 @@ export const DashboardPage = () => {
                     </div>
                     <div className="flex-1">
                       <p className="text-ws-text-tertiary text-base">
-                        Finch handles the connection for you, syncing all your data automatically so you get richer insights and expanded dashboard views, without any extra work on your end.
+                        Finch handles the connection for you, syncing all your data automatically so
+                        you get richer insights and expanded dashboard views, without any extra work
+                        on your end.
                       </p>
                       <ul className="text-ws-text-tertiary text-base list-disc list-inside my-4">
                         <li>Results in as little as 3-5 minutes*</li>
                         <li>Custom workforce data and insights</li>
-                        <li>Additional dashboard views plus everything you receive in manual entry</li>
+                        <li>
+                          Additional dashboard views plus everything you receive in manual entry
+                        </li>
                       </ul>
                       <p className="text-ws-text-tertiary text-base">
-                        “Start with Finch" will open a secure popup window where you'll sign in to your payroll provider through Finch, a trusted third-party data connector. Your payroll and workforce data is securely transmitted to A2B to power the benefits and workforce analytics in your dashboard.
+                        “Start with Finch" will open a secure popup window where you'll sign in to
+                        your payroll provider through Finch, a trusted third-party data connector.
+                        Your payroll and workforce data is securely transmitted to A2B to power the
+                        benefits and workforce analytics in your dashboard.
                       </p>
                       <p className="text-xs text-ws-text-tertiary mt-4">
                         *Result loading time is payroll provider-specific
