@@ -13,13 +13,19 @@ import { Provider } from "react-redux";
 import { createTestStore } from "../test-utils";
 
 // ─── Hoisted mutable mock factories ──────────────────────────────────────────
-const { mockUseAssessmentStatus, mockUseFinchConnect, mockConnectWithFinch, mockClearFinchError } =
-  vi.hoisted(() => ({
-    mockUseAssessmentStatus: vi.fn(),
-    mockUseFinchConnect: vi.fn(),
-    mockConnectWithFinch: vi.fn(),
-    mockClearFinchError: vi.fn(),
-  }));
+const {
+  mockUseAssessmentStatus,
+  mockUseFinchConnect,
+  mockUseDashboardStatusPolling,
+  mockConnectWithFinch,
+  mockClearFinchError,
+} = vi.hoisted(() => ({
+  mockUseAssessmentStatus: vi.fn(),
+  mockUseFinchConnect: vi.fn(),
+  mockUseDashboardStatusPolling: vi.fn(),
+  mockConnectWithFinch: vi.fn(),
+  mockClearFinchError: vi.fn(),
+}));
 
 // ─── Hook mocks ───────────────────────────────────────────────────────────────
 vi.mock("@/hooks/useAssessmentStatus", () => ({
@@ -28,6 +34,9 @@ vi.mock("@/hooks/useAssessmentStatus", () => ({
 
 vi.mock("@/hooks/useFinchConnect", () => ({
   useFinchConnect: () => mockUseFinchConnect(),
+}));
+vi.mock("@/hooks/useDashboardStatusPolling", () => ({
+  useDashboardStatusPolling: (...args: unknown[]) => mockUseDashboardStatusPolling(...args),
 }));
 vi.mock("@/hooks/useModalConfig", () => ({
   useModalConfig: vi.fn(() => ({ title: "", subtitle: "", buttons: [] })),
@@ -197,6 +206,16 @@ const DEFAULT_FINCH_CONNECT = {
   clearError: mockClearFinchError,
 };
 
+const DEFAULT_DASHBOARD_STATUS_POLLING = {
+  status: null,
+  isLoading: false,
+  error: null,
+  isPolling: false,
+  start: vi.fn(),
+  stop: vi.fn(),
+  reset: vi.fn(),
+};
+
 const COMPLETED_ASSESSMENT = {
   data: { status: "completed", sections: {} },
   assessmentType: "manual",
@@ -231,6 +250,46 @@ describe("DashboardPage", () => {
     vi.clearAllMocks();
     mockUseAssessmentStatus.mockReturnValue({ ...DEFAULT_ASSESSMENT_STATUS });
     mockUseFinchConnect.mockReturnValue({ ...DEFAULT_FINCH_CONNECT });
+    mockUseDashboardStatusPolling.mockReturnValue({ ...DEFAULT_DASHBOARD_STATUS_POLLING });
+  });
+
+  describe("Dashboard status polling trigger", () => {
+    it("enables dashboard status polling when isConnected is true", () => {
+      mockUseAssessmentStatus.mockReturnValue({
+        ...DEFAULT_ASSESSMENT_STATUS,
+        isConnected: true,
+      });
+
+      renderDashboard();
+
+      expect(mockUseDashboardStatusPolling).toHaveBeenCalledWith({ enabled: true });
+    });
+
+    it("enables dashboard status polling when assessment status is completed", () => {
+      mockUseAssessmentStatus.mockReturnValue({
+        ...DEFAULT_ASSESSMENT_STATUS,
+        assessmentData: { ...COMPLETED_ASSESSMENT },
+      });
+
+      renderDashboard();
+
+      expect(mockUseDashboardStatusPolling).toHaveBeenCalledWith({ enabled: true });
+    });
+
+    it("disables dashboard status polling when not connected and assessment is not completed", () => {
+      mockUseAssessmentStatus.mockReturnValue({
+        ...DEFAULT_ASSESSMENT_STATUS,
+        isConnected: false,
+        assessmentData: {
+          data: { status: "in_progress", sections: {} },
+          assessmentType: "manual",
+        },
+      });
+
+      renderDashboard();
+
+      expect(mockUseDashboardStatusPolling).toHaveBeenCalledWith({ enabled: false });
+    });
   });
 
   // ── Loading States ──────────────────────────────────────────────────────────
@@ -283,9 +342,7 @@ describe("DashboardPage", () => {
 
     it("shows email verification description text", () => {
       renderDashboard({ emailVerify: false });
-      expect(
-        screen.getByText(/Verify your email to unlock all A2B features/i)
-      ).toBeInTheDocument();
+      expect(screen.getByText(/Verify your email to unlock all A2B features/i)).toBeInTheDocument();
     });
 
     it("shows generic overview paragraph when unverified", () => {

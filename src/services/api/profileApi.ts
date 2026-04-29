@@ -144,12 +144,9 @@ export const updateEmail = async (payload: EmailUpdatePayload): Promise<ProfileA
         },
       });
 
-      console.log("API Response:", response.data);
-
       // Return the actual response data, not undefined variable
       return response.data;
     } catch (error) {
-      console.log("API Error:", error);
       const profileError = getErrorMessage(error);
 
       // Handle 409 Conflict for duplicate email

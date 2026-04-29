@@ -38,7 +38,6 @@ export const fetchUserById = createAsyncThunk<
           parsedUserDetail.auth.user.emailVerify = userData.emailVerify;
           parsedUserDetail.auth.user.updatedAt = userData.updatedAt;
           localStorage.setItem("userDetail", JSON.stringify(parsedUserDetail));
-          console.log("Updated localStorage with emailVerify:", userData.emailVerify);
         }
       } catch (error) {
         console.error("Failed to update localStorage:", error);
