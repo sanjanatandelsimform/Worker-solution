@@ -54,7 +54,6 @@ export const BaseModalWithIcon = ({
 }: BaseModalWithIconProps) => {
   const backgroundClass = backgroundPattern === "success" ? " " : "background-pattern-unsuccess";
 
-  console.log(messageImg, "messageImg");
   return (
     <Modal isOpen={isOpen} onOpenChange={onClose} size={size}>
       <ModalContent className={backgroundClass}>

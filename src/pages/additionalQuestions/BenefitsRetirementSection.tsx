@@ -187,6 +187,9 @@ export default function BenefitsRetirementSection({
                 size="md"
                 placeholder="Enter amount"
                 value={healthPremiumMonthly}
+                onWheel={event => {
+                  (event.target as HTMLInputElement).blur();
+                }}
                 onChange={value => {
                   onHealthPremiumMonthlyChange(value);
                   onClearFieldError(question.id);
@@ -228,6 +231,9 @@ export default function BenefitsRetirementSection({
                     size="md"
                     placeholder="e.g. 3"
                     value={retirementMatchPercentage}
+                    onWheel={event => {
+                      (event.target as HTMLInputElement).blur();
+                    }}
                     onChange={value => {
                       onRetirementMatchPercentageChange(value);
                       onClearFieldError("retirementMatchPercentage");

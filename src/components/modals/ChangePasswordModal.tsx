@@ -146,7 +146,7 @@ export const ChangePasswordModal = ({ isOpen, onClose }: ChangePasswordModalProp
       setShowError(true);
       // Parse error for attempts remaining
       if (typeof error === "string" && error.includes("attempts remaining")) {
-        const match = error.match(/(\d+)\s+attempts? remaining/);
+        const match = error.match(/(\d+)\s{1,10}attempts? remaining/);
         if (match) {
           setAttemptsRemaining(parseInt(match[1]));
         }
@@ -295,7 +295,7 @@ export const ChangePasswordModal = ({ isOpen, onClose }: ChangePasswordModalProp
                   <Input
                     name="confirmPassword"
                     isRequired
-                    label="Confirm Password"
+                    label="Confirm New Password"
                     hint={confirmPasswordError}
                     placeholder="Confirm new password"
                     size="md"

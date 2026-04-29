@@ -1,0 +1,45 @@
+openapi: 3.0.3
+info:
+  title: Assessment Status Finch Connection Contract
+  version: 1.0.0
+  description: >-
+    Contract fragment documenting fields required to derive Finch connection state.
+paths:
+  /api/v1/assessment:
+    get:
+      summary: Get current assessment status
+      responses:
+        "200":
+          description: Assessment status payload
+          content:
+            application/json:
+              schema:
+                type: object
+                required:
+                  - success
+                properties:
+                  success:
+                    type: boolean
+                  data:
+                    type: object
+                    nullable: true
+                    required:
+                      - assessmentType
+                    properties:
+                      assessmentType:
+                        type: string
+                        nullable: true
+                        description: Finch is connected when value equals "finch"
+                      data:
+                        type: object
+                        nullable: true
+                        properties:
+                          status:
+                            type: string
+                            nullable: true
+                            description: Completion status for finch/manual assessment
+x-derived-rules:
+  finchConnection:
+    expression: assessment.data.assessmentType == "finch"
+    trueMeaning: Finch connected
+    falseMeaning: Finch not connected or assessment unavailable

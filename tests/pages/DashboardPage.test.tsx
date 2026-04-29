@@ -16,13 +16,13 @@ import { createTestStore } from "../test-utils";
 const {
   mockUseAssessmentStatus,
   mockUseFinchConnect,
-  mockUseFinchStatus,
+  mockUseDashboardStatusPolling,
   mockConnectWithFinch,
   mockClearFinchError,
 } = vi.hoisted(() => ({
   mockUseAssessmentStatus: vi.fn(),
   mockUseFinchConnect: vi.fn(),
-  mockUseFinchStatus: vi.fn(),
+  mockUseDashboardStatusPolling: vi.fn(),
   mockConnectWithFinch: vi.fn(),
   mockClearFinchError: vi.fn(),
 }));
@@ -35,11 +35,9 @@ vi.mock("@/hooks/useAssessmentStatus", () => ({
 vi.mock("@/hooks/useFinchConnect", () => ({
   useFinchConnect: () => mockUseFinchConnect(),
 }));
-
-vi.mock("@/hooks/useFinchStatus", () => ({
-  useFinchStatus: () => mockUseFinchStatus(),
+vi.mock("@/hooks/useDashboardStatusPolling", () => ({
+  useDashboardStatusPolling: (...args: unknown[]) => mockUseDashboardStatusPolling(...args),
 }));
-
 vi.mock("@/hooks/useModalConfig", () => ({
   useModalConfig: vi.fn(() => ({ title: "", subtitle: "", buttons: [] })),
 }));
@@ -193,6 +191,7 @@ const DEFAULT_ASSESSMENT_STATUS = {
   isLoading: false,
   error: null,
   assessmentData: null,
+  isConnected: false,
   isFinchCompleted: false,
   isFinchAssessmentIncomplete: false,
   sectionCompletion: { workforce: false, compensation: false, benefits: false, goals: false },
@@ -207,12 +206,14 @@ const DEFAULT_FINCH_CONNECT = {
   clearError: mockClearFinchError,
 };
 
-const DEFAULT_FINCH_STATUS = {
-  connectionStatus: null,
-  syncJobStatus: null,
-  isConnected: false,
+const DEFAULT_DASHBOARD_STATUS_POLLING = {
+  status: null,
   isLoading: false,
   error: null,
+  isPolling: false,
+  start: vi.fn(),
+  stop: vi.fn(),
+  reset: vi.fn(),
 };
 
 const COMPLETED_ASSESSMENT = {
@@ -249,7 +250,46 @@ describe("DashboardPage", () => {
     vi.clearAllMocks();
     mockUseAssessmentStatus.mockReturnValue({ ...DEFAULT_ASSESSMENT_STATUS });
     mockUseFinchConnect.mockReturnValue({ ...DEFAULT_FINCH_CONNECT });
-    mockUseFinchStatus.mockReturnValue({ ...DEFAULT_FINCH_STATUS });
+    mockUseDashboardStatusPolling.mockReturnValue({ ...DEFAULT_DASHBOARD_STATUS_POLLING });
+  });
+
+  describe("Dashboard status polling trigger", () => {
+    it("enables dashboard status polling when isConnected is true", () => {
+      mockUseAssessmentStatus.mockReturnValue({
+        ...DEFAULT_ASSESSMENT_STATUS,
+        isConnected: true,
+      });
+
+      renderDashboard();
+
+      expect(mockUseDashboardStatusPolling).toHaveBeenCalledWith({ enabled: true });
+    });
+
+    it("enables dashboard status polling when assessment status is completed", () => {
+      mockUseAssessmentStatus.mockReturnValue({
+        ...DEFAULT_ASSESSMENT_STATUS,
+        assessmentData: { ...COMPLETED_ASSESSMENT },
+      });
+
+      renderDashboard();
+
+      expect(mockUseDashboardStatusPolling).toHaveBeenCalledWith({ enabled: true });
+    });
+
+    it("disables dashboard status polling when not connected and assessment is not completed", () => {
+      mockUseAssessmentStatus.mockReturnValue({
+        ...DEFAULT_ASSESSMENT_STATUS,
+        isConnected: false,
+        assessmentData: {
+          data: { status: "in_progress", sections: {} },
+          assessmentType: "manual",
+        },
+      });
+
+      renderDashboard();
+
+      expect(mockUseDashboardStatusPolling).toHaveBeenCalledWith({ enabled: false });
+    });
   });
 
   // ── Loading States ──────────────────────────────────────────────────────────
@@ -532,13 +572,9 @@ describe("DashboardPage", () => {
   // ── Verified — Finch Connected ───────────────────────────────────────────────
   describe("Verified email, Finch connected", () => {
     beforeEach(() => {
-      mockUseFinchStatus.mockReturnValue({
-        ...DEFAULT_FINCH_STATUS,
-        isConnected: true,
-        connectionStatus: "connected",
-      });
       mockUseAssessmentStatus.mockReturnValue({
         ...DEFAULT_ASSESSMENT_STATUS,
+        isConnected: true,
         completionCount: 4,
         assessmentData: {
           data: { status: "completed", sections: {} },
@@ -607,13 +643,9 @@ describe("DashboardPage", () => {
   // ── Verified — Finch Connected + Assessment Incomplete ───────────────────────
   describe("Verified email, Finch connected but assessment incomplete", () => {
     beforeEach(() => {
-      mockUseFinchStatus.mockReturnValue({
-        ...DEFAULT_FINCH_STATUS,
-        isConnected: true,
-        connectionStatus: "connected",
-      });
       mockUseAssessmentStatus.mockReturnValue({
         ...DEFAULT_ASSESSMENT_STATUS,
+        isConnected: true,
         completionCount: 1,
         isFinchCompleted: false,
         isFinchAssessmentIncomplete: true,
@@ -650,13 +682,9 @@ describe("DashboardPage", () => {
   // ── Tab Switching ────────────────────────────────────────────────────────────
   describe("Tab switching (Finch connected)", () => {
     beforeEach(() => {
-      mockUseFinchStatus.mockReturnValue({
-        ...DEFAULT_FINCH_STATUS,
-        isConnected: true,
-        connectionStatus: "connected",
-      });
       mockUseAssessmentStatus.mockReturnValue({
         ...DEFAULT_ASSESSMENT_STATUS,
+        isConnected: true,
         completionCount: 4,
         assessmentData: {
           data: { status: "completed", sections: {} },
@@ -760,11 +788,7 @@ describe("DashboardPage", () => {
     });
 
     it("is true when isConnected even without completed assessment — tabs shown", () => {
-      mockUseFinchStatus.mockReturnValue({
-        ...DEFAULT_FINCH_STATUS,
-        isConnected: true,
-        connectionStatus: "connected",
-      });
+      mockUseAssessmentStatus.mockReturnValue({ ...DEFAULT_ASSESSMENT_STATUS, isConnected: true });
       renderDashboard();
       expect(screen.getByTestId("tabs")).toBeInTheDocument();
     });
