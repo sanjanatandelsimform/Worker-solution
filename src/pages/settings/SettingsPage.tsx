@@ -27,6 +27,7 @@ import { useModalConfig } from "@/hooks/useModalConfig";
 import { useAssessmentStatus } from "@/hooks/useAssessmentStatus";
 import { InputGroup } from "@/components/base/input/input-group";
 import { ProfileApiResponse } from "@/types/profileTypes";
+import { LoadingSpinner } from "@/components/common/LoadingSpinner";
 
 export const SettingsPage = () => {
   const dispatch = useAppDispatch();
@@ -60,6 +61,7 @@ export const SettingsPage = () => {
   const [resendError, setResendError] = useState<string | null>(null);
   const [retakeError, setRetakeError] = useState<string | null>(null);
   const [retakeLoading, setRetakeLoading] = useState(false);
+  const [isRedirecting, setIsRedirecting] = useState(false);
 
   // Sync local form state when userData changes in Redux (e.g., after profile update from modal)
   useEffect(() => {
@@ -248,6 +250,12 @@ export const SettingsPage = () => {
           </main>
         </div>
       </div>
+    );
+  }
+
+  if (isRedirecting) {
+    return (
+      <LoadingSpinner height={80} width={80} bgClass="bg-secondary" ariaLabel="oval-loading" />
     );
   }
 
@@ -532,9 +540,12 @@ export const SettingsPage = () => {
         isOpen={showSuccess}
         onClose={async () => {
           setShowSuccess(false);
+          setIsRedirecting(true);
+
           await dispatch(logoutThunk())
             .unwrap()
-            .catch(() => {});
+            .catch(() => { });
+          setIsRedirecting(false);
           navigate("/success", {
             state: {
               messageImg: checkmarkIcon,

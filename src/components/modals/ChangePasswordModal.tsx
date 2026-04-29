@@ -295,7 +295,7 @@ export const ChangePasswordModal = ({ isOpen, onClose }: ChangePasswordModalProp
                   <Input
                     name="confirmPassword"
                     isRequired
-                    label="Confirm Password"
+                    label="Confirm New Password"
                     hint={confirmPasswordError}
                     placeholder="Confirm new password"
                     size="md"

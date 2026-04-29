@@ -35,7 +35,7 @@ export const ChangePasswordSuccessModal = ({
       isOpen={isOpen}
       onClose={onClose}
       size="sm"
-      title="Your password has been changed."
+      title="Your Password Has Been Changed"
       subtitle="All set! Your password has been successfully updated."
       icon={<CheckCircle className="size-6 text-ws-success-600" />}
       // messageImg={checkmarkIcon}
