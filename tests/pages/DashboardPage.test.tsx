@@ -302,9 +302,7 @@ describe("DashboardPage", () => {
 
     it("shows email verification description text", () => {
       renderDashboard({ emailVerify: false });
-      expect(
-        screen.getByText(/Verify your email to unlock all A2B features/i)
-      ).toBeInTheDocument();
+      expect(screen.getByText(/Verify your email to unlock all A2B features/i)).toBeInTheDocument();
     });
 
     it("shows generic overview paragraph when unverified", () => {

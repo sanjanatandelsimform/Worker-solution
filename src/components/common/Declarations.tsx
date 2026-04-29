@@ -34,7 +34,7 @@ export default function Declarations({ className = "" }: Readonly<DeclarationsPr
           onClick={() => setIsTermsModalOpen(true)}
           className="text-xs text-ws-light-teal-850 underline p-0 m-0 h-5"
         >
-          Terms & Conditions
+          Terms of Use
         </Button>{" "}
         and{" "}
         <Button
@@ -43,7 +43,7 @@ export default function Declarations({ className = "" }: Readonly<DeclarationsPr
           onClick={() => setIsPrivacyModalOpen(true)}
           className="text-xs text-ws-light-teal-850 underline p-0 m-0 h-5"
         >
-          Privacy Policy
+          Privacy Notice
         </Button>
       </p>
       <TermsModal

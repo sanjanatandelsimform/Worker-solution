@@ -163,7 +163,7 @@ export const SignInForm = () => {
                   name="password"
                   label="Password"
                   hint={errors.password?.message}
-                  placeholder="Password"
+                  placeholder="Enter your password"
                   size="md"
                   type="password"
                   isInvalid={!!errors.password}
@@ -233,7 +233,7 @@ export const SignInForm = () => {
             </p>
             <Link
               to="/sign-up"
-              className="text-sm font-semibold text-ws-light-teal-850 hover:text-ws-light-teal-800"
+              className="text-sm font-semibold text-ws-light-teal-850 hover:text-ws-light-teal-850"
             >
               Sign up
             </Link>
