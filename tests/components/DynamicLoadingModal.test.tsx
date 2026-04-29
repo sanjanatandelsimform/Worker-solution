@@ -1,7 +1,8 @@
+import { describe, it, expect, vi } from "vitest";
 import { render, screen, act } from "@testing-library/react";
-import DynamicLoadingModal from "./DynamicLoadingModal";
+import DynamicLoadingModal from "../../src/components/dashboard/DynamicLoadingModal";
 
-jest.useFakeTimers();
+vi.useFakeTimers();
 
 describe("DynamicLoadingModal", () => {
   const labels = [
@@ -18,32 +19,32 @@ describe("DynamicLoadingModal", () => {
   it("renders and cycles through all carousel items", () => {
     render(<DynamicLoadingModal shouldShow={true} />);
     // Initial render
-    expect(screen.getByText("Did you know?"));
-    expect(screen.getByText("Loading..."));
-    expect(screen.getByText("Generating your custom dashboard."));
-    expect(screen.getByText(labels[0]));
-    expect(screen.getByText(notes[0]));
+    expect(screen.getByText("Did you know?")).toBeTruthy();
+    expect(screen.getByText("Loading...")).toBeTruthy();
+    expect(screen.getByText("Generating your custom dashboard.")).toBeTruthy();
+    expect(screen.getByText(labels[0])).toBeTruthy();
+    expect(screen.getByText(notes[0])).toBeTruthy();
 
     // Cycle to second item
     act(() => {
-      jest.advanceTimersByTime(7000);
+      vi.advanceTimersByTime(7000);
     });
-    expect(screen.getByText(labels[1])).toBeInTheDocument();
-    expect(screen.getByText(notes[1])).toBeInTheDocument();
+    expect(screen.getByText(labels[1])).toBeTruthy();
+    expect(screen.getByText(notes[1])).toBeTruthy();
 
     // Cycle to third item
     act(() => {
-      jest.advanceTimersByTime(7000);
+      vi.advanceTimersByTime(7000);
     });
-    expect(screen.getByText(labels[2])).toBeInTheDocument();
-    expect(screen.getByText(notes[2])).toBeInTheDocument();
+    expect(screen.getByText(labels[2])).toBeTruthy();
+    expect(screen.getByText(notes[2])).toBeTruthy();
 
     // Cycle back to first item
     act(() => {
-      jest.advanceTimersByTime(7000);
+      vi.advanceTimersByTime(7000);
     });
-    expect(screen.getByText(labels[0])).toBeInTheDocument();
-    expect(screen.getByText(notes[0])).toBeInTheDocument();
+    expect(screen.getByText(labels[0])).toBeTruthy();
+    expect(screen.getByText(notes[0])).toBeTruthy();
   });
 
   it("does not render when shouldShow is false", () => {
