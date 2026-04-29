@@ -27,7 +27,7 @@ export interface BaseModalWithIconProps {
   contentDescription?: string;
   contentNote?: string;
   icon?: ReactNode;
-  buttons: BaseModalWithIconButton[];
+  buttons?: BaseModalWithIconButton[];
   showCloseButton?: boolean;
   paddingBottom?: string;
   backgroundPattern?: "success" | "unsuccess";
@@ -96,14 +96,15 @@ export const ProgressLoadingModal = ({
             <h3 className="text-lg font-medium text-ws-navy-950 mb-2">{contentTitle}</h3>
             <p className="text-base font-normal text-ws-navy-900">{contentDescription}</p>
             <p className="text-sm font-normal text-ws-text-tertiary mt-4">
-              <span className="text-ws-text-primary">Source:</span> {contentNote}
+              {/* <span className="text-ws-text-primary">Source:</span> */}
+              {contentNote}
             </p>
           </div>
         </ModalContent>
 
         {/* Modal Footer with Buttons */}
         <ModalFooter className="flex items-start gap-3 border-0 pb-6 px-6 pt-0">
-          {buttons.map(button => (
+          {buttons?.map(button => (
             <Button
               key={button.text}
               type="button"
