@@ -386,6 +386,8 @@ export default function BenchmarkFinchPage() {
     id: w.zipcode,
   }));
 
+  console.log(setSelectedGraphType, "selectedGraphType in finch page");
+
   const activeWageZip = selectedWageZip ?? areaMedianWage?.[0]?.zipcode ?? null;
 
   const selectedWageState =
