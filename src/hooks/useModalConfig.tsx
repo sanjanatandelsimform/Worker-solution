@@ -87,9 +87,9 @@ export const useModalConfig = (
       },
       emailUpdateSuccess: {
         size: "sm",
-        title: "Your Information Has Been Updated",
+        title: "Your Email Has Been Updated",
         subtitle:
-          "We've sent a verification link to your new address. To protect your privacy, you will be logged out. Please verify your email to log back in.",
+          "We’ve sent a verification link to your new address. To protect your privacy, you will be logged out. Please verify your email to log back in.",
         icon: <CheckCircle className="size-6 text-ws-success-600" />,
         backgroundPattern: "success",
         buttons: [],
