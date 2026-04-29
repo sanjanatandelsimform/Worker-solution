@@ -66,7 +66,6 @@ export const getDashboardStatus = async (): Promise<DashboardStatusResponse> => 
     const token = getAuthToken();
 
     if (!token) {
-      console.warn("[getDashboardStatus] No auth token found. Aborting API call.");
       throw new Error("Authentication required. Please log in again.");
     }
 
