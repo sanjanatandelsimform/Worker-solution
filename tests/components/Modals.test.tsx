@@ -74,7 +74,7 @@ describe("ChangePasswordModal", () => {
     render(wrap(<ChangePasswordModal isOpen={true} onClose={vi.fn()} />));
     expect(screen.getByText("Current Password")).toBeInTheDocument();
     expect(screen.getByText("New Password")).toBeInTheDocument();
-    expect(screen.getByText("Confirm Password")).toBeInTheDocument();
+    expect(screen.getByText("Confirm New Password")).toBeInTheDocument();
   });
 
   it("renders Update button", () => {
