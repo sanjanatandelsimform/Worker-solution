@@ -3,7 +3,7 @@ import { useLocation, useNavigate } from "react-router-dom";
 import { useAppDispatch } from "@/store/hooks";
 import { logout, setTokens, setUser } from "@/store/slices/authSlice";
 import { Button } from "@/components/base/buttons/button";
-import insightHero from "@/assets/finch-checkmark.svg";
+import insightHero from "@/assets/success-check.svg";
 import type { UserAccount } from "@/types/auth";
 import siteLogo from "@/assets/logo.svg";
 
@@ -105,10 +105,10 @@ export const SuccessPage: React.FC<SuccessCardProps> = ({
               <h2 className="w-full text-ws-text-primary text-4xl font-medium">
                 {title || state.title || "Account created successfully!"}
               </h2>
-              <p className="max-w-md text-2xl font-normal leading-8 text-ws-text-tertiary mt-2">
+              <p className="max-w-lg text-2xl font-normal leading-8 text-ws-text-tertiary mt-2">
                 {descriptionText ||
                   state.subtitle ||
-                  "Welcome aboard! Start your success journey with BeneStats"}
+                  "Welcome aboard! Start your success journey with A2B by Lafayette Square Institute®"}
               </p>
             </div>
             {state.buttonText && (

@@ -28,3 +28,4 @@ export * from "./SavingIcon";
 export * from "./HeartIcon";
 export * from "./TabArrow";
 export * from "./TimerIcon";
+export * from "./TrashIcon";

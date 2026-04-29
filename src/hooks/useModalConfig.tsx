@@ -1,10 +1,13 @@
 import { useMemo } from "react";
 import { CheckCircle, AlertOctagon } from "@untitledui/icons";
-import checkmarkIcon from "@/assets/finch-checkmark.svg";
+//import checkmarkIcon from "@/assets/success-check.svg";
 import alertIcon from "@/assets/alert-icon.svg";
+//import trashIcon from "@/assets/trash.svg";
 import type { BaseModalWithIconProps } from "@/components/modals/BaseModalWithIcon";
-import { CheckLineIcon } from "@/assets/icons/CheckLineIcon";
+//import { CheckLineIcon } from "@/assets/icons/CheckLineIcon";
 import { LandingProgress } from "@/assets/icons/LoadingProgress";
+import { TrashIcon } from "@/assets/icons/TrashIcon";
+//import { ArrowRight } from "@/assets/icons/ArrowRight";
 
 type ModalType =
   | "updateComplete"
@@ -41,7 +44,7 @@ export const useModalConfig = (
         size: "sm",
         title: "Update Complete",
         subtitle: "All set! Your changes have been saved.",
-        icon: <CheckCircle className="size-6" />,
+        icon: <CheckCircle className="size-6 text-ws-success-600" />,
         //messageImg: checkmarkIcon,
         backgroundPattern: "success",
         buttons: [
@@ -56,7 +59,7 @@ export const useModalConfig = (
         size: "sm",
         title: "Your Information Has Been Updated.",
         subtitle: "All set! Your name has been updated.",
-        icon: <CheckCircle className="size-6" />,
+        icon: <CheckCircle className="size-6 text-ws-success-600" />,
         backgroundPattern: "success",
         buttons: [
           {
@@ -71,7 +74,7 @@ export const useModalConfig = (
         title: "Your information has been updated",
         subtitle:
           "All set! Your email has been updated. We’ve sent a verification link to your new address. Please verify your email.",
-        icon: <CheckCircle className="size-6" />,
+        icon: <CheckCircle className="size-6 text-ws-success-600" />,
         //messageImg: checkmarkIcon,
         backgroundPattern: "success",
         buttons: [
@@ -87,7 +90,7 @@ export const useModalConfig = (
         title: "Your Information Has Been Updated",
         subtitle:
           "We've sent a verification link to your new address. To protect your privacy, you will be logged out. Please verify your email to log back in.",
-        icon: <CheckCircle className="size-6" />,
+        icon: <CheckCircle className="size-6 text-ws-success-600" />,
         backgroundPattern: "success",
         buttons: [],
       },
@@ -97,7 +100,7 @@ export const useModalConfig = (
         subtitle:
           "Retaking the assessment will remove all data from your dashboard and you will need to retake the assessment form. This action can't be reversed.",
         subtitleOne: "If you're certain this is what you want, confirm below to proceed.",
-        icon: <AlertOctagon className="size-6" />,
+        icon: <TrashIcon className="size-6" />,
         messageImg: alertIcon,
         backgroundPattern: "unsuccess",
         buttons: [
@@ -119,10 +122,10 @@ export const useModalConfig = (
         size: "sm",
         title: "Confirm Account Deletion",
         subtitle:
-          "Deleting your account will permanently erase your profile and all associated data. This action can't be reversed.",
-        subtitleOne: "If you're certain this is what you want, confirm below to proceed.",
-        icon: <AlertOctagon className="size-6" />,
-        messageImg: alertIcon,
+          "Deleting your account will permanently erase your profile and all associated data. This action can’t be reversed.",
+        subtitleOne: "If you’re certain this is what you want, confirm below to proceed.",
+        icon: <TrashIcon className="size-6" />,
+        //messageImg: trashIcon,
         backgroundPattern: "unsuccess",
         buttons: [
           {
@@ -143,8 +146,8 @@ export const useModalConfig = (
         subtitle: `We've sent a verification link to your email, ${
           config.additionalData?.email as string
         }. Verify your email to continue.`,
-        icon: <CheckLineIcon className="size-6" />,
-        messageImg: checkmarkIcon,
+        //icon: <CheckLineIcon className="size-6" />,
+        //messageImg: checkmarkIcon,
         backgroundPattern: "success",
         buttons: [
           {
@@ -173,8 +176,8 @@ export const useModalConfig = (
       logoutConfirmation: {
         size: "sm",
         title: "Are you sure you want to log out?",
-        icon: <AlertOctagon className="size-6" />,
-        messageImg: alertIcon,
+        icon: <TrashIcon className="size-6" />,
+        //messageImg: alertIcon,
         backgroundPattern: "unsuccess",
         buttons: [
           {
@@ -248,8 +251,8 @@ export const useModalConfig = (
       emailVerified: {
         size: "sm",
         title: "Your email has been verified!",
-        subtitle: "Welcome aboard! Start your success journey with BeneStats.",
-        icon: <CheckCircle className="size-6" />,
+        subtitle: "Welcome aboard! Start your success journey with A2B.",
+        icon: <CheckCircle className="size-6 text-ws-success-600" />,
         //messageImg: checkmarkIcon,
         backgroundPattern: "success",
         buttons: [
@@ -261,7 +264,7 @@ export const useModalConfig = (
         ],
       },
       updateDeclarationTerms: {
-        size: "xl",
+        size: "md",
         title: "Terms and Conditions",
         subtitle: "Last updated: [April 23, 2026]",
         //messageImg: checkmarkIcon,
@@ -275,7 +278,7 @@ export const useModalConfig = (
         ],
       },
       updateDeclarationPrivacy: {
-        size: "xl",
+        size: "md",
         title: "Privacy Policy",
         subtitle: "Last updated: [April 23, 2026]",
         //messageImg: checkmarkIcon,
@@ -289,7 +292,7 @@ export const useModalConfig = (
         ],
       },
       loadingProgressModal: {
-        size: "xl",
+        size: "md",
         title: "Loading...",
         subtitle: "This won't take long.",
         contentTitle: "Please wait",

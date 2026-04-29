@@ -297,7 +297,7 @@ A user who has updated their email but hasn't received the verification email ne
 <BaseModalWithIcon
   title={dynamic value}
   subtitle={dynamic value}
-  icon={<CheckCircle className="size-6" />}
+  icon={<CheckCircle className="size-6 text-ws-success-600" />}
   messageImg={checkmarkIcon}
   backgroundPattern={dynamic value}
   buttons={[

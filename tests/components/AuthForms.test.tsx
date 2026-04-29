@@ -45,7 +45,7 @@ describe("ForgotPasswordForm", () => {
 describe("ResetPasswordForm", () => {
   it("renders heading", () => {
     render(wrap(<ResetPasswordForm />));
-    expect(screen.getByText("Reset Password")).toBeInTheDocument();
+    expect(screen.getByText("Reset password")).toBeInTheDocument();
   });
 
   it("renders password fields", () => {

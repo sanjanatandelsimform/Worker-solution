@@ -54,13 +54,20 @@ export const BaseModalWithIcon = ({
 }: BaseModalWithIconProps) => {
   const backgroundClass = backgroundPattern === "success" ? " " : "background-pattern-unsuccess";
 
+  console.log(messageImg, "messageImg");
   return (
     <Modal isOpen={isOpen} onOpenChange={onClose} size={size}>
       <ModalContent className={backgroundClass}>
         {/* Modal Header with Featured Icon and Close Button */}
         <ModalHeader className="relative flex flex-col items-start border-0 pb-0 pt-6 px-6">
           {/* Featured Icon */}
-          {icon && (
+          {icon ? (
+            <div
+              className={`flex items-center justify-center w-12 h-12 rounded-full ${backgroundPattern === "success" ? "bg-ws-success-100" : "bg-ws-error-100"}`}
+            >
+              {icon}
+            </div>
+          ) : (
             <img
               alt="Success checkmark"
               className="block max-w-12 w-full"
@@ -77,7 +84,7 @@ export const BaseModalWithIcon = ({
               aria-label="Close modal"
               className="absolute right-3 top-3 flex size-11 items-center justify-center overflow-clip p-2 rounded-lg"
             >
-              <X className="size-6 text-quaternary text-ws-gray-60" />
+              <X className="size-7 stroke-1 text-ws-gray-400" />
             </Button>
           )}
 
@@ -91,7 +98,7 @@ export const BaseModalWithIcon = ({
                 <p className="font-body text-sm font-normal leading-5 text-ws-text-tertiary">
                   {subtitle}
                 </p>
-                <p className="font-body text-sm font-normal leading-5 text-ws-text-tertiary">
+                <p className="font-body text-sm font-normal leading-5 text-ws-text-tertiary mt-2">
                   {subtitleOne}
                 </p>
               </>
@@ -114,13 +121,13 @@ export const BaseModalWithIcon = ({
         </ModalHeader>
 
         {/* Modal Footer with Buttons */}
-        <ModalFooter className="flex items-start gap-3 border-0 pb-6 px-6 pt-0">
+        <ModalFooter className="flex items-start gap-3 border-0 pb-6 px-6 pt-0 mt-4">
           {buttons.map(button => (
             <Button
               key={button.text}
               type="button"
               color={button.color || "primary"}
-              size="md"
+              size="xl"
               onClick={button.onClick}
               className={buttons.length === 1 ? "w-full" : "flex-1"}
               isDisabled={button.isDisabled}

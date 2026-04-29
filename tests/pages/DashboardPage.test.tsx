@@ -284,14 +284,14 @@ describe("DashboardPage", () => {
     it("shows email verification description text", () => {
       renderDashboard({ emailVerify: false });
       expect(
-        screen.getByText(/Verify your email to unlock all BeneStats features/i)
+        screen.getByText(/Verify your email to unlock all A2B features/i)
       ).toBeInTheDocument();
     });
 
     it("shows generic overview paragraph when unverified", () => {
       renderDashboard({ emailVerify: false });
       expect(
-        screen.getByText(/Here's an overview of your workforce, industry/i)
+        screen.getByText(/A2B provides an overview of your workforce, industry/i)
       ).toBeInTheDocument();
     });
 
@@ -331,7 +331,7 @@ describe("DashboardPage", () => {
     it("shows connect-payroll description paragraph", () => {
       renderDashboard();
       expect(
-        screen.getByText(/Connect your payroll to BeneStats with Finch or manually/i)
+        screen.getByText(/Connect your payroll to A2B with Finch or manually/i)
       ).toBeInTheDocument();
     });
 

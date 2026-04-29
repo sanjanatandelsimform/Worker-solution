@@ -254,7 +254,10 @@ export const DashboardPage = () => {
       {/* Main Content Area */}
       <div className="flex flex-1 flex-col overflow-hidden">
         {/* Main Content */}
-        <main ref={mainRef} className="flex-1 overflow-y-auto p-5 xl:p-10 xl:pl-2">
+        <main
+          ref={mainRef}
+          className="flex flex-1 flex-col justify-between overflow-y-auto p-5 xl:p-10 xl:pl-2"
+        >
           <div className="space-y-6"></div>
           <div className="w-full">
             <h2 className="text-4xl font-bold text-ws-text-primary">
@@ -266,8 +269,8 @@ export const DashboardPage = () => {
             </h2>
             {!emailVerify && (
               <p className="text-base font-normal text-ws-text-secondary mt-4">
-                Here's an overview of your workforce, industry, and some recommendations with
-                partners that can add more value to your benefits packages and employee support.
+                A2B provides an overview of your workforce, industry, and some recommended solutions
+                that may add more value to your benefits packages and employee support.
               </p>
             )}
             {emailVerify &&
@@ -275,21 +278,21 @@ export const DashboardPage = () => {
               assessmentData?.assessmentType === "manual" && (
                 <p className="text-base font-normal text-ws-text-primary mt-4">
                   Here's an overview of your workforce, industry, and some recommendations with
-                  partners that can add more value to your benefits packages and employee support.
+                  partners that may add more value to your benefits packages and employee support.
                 </p>
               )}
             {emailVerify && assessmentData?.assessmentType == "finch" && isConnected && (
               <p className="text-base font-normal text-ws-text-primary mt-4">
                 Here's an overview of your workforce, industry, and some recommendations with
-                partners that can add more value to your benefits packages and employee support.
+                partners that may add more value to your benefits packages and employee support.
               </p>
             )}
 
             {emailVerify && assessmentData?.data?.status !== "completed" && !isConnected && (
               <p className="text-base font-normal text-ws-text-primary mt-4">
-                Connect your payroll to BeneStats with Finch or manually answer a few questions to
-                receive an overview of your workforce, industry, and some recommendations with
-                partners that can add more value to your benefits packages and employee support.
+                Connect your payroll to A2B with Finch or manually answer a few questions to receive
+                an overview of your workforce, industry, and some recommendations with partners that
+                can add more value to your benefits packages and employee support.
               </p>
             )}
             {/* Error Message */}
@@ -331,9 +334,9 @@ export const DashboardPage = () => {
                 classes="bg-ws-light-teal-50 bg-ws-primary-50 border-ws-border-primary" // Custom styles for email verification card
                 title="Verify your email"
                 description={
-                  <div className="max-w-2xl text-ws-primary-900">
-                    Verify your email to unlock all BeneStats features and secure your account.
-                    Didn’t recieve an email? Click the button to resend
+                  <div className="max-w-auto text-ws-primary-900">
+                    Verify your email to unlock all A2B features and secure your account. Didn’t
+                    receive an email? Click the button to resend.
                   </div>
                 }
                 avatarIconSrc={emailIcon}
@@ -375,13 +378,12 @@ export const DashboardPage = () => {
               />
             )}
           </div>
-
           {completionCount === 0 &&
             emailVerify &&
             assessmentData?.data?.status !== "completed" &&
             !isConnected && (
               <div className="flex flex-col mt-6">
-                <div className="flex justify-between gap-4">
+                <div className="flex justify-between gap-4 flex-col xl:flex-row">
                   <div className="flex-1 py-6 px-7 border border-ws-border-primary rounded-xl flex flex-col">
                     <div className="flex items-center justify-between border-b border-ws-border-primary pb-4 mb-4">
                       <h2 className="flex items-center text-ws-text-primary text-2xl font-medium">
@@ -456,10 +458,10 @@ export const DashboardPage = () => {
                     </div>
                   </div>
                 </div>
-                <Declarations className="mt-15" />
               </div>
             )}
-          {!emailVerify && <Declarations className="mt-15" />}
+
+          {/* {!emailVerify && <Declarations />} */}
 
           {finchError && (
             <div className="mb-4">
@@ -547,6 +549,9 @@ export const DashboardPage = () => {
               </Tabs>
             </div>
           )}
+          <div className="mt-auto pt-6">
+            <Declarations />
+          </div>
         </main>
       </div>
 

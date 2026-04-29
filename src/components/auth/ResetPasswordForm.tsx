@@ -8,7 +8,7 @@ import { InputGroup } from "../base/input/input-group";
 import { AlertCircle } from "@untitledui/icons";
 import { resetPassword } from "@/services/api/authApi";
 import { resetPasswordSchema, type ResetPasswordFormData } from "@/services/validation/authSchemas";
-import checkmarkIcon from "@/assets/finch-checkmark.svg";
+import checkmarkIcon from "@/assets/success-check.svg";
 import siteLogo from "@/assets/logo.svg";
 import { SuccessModalWithLogo } from "../modals/SuccessModalWithLogo";
 import ErrorMessage from "../common/ErrorMessage";
@@ -65,7 +65,7 @@ export default function ResetPasswordForm() {
   return (
     <div className="flex min-h-screen items-center justify-center bg-ws-light-teal-50">
       <div className="flex w-2xl items-center justify-center rounded-xl border border-ws-border-primary bg-ws-base-white py-22">
-        <div className="flex w-full max-w-md flex-col items-center gap-8">
+        <div className="flex w-full max-w-sm flex-col items-center gap-8">
           {/* Header */}
           <div className="flex w-full flex-col items-center gap-6">
             {/* Logo */}
@@ -76,9 +76,9 @@ export default function ResetPasswordForm() {
             {/* Title and Description */}
             <div className="flex w-full flex-col items-center gap-3 text-center">
               <h2 className="w-full text-3xl font-semibold leading-9.5 text-ws-text-primary">
-                Reset Password
+                Reset password
               </h2>
-              <p className="w-full text-medium font-normal leading-6 text-ws-text-tertiary">
+              <p className="w-full text-base font-normal leading-6 text-ws-text-tertiary">
                 Please enter a new password below.
               </p>
             </div>
@@ -98,6 +98,7 @@ export default function ResetPasswordForm() {
                   placeholder="Password"
                   size="md"
                   type="password"
+                  isRequired
                   hint={errors.newPassword?.message}
                   isInvalid={!!errors.newPassword}
                   value={getValues("newPassword")}
@@ -107,6 +108,7 @@ export default function ResetPasswordForm() {
                     setValue("newPassword", sanitized);
                     trigger("newPassword");
                   }}
+                  showPasswordToggle={false}
                 />
               </InputGroup>
 
@@ -118,6 +120,7 @@ export default function ResetPasswordForm() {
                   placeholder="Confirm Password"
                   size="md"
                   type="password"
+                  isRequired
                   hint={errors.confirmPassword?.message}
                   isInvalid={!!errors.confirmPassword}
                   value={getValues("confirmPassword")}
@@ -127,6 +130,7 @@ export default function ResetPasswordForm() {
                     setValue("confirmPassword", sanitized);
                     trigger("confirmPassword");
                   }}
+                  showPasswordToggle={false}
                 />
               </InputGroup>
 
@@ -162,7 +166,7 @@ export default function ResetPasswordForm() {
             </p>
             <Link
               to="/sign-in"
-              className="text-sm font-normal text-ws-light-teal-850 hover:text-ws-light-teal-800"
+              className="text-sm font-semibold text-ws-light-teal-850 hover:text-ws-light-teal-800"
             >
               Sign in
             </Link>

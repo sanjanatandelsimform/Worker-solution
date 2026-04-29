@@ -1,6 +1,6 @@
 import { CheckCircle } from "@untitledui/icons";
 import { BaseModalWithIcon } from "./BaseModalWithIcon";
-import checkmarkIcon from "@/assets/finch-checkmark.svg";
+import checkmarkIcon from "@/assets/success-check.svg";
 
 interface UpdateCompletedModalProps {
   isOpen: boolean;
@@ -27,7 +27,7 @@ export const UpdateCompletedModal = ({
       size="sm"
       title="Update Complete"
       subtitle="All set! Your changes have been saved."
-      icon={<CheckCircle className="size-6" />}
+      icon={<CheckCircle className="size-6 text-ws-success-600" />}
       messageImg={checkmarkIcon}
       backgroundPattern="success"
       buttons={[

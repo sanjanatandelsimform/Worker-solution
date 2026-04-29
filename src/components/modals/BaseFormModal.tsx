@@ -55,7 +55,7 @@ export const BaseFormModal = ({
             {showCloseButton && (
               <div className="absolute -right-2 -top-2">
                 <Button
-                  iconTrailing={<X data-icon className="text-quaternary size-6" />}
+                  iconTrailing={<X className="size-7 stroke-1 text-ws-gray-400" />}
                   onClick={onClose}
                   color="link"
                 />
@@ -75,7 +75,7 @@ export const BaseFormModal = ({
                 key={button.text}
                 type={button.type || "button"}
                 color={button.color || "primary"}
-                size="md"
+                size="xl"
                 onClick={button.onClick}
                 className={button.className || (buttons.length === 1 ? "w-full" : "")}
                 isDisabled={button.isDisabled}
