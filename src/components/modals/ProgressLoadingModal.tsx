@@ -17,6 +17,16 @@ export interface BaseModalWithIconButton {
   isDisabled?: boolean;
 }
 
+type ModalWithCloseButton = {
+  onClose: () => void;
+  showCloseButton: true;
+};
+
+type ModalWithoutCloseButton = {
+  onClose?: never;
+  showCloseButton?: false;
+};
+
 export interface BaseModalWithIconProps {
   isOpen: boolean;
   onClose?: () => void;
@@ -33,6 +43,8 @@ export interface BaseModalWithIconProps {
   backgroundPattern?: "success" | "unsuccess";
 }
 
+type LoadingModalProps = BaseModalWithIconProps & (ModalWithoutCloseButton | ModalWithCloseButton);
+
 export const ProgressLoadingModal = ({
   isOpen,
   onClose,
@@ -47,7 +59,7 @@ export const ProgressLoadingModal = ({
   showCloseButton = true,
   paddingBottom = "h-3",
   backgroundPattern = "success",
-}: BaseModalWithIconProps) => {
+}: LoadingModalProps) => {
   const backgroundClass = backgroundPattern === "success" ? " " : "background-pattern-unsuccess";
 
   return (

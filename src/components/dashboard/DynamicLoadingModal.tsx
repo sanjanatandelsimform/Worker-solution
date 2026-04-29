@@ -41,7 +41,6 @@ const DynamicLoadingModal = ({ shouldShow }: { shouldShow: boolean }) => {
       subtitle="Generating your custom dashboard."
       contentNote={note}
       isOpen={shouldShow}
-      showCloseButton={false}
       icon={<LandingProgress className="size-3" />}
     />
   );
