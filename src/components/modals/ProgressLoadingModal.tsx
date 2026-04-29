@@ -19,7 +19,7 @@ export interface BaseModalWithIconButton {
 
 export interface BaseModalWithIconProps {
   isOpen: boolean;
-  onClose: () => void;
+  onClose?: () => void;
   size?: "sm" | "md" | "lg" | "xl" | "full";
   title: string;
   subtitle?: string;
