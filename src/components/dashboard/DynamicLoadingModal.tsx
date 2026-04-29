@@ -23,11 +23,11 @@ const DynamicLoadingModal = ({ shouldShow }: { shouldShow: boolean }) => {
 
   useEffect(() => {
     if (!shouldShow) return;
-    intervalRef.current = globalThis.setInterval(() => {
+    intervalRef.current = setInterval(() => {
       setCurrentIndex(prev => (prev + 1) % labels.length);
     }, 7000);
     return () => {
-      if (intervalRef.current !== null) globalThis.clearInterval(intervalRef.current);
+      if (intervalRef.current !== null) clearInterval(intervalRef.current);
     };
   }, [shouldShow]);
 
