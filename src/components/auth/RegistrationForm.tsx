@@ -123,7 +123,6 @@ export function RegistrationForm() {
       try {
         setIsLoadingIndustries(true);
         const data = await getIndustries();
-        console.log("Fetched industries:", data.data.industries);
 
         // Sort industries alphabetically by name
         const sortedIndustries = (data.data.industries || []).sort((a, b) =>

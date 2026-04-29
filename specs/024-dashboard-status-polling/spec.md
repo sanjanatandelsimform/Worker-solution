@@ -5,7 +5,17 @@
 **Status**: Draft  
 **Input**: User description: "API Integration - Dashboard Status API Polling with automatic retry based on suggestPollMs until allSettled is true"
 
-## User Scenarios & Testing *(mandatory)*
+## Clarifications
+
+### Session 2026-04-29
+
+- Q: Should polling pause when tab is hidden, or continue in background? → A: Always continue polling in background (no pause)
+- Q: How should the hook be triggered/controlled? → A: Trigger polling when `isConnected || assessmentData?.data?.status === "completed"`; allow manual control methods for explicit stop/start/reset
+- Q: Can `suggestPollMs` be larger than a few minutes (including hours)? → A: Yes. Treat backend milliseconds as authoritative and schedule the next poll without applying a max cap.
+- Q: What retry strategy should be used on failed status calls? → A: Retry up to 3 times with exponential backoff (1000ms, 2000ms, 4000ms), then stop polling and expose error state.
+- Q: How should rate limiting (HTTP 429) be handled? → A: Do not apply special rate-limit handling; continue normal polling schedule.
+
+## User Scenarios & Testing _(mandatory)_
 
 ### User Story 1 - Auto-Polling Dashboard Status (Priority: P1)
 
@@ -58,23 +68,27 @@ If a poll request fails due to transient network errors, the system should retry
 
 - What happens if `suggestPollMs` is 0 or negative? → System should use a safe minimum (e.g., 1000ms) to prevent rapid-fire requests.
 - What if the API returns `allSettled: true` on the first call? → Polling should never start (one initial call only, no continuous polling).
-- What if the page is in a hidden/backgrounded state (browser tab inactive)? → [NEEDS CLARIFICATION: Should polling pause when tab is hidden, or continue in background?]
+- What if the page is in a hidden/backgrounded state (browser tab inactive)? → Polling continues uninterrupted in the background (no pause when tab hidden).
 - What if a poll takes longer than `suggestPollMs` to complete? → System should use the interval from API response, not relative to request start time.
+- What if `suggestPollMs` is very large (e.g., hour-level milliseconds)? → System must honor the value as returned and schedule the next poll accordingly.
+- What if status API calls fail repeatedly? → System retries up to 3 consecutive times using exponential backoff (1000ms, 2000ms, 4000ms), then stops polling and sets error state.
+- What if status API returns HTTP 429? → No special throttle mode is applied; system continues with the normal polling cadence using the current interval.
 
-## Requirements *(mandatory)*
+## Requirements _(mandatory)_
 
 ### Functional Requirements
 
-- **FR-001**: System MUST call the dashboard status endpoint (`/api/v1/dashboard/status`) immediately when the dashboard mounts or when explicitly triggered by a workflow action
+- **FR-001**: System MUST call the dashboard status endpoint (`/api/v1/dashboard/status`) immediately when the condition `isConnected || assessmentData?.data?.status === "completed"` becomes true
 - **FR-002**: System MUST parse the `suggestPollMs` value from the API response and use it as the interval (in milliseconds) for the next poll
 - **FR-003**: System MUST continue polling at the specified interval until the API response contains `allSettled: true`
 - **FR-004**: System MUST stop polling immediately once `allSettled: true` is received and not make any further status calls
 - **FR-005**: System MUST reset the polling timer if the user refreshes the page, so the next poll occurs `suggestPollMs` ms after the refresh
 - **FR-006**: System MUST update the polling interval dynamically if consecutive API responses return different `suggestPollMs` values
-- **FR-007**: System MUST handle poll request failures gracefully with retry logic before surfacing errors (implementation details deferred to error handling phase)
-- **FR-008**: System MUST NOT make rapid-fire polling requests; if `suggestPollMs` is 0 or negative, use a safe minimum interval (e.g., 1000ms)
+- **FR-007**: System MUST handle poll request failures caused by network/transport errors or non-429 server errors with a maximum of 3 retries using exponential backoff delays of 1000ms, 2000ms, and 4000ms, then stop polling and surface an error state
+- **FR-008**: System MUST NOT make rapid-fire polling requests; if `suggestPollMs` is 0 or negative, use a safe minimum interval (e.g., 1000ms), and if `suggestPollMs` is large (including hour-level values), use it as provided without capping
 - **FR-009**: System MUST store the current status data (recommendation, workforce, industry, updatedAt, etc.) in component/hook state for consumption by UI components
-- **FR-010**: System MUST expose a hook (`useDashboardStatusPolling` or similar) that encapsulates all polling logic and provides consumers with `status`, `isLoading`, and `error` states
+- **FR-010**: System MUST expose a hook (`useDashboardStatusPolling` or similar) that encapsulates polling logic and provides consumers with `status`, `isLoading`, `error`, and control methods (`start()`, `stop()`, `reset()`)
+- **FR-011**: System MUST treat HTTP 429 responses without special override logic and continue polling based on the normal interval flow
 
 ### Key Entities
 
@@ -95,27 +109,29 @@ If a poll request fails due to transient network errors, the system should retry
   - `lastPollTime`: ISO timestamp of the last poll
   - `error`: Error state, if any (implementation deferred)
 
-## Success Criteria *(mandatory)*
+## Success Criteria _(mandatory)_
 
 ### Measurable Outcomes
 
 - **SC-001**: Polling initiates automatically when dashboard loads with `allSettled: false`, without user clicking any button or triggering manual refresh
-- **SC-002**: Polling continues at the API-specified interval (`suggestPollMs`) ±200ms accuracy (within reasonable timer variance)
+- **SC-002**: Polling continues at the API-specified interval (`suggestPollMs`) with timer accuracy of ±200ms or ±1% (whichever is greater), including large intervals such as hour-level values
 - **SC-003**: Polling stops within 100ms of receiving `allSettled: true` (no orphaned timers or continued requests)
 - **SC-004**: When user refreshes the page, polling timer resets and the next poll occurs after a new full `suggestPollMs` interval (not shortened by the refresh)
 - **SC-005**: Dynamic interval changes (different `suggestPollMs` values between responses) take effect on the next polling cycle with no delays or race conditions
-- **SC-006**: Network failures are handled gracefully with retry logic before surfacing error state (error UX deferred to next phase)
+- **SC-006**: For a failed poll request, system retries exactly up to 3 times with delays 1000ms, 2000ms, and 4000ms; if all fail, polling stops and error state is set
 - **SC-007**: All polling logic is encapsulated in a reusable hook that can be tested independently of UI components
 - **SC-008**: Zero memory leaks from timers or event listeners when dashboard unmounts or polling completes
+- **SC-009**: When HTTP 429 occurs, polling cadence remains on normal schedule (no forced pause mode or special retry-after behavior)
 
 ## Assumptions
 
 - The API endpoint `/api/v1/dashboard/status` is publicly documented and available in the development, staging, and production environments.
 - `suggestPollMs` is always a positive integer ≥ 0; if 0 or negative, a safe minimum (1000ms) will be applied.
+- `suggestPollMs` may represent long delays (including hour-level milliseconds) and should be honored without a fixed maximum cap.
 - Browser timers (via `setInterval` or `setTimeout`) are sufficient for this polling pattern; no service worker or background task is required at this stage.
 - Polling logic will be implemented in a custom React hook to keep state management and lifecycle isolated from UI rendering.
-- Error handling strategy (retry count, backoff, user notification) will be defined in a future phase.
-- The feature assumes the dashboard component will have a way to trigger polling start/stop (e.g., mounted/unmounted lifecycle or explicit trigger).
+- Error UX presentation (toast/banner/copy) is deferred to a future phase, but retry mechanics are fixed to 3 attempts with exponential backoff.
+- The feature assumes the dashboard component triggers polling when `isConnected || assessmentData?.data?.status === "completed"`.
 
 ## Notes for Implementation Phase
 

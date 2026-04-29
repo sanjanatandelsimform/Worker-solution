@@ -9,6 +9,7 @@
  */
 
 import type { DashboardResponse } from "@/types/dashboardTypes";
+import type { DashboardStatusResponse } from "@/types/dashboardStatusTypes";
 import apiClient from "@/services/api/authApi";
 import { getAuthToken, getErrorMessage } from "@/services/api/apiUtils";
 
@@ -58,8 +59,42 @@ export const getDashboard = async (): Promise<DashboardResponse> => {
 };
 
 /**
+ * Fetch dashboard status from GET /api/v1/dashboard/status endpoint
+ */
+export const getDashboardStatus = async (): Promise<DashboardStatusResponse> => {
+  try {
+    const token = getAuthToken();
+
+    if (!token) {
+      console.warn("[getDashboardStatus] No auth token found. Aborting API call.");
+      throw new Error("Authentication required. Please log in again.");
+    }
+
+    const response = await apiClient.get<DashboardStatusResponse>("/dashboard/status", {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+      timeout: 600000,
+    });
+
+    return response.data;
+  } catch (error) {
+    if (
+      error instanceof Error &&
+      error.message === "Authentication required. Please log in again."
+    ) {
+      throw error;
+    }
+    const errorMessage = getErrorMessage(error);
+    console.error("[getDashboardStatus] API call failed:", errorMessage);
+    throw new Error(errorMessage);
+  }
+};
+
+/**
  * Dashboard API service object (for consistency with other API services)
  */
 export const dashboardApi = {
   getDashboard,
+  getDashboardStatus,
 };

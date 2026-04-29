@@ -16,6 +16,7 @@ import { useModalConfig } from "@/hooks/useModalConfig";
 import fpoHero from "@/assets/fpo-hero-image.png";
 import { useAssessmentStatus } from "@/hooks/useAssessmentStatus";
 import { useFinchConnect } from "@/hooks/useFinchConnect";
+import { useDashboardStatusPolling } from "@/hooks/useDashboardStatusPolling";
 import { Tabs } from "@/components/base/tabs/tabs";
 import BenchmarkPage from "../benchmark/BenchmarkPage";
 import { fetchWorkforce } from "@/store/slices/workforceSlice";
@@ -233,6 +234,9 @@ export const DashboardPage = () => {
       navigate("/assessment");
     },
   });
+
+  const shouldPollDashboardStatus = isConnected || assessmentData?.data?.status === "completed";
+  useDashboardStatusPolling({ enabled: shouldPollDashboardStatus });
 
   const isDashboardVisible = assessmentData?.data?.status === "completed" || isConnected;
 
