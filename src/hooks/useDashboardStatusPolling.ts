@@ -10,14 +10,16 @@ import type {
 const MIN_POLL_INTERVAL_MS = 1000;
 const NON_429_RETRY_DELAYS_MS = [1000, 2000, 4000];
 
+type ErrorWithStatus = { response?: { status?: number } };
+
 const getStatusCode = (error: unknown): number | null => {
   if (
     error &&
     typeof error === "object" &&
     "response" in error &&
-    (error as { response?: { status?: number } }).response?.status
+    (error as ErrorWithStatus).response?.status
   ) {
-    return (error as { response?: { status?: number } }).response?.status ?? null;
+    return (error as ErrorWithStatus).response?.status ?? null;
   }
 
   return null;
