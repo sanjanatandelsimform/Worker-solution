@@ -19,7 +19,6 @@ import {
   selectIndustryFullData,
 } from "@/store/selectors/industrySelectors";
 import type { IndustryData } from "@/types/industryTypes";
-import { useFinchStatus } from "@/hooks/useFinchStatus";
 
 export interface UseIndustryReturn {
   data: IndustryData | null;
@@ -34,25 +33,23 @@ export function useIndustry(): UseIndustryReturn {
   const isLoading = useAppSelector(selectIndustryLoading);
   const error = useAppSelector(selectIndustryError);
   const isLoaded = useAppSelector(selectIndustryIsLoaded);
-  const { isConnected } = useFinchStatus();
-  const { assessmentData } = useAssessmentStatus();
-  const isFinch = assessmentData?.assessmentType === "finch";
+  const { isConnected } = useAssessmentStatus();
 
   useEffect(() => {
     // Guard: skip if already loaded or currently loading
     if (isLoaded || isLoading) return;
 
-    if (!isFinch) {
+    if (!isConnected) {
       // Manual assessment: fetch immediately, no finch connection required
       dispatch(fetchIndustry());
       return;
     }
 
-    if (isFinch && isConnected) {
+    if (isConnected) {
       // Finch assessment: only fetch once finch is connected
       dispatch(fetchIndustry());
     }
-  }, [isFinch, isConnected, isLoaded, isLoading, dispatch]);
+  }, [isConnected, isLoaded, isLoading, dispatch]);
 
   return {
     data,

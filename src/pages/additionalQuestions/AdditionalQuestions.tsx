@@ -1,11 +1,10 @@
-﻿import { Button } from "@/components/base/buttons/button";
+import { Button } from "@/components/base/buttons/button";
 import { ChevronRight, XClose } from "@untitledui/icons";
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import ErrorMessage from "@/components/common/ErrorMessage";
 import { useSubmitFinchAssessment } from "@/hooks/useSubmitFinchAssessment";
 import { useAssessmentStatus } from "@/hooks/useAssessmentStatus";
-import { useFinchStatus } from "@/hooks/useFinchStatus";
 import { buildFinchAssessmentPayload } from "@/utils/finchAssessmentPayload";
 import type { QuestionAnswer, GoalsAnswer } from "@/types/additionalQuestionsTypes";
 import WorkforceSection from "./WorkforceSection";
@@ -15,8 +14,12 @@ import GoalsSection from "./GoalsSection";
 
 export default function AdditionalQuestions() {
   const navigate = useNavigate();
-  const { isFinchCompleted } = useAssessmentStatus();
-  const { isConnected, isLoading: isFinchStatusLoading } = useFinchStatus();
+  const {
+    isFinchCompleted,
+    isLoading: isAssessmentLoading,
+    isConnected,
+    isFetched,
+  } = useAssessmentStatus();
   const [answers, setAnswers] = useState<QuestionAnswer>({});
   const [goalsAnswers, setGoalsAnswers] = useState<GoalsAnswer>({
     selectedGoals: [],
@@ -37,10 +40,10 @@ export default function AdditionalQuestions() {
   }, [isFinchCompleted, navigate]);
 
   useEffect(() => {
-    if (!isFinchStatusLoading && !isConnected) {
+    if (isFetched && !isAssessmentLoading && !isConnected) {
       navigate("/dashboard");
     }
-  }, [isConnected, isFinchStatusLoading, navigate]);
+  }, [isFetched, isConnected, isAssessmentLoading, navigate]);
 
   useEffect(() => {
     if (success) {

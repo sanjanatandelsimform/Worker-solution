@@ -30,16 +30,6 @@ vi.mock("@/hooks/useAssessmentStatus", () => ({
   }),
 }));
 
-vi.mock("@/hooks/useFinchStatus", () => ({
-  useFinchStatus: () => ({
-    connectionStatus: null,
-    syncJobStatus: null,
-    isConnected: false,
-    isLoading: false,
-    error: null,
-  }),
-}));
-
 vi.mock("@/assets/logo.svg", () => ({ default: "logo.svg" }));
 vi.mock("@/assets/benestats-mark.svg", () => ({ default: "benestats-mark.svg" }));
 
