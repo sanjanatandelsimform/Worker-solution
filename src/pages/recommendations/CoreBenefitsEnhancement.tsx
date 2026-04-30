@@ -64,10 +64,6 @@ export default function CoreBenefitsEnhancement({
             Core Benefits Enhancement
           </h2>
           <p className="text-base text-ws-text-primary mb-3">
-            Your comprehensive plan to enhance worker financial health and retirement.
-          </p>
-          <p className="text-base text-ws-text-primary mb-3"></p>
-          <p className="text-base text-ws-text-primary mb-3">
             Here are some impactful ways to start uplifting your workforce with effective
             strategies. Consider strengthening core benefits by modifying policies to increase
             access and participation with these options:
@@ -75,7 +71,7 @@ export default function CoreBenefitsEnhancement({
           <h4 className="text-2xl font-medium text-ws-text-primary my-6">Effective Strategies</h4>
           <div className="bg-ws-navy-25 border border-ws-border-primary rounded-lg p-3.5">
             <h4 className="text-lg font-medium text-ws-text-primary">
-              Strategies Impemented: {provenStrategiesCount}/3
+              Strategies Implemented: {provenStrategiesCount}/3
             </h4>
             <p className="my-4 text-base text-ws-text-primary">
               You're already leveraging {provenStrategiesCount} of 3 benefits best practices linked

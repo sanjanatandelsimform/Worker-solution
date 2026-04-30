@@ -237,7 +237,7 @@ describe("RegistrationForm", () => {
 
   it("renders Sign up heading", async () => {
     renderForm();
-    expect(screen.getByText("Sign up")).toBeTruthy();
+    expect(screen.getByText("Sign Up")).toBeTruthy();
   });
 
   it("shows loading state initially", async () => {
@@ -285,9 +285,9 @@ describe("RegistrationForm", () => {
     expect(screen.getByRole("button", { name: /Terms/i })).toBeTruthy();
   });
 
-  it("renders Privacy Policy link button", async () => {
+  it("renders Privacy Policies link button", async () => {
     renderForm();
-    expect(screen.getByRole("button", { name: /Privacy Policy/i })).toBeTruthy();
+    expect(screen.getByRole("button", { name: /Privacy Policies/i })).toBeTruthy();
   });
 
   it("opens terms modal on Terms click", async () => {
@@ -298,9 +298,9 @@ describe("RegistrationForm", () => {
     });
   });
 
-  it("opens privacy modal on Privacy Policy click", async () => {
+  it("opens privacy modal on Privacy Policies click", async () => {
     renderForm();
-    fireEvent.click(screen.getByRole("button", { name: /Privacy Policy/i }));
+    fireEvent.click(screen.getByRole("button", { name: /Privacy Policies/i }));
     await waitFor(() => {
       expect(screen.getByTestId("terms-modal")).toBeTruthy();
     });
@@ -488,7 +488,7 @@ describe("RegistrationForm", () => {
 
   it("closes privacy modal via onClose callback (covers line 553)", async () => {
     renderForm();
-    fireEvent.click(screen.getByRole("button", { name: /Privacy Policy/i }));
+    fireEvent.click(screen.getByRole("button", { name: /Privacy Policies/i }));
     await waitFor(() => {
       expect(screen.getByTestId("terms-modal")).toBeTruthy();
     });

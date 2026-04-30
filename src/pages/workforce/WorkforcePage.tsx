@@ -11,7 +11,6 @@ import { useWorkforceOverviewConfig } from "@/hooks/useWorkforceOverviewConfig";
 import { useWorkforceParticipationConfig } from "@/hooks/useWorkforceParticipationConfig";
 import { useWorkforceDemographicsConfig } from "@/hooks/useWorkforceDemographicsConfig";
 import { useWorkforceCompensationConfig } from "@/hooks/useWorkforceCompensationConfig";
-import Declarations from "@/components/common/Declarations";
 
 export default function WorkforcePage() {
   const [isGetInTouchModalOpen, setIsGetInTouchModalOpen] = useState(false);
@@ -99,7 +98,6 @@ export default function WorkforcePage() {
         salary={salary}
         salaryChartData={salaryChartData}
       />
-      <Declarations className="mt-4" />
 
       {/* Get In Touch Modal */}
       <GetInTouchModal

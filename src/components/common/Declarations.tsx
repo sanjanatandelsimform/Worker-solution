@@ -27,7 +27,7 @@ export default function Declarations({ className = "" }: Readonly<DeclarationsPr
         and industry benchmarks. It does not provide legal, financial, tax, or benefits advice, and
         recommendations are not guarantees of outcomes or results. Actual results may vary, and you
         are responsible for evaluating and implementing any recommendations based on your
-        organization’s specific circumstances. Read our
+        organization’s specific circumstances. Read our{" "}
         <Button
           color="link"
           size="sm"

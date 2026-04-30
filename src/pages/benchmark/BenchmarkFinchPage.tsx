@@ -1165,7 +1165,6 @@ export default function BenchmarkFinchPage() {
           Community Survey
         </p>
       </div>
-      {/* <Declarations className="mt-4" /> */}
       <GetInTouchModal
         isOpen={isGetInTouchModalOpen}
         onClose={() => setIsGetInTouchModalOpen(false)}
