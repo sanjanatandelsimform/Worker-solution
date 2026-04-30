@@ -88,6 +88,7 @@ describe("assessmentApi", () => {
     const result = await submitWorkforce({});
     expect(result.success).toBe(false);
     expect(result.fieldErrors).toBeDefined();
+    expect(result.fieldErrors?.zipCode).toBe("Invalid zip");
   });
 
   it("submitCompensation calls POST /assessment/compensation", async () => {
@@ -116,6 +117,26 @@ describe("assessmentApi", () => {
     const callArgs = mockPost.mock.calls[0];
     expect(callArgs[1].responses.offersAnnualRaises).toBe(true);
   });
+
+  it.each([
+    { rawValue: "no", expected: false },
+    { rawValue: "false", expected: false },
+  ])(
+    "submitCompensation normalizes offersAnnualRaises=$rawValue and does not require month",
+    async ({ rawValue, expected }) => {
+      mockPost.mockResolvedValue({ data: {} });
+      const { submitCompensation } = await import("@/services/api/assessmentApi");
+      const result = await submitCompensation({
+        offersAnnualRaises: rawValue,
+        medianAnnualEarnings: "$50k",
+      });
+
+      expect(result.success).toBe(true);
+      expect(mockPost).toHaveBeenCalled();
+      const payload = mockPost.mock.calls.at(-1)?.[1];
+      expect(payload.responses.offersAnnualRaises).toBe(expected);
+    }
+  );
 
   it("submitBenefits calls POST /assessment/benefits", async () => {
     mockPost.mockResolvedValue({ data: {} });
@@ -157,6 +178,9 @@ describe("assessmentApi", () => {
     const { lookupZipCodes } = await import("@/services/api/assessmentApi");
     const result = await lookupZipCodes("902");
     expect(result).toBeDefined();
+    expect(mockGet).toHaveBeenCalledWith("/lookup/zip-codes", {
+      params: { search: "902", limit: 5 },
+    });
   });
 
   it("lookupZipCodes returns empty on error", async () => {

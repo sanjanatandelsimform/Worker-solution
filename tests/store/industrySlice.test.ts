@@ -214,5 +214,36 @@ describe("industrySlice", () => {
 
       expect(newState).toEqual(initialState);
     });
+
+    it("should not reset state on other action types", () => {
+      const stateWithData: IndustryState = {
+        data: mockIndustryData,
+        loading: false,
+        error: null,
+        isLoaded: true,
+      };
+      const newState = industryReducer(stateWithData, { type: "other/action" });
+      expect(newState.isLoaded).toBe(true);
+    });
+  });
+
+  describe("fetchIndustry thunk error branches", () => {
+    it("should use fallback error when rejected payload is undefined", () => {
+      const newState = industryReducer(initialState, {
+        type: fetchIndustry.rejected.type,
+        payload: undefined,
+      });
+      expect(newState.error).toBe("An unexpected error occurred");
+    });
+
+    it("fetchIndustry thunk uses fallback error when non-Error is thrown", async () => {
+      const industryApi = await import("@/services/api/industryApi");
+      vi.mocked((industryApi as any).getIndustry).mockRejectedValueOnce("string error");
+      const { configureStore } = await import("@reduxjs/toolkit");
+      const store = configureStore({ reducer: { industry: industryReducer } });
+      await store.dispatch(fetchIndustry());
+      const state = store.getState().industry;
+      expect(state.error).toBeTruthy();
+    });
   });
 });

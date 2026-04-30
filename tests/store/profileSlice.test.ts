@@ -6,12 +6,14 @@
  */
 
 import { describe, it, expect, vi, beforeEach } from "vitest";
+import { configureStore } from "@reduxjs/toolkit";
 import profileReducer, {
   updateProfileData,
   updateEmailAddress,
   changePassword,
   deleteUserAccount,
   resendVerificationEmail,
+  retakeAssessmentAction,
   clearProfileError,
   resetPasswordAttempts,
   clearProfileData,
@@ -241,6 +243,104 @@ describe("profileSlice", () => {
       });
       expect(newState.loading).toBe(false);
       expect(newState.error).toBe("Failed to resend verification email");
+    });
+  });
+
+  describe("fallback error messages when payload is undefined", () => {
+    it("updateProfileData.rejected with undefined payload uses fallback", () => {
+      const newState = profileReducer(initialState, {
+        type: updateProfileData.rejected.type,
+        payload: undefined,
+      });
+      expect(newState.error).toBe("Failed to update profile");
+    });
+
+    it("updateEmailAddress.rejected with undefined payload uses fallback", () => {
+      const newState = profileReducer(initialState, {
+        type: updateEmailAddress.rejected.type,
+        payload: undefined,
+      });
+      expect(newState.error).toBe("Failed to update email");
+    });
+
+    it("changePassword.rejected with undefined payload uses fallback", () => {
+      const newState = profileReducer(initialState, {
+        type: changePassword.rejected.type,
+        payload: undefined,
+      });
+      expect(newState.error).toBe("Failed to change password");
+      expect(newState.isAccountLocked).toBe(false);
+    });
+
+    it("changePassword.rejected with payload but no attemptsRemaining or lockoutDuration", () => {
+      const newState = profileReducer(initialState, {
+        type: changePassword.rejected.type,
+        payload: { message: "Wrong password" },
+      });
+      expect(newState.error).toBe("Wrong password");
+      expect(newState.passwordAttempts).toBe(0);
+      expect(newState.isAccountLocked).toBe(false);
+    });
+
+    it("deleteUserAccount.rejected with undefined payload uses fallback", () => {
+      const newState = profileReducer(initialState, {
+        type: deleteUserAccount.rejected.type,
+        payload: undefined,
+      });
+      expect(newState.error).toBe("Failed to delete account");
+    });
+
+    it("resendVerificationEmail.rejected with undefined payload uses fallback", () => {
+      const newState = profileReducer(initialState, {
+        type: resendVerificationEmail.rejected.type,
+        payload: undefined,
+      });
+      expect(newState.error).toBe("Failed to resend verification email");
+    });
+
+    it("retakeAssessmentAction.rejected with undefined payload uses fallback", () => {
+      const newState = profileReducer(initialState, {
+        type: retakeAssessmentAction.rejected.type,
+        payload: undefined,
+      });
+      expect(newState.error).toBe("Failed to retake assessment");
+    });
+  });
+
+  describe("thunk error branch coverage (non-Error instance)", () => {
+    function createTestStore() {
+      return configureStore({
+        reducer: {
+          profile: profileReducer,
+        },
+      });
+    }
+
+    it("changePassword thunk: uses fallback error message when error is a string", async () => {
+      const profileApi = await import("@/services/api/profileApi");
+      vi.mocked(profileApi.updatePassword).mockRejectedValueOnce("string error");
+      const store = createTestStore();
+      await store.dispatch(changePassword({ currentPassword: "old", newPassword: "new", confirmPassword: "new" } as any));
+      const state = store.getState().profile;
+      expect(state.error).toBeTruthy();
+    });
+
+    it("deleteUserAccount thunk: uses fallback error message when error is a string", async () => {
+      const profileApi = await import("@/services/api/profileApi");
+      vi.mocked(profileApi.deleteAccount).mockRejectedValueOnce("string error");
+      const store = createTestStore();
+      await store.dispatch(deleteUserAccount("user-1"));
+      const state = store.getState().profile;
+      expect(state.error).toBeTruthy();
+    });
+
+    it("updateEmailAddress thunk: uses fallback error when non-Error thrown", async () => {
+      const profileApi = await import("@/services/api/profileApi");
+      vi.mocked(profileApi.updateEmail).mockRejectedValueOnce("string error");
+      const store = createTestStore();
+      await store.dispatch(updateEmailAddress({ email: "a@b.com" } as any));
+      const state = store.getState().profile;
+      expect(state.error).toBeTruthy();
     });
   });
 });

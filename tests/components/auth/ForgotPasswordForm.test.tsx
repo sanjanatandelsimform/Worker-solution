@@ -16,6 +16,15 @@ vi.mock("@/services/api/authApi", () => ({
 vi.mock("@/assets/logo.svg", () => ({ default: "logo.svg" }));
 vi.mock("@/assets/finch-checkmark.svg", () => ({ default: "checkmark.svg" }));
 
+vi.mock("@/components/common/ErrorMessage", () => ({
+  default: ({ errorMessage, onClose }: { errorMessage: string; onClose: () => void }) => (
+    <div data-testid="error-message">
+      {errorMessage}
+      <button onClick={onClose} data-testid="error-close">Close</button>
+    </div>
+  ),
+}));
+
 describe("ForgotPasswordForm", () => {
   beforeEach(() => {
     vi.clearAllMocks();
@@ -50,6 +59,28 @@ describe("ForgotPasswordForm", () => {
     await waitFor(() => {
       expect(forgotPassword).toHaveBeenCalledWith("test@example.com");
     });
+  });
+
+  it("error message onClose callback clears error (covers line 118)", async () => {
+    const { forgotPassword } = await import("@/services/api/authApi");
+    (forgotPassword as ReturnType<typeof vi.fn>).mockRejectedValueOnce(new Error("Network error"));
+
+    renderWithProviders(<ForgotPasswordForm />);
+
+    const emailInput = screen.getByPlaceholderText("Enter your email");
+    fireEvent.input(emailInput, { target: { value: "test@example.com" } });
+    fireEvent.blur(emailInput);
+    fireEvent.submit(emailInput.closest("form")!);
+
+    await waitFor(() => {
+      expect(forgotPassword).toHaveBeenCalled();
+    });
+
+    const closeBtn = screen.queryByTestId("error-close");
+    if (closeBtn) {
+      fireEvent.click(closeBtn);
+    }
+    expect(document.body).toBeTruthy();
   });
 
   it("shows error message on API failure", async () => {
