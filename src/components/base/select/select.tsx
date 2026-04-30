@@ -74,7 +74,7 @@ const SelectValue = ({
       ref={ref}
       type="button"
       className={cx(
-        "relative flex w-full cursor-pointer items-center rounded-lg bg-ws-base-white shadow-xs ring-1 ring-ws-border-primary outline-hidden transition duration-100 ease-linear ring-inset text-ws-text-primary",
+        "relative flex w-full cursor-pointer items-center rounded-lg bg-ws-base-white shadow-xs ring-1 ring-ws-border-primary outline-hidden transition duration-100 ease-linear ring-inset text-ws-text-primary h-10",
         (isFocused || isOpen) && "ring-2 ring-ws-light-teal-850 font-normal",
         isDisabled && "cursor-not-allowed bg-disabled_subtle text-disabled",
         isInvalid && "ring-1 ring-ws-error-600"

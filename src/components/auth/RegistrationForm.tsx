@@ -203,7 +203,7 @@ export function RegistrationForm() {
           {/* Header */}
           <div className="flex w-full flex-col items-start gap-2">
             <p className="w-full flex items-center justify-center text-center font-normal text-lg text-ws-text-secondary">
-              We’re excited that you’ve decided to try our A2B platform. Before we begin we’ll need
+              We’re excited that you’ve decided to try our A2B platform. Before we begin, we’ll need
               to collect some information about your business.
             </p>
           </div>
@@ -283,7 +283,7 @@ export function RegistrationForm() {
                   name="businessPhone"
                   label="Business Phone Number"
                   isRequired
-                  placeholder="(555) 000-0000"
+                  placeholder="(000) 000-0000"
                   type="tel"
                   size="md"
                   prefix="+1"
@@ -488,16 +488,16 @@ export function RegistrationForm() {
                     color="link"
                     size="sm"
                     onClick={() => setIsTermsModalOpen(true)}
-                    className="text-xs text-ws-light-teal-850 underline p-0 m-0 h-5"
+                    className="text-sm font-normal text-ws-light-teal-850 underline p-0 m-0 h-5 hover:text-ws-light-teal-850"
                   >
-                    Terms & Conditions
+                    Terms
                   </Button>{" "}
                   and{" "}
                   <Button
                     color="link"
                     size="sm"
                     onClick={() => setIsPrivacyModalOpen(true)}
-                    className="text-xs text-ws-light-teal-850 underline p-0 m-0 h-5"
+                    className="text-sm font-normal text-ws-light-teal-850 underline p-0 m-0 h-5 hover:text-ws-light-teal-850"
                   >
                     Privacy Policy
                   </Button>

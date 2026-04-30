@@ -21,7 +21,7 @@ export default function Declarations({ className = "" }: Readonly<DeclarationsPr
   });
 
   return (
-    <div className={`w-full ${className}`}>
+    <div data-testid="declarations" className={`w-full ${className}`}>
       <p className="text-xs leading-4 font-normal text-ws-text-primary ">
         This product provides informational insights and recommendations based on the data you share
         and industry benchmarks. It does not provide legal, financial, tax, or benefits advice, and
@@ -34,7 +34,7 @@ export default function Declarations({ className = "" }: Readonly<DeclarationsPr
           onClick={() => setIsTermsModalOpen(true)}
           className="text-xs text-ws-light-teal-850 underline p-0 m-0 h-5"
         >
-          Terms & Conditions
+          Terms of Use
         </Button>{" "}
         and{" "}
         <Button
@@ -43,7 +43,7 @@ export default function Declarations({ className = "" }: Readonly<DeclarationsPr
           onClick={() => setIsPrivacyModalOpen(true)}
           className="text-xs text-ws-light-teal-850 underline p-0 m-0 h-5"
         >
-          Privacy Policy
+          Privacy Notice
         </Button>
       </p>
       <TermsModal

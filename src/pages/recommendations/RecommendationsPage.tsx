@@ -18,7 +18,6 @@ import ProvenStrategiesCard from "./ProvenStrategiesCard";
 import { LikeIcon } from "@/assets/icons/likeIcon";
 import { UserGroupIcon } from "@/assets/icons/UserGroupIcon";
 import { useEffect, useState } from "react";
-import Declarations from "@/components/common/Declarations";
 
 const OverviewCardSkeleton = () => (
   <div className="border border-ws-border-secondary rounded-lg p-4 bg-ws-base-white animate-pulse shadow-sm">
@@ -347,7 +346,7 @@ export default function RecommendationsPage() {
           </div>
         </div>
       </div>
-      <Declarations className="mt-4" />
+      {/* <Declarations className="mt-4" /> */}
     </div>
   );
 }

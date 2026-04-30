@@ -140,10 +140,7 @@ export default function ForgotPasswordForm() {
             <p className="text-sm font-normal leading-5 text-ws-text-tertiary">
               Don’t have an account?
             </p>
-            <Link
-              to="/sign-up"
-              className="text-sm font-semibold text-ws-light-teal-850 hover:text-ws-light-teal-800"
-            >
+            <Link to="/sign-up" className="font-normal underline text-ws-light-teal-850">
               Sign up
             </Link>
           </div>
