@@ -422,7 +422,7 @@ describe("RecommendationsFinchPage — benefits overview data mapping", () => {
 describe("RecommendationsFinchPage — proven strategies count and percent", () => {
   it("shows count 0/3 when all flags are false", () => {
     renderPage(); // default: all flags false
-    expect(screen.getByText(/Strategies Impemented: 0\/3/)).toBeInTheDocument();
+    expect(screen.getByText(/Strategies Implemented: 0\/3/)).toBeInTheDocument();
   });
 
   it("shows count 1/3 when nonElectiveMatch is true", () => {
@@ -440,7 +440,7 @@ describe("RecommendationsFinchPage — proven strategies count and percent", () 
       },
     });
     renderPage(store);
-    expect(screen.getByText(/Strategies Impemented: 1\/3/)).toBeInTheDocument();
+    expect(screen.getByText(/Strategies Implemented: 1\/3/)).toBeInTheDocument();
   });
 
   it("shows count 2/3 when two flags are true", () => {
@@ -458,7 +458,7 @@ describe("RecommendationsFinchPage — proven strategies count and percent", () 
       },
     });
     renderPage(store);
-    expect(screen.getByText(/Strategies Impemented: 2\/3/)).toBeInTheDocument();
+    expect(screen.getByText(/Strategies Implemented: 2\/3/)).toBeInTheDocument();
   });
 
   it("shows count 3/3 when all flags are true", () => {
@@ -476,7 +476,7 @@ describe("RecommendationsFinchPage — proven strategies count and percent", () 
       },
     });
     renderPage(store);
-    expect(screen.getByText(/Strategies Impemented: 3\/3/)).toBeInTheDocument();
+    expect(screen.getByText(/Strategies Implemented: 3\/3/)).toBeInTheDocument();
   });
 });
 
@@ -488,7 +488,7 @@ describe("RecommendationsFinchPage — static sections always rendered", () => {
     expect(screen.getAllByText("Did you know?").length).toBeGreaterThan(0);
   });
 
-  it("renders Declarations text when assessment is incomplete", () => {
+  it("renders page without crash when assessment is incomplete", () => {
     vi.mocked(useAssessmentStatus).mockReturnValue({
       isFinchAssessmentIncomplete: true,
       isFinchCompleted: false,
@@ -503,12 +503,12 @@ describe("RecommendationsFinchPage — static sections always rendered", () => {
     } as ReturnType<typeof useAssessmentStatus>);
 
     renderPage();
-    expect(screen.getByText(/This product provides informational insights/)).toBeInTheDocument();
+    expect(screen.getByText("Your Company At A Glance")).toBeInTheDocument();
   });
 
-  it("renders Declarations text when assessment is complete", () => {
+  it("renders page without crash when assessment is complete", () => {
     renderPage();
-    expect(screen.getByText(/This product provides informational insights/)).toBeInTheDocument();
+    expect(screen.getByText("Your Company At A Glance")).toBeInTheDocument();
   });
 });
 

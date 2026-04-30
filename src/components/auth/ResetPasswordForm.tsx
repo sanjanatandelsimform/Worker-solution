@@ -164,7 +164,7 @@ export default function ResetPasswordForm() {
             <p className="text-sm font-normal leading-5 text-ws-text-tertiary">
               Remember your password?
             </p>
-            <Link to="/sign-in" className="font-normal underline text-ws-light-teal-850">
+            <Link to="/sign-in" className="text-sm font-normal underline text-ws-light-teal-850">
               Sign in
             </Link>
           </div>

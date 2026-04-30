@@ -111,7 +111,7 @@ describe("AccountDeleteModal", () => {
     const onClose = vi.fn();
     const onContinue = vi.fn();
     render(<AccountDeleteModal isOpen={true} onClose={onClose} onContinue={onContinue} />);
-    fireEvent.click(screen.getByText("Yes, Delete my account"));
+    fireEvent.click(screen.getByText("Yes, delete my account"));
     expect(onContinue).toHaveBeenCalled();
     expect(onClose).toHaveBeenCalled();
   });
@@ -119,7 +119,7 @@ describe("AccountDeleteModal", () => {
   it("calls only onClose when no onContinue provided", () => {
     const onClose = vi.fn();
     render(<AccountDeleteModal isOpen={true} onClose={onClose} />);
-    fireEvent.click(screen.getByText("Yes, Delete my account"));
+    fireEvent.click(screen.getByText("Yes, delete my account"));
     expect(onClose).toHaveBeenCalled();
   });
 

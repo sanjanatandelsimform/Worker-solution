@@ -534,7 +534,7 @@ export function RegistrationForm() {
               {/* Sign in link */}
               <p className="text-sm font-normal leading-5 text-ws-text-secondary">
                 Already have an account?{" "}
-                <Link to="/sign-in" className="font-normal underline text-ws-light-teal-850">
+                <Link to="/sign-in" className="text-sm font-normal underline text-ws-light-teal-850">
                   Sign in
                 </Link>
               </p>

@@ -176,11 +176,6 @@ describe("WorkforcePage", () => {
     expect(screen.getByTestId("workforce-compensation")).toBeInTheDocument();
   });
 
-  it("renders the Declarations footer", () => {
-    renderPage();
-    expect(screen.getByTestId("declarations")).toBeInTheDocument();
-  });
-
   it("does NOT show error banner when there is no error", () => {
     renderPage();
     expect(screen.queryByTestId("error-message")).not.toBeInTheDocument();

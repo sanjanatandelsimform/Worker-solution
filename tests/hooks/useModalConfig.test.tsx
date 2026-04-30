@@ -71,7 +71,7 @@ describe("useModalConfig", () => {
     const { result } = renderHook(() => useModalConfig("accountDelete", baseConfig));
     expect(result.current.title).toBe("Confirm Account Deletion");
     expect(result.current.backgroundPattern).toBe("unsuccess");
-    expect(result.current.buttons[1].text).toBe("Yes, Delete my account");
+    expect(result.current.buttons[1].text).toBe("Yes, delete my account");
   });
 
   it("returns resendSuccess config with email", () => {
