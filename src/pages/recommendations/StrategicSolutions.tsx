@@ -44,7 +44,7 @@ export default function StrategicSolutions({
                     badgeClassess="bg-ws-light-teal-25 text-xs font-normal ring-1 ring-ws-light-teal-800 px-2 py-1 text-ws-light-teal-900"
                     title={recommendation.title}
                     descriptionText={recommendation.description}
-                    listTitle="Key Features"
+                    listTitle="Key Benefits"
                     listIcon={<CircleCheckIcon />}
                     listTexts={
                       Array.isArray(recommendation.keyFeatures)

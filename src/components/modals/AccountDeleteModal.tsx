@@ -34,7 +34,7 @@ export const AccountDeleteModal = ({ isOpen, onClose, onContinue }: AccountDelet
           color: "tertiary",
         },
         {
-          text: "Yes, Delete my account",
+          text: "Yes, delete my account",
           onClick: handleContinue,
           color: "error",
         },

@@ -86,7 +86,7 @@ export function ProgressStepper({
               <TabArrow
                 className={`
                   flex-shrink-0 transition-colors
-                  ${index < resolvedIndex ? "text-ws-gray-100" : "text-ws-gray-50"}
+                  ${index < resolvedIndex ? "text-ws-light-teal-900" : "text-ws-gray-300"}
                 `}
               />
             )}
