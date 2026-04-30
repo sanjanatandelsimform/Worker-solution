@@ -6,7 +6,6 @@ import { render, screen } from "@testing-library/react";
 
 // Mock recharts to control rendering
 vi.mock("recharts", () => {
-  const React = require("react");
   return {
     Bar: () => <div data-testid="bar" />,
     CartesianGrid: () => <div data-testid="cart-grid" />,

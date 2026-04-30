@@ -24,7 +24,6 @@ const mockComboBoxStateContextValue = {
 };
 
 vi.mock("react-aria-components", () => {
-  const React = require("react");
   const ComboBoxStateContext = React.createContext<any>(null);
 
   return {

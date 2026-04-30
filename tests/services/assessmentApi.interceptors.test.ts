@@ -11,7 +11,7 @@ let responseInterceptorError: ((error: any) => Promise<any>) | null = null;
 let responseInterceptorSuccess: ((response: any) => any) | null = null;
 
 // The refreshClient (axios.create inside interceptor) will use this mock
-let refreshClientPost = vi.fn();
+const refreshClientPost = vi.fn();
 
 const mockGet = vi.fn();
 const mockPost = vi.fn();

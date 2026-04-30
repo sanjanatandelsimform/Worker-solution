@@ -290,7 +290,7 @@ describe("useResizeObserver", () => {
     const ref = { current: mockElement };
     
     const originalResizeObserver = window.ResizeObserver;
-    // @ts-ignore
+    // @ts-expect-error test intentionally provides invalid prop shape
     delete window.ResizeObserver;
     
     const addEventSpy = vi.spyOn(window, "addEventListener");
