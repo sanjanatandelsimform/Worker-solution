@@ -29,9 +29,19 @@ vi.mock("@/hooks/useAssessmentStatus", () => ({
     completionCount: 0,
     isLoading: false,
     error: null,
-    assessmentData: { assessmentType: "finch", data: { status: "in_progress" } },
+    assessmentData: null,
     sectionCompletion: { workforce: false, compensation: false, benefits: false, goals: false },
     refetch: vi.fn(),
+  })),
+}));
+
+vi.mock("@/hooks/useFinchStatus", () => ({
+  useFinchStatus: vi.fn(() => ({
+    isConnected: true,
+    isLoading: false,
+    connectionStatus: "connected",
+    syncJobStatus: null,
+    error: null,
   })),
 }));
 
