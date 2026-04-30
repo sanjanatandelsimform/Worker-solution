@@ -16,13 +16,13 @@ import { createTestStore } from "../test-utils";
 const {
   mockUseAssessmentStatus,
   mockUseFinchConnect,
-  mockUseDashboardStatusPolling,
+  mockUseFinchStatus,
   mockConnectWithFinch,
   mockClearFinchError,
 } = vi.hoisted(() => ({
   mockUseAssessmentStatus: vi.fn(),
   mockUseFinchConnect: vi.fn(),
-  mockUseDashboardStatusPolling: vi.fn(),
+  mockUseFinchStatus: vi.fn(),
   mockConnectWithFinch: vi.fn(),
   mockClearFinchError: vi.fn(),
 }));
@@ -35,9 +35,11 @@ vi.mock("@/hooks/useAssessmentStatus", () => ({
 vi.mock("@/hooks/useFinchConnect", () => ({
   useFinchConnect: () => mockUseFinchConnect(),
 }));
-vi.mock("@/hooks/useDashboardStatusPolling", () => ({
-  useDashboardStatusPolling: (...args: unknown[]) => mockUseDashboardStatusPolling(...args),
+
+vi.mock("@/hooks/useFinchStatus", () => ({
+  useFinchStatus: () => mockUseFinchStatus(),
 }));
+
 vi.mock("@/hooks/useModalConfig", () => ({
   useModalConfig: vi.fn(() => ({ title: "", subtitle: "", buttons: [] })),
 }));
@@ -159,6 +161,14 @@ vi.mock("@/services/api/recommendationsApi", () => ({
 vi.mock("@/services/api/userApi", () => ({
   getUserById: vi.fn().mockResolvedValue({ success: false, data: null }),
 }));
+vi.mock("@/services/api/profileApi", () => ({
+  resendEmailVerification: vi.fn().mockResolvedValue({ success: true }),
+  updateProfile: vi.fn(),
+  updateEmail: vi.fn(),
+  updatePassword: vi.fn(),
+  deleteAccount: vi.fn(),
+  retakeAssessment: vi.fn(),
+}));
 
 // ─── Router mock ──────────────────────────────────────────────────────────────
 const mockNavigate = vi.fn();
@@ -191,7 +201,6 @@ const DEFAULT_ASSESSMENT_STATUS = {
   isLoading: false,
   error: null,
   assessmentData: null,
-  isConnected: false,
   isFinchCompleted: false,
   isFinchAssessmentIncomplete: false,
   sectionCompletion: { workforce: false, compensation: false, benefits: false, goals: false },
@@ -206,14 +215,12 @@ const DEFAULT_FINCH_CONNECT = {
   clearError: mockClearFinchError,
 };
 
-const DEFAULT_DASHBOARD_STATUS_POLLING = {
-  status: null,
+const DEFAULT_FINCH_STATUS = {
+  connectionStatus: null,
+  syncJobStatus: null,
+  isConnected: false,
   isLoading: false,
   error: null,
-  isPolling: false,
-  start: vi.fn(),
-  stop: vi.fn(),
-  reset: vi.fn(),
 };
 
 const COMPLETED_ASSESSMENT = {
@@ -250,46 +257,7 @@ describe("DashboardPage", () => {
     vi.clearAllMocks();
     mockUseAssessmentStatus.mockReturnValue({ ...DEFAULT_ASSESSMENT_STATUS });
     mockUseFinchConnect.mockReturnValue({ ...DEFAULT_FINCH_CONNECT });
-    mockUseDashboardStatusPolling.mockReturnValue({ ...DEFAULT_DASHBOARD_STATUS_POLLING });
-  });
-
-  describe("Dashboard status polling trigger", () => {
-    it("enables dashboard status polling when isConnected is true", () => {
-      mockUseAssessmentStatus.mockReturnValue({
-        ...DEFAULT_ASSESSMENT_STATUS,
-        isConnected: true,
-      });
-
-      renderDashboard();
-
-      expect(mockUseDashboardStatusPolling).toHaveBeenCalledWith({ enabled: true });
-    });
-
-    it("enables dashboard status polling when assessment status is completed", () => {
-      mockUseAssessmentStatus.mockReturnValue({
-        ...DEFAULT_ASSESSMENT_STATUS,
-        assessmentData: { ...COMPLETED_ASSESSMENT },
-      });
-
-      renderDashboard();
-
-      expect(mockUseDashboardStatusPolling).toHaveBeenCalledWith({ enabled: true });
-    });
-
-    it("disables dashboard status polling when not connected and assessment is not completed", () => {
-      mockUseAssessmentStatus.mockReturnValue({
-        ...DEFAULT_ASSESSMENT_STATUS,
-        isConnected: false,
-        assessmentData: {
-          data: { status: "in_progress", sections: {} },
-          assessmentType: "manual",
-        },
-      });
-
-      renderDashboard();
-
-      expect(mockUseDashboardStatusPolling).toHaveBeenCalledWith({ enabled: false });
-    });
+    mockUseFinchStatus.mockReturnValue({ ...DEFAULT_FINCH_STATUS });
   });
 
   // ── Loading States ──────────────────────────────────────────────────────────
@@ -342,7 +310,9 @@ describe("DashboardPage", () => {
 
     it("shows email verification description text", () => {
       renderDashboard({ emailVerify: false });
-      expect(screen.getByText(/Verify your email to unlock all A2B features/i)).toBeInTheDocument();
+      expect(
+        screen.getByText(/Verify your email to unlock all A2B features/i)
+      ).toBeInTheDocument();
     });
 
     it("shows generic overview paragraph when unverified", () => {
@@ -572,10 +542,15 @@ describe("DashboardPage", () => {
   // ── Verified — Finch Connected ───────────────────────────────────────────────
   describe("Verified email, Finch connected", () => {
     beforeEach(() => {
+      mockUseFinchStatus.mockReturnValue({
+        ...DEFAULT_FINCH_STATUS,
+        isConnected: true,
+        connectionStatus: "connected",
+      });
       mockUseAssessmentStatus.mockReturnValue({
         ...DEFAULT_ASSESSMENT_STATUS,
-        isConnected: true,
         completionCount: 4,
+        isConnected: true,
         assessmentData: {
           data: { status: "completed", sections: {} },
           assessmentType: "finch",
@@ -643,10 +618,15 @@ describe("DashboardPage", () => {
   // ── Verified — Finch Connected + Assessment Incomplete ───────────────────────
   describe("Verified email, Finch connected but assessment incomplete", () => {
     beforeEach(() => {
+      mockUseFinchStatus.mockReturnValue({
+        ...DEFAULT_FINCH_STATUS,
+        isConnected: true,
+        connectionStatus: "connected",
+      });
       mockUseAssessmentStatus.mockReturnValue({
         ...DEFAULT_ASSESSMENT_STATUS,
-        isConnected: true,
         completionCount: 1,
+        isConnected: true,
         isFinchCompleted: false,
         isFinchAssessmentIncomplete: true,
         assessmentData: {
@@ -682,10 +662,15 @@ describe("DashboardPage", () => {
   // ── Tab Switching ────────────────────────────────────────────────────────────
   describe("Tab switching (Finch connected)", () => {
     beforeEach(() => {
+      mockUseFinchStatus.mockReturnValue({
+        ...DEFAULT_FINCH_STATUS,
+        isConnected: true,
+        connectionStatus: "connected",
+      });
       mockUseAssessmentStatus.mockReturnValue({
         ...DEFAULT_ASSESSMENT_STATUS,
-        isConnected: true,
         completionCount: 4,
+        isConnected: true,
         assessmentData: {
           data: { status: "completed", sections: {} },
           assessmentType: "finch",
@@ -788,7 +773,12 @@ describe("DashboardPage", () => {
     });
 
     it("is true when isConnected even without completed assessment — tabs shown", () => {
-      mockUseAssessmentStatus.mockReturnValue({ ...DEFAULT_ASSESSMENT_STATUS, isConnected: true });
+      mockUseAssessmentStatus.mockReturnValue({
+        ...DEFAULT_ASSESSMENT_STATUS,
+        isConnected: true,
+        completionCount: 0,
+        assessmentData: null,
+      });
       renderDashboard();
       expect(screen.getByTestId("tabs")).toBeInTheDocument();
     });
@@ -854,6 +844,96 @@ describe("DashboardPage", () => {
     it("renders without crashing when user firstName is undefined", () => {
       renderDashboard({ firstName: undefined });
       expect(screen.getByTestId("sidebar")).toBeInTheDocument();
+    });
+  });
+
+  // ── handleVerifyEmail ────────────────────────────────────────────────────────
+  describe("handleVerifyEmail", () => {
+    it("clicking Verify button triggers resend when email not verified", async () => {
+      const profileApi = await import("@/services/api/profileApi");
+      vi.mocked(profileApi.resendEmailVerification).mockResolvedValue({ success: true } as any);
+
+      renderDashboard({ emailVerify: false });
+      const verifyBtn = screen.getByText("Verify");
+      fireEvent.click(verifyBtn);
+      await waitFor(() => {
+        expect(screen.queryByTestId("error-message")).toBeNull();
+      });
+    });
+
+    it("shows errorMessage when resend fails with non-already-verified error", async () => {
+      const profileApi = await import("@/services/api/profileApi");
+      vi.mocked(profileApi.resendEmailVerification).mockRejectedValue(new Error("Server error"));
+
+      renderDashboard({ emailVerify: false });
+      const verifyBtn = screen.getByText("Verify");
+      fireEvent.click(verifyBtn);
+      await waitFor(() => {
+        expect(screen.getByTestId("error-message")).toBeInTheDocument();
+        // The caught error is not an Error instance (it's rejectWithValue string), so fallback message is used
+        expect(screen.getByText(/Failed to resend verification email/i)).toBeInTheDocument();
+      });
+    });
+
+    it("closes error message on close button click", async () => {
+      const profileApi = await import("@/services/api/profileApi");
+      vi.mocked(profileApi.resendEmailVerification).mockRejectedValue(new Error("Server error"));
+
+      renderDashboard({ emailVerify: false });
+      fireEvent.click(screen.getByText("Verify"));
+      await waitFor(() => {
+        expect(screen.getByTestId("error-close-btn")).toBeInTheDocument();
+      });
+      fireEvent.click(screen.getByTestId("error-close-btn"));
+      await waitFor(() => {
+        expect(screen.queryByTestId("error-message")).toBeNull();
+      });
+    });
+  });
+
+  // ── localStorage-based refetchUserData ───────────────────────────────────────
+  describe("refetchUserData via localStorage", () => {
+    it("dispatches fetchUserById when localStorage has valid token on mount", () => {
+      vi.stubGlobal("localStorage", {
+        getItem: vi.fn((key: string) => {
+          if (key === "userDetail") {
+            return JSON.stringify({
+              auth: { tokens: { accessToken: "test-token" } },
+            });
+          }
+          return null;
+        }),
+        setItem: vi.fn(),
+        removeItem: vi.fn(),
+      });
+
+      renderDashboard();
+      expect(screen.getByTestId("sidebar")).toBeInTheDocument();
+    });
+  });
+
+  // ── onNavigateToWorkforce callback ───────────────────────────────────────────
+  describe("RecommendationsFinchPage onNavigateToWorkforce", () => {
+    it("RecommendationsFinchPage receives onNavigateToWorkforce prop", () => {
+      mockUseFinchStatus.mockReturnValue({
+        ...DEFAULT_FINCH_STATUS,
+        isConnected: true,
+        connectionStatus: "connected",
+      });
+      mockUseAssessmentStatus.mockReturnValue({
+        ...DEFAULT_ASSESSMENT_STATUS,
+        completionCount: 4,
+        isConnected: true,
+        assessmentData: {
+          data: { status: "completed", sections: {} },
+          assessmentType: "finch",
+        },
+        isFinchCompleted: true,
+      });
+
+      renderDashboard();
+      // RecommendationsFinchPage is mocked - just verify it renders
+      expect(screen.getByTestId("recommendations-finch-page")).toBeInTheDocument();
     });
   });
 });

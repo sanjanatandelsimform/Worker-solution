@@ -112,11 +112,25 @@ describe("authApi", () => {
     expect(result.status).toBe("error");
   });
 
+  it("signin handles non-axios failures with generic error status", async () => {
+    mockPost.mockRejectedValue(new Error("network-down"));
+    const { signin } = await import("@/services/api/authApi");
+    const result = await signin({ businessEmail: "a@b.com", password: "wrong" });
+    expect(result.status).toBe("error");
+    expect(result.message).toContain("network-down");
+  });
+
   it("signout calls logout endpoint", async () => {
     mockPost.mockResolvedValue({});
     const { signout } = await import("@/services/api/authApi");
     await signout("token");
-    expect(mockPost).toHaveBeenCalled();
+    expect(mockPost).toHaveBeenCalledWith(
+      "/auth/logout",
+      {},
+      expect.objectContaining({
+        headers: expect.objectContaining({ Authorization: "Bearer token" }),
+      })
+    );
   });
 
   it("signout reads token from localStorage when not provided", async () => {

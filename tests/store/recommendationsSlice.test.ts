@@ -164,5 +164,37 @@ describe("recommendationsSlice", () => {
       const state = recommendationsReducer(loadedState, { type: "auth/logout/fulfilled" });
       expect(state).toEqual(initialState);
     });
+
+    it("should not reset state on other action types", () => {
+      const loadedState: RecommendationsState = {
+        data: mockData,
+        loading: false,
+        error: null,
+        lastFetched: 1234567890,
+        isLoaded: true,
+      };
+      const state = recommendationsReducer(loadedState, { type: "other/action" });
+      expect(state.isLoaded).toBe(true);
+    });
+  });
+
+  describe("fetchRecommendations thunk error branches", () => {
+    it("should use fallback error when rejected payload is undefined", () => {
+      const newState = recommendationsReducer(initialState, {
+        type: fetchRecommendations.rejected.type,
+        payload: undefined,
+      });
+      expect(newState.error).toBe("An unexpected error occurred");
+    });
+
+    it("fetchRecommendations thunk uses fallback error when non-Error is thrown", async () => {
+      const recommendationsApi = await import("@/services/api/recommendationsApi");
+      vi.mocked((recommendationsApi as any).getRecommendations).mockRejectedValueOnce("string error");
+      const { configureStore } = await import("@reduxjs/toolkit");
+      const store = configureStore({ reducer: { recommendations: recommendationsReducer } });
+      await store.dispatch(fetchRecommendations());
+      const state = store.getState().recommendations;
+      expect(state.error).toBeTruthy();
+    });
   });
 });

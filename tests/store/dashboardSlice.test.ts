@@ -186,5 +186,63 @@ describe("dashboardSlice", () => {
       expect(newState.loading).toBe(true);
       expect(newState.error).toBeNull();
     });
+
+    it("should use fallback error when payload is undefined on rejected", () => {
+      const newState = dashboardReducer(initialState, {
+        type: fetchDashboard.rejected.type,
+        payload: undefined,
+      });
+      expect(newState.error).toBe("An unexpected error occurred");
+    });
+  });
+
+  describe("addMatcher - auth logout", () => {
+    it("resets to initial state on auth/logout/fulfilled", () => {
+      const loadedState: DashboardState = {
+        data: { status: "success" } as any,
+        loading: false,
+        error: null,
+        lastFetched: Date.now(),
+        isLoaded: true,
+      };
+      const result = dashboardReducer(loadedState, { type: "auth/logout/fulfilled" });
+      expect(result).toEqual(initialState);
+    });
+
+    it("resets to initial state on auth/logout action", () => {
+      const loadedState: DashboardState = {
+        data: { status: "success" } as any,
+        loading: false,
+        error: null,
+        lastFetched: Date.now(),
+        isLoaded: true,
+      };
+      const result = dashboardReducer(loadedState, { type: "auth/logout" });
+      expect(result).toEqual(initialState);
+    });
+
+    it("does not reset state on other action types", () => {
+      const loadedState: DashboardState = {
+        data: { status: "success" } as any,
+        loading: false,
+        error: "some error",
+        lastFetched: 12345,
+        isLoaded: true,
+      };
+      const result = dashboardReducer(loadedState, { type: "other/action" });
+      expect(result.data).not.toBeNull();
+    });
+  });
+
+  describe("thunk error branch: non-Error instance", () => {
+    it("fetchDashboard thunk uses fallback error when non-Error is thrown", async () => {
+      const dashboardApi = await import("@/services/api/dashboardApi");
+      vi.mocked((dashboardApi as any).getDashboard).mockRejectedValueOnce("string error");
+      const { configureStore } = await import("@reduxjs/toolkit");
+      const store = configureStore({ reducer: { dashboard: dashboardReducer } });
+      await store.dispatch(fetchDashboard());
+      const state = store.getState().dashboard;
+      expect(state.error).toBeTruthy();
+    });
   });
 });

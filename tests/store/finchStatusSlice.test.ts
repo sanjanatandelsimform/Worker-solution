@@ -143,4 +143,24 @@ describe("finchStatusSlice", () => {
       );
     });
   });
+
+  describe("fetchFinchStatus thunk error branches", () => {
+    it("uses fallback error when rejected payload is undefined", () => {
+      const newState = finchStatusReducer(initialState, {
+        type: fetchFinchStatus.rejected.type,
+        payload: undefined,
+      });
+      expect(newState.error).toBe("An unexpected error occurred");
+    });
+
+    it("fetchFinchStatus thunk uses fallback error when non-Error is thrown", async () => {
+      const finchApi = await import("@/services/api/finchApi");
+      vi.mocked((finchApi as any).getFinchStatus).mockRejectedValueOnce("string error");
+      const { configureStore } = await import("@reduxjs/toolkit");
+      const store = configureStore({ reducer: { finchStatus: finchStatusReducer } });
+      await store.dispatch(fetchFinchStatus());
+      const state = store.getState().finchStatus;
+      expect(state.error).toBeTruthy();
+    });
+  });
 });

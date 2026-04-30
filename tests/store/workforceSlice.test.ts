@@ -182,5 +182,37 @@ describe("workforceSlice", () => {
       const state = workforceReducer(loadedState, { type: "auth/logout/fulfilled" });
       expect(state).toEqual(initialState);
     });
+
+    it("should reset to initialState on auth/logout", () => {
+      const loadedState: WorkforceState = { ...initialState, isLoaded: true, error: "err" };
+      const state = workforceReducer(loadedState, { type: "auth/logout" });
+      expect(state).toEqual(initialState);
+    });
+
+    it("should not reset state on unrelated action", () => {
+      const loadedState: WorkforceState = { ...initialState, isLoaded: true };
+      const state = workforceReducer(loadedState, { type: "other/action" });
+      expect(state.isLoaded).toBe(true);
+    });
+  });
+
+  describe("fetchWorkforce thunk error branches", () => {
+    it("should use fallback error when rejected payload is undefined", () => {
+      const newState = workforceReducer(initialState, {
+        type: fetchWorkforce.rejected.type,
+        payload: undefined,
+      });
+      expect(newState.error).toBe("An unexpected error occurred");
+    });
+
+    it("fetchWorkforce thunk uses fallback error when non-Error is thrown", async () => {
+      const workforceApi = await import("@/services/api/workforceApi");
+      vi.mocked((workforceApi as any).getWorkforce).mockRejectedValueOnce("string error");
+      const { configureStore } = await import("@reduxjs/toolkit");
+      const store = configureStore({ reducer: { workforce: workforceReducer } });
+      await store.dispatch(fetchWorkforce());
+      const state = store.getState().workforce;
+      expect(state.error).toBeTruthy();
+    });
   });
 });

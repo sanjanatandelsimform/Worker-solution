@@ -18,15 +18,25 @@ vi.mock("@/services/api/authApi", () => ({
   },
 }));
 
-// Mock localStorage for auth token
-const STORAGE_KEY = "benestats_auth";
+// Mock axios.isAxiosError
+vi.mock("axios", async () => {
+  const actual = await vi.importActual<typeof import("axios")>("axios");
+  return {
+    ...actual,
+    default: { ...actual.default, isAxiosError: (err: unknown) => (err as any)?.__isAxiosError === true },
+    isAxiosError: (err: unknown) => (err as any)?.__isAxiosError === true,
+  };
+});
+
+const STORAGE_KEY = "userDetail";
 
 describe("industryApi", () => {
   beforeEach(() => {
     vi.clearAllMocks();
     vi.resetModules();
-    // Set up auth token in localStorage
-    localStorage.setItem(STORAGE_KEY, JSON.stringify({ token: "test-token-123" }));
+    localStorage.setItem(STORAGE_KEY, JSON.stringify({
+      auth: { tokens: { accessToken: "test-token-123" } }
+    }));
   });
 
   afterEach(() => {
@@ -53,12 +63,63 @@ describe("industryApi", () => {
   //   expect(result.housingCost).toBeInstanceOf(Array);
   // });
 
-  // Require when api is integrated
   it("should throw error when auth token is missing", async () => {
     localStorage.clear();
+    const { getIndustry } = await import("@/services/api/industryApi");
+    await expect(getIndustry()).rejects.toThrow("Authentication required");
+  });
 
+  it("should fetch industry data successfully", async () => {
+    const mockIndustryData = {
+      industryOverview: { turnoverRate: 15 },
+      industry: { code: "81" },
+    };
+    mockGet.mockResolvedValueOnce({
+      status: 200,
+      data: { industry: mockIndustryData },
+    });
+    const { getIndustry } = await import("@/services/api/industryApi");
+    const result = await getIndustry();
+    expect(result).toEqual(mockIndustryData);
+  });
+
+  it("should throw when api response has no status", async () => {
+    mockGet.mockResolvedValueOnce({ status: 0, data: { industry: {} } });
+    const { getIndustry } = await import("@/services/api/industryApi");
+    await expect(getIndustry()).rejects.toThrow("Failed to fetch industry data");
+  });
+
+  it("should throw with getErrorMessage for axios timeout error", async () => {
+    const axiosError = { __isAxiosError: true, code: "ECONNABORTED", message: "timeout", response: undefined };
+    mockGet.mockRejectedValueOnce(axiosError);
     const { getIndustry } = await import("@/services/api/industryApi");
     await expect(getIndustry()).rejects.toThrow();
+  });
+
+  it("should throw with getErrorMessage for axios error with API message", async () => {
+    const axiosError = { __isAxiosError: true, code: "ERR_BAD_REQUEST", response: { data: { message: "Invalid request" } }, message: "Request failed" };
+    mockGet.mockRejectedValueOnce(axiosError);
+    const { getIndustry } = await import("@/services/api/industryApi");
+    await expect(getIndustry()).rejects.toThrow();
+  });
+
+  it("should throw with getErrorMessage for axios error without API message", async () => {
+    const axiosError = { __isAxiosError: true, code: "NETWORK_ERROR", response: { data: {} }, message: "Network Error" };
+    mockGet.mockRejectedValueOnce(axiosError);
+    const { getIndustry } = await import("@/services/api/industryApi");
+    await expect(getIndustry()).rejects.toThrow();
+  });
+
+  it("should throw generic error for non-axios errors", async () => {
+    mockGet.mockRejectedValueOnce("some string error");
+    const { getIndustry } = await import("@/services/api/industryApi");
+    await expect(getIndustry()).rejects.toThrow();
+  });
+
+  it("handles localStorage parse error gracefully (no token)", async () => {
+    localStorage.setItem(STORAGE_KEY, "invalid-json{{{");
+    const { getIndustry } = await import("@/services/api/industryApi");
+    await expect(getIndustry()).rejects.toThrow("Authentication required");
   });
 
   // Require when api is integrated

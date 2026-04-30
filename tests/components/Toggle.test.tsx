@@ -213,4 +213,16 @@ describe("Toggle", () => {
       expect(screen.getByText("Slim toggle")).toBeInTheDocument();
     });
   });
+
+  describe("hint prop", () => {
+    it("renders hint text when hint prop is provided", () => {
+      render(<Toggle label="With hint" hint="Helper text" />);
+      expect(screen.getByText("Helper text")).toBeTruthy();
+    });
+
+    it("renders with hint as ReactNode", () => {
+      render(<Toggle label="Hint node" hint={<span data-testid="hint-node">Hint content</span>} />);
+      expect(screen.getByTestId("hint-node")).toBeTruthy();
+    });
+  });
 });

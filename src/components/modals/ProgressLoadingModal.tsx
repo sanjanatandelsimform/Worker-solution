@@ -17,9 +17,19 @@ export interface BaseModalWithIconButton {
   isDisabled?: boolean;
 }
 
+type ModalWithCloseButton = {
+  onClose: () => void;
+  showCloseButton: true;
+};
+
+type ModalWithoutCloseButton = {
+  onClose?: never;
+  showCloseButton?: false;
+};
+
 export interface BaseModalWithIconProps {
   isOpen: boolean;
-  onClose: () => void;
+  onClose?: () => void;
   size?: "sm" | "md" | "lg" | "xl" | "full";
   title: string;
   subtitle?: string;
@@ -27,11 +37,13 @@ export interface BaseModalWithIconProps {
   contentDescription?: string;
   contentNote?: string;
   icon?: ReactNode;
-  buttons: BaseModalWithIconButton[];
+  buttons?: BaseModalWithIconButton[];
   showCloseButton?: boolean;
   paddingBottom?: string;
   backgroundPattern?: "success" | "unsuccess";
 }
+
+type LoadingModalProps = BaseModalWithIconProps & (ModalWithoutCloseButton | ModalWithCloseButton);
 
 export const ProgressLoadingModal = ({
   isOpen,
@@ -47,7 +59,7 @@ export const ProgressLoadingModal = ({
   showCloseButton = true,
   paddingBottom = "h-3",
   backgroundPattern = "success",
-}: BaseModalWithIconProps) => {
+}: LoadingModalProps) => {
   const backgroundClass = backgroundPattern === "success" ? " " : "background-pattern-unsuccess";
 
   return (
@@ -96,14 +108,15 @@ export const ProgressLoadingModal = ({
             <h3 className="text-lg font-medium text-ws-navy-950 mb-2">{contentTitle}</h3>
             <p className="text-base font-normal text-ws-navy-900">{contentDescription}</p>
             <p className="text-sm font-normal text-ws-text-tertiary mt-4">
-              <span className="text-ws-text-primary">Source:</span> {contentNote}
+              {/* <span className="text-ws-text-primary">Source:</span> */}
+              {contentNote}
             </p>
           </div>
         </ModalContent>
 
         {/* Modal Footer with Buttons */}
         <ModalFooter className="flex items-start gap-3 border-0 pb-6 px-6 pt-0">
-          {buttons.map(button => (
+          {buttons?.map(button => (
             <Button
               key={button.text}
               type="button"

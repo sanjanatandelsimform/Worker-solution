@@ -276,4 +276,11 @@ describe("SocialButton", () => {
       expect(screen.getByRole("button", { name: "Sign in with Google" })).toBeInTheDocument();
     });
   });
+
+  describe("figma with gray theme (FigmaLogoOutlined branch)", () => {
+    it("renders figma social button with gray theme", () => {
+      render(<SocialButton social="figma" theme="gray">Figma Login</SocialButton>);
+      expect(screen.getByRole("button", { name: "Figma Login" })).toBeTruthy();
+    });
+  });
 });

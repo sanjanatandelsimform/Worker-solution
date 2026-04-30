@@ -33,7 +33,7 @@ vi.mock("@/hooks/useAssessmentStatus", () => ({
     completionCount: 0,
     isLoading: false,
     error: null,
-    assessmentData: { assessmentType: "finch", data: { status: "in_progress" } },
+    assessmentData: null,
     sectionCompletion: { workforce: false, compensation: false, benefits: false, goals: false },
     refetch: vi.fn(),
   })),
@@ -116,7 +116,7 @@ describe("AdditionalQuestions – redirect behaviour", () => {
       completionCount: 4,
       isLoading: false,
       error: null,
-      assessmentData: { assessmentType: "finch", data: { status: "completed" } },
+      assessmentData: null,
       sectionCompletion: { workforce: true, compensation: true, benefits: true, goals: true },
       refetch: vi.fn(),
     });
@@ -136,7 +136,7 @@ describe("AdditionalQuestions – redirect behaviour", () => {
       completionCount: 0,
       isLoading: false,
       error: null,
-      assessmentData: { assessmentType: "finch", data: { status: "in_progress" } },
+      assessmentData: null,
       sectionCompletion: { workforce: false, compensation: false, benefits: false, goals: false },
       refetch: vi.fn(),
     });
@@ -148,7 +148,16 @@ describe("AdditionalQuestions – redirect behaviour", () => {
     });
   });
 
-  it("redirects to /dashboard when assessment is not Finch and not loading", async () => {
+  it("redirects to /dashboard when isConnected is false and not loading", async () => {
+    mockUseAssessmentStatus.mockReturnValue({
+      isFinchCompleted: false,
+      completionCount: 0,
+      isLoading: false,
+      error: null,
+      assessmentData: null,
+      sectionCompletion: { workforce: false, compensation: false, benefits: false, goals: false },
+      refetch: vi.fn(),
+    });
     mockUseAssessmentStatus.mockReturnValue({
       isFinchCompleted: false,
       isConnected: false,
@@ -156,7 +165,7 @@ describe("AdditionalQuestions – redirect behaviour", () => {
       completionCount: 0,
       isLoading: false,
       error: null,
-      assessmentData: { assessmentType: "manual", data: { status: "in_progress" } },
+      assessmentData: null,
       sectionCompletion: { workforce: false, compensation: false, benefits: false, goals: false },
       refetch: vi.fn(),
     });
@@ -168,7 +177,16 @@ describe("AdditionalQuestions – redirect behaviour", () => {
     });
   });
 
-  it("does not redirect when assessment is loading and assessmentType is not finch", async () => {
+  it("does not redirect when isConnected is false but isLoading is true", async () => {
+    mockUseAssessmentStatus.mockReturnValue({
+      isFinchCompleted: false,
+      completionCount: 0,
+      isLoading: false,
+      error: null,
+      assessmentData: null,
+      sectionCompletion: { workforce: false, compensation: false, benefits: false, goals: false },
+      refetch: vi.fn(),
+    });
     mockUseAssessmentStatus.mockReturnValue({
       isFinchCompleted: false,
       isConnected: false,
@@ -176,7 +194,7 @@ describe("AdditionalQuestions – redirect behaviour", () => {
       completionCount: 0,
       isLoading: true,
       error: null,
-      assessmentData: { assessmentType: "manual", data: { status: "in_progress" } },
+      assessmentData: null,
       sectionCompletion: { workforce: false, compensation: false, benefits: false, goals: false },
       refetch: vi.fn(),
     });
@@ -188,7 +206,16 @@ describe("AdditionalQuestions – redirect behaviour", () => {
     });
   });
 
-  it("does not redirect when assessmentType is finch and isFinchCompleted is false", async () => {
+  it("does not redirect when isConnected is true and isFinchCompleted is false", async () => {
+    mockUseAssessmentStatus.mockReturnValue({
+      isFinchCompleted: false,
+      completionCount: 0,
+      isLoading: false,
+      error: null,
+      assessmentData: null,
+      sectionCompletion: { workforce: false, compensation: false, benefits: false, goals: false },
+      refetch: vi.fn(),
+    });
     mockUseAssessmentStatus.mockReturnValue({
       isFinchCompleted: false,
       isConnected: true,
@@ -196,7 +223,7 @@ describe("AdditionalQuestions – redirect behaviour", () => {
       completionCount: 0,
       isLoading: false,
       error: null,
-      assessmentData: { assessmentType: "finch", data: { status: "in_progress" } },
+      assessmentData: null,
       sectionCompletion: { workforce: false, compensation: false, benefits: false, goals: false },
       refetch: vi.fn(),
     });
@@ -216,7 +243,7 @@ describe("AdditionalQuestions – redirect behaviour", () => {
       completionCount: 0,
       isLoading: false,
       error: null,
-      assessmentData: { assessmentType: "finch", data: { status: "in_progress" } },
+      assessmentData: null,
       sectionCompletion: { workforce: false, compensation: false, benefits: false, goals: false },
       refetch: vi.fn(),
     });
@@ -243,7 +270,7 @@ describe("AdditionalQuestions – redirect behaviour", () => {
       completionCount: 0,
       isLoading: false,
       error: null,
-      assessmentData: { assessmentType: "finch", data: { status: "in_progress" } },
+      assessmentData: null,
       sectionCompletion: { workforce: false, compensation: false, benefits: false, goals: false },
       refetch: vi.fn(),
     });
@@ -254,10 +281,7 @@ describe("AdditionalQuestions – redirect behaviour", () => {
     const allButtons = screen.getAllByRole("button");
     const closeButton = allButtons.find(btn => btn.textContent?.trim() === "");
     expect(closeButton).toBeDefined();
-    if (!closeButton) {
-      throw new Error("Close button not found");
-    }
-    fireEvent.click(closeButton);
+    fireEvent.click(closeButton!);
 
     await waitFor(() => {
       expect(mockNavigate).toHaveBeenCalledWith("/dashboard");
