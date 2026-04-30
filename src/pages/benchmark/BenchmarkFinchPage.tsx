@@ -28,7 +28,6 @@ import { CurrencyStackIcon } from "@/assets/icons/CurrencyStackIcon";
 import ProgressCard from "./ProgressCard";
 import SalaryHourlyFinchChart from "./SalaryHourlyCharts/SalaryHourlyChartsFinch/SalaryHourlyComparisonChart";
 import { TimerIcon } from "@/assets/icons/TimerIcon";
-import Declarations from "@/components/common/Declarations";
 
 const OverviewCardSkeleton = () => (
   <div className="border border-ws-border-secondary rounded-lg p-4 bg-ws-base-white animate-pulse shadow-sm">
@@ -1166,7 +1165,7 @@ export default function BenchmarkFinchPage() {
           Community Survey
         </p>
       </div>
-      <Declarations className="mt-4" />
+      {/* <Declarations className="mt-4" /> */}
       <GetInTouchModal
         isOpen={isGetInTouchModalOpen}
         onClose={() => setIsGetInTouchModalOpen(false)}

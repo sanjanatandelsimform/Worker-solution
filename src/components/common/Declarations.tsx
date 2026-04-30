@@ -21,7 +21,7 @@ export default function Declarations({ className = "" }: Readonly<DeclarationsPr
   });
 
   return (
-    <div className={`w-full ${className}`}>
+    <div data-testid="declarations" className={`w-full ${className}`}>
       <p className="text-xs leading-4 font-normal text-ws-text-primary ">
         This product provides informational insights and recommendations based on the data you share
         and industry benchmarks. It does not provide legal, financial, tax, or benefits advice, and

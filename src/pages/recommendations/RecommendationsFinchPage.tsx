@@ -13,11 +13,11 @@ import {
   selectRecommendationsLoading,
 } from "@/store/selectors/recommendationsSelectors";
 import { useAssessmentStatus } from "@/hooks/useAssessmentStatus";
+import Declarations from "@/components/common/Declarations";
 import CompanyAtAGlance from "./CompanyAtAGlance";
 import CoreBenefitsEnhancement from "./CoreBenefitsEnhancement";
 import StrategicSolutions from "./StrategicSolutions";
 import { useIndustry } from "@/hooks/useIndustry";
-import Declarations from "@/components/common/Declarations";
 
 export default function RecommendationsFinchPage({
   onNavigateToWorkforce,

@@ -933,16 +933,6 @@ export default function BenchmarkPage() {
         </p>
       </div>
 
-      <div className="w-full">
-        <p className="text-xs text-ws-text-primary">
-          This product provides informational insights and recommendations based on the data you
-          share and industry benchmarks. It does not provide legal, financial, tax, or benefits
-          advice, and recommendations are not guarantees of outcomes or results. Actual results may
-          vary based on your unique business circumstances. Always consult qualified professionals
-          for specific legal, tax, or financial advice.
-        </p>
-      </div>
-
       <GetInTouchModal
         isOpen={isGetInTouchModalOpen}
         onClose={() => setIsGetInTouchModalOpen(false)}
