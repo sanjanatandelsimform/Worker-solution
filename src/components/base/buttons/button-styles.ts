@@ -64,6 +64,7 @@ export const styles = sortCx({
       root: [
         "bg-ws-navy-900 text-ws-base-white border border-ws-gray-950/18",
         "hover:bg-ws-navy-600 hover:text-ws-base-white hover:border-ws-gray-950/18 transition-all duration-200",
+        "focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-ws-light-teal-850",
         "active:bg-ws-navy-900 active:border-ws-gray-950/18",
         "disabled:bg-ws-gray-100 disabled:border-ws-gray-200 disabled:text-ws-gray-400 shadow-ws-shadow-xs",
         "*:data-icon:text-ws-base-white hover:*:data-icon:text-ws-base-white transition-all duration-200",
@@ -116,7 +117,7 @@ export const styles = sortCx({
     error: {
       root: [
         "bg-ws-error-600 text-ws-base-white border border-ws-error-600",
-        "hover:bg-ws-error-200 hover:border-ws-error-700 transition-all duration-200 hover:text-ws-error-700",
+        "hover:bg-ws-error-200 hover:hover:border-ws-bg-overlay/18 transition-all duration-200 hover:text-ws-error-700",
         "active:bg-ws-error-800 active:border-ws-error-800",
         "disabled:bg-ws-gray-100 disabled:border-ws-gray-100 disabled:text-ws-gray-400",
         "*:data-icon:text-ws-base-white hover:*:data-icon:text-ws-base-white transition-all duration-200",
@@ -127,7 +128,7 @@ export const styles = sortCx({
     "destructive-primary": {
       root: [
         "bg-ws-error-600 text-ws-base-white border border-ws-error-600",
-        "hover:bg-ws-error-700 hover:border-ws-error-700",
+        "hover:bg-ws-error-700 hover:border-ws-bg-overlay/18",
         "active:bg-ws-error-800 active:border-ws-error-800",
         "disabled:bg-ws-gray-100 disabled:border-ws-gray-100 disabled:text-ws-gray-400",
         "*:data-icon:text-ws-base-white hover:*:data-icon:text-ws-base-white",

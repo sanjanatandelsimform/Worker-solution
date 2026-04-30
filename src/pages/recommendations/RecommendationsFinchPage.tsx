@@ -13,7 +13,6 @@ import {
   selectRecommendationsLoading,
 } from "@/store/selectors/recommendationsSelectors";
 import { useAssessmentStatus } from "@/hooks/useAssessmentStatus";
-import Declarations from "@/components/common/Declarations";
 import CompanyAtAGlance from "./CompanyAtAGlance";
 import CoreBenefitsEnhancement from "./CoreBenefitsEnhancement";
 import StrategicSolutions from "./StrategicSolutions";
@@ -31,6 +30,7 @@ export default function RecommendationsFinchPage({
   const compensationSection = useAppSelector(selectCompensationSection);
   const participationSection = useAppSelector(selectParticipationSection);
   const workforceIsLoading = useAppSelector(selectWorkforceLoading);
+  
 
   // Recommendations slice — Proven Strategies & Strategic Solutions
   const strategicRecommendations = useAppSelector(selectRecommStrategicRecommendations);
@@ -95,7 +95,6 @@ export default function RecommendationsFinchPage({
           strategicRecommendations={strategicRecommendations}
         />
       )}
-      <Declarations className="mt-4" />
     </div>
   );
 }

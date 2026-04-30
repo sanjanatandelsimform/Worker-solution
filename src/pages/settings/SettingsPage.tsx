@@ -490,7 +490,7 @@ export const SettingsPage = () => {
                         <Button
                           color="subtle"
                           size="lg"
-                          className="w-full text-base font-semibold text-ws-error-600 hover:bg-ws-error-200 hover:border-ws-error-700 transition-all duration-200 hover:text-ws-error-700"
+                          className="w-full text-base font-semibold text-ws-error-600 hover:bg-ws-error-200 hover:border-ws-bg-overlay/18 transition-all duration-200 hover:text-ws-error-700"
                           onClick={() => setIsAccountDeleteModalOpen(true)}
                         >
                           Delete my account

@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useAppSelector } from "@/store/hooks";
-import { Settings01, LogOut04, Home05 } from "@untitledui/icons";
+import { Settings01, Home05, LogOut01 } from "@untitledui/icons";
 import { NavList } from "@/components/application/app-navigation/base-components/nav-list";
 import type { NavItemType } from "@/components/application/app-navigation/config";
 // This is require
@@ -113,7 +113,7 @@ export const DashboardSidebar = ({ activeUrl = "/" }: DashboardSidebarProps) => 
     {
       label: "Logout",
       href: "#",
-      icon: LogOut04,
+      icon: LogOut01,
       onClick: handleLogoutClick,
     },
   ];

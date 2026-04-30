@@ -346,7 +346,6 @@ export default function RecommendationsPage() {
           </div>
         </div>
       </div>
-      {/* <Declarations className="mt-4" /> */}
     </div>
   );
 }

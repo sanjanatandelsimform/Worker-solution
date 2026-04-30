@@ -197,7 +197,7 @@ export function RegistrationForm() {
         <div className="flex w-full flex-col items-center">
           {/* Logo */}
           <div className="flex items-center justify-center px-2 py-1">
-            <h1 className="text-3xl font-semibold leading-15 text-ws-text-primary">Sign up</h1>
+            <h1 className="text-3xl font-semibold leading-15 text-ws-text-primary">Sign Up</h1>
           </div>
 
           {/* Header */}
@@ -499,7 +499,7 @@ export function RegistrationForm() {
                     onClick={() => setIsPrivacyModalOpen(true)}
                     className="text-sm font-normal text-ws-light-teal-850 underline p-0 m-0 h-5 hover:text-ws-light-teal-850"
                   >
-                    Privacy Policy
+                    Privacy Policies
                   </Button>
                 </p>
               </div>
@@ -528,7 +528,7 @@ export function RegistrationForm() {
                 className="w-full"
                 isDisabled={isSubmitting}
               >
-                {isSubmitting ? "Creating account..." : "Create Account"}
+                {isSubmitting ? "Creating account..." : "Create account"}
               </Button>
 
               {/* Sign in link */}
