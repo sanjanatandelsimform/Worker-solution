@@ -148,7 +148,9 @@ describe("UpdateYourEmailModal", () => {
       <UpdateYourEmailModal isOpen={true} onClose={vi.fn()} getResponse={vi.fn()} />
     );
 
-    fireEvent.change(screen.getByLabelText("new@email.com"), { target: { value: "used@acme.com" } });
+    fireEvent.change(screen.getByLabelText("new@email.com"), {
+      target: { value: "used@acme.com" },
+    });
     fireEvent.submit(container.querySelector("form")!);
     expect(await screen.findByText("This email is already in use")).toBeTruthy();
 
@@ -162,4 +164,3 @@ describe("UpdateYourEmailModal", () => {
     expect(await screen.findByText("random-failure")).toBeTruthy();
   });
 });
-

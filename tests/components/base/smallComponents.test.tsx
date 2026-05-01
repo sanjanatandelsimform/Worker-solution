@@ -13,25 +13,45 @@ import { configureStore } from "@reduxjs/toolkit";
 // Store setup
 // -------------------------------------------------------------------
 vi.mock("@/services/api/authApi", () => ({
-  default: { get: vi.fn(), post: vi.fn(), interceptors: { request: { use: vi.fn() }, response: { use: vi.fn() } }, defaults: { headers: { common: {} } } },
+  default: {
+    get: vi.fn(),
+    post: vi.fn(),
+    interceptors: { request: { use: vi.fn() }, response: { use: vi.fn() } },
+    defaults: { headers: { common: {} } },
+  },
   refreshAccessToken: vi.fn(),
   signout: vi.fn(),
 }));
-vi.mock("@/services/api/assessmentApi", () => ({ getAssessment: vi.fn().mockResolvedValue({ success: false, data: null }) }));
-vi.mock("@/services/api/finchApi", () => ({ getFinchStatus: vi.fn().mockResolvedValue({ connection: null, latestSyncJob: null }) }));
+vi.mock("@/services/api/assessmentApi", () => ({
+  getAssessment: vi.fn().mockResolvedValue({ success: false, data: null }),
+}));
+vi.mock("@/services/api/finchApi", () => ({
+  getFinchStatus: vi.fn().mockResolvedValue({ connection: null, latestSyncJob: null }),
+}));
 vi.mock("@/services/api/industryApi", () => ({ getIndustry: vi.fn() }));
 vi.mock("@/services/api/dashboardApi", () => ({ getDashboard: vi.fn() }));
 vi.mock("@/services/api/workforceApi", () => ({ getWorkforce: vi.fn() }));
 vi.mock("@/services/api/recommendationsApi", () => ({ getRecommendations: vi.fn() }));
-vi.mock("@/services/api/profileApi", () => ({ updateProfile: vi.fn(), updateEmail: vi.fn(), updatePassword: vi.fn(), deleteAccount: vi.fn(), resendEmailVerification: vi.fn(), retakeAssessment: vi.fn() }));
+vi.mock("@/services/api/profileApi", () => ({
+  updateProfile: vi.fn(),
+  updateEmail: vi.fn(),
+  updatePassword: vi.fn(),
+  deleteAccount: vi.fn(),
+  resendEmailVerification: vi.fn(),
+  retakeAssessment: vi.fn(),
+}));
 vi.mock("@/services/api/userApi", () => ({ getUserById: vi.fn() }));
 
 // Mock heavy page components to prevent deep render chains
 vi.mock("@/pages/dashboard/DashboardPage", () => ({ DashboardPage: () => <div>Dashboard</div> }));
 vi.mock("@/pages/settings/SettingsPage", () => ({ SettingsPage: () => <div>Settings</div> }));
-vi.mock("@/pages/assessmentWorkforce/AssessmentWorkforce", () => ({ default: () => <div>Assessment</div> }));
+vi.mock("@/pages/assessmentWorkforce/AssessmentWorkforce", () => ({
+  default: () => <div>Assessment</div>,
+}));
 vi.mock("@/pages/getMore/GetMore", () => ({ default: () => <div>GetMore</div> }));
-vi.mock("@/pages/additionalQuestions/AdditionalQuestions", () => ({ default: () => <div>AdditionalQuestions</div> }));
+vi.mock("@/pages/additionalQuestions/AdditionalQuestions", () => ({
+  default: () => <div>AdditionalQuestions</div>,
+}));
 vi.mock("@/pages/aboutUs/AboutUs", () => ({ default: () => <div>AboutUs</div> }));
 vi.mock("@/pages/auth/RegisterPage", () => ({ RegisterPage: () => <div>Register</div> }));
 vi.mock("@/pages/auth/SignInPage", () => ({ SignInPage: () => <div>SignIn</div> }));
@@ -39,9 +59,13 @@ vi.mock("@/pages/auth/VerifyEmailPage", () => ({ VerifyEmailPage: () => <div>Ver
 vi.mock("@/pages/successPage/SuccessPage", () => ({ SuccessPage: () => <div>Success</div> }));
 vi.mock("@/pages/termsPolicy/PrivacyPage", () => ({ default: () => <div>Privacy</div> }));
 vi.mock("@/pages/termsPolicy/TermsPage", () => ({ default: () => <div>Terms</div> }));
-vi.mock("@/components/auth/ForgotPasswordForm", () => ({ default: () => <div>ForgotPassword</div> }));
+vi.mock("@/components/auth/ForgotPasswordForm", () => ({
+  default: () => <div>ForgotPassword</div>,
+}));
 vi.mock("@/components/auth/ResetPasswordForm", () => ({ default: () => <div>ResetPassword</div> }));
-vi.mock("@/components/common/LoadingSpinner", () => ({ LoadingSpinner: () => <div>Loading...</div> }));
+vi.mock("@/components/common/LoadingSpinner", () => ({
+  LoadingSpinner: () => <div>Loading...</div>,
+}));
 vi.mock("@/components/auth/AuthErrorBoundary", () => ({
   AuthErrorBoundary: ({ children }: any) => <>{children}</>,
 }));
@@ -82,7 +106,13 @@ const createStore = () =>
       registrationForm: registrationFormReducer,
     },
     preloadedState: {
-      auth: { user: null, isAuthenticated: false, isLoading: false, authInitAttempted: true, tokens: { accessToken: null, refreshToken: null } },
+      auth: {
+        user: null,
+        isAuthenticated: false,
+        isLoading: false,
+        authInitAttempted: true,
+        tokens: { accessToken: null, refreshToken: null },
+      },
     } as any,
   });
 
@@ -148,7 +178,13 @@ describe("App", () => {
         registrationForm: registrationFormReducer,
       },
       preloadedState: {
-        auth: { user: null, isAuthenticated: false, isLoading: true, authInitAttempted: false, tokens: { accessToken: null, refreshToken: null } },
+        auth: {
+          user: null,
+          isAuthenticated: false,
+          isLoading: true,
+          authInitAttempted: false,
+          tokens: { accessToken: null, refreshToken: null },
+        },
       } as any,
     });
     render(
@@ -227,7 +263,9 @@ describe("Accordion", () => {
     const onChange = vi.fn();
     render(
       <Accordion onChange={onChange}>
-        <AccordionItem value="item1" header={<span>H1</span>}>Content</AccordionItem>
+        <AccordionItem value="item1" header={<span>H1</span>}>
+          Content
+        </AccordionItem>
       </Accordion>
     );
     fireEvent.click(screen.getByText("H1"));
@@ -241,8 +279,12 @@ describe("Accordion", () => {
     const onChange = vi.fn();
     render(
       <Accordion value="item1" onChange={onChange}>
-        <AccordionItem value="item1" header={<span>H1</span>}>Content</AccordionItem>
-        <AccordionItem value="item2" header={<span>H2</span>}>Content 2</AccordionItem>
+        <AccordionItem value="item1" header={<span>H1</span>}>
+          Content
+        </AccordionItem>
+        <AccordionItem value="item2" header={<span>H2</span>}>
+          Content 2
+        </AccordionItem>
       </Accordion>
     );
     fireEvent.click(screen.getByText("H2"));
@@ -252,7 +294,9 @@ describe("Accordion", () => {
   it("renders non-element children without crashing", () => {
     render(
       <Accordion>
-        <AccordionItem value="item1" header={<span>H1</span>}>Content</AccordionItem>
+        <AccordionItem value="item1" header={<span>H1</span>}>
+          Content
+        </AccordionItem>
         {null}
         {false}
       </Accordion>
@@ -283,7 +327,9 @@ describe("Avatar", () => {
   });
 
   it("renders placeholder icon when placeholderIcon provided", () => {
-    const Icon = ({ className }: { className?: string }) => <svg className={className} data-testid="placeholder-icon" />;
+    const Icon = ({ className }: { className?: string }) => (
+      <svg className={className} data-testid="placeholder-icon" />
+    );
     render(<Avatar placeholderIcon={Icon} />);
     expect(screen.getByTestId("placeholder-icon")).toBeTruthy();
   });
@@ -393,7 +439,12 @@ describe("GoalsSection", () => {
   });
 
   it("shows field error for selectedGoals", () => {
-    render(<GoalsSection {...defaultProps} fieldErrors={{ selectedGoals: "Please select at least one goal" }} />);
+    render(
+      <GoalsSection
+        {...defaultProps}
+        fieldErrors={{ selectedGoals: "Please select at least one goal" }}
+      />
+    );
     expect(screen.getByText("Please select at least one goal")).toBeTruthy();
   });
 
@@ -504,7 +555,7 @@ vi.mock("@/components/base/buttons/button", () => ({
   Button: ({ children, onClick }: any) => <button onClick={onClick}>{children}</button>,
 }));
 vi.mock("@/components/modals/TermsModal", () => ({
-  default: ({ isOpen }: any) => isOpen ? <div data-testid="terms-modal">Terms Modal</div> : null,
+  default: ({ isOpen }: any) => (isOpen ? <div data-testid="terms-modal">Terms Modal</div> : null),
 }));
 
 describe("Declarations", () => {

@@ -72,10 +72,18 @@ const mockLocalStorage = (() => {
   let store: Record<string, string> = {};
   return {
     getItem: (key: string) => store[key] ?? null,
-    setItem: (key: string, value: string) => { store[key] = value; },
-    removeItem: (key: string) => { delete store[key]; },
-    clear: () => { store = {}; },
-    get length() { return Object.keys(store).length; },
+    setItem: (key: string, value: string) => {
+      store[key] = value;
+    },
+    removeItem: (key: string) => {
+      delete store[key];
+    },
+    clear: () => {
+      store = {};
+    },
+    get length() {
+      return Object.keys(store).length;
+    },
     key: () => null,
   };
 })();
@@ -163,13 +171,9 @@ describe("profileApi - updateProfile", () => {
 
   it("propagates API error message on axios error", async () => {
     setAuthToken();
-    mockApiClient.patch.mockRejectedValueOnce(
-      makeAxiosError(500, { message: "Server Error" })
-    );
+    mockApiClient.patch.mockRejectedValueOnce(makeAxiosError(500, { message: "Server Error" }));
 
-    await expect(updateProfile({ firstName: "A", lastName: "B" })).rejects.toThrow(
-      "Server Error"
-    );
+    await expect(updateProfile({ firstName: "A", lastName: "B" })).rejects.toThrow("Server Error");
   });
 
   it("propagates non-axios errors through catch block", async () => {
@@ -225,7 +229,10 @@ describe("profileApi - updateEmail", () => {
 
   it("throws 'already in use' on 409 conflict", async () => {
     setAuthToken();
-    const conflictError = { ...makeAxiosError(409, { message: "Email conflict" }), isAxiosError: true };
+    const conflictError = {
+      ...makeAxiosError(409, { message: "Email conflict" }),
+      isAxiosError: true,
+    };
     mockApiClient.patch.mockRejectedValueOnce(conflictError);
 
     await expect(updateEmail({ email: "used@example.com" })).rejects.toThrow(
@@ -301,7 +308,11 @@ describe("profileApi - updatePassword", () => {
 
     let caught: unknown;
     try {
-      await updatePassword({ currentPassword: "wrong", newPassword: "new", confirmNewPassword: "new" });
+      await updatePassword({
+        currentPassword: "wrong",
+        newPassword: "new",
+        confirmNewPassword: "new",
+      });
     } catch (err) {
       caught = err;
     }
@@ -321,13 +332,19 @@ describe("profileApi - updatePassword", () => {
 
     let caught: unknown;
     try {
-      await updatePassword({ currentPassword: "bad", newPassword: "new", confirmNewPassword: "new" });
+      await updatePassword({
+        currentPassword: "bad",
+        newPassword: "new",
+        confirmNewPassword: "new",
+      });
     } catch (err) {
       caught = err;
     }
     expect(caught).toBeDefined();
     expect((caught as { lockoutDuration: number }).lockoutDuration).toBe(900);
-    expect((caught as { message: string }).message).toBe("Account locked due to too many failed attempts");
+    expect((caught as { message: string }).message).toBe(
+      "Account locked due to too many failed attempts"
+    );
   });
 
   it("uses default lockoutDuration of 900 when not in response", async () => {
@@ -341,7 +358,11 @@ describe("profileApi - updatePassword", () => {
 
     let caught: unknown;
     try {
-      await updatePassword({ currentPassword: "bad", newPassword: "new", confirmNewPassword: "new" });
+      await updatePassword({
+        currentPassword: "bad",
+        newPassword: "new",
+        confirmNewPassword: "new",
+      });
     } catch (err) {
       caught = err;
     }
@@ -379,7 +400,11 @@ describe("profileApi - updatePassword", () => {
 
     let caught: unknown;
     try {
-      await updatePassword({ currentPassword: "wrong", newPassword: "new", confirmNewPassword: "new" });
+      await updatePassword({
+        currentPassword: "wrong",
+        newPassword: "new",
+        confirmNewPassword: "new",
+      });
     } catch (err) {
       caught = err;
     }

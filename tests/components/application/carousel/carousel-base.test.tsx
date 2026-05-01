@@ -128,10 +128,7 @@ describe("CarouselIndicator", () => {
   });
 
   it("isSelected is true when selectedIndex matches index", () => {
-    renderWithContext(
-      <Carousel.Indicator index={0}>Dot</Carousel.Indicator>,
-      { selectedIndex: 0 }
-    );
+    renderWithContext(<Carousel.Indicator index={0}>Dot</Carousel.Indicator>, { selectedIndex: 0 });
     const btn = document.querySelector("button");
     expect(btn?.getAttribute("aria-current")).toBe("true");
   });

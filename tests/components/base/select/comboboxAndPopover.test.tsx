@@ -37,9 +37,10 @@ vi.mock("react-aria-components", () => {
       );
     },
     Group: ({ children, className, disabled: isDisabledProp, ...props }: any) => {
-      const cls = typeof className === "function"
-        ? className({ isFocusWithin: false, isDisabled: false })
-        : className;
+      const cls =
+        typeof className === "function"
+          ? className({ isFocusWithin: false, isDisabled: false })
+          : className;
       // Call with all state variants to cover branches
       if (typeof className === "function") {
         className({ isFocusWithin: true, isDisabled: false });
@@ -48,14 +49,17 @@ vi.mock("react-aria-components", () => {
       }
       return (
         <div data-testid="combobox-group" className={cls} {...props}>
-          {typeof children === "function"
-            ? children({ isDisabled: !!isDisabledProp })
-            : children}
+          {typeof children === "function" ? children({ isDisabled: !!isDisabledProp }) : children}
         </div>
       );
     },
     Input: ({ className, placeholder, ...props }: any) => (
-      <input data-testid="combobox-input" className={className} placeholder={placeholder} {...props} />
+      <input
+        data-testid="combobox-input"
+        className={className}
+        placeholder={placeholder}
+        {...props}
+      />
     ),
     ListBox: ({ children, items, className, ...props }: any) => (
       <ul data-testid="listbox" className={className} {...props}>
@@ -76,13 +80,17 @@ vi.mock("react-aria-components", () => {
 
 vi.mock("@/components/base/input/hint-text", () => ({
   HintText: ({ children, isInvalid }: any) => (
-    <span data-testid="hint-text" data-invalid={isInvalid}>{children}</span>
+    <span data-testid="hint-text" data-invalid={isInvalid}>
+      {children}
+    </span>
   ),
 }));
 
 vi.mock("@/components/base/input/label", () => ({
   Label: ({ children, isRequired, tooltip }: any) => (
-    <label data-testid="label" data-required={isRequired}>{children}</label>
+    <label data-testid="label" data-required={isRequired}>
+      {children}
+    </label>
   ),
 }));
 
@@ -114,11 +122,7 @@ describe("ComboBox", () => {
   });
 
   it("renders basic ComboBox without label or hint", () => {
-    render(
-      <ComboBox>
-        {() => null}
-      </ComboBox>
-    );
+    render(<ComboBox>{() => null}</ComboBox>);
     expect(screen.getByTestId("combobox")).toBeTruthy();
     expect(screen.getByTestId("combobox-group")).toBeTruthy();
     expect(screen.getByTestId("combobox-input")).toBeTruthy();
@@ -127,21 +131,13 @@ describe("ComboBox", () => {
   });
 
   it("renders with label", () => {
-    render(
-      <ComboBox label="Choose an option">
-        {() => null}
-      </ComboBox>
-    );
+    render(<ComboBox label="Choose an option">{() => null}</ComboBox>);
     expect(screen.getByTestId("label")).toBeTruthy();
     expect(screen.getByText("Choose an option")).toBeTruthy();
   });
 
   it("renders with hint text", () => {
-    render(
-      <ComboBox hint="Type to search">
-        {() => null}
-      </ComboBox>
-    );
+    render(<ComboBox hint="Type to search">{() => null}</ComboBox>);
     expect(screen.getByTestId("hint-text")).toBeTruthy();
     expect(screen.getByText("Type to search")).toBeTruthy();
   });
@@ -157,57 +153,33 @@ describe("ComboBox", () => {
   });
 
   it("renders with md size", () => {
-    render(
-      <ComboBox size="md">
-        {() => null}
-      </ComboBox>
-    );
+    render(<ComboBox size="md">{() => null}</ComboBox>);
     expect(screen.getByTestId("combobox")).toBeTruthy();
   });
 
   it("renders with shortcut=false", () => {
-    render(
-      <ComboBox shortcut={false}>
-        {() => null}
-      </ComboBox>
-    );
+    render(<ComboBox shortcut={false}>{() => null}</ComboBox>);
     expect(screen.getByTestId("combobox")).toBeTruthy();
   });
 
   it("renders with custom placeholder", () => {
-    render(
-      <ComboBox placeholder="Search for items">
-        {() => null}
-      </ComboBox>
-    );
+    render(<ComboBox placeholder="Search for items">{() => null}</ComboBox>);
     expect(screen.getByTestId("combobox-input")).toBeTruthy();
   });
 
   it("renders with items", () => {
     const items = [{ id: "1", label: "Item 1" }];
-    render(
-      <ComboBox items={items as any}>
-        {(item) => <li key={item.id}>{item.label}</li>}
-      </ComboBox>
-    );
+    render(<ComboBox items={items as any}>{item => <li key={item.id}>{item.label}</li>}</ComboBox>);
     expect(screen.getByTestId("combobox")).toBeTruthy();
   });
 
   it("renders search icon", () => {
-    render(
-      <ComboBox>
-        {() => null}
-      </ComboBox>
-    );
+    render(<ComboBox>{() => null}</ComboBox>);
     expect(screen.getByTestId("search-icon")).toBeTruthy();
   });
 
   it("onResize callback covers the placeholderRef null check (return early branch)", () => {
-    render(
-      <ComboBox>
-        {() => null}
-      </ComboBox>
-    );
+    render(<ComboBox>{() => null}</ComboBox>);
     // capturedOnResize is the useCallback function from ComboBox
     // placeholderRef.current may be null in jsdom, so calling it covers the early return
     if (capturedOnResize) {
@@ -217,20 +189,12 @@ describe("ComboBox", () => {
   });
 
   it("Group component renders with disabled state", () => {
-    render(
-      <ComboBox>
-        {() => null}
-      </ComboBox>
-    );
+    render(<ComboBox>{() => null}</ComboBox>);
     expect(screen.getByTestId("combobox-group")).toBeTruthy();
   });
 
   it("renders with shortcut string to cover shortcut branch (lines 118-126)", () => {
-    render(
-      <ComboBox shortcut="⌘K">
-        {() => null}
-      </ComboBox>
-    );
+    render(<ComboBox shortcut="⌘K">{() => null}</ComboBox>);
     expect(screen.getByTestId("combobox")).toBeTruthy();
   });
 });

@@ -11,8 +11,20 @@ import {
 describe("charts-base", () => {
   it("renders legend with reverse + layout/align branches", () => {
     const payload = [
-      { value: "One", type: "line", color: "red", dataKey: "one", payload: { className: "dot-one" } },
-      { value: "Two", type: "line", color: "blue", dataKey: "two", payload: { className: "dot-two" } },
+      {
+        value: "One",
+        type: "line",
+        color: "red",
+        dataKey: "one",
+        payload: { className: "dot-one" },
+      },
+      {
+        value: "Two",
+        type: "line",
+        color: "blue",
+        dataKey: "two",
+        payload: { className: "dot-two" },
+      },
     ];
 
     const { container, rerender } = render(
@@ -99,4 +111,3 @@ describe("charts-base", () => {
     expect(svg2.getAttribute("y")).toBe("24");
   });
 });
-

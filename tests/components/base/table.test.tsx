@@ -34,18 +34,17 @@ describe("Table", () => {
     expect(screen.getByText("Loading...")).toBeTruthy();
 
     render(
-      <Table
-        data={[]}
-        columns={[{ key: "name", header: "Name" } as any]}
-        emptyMessage="Empty"
-      />
+      <Table data={[]} columns={[{ key: "name", header: "Name" } as any]} emptyMessage="Empty" />
     );
     expect(screen.getByText("Empty")).toBeTruthy();
   });
 
   it("supports selectable row selection via header + row checkbox and keyboard", () => {
     const onRowSelectionChange = vi.fn();
-    const data = [{ id: "r1", name: "Row 1" }, { id: "r2", name: "Row 2" }];
+    const data = [
+      { id: "r1", name: "Row 1" },
+      { id: "r2", name: "Row 2" },
+    ];
     const columns = [{ key: "name", header: "Name" }];
 
     render(
@@ -81,7 +80,10 @@ describe("Table", () => {
 
   it("adds row to selection when row is not yet selected (covers line 92)", () => {
     const onRowSelectionChange = vi.fn();
-    const data = [{ id: "r1", name: "Row 1" }, { id: "r2", name: "Row 2" }];
+    const data = [
+      { id: "r1", name: "Row 1" },
+      { id: "r2", name: "Row 2" },
+    ];
     const columns = [{ key: "name", header: "Name" }];
 
     render(
@@ -151,4 +153,3 @@ describe("Table", () => {
     expect(onRowClick).toHaveBeenCalled();
   });
 });
-

@@ -7,7 +7,11 @@ import { render, screen } from "@testing-library/react";
 // Mock DynamicTab to avoid its complexity
 vi.mock("@/components/assessment/DynamicTab", () => ({
   DynamicTab: ({ questions, section, stateOptions }: any) => (
-    <div data-testid="dynamic-tab" data-section={section} data-question-count={questions?.length ?? 0}>
+    <div
+      data-testid="dynamic-tab"
+      data-section={section}
+      data-question-count={questions?.length ?? 0}
+    >
       {stateOptions && <span data-testid="state-options-count">{stateOptions.length}</span>}
     </div>
   ),
@@ -23,9 +27,7 @@ vi.mock("@/data/assessment/questionData.json", () => ({
           {
             key: "topWorkLocations",
             validationRules: {
-              fields: [
-                { options: [], placeholder: "Select state" },
-              ],
+              fields: [{ options: [], placeholder: "Select state" }],
             },
           },
           {
@@ -72,7 +74,10 @@ describe("WorkforceTab Component", () => {
 
   it("renders with state options injected into topWorkLocations", () => {
     mockUseStatesLookup.mockReturnValue({
-      stateOptions: [{ label: "Texas", value: "TX" }, { label: "California", value: "CA" }],
+      stateOptions: [
+        { label: "Texas", value: "TX" },
+        { label: "California", value: "CA" },
+      ],
       isLoading: false,
       error: null,
     });

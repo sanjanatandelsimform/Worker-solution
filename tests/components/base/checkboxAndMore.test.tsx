@@ -7,8 +7,7 @@ import React from "react";
 
 vi.mock("react-aria-components", () => ({
   Checkbox: ({ children, className, ...props }: any) => {
-    const cls =
-      typeof className === "function" ? className({ isDisabled: false }) : className;
+    const cls = typeof className === "function" ? className({ isDisabled: false }) : className;
     return (
       <label className={cls} data-testid="aria-checkbox" {...props}>
         {typeof children === "function"
@@ -23,26 +22,32 @@ vi.mock("react-aria-components", () => ({
     );
   },
   Radio: ({ children, className, value, ...props }: any) => {
-    const cls = typeof className === "function"
-      ? className({ isSelected: false, isDisabled: false, isFocusVisible: false })
-      : className;
+    const cls =
+      typeof className === "function"
+        ? className({ isSelected: false, isDisabled: false, isFocusVisible: false })
+        : className;
     return (
       <label className={cls} data-testid="aria-radio" data-value={value} {...props}>
         {typeof children === "function"
-          ? children({ isSelected: false, isDisabled: false, isFocusVisible: false, isHovered: false })
+          ? children({
+              isSelected: false,
+              isDisabled: false,
+              isFocusVisible: false,
+              isHovered: false,
+            })
           : children}
       </label>
     );
   },
   RadioGroup: ({ children, ...props }: any) => (
-    <div data-testid="aria-radio-group" {...props}>{children}</div>
+    <div data-testid="aria-radio-group" {...props}>
+      {children}
+    </div>
   ),
 }));
 
 vi.mock("@untitledui/icons", () => ({
-  InfoCircle: ({ className }: any) => (
-    <span className={className} data-testid="info-circle" />
-  ),
+  InfoCircle: ({ className }: any) => <span className={className} data-testid="info-circle" />,
 }));
 
 vi.mock("@/components/base/tooltip/tooltip", () => ({

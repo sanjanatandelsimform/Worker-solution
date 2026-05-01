@@ -19,13 +19,12 @@ vi.mock("@/components/base/select/select", async () => {
         if (onSelectionChange) capturedOnSelectionChange = onSelectionChange;
         return (
           <div data-testid="mock-select">
-            <select
-              value={value || ""}
-              onChange={(e) => onSelectionChange?.(e.target.value)}
-            >
+            <select value={value || ""} onChange={e => onSelectionChange?.(e.target.value)}>
               <option value="">{placeholder}</option>
               {items?.map((item: any) => (
-                <option key={item.id} value={item.id}>{item.label}</option>
+                <option key={item.id} value={item.id}>
+                  {item.label}
+                </option>
               ))}
             </select>
             {children}
@@ -191,9 +190,7 @@ describe("BenchmarkPage", () => {
             quarter: "Q1",
             year: "2025",
           },
-          areaMedianWage: [
-            { zipcode: "12345", medianWage: "55000" },
-          ],
+          areaMedianWage: [{ zipcode: "12345", medianWage: "55000" }],
           housingCost: [
             {
               zipcode: "12345",
@@ -218,7 +215,9 @@ describe("BenchmarkPage", () => {
     );
 
     await waitFor(() => {
-      expect(document.querySelector(".flex") || screen.getByText(/benchmark/i) || document.body).toBeTruthy();
+      expect(
+        document.querySelector(".flex") || screen.getByText(/benchmark/i) || document.body
+      ).toBeTruthy();
     });
   });
 

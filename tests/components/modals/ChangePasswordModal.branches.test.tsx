@@ -48,14 +48,7 @@ vi.mock("@/components/base/modal/modal", () => ({
 }));
 
 vi.mock("@/components/base/buttons/button", () => ({
-  Button: ({
-    children,
-    onClick,
-    color,
-    "aria-label": ariaLabel,
-    type,
-    isDisabled,
-  }: any) => (
+  Button: ({ children, onClick, color, "aria-label": ariaLabel, type, isDisabled }: any) => (
     <button
       aria-label={ariaLabel}
       data-color={color}
@@ -118,15 +111,11 @@ describe("ChangePasswordModal branches", () => {
 
     render(<ChangePasswordModal isOpen={true} onClose={vi.fn()} />);
 
-    expect(
-      screen.getByText(/Account locked for 3 minutes/i)
-    ).toBeTruthy();
+    expect(screen.getByText(/Account locked for 3 minutes/i)).toBeTruthy();
   });
 
   it("validates required fields and shows validation hints on Update when inputs are empty", () => {
-    const { container } = render(
-      <ChangePasswordModal isOpen={true} onClose={vi.fn()} />
-    );
+    const { container } = render(<ChangePasswordModal isOpen={true} onClose={vi.fn()} />);
     const form = container.querySelector("form")!;
     fireEvent.submit(form);
 
@@ -139,13 +128,15 @@ describe("ChangePasswordModal branches", () => {
     const dispatchResult = { unwrap: () => Promise.resolve({}) };
     mockDispatch.mockReturnValue(dispatchResult as any);
 
-    const { container } = render(
-      <ChangePasswordModal isOpen={true} onClose={onClose} />
-    );
+    const { container } = render(<ChangePasswordModal isOpen={true} onClose={onClose} />);
 
-    fireEvent.change(screen.getByLabelText("Current Password"), { target: { value: "CurrentPassword1!" } });
+    fireEvent.change(screen.getByLabelText("Current Password"), {
+      target: { value: "CurrentPassword1!" },
+    });
     fireEvent.change(screen.getByLabelText("New Password"), { target: { value: "NewPassword1!" } });
-    fireEvent.change(screen.getByLabelText("Confirm New Password"), { target: { value: "NewPassword1!" } });
+    fireEvent.change(screen.getByLabelText("Confirm New Password"), {
+      target: { value: "NewPassword1!" },
+    });
 
     await waitFor(() => {
       const btn = screen.getByText("Update") as HTMLButtonElement;
@@ -165,9 +156,13 @@ describe("ChangePasswordModal branches", () => {
 
     const { container } = render(<ChangePasswordModal isOpen={true} onClose={vi.fn()} />);
 
-    fireEvent.change(screen.getByLabelText("Current Password"), { target: { value: "CurrentPassword1!" } });
+    fireEvent.change(screen.getByLabelText("Current Password"), {
+      target: { value: "CurrentPassword1!" },
+    });
     fireEvent.change(screen.getByLabelText("New Password"), { target: { value: "NewPassword1!" } });
-    fireEvent.change(screen.getByLabelText("Confirm New Password"), { target: { value: "NewPassword1!" } });
+    fireEvent.change(screen.getByLabelText("Confirm New Password"), {
+      target: { value: "NewPassword1!" },
+    });
 
     fireEvent.submit(container.querySelector("form")!);
 
@@ -177,4 +172,3 @@ describe("ChangePasswordModal branches", () => {
     );
   });
 });
-

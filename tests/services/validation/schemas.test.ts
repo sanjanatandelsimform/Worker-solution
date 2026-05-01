@@ -77,7 +77,10 @@ describe("registrationSchema", () => {
   });
 
   it("rejects legalBusinessName exceeding 50 chars", () => {
-    const result = registrationSchema.safeParse({ ...validData, legalBusinessName: "A".repeat(51) });
+    const result = registrationSchema.safeParse({
+      ...validData,
+      legalBusinessName: "A".repeat(51),
+    });
     expect(result.success).toBe(false);
   });
 
@@ -107,12 +110,19 @@ describe("registrationSchema", () => {
   });
 
   it("rejects password without uppercase", () => {
-    const result = registrationSchema.safeParse({ ...validData, password: "lowercase1!", confirmPassword: "lowercase1!" });
+    const result = registrationSchema.safeParse({
+      ...validData,
+      password: "lowercase1!",
+      confirmPassword: "lowercase1!",
+    });
     expect(result.success).toBe(false);
   });
 
   it("rejects non-matching confirmPassword", () => {
-    const result = registrationSchema.safeParse({ ...validData, confirmPassword: "DifferentPass1!" });
+    const result = registrationSchema.safeParse({
+      ...validData,
+      confirmPassword: "DifferentPass1!",
+    });
     expect(result.success).toBe(false);
     if (!result.success) {
       const messages = result.error.issues.map(i => i.message);
@@ -133,7 +143,9 @@ describe("signInSchema", () => {
   });
 
   it("accepts sign-in without rememberMe", () => {
-    expect(signInSchema.safeParse({ email: validData.email, password: validData.password }).success).toBe(true);
+    expect(
+      signInSchema.safeParse({ email: validData.email, password: validData.password }).success
+    ).toBe(true);
   });
 
   it("rejects empty email", () => {
@@ -186,7 +198,10 @@ describe("resetPasswordSchema", () => {
   });
 
   it("rejects weak password", () => {
-    const result = resetPasswordSchema.safeParse({ newPassword: "weakpass", confirmPassword: "weakpass" });
+    const result = resetPasswordSchema.safeParse({
+      newPassword: "weakpass",
+      confirmPassword: "weakpass",
+    });
     expect(result.success).toBe(false);
   });
 });

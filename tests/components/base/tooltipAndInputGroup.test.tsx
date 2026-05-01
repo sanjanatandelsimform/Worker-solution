@@ -8,8 +8,15 @@ import React from "react";
 // Mock react-aria-components for all tests in this file
 vi.mock("react-aria-components", () => ({
   Button: ({ children, className, ...props }: any) => {
-    const cls = typeof className === "function" ? className({ isHovered: false, isPressed: false, isFocusVisible: false }) : className;
-    return <button className={cls} {...props}>{children}</button>;
+    const cls =
+      typeof className === "function"
+        ? className({ isHovered: false, isPressed: false, isFocusVisible: false })
+        : className;
+    return (
+      <button className={cls} {...props}>
+        {children}
+      </button>
+    );
   },
   TooltipTrigger: ({ children, isDisabled, isOpen, delay, closeDelay, onOpenChange }: any) => (
     <div data-testid="tooltip-trigger" data-disabled={isDisabled} data-open={isOpen}>
@@ -17,9 +24,10 @@ vi.mock("react-aria-components", () => ({
     </div>
   ),
   Tooltip: ({ children, placement, className, offset, crossOffset, ...props }: any) => {
-    const cls = typeof className === "function"
-      ? className({ isEntering: false, isExiting: false })
-      : className;
+    const cls =
+      typeof className === "function"
+        ? className({ isEntering: false, isExiting: false })
+        : className;
     return (
       <div data-testid="tooltip" data-placement={placement} className={cls}>
         {typeof children === "function"
@@ -29,7 +37,14 @@ vi.mock("react-aria-components", () => ({
     );
   },
   OverlayArrow: ({ children }: any) => <div data-testid="overlay-arrow">{children}</div>,
-  TextField: ({ children, isInvalid, isDisabled, isRequired, "aria-label": ariaLabel, ...props }: any) => (
+  TextField: ({
+    children,
+    isInvalid,
+    isDisabled,
+    isRequired,
+    "aria-label": ariaLabel,
+    ...props
+  }: any) => (
     <div data-testid="text-field" data-invalid={isInvalid} data-disabled={isDisabled}>
       {typeof children === "function"
         ? children({ isDisabled: !!isDisabled, isInvalid: !!isInvalid, isRequired: !!isRequired })
@@ -43,23 +58,38 @@ vi.mock("react-aria-components", () => ({
     return (
       <label className={cls} {...props}>
         {typeof children === "function"
-          ? children({ isSelected: false, isIndeterminate: false, isDisabled: false, isFocusVisible: false })
+          ? children({
+              isSelected: false,
+              isIndeterminate: false,
+              isDisabled: false,
+              isFocusVisible: false,
+            })
           : children}
       </label>
     );
   },
   ListBoxItem: ({ children, id, textValue, isDisabled, className, ...props }: any) => {
-    const cls = typeof className === "function" ? className({ isSelected: false, isFocused: false, isFocusVisible: false }) : className;
+    const cls =
+      typeof className === "function"
+        ? className({ isSelected: false, isFocused: false, isFocusVisible: false })
+        : className;
     return (
       <li id={id} className={cls} data-testid={`list-item-${id}`} role="option">
         {typeof children === "function"
-          ? children({ isSelected: true, isDisabled: false, isFocused: false, isFocusVisible: false })
+          ? children({
+              isSelected: true,
+              isDisabled: false,
+              isFocused: false,
+              isFocusVisible: false,
+            })
           : children}
       </li>
     );
   },
   Text: ({ children, slot, className }: any) => (
-    <span data-slot={slot} className={className}>{children}</span>
+    <span data-slot={slot} className={className}>
+      {children}
+    </span>
   ),
 }));
 
@@ -74,12 +104,24 @@ vi.mock("@/components/base/input/label", () => ({
 
 vi.mock("@/components/base/input/hint-text", () => ({
   HintText: ({ children, isInvalid, className }: any) => (
-    <p data-invalid={isInvalid} className={className}>{children}</p>
+    <p data-invalid={isInvalid} className={className}>
+      {children}
+    </p>
   ),
 }));
 
 vi.mock("@/components/base/input/input", () => ({
-  TextField: ({ children, isInvalid, isDisabled, isRequired, "aria-label": ariaLabel, inputClassName, wrapperClassName, tooltipClassName, ...props }: any) => (
+  TextField: ({
+    children,
+    isInvalid,
+    isDisabled,
+    isRequired,
+    "aria-label": ariaLabel,
+    inputClassName,
+    wrapperClassName,
+    tooltipClassName,
+    ...props
+  }: any) => (
     <div data-testid="text-field" data-invalid={isInvalid}>
       {typeof children === "function"
         ? children({ isDisabled: !!isDisabled, isInvalid: !!isInvalid, isRequired: !!isRequired })

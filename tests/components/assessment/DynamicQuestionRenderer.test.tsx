@@ -26,7 +26,15 @@ vi.mock("@/data/assessment/questionData.json", () => ({
 }));
 
 vi.mock("@/components/base/input/input", () => ({
-  Input: ({ value, onChange, placeholder }: { value?: string; onChange: (v: string) => void; placeholder?: string }) => (
+  Input: ({
+    value,
+    onChange,
+    placeholder,
+  }: {
+    value?: string;
+    onChange: (v: string) => void;
+    placeholder?: string;
+  }) => (
     <input
       data-testid={placeholder || "input"}
       value={value || ""}
@@ -73,13 +81,7 @@ vi.mock("@/components/base/radio-buttons/radio-buttons", () => ({
 }));
 
 vi.mock("@/components/base/checkbox/checkbox", () => ({
-  Checkbox: ({
-    label,
-    onChange,
-  }: {
-    label: string;
-    onChange: (checked: boolean) => void;
-  }) => (
+  Checkbox: ({ label, onChange }: { label: string; onChange: (checked: boolean) => void }) => (
     <div>
       <button onClick={() => onChange(true)}>{label}</button>
       <button data-testid={`uncheck-${label}`} onClick={() => onChange(false)}>
@@ -90,7 +92,13 @@ vi.mock("@/components/base/checkbox/checkbox", () => ({
 }));
 
 vi.mock("@/components/base/select/select", () => {
-  const Select = ({ items = [], onSelectionChange }: { items?: Array<{ id: string; label: string }>; onSelectionChange: (id: string) => void }) => (
+  const Select = ({
+    items = [],
+    onSelectionChange,
+  }: {
+    items?: Array<{ id: string; label: string }>;
+    onSelectionChange: (id: string) => void;
+  }) => (
     <div>
       {items.map(i => (
         <button key={i.id} onClick={() => onSelectionChange(i.id)}>
@@ -104,7 +112,15 @@ vi.mock("@/components/base/select/select", () => {
 });
 
 vi.mock("@/components/base/buttons/button", () => ({
-  Button: ({ children, onClick, "aria-label": ariaLabel }: { children?: React.ReactNode; onClick?: () => void; "aria-label"?: string }) => (
+  Button: ({
+    children,
+    onClick,
+    "aria-label": ariaLabel,
+  }: {
+    children?: React.ReactNode;
+    onClick?: () => void;
+    "aria-label"?: string;
+  }) => (
     <button aria-label={ariaLabel} onClick={onClick}>
       {children || ariaLabel}
     </button>
@@ -208,7 +224,16 @@ describe("DynamicQuestionRenderer", () => {
           validationRules: {
             type: "STRUCTURED_ARRAY",
             required: false,
-            fields: [{ name: "state", label: "State", placeholder: "", type: "text", required: true, width: "" }],
+            fields: [
+              {
+                name: "state",
+                label: "State",
+                placeholder: "",
+                type: "text",
+                required: true,
+                width: "",
+              },
+            ],
           },
         })}
         answers={{ topWorkLocations: [] }}
@@ -365,8 +390,22 @@ describe("DynamicQuestionRenderer", () => {
         required: false,
         maxItems: 2,
         fields: [
-          { name: "state", label: "State", placeholder: "", type: "text", required: true, width: "" },
-          { name: "zipCode", label: "Zip", placeholder: "", type: "text", required: true, width: "" },
+          {
+            name: "state",
+            label: "State",
+            placeholder: "",
+            type: "text",
+            required: true,
+            width: "",
+          },
+          {
+            name: "zipCode",
+            label: "Zip",
+            placeholder: "",
+            type: "text",
+            required: true,
+            width: "",
+          },
         ],
       },
     });
@@ -636,8 +675,22 @@ describe("DynamicQuestionRenderer", () => {
         required: false,
         maxItems: 3,
         fields: [
-          { name: "state", label: "State", placeholder: "", type: "text", required: true, width: "" },
-          { name: "zipCode", label: "Zip", placeholder: "", type: "text", required: true, width: "" },
+          {
+            name: "state",
+            label: "State",
+            placeholder: "",
+            type: "text",
+            required: true,
+            width: "",
+          },
+          {
+            name: "zipCode",
+            label: "Zip",
+            placeholder: "",
+            type: "text",
+            required: true,
+            width: "",
+          },
         ],
       },
     });
@@ -680,7 +733,14 @@ describe("DynamicQuestionRenderer", () => {
         required: false,
         maxItems: 3,
         fields: [
-          { name: "state", label: "State", placeholder: "", type: "text", required: true, width: "" },
+          {
+            name: "state",
+            label: "State",
+            placeholder: "",
+            type: "text",
+            required: true,
+            width: "",
+          },
         ],
       },
     });
@@ -694,10 +754,16 @@ describe("DynamicQuestionRenderer", () => {
       />
     );
 
-    await waitFor(() => {
-      // Empty array triggers getArrayItems to create a new item
-      expect(onAnswerChange).toHaveBeenCalledWith("locations", expect.arrayContaining([expect.objectContaining({ id: expect.any(Number) })]));
-    }, { timeout: 1000 }).catch(() => {});
+    await waitFor(
+      () => {
+        // Empty array triggers getArrayItems to create a new item
+        expect(onAnswerChange).toHaveBeenCalledWith(
+          "locations",
+          expect.arrayContaining([expect.objectContaining({ id: expect.any(Number) })])
+        );
+      },
+      { timeout: 1000 }
+    ).catch(() => {});
     expect(document.body).toBeTruthy();
   });
 

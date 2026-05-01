@@ -13,8 +13,7 @@ import { BaseFormModal } from "../../../src/components/modals/BaseFormModal";
 
 // Mock Modal components
 vi.mock("@/components/base/modal/modal", () => ({
-  Modal: ({ isOpen, children }: any) =>
-    isOpen ? <div data-testid="modal">{children}</div> : null,
+  Modal: ({ isOpen, children }: any) => (isOpen ? <div data-testid="modal">{children}</div> : null),
   ModalContent: ({ children, ...props }: any) => (
     <div data-testid="modal-content" {...props}>
       {children}

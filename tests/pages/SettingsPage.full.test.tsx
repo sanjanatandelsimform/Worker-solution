@@ -75,11 +75,7 @@ vi.mock("@/components/modals/BaseModalWithIcon", () => ({
     if (!isOpen) return null;
     return (
       <div>
-        <button
-          data-testid="modal-confirm"
-          type="button"
-          onClick={onConfirm}
-        >
+        <button data-testid="modal-confirm" type="button" onClick={onConfirm}>
           {primaryLabel ?? "Confirm"}
         </button>
         <button data-testid="modal-close" type="button" onClick={onClose}>
@@ -376,9 +372,12 @@ describe("SettingsPage", () => {
     fireEvent.click(screen.getByRole("button", { name: /retake the assessment/i }));
     fireEvent.click(screen.getByTestId("modal-confirm"));
 
-    await waitFor(() => {
-      expect(retakeAssessmentAction).toHaveBeenCalled();
-    }, { timeout: 3000 });
+    await waitFor(
+      () => {
+        expect(retakeAssessmentAction).toHaveBeenCalled();
+      },
+      { timeout: 3000 }
+    );
   });
 
   it("handles handleFirstNameChange with valid name", () => {
@@ -443,4 +442,3 @@ describe("SettingsPage", () => {
     expect(screen.getByText("Settings")).toBeTruthy();
   });
 });
-

@@ -18,30 +18,27 @@ const mockPost = vi.fn();
 const mockRetryCall = vi.fn().mockResolvedValue({ data: { success: true } });
 
 // Create a callable mockApiInstance that also has method properties
-const mockApiInstance: any = Object.assign(
-  (...args: any[]) => mockRetryCall(...args),
-  {
-    get: mockGet,
-    post: mockPost,
-    interceptors: {
-      request: {
-        use: vi.fn((success: (config: any) => any, error: (err: any) => any) => {
-          requestInterceptorSuccess = success;
-          requestInterceptorError = error;
-          return 0;
-        }),
-      },
-      response: {
-        use: vi.fn((success: (r: any) => any, error: (e: any) => Promise<any>) => {
-          responseInterceptorSuccess = success;
-          responseInterceptorError = error;
-          return 0;
-        }),
-      },
+const mockApiInstance: any = Object.assign((...args: any[]) => mockRetryCall(...args), {
+  get: mockGet,
+  post: mockPost,
+  interceptors: {
+    request: {
+      use: vi.fn((success: (config: any) => any, error: (err: any) => any) => {
+        requestInterceptorSuccess = success;
+        requestInterceptorError = error;
+        return 0;
+      }),
     },
-    defaults: { headers: { common: {} } },
-  }
-);
+    response: {
+      use: vi.fn((success: (r: any) => any, error: (e: any) => Promise<any>) => {
+        responseInterceptorSuccess = success;
+        responseInterceptorError = error;
+        return 0;
+      }),
+    },
+  },
+  defaults: { headers: { common: {} } },
+});
 
 vi.mock("axios", async () => {
   const actual = await vi.importActual("axios");
@@ -107,9 +104,7 @@ describe("assessmentApi - request interceptor", () => {
     (localStorage.getItem as ReturnType<typeof vi.fn>).mockReturnValue(null);
     const config = { headers: {} };
     requestInterceptorSuccess?.(config);
-    expect(consoleSpy).toHaveBeenCalledWith(
-      expect.stringContaining("No auth token found")
-    );
+    expect(consoleSpy).toHaveBeenCalledWith(expect.stringContaining("No auth token found"));
     consoleSpy.mockRestore();
   });
 

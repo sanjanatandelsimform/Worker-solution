@@ -11,11 +11,19 @@ describe("store.ts", () => {
     storageData = {};
     localStorageMock = {
       getItem: vi.fn((key: string) => storageData[key] ?? null),
-      setItem: vi.fn((key: string, value: string) => { storageData[key] = value; }),
-      removeItem: vi.fn((key: string) => { delete storageData[key]; }),
-      clear: vi.fn(() => { storageData = {}; }),
+      setItem: vi.fn((key: string, value: string) => {
+        storageData[key] = value;
+      }),
+      removeItem: vi.fn((key: string) => {
+        delete storageData[key];
+      }),
+      clear: vi.fn(() => {
+        storageData = {};
+      }),
       key: vi.fn((index: number) => Object.keys(storageData)[index] ?? null),
-      get length() { return Object.keys(storageData).length; },
+      get length() {
+        return Object.keys(storageData).length;
+      },
     } as Storage;
     Object.defineProperty(globalThis, "localStorage", {
       value: localStorageMock,

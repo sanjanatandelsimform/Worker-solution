@@ -23,7 +23,10 @@ vi.mock("axios", async () => {
   const actual = await vi.importActual<typeof import("axios")>("axios");
   return {
     ...actual,
-    default: { ...actual.default, isAxiosError: (err: unknown) => (err as any)?.__isAxiosError === true },
+    default: {
+      ...actual.default,
+      isAxiosError: (err: unknown) => (err as any)?.__isAxiosError === true,
+    },
     isAxiosError: (err: unknown) => (err as any)?.__isAxiosError === true,
   };
 });
@@ -34,9 +37,12 @@ describe("industryApi", () => {
   beforeEach(() => {
     vi.clearAllMocks();
     vi.resetModules();
-    localStorage.setItem(STORAGE_KEY, JSON.stringify({
-      auth: { tokens: { accessToken: "test-token-123" } }
-    }));
+    localStorage.setItem(
+      STORAGE_KEY,
+      JSON.stringify({
+        auth: { tokens: { accessToken: "test-token-123" } },
+      })
+    );
   });
 
   afterEach(() => {
@@ -90,21 +96,36 @@ describe("industryApi", () => {
   });
 
   it("should throw with getErrorMessage for axios timeout error", async () => {
-    const axiosError = { __isAxiosError: true, code: "ECONNABORTED", message: "timeout", response: undefined };
+    const axiosError = {
+      __isAxiosError: true,
+      code: "ECONNABORTED",
+      message: "timeout",
+      response: undefined,
+    };
     mockGet.mockRejectedValueOnce(axiosError);
     const { getIndustry } = await import("@/services/api/industryApi");
     await expect(getIndustry()).rejects.toThrow();
   });
 
   it("should throw with getErrorMessage for axios error with API message", async () => {
-    const axiosError = { __isAxiosError: true, code: "ERR_BAD_REQUEST", response: { data: { message: "Invalid request" } }, message: "Request failed" };
+    const axiosError = {
+      __isAxiosError: true,
+      code: "ERR_BAD_REQUEST",
+      response: { data: { message: "Invalid request" } },
+      message: "Request failed",
+    };
     mockGet.mockRejectedValueOnce(axiosError);
     const { getIndustry } = await import("@/services/api/industryApi");
     await expect(getIndustry()).rejects.toThrow();
   });
 
   it("should throw with getErrorMessage for axios error without API message", async () => {
-    const axiosError = { __isAxiosError: true, code: "NETWORK_ERROR", response: { data: {} }, message: "Network Error" };
+    const axiosError = {
+      __isAxiosError: true,
+      code: "NETWORK_ERROR",
+      response: { data: {} },
+      message: "Network Error",
+    };
     mockGet.mockRejectedValueOnce(axiosError);
     const { getIndustry } = await import("@/services/api/industryApi");
     await expect(getIndustry()).rejects.toThrow();

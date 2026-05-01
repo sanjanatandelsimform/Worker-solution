@@ -273,9 +273,7 @@ describe("NavItemButton", () => {
   });
 
   it("renders with current style when current=true", () => {
-    const { container } = render(
-      <NavItemButton label="Home" icon={MockIcon} current={true} />
-    );
+    const { container } = render(<NavItemButton label="Home" icon={MockIcon} current={true} />);
     expect(container.querySelector("a")).toBeTruthy();
   });
 });

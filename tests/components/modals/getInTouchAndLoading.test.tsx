@@ -26,9 +26,7 @@ vi.mock("@/components/base/modal/modal", () => ({
       {children}
     </div>
   ),
-  ModalTitle: ({ children, className }: any) => (
-    <h2 className={className}>{children}</h2>
-  ),
+  ModalTitle: ({ children, className }: any) => <h2 className={className}>{children}</h2>,
   ModalDescription: ({ children }: any) => <p>{children}</p>,
   ModalBody: ({ children }: any) => <div>{children}</div>,
   ModalFooter: ({ children, className }: any) => (
@@ -39,7 +37,17 @@ vi.mock("@/components/base/modal/modal", () => ({
 }));
 
 vi.mock("@/components/base/buttons/button", () => ({
-  Button: ({ children, onClick, type, isDisabled, iconTrailing, color, size, className, "aria-label": ariaLabel }: any) => (
+  Button: ({
+    children,
+    onClick,
+    type,
+    isDisabled,
+    iconTrailing,
+    color,
+    size,
+    className,
+    "aria-label": ariaLabel,
+  }: any) => (
     <button
       type={type || "button"}
       onClick={onClick}
@@ -228,9 +236,7 @@ describe("GetInTouchModal", () => {
 });
 
 describe("ProgressLoadingModal", () => {
-  const defaultButtons = [
-    { text: "OK", onClick: vi.fn(), color: "primary" as const },
-  ];
+  const defaultButtons = [{ text: "OK", onClick: vi.fn(), color: "primary" as const }];
 
   it("renders nothing when isOpen is false", () => {
     render(

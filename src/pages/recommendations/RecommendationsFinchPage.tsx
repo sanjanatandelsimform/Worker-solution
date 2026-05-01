@@ -20,8 +20,10 @@ import { useIndustry } from "@/hooks/useIndustry";
 
 export default function RecommendationsFinchPage({
   onNavigateToWorkforce,
+  isReady = true,
 }: {
   readonly onNavigateToWorkforce?: () => void;
+  readonly isReady?: boolean;
 }) {
   const { isFinchAssessmentIncomplete } = useAssessmentStatus();
 
@@ -30,7 +32,6 @@ export default function RecommendationsFinchPage({
   const compensationSection = useAppSelector(selectCompensationSection);
   const participationSection = useAppSelector(selectParticipationSection);
   const workforceIsLoading = useAppSelector(selectWorkforceLoading);
-  
 
   // Recommendations slice — Proven Strategies & Strategic Solutions
   const strategicRecommendations = useAppSelector(selectRecommStrategicRecommendations);
@@ -66,7 +67,7 @@ export default function RecommendationsFinchPage({
   const provenStrategiesPercent = Math.round((provenStrategiesCount / 3) * 100);
 
   // Combined loading guard
-  const isLoading = workforceIsLoading || recommendationsIsLoading || isIndustryLoading;
+  const isLoading = !isReady || workforceIsLoading || recommendationsIsLoading || isIndustryLoading;
 
   return (
     <div className="bg-ws-base-white space-y-6 py-10 px-6 shadow-xl rounded-b-xl">

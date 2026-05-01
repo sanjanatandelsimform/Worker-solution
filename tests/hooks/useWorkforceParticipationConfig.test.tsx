@@ -27,15 +27,15 @@ vi.mock("@/assets/icons/HeartLineIcon", () => ({
 
 // Mock parsePercentage
 vi.mock("@/pages/workforce/workforceUtils", () => ({
-  parsePercentage: (val: any) => (typeof val === "string" ? parseFloat(val) : val ?? 0),
+  parsePercentage: (val: any) => (typeof val === "string" ? parseFloat(val) : (val ?? 0)),
 }));
 
 describe("useWorkforceParticipationConfig", () => {
   it("returns empty items when participationSection is null", () => {
     mockUseAppSelector.mockReturnValue(null);
-    
+
     const { result } = renderHook(() => useWorkforceParticipationConfig());
-    
+
     expect(result.current.participationCardsConfig).toHaveLength(3);
     expect(result.current.participationCardsConfig[0].count).toBe("--");
     expect(result.current.participationCardsConfig[1].count).toBe("--");
@@ -54,12 +54,8 @@ describe("useWorkforceParticipationConfig", () => {
         { name: "Health Insurance", enrollment: "90%" },
         { name: "Dental", enrollment: "70%" },
       ],
-      retirement: [
-        { name: "401k", enrollment: "60%" },
-      ],
-      insurance: [
-        { name: "Life Insurance", enrollment: "40%" },
-      ],
+      retirement: [{ name: "401k", enrollment: "60%" }],
+      insurance: [{ name: "Life Insurance", enrollment: "40%" }],
     });
 
     const { result } = renderHook(() => useWorkforceParticipationConfig());

@@ -12,7 +12,7 @@ import { useWorkforceParticipationConfig } from "@/hooks/useWorkforceParticipati
 import { useWorkforceDemographicsConfig } from "@/hooks/useWorkforceDemographicsConfig";
 import { useWorkforceCompensationConfig } from "@/hooks/useWorkforceCompensationConfig";
 
-export default function WorkforcePage() {
+export default function WorkforcePage({ isReady = true }: { readonly isReady?: boolean } = {}) {
   const [isGetInTouchModalOpen, setIsGetInTouchModalOpen] = useState(false);
   const [selectedDepartment, setSelectedDepartment] = useState<string>("all");
   const [selectedWorkforceDept, setSelectedWorkforceDept] = useState<string>("all");
@@ -21,7 +21,8 @@ export default function WorkforcePage() {
   >("fullTime");
 
   // Redux state
-  const isLoadingCards = useAppSelector(selectWorkforceLoading);
+  const isLoadingRedux = useAppSelector(selectWorkforceLoading);
+  const isLoadingCards = !isReady || isLoadingRedux;
   const workforceError = useAppSelector(selectWorkforceError);
 
   // -- Overview config ----------------------------------------------------------

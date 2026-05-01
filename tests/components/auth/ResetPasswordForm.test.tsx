@@ -24,7 +24,9 @@ vi.mock("@/components/common/ErrorMessage", () => ({
   default: ({ errorMessage, onClose }: { errorMessage: string; onClose: () => void }) => (
     <div data-testid="error-message">
       {errorMessage}
-      <button onClick={onClose} data-testid="error-close">Close</button>
+      <button onClick={onClose} data-testid="error-close">
+        Close
+      </button>
     </div>
   ),
 }));
@@ -110,9 +112,12 @@ describe("ResetPasswordForm", () => {
     fireEvent.blur(confirmInput);
     fireEvent.submit(passwordInput.closest("form")!);
 
-    await waitFor(() => {
-      expect(screen.getByTestId("success-modal")).toBeTruthy();
-    }, { timeout: 3000 });
+    await waitFor(
+      () => {
+        expect(screen.getByTestId("success-modal")).toBeTruthy();
+      },
+      { timeout: 3000 }
+    );
 
     // Click modal close button (covers onClose callback)
     fireEvent.click(screen.getByTestId("modal-close"));
@@ -133,9 +138,12 @@ describe("ResetPasswordForm", () => {
     fireEvent.blur(confirmInput);
     fireEvent.submit(passwordInput.closest("form")!);
 
-    await waitFor(() => {
-      expect(screen.getByTestId("success-modal")).toBeTruthy();
-    }, { timeout: 3000 });
+    await waitFor(
+      () => {
+        expect(screen.getByTestId("success-modal")).toBeTruthy();
+      },
+      { timeout: 3000 }
+    );
 
     // Click modal "Log in" button (covers handleGetStarted which calls navigate)
     fireEvent.click(screen.getByTestId("modal-action"));

@@ -46,7 +46,13 @@ vi.mock("@/components/common/Declarations", () => ({
   default: () => <div>declarations</div>,
 }));
 vi.mock("@/components/base/select/select", () => {
-  const Select = ({ items = [], onSelectionChange }: { items?: Array<{ id: string; label: string }>; onSelectionChange: (id: string) => void }) => (
+  const Select = ({
+    items = [],
+    onSelectionChange,
+  }: {
+    items?: Array<{ id: string; label: string }>;
+    onSelectionChange: (id: string) => void;
+  }) => (
     <div>
       {items.map(i => (
         <button key={i.id} onClick={() => onSelectionChange(i.id)}>
@@ -58,7 +64,9 @@ vi.mock("@/components/base/select/select", () => {
   Select.Item = ({ children }: { children: React.ReactNode }) => <>{children}</>;
   return { Select };
 });
-vi.mock("@/components/base/input/label", () => ({ Label: ({ children }: { children: React.ReactNode }) => <label>{children}</label> }));
+vi.mock("@/components/base/input/label", () => ({
+  Label: ({ children }: { children: React.ReactNode }) => <label>{children}</label>,
+}));
 vi.mock("@/assets/icons/Globe", () => ({ GlobeIcon: () => <span>g</span> }));
 vi.mock("@/assets/icons/DollarIcon", () => ({ DollarIcon: () => <span>d</span> }));
 vi.mock("@/assets/icons/CurrencyStackIcon", () => ({ CurrencyStackIcon: () => <span>c</span> }));
@@ -88,7 +96,11 @@ describe("BenchmarkFinchPage", () => {
   });
 
   it("renders industry error banner", () => {
-    mockUseIndustry.mockReturnValue({ isLoading: false, error: "err", industryError: "Industry failed" });
+    mockUseIndustry.mockReturnValue({
+      isLoading: false,
+      error: "err",
+      industryError: "Industry failed",
+    });
     render(<BenchmarkFinchPage />);
     expect(screen.getByText("err")).toBeTruthy();
   });
@@ -117,7 +129,11 @@ describe("BenchmarkFinchPage", () => {
     vi.mock("@/components/modals/GetInTouchModal", () => ({
       GetInTouchModal: ({ isOpen, onClose }: any) => {
         if (!isOpen) return null;
-        return <button data-testid="get-in-touch-close" onClick={onClose}>Close</button>;
+        return (
+          <button data-testid="get-in-touch-close" onClick={onClose}>
+            Close
+          </button>
+        );
       },
     }));
     render(<BenchmarkFinchPage />);

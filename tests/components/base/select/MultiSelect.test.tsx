@@ -97,10 +97,7 @@ vi.mock("react-aria-components", async () => {
   }) => {
     return (
       <div>
-        <button
-          data-testid="input-mousedown"
-          onClick={() => props.onMouseDown?.({} as any)}
-        >
+        <button data-testid="input-mousedown" onClick={() => props.onMouseDown?.({} as any)}>
           input-mousedown
         </button>
         <button
@@ -146,9 +143,7 @@ vi.mock("react-aria-components", async () => {
     // These are referenced by SelectItem module imports; keep them lightweight.
     Text: ({ children }: { children: React.ReactNode }) => <>{children}</>,
     ListBoxItem: ({ children }: { children: React.ReactNode }) => <>{children}</>,
-    Button: ({ children, onClick }: any) => (
-      <button onClick={onClick}>{children}</button>
-    ),
+    Button: ({ children, onClick }: any) => <button onClick={onClick}>{children}</button>,
     Select: ({ children }: { children: any }) => <>{children?.({})}</>,
     SelectValue: ({ children }: { children: any }) => <>{children?.({})}</>,
   };
@@ -199,11 +194,7 @@ vi.mock("@/components/base/tags/base-components/tag-close-x", () => ({
     isDisabled?: boolean;
   }) => (
     <div data-testid={isDisabled ? "tag-disabled" : "tag"}>
-      <button
-        data-testid="tag-press"
-        onClick={() => onPress?.()}
-        disabled={!!isDisabled}
-      >
+      <button data-testid="tag-press" onClick={() => onPress?.()} disabled={!!isDisabled}>
         press
       </button>
       <button
@@ -220,25 +211,19 @@ vi.mock("@/components/base/tags/base-components/tag-close-x", () => ({
       </button>
       <button
         data-testid="tag-key-escape"
-        onClick={() =>
-          onKeyDown?.({ key: "Escape", preventDefault: vi.fn() } as any)
-        }
+        onClick={() => onKeyDown?.({ key: "Escape", preventDefault: vi.fn() } as any)}
       >
         escape
       </button>
       <button
         data-testid="tag-key-arrow-left"
-        onClick={() =>
-          onKeyDown?.({ key: "ArrowLeft", preventDefault: vi.fn() } as any)
-        }
+        onClick={() => onKeyDown?.({ key: "ArrowLeft", preventDefault: vi.fn() } as any)}
       >
         arrow-left
       </button>
       <button
         data-testid="tag-key-arrow-right"
-        onClick={() =>
-          onKeyDown?.({ key: "ArrowRight", preventDefault: vi.fn() } as any)
-        }
+        onClick={() => onKeyDown?.({ key: "ArrowRight", preventDefault: vi.fn() } as any)}
       >
         arrow-right
       </button>
@@ -254,9 +239,7 @@ vi.mock("@/components/base/input/hint-text", () => ({
   HintText: () => <div data-testid="hint-text">hint</div>,
 }));
 vi.mock("@/components/base/input/label", () => ({
-  Label: ({ children }: { children: React.ReactNode }) => (
-    <div data-testid="label">{children}</div>
-  ),
+  Label: ({ children }: { children: React.ReactNode }) => <div data-testid="label">{children}</div>,
 }));
 
 import { MultiSelectBase } from "@/components/base/select/multi-select";
@@ -283,10 +266,12 @@ describe("MultiSelectBase", () => {
 
     render(
       <MultiSelectBase
-        items={[
-          { id: "a", label: "Item A" },
-          { id: "b", label: "Item B" },
-        ] as any}
+        items={
+          [
+            { id: "a", label: "Item A" },
+            { id: "b", label: "Item B" },
+          ] as any
+        }
         selectedItems={selectedItems as any}
         onItemCleared={onItemCleared}
         onItemInserted={onItemInserted}
@@ -363,4 +348,3 @@ describe("MultiSelectBase", () => {
     expect(mocks.focusNext).toHaveBeenCalled();
   });
 });
-

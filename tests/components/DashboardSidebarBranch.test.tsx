@@ -36,17 +36,25 @@ vi.mock("@/components/modals/BaseModalWithIcon", () => ({
     if (!isOpen) return null;
     return (
       <div>
-        <button data-testid="modal-confirm" onClick={onConfirm}>Confirm</button>
-        <button data-testid="modal-close" onClick={onClose}>Close</button>
+        <button data-testid="modal-confirm" onClick={onConfirm}>
+          Confirm
+        </button>
+        <button data-testid="modal-close" onClick={onClose}>
+          Close
+        </button>
       </div>
     );
   },
 }));
 
 vi.mock("@/components/application/app-navigation/base-components/nav-list", () => ({
-  NavList: ({ items }: { items: Array<{ label: string; onClick?: (e?: React.MouseEvent) => void }> }) => (
+  NavList: ({
+    items,
+  }: {
+    items: Array<{ label: string; onClick?: (e?: React.MouseEvent) => void }>;
+  }) => (
     <nav data-testid="nav-list">
-      {items?.map((item) => (
+      {items?.map(item => (
         <button
           key={item.label}
           data-testid={`nav-${item.label.toLowerCase()}`}
@@ -85,7 +93,12 @@ function makeStore(userOverride?: object) {
     reducer: { auth: authReducer },
     preloadedState: {
       auth: {
-        user: { firstName: "Jane", lastName: "Doe", businessEmail: "j@test.com", ...userOverride } as any,
+        user: {
+          firstName: "Jane",
+          lastName: "Doe",
+          businessEmail: "j@test.com",
+          ...userOverride,
+        } as any,
         isAuthenticated: true,
         isLoading: false,
         authInitAttempted: true,

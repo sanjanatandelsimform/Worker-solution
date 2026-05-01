@@ -79,7 +79,9 @@ describe("RecommendationsPage", () => {
     expect(document.querySelector(".animate-pulse")).toBeTruthy();
 
     // Advance past 5000ms
-    act(() => { vi.advanceTimersByTime(5100); });
+    act(() => {
+      vi.advanceTimersByTime(5100);
+    });
 
     // After timer fires, actual content should render
     expect(screen.queryByText("Total Workforce")).toBeTruthy();
@@ -91,7 +93,9 @@ describe("RecommendationsPage", () => {
     vi.useFakeTimers({ shouldAdvanceTime: false });
     renderRecommendationsPage();
 
-    act(() => { vi.advanceTimersByTime(5100); });
+    act(() => {
+      vi.advanceTimersByTime(5100);
+    });
 
     expect(screen.getByText("Total Workforce")).toBeInTheDocument();
     expect(screen.getByText("Average Hourly Wage")).toBeInTheDocument();
@@ -104,7 +108,9 @@ describe("RecommendationsPage", () => {
     vi.useFakeTimers({ shouldAdvanceTime: false });
     renderRecommendationsPage();
 
-    act(() => { vi.advanceTimersByTime(5100); });
+    act(() => {
+      vi.advanceTimersByTime(5100);
+    });
 
     expect(screen.getByText("Improve Benefits")).toBeInTheDocument();
 
@@ -115,7 +121,9 @@ describe("RecommendationsPage", () => {
     vi.useFakeTimers({ shouldAdvanceTime: false });
     renderRecommendationsPage({ strategicRecommendations: [] });
 
-    act(() => { vi.advanceTimersByTime(5100); });
+    act(() => {
+      vi.advanceTimersByTime(5100);
+    });
 
     expect(screen.getByText("No recommendations available at this time.")).toBeInTheDocument();
 
@@ -126,7 +134,9 @@ describe("RecommendationsPage", () => {
     vi.useFakeTimers({ shouldAdvanceTime: false });
     renderRecommendationsPage();
 
-    act(() => { vi.advanceTimersByTime(5100); });
+    act(() => {
+      vi.advanceTimersByTime(5100);
+    });
 
     // 50 should render as "50"
     expect(screen.getByText("50")).toBeInTheDocument();
@@ -171,7 +181,9 @@ describe("RecommendationsPage", () => {
       </Provider>
     );
 
-    act(() => { vi.advanceTimersByTime(5100); });
+    act(() => {
+      vi.advanceTimersByTime(5100);
+    });
 
     // Component should render without crashing
     expect(container).toBeTruthy();
@@ -185,7 +197,9 @@ describe("RecommendationsPage", () => {
       companyAtGlance: { ...mockCompanyAtGlance, totalWorkforce: "200" },
     });
 
-    act(() => { vi.advanceTimersByTime(5100); });
+    act(() => {
+      vi.advanceTimersByTime(5100);
+    });
 
     expect(screen.getByText("200")).toBeInTheDocument();
 

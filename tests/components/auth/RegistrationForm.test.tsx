@@ -122,9 +122,7 @@ vi.mock("@/components/base/select/select", () => ({
 }));
 
 // Add the Item subcomponent to Select mock
-const SelectMock = vi.mocked(
-  (await import("@/components/base/select/select")).Select
-);
+const SelectMock = vi.mocked((await import("@/components/base/select/select")).Select);
 if (SelectMock && !(SelectMock as any).Item) {
   (SelectMock as any).Item = ({ children }: { children: React.ReactNode }) => <>{children}</>;
 }
@@ -242,7 +240,8 @@ describe("RegistrationForm", () => {
 
   it("shows loading state initially", async () => {
     mockGetIndustries.mockImplementation(
-      () => new Promise(resolve => setTimeout(() => resolve({ data: { industries: INDUSTRIES } }), 100))
+      () =>
+        new Promise(resolve => setTimeout(() => resolve({ data: { industries: INDUSTRIES } }), 100))
     );
     renderForm();
     expect(screen.getByText(/Loading industries/i)).toBeTruthy();
@@ -256,7 +255,9 @@ describe("RegistrationForm", () => {
   });
 
   it("shows industry error when getIndustries fails", async () => {
-    mockGetIndustries.mockRejectedValueOnce(new Error("Failed to load industries. Please try again."));
+    mockGetIndustries.mockRejectedValueOnce(
+      new Error("Failed to load industries. Please try again.")
+    );
     renderForm();
     await waitFor(() => {
       expect(screen.getByTestId("industry-hint")).toBeTruthy();
@@ -425,20 +426,31 @@ describe("RegistrationForm", () => {
     // Fill all required fields
     fireEvent.change(screen.getByTestId("input-firstName"), { target: { value: "Jane" } });
     fireEvent.change(screen.getByTestId("input-lastName"), { target: { value: "Doe" } });
-    fireEvent.change(screen.getByTestId("input-legalBusinessName"), { target: { value: "Acme Corp" } });
-    fireEvent.change(screen.getByTestId("input-businessPhone"), { target: { value: "5551234567" } });
+    fireEvent.change(screen.getByTestId("input-legalBusinessName"), {
+      target: { value: "Acme Corp" },
+    });
+    fireEvent.change(screen.getByTestId("input-businessPhone"), {
+      target: { value: "5551234567" },
+    });
     fireEvent.change(screen.getByTestId("input-zipCode"), { target: { value: "94102" } });
-    fireEvent.change(screen.getByTestId("input-businessEmail"), { target: { value: "jane@acme.com" } });
+    fireEvent.change(screen.getByTestId("input-businessEmail"), {
+      target: { value: "jane@acme.com" },
+    });
     fireEvent.change(screen.getByTestId("input-password"), { target: { value: "Password123!" } });
-    fireEvent.change(screen.getByTestId("input-confirmPassword"), { target: { value: "Password123!" } });
+    fireEvent.change(screen.getByTestId("input-confirmPassword"), {
+      target: { value: "Password123!" },
+    });
     fireEvent.change(screen.getByTestId("select-industry"), { target: { value: "TECH" } });
 
     fireEvent.click(screen.getByRole("button", { name: /Create Account/i }));
 
-    await waitFor(() => {
-      expect(mockSignup).toHaveBeenCalled();
-      expect(mockNavigate).toHaveBeenCalledWith("/success", expect.any(Object));
-    }, { timeout: 5000 });
+    await waitFor(
+      () => {
+        expect(mockSignup).toHaveBeenCalled();
+        expect(mockNavigate).toHaveBeenCalledWith("/success", expect.any(Object));
+      },
+      { timeout: 5000 }
+    );
   });
 
   it("handles signup API error and shows error message (covers catch block + setSubmitError)", async () => {
@@ -453,18 +465,27 @@ describe("RegistrationForm", () => {
     fireEvent.change(screen.getByTestId("input-firstName"), { target: { value: "Jane" } });
     fireEvent.change(screen.getByTestId("input-lastName"), { target: { value: "Doe" } });
     fireEvent.change(screen.getByTestId("input-legalBusinessName"), { target: { value: "Acme" } });
-    fireEvent.change(screen.getByTestId("input-businessPhone"), { target: { value: "5551234567" } });
+    fireEvent.change(screen.getByTestId("input-businessPhone"), {
+      target: { value: "5551234567" },
+    });
     fireEvent.change(screen.getByTestId("input-zipCode"), { target: { value: "94102" } });
-    fireEvent.change(screen.getByTestId("input-businessEmail"), { target: { value: "jane@acme.com" } });
+    fireEvent.change(screen.getByTestId("input-businessEmail"), {
+      target: { value: "jane@acme.com" },
+    });
     fireEvent.change(screen.getByTestId("input-password"), { target: { value: "Password123!" } });
-    fireEvent.change(screen.getByTestId("input-confirmPassword"), { target: { value: "Password123!" } });
+    fireEvent.change(screen.getByTestId("input-confirmPassword"), {
+      target: { value: "Password123!" },
+    });
     fireEvent.change(screen.getByTestId("select-industry"), { target: { value: "TECH" } });
 
     fireEvent.click(screen.getByRole("button", { name: /Create Account/i }));
 
-    await waitFor(() => {
-      expect(mockSignup).toHaveBeenCalled();
-    }, { timeout: 5000 });
+    await waitFor(
+      () => {
+        expect(mockSignup).toHaveBeenCalled();
+      },
+      { timeout: 5000 }
+    );
 
     // Close the error message if it appears (covers line 518)
     const closeBtn = screen.queryByTestId("error-close");
