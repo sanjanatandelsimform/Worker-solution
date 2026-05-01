@@ -680,7 +680,6 @@ describe("buildFinchAssessmentPayload", () => {
       answers,
       baseGoals,
       "january",
-      "ADP",
       "october",
       true,
       "50",
@@ -688,7 +687,6 @@ describe("buildFinchAssessmentPayload", () => {
     );
     expect(payload.compensation.offersAnnualRaises).toBe(true);
     expect(payload.compensation.annualRaiseMonth).toBe("January");
-    expect(payload.compensation.payrollProvider).toBe("ADP");
     expect(payload.workforce.hasDesklessEmployees).toBe(true);
     expect(payload.benefits.workWithBenefitsBroker).toBe("Yes");
     expect(payload.benefits.benefitEnrollmentMonth).toBe("October");

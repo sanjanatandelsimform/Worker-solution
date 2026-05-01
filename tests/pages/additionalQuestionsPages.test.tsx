@@ -201,11 +201,9 @@ describe("CompensationSection", () => {
     answers: {},
     fieldErrors: {},
     annualRaiseMonth: "",
-    payrollProvider: "",
     onAnswerChange: vi.fn(),
     onMultiSelectToggle: vi.fn(),
     onAnnualRaiseMonthChange: vi.fn(),
-    onPayrollProviderChange: vi.fn(),
     onClearFieldError: vi.fn(),
   };
 
@@ -217,13 +215,6 @@ describe("CompensationSection", () => {
   it("renders radio groups for compensation questions", () => {
     render(<CompensationSection {...defaultProps} />);
     expect(screen.getByTestId("radio-group-annual-raises")).toBeTruthy();
-  });
-
-  it("renders a select for payroll provider", () => {
-    render(<CompensationSection {...defaultProps} />);
-    // Payroll provider select is present
-    const selects = screen.getAllByTestId("select");
-    expect(selects.length).toBeGreaterThan(0);
   });
 
   it("passes field errors to components", () => {
@@ -243,7 +234,7 @@ describe("CompensationSection", () => {
     );
     // Should show month dropdown
     const selects = screen.getAllByTestId("select");
-    expect(selects.length).toBeGreaterThan(1);
+    expect(selects.length).toBeGreaterThan(0);
   });
 
   it("calls onAnswerChange when radio changed", () => {
@@ -259,25 +250,6 @@ describe("CompensationSection", () => {
     // short-term-incentives is a checkbox group
     fireEvent.click(screen.getByTestId("checkbox-cash_bonuses"));
     expect(onMultiSelectToggle).toHaveBeenCalledWith("short-term-incentives", "cash_bonuses");
-  });
-
-  it("calls onPayrollProviderChange when select changes", () => {
-    const onPayrollProviderChange = vi.fn();
-    render(
-      <CompensationSection {...defaultProps} onPayrollProviderChange={onPayrollProviderChange} />
-    );
-    const selects = screen.getAllByTestId("select");
-    // Find the payroll select (likely first)
-    fireEvent.change(selects[0], { target: { value: "ADP" } });
-    expect(onPayrollProviderChange).toHaveBeenCalledWith("ADP");
-  });
-
-  it("calls onClearFieldError when select changes", () => {
-    const onClearFieldError = vi.fn();
-    render(<CompensationSection {...defaultProps} onClearFieldError={onClearFieldError} />);
-    const selects = screen.getAllByTestId("select");
-    fireEvent.change(selects[0], { target: { value: "Gusto" } });
-    expect(onClearFieldError).toHaveBeenCalled();
   });
 });
 
