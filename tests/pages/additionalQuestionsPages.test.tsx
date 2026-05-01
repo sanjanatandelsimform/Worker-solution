@@ -222,6 +222,19 @@ describe("CompensationSection", () => {
     expect(screen.getByTestId("error-annual-raises")).toBeTruthy();
   });
 
+  it("shows annual raise month select when raises are yes", () => {
+    render(
+      <CompensationSection
+        {...defaultProps}
+        answers={{ "annual-raises": "yes-raises" }}
+        annualRaiseMonth="january"
+      />
+    );
+    // Should show month dropdown
+    const selects = screen.getAllByTestId("select");
+    expect(selects.length).toBeGreaterThan(0);
+  });
+
   it("calls onAnswerChange when radio changed", () => {
     const onAnswerChange = vi.fn();
     render(<CompensationSection {...defaultProps} onAnswerChange={onAnswerChange} />);

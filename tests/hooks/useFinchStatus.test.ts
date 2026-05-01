@@ -12,6 +12,14 @@ vi.mock("@/services/api/assessmentApi", () => ({
   getAssessment: () => mockGetAssessment(),
 }));
 
+// Mock the cache module to pass through to getAssessment
+vi.mock("@/hooks/assessmentCache", () => ({
+  fetchAssessmentWithCache: () => mockGetAssessment(),
+  getCachedAssessment: vi.fn(() => null),
+  invalidateAssessmentCache: vi.fn(),
+  updateAssessmentCache: vi.fn(),
+}));
+
 // ── Import hook after mocks ────────────────────────────────────────────────
 const { useAssessmentStatus } = await import("@/hooks/useAssessmentStatus");
 

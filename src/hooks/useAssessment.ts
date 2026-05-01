@@ -1,13 +1,13 @@
-import { useState, useEffect, useCallback } from "react";
+import { useState, useEffect, useCallback, useRef } from "react";
 import {
   submitWorkforce,
   submitCompensation,
   submitBenefits,
   submitGoals,
-  getAssessment,
   type SectionType,
 } from "@/services/api/assessmentApi";
 import type { ApiResponse } from "@/services/api/assessmentApi";
+import { fetchAssessmentWithCache, getCachedAssessment, invalidateAssessmentCache } from "./assessmentCache";
 import questionData from "@/data/assessment/questionData.json";
 import type { Question } from "@/types/questionTypes";
 
@@ -131,12 +131,40 @@ export const useAssessment = ({ section }: UseAssessmentOptions): UseAssessmentR
     message: string;
   } | null>(null);
 
+  // Ref to prevent duplicate API calls
+  const fetchInProgressRef = useRef(false);
+  const lastFetchedSectionRef = useRef<string | null>(null);
+
   // Load progress from API on mount
-  const loadProgress = useCallback(async () => {
+  const loadProgress = useCallback(async (forceRefresh = false) => {
+    // Prevent duplicate calls for the same section (unless forced)
+    if (!forceRefresh && fetchInProgressRef.current) {
+      return;
+    }
+
+    // Check shared cache first (without forcing refresh)
+    if (!forceRefresh) {
+      const cached = getCachedAssessment();
+      if (cached?.data?.sections?.[section]) {
+        const sectionAnswers = cached.data.sections[section] as Record<string, unknown>;
+        const normalizedAnswers = normalizeSectionAnswers(section, sectionAnswers);
+        setAnswers(normalizedAnswers);
+        setIsCompleted(true);
+        lastFetchedSectionRef.current = section;
+        return;
+      }
+    }
+
+    if (!forceRefresh && lastFetchedSectionRef.current === section) {
+      return;
+    }
+
+    fetchInProgressRef.current = true;
     setIsLoadingGet(true);
     setApiError(null);
     try {
-      const response = await getAssessment();
+      const response = await fetchAssessmentWithCache(forceRefresh);
+      lastFetchedSectionRef.current = section;
       if (response.success && response.data?.data?.sections?.[section]) {
         const sectionAnswers = response.data.data?.sections[section] as Record<string, unknown>;
         const normalizedAnswers = normalizeSectionAnswers(section, sectionAnswers);
@@ -155,18 +183,24 @@ export const useAssessment = ({ section }: UseAssessmentOptions): UseAssessmentR
       });
     } finally {
       setIsLoadingGet(false);
+      fetchInProgressRef.current = false;
     }
   }, [section]);
 
-  // Retry function for GET failures
+  // Retry function for GET failures (force refresh)
   const retryGetAssessment = useCallback(async () => {
-    await loadProgress();
+    await loadProgress(true);
   }, [loadProgress]);
 
   // Load progress on mount AND when section changes
   useEffect(() => {
+    // Reset tracking when section changes to allow new fetch
+    if (lastFetchedSectionRef.current !== section) {
+      lastFetchedSectionRef.current = null;
+    }
     loadProgress();
-  }, [section, loadProgress]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [section]);
 
   // Update single answer (no localStorage auto-save)
   const updateAnswer = useCallback((key: string, value: unknown) => {
@@ -220,6 +254,8 @@ export const useAssessment = ({ section }: UseAssessmentOptions): UseAssessmentR
         // Mark as completed on success (API is authoritative)
         if (response.success) {
           setIsCompleted(true);
+          // Invalidate cache so next fetch gets fresh data
+          invalidateAssessmentCache();
         } else {
           // Set field errors from API response
           if (response.fieldErrors) {

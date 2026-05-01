@@ -82,6 +82,7 @@ export default function AssessmentWorkforcePage() {
     try {
       const response = await dynamicTabValidation.submit();
       if (response.success) {
+        // Refetch to update sectionCompletion for ProgressStepper navigation
         await refetch();
         if (isLastStep) {
           sessionStorage.setItem("goalsCompletionPending", "true");

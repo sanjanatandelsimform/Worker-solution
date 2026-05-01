@@ -6,6 +6,7 @@ import finchLogo from "@/assets/finch-logo.svg";
 import DashboardCard from "./DashboardCard";
 import { useAppSelector, useAppDispatch } from "@/store/hooks";
 import { selectUser } from "@/store/selectors/authSelectors";
+import { selectUser as selectDetailedUser } from "@/store/selectors/userSelector";
 import { BaseModalWithIcon } from "@/components/modals/BaseModalWithIcon";
 import ErrorMessage from "@/components/common/ErrorMessage";
 import { AlertCircle, ChevronRight } from "@untitledui/icons";
@@ -45,6 +46,7 @@ export const DashboardPage = () => {
   const navigate = useNavigate();
   const location = useLocation();
   const user = useAppSelector(selectUser);
+  const detailedUser = useAppSelector(selectDetailedUser);
   const dispatch = useAppDispatch();
   const profileError = useAppSelector(selectProfileError);
   const {
@@ -82,47 +84,68 @@ export const DashboardPage = () => {
   const [activeTab, setActiveTab] = useState("finchRecommendations");
   const fromGoalsCompletionRef = useRef(false);
   const mainRef = useRef<HTMLElement>(null);
+  
+  // Refs to prevent duplicate API calls
+  const fetchInProgressRef = useRef(false);
+  const lastFetchedUserIdRef = useRef<string | null>(null);
 
-  const refetchUserData = useCallback(async () => {
-    if (user?.id) {
-      try {
-        const userDetail = localStorage.getItem("userDetail");
-        if (userDetail) {
-          const parsedUserDetail = JSON.parse(userDetail);
-          const accessToken = parsedUserDetail?.auth?.tokens?.accessToken;
-          if (accessToken) {
-            await dispatch(fetchUserById({ userId: user.id, token: accessToken })).unwrap();
-          }
-        }
-      } catch (error) {
-        console.error("Failed to refetch user data:", error);
-      }
+  const refetchUserData = useCallback(async (forceRefresh = false) => {
+    if (!user?.id) return;
+    
+    // Check if detailed user data already exists in Redux (persists across remounts)
+    if (!forceRefresh && detailedUser?.id === user.id) {
+      console.log("[DashboardPage] User data already exists in Redux, skipping API call");
+      return;
     }
-  }, [user, dispatch]);
+    
+    // Prevent concurrent duplicate calls
+    if (!forceRefresh && fetchInProgressRef.current) {
+      return;
+    }
+    if (!forceRefresh && lastFetchedUserIdRef.current === user.id) {
+      return;
+    }
 
-  useEffect(() => {
-    if (user?.id) {
+    try {
       const userDetail = localStorage.getItem("userDetail");
       if (userDetail) {
         const parsedUserDetail = JSON.parse(userDetail);
         const accessToken = parsedUserDetail?.auth?.tokens?.accessToken;
         if (accessToken) {
-          dispatch(fetchUserById({ userId: user.id, token: accessToken }));
+          fetchInProgressRef.current = true;
+          await dispatch(fetchUserById({ userId: user.id, token: accessToken })).unwrap();
+          lastFetchedUserIdRef.current = user.id;
         }
       }
+    } catch (error) {
+      console.error("Failed to refetch user data:", error);
+    } finally {
+      fetchInProgressRef.current = false;
     }
-  }, [user?.id, dispatch]);
+  }, [user?.id, detailedUser?.id, dispatch]);
+
+  // Fetch user data only once on mount or when user ID changes
+  useEffect(() => {
+    // Reset tracking when user ID changes to allow new fetch
+    if (user?.id && lastFetchedUserIdRef.current !== user.id) {
+      lastFetchedUserIdRef.current = null;
+    }
+    refetchUserData();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [user?.id]);
 
   // Handle visibility change and window focus to keep UI in sync
   useEffect(() => {
     const handleVisibilityChange = () => {
       if (document.visibilityState === "visible") {
-        refetchUserData();
+        // Force refresh on visibility change
+        refetchUserData(true);
       }
     };
 
     const handleWindowFocus = () => {
-      refetchUserData();
+      // Force refresh on window focus
+      refetchUserData(true);
     };
 
     document.addEventListener("visibilitychange", handleVisibilityChange);
@@ -132,7 +155,7 @@ export const DashboardPage = () => {
       document.removeEventListener("visibilitychange", handleVisibilityChange);
       window.removeEventListener("focus", handleWindowFocus);
     };
-  }, [user?.id, refetchUserData]);
+  }, [refetchUserData]);
 
   // Check sessionStorage once on mount for Goals completion flag.
   useEffect(() => {
