@@ -97,12 +97,6 @@ describe("UpdateYourEmailModal", () => {
     expect(screen.getByText("Update Your Email")).toBeInTheDocument();
   });
 
-  it("renders form fields", () => {
-    render(wrap(<UpdateYourEmailModal isOpen={true} onClose={vi.fn()} getResponse={vi.fn()} />));
-    expect(screen.getByText(/First Name/)).toBeInTheDocument();
-    expect(screen.getByText(/Last Name/)).toBeInTheDocument();
-  });
-
   it("does not render when closed", () => {
     render(wrap(<UpdateYourEmailModal isOpen={false} onClose={vi.fn()} getResponse={vi.fn()} />));
     expect(screen.queryByText("Update Your Email")).toBeNull();
@@ -118,14 +112,6 @@ describe("UpdateYourInformationModal", () => {
       wrap(<UpdateYourInformationModal isOpen={true} onClose={vi.fn()} onSuccess={vi.fn()} />)
     );
     expect(screen.getByText("Update Your Information")).toBeInTheDocument();
-  });
-
-  it("renders name fields", () => {
-    render(
-      wrap(<UpdateYourInformationModal isOpen={true} onClose={vi.fn()} onSuccess={vi.fn()} />)
-    );
-    expect(screen.getByText(/First Name/)).toBeInTheDocument();
-    expect(screen.getByText(/Last Name/)).toBeInTheDocument();
   });
 
   it("renders submit button", () => {

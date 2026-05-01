@@ -14,7 +14,7 @@ import { InputGroup } from "@/components/base/input/input-group";
 import { Mail01, X, AlertCircle } from "@untitledui/icons";
 import ErrorMessage from "@/components/common/ErrorMessage";
 import { useAppDispatch, useAppSelector } from "@/store/hooks";
-import { updateProfileData } from "@/store/slices/profileSlice";
+import { updateEmailAddress } from "@/store/slices/profileSlice";
 import { updateUser } from "@/store/slices/authSlice";
 import { selectUser } from "@/store/selectors/authSelectors";
 import { selectProfileLoading } from "@/store/selectors/profileSelectors";
@@ -46,10 +46,6 @@ export const UpdateYourEmailModal = ({
   const [newEmailError, setNewEmailError] = useState("");
   const [showError, setShowError] = useState(false);
   const [showSuccess, setShowSuccess] = useState(false);
-  const [firstName, setFirstName] = useState(() => userData?.firstName ?? "");
-  const [lastName, setLastName] = useState(() => userData?.lastName ?? "");
-
-  const isFormValid = firstName.trim() !== "" && lastName.trim() !== "";
 
   const handleNewEmailChange = (value: string) => {
     setNewEmail(value);
@@ -106,19 +102,14 @@ export const UpdateYourEmailModal = ({
 
     try {
       const payload = {
-        firstName: firstName.trim(),
-        lastName: lastName.trim(),
-
         newEmail: newEmail.trim(),
         currentEmail: userData?.businessEmail?.trim() ?? "",
       };
 
-      const response = (await dispatch(updateProfileData(payload)).unwrap()) as ProfileApiResponse;
+      const response = (await dispatch(updateEmailAddress(payload)).unwrap()) as ProfileApiResponse;
       const updatedFields: Record<string, unknown> = {};
       if (response.data?.user) {
         const apiUser = response.data.user;
-        updatedFields.firstName = apiUser.firstName;
-        updatedFields.lastName = apiUser.lastName;
         updatedFields.businessEmail = apiUser.businessEmail;
         if (apiUser.emailVerified !== undefined) {
           updatedFields.emailVerify = apiUser.emailVerified;
@@ -207,35 +198,6 @@ export const UpdateYourEmailModal = ({
             )}
 
             <div className="flex flex-col gap-4">
-              <div className="grid grid-cols-1 xl:grid-cols-2 gap-6">
-                <InputGroup>
-                  <div className="flex flex-col gap-1.5 w-full">
-                    <Label className="text-sm font-medium text-ws-text-secondary">
-                      First Name <span className="text-ws-error-600">*</span>
-                    </Label>
-
-                    <Input
-                      size="md"
-                      placeholder="First Name"
-                      value={firstName || ""}
-                      onChange={value => setFirstName(value)}
-                    />
-                  </div>
-                </InputGroup>
-                <InputGroup className="relative">
-                  <div className="flex flex-col gap-1.5 w-full">
-                    <Label className="text-sm font-medium text-ws-text-secondary">
-                      Last Name <span className="text-ws-error-600">*</span>
-                    </Label>
-                    <Input
-                      size="md"
-                      placeholder="Last Name"
-                      value={lastName || ""}
-                      onChange={value => setLastName(value)}
-                    />
-                  </div>
-                </InputGroup>
-              </div>
               <InputGroup className="relative">
                 <div className="flex flex-col gap-1.5 w-full">
                   <Label className="text-sm font-medium text-ws-text-secondary">
@@ -289,7 +251,7 @@ export const UpdateYourEmailModal = ({
                 size="xl"
                 className="w-full"
                 // isDisabled={profileLoading || !newEmail.trim() || !!newEmailError}
-                isDisabled={profileLoading || !isFormValid || !newEmail.trim() || !!newEmailError}
+                isDisabled={profileLoading  || !newEmail.trim() || !!newEmailError}
               >
                 {profileLoading ? "Updating..." : "Update information"}
               </Button>

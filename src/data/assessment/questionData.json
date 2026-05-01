@@ -1336,7 +1336,7 @@
             "required": true,
             "minItems": 3,
             "maxItems": 14,
-            "errorMessage": "Select at least one"
+            "errorMessage": "Please select at least 3 workforce goals to rank them."
           },
           "schemaVersion": 1,
           "isRequired": true,
