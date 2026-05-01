@@ -275,9 +275,10 @@ export const DashboardPage = () => {
     isAutomatedProvider,
   } = useDashboardStatusPolling({ enabled: shouldPollDashboardStatus });
 
+  const [isLoadingModalDismissed, setIsLoadingModalDismissed] = useState(false);
   const allTabsReady = isRecommendationTabReady && isWorkforceTabReady && isIndustryTabReady;
   const isDashboardVisible = assessmentData?.data?.status === "completed" || isConnected;
-  const showLoadingModal = isDashboardVisible && !allTabsReady && !hasExceededProcessingWindow;
+  const showLoadingModal = isDashboardVisible && !allTabsReady && !hasExceededProcessingWindow && !isLoadingModalDismissed;
 
   if (isLoadingAssessment || isFinchPageLoading) {
     return (
@@ -627,7 +628,7 @@ export const DashboardPage = () => {
       </div>
 
       {/* Modals */}
-      <DynamicLoadingModal shouldShow={showLoadingModal} />
+      <DynamicLoadingModal shouldShow={showLoadingModal} onClose={() => setIsLoadingModalDismissed(true)} />
 
       <BaseModalWithIcon
         isOpen={showResendSuccess}
