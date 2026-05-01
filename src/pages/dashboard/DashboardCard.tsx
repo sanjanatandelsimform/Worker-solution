@@ -12,6 +12,7 @@ export interface DashboardCardProps {
   classes?: string;
   titleClass?: string;
   descriptionClass?: string;
+  buttonClasses?: string;
   toggleButton?: boolean;
   toggleAvatar?: boolean;
   avatarClassName?: string;
@@ -28,6 +29,7 @@ export default function DashboardCard({
   classes = "",
   titleClass = "",
   descriptionClass = "",
+  buttonClasses = "",
   toggleButton = true,
   toggleAvatar = false,
   avatarClassName = "",
@@ -75,7 +77,7 @@ export default function DashboardCard({
             size="sm"
             isDisabled={buttonIsDisabled}
             onClick={onClick}
-            className="bg-ws-navy-900 text-ws-base-white hover:bg-ws-navy-900-hover focus:bg-ws-navy-900-hover active:bg-ws-navy-900-hover min-w-30"
+            className={buttonClasses}
           >
             {buttonLabel}
           </Button>

@@ -91,6 +91,7 @@ export default function WorkforceOverview({
         imageAlt="Workforce hero"
         stat="78%"
         text="of employees reported they're more likely to stay with an employer because of their benefits program."
+        note="Source: Gallup"
       />
     </>
   );

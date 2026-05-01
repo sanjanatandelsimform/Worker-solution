@@ -3,6 +3,7 @@ interface DidYouKnowBannerProps {
   readonly imageAlt: string;
   readonly stat: string;
   readonly text: string;
+  readonly note?: string;
 }
 
 /** Reusable "Did you know?" info banner with an image on the left and content on the right. */
@@ -11,6 +12,7 @@ export default function DidYouKnowBanner({
   imageAlt,
   stat,
   text,
+  note,
 }: DidYouKnowBannerProps) {
   return (
     <div className="w-full mt-6">
@@ -27,6 +29,7 @@ export default function DidYouKnowBanner({
           <p className="text-lg text-ws-light-teal-950">
             <span className="font-semibold">{stat}</span> {text}
           </p>
+          <p className="text-ws-text-primary text-xs font-normal mt-2">{note}</p>
         </div>
       </div>
     </div>
