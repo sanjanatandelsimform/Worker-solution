@@ -171,7 +171,7 @@ export function RegistrationForm() {
       navigate("/success", {
         state: {
           messageImg: checkmarkIcon,
-          title: "Account created successfully!",
+          title: "Account Created Successfully!",
           subtitle:
             "Welcome aboard! Start your success journey with A2B by Lafayette Square Institute®",
           buttonText: "Let's get started",
@@ -501,6 +501,7 @@ export function RegistrationForm() {
                   >
                     Privacy Policies
                   </Button>
+                  .
                 </p>
               </div>
               {/* {errors.agreeToTerms && (

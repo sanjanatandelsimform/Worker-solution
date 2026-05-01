@@ -62,7 +62,7 @@ describe("SuccessPage", () => {
 
   it("renders default title and description with no state", () => {
     renderSuccess();
-    expect(screen.getByText("Account created successfully!")).toBeInTheDocument();
+    expect(screen.getByText("Account Created Successfully!")).toBeInTheDocument();
     expect(screen.getByText(/Welcome aboard/i)).toBeInTheDocument();
   });
 
@@ -126,7 +126,7 @@ describe("SuccessPage", () => {
   it("dispatches setTokens when state.tokens is present", () => {
     renderSuccess({ tokens: { accessToken: "at", refreshToken: "rt" } });
     // Should render without crashing
-    expect(screen.getByText("Account created successfully!")).toBeInTheDocument();
+    expect(screen.getByText("Account Created Successfully!")).toBeInTheDocument();
   });
 
   it("clicking button with user and tokens dispatches setUser", () => {
