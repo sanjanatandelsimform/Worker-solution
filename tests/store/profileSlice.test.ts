@@ -21,6 +21,7 @@ import profileReducer, {
 import type { ProfileState } from "@/types/profileTypes";
 
 vi.mock("@/services/api/profileApi");
+vi.mock("@/services/api/assessmentApi");
 
 const initialState: ProfileState = {
   loading: false,
