@@ -40,7 +40,6 @@ export function buildFinchAssessmentPayload(
   answers: QuestionAnswer,
   goalsAnswers: GoalsAnswer,
   annualRaiseMonth: string,
-  payrollProvider: string,
   benefitsEnrollmentMonth: string,
   retirementPlanHasMatch: boolean = false,
   retirementMatchPercentage: string = "",
@@ -60,7 +59,6 @@ export function buildFinchAssessmentPayload(
     ...(offersAnnualRaises && annualRaiseMonth
       ? { annualRaiseMonth: capitalise(annualRaiseMonth) }
       : {}),
-    payrollProvider: payrollProvider || null,
     shiftDifferentials: answers["shift-differentials"] === "yes-shift-diff",
     shortTermIncentives: (answers["short-term-incentives"] as string[]) ?? [],
     longTermIncentives: (answers["long-term-incentives"] as string[]) ?? [],

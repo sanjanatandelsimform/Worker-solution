@@ -20,30 +20,6 @@ const compensationQuestions: QuestionDefinition[] = [
     ],
   },
   {
-    id: "payroll-provider",
-    question: "Who is your company's payroll provider?",
-    required: true,
-    isDropdown: true,
-    options: [
-      { id: "ADP", label: "ADP" },
-      { id: "Paychex", label: "Paychex" },
-      { id: "Paycom", label: "Paycom" },
-      { id: "Paylocity", label: "Paylocity" },
-      { id: "Gusto", label: "Gusto" },
-      { id: "QuickBooks", label: "QuickBooks" },
-      { id: "TriNet", label: "TriNet" },
-      { id: "Deel", label: "Deel" },
-      { id: "Rippling", label: "Rippling" },
-      { id: "Paycor", label: "Paycor" },
-      { id: "Square", label: "Square" },
-      { id: "Patriot Software", label: "Patriot Software" },
-      { id: "OnPay", label: "OnPay" },
-      { id: "SurePayroll", label: "SurePayroll" },
-      { id: "Insperity", label: "Insperity" },
-      { id: "Other", label: "Other" },
-    ],
-  },
-  {
     id: "shift-differentials",
     question:
       "Are your hourly employees eligible for shift differentials e.g. extra pay for nights/weekends/holidays?",
@@ -85,11 +61,9 @@ interface CompensationSectionProps {
   answers: QuestionAnswer;
   fieldErrors: Record<string, string>;
   annualRaiseMonth: string;
-  payrollProvider: string;
   onAnswerChange: (questionId: string, value: string) => void;
   onMultiSelectToggle: (questionId: string, optionId: string) => void;
   onAnnualRaiseMonthChange: (month: string) => void;
-  onPayrollProviderChange: (provider: string) => void;
   onClearFieldError: (key: string) => void;
 }
 
@@ -97,11 +71,9 @@ export default function CompensationSection({
   answers,
   fieldErrors,
   annualRaiseMonth,
-  payrollProvider,
   onAnswerChange,
   onMultiSelectToggle,
   onAnnualRaiseMonthChange,
-  onPayrollProviderChange,
   onClearFieldError,
 }: CompensationSectionProps): JSX.Element {
   return (
@@ -123,33 +95,6 @@ export default function CompensationSection({
                 onToggle={onMultiSelectToggle}
                 error={fieldErrors[question.id]}
               />
-            );
-          }
-
-          if (question.isDropdown) {
-            return (
-              <div key={question.id} className="space-y-3">
-                <Label
-                  isRequired={question.required}
-                  className="text-base font-normal text-ws-text-primary"
-                >
-                  {index + 1}. {question.question}
-                </Label>
-                <FieldError message={fieldErrors["payroll-provider"]} />
-                <Select
-                  items={question.options}
-                  placeholder="Select payroll provider"
-                  size="md"
-                  className="w-full max-w-xs rounded-lg"
-                  selectedKey={payrollProvider}
-                  onSelectionChange={key => {
-                    onPayrollProviderChange(String(key));
-                    onClearFieldError("payroll-provider");
-                  }}
-                >
-                  {item => <SelectItem id={item.id} label={item.label} />}
-                </Select>
-              </div>
             );
           }
 

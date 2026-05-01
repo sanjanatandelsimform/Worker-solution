@@ -26,6 +26,7 @@ vi.mock("@/store/selectors/profileSelectors", () => ({
 
 vi.mock("@/store/slices/profileSlice", () => ({
   updateProfileData: (payload: any) => mockUpdateProfileData(payload),
+  updateEmailAddress: (payload: any) => mockUpdateProfileData(payload),
 }));
 
 vi.mock("@/store/slices/authSlice", () => ({

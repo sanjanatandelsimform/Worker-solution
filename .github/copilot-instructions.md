@@ -146,6 +146,39 @@ Features 021–027 added Finch connect loading, modal fixes, additional-question
 - Timer checks every 10 seconds; flips `hasExceededProcessingWindow` once boundary crossed
 - Each tab already has skeleton states; `isReady=false` merges with existing `isLoading`
 - See full implementation guide: `specs/028-dashboard-tab-readiness/quickstart.md`
+
+## Active Feature: 022-finch-remove-payroll (2026-04-24)
+
+<!-- specify:agent:start -->
+
+**Branch**: `022-finch-remove-payroll` | **Spec**: `specs/022-finch-remove-payroll/spec.md` | **Plan**: `specs/022-finch-remove-payroll/plan.md`
+
+### Context: Previous features (009–021) are complete
+
+Features 009–021 fully implemented. Feature 021 added a loading spinner to the Finch connection flow in `DashboardPage.tsx`.
+
+### What this feature does
+
+Removes the "Who is your company's payroll provider?" question from the Finch Additional Questions form only. The manual assessment flow is untouched. The question, its state, its validation, and its field in the API payload are all removed.
+
+### Files to modify (4 source + 4 test)
+
+- `src/types/finchAssessmentTypes.ts` — remove `payrollProvider: string | null` from `CompensationPayload`
+- `src/utils/finchAssessmentPayload.ts` — remove `payrollProvider` parameter and field from `buildFinchAssessmentPayload`
+- `src/pages/additionalQuestions/AdditionalQuestions.tsx` — remove state, validation, and props for payroll provider
+- `src/pages/additionalQuestions/CompensationSection.tsx` — remove the question definition, props, and `isDropdown` rendering branch
+- `tests/utils/finchAssessmentPayload.test.ts` — remove `payrollProvider` from call args and assertions
+- `tests/hooks/useSubmitFinchAssessment.test.ts` — remove `payrollProvider: null` from payload fixtures
+- `tests/pages/AdditionalQuestionsHealthPremium.test.tsx` — remove `_payrollProvider` destructuring
+- `tests/services/finchAssessmentApi.test.ts` — remove `payrollProvider: null` from test fixture
+
+### Key facts
+
+- **Do NOT touch** `assessmentSchemas.ts` — that schema is for the manual flow, not Finch
+- **Do NOT touch** `CompensationTab.tsx` or `useWorkforceCompensationConfig.ts` — those reference a Redux selector named `selectCompensationSection`, unrelated to this component
+- `CompensationSection` is only used in `AdditionalQuestions.tsx` — safe to remove question outright
+- No new imports or new components needed
+- See full implementation guide: `specs/022-finch-remove-payroll/quickstart.md`
 <!-- specify:agent:end -->
 
 Essential files to reference in PRs or fixes:
