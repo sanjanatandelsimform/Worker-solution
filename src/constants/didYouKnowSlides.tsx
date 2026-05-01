@@ -3,7 +3,7 @@ import { SmileFace } from "@/assets/icons/SmileFace";
 import { KeyIcon } from "@/assets/icons/KeyIcon";
 import { ChartIcon } from "@/assets/icons/ChartIcon";
 
-export interface DidYouKnowSlide {
+interface DidYouKnowSlide {
   id: number;
   icon: ReactNode;
   title: string;
