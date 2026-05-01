@@ -265,6 +265,9 @@ export const DashboardPage = () => {
     isWorkforceTabReady,
     isIndustryTabReady,
     hasExceededProcessingWindow,
+    isRecommendationTabStale,
+    isWorkforceTabStale,
+    isIndustryTabStale,
   } = useDashboardStatusPolling({ enabled: shouldPollDashboardStatus });
 
   const allTabsReady = isRecommendationTabReady && isWorkforceTabReady && isIndustryTabReady;
@@ -566,6 +569,7 @@ export const DashboardPage = () => {
                 <Tabs.Panel id="finchRecommendations" className="pt-0">
                   <RecommendationsFinchPage
                     isReady={isRecommendationTabReady}
+                    isStale={isRecommendationTabStale}
                     onNavigateToWorkforce={() => {
                       setActiveTab("finchWorkforce");
                       mainRef.current?.scrollTo({ top: 0, behavior: "smooth" });
@@ -574,12 +578,12 @@ export const DashboardPage = () => {
                 </Tabs.Panel>
                 {isConnected && (
                   <Tabs.Panel id="finchIndustry" className="pt-0">
-                    <BenchmarkFinchPage isReady={isIndustryTabReady} />
+                    <BenchmarkFinchPage isReady={isIndustryTabReady} isStale={isIndustryTabStale} />
                   </Tabs.Panel>
                 )}
                 {isConnected && (
                   <Tabs.Panel id="finchWorkforce" className="pt-0">
-                    <WorkforcePage isReady={isWorkforceTabReady} />
+                    <WorkforcePage isReady={isWorkforceTabReady} isStale={isWorkforceTabStale} />
                   </Tabs.Panel>
                 )}
               </Tabs>

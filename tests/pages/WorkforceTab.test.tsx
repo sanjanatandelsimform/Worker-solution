@@ -16,6 +16,7 @@ import WorkforcePage from "@/pages/workforce/WorkforcePage";
 // ── Asset mocks ──────────────────────────────────────────────────────────────
 vi.mock("@/assets/employees-reported.jpg", () => ({ default: "employees-reported.jpg" }));
 vi.mock("@/assets/placeholder.svg", () => ({ default: "placeholder.svg" }));
+vi.mock("@/assets/preparingData.svg", () => ({ default: "preparingData.svg" }));
 
 // ── Child component mocks ────────────────────────────────────────────────────
 vi.mock("@/pages/workforce/WorkforceOverview", () => ({
@@ -133,7 +134,7 @@ const mockWorkforceData: WorkforceApiResponse = {
   },
 };
 
-function renderPage(workforceOverride: object = {}) {
+function renderPage(workforceOverride: object = {}, isStale?: boolean) {
   const store = createTestStore({
     workforce: {
       data: mockWorkforceData,
@@ -147,7 +148,7 @@ function renderPage(workforceOverride: object = {}) {
   return render(
     <Provider store={store}>
       <MemoryRouter>
-        <WorkforcePage />
+        <WorkforcePage isStale={isStale} />
       </MemoryRouter>
     </Provider>
   );
@@ -200,5 +201,24 @@ describe("WorkforcePage", () => {
     expect(screen.getByTestId("workforce-participation")).toHaveAttribute("data-loading", "true");
     expect(screen.getByTestId("workforce-demographics")).toHaveAttribute("data-loading", "true");
     expect(screen.getByTestId("workforce-compensation")).toHaveAttribute("data-loading", "true");
+  });
+});
+
+// ─── isStale prop: PreparingDashboard fallback ───────────────────────────────
+
+describe("WorkforcePage — isStale prop", () => {
+  it("renders PreparingDashboard when isStale is true", () => {
+    renderPage({}, true);
+    expect(screen.getByText(/Preparing your dashboard/i)).toBeInTheDocument();
+  });
+
+  it("does not render PreparingDashboard when isStale is false (default)", () => {
+    renderPage();
+    expect(screen.queryByText(/Preparing your dashboard/i)).not.toBeInTheDocument();
+  });
+
+  it("does not render PreparingDashboard when isStale is explicitly false", () => {
+    renderPage({}, false);
+    expect(screen.queryByText(/Preparing your dashboard/i)).not.toBeInTheDocument();
   });
 });

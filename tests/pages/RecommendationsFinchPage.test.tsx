@@ -59,6 +59,7 @@ vi.mock("@/hooks/useModalConfig", () => ({
 }));
 
 vi.mock("@/assets/did-hero.jpg", () => ({ default: "did-hero.jpg" }));
+vi.mock("@/assets/preparingData.svg", () => ({ default: "preparingData.svg" }));
 
 // Mock the Carousel component to avoid embla-carousel-react ResizeObserver dependency in jsdom
 vi.mock("@/pages/recommendations/Carousel", () => ({
@@ -601,5 +602,38 @@ describe("RecommendationsFinchPage — strategic recommendations", () => {
     });
     renderPage(store);
     expect(screen.getByText("Single Feature Rec")).toBeInTheDocument();
+  });
+});
+
+// ─── isStale prop: PreparingDashboard fallback ─────────────────────────────
+
+describe("RecommendationsFinchPage — isStale prop", () => {
+  it("renders PreparingDashboard when isStale is true", () => {
+    const store = createTestStore();
+    render(
+      <Provider store={store}>
+        <MemoryRouter>
+          <RecommendationsFinchPage isStale={true} />
+        </MemoryRouter>
+      </Provider>
+    );
+    expect(screen.getByText(/Preparing your dashboard/i)).toBeInTheDocument();
+  });
+
+  it("does not render PreparingDashboard when isStale is false (default)", () => {
+    renderPage();
+    expect(screen.queryByText(/Preparing your dashboard/i)).not.toBeInTheDocument();
+  });
+
+  it("does not render PreparingDashboard when isStale is explicitly false", () => {
+    const store = createTestStore();
+    render(
+      <Provider store={store}>
+        <MemoryRouter>
+          <RecommendationsFinchPage isStale={false} />
+        </MemoryRouter>
+      </Provider>
+    );
+    expect(screen.queryByText(/Preparing your dashboard/i)).not.toBeInTheDocument();
   });
 });
