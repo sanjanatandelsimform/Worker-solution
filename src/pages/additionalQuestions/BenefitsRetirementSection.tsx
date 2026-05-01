@@ -239,10 +239,10 @@ export default function BenefitsRetirementSection({
                       onClearFieldError("retirementMatchPercentage");
                     }}
                     isInvalid={!!fieldErrors["retirementMatchPercentage"]}
-                    hint={fieldErrors["retirementMatchPercentage"]}
                     className="w-full max-w-xs"
                     inputClassName="[appearance:textfield] [&::-webkit-inner-spin-button]:appearance-none [&::-webkit-outer-spin-button]:appearance-none"
                   />
+                  <FieldError message={fieldErrors["retirementMatchPercentage"]} />
                 </div>
               )}
             </div>
