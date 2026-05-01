@@ -268,6 +268,7 @@ export const DashboardPage = () => {
     isRecommendationTabStale,
     isWorkforceTabStale,
     isIndustryTabStale,
+    isAutomatedProvider,
   } = useDashboardStatusPolling({ enabled: shouldPollDashboardStatus });
 
   const allTabsReady = isRecommendationTabReady && isWorkforceTabReady && isIndustryTabReady;
@@ -569,7 +570,8 @@ export const DashboardPage = () => {
                 <Tabs.Panel id="finchRecommendations" className="pt-0">
                   <RecommendationsFinchPage
                     isReady={isRecommendationTabReady}
-                    isStale={isRecommendationTabStale}
+                    isStale={isRecommendationTabStale && isConnected}
+                    isAutomatedProvider={isAutomatedProvider}
                     onNavigateToWorkforce={() => {
                       setActiveTab("finchWorkforce");
                       mainRef.current?.scrollTo({ top: 0, behavior: "smooth" });
@@ -578,12 +580,20 @@ export const DashboardPage = () => {
                 </Tabs.Panel>
                 {isConnected && (
                   <Tabs.Panel id="finchIndustry" className="pt-0">
-                    <BenchmarkFinchPage isReady={isIndustryTabReady} isStale={isIndustryTabStale} />
+                    <BenchmarkFinchPage
+                      isReady={isIndustryTabReady}
+                      isStale={isIndustryTabStale && isConnected}
+                      isAutomatedProvider={isAutomatedProvider}
+                    />
                   </Tabs.Panel>
                 )}
                 {isConnected && (
                   <Tabs.Panel id="finchWorkforce" className="pt-0">
-                    <WorkforcePage isReady={isWorkforceTabReady} isStale={isWorkforceTabStale} />
+                    <WorkforcePage
+                      isReady={isWorkforceTabReady}
+                      isStale={isWorkforceTabStale && isConnected}
+                      isAutomatedProvider={isAutomatedProvider}
+                    />
                   </Tabs.Panel>
                 )}
               </Tabs>

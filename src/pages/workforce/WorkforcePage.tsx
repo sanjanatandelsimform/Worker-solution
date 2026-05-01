@@ -14,11 +14,20 @@ import { useWorkforceCompensationConfig } from "@/hooks/useWorkforceCompensation
 import PreparingDashboard from "@/pages/recommendations/PreparingDashboard";
 import DidYouKnowBanner from "@/components/common/DidYouKnowBanner";
 import didHeroImg from "@/assets/employees-reported.jpg";
+import {
+  PREPARING_MSG_AUTOMATED,
+  PREPARING_MSG_NON_AUTOMATED,
+} from "@/constants/preparingDashboardMessages";
 
 export default function WorkforcePage({
   isReady = true,
   isStale = false,
-}: { readonly isReady?: boolean; readonly isStale?: boolean } = {}) {
+  isAutomatedProvider = false,
+}: {
+  readonly isReady?: boolean;
+  readonly isStale?: boolean;
+  readonly isAutomatedProvider?: boolean;
+} = {}) {
   const [isGetInTouchModalOpen, setIsGetInTouchModalOpen] = useState(false);
   const [selectedDepartment, setSelectedDepartment] = useState<string>("all");
   const [selectedWorkforceDept, setSelectedWorkforceDept] = useState<string>("all");
@@ -55,9 +64,10 @@ export default function WorkforcePage({
   } = useWorkforceCompensationConfig(selectedWorkforceDept);
 
   if (isStale) {
+    const description = isAutomatedProvider ? PREPARING_MSG_AUTOMATED : PREPARING_MSG_NON_AUTOMATED;
     return (
       <>
-        <PreparingDashboard />
+        <PreparingDashboard description={description} />
         <DidYouKnowBanner
           imageSrc={didHeroImg}
           imageAlt="Workforce hero"

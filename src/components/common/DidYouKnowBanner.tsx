@@ -6,7 +6,12 @@ interface DidYouKnowBannerProps {
 }
 
 /** Reusable "Did you know?" info banner with an image on the left and content on the right. */
-export default function DidYouKnowBanner({ imageSrc, imageAlt, stat, text }: DidYouKnowBannerProps) {
+export default function DidYouKnowBanner({
+  imageSrc,
+  imageAlt,
+  stat,
+  text,
+}: DidYouKnowBannerProps) {
   return (
     <div className="w-full mt-6">
       <div className="bg-ws-light-teal-50 flex gap-4 rounded-xl xl:max-h-33 ring-1 ring-ws-border-primary">

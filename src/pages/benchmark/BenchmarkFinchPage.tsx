@@ -31,6 +31,10 @@ import { TimerIcon } from "@/assets/icons/TimerIcon";
 import PreparingDashboard from "@/pages/recommendations/PreparingDashboard";
 import didHeroImg from "@/assets/employees-reported.jpg";
 import DidYouKnowBanner from "@/components/common/DidYouKnowBanner";
+import {
+  PREPARING_MSG_AUTOMATED,
+  PREPARING_MSG_NON_AUTOMATED,
+} from "@/constants/preparingDashboardMessages";
 
 const OverviewCardSkeleton = () => (
   <div className="border border-ws-border-secondary rounded-lg p-4 bg-ws-base-white animate-pulse shadow-sm">
@@ -369,7 +373,12 @@ interface ProgressCardFinchConfig {
 export default function BenchmarkFinchPage({
   isReady = true,
   isStale = false,
-}: { readonly isReady?: boolean; readonly isStale?: boolean } = {}) {
+  isAutomatedProvider = false,
+}: {
+  readonly isReady?: boolean;
+  readonly isStale?: boolean;
+  readonly isAutomatedProvider?: boolean;
+} = {}) {
   const [isGetInTouchModalOpen, setIsGetInTouchModalOpen] = useState(false);
   const [selectedGraphType, setSelectedGraphType] = useState<"owners" | "renters">("renters");
   const [selectedWageZip, setSelectedWageZip] = useState<string | null>(null);
@@ -805,9 +814,10 @@ export default function BenchmarkFinchPage({
   // const rentersPeriodLabel = rentersBurdenYear ? `Q${rentersBurdenQuarter} ${rentersBurdenYear}` : "";
 
   if (isStale) {
+    const description = isAutomatedProvider ? PREPARING_MSG_AUTOMATED : PREPARING_MSG_NON_AUTOMATED;
     return (
       <>
-        <PreparingDashboard />
+        <PreparingDashboard description={description} />
         <DidYouKnowBanner
           imageSrc={didHeroImg}
           imageAlt="Workforce hero"
