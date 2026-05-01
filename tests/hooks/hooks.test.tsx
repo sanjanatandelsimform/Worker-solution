@@ -18,6 +18,18 @@ vi.mock("@/services/api/assessmentApi", () => ({
   submitGoals: vi.fn(),
 }));
 
+// Mock the cache module to pass through to getAssessment
+const mockFetchAssessmentWithCache = vi.fn();
+const mockGetCachedAssessment = vi.fn(() => null);
+const mockInvalidateAssessmentCache = vi.fn();
+
+vi.mock("@/hooks/assessmentCache", () => ({
+  fetchAssessmentWithCache: (...args: any[]) => mockFetchAssessmentWithCache(...args),
+  getCachedAssessment: () => mockGetCachedAssessment(),
+  invalidateAssessmentCache: () => mockInvalidateAssessmentCache(),
+  updateAssessmentCache: vi.fn(),
+}));
+
 vi.mock("@/services/api/authApi", () => ({
   default: { get: vi.fn(), post: vi.fn() },
   refreshAccessToken: vi.fn(),
@@ -40,8 +52,17 @@ vi.mock("@/services/api/profileApi", () => ({
 vi.mock("@/services/api/userApi", () => ({ getUserById: vi.fn() }));
 
 import * as assessmentApi from "@/services/api/assessmentApi";
+import * as assessmentCache from "@/hooks/assessmentCache";
 import { getFinchStatus } from "@/services/api/finchApi";
 import { getIndustry } from "@/services/api/industryApi";
+
+// Link cache mock to API mock
+beforeEach(() => {
+  vi.clearAllMocks();
+  // Make fetchAssessmentWithCache call the mocked getAssessment
+  mockFetchAssessmentWithCache.mockImplementation(() => assessmentApi.getAssessment());
+  mockGetCachedAssessment.mockReturnValue(null);
+});
 
 // Store slice imports
 import authReducer from "@/store/slices/authSlice";

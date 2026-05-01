@@ -14,6 +14,14 @@ vi.mock("@/services/api/assessmentApi", () => ({
   submitGoals: vi.fn(),
 }));
 
+// Mock the cache module to pass through to getAssessment
+vi.mock("@/hooks/assessmentCache", () => ({
+  fetchAssessmentWithCache: vi.fn(() => getAssessment()),
+  getCachedAssessment: vi.fn(() => null),
+  invalidateAssessmentCache: vi.fn(),
+  updateAssessmentCache: vi.fn(),
+}));
+
 describe("useAssessment Hook", () => {
   beforeEach(() => {
     vi.clearAllMocks();

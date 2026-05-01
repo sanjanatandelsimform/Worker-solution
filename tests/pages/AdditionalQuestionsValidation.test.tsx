@@ -634,7 +634,7 @@ describe("AdditionalQuestions – Submission payload", () => {
 
   it("calls buildFinchAssessmentPayload with correct arguments on valid no-match submission", async () => {
     renderPage();
-    fillAllRequiredFields(); // uses no-match path, ADP, january, 300
+    fillAllRequiredFields(); // uses no-match path, january, 300
     clickNext();
     await waitFor(() => {
       expect(mockBuildPayload).toHaveBeenCalledWith(
@@ -673,7 +673,7 @@ describe("AdditionalQuestions – Submission payload", () => {
   it("calls submit() with the payload returned by buildFinchAssessmentPayload", async () => {
     const knownPayload = {
       workforce: { hasDesklessEmployees: false },
-      compensation: {},
+      compensation: { offersAnnualRaises: false },
       benefits: { lowestHealthPlanPremium: 300 },
       goals: { workforceGoals: [] },
     };

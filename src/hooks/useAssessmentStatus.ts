@@ -1,5 +1,6 @@
-import { useState, useEffect, useCallback } from "react";
-import { getAssessment, type AssessmentData } from "@/services/api/assessmentApi";
+import { useState, useEffect, useCallback, useRef } from "react";
+import { type AssessmentData } from "@/services/api/assessmentApi";
+import { fetchAssessmentWithCache, getCachedAssessment } from "./assessmentCache";
 
 interface UseAssessmentStatusOptions {
   enabled?: boolean;
@@ -31,14 +32,40 @@ export const useAssessmentStatus = ({
   const [isFetched, setIsFetched] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
-  const fetchAssessmentStatus = useCallback(async () => {
+  // Refs to prevent duplicate API calls
+  const fetchInProgressRef = useRef(false);
+  const hasFetchedRef = useRef(false);
+
+  const fetchAssessmentStatus = useCallback(async (forceRefresh = false) => {
     if (!enabled) return;
 
+    // Prevent duplicate calls unless forced (e.g., explicit refetch)
+    if (!forceRefresh && fetchInProgressRef.current) {
+      return;
+    }
+
+    // Check shared cache first (without forcing refresh)
+    if (!forceRefresh) {
+      const cached = getCachedAssessment();
+      if (cached) {
+        setAssessmentData(cached);
+        setIsFetched(true);
+        hasFetchedRef.current = true;
+        return;
+      }
+    }
+
+    if (!forceRefresh && hasFetchedRef.current) {
+      return;
+    }
+
+    fetchInProgressRef.current = true;
     setIsLoading(true);
     setError(null);
 
     try {
-      const response = await getAssessment();
+      const response = await fetchAssessmentWithCache(forceRefresh);
+      hasFetchedRef.current = true;
 
       if (response.success && response.data) {
         setAssessmentData(response.data);
@@ -53,12 +80,22 @@ export const useAssessmentStatus = ({
     } finally {
       setIsLoading(false);
       setIsFetched(true);
+      fetchInProgressRef.current = false;
     }
   }, [enabled]);
 
-  useEffect(() => {
-    fetchAssessmentStatus();
+  // Refetch function that forces a new API call
+  const refetch = useCallback(async () => {
+    await fetchAssessmentStatus(true);
   }, [fetchAssessmentStatus]);
+
+  useEffect(() => {
+    // Reset hasFetchedRef when enabled changes from false to true
+    if (enabled && !hasFetchedRef.current) {
+      fetchAssessmentStatus();
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [enabled]);
 
   const sections = assessmentData?.data?.sections;
 
@@ -97,6 +134,6 @@ export const useAssessmentStatus = ({
     isFinchCompleted,
     isFinchAssessmentIncomplete,
     sectionCompletion,
-    refetch: fetchAssessmentStatus,
+    refetch,
   };
 };
