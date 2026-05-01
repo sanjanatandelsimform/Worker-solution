@@ -11,8 +11,14 @@ import { useWorkforceOverviewConfig } from "@/hooks/useWorkforceOverviewConfig";
 import { useWorkforceParticipationConfig } from "@/hooks/useWorkforceParticipationConfig";
 import { useWorkforceDemographicsConfig } from "@/hooks/useWorkforceDemographicsConfig";
 import { useWorkforceCompensationConfig } from "@/hooks/useWorkforceCompensationConfig";
+import PreparingDashboard from "@/pages/recommendations/PreparingDashboard";
+import DidYouKnowBanner from "@/components/common/DidYouKnowBanner";
+import didHeroImg from "@/assets/employees-reported.jpg";
 
-export default function WorkforcePage({ isReady = true }: { readonly isReady?: boolean } = {}) {
+export default function WorkforcePage({
+  isReady = true,
+  isStale = false,
+}: { readonly isReady?: boolean; readonly isStale?: boolean } = {}) {
   const [isGetInTouchModalOpen, setIsGetInTouchModalOpen] = useState(false);
   const [selectedDepartment, setSelectedDepartment] = useState<string>("all");
   const [selectedWorkforceDept, setSelectedWorkforceDept] = useState<string>("all");
@@ -47,6 +53,20 @@ export default function WorkforcePage({ isReady = true }: { readonly isReady?: b
     salaryBreakdownCardsConfig,
     salaryChartData,
   } = useWorkforceCompensationConfig(selectedWorkforceDept);
+
+  if (isStale) {
+    return (
+      <>
+        <PreparingDashboard />
+        <DidYouKnowBanner
+          imageSrc={didHeroImg}
+          imageAlt="Workforce hero"
+          stat="78%"
+          text="of employees reported they're more likely to stay with an employer because of their benefits program."
+        />
+      </>
+    );
+  }
 
   return (
     <div className="bg-ws-base-white py-10 px-6 space-y-6 shadow-xl rounded-b-xl">

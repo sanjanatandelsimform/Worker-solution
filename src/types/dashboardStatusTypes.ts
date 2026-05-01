@@ -35,4 +35,7 @@ export interface UseDashboardStatusPollingReturn {
   isWorkforceTabReady: boolean;
   isIndustryTabReady: boolean;
   hasExceededProcessingWindow: boolean;
+  isRecommendationTabStale: boolean;
+  isWorkforceTabStale: boolean;
+  isIndustryTabStale: boolean;
 }
