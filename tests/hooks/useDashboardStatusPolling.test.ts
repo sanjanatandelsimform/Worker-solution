@@ -134,3 +134,114 @@ describe("useDashboardStatusPolling — hasExceededProcessingWindow", () => {
     expect(result.current.hasExceededProcessingWindow).toBe(true);
   });
 });
+
+describe("useDashboardStatusPolling — stale flags", () => {
+  beforeEach(() => {
+    vi.clearAllMocks();
+  });
+
+  afterEach(() => {
+    vi.clearAllMocks();
+  });
+
+  it("returns false for all stale flags when not enabled (no status)", () => {
+    const { result } = renderHook(() => useDashboardStatusPolling({ enabled: false }));
+    expect(result.current.isRecommendationTabStale).toBe(false);
+    expect(result.current.isWorkforceTabStale).toBe(false);
+    expect(result.current.isIndustryTabStale).toBe(false);
+  });
+
+  it("returns false for all stale flags when updatedAt is null (even if pending)", async () => {
+    // makeStatus defaults all tabs to { status: "pending", updatedAt: null }
+    mockGetDashboardStatus.mockResolvedValue(makeStatus());
+
+    const { result } = renderHook(() => useDashboardStatusPolling({ enabled: true }));
+
+    await waitFor(() => expect(result.current.status).not.toBeNull());
+
+    expect(result.current.isRecommendationTabStale).toBe(false);
+    expect(result.current.isWorkforceTabStale).toBe(false);
+    expect(result.current.isIndustryTabStale).toBe(false);
+  });
+
+  it("returns true for isRecommendationTabStale when status=pending and updatedAt is > 5 min ago", async () => {
+    const staleTime = new Date(Date.now() - 400_000).toISOString(); // 400s > 300s
+    mockGetDashboardStatus.mockResolvedValue(
+      makeStatus({
+        recommendation: { status: "pending", updatedAt: staleTime },
+      })
+    );
+
+    const { result } = renderHook(() => useDashboardStatusPolling({ enabled: true }));
+
+    await waitFor(() => expect(result.current.status).not.toBeNull());
+
+    expect(result.current.isRecommendationTabStale).toBe(true);
+    // Other tabs have updatedAt: null → false
+    expect(result.current.isWorkforceTabStale).toBe(false);
+    expect(result.current.isIndustryTabStale).toBe(false);
+  });
+
+  it("returns false for isRecommendationTabStale when status=pending but updatedAt is recent (< 5 min)", async () => {
+    const freshTime = new Date(Date.now() - 60_000).toISOString(); // 60s < 300s
+    mockGetDashboardStatus.mockResolvedValue(
+      makeStatus({
+        recommendation: { status: "pending", updatedAt: freshTime },
+      })
+    );
+
+    const { result } = renderHook(() => useDashboardStatusPolling({ enabled: true }));
+
+    await waitFor(() => expect(result.current.status).not.toBeNull());
+
+    expect(result.current.isRecommendationTabStale).toBe(false);
+  });
+
+  it("returns false for isRecommendationTabStale when status=completed regardless of updatedAt age", async () => {
+    const staleTime = new Date(Date.now() - 400_000).toISOString();
+    mockGetDashboardStatus.mockResolvedValue(
+      makeStatus({
+        recommendation: { status: "completed", updatedAt: staleTime },
+      })
+    );
+
+    const { result } = renderHook(() => useDashboardStatusPolling({ enabled: true }));
+
+    await waitFor(() => expect(result.current.status).not.toBeNull());
+
+    expect(result.current.isRecommendationTabStale).toBe(false);
+  });
+
+  it("returns false for isRecommendationTabStale when status=not_applicable regardless of updatedAt age", async () => {
+    const staleTime = new Date(Date.now() - 400_000).toISOString();
+    mockGetDashboardStatus.mockResolvedValue(
+      makeStatus({
+        recommendation: { status: "not_applicable", updatedAt: staleTime },
+      })
+    );
+
+    const { result } = renderHook(() => useDashboardStatusPolling({ enabled: true }));
+
+    await waitFor(() => expect(result.current.status).not.toBeNull());
+
+    expect(result.current.isRecommendationTabStale).toBe(false);
+  });
+
+  it("returns true independently for isWorkforceTabStale and isIndustryTabStale with stale+pending values", async () => {
+    const staleTime = new Date(Date.now() - 400_000).toISOString();
+    mockGetDashboardStatus.mockResolvedValue(
+      makeStatus({
+        workforce: { status: "pending", updatedAt: staleTime },
+        industry: { status: "pending", updatedAt: staleTime },
+      })
+    );
+
+    const { result } = renderHook(() => useDashboardStatusPolling({ enabled: true }));
+
+    await waitFor(() => expect(result.current.status).not.toBeNull());
+
+    expect(result.current.isRecommendationTabStale).toBe(false); // null updatedAt
+    expect(result.current.isWorkforceTabStale).toBe(true);
+    expect(result.current.isIndustryTabStale).toBe(true);
+  });
+});

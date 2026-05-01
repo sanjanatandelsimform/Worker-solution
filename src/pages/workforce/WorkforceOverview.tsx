@@ -1,5 +1,6 @@
 import StaticCard from "@/pages/recommendations/StaticCard";
 import { OverviewCardSkeleton } from "@/pages/workforce/WorkforceSkeletons";
+import DidYouKnowBanner from "@/components/common/DidYouKnowBanner";
 import didHeroImg from "@/assets/employees-reported.jpg";
 
 interface OverviewCardConfig {
@@ -85,24 +86,12 @@ export default function WorkforceOverview({
         )}
       </div>
 
-      <div className="w-full mt-6">
-        <div className="bg-ws-light-teal-50 flex gape-4 rounded-xl xl:max-h-33 ring-1 ring-ws-border-primary">
-          <div className="flex w-100 xl:w-auto">
-            <img
-              src={didHeroImg}
-              alt="Workforce hero"
-              className="w-full xl:w-42 rounded-tl-xl rounded-bl-xl h-full object-cover"
-            />
-          </div>
-          <div className="p-4 overflow-auto">
-            <h4 className="text-base font-semibold mb-2 text-ws-light-teal-950">Did you know?</h4>
-            <p className="text-lg text-ws-light-teal-950">
-              <span className="font-semibold">78%</span> of employees reported they're more likely
-              to stay with an employer because of their benefits program.
-            </p>
-          </div>
-        </div>
-      </div>
+      <DidYouKnowBanner
+        imageSrc={didHeroImg}
+        imageAlt="Workforce hero"
+        stat="78%"
+        text="of employees reported they're more likely to stay with an employer because of their benefits program."
+      />
     </>
   );
 }

@@ -31,6 +31,20 @@ const normalizeDelay = (delayMs: number): number => {
   return Math.max(MIN_POLL_INTERVAL_MS, Math.floor(delayMs));
 };
 
+/**
+ * Returns true when a tab's status is "pending" and its updatedAt timestamp
+ * is older than PROCESSING_WINDOW_MS (5 minutes) relative to Date.now().
+ */
+const isTabStale = (
+  updatedAt: string | null | undefined,
+  tabStatus: string | undefined
+): boolean => {
+  if (tabStatus !== "pending" || !updatedAt) return false;
+  const parsed = Date.parse(updatedAt);
+  if (Number.isNaN(parsed)) return false;
+  return Date.now() - parsed > PROCESSING_WINDOW_MS;
+};
+
 export const useDashboardStatusPolling = ({
   enabled = false,
 }: UseDashboardStatusPollingOptions = {}): UseDashboardStatusPollingReturn => {
@@ -243,6 +257,20 @@ export const useDashboardStatusPolling = ({
     [status]
   );
 
+  // Per-tab stale flags (pending AND updatedAt > 5 min ago)
+  const isRecommendationTabStale = useMemo(
+    () => isTabStale(status?.recommendation?.updatedAt, status?.recommendation?.status),
+    [status]
+  );
+  const isWorkforceTabStale = useMemo(
+    () => isTabStale(status?.workforce?.updatedAt, status?.workforce?.status),
+    [status]
+  );
+  const isIndustryTabStale = useMemo(
+    () => isTabStale(status?.industry?.updatedAt, status?.industry?.status),
+    [status]
+  );
+
   // 5-minute processing window flag
   const createdAtMs = useMemo(() => {
     if (!status?.createdAt) return null;
@@ -284,5 +312,8 @@ export const useDashboardStatusPolling = ({
     isWorkforceTabReady,
     isIndustryTabReady,
     hasExceededProcessingWindow,
+    isRecommendationTabStale,
+    isWorkforceTabStale,
+    isIndustryTabStale,
   };
 };

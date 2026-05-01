@@ -17,13 +17,16 @@ import CompanyAtAGlance from "./CompanyAtAGlance";
 import CoreBenefitsEnhancement from "./CoreBenefitsEnhancement";
 import StrategicSolutions from "./StrategicSolutions";
 import { useIndustry } from "@/hooks/useIndustry";
+import PreparingDashboard from "./PreparingDashboard";
 
 export default function RecommendationsFinchPage({
   onNavigateToWorkforce,
   isReady = true,
+  isStale = false,
 }: {
   readonly onNavigateToWorkforce?: () => void;
   readonly isReady?: boolean;
+  readonly isStale?: boolean;
 }) {
   const { isFinchAssessmentIncomplete } = useAssessmentStatus();
 
@@ -68,6 +71,15 @@ export default function RecommendationsFinchPage({
 
   // Combined loading guard
   const isLoading = !isReady || workforceIsLoading || recommendationsIsLoading || isIndustryLoading;
+
+  if (isStale) {
+    return (
+      <>
+        <PreparingDashboard />
+        <CarouselSection />
+      </>
+    );
+  }
 
   return (
     <div className="bg-ws-base-white space-y-6 py-10 px-6 shadow-xl rounded-b-xl">

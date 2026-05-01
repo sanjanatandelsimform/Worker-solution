@@ -28,6 +28,9 @@ import { CurrencyStackIcon } from "@/assets/icons/CurrencyStackIcon";
 import ProgressCard from "./ProgressCard";
 import SalaryHourlyFinchChart from "./SalaryHourlyCharts/SalaryHourlyChartsFinch/SalaryHourlyComparisonChart";
 import { TimerIcon } from "@/assets/icons/TimerIcon";
+import PreparingDashboard from "@/pages/recommendations/PreparingDashboard";
+import didHeroImg from "@/assets/employees-reported.jpg";
+import DidYouKnowBanner from "@/components/common/DidYouKnowBanner";
 
 const OverviewCardSkeleton = () => (
   <div className="border border-ws-border-secondary rounded-lg p-4 bg-ws-base-white animate-pulse shadow-sm">
@@ -365,7 +368,8 @@ interface ProgressCardFinchConfig {
 
 export default function BenchmarkFinchPage({
   isReady = true,
-}: { readonly isReady?: boolean } = {}) {
+  isStale = false,
+}: { readonly isReady?: boolean; readonly isStale?: boolean } = {}) {
   const [isGetInTouchModalOpen, setIsGetInTouchModalOpen] = useState(false);
   const [selectedGraphType, setSelectedGraphType] = useState<"owners" | "renters">("renters");
   const [selectedWageZip, setSelectedWageZip] = useState<string | null>(null);
@@ -799,6 +803,20 @@ export default function BenchmarkFinchPage({
   // const rentersBurdenQuarter = latestRentersBurden?.period?.quarter;
   // const ownersPeriodLabel = ownersBurdenYear ? `Q${ownersBurdenQuarter} ${ownersBurdenYear}` : "";
   // const rentersPeriodLabel = rentersBurdenYear ? `Q${rentersBurdenQuarter} ${rentersBurdenYear}` : "";
+
+  if (isStale) {
+    return (
+      <>
+        <PreparingDashboard />
+        <DidYouKnowBanner
+          imageSrc={didHeroImg}
+          imageAlt="Workforce hero"
+          stat="78%"
+          text="of employees reported they're more likely to stay with an employer because of their benefits program."
+        />
+      </>
+    );
+  }
 
   return (
     <div className="bg-ws-base-white py-10 px-6 space-y-6 shadow-xl rounded-b-xl">

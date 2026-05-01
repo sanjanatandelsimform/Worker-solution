@@ -71,6 +71,7 @@ vi.mock("@/assets/icons/Globe", () => ({ GlobeIcon: () => <span>g</span> }));
 vi.mock("@/assets/icons/DollarIcon", () => ({ DollarIcon: () => <span>d</span> }));
 vi.mock("@/assets/icons/CurrencyStackIcon", () => ({ CurrencyStackIcon: () => <span>c</span> }));
 vi.mock("@/assets/icons/TimerIcon", () => ({ TimerIcon: () => <span>t</span> }));
+vi.mock("@/assets/preparingData.svg", () => ({ default: "preparingData.svg" }));
 
 describe("BenchmarkFinchPage", () => {
   beforeEach(() => {
@@ -139,5 +140,22 @@ describe("BenchmarkFinchPage", () => {
     render(<BenchmarkFinchPage />);
     // Modal starts closed, just verify render is stable
     expect(document.body).toBeTruthy();
+  });
+
+  // ─── isStale prop: PreparingDashboard fallback ─────────────────────────────
+
+  it("renders PreparingDashboard when isStale is true", () => {
+    render(<BenchmarkFinchPage isStale={true} />);
+    expect(screen.getByText(/Preparing your dashboard/i)).toBeInTheDocument();
+  });
+
+  it("does not render PreparingDashboard when isStale is false (default)", () => {
+    render(<BenchmarkFinchPage />);
+    expect(screen.queryByText(/Preparing your dashboard/i)).not.toBeInTheDocument();
+  });
+
+  it("does not render PreparingDashboard when isStale is explicitly false", () => {
+    render(<BenchmarkFinchPage isStale={false} />);
+    expect(screen.queryByText(/Preparing your dashboard/i)).not.toBeInTheDocument();
   });
 });
