@@ -105,15 +105,7 @@ describe("buildFinchAssessmentPayload", () => {
       selectedGoals: ["Attract Talent"],
       topThreeGoals: ["Retain Talent", "Attract Talent", "Reduce Absenteeism"],
     };
-    const result = buildFinchAssessmentPayload(
-      answers,
-      goals,
-      "march",
-      "ADP",
-      "november",
-      true,
-      "4"
-    );
+    const result = buildFinchAssessmentPayload(answers, goals, "march", "november", true, "4");
 
     expect(result).toMatchObject({
       workforce: {
@@ -125,7 +117,6 @@ describe("buildFinchAssessmentPayload", () => {
       compensation: {
         offersAnnualRaises: true,
         annualRaiseMonth: "March",
-        payrollProvider: "ADP",
         shiftDifferentials: true,
         shortTermIncentives: ["cash_bonuses"],
         longTermIncentives: ["stock_options"],
@@ -147,13 +138,13 @@ describe("buildFinchAssessmentPayload", () => {
   });
 
   it("includes retirementMatchPercentage as a number when retirementPlanHasMatch is true", () => {
-    const result = buildFinchAssessmentPayload(emptyAnswers, emptyGoals, "", "", "", true, "3");
+    const result = buildFinchAssessmentPayload(emptyAnswers, emptyGoals, "", "", true, "3");
     expect(result.benefits.retirementPlanHasMatch).toBe(true);
     expect(result.benefits.retirementMatchPercentage).toBe(3);
   });
 
   it("omits retirementMatchPercentage from payload when retirementPlanHasMatch is false", () => {
-    const result = buildFinchAssessmentPayload(emptyAnswers, emptyGoals, "", "", "", false, "5");
+    const result = buildFinchAssessmentPayload(emptyAnswers, emptyGoals, "", "", false, "5");
     expect(result.benefits.retirementPlanHasMatch).toBe(false);
     expect(result.benefits.retirementMatchPercentage).toBeUndefined();
   });

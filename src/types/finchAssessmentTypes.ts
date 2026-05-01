@@ -14,8 +14,6 @@ export interface CompensationPayload {
   offersAnnualRaises: boolean;
   /** Full month name; present only when offersAnnualRaises === true */
   annualRaiseMonth?: string;
-  /** Provider label e.g. "ADP"; null when not selected */
-  payrollProvider: string | null;
   shiftDifferentials: boolean;
   /** API values: "cash_bonuses" | "profit_sharing" | "commissions" */
   shortTermIncentives: string[];

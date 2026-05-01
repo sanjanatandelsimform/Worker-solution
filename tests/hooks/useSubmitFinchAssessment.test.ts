@@ -13,7 +13,6 @@ const mockPayload: FinchAssessmentPayload = {
   },
   compensation: {
     offersAnnualRaises: false,
-    payrollProvider: null,
     shiftDifferentials: false,
     shortTermIncentives: [],
     longTermIncentives: [],
