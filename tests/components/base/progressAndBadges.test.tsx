@@ -78,11 +78,7 @@ describe("ProgressBar (with labels)", () => {
 
   it("uses custom valueFormatter", () => {
     render(
-      <ProgressBar
-        value={75}
-        labelPosition="right"
-        valueFormatter={(val) => `${val} out of 100`}
-      />
+      <ProgressBar value={75} labelPosition="right" valueFormatter={val => `${val} out of 100`} />
     );
     expect(screen.getByText("75 out of 100")).toBeInTheDocument();
   });
@@ -128,13 +124,7 @@ describe("ProgressBarCircle", () => {
   });
 
   it("renders formatted value", () => {
-    render(
-      <ProgressBarCircle
-        value={75}
-        size="md"
-        valueFormatter={(val) => `${val}%`}
-      />
-    );
+    render(<ProgressBarCircle value={75} size="md" valueFormatter={val => `${val}%`} />);
     expect(screen.getByText("75%")).toBeInTheDocument();
   });
 
@@ -156,10 +146,18 @@ describe("ProgressBarCircle", () => {
 
 // ── Badges ──────────────────────────────────────────────────────────────────
 vi.mock("@untitledui/icons", () => ({
-  X: ({ className }: any) => <span className={className} data-testid="x-icon">×</span>,
+  X: ({ className }: any) => (
+    <span className={className} data-testid="x-icon">
+      ×
+    </span>
+  ),
 }));
 vi.mock("@/components/foundations/dot-icon", () => ({
-  Dot: ({ className }: any) => <span className={className} data-testid="dot-icon">•</span>,
+  Dot: ({ className }: any) => (
+    <span className={className} data-testid="dot-icon">
+      •
+    </span>
+  ),
 }));
 
 import {
@@ -183,17 +181,29 @@ describe("Badge", () => {
   });
 
   it("renders pill-color type badge", () => {
-    render(<Badge type="pill-color" color="brand">Pill</Badge>);
+    render(
+      <Badge type="pill-color" color="brand">
+        Pill
+      </Badge>
+    );
     expect(screen.getByText("Pill")).toBeInTheDocument();
   });
 
   it("renders color type (badge-color)", () => {
-    render(<Badge type="color" color="error">Error Badge</Badge>);
+    render(
+      <Badge type="color" color="error">
+        Error Badge
+      </Badge>
+    );
     expect(screen.getByText("Error Badge")).toBeInTheDocument();
   });
 
   it("renders modern type (badge-modern)", () => {
-    render(<Badge type="modern" color="gray">Modern</Badge>);
+    render(
+      <Badge type="modern" color="gray">
+        Modern
+      </Badge>
+    );
     expect(screen.getByText("Modern")).toBeInTheDocument();
   });
 
@@ -269,7 +279,11 @@ describe("BadgeWithIcon", () => {
   });
 
   it("renders with color type", () => {
-    render(<BadgeWithIcon type="color" color="error">Error</BadgeWithIcon>);
+    render(
+      <BadgeWithIcon type="color" color="error">
+        Error
+      </BadgeWithIcon>
+    );
     expect(screen.getByText("Error")).toBeInTheDocument();
   });
 });
@@ -364,7 +378,12 @@ describe("BadgeWithImage", () => {
 
   it("renders with type=pill-color, size=sm", () => {
     const { container } = render(
-      <BadgeWithImage type="pill-color" size="sm" color="error" imgSrc="https://example.com/img.png">
+      <BadgeWithImage
+        type="pill-color"
+        size="sm"
+        color="error"
+        imgSrc="https://example.com/img.png"
+      >
         Small
       </BadgeWithImage>
     );

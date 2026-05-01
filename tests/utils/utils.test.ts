@@ -29,7 +29,13 @@ describe("capitalise", () => {
 // -------------------------------------------------------------------
 // validation.ts
 // -------------------------------------------------------------------
-import { validateEmail, validatePassword, validateName, passwordsMatch, isPasswordDifferent } from "@/utils/validation";
+import {
+  validateEmail,
+  validatePassword,
+  validateName,
+  passwordsMatch,
+  isPasswordDifferent,
+} from "@/utils/validation";
 
 describe("validateEmail", () => {
   it("returns false for empty string", () => {
@@ -443,7 +449,12 @@ describe("getInfoState", () => {
 // -------------------------------------------------------------------
 // sessionManager.ts
 // -------------------------------------------------------------------
-import { isSessionValid, saveModalContext, restoreModalContext, sanitizeFormData } from "@/utils/sessionManager";
+import {
+  isSessionValid,
+  saveModalContext,
+  restoreModalContext,
+  sanitizeFormData,
+} from "@/utils/sessionManager";
 
 describe("isSessionValid", () => {
   beforeEach(() => {
@@ -602,7 +613,9 @@ describe("isClassComponent", () => {
 
   it("returns true for class components with isReactComponent", () => {
     class MyComp extends React.Component {
-      render() { return null; }
+      render() {
+        return null;
+      }
     }
     expect(isClassComponent(MyComp)).toBe(true);
   });

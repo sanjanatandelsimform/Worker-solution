@@ -31,4 +31,8 @@ export interface UseDashboardStatusPollingReturn {
   start: () => void;
   stop: () => void;
   reset: () => void;
+  isRecommendationTabReady: boolean;
+  isWorkforceTabReady: boolean;
+  isIndustryTabReady: boolean;
+  hasExceededProcessingWindow: boolean;
 }

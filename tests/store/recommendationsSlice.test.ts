@@ -189,7 +189,9 @@ describe("recommendationsSlice", () => {
 
     it("fetchRecommendations thunk uses fallback error when non-Error is thrown", async () => {
       const recommendationsApi = await import("@/services/api/recommendationsApi");
-      vi.mocked((recommendationsApi as any).getRecommendations).mockRejectedValueOnce("string error");
+      vi.mocked((recommendationsApi as any).getRecommendations).mockRejectedValueOnce(
+        "string error"
+      );
       const { configureStore } = await import("@reduxjs/toolkit");
       const store = configureStore({ reducer: { recommendations: recommendationsReducer } });
       await store.dispatch(fetchRecommendations());

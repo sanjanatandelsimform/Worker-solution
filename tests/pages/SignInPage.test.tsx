@@ -264,7 +264,8 @@ describe("SignInPage", () => {
       expect(mockSignin).toHaveBeenCalled();
     });
     // Find and click the error message close button if it's rendered
-    const closeBtn = screen.queryByText("dismiss") || screen.queryByRole("button", { name: /close/i });
+    const closeBtn =
+      screen.queryByText("dismiss") || screen.queryByRole("button", { name: /close/i });
     if (closeBtn) {
       fireEvent.click(closeBtn);
     }
@@ -276,7 +277,9 @@ describe("SignInPage", () => {
     const rememberMeEl = screen.queryByText(/Remember for 30 days/i);
     if (rememberMeEl) {
       // Click the checkbox area
-      const checkbox = rememberMeEl.closest("label") || rememberMeEl.parentElement?.querySelector('input[type="checkbox"]');
+      const checkbox =
+        rememberMeEl.closest("label") ||
+        rememberMeEl.parentElement?.querySelector('input[type="checkbox"]');
       if (checkbox) fireEvent.click(checkbox);
     }
     expect(document.body).toBeTruthy();

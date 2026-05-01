@@ -15,29 +15,26 @@ const mockPost = vi.fn();
 const mockRetryCall = vi.fn().mockResolvedValue({ data: { success: true } });
 
 // Make mockApiInstance callable (for apiClient(originalRequest) retry)
-const mockApiInstance = Object.assign(
-  (...args: any[]) => mockRetryCall(...args),
-  {
-    get: mockGet,
-    post: mockPost,
-    interceptors: {
-      request: {
-        use: vi.fn((cb: (config: any) => any) => {
-          requestInterceptorCallback = cb;
-          return 0;
-        }),
-      },
-      response: {
-        use: vi.fn((success: (r: any) => any, error: (e: any) => Promise<any>) => {
-          responseInterceptorSuccess = success;
-          responseInterceptorError = error;
-          return 0;
-        }),
-      },
+const mockApiInstance = Object.assign((...args: any[]) => mockRetryCall(...args), {
+  get: mockGet,
+  post: mockPost,
+  interceptors: {
+    request: {
+      use: vi.fn((cb: (config: any) => any) => {
+        requestInterceptorCallback = cb;
+        return 0;
+      }),
     },
-    defaults: { headers: { common: {} } },
-  }
-);
+    response: {
+      use: vi.fn((success: (r: any) => any, error: (e: any) => Promise<any>) => {
+        responseInterceptorSuccess = success;
+        responseInterceptorError = error;
+        return 0;
+      }),
+    },
+  },
+  defaults: { headers: { common: {} } },
+});
 
 vi.mock("axios", async () => {
   const actual = await vi.importActual("axios");
@@ -223,7 +220,9 @@ describe("authApi - response interceptor", () => {
       writable: true,
     });
 
-    const storedState = JSON.stringify({ auth: { tokens: { accessToken: "at", refreshToken: "rt" } } });
+    const storedState = JSON.stringify({
+      auth: { tokens: { accessToken: "at", refreshToken: "rt" } },
+    });
     (localStorage.getItem as ReturnType<typeof vi.fn>).mockReturnValue(storedState);
 
     mockPost.mockResolvedValueOnce({

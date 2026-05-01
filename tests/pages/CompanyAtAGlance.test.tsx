@@ -44,12 +44,14 @@ const defaultBenefitsData: Record<string, string | null> = {
   "enrolled-in-healthcare": "92%",
 };
 
-function renderCAG(props: Partial<{
-  isLoading: boolean;
-  companyGlanceData: any;
-  benefitsGlanceData: Record<string, string | null>;
-  onNavigateToWorkforce?: () => void;
-}> = {}) {
+function renderCAG(
+  props: Partial<{
+    isLoading: boolean;
+    companyGlanceData: any;
+    benefitsGlanceData: Record<string, string | null>;
+    onNavigateToWorkforce?: () => void;
+  }> = {}
+) {
   return render(
     <MemoryRouter>
       <CompanyAtAGlance

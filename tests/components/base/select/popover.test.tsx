@@ -64,7 +64,9 @@ describe("Popover", () => {
   });
 
   it("renders with function className (covers function className branch)", () => {
-    const classnameFn = vi.fn((state: any) => `popover-${state.isEntering ? "entering" : "normal"}`);
+    const classnameFn = vi.fn(
+      (state: any) => `popover-${state.isEntering ? "entering" : "normal"}`
+    );
     render(
       <Popover size="sm" triggerRef={React.createRef() as any} className={classnameFn}>
         <div>Function class</div>

@@ -1,6 +1,6 @@
 /**
  * WageBarChart branch tests
- * Covers: single-item data, tooltip rendering for all three bar positions, resize listener, 
+ * Covers: single-item data, tooltip rendering for all three bar positions, resize listener,
  * no data hover (clears tooltip), data with 0 values but partial non-zero, legend rendering
  */
 import React from "react";
@@ -208,9 +208,7 @@ describe("WageBarChart - branch coverage", () => {
     const { container } = render(
       <WageBarChart
         width={700}
-        data={[
-          { name: "Salary", industryAverage: 50, yourCompany: 80, nationalAverage: 70 },
-        ]}
+        data={[{ name: "Salary", industryAverage: 50, yourCompany: 80, nationalAverage: 70 }]}
       />
     );
     const figure = container.querySelector("figure");

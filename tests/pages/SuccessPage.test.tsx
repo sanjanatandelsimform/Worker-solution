@@ -13,7 +13,9 @@ vi.mock("@/assets/success-check.svg", () => ({ default: "success-check.svg" }));
 vi.mock("@/assets/logo.svg", () => ({ default: "logo.svg" }));
 vi.mock("@/components/base/buttons/button", () => ({
   Button: ({ children, onClick, color, size, className }: any) => (
-    <button data-testid="cta-button" onClick={onClick}>{children}</button>
+    <button data-testid="cta-button" onClick={onClick}>
+      {children}
+    </button>
   ),
 }));
 
@@ -155,7 +157,9 @@ describe("SuccessPage", () => {
     const store = buildStore();
     render(
       <Provider store={store}>
-        <MemoryRouter initialEntries={[{ pathname: "/success", state: { buttonText: "State Btn" } }]}>
+        <MemoryRouter
+          initialEntries={[{ pathname: "/success", state: { buttonText: "State Btn" } }]}
+        >
           <SuccessPage buttonLabel="Custom Label" />
         </MemoryRouter>
       </Provider>

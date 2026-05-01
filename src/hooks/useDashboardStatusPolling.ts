@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useRef, useState } from "react";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { getErrorMessage } from "@/services/api/apiUtils";
 import { getDashboardStatus } from "@/services/api/dashboardApi";
 import type {
@@ -9,6 +9,8 @@ import type {
 
 const MIN_POLL_INTERVAL_MS = 1000;
 const NON_429_RETRY_DELAYS_MS = [1000, 2000, 4000];
+const PROCESSING_WINDOW_MS = 300_000; // 5 minutes
+const WINDOW_CHECK_INTERVAL_MS = 10_000; // 10 seconds
 
 type ErrorWithStatus = { response?: { status?: number } };
 
@@ -225,6 +227,52 @@ export const useDashboardStatusPolling = ({
     };
   }, [stop]);
 
+  // Per-tab readiness flags
+  const isRecommendationTabReady = useMemo(
+    () =>
+      status?.recommendation?.status === "completed" ||
+      status?.recommendation?.status === "not_applicable",
+    [status]
+  );
+  const isWorkforceTabReady = useMemo(
+    () =>
+      status?.workforce?.status === "completed" || status?.workforce?.status === "not_applicable",
+    [status]
+  );
+  const isIndustryTabReady = useMemo(
+    () => status?.industry?.status === "completed" || status?.industry?.status === "not_applicable",
+    [status]
+  );
+
+  // 5-minute processing window flag
+  const createdAtMs = useMemo(() => {
+    if (!status?.createdAt) return null;
+    const parsed = Date.parse(status.createdAt);
+    return Number.isNaN(parsed) ? null : parsed;
+  }, [status]);
+
+  const [hasExceededProcessingWindow, setHasExceededProcessingWindow] = useState(true);
+
+  useEffect(() => {
+    if (createdAtMs === null) {
+      queueMicrotask(() => setHasExceededProcessingWindow(true));
+      return;
+    }
+    const check = () => Date.now() - createdAtMs >= PROCESSING_WINDOW_MS;
+    if (check()) {
+      queueMicrotask(() => setHasExceededProcessingWindow(true));
+      return;
+    }
+    queueMicrotask(() => setHasExceededProcessingWindow(false));
+    const id = setInterval(() => {
+      if (check()) {
+        setHasExceededProcessingWindow(true);
+        clearInterval(id);
+      }
+    }, WINDOW_CHECK_INTERVAL_MS);
+    return () => clearInterval(id);
+  }, [createdAtMs]);
+
   return {
     status,
     isLoading,
@@ -233,5 +281,9 @@ export const useDashboardStatusPolling = ({
     start,
     stop,
     reset,
+    isRecommendationTabReady,
+    isWorkforceTabReady,
+    isIndustryTabReady,
+    hasExceededProcessingWindow,
   };
 };

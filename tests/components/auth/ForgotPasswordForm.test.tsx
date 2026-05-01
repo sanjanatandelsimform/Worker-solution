@@ -20,7 +20,9 @@ vi.mock("@/components/common/ErrorMessage", () => ({
   default: ({ errorMessage, onClose }: { errorMessage: string; onClose: () => void }) => (
     <div data-testid="error-message">
       {errorMessage}
-      <button onClick={onClose} data-testid="error-close">Close</button>
+      <button onClick={onClose} data-testid="error-close">
+        Close
+      </button>
     </div>
   ),
 }));

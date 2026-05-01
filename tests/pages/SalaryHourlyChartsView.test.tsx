@@ -34,7 +34,18 @@ describe("SalaryHourlyChartsView", () => {
       () => ctx as unknown as CanvasRenderingContext2D
     );
     HTMLCanvasElement.prototype.getBoundingClientRect = vi.fn(
-      () => ({ left: 0, top: 0, width: 500, height: 350, right: 500, bottom: 350, x: 0, y: 0, toJSON: vi.fn() }) as DOMRect
+      () =>
+        ({
+          left: 0,
+          top: 0,
+          width: 500,
+          height: 350,
+          right: 500,
+          bottom: 350,
+          x: 0,
+          y: 0,
+          toJSON: vi.fn(),
+        }) as DOMRect
     );
   });
 

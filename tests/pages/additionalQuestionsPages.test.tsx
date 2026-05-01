@@ -77,7 +77,9 @@ vi.mock("@/components/base/input/input", () => ({
 }));
 
 vi.mock("@/components/base/radio-buttons/radio-buttons", () => ({
-  RadioButton: ({ value }: any) => <input type="radio" value={value} data-testid={`radio-btn-${value}`} />,
+  RadioButton: ({ value }: any) => (
+    <input type="radio" value={value} data-testid={`radio-btn-${value}`} />
+  ),
   RadioGroup: ({ children, onChange, value, ...props }: any) => (
     <div data-testid="benefits-radio-group" {...props}>
       {children}
@@ -116,9 +118,7 @@ vi.mock("@/components/common/FieldError", () => ({
 }));
 
 vi.mock("@/components/base/tooltip/tooltip", () => ({
-  Tooltip: ({ children, title }: any) => (
-    <div data-tooltip={title}>{children}</div>
-  ),
+  Tooltip: ({ children, title }: any) => <div data-tooltip={title}>{children}</div>,
   TooltipTrigger: ({ children }: any) => <div>{children}</div>,
 }));
 
@@ -227,9 +227,7 @@ describe("CompensationSection", () => {
   });
 
   it("passes field errors to components", () => {
-    render(
-      <CompensationSection {...defaultProps} fieldErrors={{ "annual-raises": "Required" }} />
-    );
+    render(<CompensationSection {...defaultProps} fieldErrors={{ "annual-raises": "Required" }} />);
     expect(screen.getByTestId("error-annual-raises")).toBeTruthy();
   });
 

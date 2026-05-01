@@ -25,7 +25,12 @@ vi.mock("@/components/base/buttons/button", () => ({
 // Mock react-loader-spinner
 vi.mock("react-loader-spinner", () => ({
   Oval: ({ ariaLabel, height, width }: any) => (
-    <div data-testid="loading-spinner" aria-label={ariaLabel} data-height={height} data-width={width} />
+    <div
+      data-testid="loading-spinner"
+      aria-label={ariaLabel}
+      data-height={height}
+      data-width={width}
+    />
   ),
 }));
 
@@ -72,9 +77,7 @@ describe("ErrorMessage", () => {
   });
 
   it("renders with custom error type class", () => {
-    const { container } = render(
-      <ErrorMessage errorType="warning" errorMessage="Warning!" />
-    );
+    const { container } = render(<ErrorMessage errorType="warning" errorMessage="Warning!" />);
     expect(container.querySelector(".warning")).toBeTruthy();
   });
 
@@ -100,7 +103,7 @@ describe("ErrorMessage", () => {
   it("auto-closes after 5000ms when onClose is provided", async () => {
     const onClose = vi.fn();
     render(<ErrorMessage errorMessage="Auto-close error" onClose={onClose} />);
-    
+
     expect(onClose).not.toHaveBeenCalled();
     act(() => {
       vi.advanceTimersByTime(5000);
@@ -118,16 +121,12 @@ describe("ErrorMessage", () => {
   });
 
   it("renders with custom classess prop", () => {
-    const { container } = render(
-      <ErrorMessage errorMessage="Error" classess="my-custom-class" />
-    );
+    const { container } = render(<ErrorMessage errorMessage="Error" classess="my-custom-class" />);
     expect(container.querySelector(".my-custom-class")).toBeTruthy();
   });
 
   it("renders with custom textColor", () => {
-    const { container } = render(
-      <ErrorMessage errorMessage="Error" textColor="text-red-500" />
-    );
+    const { container } = render(<ErrorMessage errorMessage="Error" textColor="text-red-500" />);
     expect(container.querySelector(".text-red-500")).toBeTruthy();
   });
 });

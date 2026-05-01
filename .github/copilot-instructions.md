@@ -107,33 +107,45 @@ Do this first when editing code:
 - Open `src/routes/index.tsx` to follow the lazy-load + Suspense pattern (helper: `lazyLoad(Component)`).
 - Use barrel exports (feature `index.ts`) and the `@/` alias for imports (never relative `../..` for src files).
 
-## Active Feature: 021-finch-connect-loading (2026-04-24)
+## Active Feature: 028-dashboard-tab-readiness (2026-05-01)
 
 <!-- specify:agent:start -->
 
-**Branch**: `021-finch-connect-loading` | **Spec**: `specs/021-finch-connect-loading/spec.md` | **Plan**: `specs/021-finch-connect-loading/plan.md`
+**Branch**: `028-dashboard-tab-readiness` | **Spec**: `specs/028-dashboard-tab-readiness/spec.md` | **Plan**: `specs/028-dashboard-tab-readiness/plan.md`
 
-### Context: Previous features (009–020) are complete
+### Context: Previous features (009–027) are complete
 
-Features 009–020 fully implemented. Feature 016 refactored `AdditionalQuestions.tsx` into section components. Features 017–018 added formatting and dynamic card content.
+Features 021–027 added Finch connect loading, modal fixes, additional-questions tests, dashboard status polling, and dashboard ready states groundwork.
 
 ### What this feature does
 
-Minimal UI fix — adds a full-screen loading spinner to `DashboardPage.tsx` during the Finch connection flow. When the user clicks "Start with Finch", there is currently no visible feedback between click and outcome. This adds a `<LoadingSpinner>` guard matching the existing `isLoadingAssessment` pattern.
+1. Extracts `didYouKnowSlides` from `Carousel.tsx` into `src/constants/didYouKnowSlides.tsx` and reuses in `DynamicLoadingModal.tsx` (removes its hardcoded `labels` array).
+2. Extends `useDashboardStatusPolling` to expose three per-tab readiness flags (`isRecommendationTabReady`, `isWorkforceTabReady`, `isIndustryTabReady`) and a `hasExceededProcessingWindow` flag (flips to `true` when `createdAt` + 5 min < now).
+3. Passes `isReady` prop into each tab page so it renders skeletons when not ready.
+4. Shows `<DynamicLoadingModal>` only while at least one tab is pending AND within the 5-minute window.
 
-### Single file to modify
+### Files to create
 
-- `src/pages/dashboard/DashboardPage.tsx` — add early-return guard `if (isFinchLoading)` immediately after the existing `if (isLoadingAssessment)` guard
+- `src/constants/didYouKnowSlides.tsx` — shared slides array + `DidYouKnowSlide` type
+
+### Files to modify
+
+- `src/pages/recommendations/Carousel.tsx` — import slides from constants, remove inline array
+- `src/components/dashboard/DynamicLoadingModal.tsx` — use shared slides, remove internal labels
+- `src/types/dashboardStatusTypes.ts` — extend `UseDashboardStatusPollingReturn`
+- `src/hooks/useDashboardStatusPolling.ts` — add readiness flags + 5-min timer
+- `src/pages/dashboard/DashboardPage.tsx` — destructure new flags, pass `isReady`, render modal
+- `src/pages/recommendations/RecommendationsFinchPage.tsx` — accept `isReady` prop
+- `src/pages/benchmark/BenchmarkFinchPage.tsx` — accept `isReady` prop
+- `src/pages/workforce/WorkforcePage.tsx` — accept `isReady` prop
 
 ### Key facts
 
-- `isFinchLoading` is already destructured from `useFinchConnect()` in `DashboardPage.tsx`
-- `LoadingSpinner` is already imported in `DashboardPage.tsx`
-- Spinner props: `height={80} width={80} bgClass="bg-secondary" ariaLabel="oval-loading"`
-- **No hook changes needed** — `useFinchConnect.ts` already tracks full lifecycle via `status !== "idle"`
-- **No new imports** — everything already present
-- **No test changes** — mocks default to `isLoading: false`
-- See full implementation guide: `specs/021-finch-connect-loading/quickstart.md`
+- `PROCESSING_WINDOW_MS = 300_000` (5 minutes)
+- Readiness: `status === "completed" || status === "not_applicable"` → ready
+- Timer checks every 10 seconds; flips `hasExceededProcessingWindow` once boundary crossed
+- Each tab already has skeleton states; `isReady=false` merges with existing `isLoading`
+- See full implementation guide: `specs/028-dashboard-tab-readiness/quickstart.md`
 <!-- specify:agent:end -->
 
 Essential files to reference in PRs or fixes:

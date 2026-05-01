@@ -24,7 +24,9 @@ describe("CostBurdenBarChart", () => {
   beforeEach(() => {
     vi.clearAllMocks();
     Object.defineProperty(window, "devicePixelRatio", { value: 1, configurable: true });
-    HTMLCanvasElement.prototype.getContext = vi.fn(() => mockCtx as unknown as CanvasRenderingContext2D);
+    HTMLCanvasElement.prototype.getContext = vi.fn(
+      () => mockCtx as unknown as CanvasRenderingContext2D
+    );
     HTMLCanvasElement.prototype.getBoundingClientRect = vi.fn(
       () =>
         ({
@@ -73,7 +75,9 @@ describe("CostBurdenBarChart - direct rendering with width=800", () => {
   beforeEach(() => {
     vi.clearAllMocks();
     Object.defineProperty(window, "devicePixelRatio", { value: 1, configurable: true });
-    HTMLCanvasElement.prototype.getContext = vi.fn(() => mockCtx as unknown as CanvasRenderingContext2D);
+    HTMLCanvasElement.prototype.getContext = vi.fn(
+      () => mockCtx as unknown as CanvasRenderingContext2D
+    );
     HTMLCanvasElement.prototype.getBoundingClientRect = vi.fn(
       () => ({ left: 0, top: 0, width: 800, height: 400 }) as DOMRect
     );

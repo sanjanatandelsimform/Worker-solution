@@ -155,8 +155,7 @@ describe("authSlice - reducers", () => {
 });
 
 describe("authSlice - initializeAuth thunk", () => {
-  const createTestStore = () =>
-    configureStore({ reducer: { auth: authReducer } });
+  const createTestStore = () => configureStore({ reducer: { auth: authReducer } });
 
   beforeEach(() => {
     vi.stubGlobal("localStorage", {
@@ -219,7 +218,10 @@ describe("authSlice - initializeAuth thunk", () => {
         },
       })
     );
-    vi.mocked(refreshAccessToken).mockResolvedValueOnce({ accessToken: "new-at", refreshToken: "new-rt" });
+    vi.mocked(refreshAccessToken).mockResolvedValueOnce({
+      accessToken: "new-at",
+      refreshToken: "new-rt",
+    });
     const store = createTestStore();
     await store.dispatch(initializeAuth());
     expect(store.getState().auth.isAuthenticated).toBe(true);
@@ -362,7 +364,12 @@ describe("profileSlice - reducers", () => {
   });
 
   it("resetPasswordAttempts resets attempt tracking", () => {
-    const locked = { ...state, passwordAttempts: 3, isAccountLocked: true, lockoutExpiry: Date.now() };
+    const locked = {
+      ...state,
+      passwordAttempts: 3,
+      isAccountLocked: true,
+      lockoutExpiry: Date.now(),
+    };
     const next = profileReducer(locked, resetPasswordAttempts());
     expect(next.passwordAttempts).toBe(0);
     expect(next.isAccountLocked).toBe(false);
@@ -370,7 +377,13 @@ describe("profileSlice - reducers", () => {
   });
 
   it("clearProfileData resets all", () => {
-    const modified = { ...state, loading: true, error: "err", passwordAttempts: 2, isAccountLocked: true };
+    const modified = {
+      ...state,
+      loading: true,
+      error: "err",
+      passwordAttempts: 2,
+      isAccountLocked: true,
+    };
     const next = profileReducer(modified, clearProfileData());
     expect(next.loading).toBe(false);
     expect(next.error).toBeNull();
@@ -380,8 +393,7 @@ describe("profileSlice - reducers", () => {
 });
 
 describe("profileSlice - async thunks", () => {
-  const createTestStore = () =>
-    configureStore({ reducer: { profile: profileReducer } });
+  const createTestStore = () => configureStore({ reducer: { profile: profileReducer } });
 
   beforeEach(() => {
     vi.stubGlobal("localStorage", {
@@ -410,25 +422,37 @@ describe("profileSlice - async thunks", () => {
   it("updateEmailAddress pending/fulfilled", async () => {
     vi.mocked(profileService.updateEmail).mockResolvedValueOnce({ success: true } as any);
     const store = createTestStore();
-    await store.dispatch(updateEmailAddress({ email: "new@test.com", currentEmail: "old@test.com" }));
+    await store.dispatch(
+      updateEmailAddress({ email: "new@test.com", currentEmail: "old@test.com" })
+    );
     expect(store.getState().profile.error).toBeNull();
   });
 
   it("updateEmailAddress rejected", async () => {
     vi.mocked(profileService.updateEmail).mockRejectedValueOnce(new Error("Email error"));
     const store = createTestStore();
-    await store.dispatch(updateEmailAddress({ email: "new@test.com", currentEmail: "old@test.com" }));
+    await store.dispatch(
+      updateEmailAddress({ email: "new@test.com", currentEmail: "old@test.com" })
+    );
     expect(store.getState().profile.error).toBe("Email error");
   });
 
   it("changePassword fulfilled resets attempts", async () => {
     vi.mocked(profileService.updatePassword).mockResolvedValueOnce(undefined as any);
-    const modifiedState = { loading: false, error: null, passwordAttempts: 3, isAccountLocked: false, lockoutExpiry: null };
+    const modifiedState = {
+      loading: false,
+      error: null,
+      passwordAttempts: 3,
+      isAccountLocked: false,
+      lockoutExpiry: null,
+    };
     const store = configureStore({
       reducer: { profile: profileReducer },
       preloadedState: { profile: modifiedState },
     });
-    await store.dispatch(changePassword({ currentPassword: "old", newPassword: "new", confirmNewPassword: "new" }));
+    await store.dispatch(
+      changePassword({ currentPassword: "old", newPassword: "new", confirmNewPassword: "new" })
+    );
     expect(store.getState().profile.passwordAttempts).toBe(0);
     expect(store.getState().profile.isAccountLocked).toBe(false);
   });
@@ -439,7 +463,9 @@ describe("profileSlice - async thunks", () => {
       attemptsRemaining: 3,
     });
     const store = createTestStore();
-    await store.dispatch(changePassword({ currentPassword: "old", newPassword: "new", confirmNewPassword: "new" }));
+    await store.dispatch(
+      changePassword({ currentPassword: "old", newPassword: "new", confirmNewPassword: "new" })
+    );
     expect(store.getState().profile.passwordAttempts).toBe(2); // 5 - 3
     expect(store.getState().profile.error).toBe("Wrong password");
   });
@@ -451,7 +477,9 @@ describe("profileSlice - async thunks", () => {
       lockoutDuration: 900,
     });
     const store = createTestStore();
-    await store.dispatch(changePassword({ currentPassword: "old", newPassword: "new", confirmNewPassword: "new" }));
+    await store.dispatch(
+      changePassword({ currentPassword: "old", newPassword: "new", confirmNewPassword: "new" })
+    );
     expect(store.getState().profile.isAccountLocked).toBe(true);
     expect(store.getState().profile.lockoutExpiry).toBeGreaterThan(Date.now());
   });
@@ -480,7 +508,9 @@ describe("profileSlice - async thunks", () => {
   });
 
   it("resendVerificationEmail rejected", async () => {
-    vi.mocked(profileService.resendEmailVerification).mockRejectedValueOnce(new Error("Resend failed"));
+    vi.mocked(profileService.resendEmailVerification).mockRejectedValueOnce(
+      new Error("Resend failed")
+    );
     const store = createTestStore();
     await store.dispatch(resendVerificationEmail());
     expect(store.getState().profile.error).toBe("Resend failed");
@@ -523,20 +553,32 @@ describe("dashboardSlice", () => {
   });
 
   it("clearDashboard resets data", () => {
-    const loaded = dashboardReducer(undefined, fetchDashboard.fulfilled(mockDashboardData, "", undefined));
+    const loaded = dashboardReducer(
+      undefined,
+      fetchDashboard.fulfilled(mockDashboardData, "", undefined)
+    );
     const cleared = dashboardReducer(loaded, clearDashboard());
     expect(cleared.data).toBeNull();
     expect(cleared.isLoaded).toBe(false);
   });
 
   it("clearDashboardError clears error only", () => {
-    const withError = { data: null, loading: false, error: "err", lastFetched: null, isLoaded: false };
+    const withError = {
+      data: null,
+      loading: false,
+      error: "err",
+      lastFetched: null,
+      isLoaded: false,
+    };
     const next = dashboardReducer(withError, clearDashboardError());
     expect(next.error).toBeNull();
   });
 
   it("resetDashboard returns initial state", () => {
-    const loaded = dashboardReducer(undefined, fetchDashboard.fulfilled(mockDashboardData, "", undefined));
+    const loaded = dashboardReducer(
+      undefined,
+      fetchDashboard.fulfilled(mockDashboardData, "", undefined)
+    );
     const reset = dashboardReducer(loaded, resetDashboard());
     expect(reset.data).toBeNull();
     expect(reset.isLoaded).toBe(false);
@@ -561,7 +603,10 @@ describe("dashboardSlice", () => {
   });
 
   it("resets on auth/logout action", () => {
-    const loaded = dashboardReducer(undefined, fetchDashboard.fulfilled(mockDashboardData, "", undefined));
+    const loaded = dashboardReducer(
+      undefined,
+      fetchDashboard.fulfilled(mockDashboardData, "", undefined)
+    );
     const reset = dashboardReducer(loaded, { type: "auth/logout" });
     expect(reset.data).toBeNull();
   });
@@ -589,7 +634,10 @@ describe("industrySlice", () => {
   });
 
   it("clearIndustry resets data", () => {
-    const loaded = industryReducer(undefined, fetchIndustry.fulfilled(mockIndustryData, "", undefined));
+    const loaded = industryReducer(
+      undefined,
+      fetchIndustry.fulfilled(mockIndustryData, "", undefined)
+    );
     const cleared = industryReducer(loaded, clearIndustry());
     expect(cleared.data).toBeNull();
     expect(cleared.isLoaded).toBe(false);
@@ -602,7 +650,10 @@ describe("industrySlice", () => {
   });
 
   it("resetIndustry returns initial state", () => {
-    const loaded = industryReducer(undefined, fetchIndustry.fulfilled(mockIndustryData, "", undefined));
+    const loaded = industryReducer(
+      undefined,
+      fetchIndustry.fulfilled(mockIndustryData, "", undefined)
+    );
     const reset = industryReducer(loaded, resetIndustry());
     expect(reset.data).toBeNull();
   });
@@ -623,7 +674,10 @@ describe("industrySlice", () => {
   });
 
   it("resets on auth/logout", () => {
-    const loaded = industryReducer(undefined, fetchIndustry.fulfilled(mockIndustryData, "", undefined));
+    const loaded = industryReducer(
+      undefined,
+      fetchIndustry.fulfilled(mockIndustryData, "", undefined)
+    );
     const reset = industryReducer(loaded, { type: "auth/logout" });
     expect(reset.data).toBeNull();
   });
@@ -651,19 +705,31 @@ describe("workforceSlice", () => {
   });
 
   it("clearWorkforce resets data", () => {
-    const loaded = workforceReducer(undefined, fetchWorkforce.fulfilled(mockWorkforceData, "", undefined));
+    const loaded = workforceReducer(
+      undefined,
+      fetchWorkforce.fulfilled(mockWorkforceData, "", undefined)
+    );
     const cleared = workforceReducer(loaded, clearWorkforce());
     expect(cleared.data).toBeNull();
   });
 
   it("clearWorkforceError clears error", () => {
-    const withError = { data: null, loading: false, error: "err", lastFetched: null, isLoaded: false };
+    const withError = {
+      data: null,
+      loading: false,
+      error: "err",
+      lastFetched: null,
+      isLoaded: false,
+    };
     const next = workforceReducer(withError, clearWorkforceError());
     expect(next.error).toBeNull();
   });
 
   it("resetWorkforce returns initial state", () => {
-    const loaded = workforceReducer(undefined, fetchWorkforce.fulfilled(mockWorkforceData, "", undefined));
+    const loaded = workforceReducer(
+      undefined,
+      fetchWorkforce.fulfilled(mockWorkforceData, "", undefined)
+    );
     const reset = workforceReducer(loaded, resetWorkforce());
     expect(reset.data).toBeNull();
   });
@@ -705,19 +771,31 @@ describe("recommendationsSlice", () => {
   });
 
   it("clearRecommendations resets", () => {
-    const loaded = recommendationsReducer(undefined, fetchRecommendations.fulfilled(mockRecsData, "", undefined));
+    const loaded = recommendationsReducer(
+      undefined,
+      fetchRecommendations.fulfilled(mockRecsData, "", undefined)
+    );
     const cleared = recommendationsReducer(loaded, clearRecommendations());
     expect(cleared.data).toBeNull();
   });
 
   it("clearRecommendationsError clears error", () => {
-    const withError = { data: null, loading: false, error: "err", lastFetched: null, isLoaded: false };
+    const withError = {
+      data: null,
+      loading: false,
+      error: "err",
+      lastFetched: null,
+      isLoaded: false,
+    };
     const next = recommendationsReducer(withError, clearRecommendationsError());
     expect(next.error).toBeNull();
   });
 
   it("resetRecommendations returns initial state", () => {
-    const loaded = recommendationsReducer(undefined, fetchRecommendations.fulfilled(mockRecsData, "", undefined));
+    const loaded = recommendationsReducer(
+      undefined,
+      fetchRecommendations.fulfilled(mockRecsData, "", undefined)
+    );
     const reset = recommendationsReducer(loaded, resetRecommendations());
     expect(reset.data).toBeNull();
   });
@@ -737,7 +815,10 @@ describe("recommendationsSlice", () => {
   });
 
   it("resets on auth/logout", () => {
-    const loaded = recommendationsReducer(undefined, fetchRecommendations.fulfilled(mockRecsData, "", undefined));
+    const loaded = recommendationsReducer(
+      undefined,
+      fetchRecommendations.fulfilled(mockRecsData, "", undefined)
+    );
     const reset = recommendationsReducer(loaded, { type: "auth/logout" });
     expect(reset.data).toBeNull();
   });
@@ -753,7 +834,12 @@ import finchStatusReducer, {
 import { getFinchStatus } from "@/services/api/finchApi";
 
 const mockFinchData = {
-  connection: { connectionId: "c1", connectionStatus: "connected", products: [], payFrequency: null },
+  connection: {
+    connectionId: "c1",
+    connectionStatus: "connected",
+    products: [],
+    payFrequency: null,
+  },
   latestSyncJob: null,
 };
 
@@ -766,7 +852,10 @@ describe("finchStatusSlice", () => {
   });
 
   it("resetFinchStatus returns initial state", () => {
-    const loaded = finchStatusReducer(undefined, fetchFinchStatus.fulfilled(mockFinchData as any, "", undefined));
+    const loaded = finchStatusReducer(
+      undefined,
+      fetchFinchStatus.fulfilled(mockFinchData as any, "", undefined)
+    );
     const reset = finchStatusReducer(loaded, resetFinchStatus());
     expect(reset.connection).toBeNull();
   });
@@ -788,7 +877,10 @@ describe("finchStatusSlice", () => {
   });
 
   it("resets on auth/logout", () => {
-    const loaded = finchStatusReducer(undefined, fetchFinchStatus.fulfilled(mockFinchData as any, "", undefined));
+    const loaded = finchStatusReducer(
+      undefined,
+      fetchFinchStatus.fulfilled(mockFinchData as any, "", undefined)
+    );
     const reset = finchStatusReducer(loaded, { type: "auth/logout" });
     expect(reset.connection).toBeNull();
   });
@@ -840,9 +932,11 @@ const mockUserData = {
 describe("userSlice", () => {
   beforeEach(() => {
     vi.stubGlobal("localStorage", {
-      getItem: vi.fn(() => JSON.stringify({
-        auth: { user: { id: "u-1", businessEmail: "old@test.com" } },
-      })),
+      getItem: vi.fn(() =>
+        JSON.stringify({
+          auth: { user: { id: "u-1", businessEmail: "old@test.com" } },
+        })
+      ),
       setItem: vi.fn(),
       removeItem: vi.fn(),
     });
