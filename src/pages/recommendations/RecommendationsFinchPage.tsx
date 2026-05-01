@@ -81,10 +81,10 @@ export default function RecommendationsFinchPage({
   if (isStale) {
     const description = isAutomatedProvider ? PREPARING_MSG_AUTOMATED : PREPARING_MSG_NON_AUTOMATED;
     return (
-      <>
+      <div className="bg-ws-base-white space-y-6 py-10 px-6 shadow-xl rounded-b-xl">
         <PreparingDashboard description={description} />
         <CarouselSection />
-      </>
+      </div>
     );
   }
 

@@ -16,7 +16,7 @@ export default function DidYouKnowBanner({
 }: DidYouKnowBannerProps) {
   return (
     <div className="w-full mt-6">
-      <div className="bg-ws-light-teal-50 flex gap-4 rounded-xl xl:max-h-33 ring-1 ring-ws-border-primary">
+      <div className="bg-ws-light-teal-50 flex gap-4 rounded-xl ring-1 ring-ws-border-primary">
         <div className="flex w-100 xl:w-auto">
           <img
             src={imageSrc}

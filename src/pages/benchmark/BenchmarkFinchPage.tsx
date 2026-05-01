@@ -816,7 +816,7 @@ export default function BenchmarkFinchPage({
   if (isStale) {
     const description = isAutomatedProvider ? PREPARING_MSG_AUTOMATED : PREPARING_MSG_NON_AUTOMATED;
     return (
-      <>
+      <div className="bg-ws-base-white py-10 px-6 space-y-6 shadow-xl rounded-b-xl">
         <PreparingDashboard description={description} />
         <DidYouKnowBanner
           imageSrc={didHeroImg}
@@ -825,7 +825,7 @@ export default function BenchmarkFinchPage({
           text="of employees reported they're more likely to stay with an employer because of their benefits program."
           note="Source: Gallup"
         />
-      </>
+      </div>
     );
   }
 
