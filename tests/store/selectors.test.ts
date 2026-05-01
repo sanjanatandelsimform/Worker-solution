@@ -136,7 +136,13 @@ import { selectRegistrationFormData } from "@/store/selectors/registrationFormSe
 // -----------------------------------------------
 // Build a fake root state for tests
 // -----------------------------------------------
-const mockUser = { id: "1", firstName: "Alice", lastName: "Smith", businessEmail: "a@b.com", emailVerify: true } as any;
+const mockUser = {
+  id: "1",
+  firstName: "Alice",
+  lastName: "Smith",
+  businessEmail: "a@b.com",
+  emailVerify: true,
+} as any;
 const mockTokens = { accessToken: "at", refreshToken: "rt" };
 
 const buildState = (overrides: Partial<any> = {}): any => ({
@@ -234,7 +240,9 @@ describe("authSelectors", () => {
   });
 
   it("selectAuthInitAttempted defaults to false", () => {
-    expect(selectAuthInitAttempted(buildState({ auth: { authInitAttempted: undefined } }))).toBe(false);
+    expect(selectAuthInitAttempted(buildState({ auth: { authInitAttempted: undefined } }))).toBe(
+      false
+    );
   });
 
   it("selectAccessToken returns token", () => {
@@ -343,14 +351,26 @@ const mockDashboardData: any = {
       zipcode: "12345",
       housingCostBurdenedOwners: [{ burdened: 20, severelyBurdened: 10 }],
       housingCostBurdenedRenters: [{ burdened: 30, severelyBurdened: 15 }],
-      workingClassHousingCostBurden: { homeOwnershipRate: 50, medianHomeValue: 200000, medianRent: 1200 },
+      workingClassHousingCostBurden: {
+        homeOwnershipRate: 50,
+        medianHomeValue: 200000,
+        medianRent: 1200,
+      },
       workingClassHousingGraph: { owners: {}, renters: {} },
     },
   ],
 };
 
 describe("dashboardSelectors", () => {
-  const loadedState = buildState({ dashboard: { data: mockDashboardData, loading: false, error: null, lastFetched: 123, isLoaded: true } });
+  const loadedState = buildState({
+    dashboard: {
+      data: mockDashboardData,
+      loading: false,
+      error: null,
+      lastFetched: 123,
+      isLoaded: true,
+    },
+  });
   const emptyState = buildState();
 
   it("selectDashboardState returns dashboard slice", () => {
@@ -499,7 +519,13 @@ const mockWorkforceData: any = {
 
 describe("workforceSelectors", () => {
   const loadedState = buildState({
-    workforce: { data: mockWorkforceData, loading: false, error: null, lastFetched: 100, isLoaded: true },
+    workforce: {
+      data: mockWorkforceData,
+      loading: false,
+      error: null,
+      lastFetched: 100,
+      isLoaded: true,
+    },
   });
   const emptyState = buildState();
 
@@ -566,7 +592,13 @@ const mockRecommendationsData: any = {
 
 describe("recommendationsSelectors", () => {
   const loadedState = buildState({
-    recommendations: { data: mockRecommendationsData, loading: false, error: null, lastFetched: 100, isLoaded: true },
+    recommendations: {
+      data: mockRecommendationsData,
+      loading: false,
+      error: null,
+      lastFetched: 100,
+      isLoaded: true,
+    },
   });
   const emptyState = buildState();
 
@@ -629,7 +661,12 @@ const mockFinchConnection: any = {
 
 describe("finchStatusSelectors", () => {
   const loadedState = buildState({
-    finchStatus: { connection: mockFinchConnection, latestSyncJob: null, loading: false, error: null },
+    finchStatus: {
+      connection: mockFinchConnection,
+      latestSyncJob: null,
+      loading: false,
+      error: null,
+    },
   });
   const emptyState = buildState();
 

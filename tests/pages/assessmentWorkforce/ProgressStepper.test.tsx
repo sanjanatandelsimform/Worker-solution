@@ -4,7 +4,9 @@ import { render, screen, fireEvent } from "@testing-library/react";
 import { ProgressStepper } from "@/pages/assessmentWorkforce/ProgressStepper";
 
 vi.mock("@/assets/icons/TabArrow", () => ({
-  TabArrow: ({ className }: { className?: string }) => <span data-testid="tab-arrow" className={className} />,
+  TabArrow: ({ className }: { className?: string }) => (
+    <span data-testid="tab-arrow" className={className} />
+  ),
 }));
 
 const steps = [

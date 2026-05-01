@@ -30,6 +30,7 @@ import WorkforcePage from "../workforce/WorkforcePage";
 import { fetchRecommendations } from "@/store/slices/recommendationsSlice";
 import { ArrowLeft } from "@/assets/icons/ArrowLeft";
 import Declarations from "@/components/common/Declarations";
+import DynamicLoadingModal from "@/components/dashboard/DynamicLoadingModal";
 
 const BASE_TAB_ITEMS = [{ id: "finchRecommendations", label: "Recommendations" }];
 
@@ -236,9 +237,16 @@ export const DashboardPage = () => {
   });
 
   const shouldPollDashboardStatus = isConnected || assessmentData?.data?.status === "completed";
-  useDashboardStatusPolling({ enabled: shouldPollDashboardStatus });
+  const {
+    isRecommendationTabReady,
+    isWorkforceTabReady,
+    isIndustryTabReady,
+    hasExceededProcessingWindow,
+  } = useDashboardStatusPolling({ enabled: shouldPollDashboardStatus });
 
+  const allTabsReady = isRecommendationTabReady && isWorkforceTabReady && isIndustryTabReady;
   const isDashboardVisible = assessmentData?.data?.status === "completed" || isConnected;
+  const showLoadingModal = isDashboardVisible && !allTabsReady && !hasExceededProcessingWindow;
 
   if (isLoadingAssessment || isFinchPageLoading) {
     return (
@@ -534,6 +542,7 @@ export const DashboardPage = () => {
                 )}
                 <Tabs.Panel id="finchRecommendations" className="pt-0">
                   <RecommendationsFinchPage
+                    isReady={isRecommendationTabReady}
                     onNavigateToWorkforce={() => {
                       setActiveTab("finchWorkforce");
                       mainRef.current?.scrollTo({ top: 0, behavior: "smooth" });
@@ -542,12 +551,12 @@ export const DashboardPage = () => {
                 </Tabs.Panel>
                 {isConnected && (
                   <Tabs.Panel id="finchIndustry" className="pt-0">
-                    <BenchmarkFinchPage />
+                    <BenchmarkFinchPage isReady={isIndustryTabReady} />
                   </Tabs.Panel>
                 )}
                 {isConnected && (
                   <Tabs.Panel id="finchWorkforce" className="pt-0">
-                    <WorkforcePage />
+                    <WorkforcePage isReady={isWorkforceTabReady} />
                   </Tabs.Panel>
                 )}
               </Tabs>
@@ -560,6 +569,8 @@ export const DashboardPage = () => {
       </div>
 
       {/* Modals */}
+      <DynamicLoadingModal shouldShow={showLoadingModal} />
+
       <BaseModalWithIcon
         isOpen={showResendSuccess}
         onClose={() => setShowResendSuccess(false)}

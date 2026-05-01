@@ -12,13 +12,15 @@ vi.mock("recharts", () => {
     ComposedChart: ({ children }: any) => <div data-testid="composed-chart">{children}</div>,
     Label: ({ value }: any) => <div data-testid="chart-label">{value}</div>,
     Line: () => <div data-testid="line" />,
-    ResponsiveContainer: ({ children }: any) => <div data-testid="responsive-container">{children}</div>,
+    ResponsiveContainer: ({ children }: any) => (
+      <div data-testid="responsive-container">{children}</div>
+    ),
     Tooltip: ({ content, formatter, labelFormatter, cursor }: any) => {
       // Exercise formatter and labelFormatter to cover branches
       if (formatter) {
-        formatter(42);           // normal number
-        formatter(undefined);    // undefined -> returns ""
-        formatter([1, 2]);       // array -> returns ""
+        formatter(42); // normal number
+        formatter(undefined); // undefined -> returns ""
+        formatter([1, 2]); // array -> returns ""
       }
       if (labelFormatter) {
         // Same month range (Jun 1-7)

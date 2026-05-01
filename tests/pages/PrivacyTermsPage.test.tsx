@@ -10,7 +10,9 @@ import TermsPage from "@/pages/termsPolicy/TermsPage";
 
 vi.mock("@/components/base/buttons/button", () => ({
   Button: ({ children, onClick }: any) => (
-    <button data-testid="back-button" onClick={onClick}>{children}</button>
+    <button data-testid="back-button" onClick={onClick}>
+      {children}
+    </button>
   ),
 }));
 

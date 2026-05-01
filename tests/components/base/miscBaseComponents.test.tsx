@@ -173,9 +173,7 @@ describe("Dot icon", () => {
 
 describe("AvatarLabelGroup", () => {
   it("renders with title, subtitle, and avatar", () => {
-    render(
-      <AvatarLabelGroup size="md" title="John Doe" subtitle="Software Engineer" />
-    );
+    render(<AvatarLabelGroup size="md" title="John Doe" subtitle="Software Engineer" />);
     expect(screen.getByText("John Doe")).toBeTruthy();
     expect(screen.getByText("Software Engineer")).toBeTruthy();
   });
@@ -205,7 +203,14 @@ describe("AvatarCompanyIcon", () => {
   });
 
   it("renders with different sizes", () => {
-    const sizes: Array<"xs" | "sm" | "md" | "lg" | "xl" | "2xl"> = ["xs", "sm", "md", "lg", "xl", "2xl"];
+    const sizes: Array<"xs" | "sm" | "md" | "lg" | "xl" | "2xl"> = [
+      "xs",
+      "sm",
+      "md",
+      "lg",
+      "xl",
+      "2xl",
+    ];
     sizes.forEach(size => {
       const { container } = render(<AvatarCompanyIcon size={size} src="icon.png" />);
       const img = container.querySelector("img");
@@ -237,11 +242,11 @@ describe("useResizeObserver", () => {
     const onResize = vi.fn();
     const mockElement = document.createElement("div");
     const ref = { current: mockElement };
-    
+
     const mockObserve = vi.fn();
     let capturedCallback: ((entries: any[]) => void) | null = null;
-    
-    const MockResizeObserver = function(callback: (entries: any[]) => void) {
+
+    const MockResizeObserver = function (callback: (entries: any[]) => void) {
       capturedCallback = callback;
       return {
         observe: mockObserve,
@@ -249,29 +254,29 @@ describe("useResizeObserver", () => {
         disconnect: vi.fn(),
       };
     };
-    
+
     const originalResizeObserver = window.ResizeObserver;
     window.ResizeObserver = MockResizeObserver as any;
-    
+
     const { unmount } = renderHook(() => useResizeObserver({ ref, onResize }));
-    
+
     expect(mockObserve).toHaveBeenCalledWith(mockElement, { box: undefined });
-    
+
     // Trigger the resize observer
     if (capturedCallback) {
       capturedCallback([{ target: mockElement }]);
     }
     expect(onResize).toHaveBeenCalled();
-    
+
     unmount();
-    
+
     window.ResizeObserver = originalResizeObserver;
   });
 
   it("does nothing when ref.current is null", () => {
     const onResize = vi.fn();
     const ref = { current: null };
-    
+
     renderHook(() => useResizeObserver({ ref, onResize }));
     // No observer should be set up since ref.current is null
     expect(onResize).not.toHaveBeenCalled();
@@ -279,7 +284,7 @@ describe("useResizeObserver", () => {
 
   it("does nothing when ref is undefined", () => {
     const onResize = vi.fn();
-    
+
     renderHook(() => useResizeObserver({ ref: undefined, onResize }));
     expect(onResize).not.toHaveBeenCalled();
   });
@@ -288,22 +293,22 @@ describe("useResizeObserver", () => {
     const onResize = vi.fn();
     const mockElement = document.createElement("div");
     const ref = { current: mockElement };
-    
+
     const originalResizeObserver = window.ResizeObserver;
     // @ts-expect-error test intentionally provides invalid prop shape
     delete window.ResizeObserver;
-    
+
     const addEventSpy = vi.spyOn(window, "addEventListener");
     const removeEventSpy = vi.spyOn(window, "removeEventListener");
-    
+
     const { unmount } = renderHook(() => useResizeObserver({ ref, onResize }));
-    
+
     expect(addEventSpy).toHaveBeenCalledWith("resize", onResize, false);
-    
+
     unmount();
-    
+
     expect(removeEventSpy).toHaveBeenCalledWith("resize", onResize, false);
-    
+
     window.ResizeObserver = originalResizeObserver;
     addEventSpy.mockRestore();
     removeEventSpy.mockRestore();
@@ -313,10 +318,10 @@ describe("useResizeObserver", () => {
     const onResize = vi.fn();
     const mockElement = document.createElement("div");
     const ref = { current: mockElement };
-    
+
     let capturedCallback: ((entries: any[]) => void) | null = null;
 
-    const MockResizeObserver = function(callback: (entries: any[]) => void) {
+    const MockResizeObserver = function (callback: (entries: any[]) => void) {
       capturedCallback = callback;
       return {
         observe: vi.fn(),

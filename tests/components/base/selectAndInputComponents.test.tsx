@@ -14,9 +14,10 @@ vi.mock("react-aria-components", () => ({
       className({ isFocused: false, isDisabled: false, isInvalid: true });
       className({ isFocused: true, isDisabled: false, isInvalid: true });
     }
-    const classVal = typeof className === "function"
-      ? className({ isFocused: false, isDisabled: false, isInvalid: false })
-      : className;
+    const classVal =
+      typeof className === "function"
+        ? className({ isFocused: false, isDisabled: false, isInvalid: false })
+        : className;
     return <textarea className={classVal} {...props} />;
   },
   TextField: ({ children, className, isInvalid, isDisabled, isRequired, ...props }: any) => {
@@ -172,7 +173,11 @@ describe("TextArea", () => {
   });
 
   it("renders with textAreaClassName as function (covers TextAreaBase line 43 function branch)", () => {
-    render(<TextArea textAreaClassName={(state: any) => `ta-${state.isFocused ? "focused" : "normal"}`} />);
+    render(
+      <TextArea
+        textAreaClassName={(state: any) => `ta-${state.isFocused ? "focused" : "normal"}`}
+      />
+    );
     expect(screen.getByRole("textbox")).toBeTruthy();
   });
 

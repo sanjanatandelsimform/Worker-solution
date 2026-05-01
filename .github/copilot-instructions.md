@@ -107,6 +107,46 @@ Do this first when editing code:
 - Open `src/routes/index.tsx` to follow the lazy-load + Suspense pattern (helper: `lazyLoad(Component)`).
 - Use barrel exports (feature `index.ts`) and the `@/` alias for imports (never relative `../..` for src files).
 
+## Active Feature: 028-dashboard-tab-readiness (2026-05-01)
+
+<!-- specify:agent:start -->
+
+**Branch**: `028-dashboard-tab-readiness` | **Spec**: `specs/028-dashboard-tab-readiness/spec.md` | **Plan**: `specs/028-dashboard-tab-readiness/plan.md`
+
+### Context: Previous features (009–027) are complete
+
+Features 021–027 added Finch connect loading, modal fixes, additional-questions tests, dashboard status polling, and dashboard ready states groundwork.
+
+### What this feature does
+
+1. Extracts `didYouKnowSlides` from `Carousel.tsx` into `src/constants/didYouKnowSlides.tsx` and reuses in `DynamicLoadingModal.tsx` (removes its hardcoded `labels` array).
+2. Extends `useDashboardStatusPolling` to expose three per-tab readiness flags (`isRecommendationTabReady`, `isWorkforceTabReady`, `isIndustryTabReady`) and a `hasExceededProcessingWindow` flag (flips to `true` when `createdAt` + 5 min < now).
+3. Passes `isReady` prop into each tab page so it renders skeletons when not ready.
+4. Shows `<DynamicLoadingModal>` only while at least one tab is pending AND within the 5-minute window.
+
+### Files to create
+
+- `src/constants/didYouKnowSlides.tsx` — shared slides array + `DidYouKnowSlide` type
+
+### Files to modify
+
+- `src/pages/recommendations/Carousel.tsx` — import slides from constants, remove inline array
+- `src/components/dashboard/DynamicLoadingModal.tsx` — use shared slides, remove internal labels
+- `src/types/dashboardStatusTypes.ts` — extend `UseDashboardStatusPollingReturn`
+- `src/hooks/useDashboardStatusPolling.ts` — add readiness flags + 5-min timer
+- `src/pages/dashboard/DashboardPage.tsx` — destructure new flags, pass `isReady`, render modal
+- `src/pages/recommendations/RecommendationsFinchPage.tsx` — accept `isReady` prop
+- `src/pages/benchmark/BenchmarkFinchPage.tsx` — accept `isReady` prop
+- `src/pages/workforce/WorkforcePage.tsx` — accept `isReady` prop
+
+### Key facts
+
+- `PROCESSING_WINDOW_MS = 300_000` (5 minutes)
+- Readiness: `status === "completed" || status === "not_applicable"` → ready
+- Timer checks every 10 seconds; flips `hasExceededProcessingWindow` once boundary crossed
+- Each tab already has skeleton states; `isReady=false` merges with existing `isLoading`
+- See full implementation guide: `specs/028-dashboard-tab-readiness/quickstart.md`
+
 ## Active Feature: 022-finch-remove-payroll (2026-04-24)
 
 <!-- specify:agent:start -->

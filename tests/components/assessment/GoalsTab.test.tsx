@@ -44,9 +44,7 @@ function renderGoalsTab() {
 // Mock questionData to test the missing section path
 vi.mock("@/data/assessment/questionData.json", () => ({
   default: {
-    sections: [
-      { name: "Goals", questions: [] },
-    ],
+    sections: [{ name: "Goals", questions: [] }],
   },
 }));
 

@@ -365,9 +365,12 @@ describe("SettingsPage - branches", () => {
     await act(async () => {
       fireEvent.click(screen.getByTestId("info-modal-close"));
     });
-    await waitFor(() => {
-      expect(screen.queryByTestId("update-info-modal")).toBeNull();
-    }, { timeout: 3000 });
+    await waitFor(
+      () => {
+        expect(screen.queryByTestId("update-info-modal")).toBeNull();
+      },
+      { timeout: 3000 }
+    );
   });
 
   it("handleFirstNameChange with valid name clears error", async () => {
@@ -425,9 +428,12 @@ describe("SettingsPage - branches", () => {
     fireEvent.click(screen.getByRole("button", { name: /retake the assessment/i }));
     fireEvent.click(screen.getByTestId("modal-confirm"));
 
-    await waitFor(() => {
-      expect(retakeAssessmentAction).toHaveBeenCalled();
-    }, { timeout: 5000 });
+    await waitFor(
+      () => {
+        expect(retakeAssessmentAction).toHaveBeenCalled();
+      },
+      { timeout: 5000 }
+    );
   });
 
   it("retakeError as Error object triggers fallback message", async () => {
@@ -441,9 +447,12 @@ describe("SettingsPage - branches", () => {
     fireEvent.click(screen.getByRole("button", { name: /retake the assessment/i }));
     fireEvent.click(screen.getByTestId("modal-confirm"));
 
-    await waitFor(() => {
-      expect(retakeAssessmentAction).toHaveBeenCalled();
-    }, { timeout: 5000 });
+    await waitFor(
+      () => {
+        expect(retakeAssessmentAction).toHaveBeenCalled();
+      },
+      { timeout: 5000 }
+    );
   });
 
   it("BaseModalWithIcon onClose callbacks for retake and delete", async () => {
@@ -452,16 +461,22 @@ describe("SettingsPage - branches", () => {
     // Open retake modal then close it
     fireEvent.click(screen.getByRole("button", { name: /retake the assessment/i }));
     fireEvent.click(screen.getByTestId("modal-close"));
-    await waitFor(() => {
-      expect(screen.queryByTestId("modal-confirm")).toBeNull();
-    }, { timeout: 3000 });
+    await waitFor(
+      () => {
+        expect(screen.queryByTestId("modal-confirm")).toBeNull();
+      },
+      { timeout: 3000 }
+    );
 
     // Open delete modal then close it
     fireEvent.click(screen.getByRole("button", { name: /delete my account/i }));
     fireEvent.click(screen.getByTestId("modal-close"));
-    await waitFor(() => {
-      expect(screen.queryByTestId("modal-confirm")).toBeNull();
-    }, { timeout: 3000 });
+    await waitFor(
+      () => {
+        expect(screen.queryByTestId("modal-confirm")).toBeNull();
+      },
+      { timeout: 3000 }
+    );
   });
 
   it("resendError ErrorMessage onClose clears resendError (via direct ErrorMessage mock)", async () => {
@@ -482,9 +497,12 @@ describe("SettingsPage - branches", () => {
     const confirmBtn = await waitFor(() => screen.getByTestId("modal-confirm"), { timeout: 2000 });
     fireEvent.click(confirmBtn);
 
-    await waitFor(() => {
-      expect(retakeAssessmentAction).toHaveBeenCalled();
-    }, { timeout: 3000 });
+    await waitFor(
+      () => {
+        expect(retakeAssessmentAction).toHaveBeenCalled();
+      },
+      { timeout: 3000 }
+    );
     expect(true).toBe(true);
   }, 10000);
 
@@ -512,9 +530,12 @@ describe("SettingsPage - branches", () => {
       fireEvent.click(screen.getByTestId("email-modal-respond-success"));
     });
 
-    await waitFor(() => {
-      expect(screen.queryByTestId("update-email-modal")).toBeNull();
-    }, { timeout: 3000 });
+    await waitFor(
+      () => {
+        expect(screen.queryByTestId("update-email-modal")).toBeNull();
+      },
+      { timeout: 3000 }
+    );
 
     localStorage.removeItem("userDetail");
   });

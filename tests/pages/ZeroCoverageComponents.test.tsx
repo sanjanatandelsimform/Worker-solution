@@ -244,9 +244,8 @@ vi.mock("@/pages/benchmark/SalaryHourlyCharts/SalaryHourlyChartsFinch/SalaryChar
   default: () => <div data-testid="salary-chart" />,
 }));
 
-const { default: SalaryHourlyFinchChart } = await import(
-  "@/pages/benchmark/SalaryHourlyCharts/SalaryHourlyChartsFinch/SalaryHourlyComparisonChart"
-);
+const { default: SalaryHourlyFinchChart } =
+  await import("@/pages/benchmark/SalaryHourlyCharts/SalaryHourlyChartsFinch/SalaryHourlyComparisonChart");
 
 describe("SalaryHourlyFinchChart", () => {
   const defaultProps = {

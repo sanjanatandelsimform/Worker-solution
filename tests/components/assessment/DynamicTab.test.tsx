@@ -43,12 +43,18 @@ vi.mock("@/components/assessment/DynamicQuestionRenderer", () => ({
       <div>{question.questionText}</div>
       <button onClick={() => onAnswerChange(question.key, "yes")}>set-{question.key}</button>
       <button onClick={() => onAnswerChange(question.key, "no")}>set-no-{question.key}</button>
-      <button onClick={() => onAnswerChange(question.key, { subKey: "value" })}>set-obj-{question.key}</button>
+      <button onClick={() => onAnswerChange(question.key, { subKey: "value" })}>
+        set-obj-{question.key}
+      </button>
       <button onClick={() => onAnswerChange(question.key, null)}>clear-val-{question.key}</button>
       <button onClick={() => onErrorChange({ [question.key]: "" })}>clear-{question.key}</button>
       <button onClick={() => onAnswerChange(question.key, [])}>set-arr-empty-{question.key}</button>
-      <button onClick={() => onAnswerChange(question.key, [{ id: "1", name: "item1" }])}>set-arr-{question.key}</button>
-      <button onClick={() => onAnswerChange(question.key, ["opt1", "opt2"])}>set-plain-arr-{question.key}</button>
+      <button onClick={() => onAnswerChange(question.key, [{ id: "1", name: "item1" }])}>
+        set-arr-{question.key}
+      </button>
+      <button onClick={() => onAnswerChange(question.key, ["opt1", "opt2"])}>
+        set-plain-arr-{question.key}
+      </button>
     </div>
   ),
 }));
@@ -320,8 +326,22 @@ describe("DynamicTab", () => {
               type: "STRUCTURED_ARRAY",
               required: false,
               fields: [
-                { name: "state", label: "State", placeholder: "", type: "text", required: true, width: "" },
-                { name: "zipCode", label: "Zip", placeholder: "", type: "text", required: true, width: "" },
+                {
+                  name: "state",
+                  label: "State",
+                  placeholder: "",
+                  type: "text",
+                  required: true,
+                  width: "",
+                },
+                {
+                  name: "zipCode",
+                  label: "Zip",
+                  placeholder: "",
+                  type: "text",
+                  required: true,
+                  width: "",
+                },
               ],
             },
           }),
@@ -406,8 +426,22 @@ describe("DynamicTab", () => {
               type: "STRUCTURED_ARRAY",
               required: true,
               fields: [
-                { name: "state", label: "State", placeholder: "", type: "text", required: true, width: "" },
-                { name: "zipCode", label: "Zip", placeholder: "", type: "text", required: true, width: "" },
+                {
+                  name: "state",
+                  label: "State",
+                  placeholder: "",
+                  type: "text",
+                  required: true,
+                  width: "",
+                },
+                {
+                  name: "zipCode",
+                  label: "Zip",
+                  placeholder: "",
+                  type: "text",
+                  required: true,
+                  width: "",
+                },
               ],
             },
           }),
@@ -425,9 +459,7 @@ describe("DynamicTab", () => {
     const ref = createRef<DynamicTabRef>();
     mockUseAssessment.mockReturnValue({
       answers: {
-        locations: [
-          { id: 1, state: "TX", zipCode: "75001", __zipValidityState: "invalid_zip" },
-        ],
+        locations: [{ id: 1, state: "TX", zipCode: "75001", __zipValidityState: "invalid_zip" }],
       },
       updateAnswer: mockUpdateAnswer,
       updateAnswers: mockUpdateAnswers,
@@ -450,8 +482,22 @@ describe("DynamicTab", () => {
               type: "STRUCTURED_ARRAY",
               required: true,
               fields: [
-                { name: "state", label: "State", placeholder: "", type: "text", required: true, width: "" },
-                { name: "zipCode", label: "Zip", placeholder: "", type: "text", required: true, width: "" },
+                {
+                  name: "state",
+                  label: "State",
+                  placeholder: "",
+                  type: "text",
+                  required: true,
+                  width: "",
+                },
+                {
+                  name: "zipCode",
+                  label: "Zip",
+                  placeholder: "",
+                  type: "text",
+                  required: true,
+                  width: "",
+                },
               ],
             },
           }),
@@ -507,8 +553,22 @@ describe("DynamicTab", () => {
               type: "STRUCTURED_ARRAY",
               required: true,
               fields: [
-                { name: "state", label: "State", placeholder: "", type: "text", required: true, width: "" },
-                { name: "zipCode", label: "Zip", placeholder: "", type: "text", required: true, width: "" },
+                {
+                  name: "state",
+                  label: "State",
+                  placeholder: "",
+                  type: "text",
+                  required: true,
+                  width: "",
+                },
+                {
+                  name: "zipCode",
+                  label: "Zip",
+                  placeholder: "",
+                  type: "text",
+                  required: true,
+                  width: "",
+                },
               ],
             },
           }),

@@ -191,12 +191,7 @@ describe("QuestionCheckboxGroup", () => {
 describe("QuestionRadioGroup", () => {
   it("renders question text and options", () => {
     render(
-      <QuestionRadioGroup
-        question={mockQuestion}
-        displayIndex={2}
-        value=""
-        onChange={vi.fn()}
-      />
+      <QuestionRadioGroup question={mockQuestion} displayIndex={2} value="" onChange={vi.fn()} />
     );
     expect(screen.getByText(/Sample Question/)).toBeTruthy();
     expect(screen.getByText("Option 1")).toBeTruthy();
@@ -219,24 +214,14 @@ describe("QuestionRadioGroup", () => {
 
   it("does not render error when not provided", () => {
     render(
-      <QuestionRadioGroup
-        question={mockQuestion}
-        displayIndex={1}
-        value=""
-        onChange={vi.fn()}
-      />
+      <QuestionRadioGroup question={mockQuestion} displayIndex={1} value="" onChange={vi.fn()} />
     );
     expect(screen.queryByTestId("field-error")).toBeNull();
   });
 
   it("renders display index in label", () => {
     render(
-      <QuestionRadioGroup
-        question={mockQuestion}
-        displayIndex={5}
-        value=""
-        onChange={vi.fn()}
-      />
+      <QuestionRadioGroup question={mockQuestion} displayIndex={5} value="" onChange={vi.fn()} />
     );
     expect(screen.getByText(/5\. Sample Question/)).toBeTruthy();
   });

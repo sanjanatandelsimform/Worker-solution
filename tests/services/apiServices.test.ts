@@ -124,9 +124,12 @@ describe("dashboardApi - getDashboard", () => {
     mockGet.mockResolvedValueOnce({ data: mockData });
     const result = await getDashboard();
     expect(result).toEqual(mockData);
-    expect(mockGet).toHaveBeenCalledWith("/dashboard", expect.objectContaining({
-      headers: expect.objectContaining({ Authorization: "Bearer test-token" }),
-    }));
+    expect(mockGet).toHaveBeenCalledWith(
+      "/dashboard",
+      expect.objectContaining({
+        headers: expect.objectContaining({ Authorization: "Bearer test-token" }),
+      })
+    );
   });
 
   it("throws authentication error when no token", async () => {
@@ -194,7 +197,9 @@ describe("recommendationsApi - getRecommendations", () => {
 
   it("rethrows auth error", async () => {
     (localStorage.getItem as ReturnType<typeof vi.fn>).mockReturnValue(null);
-    await expect(getRecommendations()).rejects.toThrow("Authentication required. Please log in again.");
+    await expect(getRecommendations()).rejects.toThrow(
+      "Authentication required. Please log in again."
+    );
   });
 
   it("wraps API errors", async () => {
@@ -268,7 +273,9 @@ describe("finchApi", () => {
     mockPost.mockResolvedValueOnce({
       data: { status: false },
     });
-    await expect(exchangeFinchCode("bad-code")).rejects.toThrow("Failed to complete Finch connection");
+    await expect(exchangeFinchCode("bad-code")).rejects.toThrow(
+      "Failed to complete Finch connection"
+    );
   });
 
   it("getFinchStatus returns data on success", async () => {
@@ -295,13 +302,22 @@ import { getUserById } from "@/services/api/userApi";
 
 describe("userApi - getUserById", () => {
   it("returns user data on success", async () => {
-    const mockUser = { id: "u1", firstName: "Alice", lastName: "Smith", businessEmail: "a@b.com", emailVerify: true };
+    const mockUser = {
+      id: "u1",
+      firstName: "Alice",
+      lastName: "Smith",
+      businessEmail: "a@b.com",
+      emailVerify: true,
+    };
     mockGet.mockResolvedValueOnce({ data: { data: { user: mockUser } } });
     const result = await getUserById("u1", "test-token");
     expect(result).toEqual(mockUser);
-    expect(mockGet).toHaveBeenCalledWith("/users/u1", expect.objectContaining({
-      headers: expect.objectContaining({ Authorization: "Bearer test-token" }),
-    }));
+    expect(mockGet).toHaveBeenCalledWith(
+      "/users/u1",
+      expect.objectContaining({
+        headers: expect.objectContaining({ Authorization: "Bearer test-token" }),
+      })
+    );
   });
 
   it("throws error on API failure", async () => {

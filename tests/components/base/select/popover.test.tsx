@@ -4,6 +4,7 @@
 import { describe, it, expect, vi } from "vitest";
 import { render, screen } from "@testing-library/react";
 import React from "react";
+import { Popover } from "@/components/base/select/popover";
 
 // Mock react-aria-components AriaPopover to call className function
 vi.mock("react-aria-components", () => ({
@@ -31,8 +32,6 @@ vi.mock("react-aria-components", () => ({
 vi.mock("@/utils/cx", () => ({
   cx: (...args: any[]) => args.filter(Boolean).join(" "),
 }));
-
-import { Popover } from "@/components/base/select/popover";
 
 describe("Popover", () => {
   it("renders with sm size", () => {
@@ -64,7 +63,9 @@ describe("Popover", () => {
   });
 
   it("renders with function className (covers function className branch)", () => {
-    const classnameFn = vi.fn((state: any) => `popover-${state.isEntering ? "entering" : "normal"}`);
+    const classnameFn = vi.fn(
+      (state: any) => `popover-${state.isEntering ? "entering" : "normal"}`
+    );
     render(
       <Popover size="sm" triggerRef={React.createRef() as any} className={classnameFn}>
         <div>Function class</div>

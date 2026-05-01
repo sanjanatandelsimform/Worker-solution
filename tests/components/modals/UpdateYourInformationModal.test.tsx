@@ -112,7 +112,9 @@ describe("UpdateYourInformationModal", () => {
   });
 
   it("submits updated values and calls onClose/onSuccess", async () => {
-    mockDispatch.mockReturnValue({ unwrap: () => Promise.resolve({ data: { user: { firstName: "Janet", lastName: "Smith" } } }) });
+    mockDispatch.mockReturnValue({
+      unwrap: () => Promise.resolve({ data: { user: { firstName: "Janet", lastName: "Smith" } } }),
+    });
     const onClose = vi.fn();
     const onSuccess = vi.fn();
 
@@ -126,7 +128,9 @@ describe("UpdateYourInformationModal", () => {
 
     await waitFor(() => {
       expect(mockUpdateProfileData).toHaveBeenCalled();
-      expect(mockUpdateUser).toHaveBeenCalledWith(expect.objectContaining({ firstName: "Janet", lastName: "Smith" }));
+      expect(mockUpdateUser).toHaveBeenCalledWith(
+        expect.objectContaining({ firstName: "Janet", lastName: "Smith" })
+      );
       expect(onClose).toHaveBeenCalled();
       expect(onSuccess).toHaveBeenCalled();
     });
@@ -147,4 +151,3 @@ describe("UpdateYourInformationModal", () => {
     fireEvent.click(screen.getByText("dismiss"));
   });
 });
-

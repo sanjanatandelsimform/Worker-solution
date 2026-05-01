@@ -15,7 +15,9 @@ vi.mock("react-aria", () => ({
 vi.mock("react-aria-components", () => ({
   Button: ({ children, className, ...props }: any) => {
     const cls =
-      typeof className === "function" ? className({ isFocused: false, isPressed: false }) : className;
+      typeof className === "function"
+        ? className({ isFocused: false, isPressed: false })
+        : className;
     return (
       <button type="button" className={cls} {...props}>
         {children}
@@ -61,9 +63,7 @@ vi.mock("@/components/base/radio-buttons/radio-buttons", () => ({
 }));
 
 vi.mock("@/components/base/buttons/button", () => ({
-  Button: ({ children, iconLeading, ...props }: any) => (
-    <button {...props}>{children}</button>
-  ),
+  Button: ({ children, iconLeading, ...props }: any) => <button {...props}>{children}</button>,
 }));
 
 vi.mock("@untitledui/icons", () => ({

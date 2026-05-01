@@ -9,11 +9,7 @@ let capturedDragEnd: ((event: any) => void) | null = null;
 vi.mock("@dnd-kit/core", () => ({
   DndContext: ({ children, onDragEnd }: any) => {
     capturedDragEnd = onDragEnd;
-    return (
-      <div data-testid="dnd-context">
-        {children}
-      </div>
-    );
+    return <div data-testid="dnd-context">{children}</div>;
   },
   closestCenter: vi.fn(),
   KeyboardSensor: vi.fn(),
@@ -24,9 +20,7 @@ vi.mock("@dnd-kit/core", () => ({
 
 // Mock @dnd-kit/sortable
 vi.mock("@dnd-kit/sortable", () => ({
-  SortableContext: ({ children }: any) => (
-    <div data-testid="sortable-context">{children}</div>
-  ),
+  SortableContext: ({ children }: any) => <div data-testid="sortable-context">{children}</div>,
   sortableKeyboardCoordinates: vi.fn(),
   useSortable: ({ id }: any) => ({
     attributes: { "data-id": id },
@@ -254,9 +248,12 @@ describe("RankingList", () => {
         onChange={onChange}
       />
     );
-    await waitFor(() => {
-      expect(capturedDragEnd).not.toBeNull();
-    }, { timeout: 3000 });
+    await waitFor(
+      () => {
+        expect(capturedDragEnd).not.toBeNull();
+      },
+      { timeout: 3000 }
+    );
 
     // Simulate drag end with different active and over IDs
     if (capturedDragEnd) {
@@ -280,9 +277,12 @@ describe("RankingList", () => {
         onChange={onChange}
       />
     );
-    await waitFor(() => {
-      expect(capturedDragEnd).not.toBeNull();
-    }, { timeout: 3000 });
+    await waitFor(
+      () => {
+        expect(capturedDragEnd).not.toBeNull();
+      },
+      { timeout: 3000 }
+    );
 
     const callCountBefore = onChange.mock.calls.length;
     if (capturedDragEnd) {
@@ -307,9 +307,12 @@ describe("RankingList", () => {
         onChange={onChange}
       />
     );
-    await waitFor(() => {
-      expect(onChange).toHaveBeenCalled();
-    }, { timeout: 3000 });
+    await waitFor(
+      () => {
+        expect(onChange).toHaveBeenCalled();
+      },
+      { timeout: 3000 }
+    );
 
     // Re-render with the same options to trigger the "preserve order" branch
     rerender(

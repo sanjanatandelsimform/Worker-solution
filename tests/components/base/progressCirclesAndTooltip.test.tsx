@@ -94,9 +94,7 @@ describe("ProgressBarHalfCircle", () => {
 
   it("renders with label + valueFormatter (non-xxs)", () => {
     const formatter = (_value: number, pct: number) => `${pct}%`;
-    render(
-      <ProgressBarHalfCircle value={80} size="lg" label="Total" valueFormatter={formatter} />
-    );
+    render(<ProgressBarHalfCircle value={80} size="lg" label="Total" valueFormatter={formatter} />);
     expect(screen.getByText("Total")).toBeTruthy();
   });
 

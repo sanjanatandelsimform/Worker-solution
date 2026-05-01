@@ -8,7 +8,9 @@ vi.mock("react-aria-components", async () => {
   const TabsContext = React.createContext<{ orientation?: "horizontal" | "vertical" } | null>(null);
 
   const useSlottedContext = (_ctx: unknown) =>
-    React.useContext(TabsContext as React.Context<{ orientation?: "horizontal" | "vertical" } | null>);
+    React.useContext(
+      TabsContext as React.Context<{ orientation?: "horizontal" | "vertical" } | null>
+    );
 
   const Tabs = ({
     children,
@@ -42,7 +44,9 @@ vi.mock("react-aria-components", async () => {
     return (
       <div data-testid="tab-list" className={computed}>
         {typeof children === "function" && items
-          ? items.map((item, index) => <React.Fragment key={item.id ?? index}>{children(item)}</React.Fragment>)
+          ? items.map((item, index) => (
+              <React.Fragment key={item.id ?? index}>{children(item)}</React.Fragment>
+            ))
           : children}
       </div>
     );
@@ -169,9 +173,7 @@ describe("tabs component set", () => {
 
   it("TabList orientation fallback to horizontal when no context (covers line 143)", () => {
     // Render TabList WITHOUT a Tabs wrapper so context is null -> falls back to "horizontal"
-    render(
-      <TabList type="underline" size="sm" items={[{ id: "x", label: "X", children: "X" }]} />
-    );
+    render(<TabList type="underline" size="sm" items={[{ id: "x", label: "X", children: "X" }]} />);
     expect(screen.getByTestId("tab-list")).toBeTruthy();
   });
 
@@ -204,4 +206,3 @@ describe("tabs component set", () => {
     expect(screen.getByText("Content 2")).toBeTruthy();
   });
 });
-

@@ -74,7 +74,9 @@ vi.mock("@/components/common/ErrorMessage", () => ({
   default: ({ errorMessage, onClose }: any) => (
     <div data-testid="error-message">
       <span>{errorMessage}</span>
-      <button onClick={onClose} data-testid="error-close-btn" type="button">Close</button>
+      <button onClick={onClose} data-testid="error-close-btn" type="button">
+        Close
+      </button>
     </div>
   ),
 }));
@@ -101,15 +103,17 @@ vi.mock("@/components/base/tabs/tabs", () => {
   Tabs.List = ({ items, onSelectionChange }: any) => (
     <div data-testid="tabs-list">
       {items?.map((item: any) => (
-        <button key={item.id} data-testid={`tab-${item.id}`} onClick={() => onSelectionChange?.(item.id)}>
+        <button
+          key={item.id}
+          data-testid={`tab-${item.id}`}
+          onClick={() => onSelectionChange?.(item.id)}
+        >
           {item.label}
         </button>
       ))}
     </div>
   );
-  Tabs.Panel = ({ id, children }: any) => (
-    <div data-testid={`tab-panel-${id}`}>{children}</div>
-  );
+  Tabs.Panel = ({ id, children }: any) => <div data-testid={`tab-panel-${id}`}>{children}</div>;
   return { Tabs };
 });
 
@@ -121,11 +125,7 @@ vi.mock("@/pages/benchmark/BenchmarkPage", () => ({
 vi.mock("@/pages/recommendations/RecommendationsFinchPage", () => ({
   default: ({ onNavigateToWorkforce }: any) => (
     <div data-testid="recommendations-finch-page">
-      <button
-        data-testid="navigate-to-workforce"
-        type="button"
-        onClick={onNavigateToWorkforce}
-      >
+      <button data-testid="navigate-to-workforce" type="button" onClick={onNavigateToWorkforce}>
         Navigate to Workforce
       </button>
     </div>
@@ -306,9 +306,12 @@ describe("DashboardPage branches", () => {
     const verifyBtn = screen.queryByText("Verify");
     if (verifyBtn) {
       fireEvent.click(verifyBtn);
-      await waitFor(() => {
-        expect(screen.queryByTestId("base-modal")).toBeTruthy();
-      }, { timeout: 3000 }).catch(() => {});
+      await waitFor(
+        () => {
+          expect(screen.queryByTestId("base-modal")).toBeTruthy();
+        },
+        { timeout: 3000 }
+      ).catch(() => {});
 
       // Try to click confirm
       const confirmBtn = screen.queryByTestId("modal-confirm");
@@ -335,16 +338,22 @@ describe("DashboardPage branches", () => {
     const verifyBtn = screen.queryByText("Verify");
     if (verifyBtn) {
       fireEvent.click(verifyBtn);
-      await waitFor(() => {
-        expect(screen.queryByTestId("base-modal")).toBeTruthy();
-      }, { timeout: 3000 }).catch(() => {});
+      await waitFor(
+        () => {
+          expect(screen.queryByTestId("base-modal")).toBeTruthy();
+        },
+        { timeout: 3000 }
+      ).catch(() => {});
 
       const closeBtn = screen.queryByTestId("modal-close");
       if (closeBtn) {
         fireEvent.click(closeBtn);
-        await waitFor(() => {
-          expect(screen.queryByTestId("base-modal")).toBeNull();
-        }, { timeout: 2000 }).catch(() => {});
+        await waitFor(
+          () => {
+            expect(screen.queryByTestId("base-modal")).toBeNull();
+          },
+          { timeout: 2000 }
+        ).catch(() => {});
       }
     }
     expect(true).toBe(true);
@@ -402,12 +411,15 @@ describe("DashboardPage branches", () => {
     );
 
     // The emailVerified modal should be open - try to close it
-    await waitFor(() => {
-      const closeBtn = screen.queryByTestId("modal-close");
-      if (closeBtn) {
-        fireEvent.click(closeBtn);
-      }
-    }, { timeout: 2000 }).catch(() => {});
+    await waitFor(
+      () => {
+        const closeBtn = screen.queryByTestId("modal-close");
+        if (closeBtn) {
+          fireEvent.click(closeBtn);
+        }
+      },
+      { timeout: 2000 }
+    ).catch(() => {});
 
     expect(true).toBe(true);
   });
@@ -510,9 +522,12 @@ describe("DashboardPage branches", () => {
   });
 
   it("handleVisibilityChange triggers refetchUserData on visible", async () => {
-    localStorage.setItem("userDetail", JSON.stringify({
-      auth: { tokens: { accessToken: "test-token" } },
-    }));
+    localStorage.setItem(
+      "userDetail",
+      JSON.stringify({
+        auth: { tokens: { accessToken: "test-token" } },
+      })
+    );
 
     renderDashboard();
 

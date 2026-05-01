@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useRef, useState } from "react";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { getErrorMessage } from "@/services/api/apiUtils";
 import { getDashboardStatus } from "@/services/api/dashboardApi";
 import type {
@@ -9,6 +9,7 @@ import type {
 
 const MIN_POLL_INTERVAL_MS = 1000;
 const NON_429_RETRY_DELAYS_MS = [1000, 2000, 4000];
+const PROCESSING_WINDOW_MS = 300_000; // 5 minutes
 
 type ErrorWithStatus = { response?: { status?: number } };
 
@@ -225,6 +226,52 @@ export const useDashboardStatusPolling = ({
     };
   }, [stop]);
 
+  // Per-tab readiness flags
+  const isRecommendationTabReady = useMemo(
+    () =>
+      status?.recommendation?.status === "completed" ||
+      status?.recommendation?.status === "not_applicable",
+    [status]
+  );
+  const isWorkforceTabReady = useMemo(
+    () =>
+      status?.workforce?.status === "completed" || status?.workforce?.status === "not_applicable",
+    [status]
+  );
+  const isIndustryTabReady = useMemo(
+    () => status?.industry?.status === "completed" || status?.industry?.status === "not_applicable",
+    [status]
+  );
+
+  // 5-minute processing window flag
+  const createdAtMs = useMemo(() => {
+    if (!status?.createdAt) return null;
+    const parsed = Date.parse(status.createdAt);
+    return Number.isNaN(parsed) ? null : parsed;
+  }, [status]);
+
+  const [hasExceededProcessingWindow, setHasExceededProcessingWindow] = useState<boolean>(
+    () => createdAtMs === null || Date.now() - createdAtMs >= PROCESSING_WINDOW_MS
+  );
+
+  useEffect(() => {
+    if (createdAtMs === null) {
+      queueMicrotask(() => setHasExceededProcessingWindow(true));
+      return;
+    }
+    const elapsed = Date.now() - createdAtMs;
+    if (elapsed >= PROCESSING_WINDOW_MS) {
+      queueMicrotask(() => setHasExceededProcessingWindow(true));
+      return;
+    }
+    queueMicrotask(() => setHasExceededProcessingWindow(false));
+    const remaining = PROCESSING_WINDOW_MS - elapsed;
+    const timer = setTimeout(() => {
+      setHasExceededProcessingWindow(true);
+    }, remaining);
+    return () => clearTimeout(timer);
+  }, [createdAtMs]);
+
   return {
     status,
     isLoading,
@@ -233,5 +280,9 @@ export const useDashboardStatusPolling = ({
     start,
     stop,
     reset,
+    isRecommendationTabReady,
+    isWorkforceTabReady,
+    isIndustryTabReady,
+    hasExceededProcessingWindow,
   };
 };

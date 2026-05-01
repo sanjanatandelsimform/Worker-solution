@@ -118,10 +118,9 @@ describe("useDebounce", () => {
   });
 
   it("debounces value updates", async () => {
-    const { result, rerender } = renderHook(
-      ({ value, delay }) => useDebounce(value, delay),
-      { initialProps: { value: "initial", delay: 300 } }
-    );
+    const { result, rerender } = renderHook(({ value, delay }) => useDebounce(value, delay), {
+      initialProps: { value: "initial", delay: 300 },
+    });
     rerender({ value: "updated", delay: 300 });
     // Still shows old value before timer fires
     expect(result.current).toBe("initial");
@@ -133,18 +132,23 @@ describe("useDebounce", () => {
   });
 
   it("resets timer on rapid changes", () => {
-    const { result, rerender } = renderHook(
-      ({ value }) => useDebounce(value, 300),
-      { initialProps: { value: "a" } }
-    );
+    const { result, rerender } = renderHook(({ value }) => useDebounce(value, 300), {
+      initialProps: { value: "a" },
+    });
     rerender({ value: "b" });
-    act(() => { vi.advanceTimersByTime(100); });
+    act(() => {
+      vi.advanceTimersByTime(100);
+    });
     rerender({ value: "c" });
-    act(() => { vi.advanceTimersByTime(200); });
+    act(() => {
+      vi.advanceTimersByTime(200);
+    });
     // Timer hasn't expired for "c" yet
     expect(result.current).toBe("a");
 
-    act(() => { vi.advanceTimersByTime(300); });
+    act(() => {
+      vi.advanceTimersByTime(300);
+    });
     expect(result.current).toBe("c");
   });
 });
@@ -201,7 +205,15 @@ import { useAuthInit } from "@/hooks/useAuthInit";
 
 describe("useAuthInit", () => {
   it("returns isAuthReady from store authInitAttempted", () => {
-    const store = createStore({ auth: { authInitAttempted: true, isAuthenticated: false, isLoading: false, user: null, tokens: { accessToken: null, refreshToken: null } } });
+    const store = createStore({
+      auth: {
+        authInitAttempted: true,
+        isAuthenticated: false,
+        isLoading: false,
+        user: null,
+        tokens: { accessToken: null, refreshToken: null },
+      },
+    });
     const { result } = renderHook(() => useAuthInit(), { wrapper: createWrapper(store) });
     expect(result.current.isAuthReady).toBe(true);
   });
@@ -533,7 +545,12 @@ describe("useIndustry", () => {
     vi.mocked(assessmentApi.getAssessment).mockResolvedValue({ success: false, data: null });
     vi.mocked(getFinchStatus).mockResolvedValue({ connection: null, latestSyncJob: null });
     const store = createStore({
-      industry: { data: { industry: { code: "c1", name: "Tech" } }, loading: false, error: null, isLoaded: true },
+      industry: {
+        data: { industry: { code: "c1", name: "Tech" } },
+        loading: false,
+        error: null,
+        isLoaded: true,
+      },
     });
     renderHook(() => useIndustry(), { wrapper: createWrapper(store) });
     await act(async () => {});

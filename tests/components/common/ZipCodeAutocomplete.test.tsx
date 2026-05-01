@@ -57,12 +57,18 @@ describe("ZipCodeAutocomplete", () => {
     const input = document.querySelector("input")!;
 
     fireEvent.change(input, { target: { value: "90" } });
-    await waitFor(() => {
-      expect(mockLookup).toHaveBeenCalledWith("90");
-    }, { timeout: 1800 });
-    await waitFor(() => {
-      expect(onValidityChange).toHaveBeenCalledWith(false, "invalid_zip");
-    }, { timeout: 1800 });
+    await waitFor(
+      () => {
+        expect(mockLookup).toHaveBeenCalledWith("90");
+      },
+      { timeout: 1800 }
+    );
+    await waitFor(
+      () => {
+        expect(onValidityChange).toHaveBeenCalledWith(false, "invalid_zip");
+      },
+      { timeout: 1800 }
+    );
   });
 
   it("shows suggestions in dropdown and allows selection (covers lines 295-300)", async () => {
@@ -80,13 +86,19 @@ describe("ZipCodeAutocomplete", () => {
     const input = document.querySelector("input")!;
     fireEvent.change(input, { target: { value: "941" } });
 
-    await waitFor(() => {
-      expect(mockLookup).toHaveBeenCalledWith("941");
-    }, { timeout: 2000 });
+    await waitFor(
+      () => {
+        expect(mockLookup).toHaveBeenCalledWith("941");
+      },
+      { timeout: 2000 }
+    );
 
-    await waitFor(() => {
-      expect(document.querySelector("li")).toBeTruthy();
-    }, { timeout: 2000 });
+    await waitFor(
+      () => {
+        expect(document.querySelector("li")).toBeTruthy();
+      },
+      { timeout: 2000 }
+    );
 
     // Click on suggestion
     const suggestion = document.querySelector("li");
@@ -100,7 +112,10 @@ describe("ZipCodeAutocomplete", () => {
     render(<ZipCodeAutocomplete {...defaultProps} />);
     const input = document.querySelector("input")!;
     const preventDefaultSpy = vi.fn();
-    fireEvent.paste(input, { preventDefault: preventDefaultSpy, clipboardData: { getData: () => "94102" } });
+    fireEvent.paste(input, {
+      preventDefault: preventDefaultSpy,
+      clipboardData: { getData: () => "94102" },
+    });
     fireEvent.copy(input, { preventDefault: preventDefaultSpy });
     fireEvent.cut(input, { preventDefault: preventDefaultSpy });
     expect(document.body).toBeTruthy();
@@ -125,9 +140,12 @@ describe("ZipCodeAutocomplete", () => {
     const input = document.querySelector("input")!;
     fireEvent.change(input, { target: { value: "941" } });
 
-    await waitFor(() => {
-      expect(mockLookup).toHaveBeenCalled();
-    }, { timeout: 2000 });
+    await waitFor(
+      () => {
+        expect(mockLookup).toHaveBeenCalled();
+      },
+      { timeout: 2000 }
+    );
 
     fireEvent.keyDown(input, { key: "Escape" });
     expect(document.body).toBeTruthy();
@@ -144,9 +162,12 @@ describe("ZipCodeAutocomplete", () => {
     const input = document.querySelector("input")!;
     fireEvent.change(input, { target: { value: "941" } });
 
-    await waitFor(() => {
-      expect(mockLookup).toHaveBeenCalled();
-    }, { timeout: 2000 });
+    await waitFor(
+      () => {
+        expect(mockLookup).toHaveBeenCalled();
+      },
+      { timeout: 2000 }
+    );
 
     // Click outside
     fireEvent.mouseDown(document.body);
@@ -160,9 +181,12 @@ describe("ZipCodeAutocomplete", () => {
     const input = document.querySelector("input")!;
     fireEvent.change(input, { target: { value: "941" } });
 
-    await waitFor(() => {
-      expect(mockLookup).toHaveBeenCalled();
-    }, { timeout: 2000 });
+    await waitFor(
+      () => {
+        expect(mockLookup).toHaveBeenCalled();
+      },
+      { timeout: 2000 }
+    );
     expect(document.body).toBeTruthy();
   });
 
@@ -171,7 +195,9 @@ describe("ZipCodeAutocomplete", () => {
     const onValidityChange = vi.fn();
     mockLookup.mockResolvedValue({
       data: {
-        zipCodes: [{ zip: "90210", city: "Beverly Hills", state: "California", stateAbbreviation: "CA" }],
+        zipCodes: [
+          { zip: "90210", city: "Beverly Hills", state: "California", stateAbbreviation: "CA" },
+        ],
       },
     } as any);
 
@@ -186,11 +212,17 @@ describe("ZipCodeAutocomplete", () => {
     const input = document.querySelector("input")!;
     fireEvent.change(input, { target: { value: "90210" } });
 
-    await waitFor(() => {
-      expect(onSuggestionSelect).toHaveBeenCalled();
-    }, { timeout: 1800 });
-    await waitFor(() => {
-      expect(onValidityChange).toHaveBeenCalledWith(false, "state_mismatch");
-    }, { timeout: 1800 });
+    await waitFor(
+      () => {
+        expect(onSuggestionSelect).toHaveBeenCalled();
+      },
+      { timeout: 1800 }
+    );
+    await waitFor(
+      () => {
+        expect(onValidityChange).toHaveBeenCalledWith(false, "state_mismatch");
+      },
+      { timeout: 1800 }
+    );
   });
 });

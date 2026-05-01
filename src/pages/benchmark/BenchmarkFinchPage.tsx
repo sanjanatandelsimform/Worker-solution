@@ -363,14 +363,17 @@ interface ProgressCardFinchConfig {
   }>;
 }
 
-export default function BenchmarkFinchPage() {
+export default function BenchmarkFinchPage({
+  isReady = true,
+}: { readonly isReady?: boolean } = {}) {
   const [isGetInTouchModalOpen, setIsGetInTouchModalOpen] = useState(false);
   const [selectedGraphType, setSelectedGraphType] = useState<"owners" | "renters">("renters");
   const [selectedWageZip, setSelectedWageZip] = useState<string | null>(null);
   const [selectedHousingZipState, setSelectedHousingZipState] = useState<string | null>(null);
 
   // Use industry hook for conditional API fetch and loading state
-  const { isLoading: isLoadingCards, error: industryError } = useIndustry();
+  const { isLoading: isLoadingIndustry, error: industryError } = useIndustry();
+  const isLoadingCards = !isReady || isLoadingIndustry;
   // Get industry data from Redux store via industry selectors
   const industryOverview = useAppSelector(selectIndustryOverviewData);
   // const zipCodes = useAppSelector(selectIndustryZipCodes);

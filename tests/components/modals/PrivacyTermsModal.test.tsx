@@ -6,7 +6,7 @@ import { describe, it, expect, vi } from "vitest";
 import { render, screen, fireEvent } from "@testing-library/react";
 
 vi.mock("@/components/base/modal/modal", () => ({
-  Modal: ({ children, isOpen }: any) => isOpen ? <div data-testid="modal">{children}</div> : null,
+  Modal: ({ children, isOpen }: any) => (isOpen ? <div data-testid="modal">{children}</div> : null),
   ModalContent: ({ children }: any) => <div>{children}</div>,
   ModalHeader: ({ children }: any) => <div>{children}</div>,
   ModalFooter: ({ children }: any) => <div>{children}</div>,
@@ -15,7 +15,9 @@ vi.mock("@/components/base/modal/modal", () => ({
 
 vi.mock("@/components/base/buttons/button", () => ({
   Button: ({ children, onClick, "aria-label": ariaLabel }: any) => (
-    <button onClick={onClick} aria-label={ariaLabel}>{children}</button>
+    <button onClick={onClick} aria-label={ariaLabel}>
+      {children}
+    </button>
   ),
 }));
 

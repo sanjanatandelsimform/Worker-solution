@@ -5,9 +5,7 @@ import { describe, it, expect, vi, beforeEach } from "vitest";
 import { render, screen } from "@testing-library/react";
 import React from "react";
 
-const mockDynamicTab = vi.fn(({ section }: any) => (
-  <div data-testid={`dynamic-tab-${section}`} />
-));
+const mockDynamicTab = vi.fn(({ section }: any) => <div data-testid={`dynamic-tab-${section}`} />);
 
 vi.mock("@/components/assessment/DynamicTab", () => ({
   DynamicTab: (props: any) => mockDynamicTab(props),
@@ -74,9 +72,7 @@ describe("GoalsTab - section not found", () => {
   it("renders error when goals section is missing from questionData", async () => {
     vi.doMock("@/data/assessment/questionData.json", () => ({
       default: {
-        sections: [
-          { name: "Compensation", questions: [] },
-        ],
+        sections: [{ name: "Compensation", questions: [] }],
       },
     }));
     // Re-import after mock override

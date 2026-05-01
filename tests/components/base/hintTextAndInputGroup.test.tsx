@@ -37,9 +37,7 @@ describe("HintText", () => {
   });
 
   it("applies custom className", () => {
-    const { container } = render(
-      <HintText className="custom-class">Custom hint</HintText>
-    );
+    const { container } = render(<HintText className="custom-class">Custom hint</HintText>);
     expect(container.querySelector(".custom-class")).toBeTruthy();
   });
 });

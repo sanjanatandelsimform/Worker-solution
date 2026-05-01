@@ -320,7 +320,13 @@ describe("profileSlice", () => {
       const profileApi = await import("@/services/api/profileApi");
       vi.mocked(profileApi.updatePassword).mockRejectedValueOnce("string error");
       const store = createTestStore();
-      await store.dispatch(changePassword({ currentPassword: "old", newPassword: "new", confirmPassword: "new" } as any));
+      await store.dispatch(
+        changePassword({
+          currentPassword: "old",
+          newPassword: "new",
+          confirmPassword: "new",
+        } as any)
+      );
       const state = store.getState().profile;
       expect(state.error).toBeTruthy();
     });
