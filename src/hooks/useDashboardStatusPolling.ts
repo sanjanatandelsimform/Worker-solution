@@ -271,6 +271,8 @@ export const useDashboardStatusPolling = ({
     [status]
   );
 
+  const isAutomatedProvider = useMemo(() => status?.providerType === "automated", [status]);
+
   // 5-minute processing window flag
   const createdAtMs = useMemo(() => {
     if (!status?.createdAt) return null;
@@ -315,5 +317,6 @@ export const useDashboardStatusPolling = ({
     isRecommendationTabStale,
     isWorkforceTabStale,
     isIndustryTabStale,
+    isAutomatedProvider,
   };
 };

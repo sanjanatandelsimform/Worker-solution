@@ -158,4 +158,30 @@ describe("BenchmarkFinchPage", () => {
     render(<BenchmarkFinchPage isStale={false} />);
     expect(screen.queryByText(/Preparing your dashboard/i)).not.toBeInTheDocument();
   });
+
+  // ─── T008: stale-guard ─────────────────────────────────────────────────────
+  it("does not render PreparingDashboard when isStale is false — skeleton shown instead", () => {
+    mockUseIndustry.mockReturnValue({ isLoading: true, error: null });
+    render(<BenchmarkFinchPage isStale={false} isReady={false} />);
+    expect(screen.queryByText(/Preparing your dashboard/i)).not.toBeInTheDocument();
+  });
+
+  // ─── T014: message selection based on isAutomatedProvider ─────────────────
+  it("shows automated message when isStale=true and isAutomatedProvider=true", () => {
+    render(<BenchmarkFinchPage isStale={true} isAutomatedProvider={true} />);
+    expect(screen.getByText(/24-36 hours/i)).toBeInTheDocument();
+    expect(screen.queryByText(/up to 2 weeks/i)).not.toBeInTheDocument();
+  });
+
+  it("shows non-automated message when isStale=true and isAutomatedProvider=false", () => {
+    render(<BenchmarkFinchPage isStale={true} isAutomatedProvider={false} />);
+    expect(screen.getByText(/up to 2 weeks/i)).toBeInTheDocument();
+    expect(screen.queryByText(/24-36 hours/i)).not.toBeInTheDocument();
+  });
+
+  it("shows non-automated message when isStale=true and isAutomatedProvider is not provided", () => {
+    render(<BenchmarkFinchPage isStale={true} />);
+    expect(screen.getByText(/up to 2 weeks/i)).toBeInTheDocument();
+    expect(screen.queryByText(/24-36 hours/i)).not.toBeInTheDocument();
+  });
 });

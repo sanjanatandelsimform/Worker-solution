@@ -245,3 +245,39 @@ describe("useDashboardStatusPolling — stale flags", () => {
     expect(result.current.isIndustryTabStale).toBe(true);
   });
 });
+
+describe("useDashboardStatusPolling — isAutomatedProvider", () => {
+  beforeEach(() => {
+    vi.clearAllMocks();
+  });
+
+  afterEach(() => {
+    vi.clearAllMocks();
+  });
+
+  it("returns false when not enabled (no status)", () => {
+    const { result } = renderHook(() => useDashboardStatusPolling({ enabled: false }));
+    expect(result.current.isAutomatedProvider).toBe(false);
+  });
+
+  it("returns false when providerType is null", async () => {
+    mockGetDashboardStatus.mockResolvedValue(makeStatus({ providerType: null }));
+    const { result } = renderHook(() => useDashboardStatusPolling({ enabled: true }));
+    await waitFor(() => expect(result.current.status).not.toBeNull());
+    expect(result.current.isAutomatedProvider).toBe(false);
+  });
+
+  it("returns false when providerType is 'assisted'", async () => {
+    mockGetDashboardStatus.mockResolvedValue(makeStatus({ providerType: "assisted" }));
+    const { result } = renderHook(() => useDashboardStatusPolling({ enabled: true }));
+    await waitFor(() => expect(result.current.status).not.toBeNull());
+    expect(result.current.isAutomatedProvider).toBe(false);
+  });
+
+  it("returns true when providerType is 'automated'", async () => {
+    mockGetDashboardStatus.mockResolvedValue(makeStatus({ providerType: "automated" }));
+    const { result } = renderHook(() => useDashboardStatusPolling({ enabled: true }));
+    await waitFor(() => expect(result.current.status).not.toBeNull());
+    expect(result.current.isAutomatedProvider).toBe(true);
+  });
+});

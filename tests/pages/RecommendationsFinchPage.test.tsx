@@ -636,4 +636,62 @@ describe("RecommendationsFinchPage — isStale prop", () => {
     );
     expect(screen.queryByText(/Preparing your dashboard/i)).not.toBeInTheDocument();
   });
+
+  // ─── T007: stale-guard (isConnected gate) ─────────────────────────────────
+  // Note: The isConnected guard is applied in DashboardPage before passing isStale.
+  // These tests verify that isStale=false results in no Preparing screen (the guard
+  // prevents isStale=true from reaching the tab when isConnected is false).
+  it("does not render PreparingDashboard when isStale is false — confirming skeleton is shown instead", () => {
+    const store = createTestStore({
+      workforce: { data: null, loading: true, isLoaded: false, error: null, lastFetched: null },
+    });
+    render(
+      <Provider store={store}>
+        <MemoryRouter>
+          <RecommendationsFinchPage isStale={false} isReady={false} />
+        </MemoryRouter>
+      </Provider>
+    );
+    expect(screen.queryByText(/Preparing your dashboard/i)).not.toBeInTheDocument();
+  });
+
+  // ─── T013: message selection based on isAutomatedProvider ─────────────────
+  it("shows automated message when isStale=true and isAutomatedProvider=true", () => {
+    const store = createTestStore();
+    render(
+      <Provider store={store}>
+        <MemoryRouter>
+          <RecommendationsFinchPage isStale={true} isAutomatedProvider={true} />
+        </MemoryRouter>
+      </Provider>
+    );
+    expect(screen.getByText(/24-36 hours/i)).toBeInTheDocument();
+    expect(screen.queryByText(/up to 2 weeks/i)).not.toBeInTheDocument();
+  });
+
+  it("shows non-automated message when isStale=true and isAutomatedProvider=false", () => {
+    const store = createTestStore();
+    render(
+      <Provider store={store}>
+        <MemoryRouter>
+          <RecommendationsFinchPage isStale={true} isAutomatedProvider={false} />
+        </MemoryRouter>
+      </Provider>
+    );
+    expect(screen.getByText(/up to 2 weeks/i)).toBeInTheDocument();
+    expect(screen.queryByText(/24-36 hours/i)).not.toBeInTheDocument();
+  });
+
+  it("shows non-automated message when isStale=true and isAutomatedProvider is not provided", () => {
+    const store = createTestStore();
+    render(
+      <Provider store={store}>
+        <MemoryRouter>
+          <RecommendationsFinchPage isStale={true} />
+        </MemoryRouter>
+      </Provider>
+    );
+    expect(screen.getByText(/up to 2 weeks/i)).toBeInTheDocument();
+    expect(screen.queryByText(/24-36 hours/i)).not.toBeInTheDocument();
+  });
 });

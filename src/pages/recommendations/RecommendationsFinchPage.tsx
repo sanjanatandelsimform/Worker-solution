@@ -18,15 +18,21 @@ import CoreBenefitsEnhancement from "./CoreBenefitsEnhancement";
 import StrategicSolutions from "./StrategicSolutions";
 import { useIndustry } from "@/hooks/useIndustry";
 import PreparingDashboard from "./PreparingDashboard";
+import {
+  PREPARING_MSG_AUTOMATED,
+  PREPARING_MSG_NON_AUTOMATED,
+} from "@/constants/preparingDashboardMessages";
 
 export default function RecommendationsFinchPage({
   onNavigateToWorkforce,
   isReady = true,
   isStale = false,
+  isAutomatedProvider = false,
 }: {
   readonly onNavigateToWorkforce?: () => void;
   readonly isReady?: boolean;
   readonly isStale?: boolean;
+  readonly isAutomatedProvider?: boolean;
 }) {
   const { isFinchAssessmentIncomplete } = useAssessmentStatus();
 
@@ -73,9 +79,10 @@ export default function RecommendationsFinchPage({
   const isLoading = !isReady || workforceIsLoading || recommendationsIsLoading || isIndustryLoading;
 
   if (isStale) {
+    const description = isAutomatedProvider ? PREPARING_MSG_AUTOMATED : PREPARING_MSG_NON_AUTOMATED;
     return (
       <>
-        <PreparingDashboard />
+        <PreparingDashboard description={description} />
         <CarouselSection />
       </>
     );

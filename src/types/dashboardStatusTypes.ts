@@ -38,4 +38,5 @@ export interface UseDashboardStatusPollingReturn {
   isRecommendationTabStale: boolean;
   isWorkforceTabStale: boolean;
   isIndustryTabStale: boolean;
+  isAutomatedProvider: boolean;
 }
