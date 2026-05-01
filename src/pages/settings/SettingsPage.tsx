@@ -10,7 +10,7 @@ import SessionExpiredModal from "@/components/modals/SessionExpiredModal";
 import DashboardSidebar from "@/components/dashboard/DashboardSidebar";
 import ErrorMessage from "@/components/common/ErrorMessage";
 import { BaseModalWithIcon } from "@/components/modals/BaseModalWithIcon";
-import checkmarkIcon from "@/assets/success-check.svg";
+import signoutIcon from "@/assets/signout-icon.svg";
 import trashIcon from "@/assets/trash-confirm.svg";
 import { useAppDispatch, useAppSelector } from "@/store/hooks";
 import {
@@ -548,7 +548,7 @@ export const SettingsPage = () => {
           setIsRedirecting(false);
           navigate("/success", {
             state: {
-              messageImg: checkmarkIcon,
+              messageImg: signoutIcon,
               title: "You've been logged out.",
               subtitle:
                 "To protect your privacy, you've been logged out. Please verify your email to log back in.",
