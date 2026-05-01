@@ -106,8 +106,10 @@ export const ProgressLoadingModal = ({
         <ModalContent className="border-0 px-6 pt-2 pb-0">
           <div className="bg-ws-light-teal-25 border border-ws-border-primary rounded-xl p-4">
             <h3 className="text-lg font-medium text-ws-navy-950 mb-2">{contentTitle}</h3>
-            <p className="text-base font-normal text-ws-navy-900">{contentDescription}</p>
-            <p className="text-sm font-normal text-ws-text-tertiary mt-4">
+            <p className="text-base font-normal text-ws-navy-900 h-30 overflow-x-auto">
+              {contentDescription}
+            </p>
+            <p className="text-sm font-normal text-ws-text-tertiary mt-4 h-10 overflow-x-auto">
               {/* <span className="text-ws-text-primary">Source:</span> */}
               {contentNote}
             </p>
