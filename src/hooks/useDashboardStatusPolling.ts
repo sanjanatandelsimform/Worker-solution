@@ -10,7 +10,6 @@ import type {
 const MIN_POLL_INTERVAL_MS = 1000;
 const NON_429_RETRY_DELAYS_MS = [1000, 2000, 4000];
 const PROCESSING_WINDOW_MS = 300_000; // 5 minutes
-const WINDOW_CHECK_INTERVAL_MS = 10_000; // 10 seconds
 
 type ErrorWithStatus = { response?: { status?: number } };
 
@@ -251,26 +250,26 @@ export const useDashboardStatusPolling = ({
     return Number.isNaN(parsed) ? null : parsed;
   }, [status]);
 
-  const [hasExceededProcessingWindow, setHasExceededProcessingWindow] = useState(true);
+  const [hasExceededProcessingWindow, setHasExceededProcessingWindow] = useState<boolean>(
+    () => createdAtMs === null || Date.now() - createdAtMs >= PROCESSING_WINDOW_MS
+  );
 
   useEffect(() => {
     if (createdAtMs === null) {
       queueMicrotask(() => setHasExceededProcessingWindow(true));
       return;
     }
-    const check = () => Date.now() - createdAtMs >= PROCESSING_WINDOW_MS;
-    if (check()) {
+    const elapsed = Date.now() - createdAtMs;
+    if (elapsed >= PROCESSING_WINDOW_MS) {
       queueMicrotask(() => setHasExceededProcessingWindow(true));
       return;
     }
     queueMicrotask(() => setHasExceededProcessingWindow(false));
-    const id = setInterval(() => {
-      if (check()) {
-        setHasExceededProcessingWindow(true);
-        clearInterval(id);
-      }
-    }, WINDOW_CHECK_INTERVAL_MS);
-    return () => clearInterval(id);
+    const remaining = PROCESSING_WINDOW_MS - elapsed;
+    const timer = setTimeout(() => {
+      setHasExceededProcessingWindow(true);
+    }, remaining);
+    return () => clearTimeout(timer);
   }, [createdAtMs]);
 
   return {

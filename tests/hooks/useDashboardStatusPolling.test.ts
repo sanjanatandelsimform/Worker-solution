@@ -110,7 +110,7 @@ describe("useDashboardStatusPolling — hasExceededProcessingWindow", () => {
 
   it("is true when status is null (not enabled)", () => {
     const { result } = renderHook(() => useDashboardStatusPolling({ enabled: false }));
-    // No status loaded → hasExceededProcessingWindow starts as true (default)
+    // No status loaded → createdAtMs is null → hasExceededProcessingWindow is true
     expect(result.current.hasExceededProcessingWindow).toBe(true);
   });
 
@@ -131,6 +131,6 @@ describe("useDashboardStatusPolling — hasExceededProcessingWindow", () => {
     const { result } = renderHook(() => useDashboardStatusPolling({ enabled: true }));
 
     await waitFor(() => expect(result.current.status).not.toBeNull());
-    await waitFor(() => expect(result.current.hasExceededProcessingWindow).toBe(true));
+    expect(result.current.hasExceededProcessingWindow).toBe(true);
   });
 });

@@ -174,22 +174,19 @@ vi.mock("@/pages/additionalQuestions/CompensationSection", () => ({
   default: ({
     fieldErrors,
     onAnswerChange,
-    onPayrollProviderChange,
     onAnnualRaiseMonthChange,
   }: {
     answers: Record<string, string | string[]>;
     fieldErrors: Record<string, string>;
     annualRaiseMonth: string;
-    payrollProvider: string;
     onAnswerChange: (id: string, v: string) => void;
     onMultiSelectToggle: (id: string, optId: string) => void;
     onAnnualRaiseMonthChange: (month: string) => void;
-    onPayrollProviderChange: (provider: string) => void;
     onClearFieldError: (key: string) => void;
   }) => (
     <div data-testid="compensation-section">
       {Object.entries(fieldErrors)
-        .filter(([k]) => ["payroll-provider", "annualRaiseMonth"].includes(k))
+        .filter(([k]) => ["annualRaiseMonth"].includes(k))
         .map(([k, v]) =>
           v ? (
             <span key={k} data-testid={`field-error-${k}`}>
@@ -197,12 +194,6 @@ vi.mock("@/pages/additionalQuestions/CompensationSection", () => ({
             </span>
           ) : null
         )}
-      <button
-        data-testid="trigger-payroll-provider-ADP"
-        onClick={() => onPayrollProviderChange("ADP")}
-      >
-        set payroll provider
-      </button>
       <button
         data-testid="trigger-annual-raise-month-january"
         onClick={() => onAnnualRaiseMonthChange("january")}
@@ -377,8 +368,6 @@ const fillAllRequiredFields = () => {
   fireEvent.click(screen.getByTestId("trigger-benefits-updates-work_email"));
   fireEvent.click(screen.getByTestId("trigger-deskless-employees-yes-deskless"));
   fireEvent.click(screen.getByTestId("trigger-annual-raises-no-raises"));
-  // Compensation section
-  fireEvent.click(screen.getByTestId("trigger-payroll-provider-ADP"));
   // Benefits/retirement section
   fireEvent.click(screen.getByTestId("trigger-benefits-broker-yes-broker"));
   fireEvent.click(screen.getByTestId("trigger-benefits-enrollment-month-january"));
@@ -435,9 +424,6 @@ describe("AdditionalQuestions – Validation (empty form)", () => {
         "Select an option"
       );
       expect(screen.getByTestId("field-error-annual-raises")).toHaveTextContent("Select an option");
-      expect(screen.getByTestId("field-error-payroll-provider")).toHaveTextContent(
-        "Select an option"
-      );
       expect(screen.getByTestId("field-error-benefits-broker")).toHaveTextContent(
         "Select an option"
       );
@@ -655,7 +641,6 @@ describe("AdditionalQuestions – Submission payload", () => {
         expect.any(Object), // answers
         expect.any(Object), // goalsAnswers
         "", // annualRaiseMonth (no-raises path)
-        "ADP", // payrollProvider
         "january", // benefitsEnrollmentMonth
         false, // retirementPlanHasMatch (no-match)
         "", // retirementMatchPercentage
@@ -677,7 +662,6 @@ describe("AdditionalQuestions – Submission payload", () => {
         expect.any(Object),
         expect.any(Object),
         "",
-        "ADP",
         "january",
         true, // retirementPlanHasMatch = true
         "5", // retirementMatchPercentage
@@ -689,7 +673,7 @@ describe("AdditionalQuestions – Submission payload", () => {
   it("calls submit() with the payload returned by buildFinchAssessmentPayload", async () => {
     const knownPayload = {
       workforce: { hasDesklessEmployees: false },
-      compensation: { payrollProvider: "ADP" },
+      compensation: {},
       benefits: { lowestHealthPlanPremium: 300 },
       goals: { workforceGoals: [] },
     };
@@ -713,13 +697,13 @@ describe("AdditionalQuestions – Submission payload", () => {
     expect(mockSubmit).not.toHaveBeenCalled();
   });
 
-  it("passes healthPremiumMonthly as the 8th argument", async () => {
+  it("passes healthPremiumMonthly as the 7th argument", async () => {
     renderPage();
     fillAllRequiredFields();
     clickNext();
     await waitFor(() => {
       const callArgs = mockBuildPayload.mock.calls[0];
-      expect(callArgs[7]).toBe("300");
+      expect(callArgs[6]).toBe("300");
     });
   });
 });
