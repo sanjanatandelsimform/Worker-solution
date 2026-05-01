@@ -278,7 +278,8 @@ export const DashboardPage = () => {
   const [isLoadingModalDismissed, setIsLoadingModalDismissed] = useState(false);
   const allTabsReady = isRecommendationTabReady && isWorkforceTabReady && isIndustryTabReady;
   const isDashboardVisible = assessmentData?.data?.status === "completed" || isConnected;
-  const showLoadingModal = isDashboardVisible && !allTabsReady && !hasExceededProcessingWindow && !isLoadingModalDismissed;
+  const showLoadingModal =
+    isDashboardVisible && !allTabsReady && !hasExceededProcessingWindow && !isLoadingModalDismissed;
 
   if (isLoadingAssessment || isFinchPageLoading) {
     return (
@@ -549,7 +550,7 @@ export const DashboardPage = () => {
             buttonLabel="Reconnect"
             buttonType={"secondary"}
             buttonClasses="h-9"
-            onClick={() => navigate("/additional-questions")}
+            onClick={connectWithFinch}
           />
           {emailVerify && isConnected && !isFinchCompleted && (
             <DashboardCard
@@ -628,7 +629,10 @@ export const DashboardPage = () => {
       </div>
 
       {/* Modals */}
-      <DynamicLoadingModal shouldShow={showLoadingModal} onClose={() => setIsLoadingModalDismissed(true)} />
+      <DynamicLoadingModal
+        shouldShow={showLoadingModal}
+        onClose={() => setIsLoadingModalDismissed(true)}
+      />
 
       <BaseModalWithIcon
         isOpen={showResendSuccess}
