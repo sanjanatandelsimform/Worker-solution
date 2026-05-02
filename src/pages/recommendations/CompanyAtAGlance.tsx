@@ -59,7 +59,7 @@ const overviewCardsConfig: CardConfig<CompanyGlanceData>[] = [
   },
   {
     id: "average-salary",
-    title: "Average Salary",
+    title: "Average Annual Salary",
     icon: BriefcaseIcon,
     format: () => String("$72k"),
   },
