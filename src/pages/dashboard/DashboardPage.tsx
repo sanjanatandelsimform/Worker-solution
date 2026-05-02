@@ -52,6 +52,7 @@ export const DashboardPage = () => {
   const profileError = useAppSelector(selectProfileError);
   const {
     connectWithFinch,
+    reconnectWithFinch,
     isLoading: isFinchLoading,
     isPageLoading: isFinchPageLoading,
     error: finchError,
@@ -273,6 +274,7 @@ export const DashboardPage = () => {
     isWorkforceTabStale,
     isIndustryTabStale,
     isAutomatedProvider,
+    isReauthRequired,
   } = useDashboardStatusPolling({ enabled: shouldPollDashboardStatus });
 
   const [isLoadingModalDismissed, setIsLoadingModalDismissed] = useState(false);
@@ -537,21 +539,23 @@ export const DashboardPage = () => {
               buttonIsDisabled={isFinchLoading}
             />
           )} */}
-          <DashboardCard
-            classes="bg-ws-navy-100 border-ws-border-primary mt-10 shadow-none"
-            toggleAvatar={true}
-            title="Reconnect to Finch"
-            titleClass="text-ws-text-primary"
-            avatarIconSrc={<XhexagonIcon className="text-ws-warning-700" />}
-            avatarClassName="bg-ws-warning-200"
-            description="There was an issue connecting your payroll data. Please reconnect to Finch."
-            descriptionClass="text-ws-text-tertiary"
-            toggleButton={true}
-            buttonLabel="Reconnect"
-            buttonType={"secondary"}
-            buttonClasses="h-9"
-            onClick={connectWithFinch}
-          />
+          {isReauthRequired && (
+            <DashboardCard
+              classes="bg-ws-navy-100 border-ws-border-primary mt-10 shadow-none"
+              toggleAvatar={true}
+              title="Reconnect to Finch"
+              titleClass="text-ws-text-primary"
+              avatarIconSrc={<XhexagonIcon className="text-ws-warning-700" />}
+              avatarClassName="bg-ws-warning-200"
+              description="There was an issue connecting your payroll data. Please reconnect to Finch."
+              descriptionClass="text-ws-text-tertiary"
+              toggleButton={true}
+              buttonLabel="Reconnect"
+              buttonType={"secondary"}
+              buttonClasses="h-9"
+              onClick={reconnectWithFinch}
+            />
+          )}
           {emailVerify && isConnected && !isFinchCompleted && (
             <DashboardCard
               classes="bg-ws-navy-100 border-ws-border-primary mt-10 shadow-none"

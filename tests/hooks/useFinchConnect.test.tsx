@@ -328,4 +328,106 @@ describe("useFinchConnect", () => {
     // Clean up — resolve the pending exchange
     act(() => resolveExchange());
   });
+  // ── reconnectWithFinch ──────────────────────────────────────────────────
+
+  describe("reconnectWithFinch", () => {
+    beforeEach(() => {
+      mockGetFinchSessionId.mockResolvedValue({ sessionId: "sess_reauth" });
+      mockExchangeFinchCode.mockResolvedValue({});
+    });
+
+    // T-reconnect-01 — skips navigation
+    it("exchanges code but does NOT navigate to /additional-questions", async () => {
+      const { result } = renderHook(() => useFinchConnect(), { wrapper });
+
+      await act(async () => {
+        await result.current.reconnectWithFinch();
+      });
+
+      expect(mockOpen).toHaveBeenCalledWith({ sessionId: "sess_reauth" });
+
+      await act(async () => {
+        capturedOnSuccess!({ code: "reauth-code" });
+      });
+
+      await waitFor(() => {
+        expect(mockExchangeFinchCode).toHaveBeenCalledWith("reauth-code");
+        expect(mockNavigate).not.toHaveBeenCalled();
+      });
+    });
+
+    // T-reconnect-02 — connectWithFinch still navigates (no regression)
+    it("connectWithFinch still navigates to /additional-questions after reconnectWithFinch is available", async () => {
+      const { result } = renderHook(() => useFinchConnect(), { wrapper });
+
+      await act(async () => {
+        await result.current.connectWithFinch();
+      });
+
+      await act(async () => {
+        capturedOnSuccess!({ code: "new-code" });
+      });
+
+      await waitFor(() => {
+        expect(mockNavigate).toHaveBeenCalledWith("/additional-questions");
+      });
+    });
+
+    // T-reconnect-03 — subsequent connectWithFinch after reconnect still navigates (ref reset)
+    it("connectWithFinch navigates correctly after a previous reconnectWithFinch call", async () => {
+      const { result } = renderHook(() => useFinchConnect(), { wrapper });
+
+      // First: reconnect (no navigate)
+      await act(async () => {
+        await result.current.reconnectWithFinch();
+      });
+      await act(async () => {
+        capturedOnSuccess!({ code: "code-a" });
+      });
+      await waitFor(() => expect(mockExchangeFinchCode).toHaveBeenCalledWith("code-a"));
+      expect(mockNavigate).not.toHaveBeenCalled();
+
+      // Second: regular connect (should navigate)
+      await act(async () => {
+        await result.current.connectWithFinch();
+      });
+      await act(async () => {
+        capturedOnSuccess!({ code: "code-b" });
+      });
+      await waitFor(() => {
+        expect(mockNavigate).toHaveBeenCalledWith("/additional-questions");
+      });
+    });
+
+    // T-reconnect-04 — error during reconnect resets ref
+    it("resets isReconnect ref on exchange error so next connectWithFinch still navigates", async () => {
+      mockExchangeFinchCode.mockRejectedValueOnce(new Error("exchange failed"));
+
+      const { result } = renderHook(() => useFinchConnect(), { wrapper });
+
+      // First: reconnect fails during exchange
+      await act(async () => {
+        await result.current.reconnectWithFinch();
+      });
+      await act(async () => {
+        capturedOnSuccess!({ code: "err-code" });
+      });
+      await waitFor(() => expect(result.current.error).toBeTruthy());
+
+      // Reset error state
+      act(() => result.current.clearError());
+
+      // Second: regular connect succeeds and navigates
+      mockExchangeFinchCode.mockResolvedValueOnce({});
+      await act(async () => {
+        await result.current.connectWithFinch();
+      });
+      await act(async () => {
+        capturedOnSuccess!({ code: "ok-code" });
+      });
+      await waitFor(() => {
+        expect(mockNavigate).toHaveBeenCalledWith("/additional-questions");
+      });
+    });
+  });
 });

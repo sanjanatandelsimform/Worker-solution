@@ -281,3 +281,65 @@ describe("useDashboardStatusPolling — isAutomatedProvider", () => {
     expect(result.current.isAutomatedProvider).toBe(true);
   });
 });
+
+describe("useDashboardStatusPolling — isReauthRequired flag", () => {
+  beforeEach(() => {
+    vi.clearAllMocks();
+  });
+
+  afterEach(() => {
+    vi.clearAllMocks();
+  });
+
+  it("returns false when hook is disabled (no status)", () => {
+    const { result } = renderHook(() => useDashboardStatusPolling({ enabled: false }));
+    expect(result.current.isReauthRequired).toBe(false);
+  });
+
+  it("returns false when finchConnectionStatus is absent from response", async () => {
+    mockGetDashboardStatus.mockResolvedValue(makeStatus());
+
+    const { result } = renderHook(() => useDashboardStatusPolling({ enabled: true }));
+    await waitFor(() => expect(result.current.status).not.toBeNull());
+
+    expect(result.current.isReauthRequired).toBe(false);
+  });
+
+  it("returns true when finchConnectionStatus is reauth_required", async () => {
+    mockGetDashboardStatus.mockResolvedValue(
+      makeStatus({ finchConnectionStatus: "reauth_required" })
+    );
+
+    const { result } = renderHook(() => useDashboardStatusPolling({ enabled: true }));
+    await waitFor(() => expect(result.current.status).not.toBeNull());
+
+    expect(result.current.isReauthRequired).toBe(true);
+  });
+
+  it("returns false when finchConnectionStatus is connected", async () => {
+    mockGetDashboardStatus.mockResolvedValue(makeStatus({ finchConnectionStatus: "connected" }));
+
+    const { result } = renderHook(() => useDashboardStatusPolling({ enabled: true }));
+    await waitFor(() => expect(result.current.status).not.toBeNull());
+
+    expect(result.current.isReauthRequired).toBe(false);
+  });
+
+  it("returns false when finchConnectionStatus is disconnected", async () => {
+    mockGetDashboardStatus.mockResolvedValue(makeStatus({ finchConnectionStatus: "disconnected" }));
+
+    const { result } = renderHook(() => useDashboardStatusPolling({ enabled: true }));
+    await waitFor(() => expect(result.current.status).not.toBeNull());
+
+    expect(result.current.isReauthRequired).toBe(false);
+  });
+
+  it("returns false when finchConnectionStatus is pending", async () => {
+    mockGetDashboardStatus.mockResolvedValue(makeStatus({ finchConnectionStatus: "pending" }));
+
+    const { result } = renderHook(() => useDashboardStatusPolling({ enabled: true }));
+    await waitFor(() => expect(result.current.status).not.toBeNull());
+
+    expect(result.current.isReauthRequired).toBe(false);
+  });
+});

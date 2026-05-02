@@ -4,8 +4,20 @@ import { render, screen, fireEvent, act } from "@testing-library/react";
 // Mock the didYouKnowSlides constant
 vi.mock("@/constants/didYouKnowSlides", () => ({
   didYouKnowSlides: [
-    { id: 1, icon: null, title: "Slide One Title", content: "Slide one content.", source: "Source A" },
-    { id: 2, icon: null, title: "Slide Two Title", content: "Slide two content.", source: "Source B" },
+    {
+      id: 1,
+      icon: null,
+      title: "Slide One Title",
+      content: "Slide one content.",
+      source: "Source A",
+    },
+    {
+      id: 2,
+      icon: null,
+      title: "Slide Two Title",
+      content: "Slide two content.",
+      source: "Source B",
+    },
   ],
 }));
 

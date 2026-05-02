@@ -10,6 +10,7 @@ import * as workforceSliceModule from "@/store/slices/workforceSlice";
 import * as recommendationsSliceModule from "@/store/slices/recommendationsSlice";
 import * as industrySliceModule from "@/store/slices/industrySlice";
 import { renderWithProviders } from "../test-utils";
+import DashboardPage from "@/pages/dashboard/DashboardPage";
 
 vi.mock("@/hooks/useAssessmentStatus", () => ({
   useAssessmentStatus: () => ({
@@ -27,6 +28,7 @@ vi.mock("@/hooks/useAssessmentStatus", () => ({
 vi.mock("@/hooks/useFinchConnect", () => ({
   useFinchConnect: () => ({
     connectWithFinch: vi.fn(),
+    reconnectWithFinch: vi.fn(),
     isLoading: false,
     isPageLoading: false,
     error: null,
@@ -40,7 +42,16 @@ vi.mock("@/hooks/useDashboardStatusPolling", () => ({
     isWorkforceTabReady: true,
     isIndustryTabReady: true,
     hasExceededProcessingWindow: false,
+    isRecommendationTabStale: false,
+    isWorkforceTabStale: false,
+    isIndustryTabStale: false,
+    isAutomatedProvider: false,
+    isReauthRequired: false,
   }),
+}));
+
+vi.mock("@/pages/benchmark/BenchmarkPage", () => ({
+  default: () => <div>BenchmarkPage</div>,
 }));
 
 vi.mock("@/components/dashboard/DashboardSidebar", () => ({
@@ -61,8 +72,12 @@ vi.mock("@/pages/workforce/WorkforcePage", () => ({
 
 const mockFetchUserById = vi.fn();
 vi.spyOn(userSliceModule, "fetchUserById").mockImplementation(mockFetchUserById as any);
-vi.spyOn(workforceSliceModule, "fetchWorkforce").mockReturnValue({ type: "workforce/fetch" } as any);
-vi.spyOn(recommendationsSliceModule, "fetchRecommendations").mockReturnValue({ type: "recommendations/fetch" } as any);
+vi.spyOn(workforceSliceModule, "fetchWorkforce").mockReturnValue({
+  type: "workforce/fetch",
+} as any);
+vi.spyOn(recommendationsSliceModule, "fetchRecommendations").mockReturnValue({
+  type: "recommendations/fetch",
+} as any);
 vi.spyOn(industrySliceModule, "fetchIndustry").mockReturnValue({ type: "industry/fetch" } as any);
 
 describe("DashboardPage - User Fetch Optimization", () => {
@@ -87,8 +102,6 @@ describe("DashboardPage - User Fetch Optimization", () => {
   });
 
   it("should NOT call fetchUserById when detailed user data already exists in Redux", async () => {
-    const { default: DashboardPage } = await import("@/pages/dashboard/DashboardPage");
-
     const preloadedState = {
       auth: {
         user: {
@@ -128,8 +141,6 @@ describe("DashboardPage - User Fetch Optimization", () => {
   });
 
   it("should call fetchUserById when detailed user data is missing from Redux", async () => {
-    const { default: DashboardPage } = await import("@/pages/dashboard/DashboardPage");
-
     mockFetchUserById.mockResolvedValue({
       unwrap: () =>
         Promise.resolve({
@@ -176,8 +187,6 @@ describe("DashboardPage - User Fetch Optimization", () => {
   });
 
   it("should call fetchUserById when user ID changes", async () => {
-    const { default: DashboardPage } = await import("@/pages/dashboard/DashboardPage");
-
     mockFetchUserById.mockResolvedValue({
       unwrap: () =>
         Promise.resolve({
