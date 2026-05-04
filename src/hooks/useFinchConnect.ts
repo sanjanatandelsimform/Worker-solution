@@ -2,6 +2,7 @@ import { useCallback, useRef, useState } from "react";
 import { useFinchConnect as useFinchSDK } from "@tryfinch/react-connect";
 import { useNavigate } from "react-router-dom";
 import { getFinchSessionId, exchangeFinchCode } from "@/services/api/finchApi";
+import { getDashboardStatus } from "@/services/api/dashboardApi";
 
 type FinchConnectStatus = "idle" | "fetching-session" | "connecting" | "exchanging-code";
 
@@ -35,6 +36,7 @@ export function useFinchConnect(): UseFinchConnectReturn {
       setStatus("exchanging-code");
       try {
         await exchangeFinchCode(code);
+        await getDashboardStatus();
         if (!isReconnectRef.current) {
           navigate("/additional-questions");
         }
