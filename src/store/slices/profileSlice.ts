@@ -7,6 +7,8 @@ import type {
   ProfileApiResponse,
 } from "@/types/profileTypes";
 import * as profileService from "@/services/api/profileApi";
+import { getAssessment } from "@/services/api/assessmentApi";
+import { updateAssessmentCache } from "@/hooks/assessmentCache";
 import { fetchUserById } from "./userSlice";
 
 // Initial state - NO user data stored here
@@ -95,7 +97,25 @@ export const retakeAssessmentAction = createAsyncThunk<void, void, { rejectValue
   "profile/retakeAssessment",
   async (_, { rejectWithValue }) => {
     try {
+      // Step 1: Delete the existing assessment
       await profileService.retakeAssessment();
+      
+      // Step 2: Fetch fresh assessment data after deletion
+      const assessmentResponse = await getAssessment();
+      
+      // Check if the GET request was successful
+      if (!assessmentResponse.success) {
+        return rejectWithValue(
+          assessmentResponse.error || "Failed to fetch fresh assessment data"
+        );
+      }
+      
+      // Step 3: Update the assessment cache with fresh data so useAssessmentStatus hook picks it up
+      if (assessmentResponse.data) {
+        updateAssessmentCache(() => assessmentResponse.data ?? null);
+      }
+      
+      // Successfully deleted and fetched fresh data
     } catch (error) {
       return rejectWithValue(
         error instanceof Error ? error.message : "Failed to retake assessment"

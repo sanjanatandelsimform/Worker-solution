@@ -26,6 +26,26 @@ vi.mock("@/services/api/authApi", () => ({
 vi.mock("@/services/api/userApi", () => ({ getUserById: vi.fn() }));
 vi.mock("@/services/api/dashboardApi", () => ({ getDashboard: vi.fn() }));
 
+// Mock assessmentApi — control getAssessment behavior per test
+const mockGetAssessment = vi.fn();
+vi.mock("@/services/api/assessmentApi", () => ({
+  getAssessment: (...args: unknown[]) => mockGetAssessment(...args),
+  submitWorkforce: vi.fn(),
+  submitCompensation: vi.fn(),
+  submitBenefits: vi.fn(),
+  submitGoals: vi.fn(),
+  getAssessmentStatus: vi.fn(),
+}));
+
+// Mock assessmentCache to verify cache updates
+const mockUpdateAssessmentCache = vi.fn();
+vi.mock("@/hooks/assessmentCache", () => ({
+  updateAssessmentCache: (...args: unknown[]) => mockUpdateAssessmentCache(...args),
+  invalidateAssessmentCache: vi.fn(),
+  fetchAssessmentWithCache: vi.fn(),
+  getCachedAssessment: vi.fn(),
+}));
+
 // Mock profileApi — control retakeAssessment behavior per test
 const mockRetakeAssessment = vi.fn();
 vi.mock("@/services/api/profileApi", () => ({
@@ -59,6 +79,21 @@ const createTestStore = (overrides?: Partial<ProfileState>) =>
 describe("Retake Assessment — Redux Thunk Integration", () => {
   beforeEach(() => {
     vi.clearAllMocks();
+    // Default successful response for getAssessment
+    mockGetAssessment.mockResolvedValue({
+      success: true,
+      data: {
+        assessmentType: "manual",
+        data: {
+          assessmentResponseId: 1,
+          userId: "test-user",
+          status: "in_progress",
+          sections: {},
+          createdAt: new Date().toISOString(),
+          updatedAt: new Date().toISOString(),
+        },
+      },
+    });
   });
 
   describe("retakeAssessmentAction thunk state transitions", () => {
@@ -107,13 +142,14 @@ describe("Retake Assessment — Redux Thunk Integration", () => {
   });
 
   describe("retakeAssessmentAction thunk API integration", () => {
-    it("should call profileService.retakeAssessment() exactly once", async () => {
+    it("should call profileService.retakeAssessment() and getAssessment()", async () => {
       mockRetakeAssessment.mockResolvedValue({ success: true });
       const store = createTestStore();
 
       await store.dispatch(retakeAssessmentAction());
 
       expect(mockRetakeAssessment).toHaveBeenCalledTimes(1);
+      expect(mockGetAssessment).toHaveBeenCalledTimes(1);
     });
 
     it("should call retakeAssessment with no arguments", async () => {
@@ -123,6 +159,53 @@ describe("Retake Assessment — Redux Thunk Integration", () => {
       await store.dispatch(retakeAssessmentAction());
 
       expect(mockRetakeAssessment).toHaveBeenCalledWith();
+    });
+
+    it("should call getAssessment after successful delete", async () => {
+      mockRetakeAssessment.mockResolvedValue({ success: true });
+      const store = createTestStore();
+
+      await store.dispatch(retakeAssessmentAction());
+
+      // Verify getAssessment was called after retakeAssessment
+      expect(mockGetAssessment).toHaveBeenCalledWith();
+    });
+
+    it("should not call getAssessment if delete fails", async () => {
+      mockRetakeAssessment.mockRejectedValue(new Error("Delete failed"));
+      const store = createTestStore();
+
+      await store.dispatch(retakeAssessmentAction());
+
+      expect(mockRetakeAssessment).toHaveBeenCalledTimes(1);
+      expect(mockGetAssessment).not.toHaveBeenCalled();
+    });
+
+    it("should fail if getAssessment returns success=false", async () => {
+      mockRetakeAssessment.mockResolvedValue({ success: true });
+      mockGetAssessment.mockResolvedValue({
+        success: false,
+        error: "Failed to fetch assessment",
+      });
+      const store = createTestStore();
+
+      await store.dispatch(retakeAssessmentAction());
+
+      const state = store.getState().profile;
+      expect(state.loading).toBe(false);
+      expect(state.error).toBe("Failed to fetch assessment");
+    });
+
+    it("should fail if getAssessment throws an error", async () => {
+      mockRetakeAssessment.mockResolvedValue({ success: true });
+      mockGetAssessment.mockRejectedValue(new Error("Network error"));
+      const store = createTestStore();
+
+      await store.dispatch(retakeAssessmentAction());
+
+      const state = store.getState().profile;
+      expect(state.loading).toBe(false);
+      expect(state.error).toBe("Network error");
     });
   });
 
@@ -169,6 +252,64 @@ describe("Retake Assessment — Redux Thunk Integration", () => {
       await store.dispatch(retakeAssessmentAction());
 
       expect(store.getState().profile.isAccountLocked).toBe(false);
+    });
+  });
+
+  describe("retakeAssessmentAction cache update behavior", () => {
+    it("should update assessment cache with fresh data on success", async () => {
+      const freshAssessmentData = {
+        assessmentType: "manual",
+        data: {
+          assessmentResponseId: 123,
+          userId: "user-456",
+          status: "in_progress",
+          sections: {},
+          createdAt: new Date().toISOString(),
+          updatedAt: new Date().toISOString(),
+        },
+      };
+
+      mockRetakeAssessment.mockResolvedValue({ success: true });
+      mockGetAssessment.mockResolvedValue({
+        success: true,
+        data: freshAssessmentData,
+      });
+
+      const store = createTestStore();
+      await store.dispatch(retakeAssessmentAction());
+
+      // Verify updateAssessmentCache was called
+      expect(mockUpdateAssessmentCache).toHaveBeenCalledTimes(1);
+
+      // Verify the updater function returns the fresh data
+      const updaterFn = mockUpdateAssessmentCache.mock.calls[0][0];
+      expect(typeof updaterFn).toBe("function");
+      expect(updaterFn(null)).toEqual(freshAssessmentData);
+    });
+
+    it("should not update cache if getAssessment fails", async () => {
+      mockRetakeAssessment.mockResolvedValue({ success: true });
+      mockGetAssessment.mockResolvedValue({
+        success: false,
+        error: "Failed to fetch",
+      });
+
+      const store = createTestStore();
+      await store.dispatch(retakeAssessmentAction());
+
+      // Cache should not be updated on failure
+      expect(mockUpdateAssessmentCache).not.toHaveBeenCalled();
+    });
+
+    it("should not update cache if getAssessment throws", async () => {
+      mockRetakeAssessment.mockResolvedValue({ success: true });
+      mockGetAssessment.mockRejectedValue(new Error("Network error"));
+
+      const store = createTestStore();
+      await store.dispatch(retakeAssessmentAction());
+
+      // Cache should not be updated on error
+      expect(mockUpdateAssessmentCache).not.toHaveBeenCalled();
     });
   });
 });
