@@ -103,7 +103,7 @@ export const SuccessPage: React.FC<SuccessCardProps> = ({
             {/* Title and Description */}
             <div className="flex flex-col w-full items-center justify-center text-center">
               <h2 className="w-full text-ws-text-primary text-4xl font-medium">
-                {title || state.title || "Account created successfully!"}
+                {title || state.title || "Account Created Successfully!"}
               </h2>
               <p className="max-w-lg text-2xl font-normal leading-8 text-ws-text-tertiary mt-2">
                 {descriptionText ||

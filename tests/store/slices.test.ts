@@ -49,6 +49,21 @@ vi.mock("@/services/api/finchApi", () => ({
   getFinchStatus: vi.fn(),
 }));
 
+vi.mock("@/services/api/assessmentApi", () => ({
+  getAssessment: vi.fn(),
+  submitWorkforce: vi.fn(),
+  submitCompensation: vi.fn(),
+  submitBenefits: vi.fn(),
+  submitGoals: vi.fn(),
+}));
+
+vi.mock("@/hooks/assessmentCache", () => ({
+  updateAssessmentCache: vi.fn(),
+  invalidateAssessmentCache: vi.fn(),
+  fetchAssessmentWithCache: vi.fn(),
+  getCachedAssessment: vi.fn(),
+}));
+
 // -------------------------------------------------------------------
 // authSlice
 // -------------------------------------------------------------------
@@ -342,6 +357,7 @@ import profileReducer, {
   retakeAssessmentAction,
 } from "@/store/slices/profileSlice";
 import * as profileService from "@/services/api/profileApi";
+import { getAssessment } from "@/services/api/assessmentApi";
 
 describe("profileSlice - reducers", () => {
   let state: ReturnType<typeof profileReducer>;
@@ -518,6 +534,20 @@ describe("profileSlice - async thunks", () => {
 
   it("retakeAssessmentAction fulfilled", async () => {
     vi.mocked(profileService.retakeAssessment).mockResolvedValueOnce(undefined);
+    vi.mocked(getAssessment).mockResolvedValueOnce({
+      success: true,
+      data: {
+        assessmentType: "manual",
+        data: {
+          assessmentResponseId: 1,
+          userId: "test-user",
+          status: "in_progress",
+          sections: {},
+          createdAt: new Date().toISOString(),
+          updatedAt: new Date().toISOString(),
+        },
+      },
+    });
     const store = createTestStore();
     await store.dispatch(retakeAssessmentAction());
     expect(store.getState().profile.loading).toBe(false);
@@ -525,6 +555,7 @@ describe("profileSlice - async thunks", () => {
 
   it("retakeAssessmentAction rejected", async () => {
     vi.mocked(profileService.retakeAssessment).mockRejectedValueOnce(new Error("Retake failed"));
+    // getAssessment should not be called when retakeAssessment fails
     const store = createTestStore();
     await store.dispatch(retakeAssessmentAction());
     expect(store.getState().profile.error).toBe("Retake failed");

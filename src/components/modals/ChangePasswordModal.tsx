@@ -146,7 +146,7 @@ export const ChangePasswordModal = ({ isOpen, onClose }: ChangePasswordModalProp
       setShowError(true);
       // Parse error for attempts remaining
       if (typeof error === "string" && error.includes("attempts remaining")) {
-        const match = error.match(/(\d+)\s+attempts?\s+remaining/);
+        const match = error.match(/(\d+) attempt(?:s)? remaining/);
         if (match) {
           setAttemptsRemaining(parseInt(match[1]));
         }
