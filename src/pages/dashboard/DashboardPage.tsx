@@ -96,7 +96,6 @@ export const DashboardPage = () => {
 
       // Check if detailed user data already exists in Redux (persists across remounts)
       if (!forceRefresh && detailedUser?.id === user.id) {
-        console.log("[DashboardPage] User data already exists in Redux, skipping API call");
         return;
       }
 
