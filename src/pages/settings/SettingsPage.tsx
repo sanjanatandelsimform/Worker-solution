@@ -432,7 +432,7 @@ export const SettingsPage = () => {
                         onClick={() => setIsChangePasswordModalOpen(true)}
                         isDisabled={profileLoading || !firstName || !lastName}
                       >
-                        Change password
+                        Change Password
                       </Button>
                     </div>
                   </div>
@@ -544,7 +544,7 @@ export const SettingsPage = () => {
 
           await dispatch(logoutThunk())
             .unwrap()
-            .catch(() => { });
+            .catch(() => {});
           setIsRedirecting(false);
           navigate("/success", {
             state: {
