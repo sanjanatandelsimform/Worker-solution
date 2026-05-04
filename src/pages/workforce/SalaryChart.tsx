@@ -2,10 +2,10 @@ import React, { useEffect, useRef } from "react";
 
 type ChartItem = {
   label: string;
-  boxStart: number;
-  boxEnd: number;
-  max: number;
-  min: number;
+  boxStart: number | null;
+  boxEnd: number | null;
+  max: number | null;
+  min: number | null;
 };
 
 interface SalaryRangeChartProps {
@@ -47,7 +47,16 @@ const SalaryRangeChart: React.FC<SalaryRangeChartProps> = ({ data }) => {
       const columnCount = 5;
       const columnSpacing = chartWidth / (columnCount + 0.5);
       const barWidth = columnSpacing * 0.35;
-      const maxValue = 500;
+
+      // Compute maxValue dynamically from non-null data fields, rounded up to nearest 100
+      const allValues = data.flatMap(item =>
+        [item.min, item.boxStart, item.boxEnd, item.max].filter((v): v is number => v != null)
+      );
+      const dataMax = allValues.length > 0 ? Math.max(...allValues) : 0;
+      // Round up to nearest 100, then ensure at least a 70-unit gap above the data max
+      const rounded = Math.ceil(dataMax / 100) * 100;
+      const maxValue = Math.max(100, rounded + 150);
+      const rowCount = maxValue / 100;
 
       const scaleY = (value: number) => chartBottom - (value / maxValue) * chartHeight;
 
@@ -56,7 +65,7 @@ const SalaryRangeChart: React.FC<SalaryRangeChartProps> = ({ data }) => {
         ctx.fillStyle = "#9CA3AF";
         ctx.font = "14px Inter Regular, sans-serif";
 
-        for (let i = 0; i <= 5; i++) {
+        for (let i = 1; i <= rowCount; i++) {
           const value = i * 100;
           const y = scaleY(value);
 
@@ -71,6 +80,16 @@ const SalaryRangeChart: React.FC<SalaryRangeChartProps> = ({ data }) => {
 
       const drawBars = () => {
         data.forEach((item, index) => {
+          // Skip items with any null numeric field — no box, whisker, or label drawn
+          if (
+            item.min == null ||
+            item.max == null ||
+            item.boxStart == null ||
+            item.boxEnd == null
+          ) {
+            return;
+          }
+
           const x = chartLeft + columnSpacing * (index + 0.75);
 
           const minY = scaleY(item.min);
