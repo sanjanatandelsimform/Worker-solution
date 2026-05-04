@@ -62,7 +62,7 @@ export const styles = sortCx({
     // PRIMARY VARIANT - Solid Navy Background
     primary: {
       root: [
-        "bg-ws-navy-900 text-ws-base-white border border-ws-gray-950/18",
+        "bg-ws-navy-900 text-ws-base-white border-2 border-ws-gray-950/18",
         "hover:bg-ws-navy-600 hover:text-ws-base-white hover:border-ws-gray-950/18 transition-all duration-200",
         "focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-ws-light-teal-850",
         "active:bg-ws-navy-900 active:border-ws-gray-950/18",
@@ -74,7 +74,7 @@ export const styles = sortCx({
     // SECONDARY VARIANT - White Background with Navy Border
     secondary: {
       root: [
-        "bg-ws-navy-800 text-ws-base-white border border-ws-gray-950/18",
+        "bg-ws-navy-800 text-ws-base-white border-2 border-ws-gray-950/18",
         "hover:bg-ws-navy-600 hover:text-ws-base-white hover:border-ws-gray-950/18 transition-all duration-200",
         "active:bg-ws-navy-800 active:border-ws-gray-950/18",
         "disabled:bg-ws-gray-100 disabled:border-ws-gray-200 disabled:text-ws-gray-400",

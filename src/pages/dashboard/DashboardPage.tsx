@@ -32,6 +32,7 @@ import { fetchRecommendations } from "@/store/slices/recommendationsSlice";
 import { ArrowLeft } from "@/assets/icons/ArrowLeft";
 import Declarations from "@/components/common/Declarations";
 import DynamicLoadingModal from "@/components/dashboard/DynamicLoadingModal";
+import { XhexagonIcon } from "@/assets/icons/XhexagonIcon";
 
 const BASE_TAB_ITEMS = [{ id: "finchRecommendations", label: "Recommendations" }];
 
@@ -84,45 +85,47 @@ export const DashboardPage = () => {
   const [activeTab, setActiveTab] = useState("finchRecommendations");
   const fromGoalsCompletionRef = useRef(false);
   const mainRef = useRef<HTMLElement>(null);
-  
+
   // Refs to prevent duplicate API calls
   const fetchInProgressRef = useRef(false);
   const lastFetchedUserIdRef = useRef<string | null>(null);
 
-  const refetchUserData = useCallback(async (forceRefresh = false) => {
-    if (!user?.id) return;
-    
-    // Check if detailed user data already exists in Redux (persists across remounts)
-    if (!forceRefresh && detailedUser?.id === user.id) {
-      console.log("[DashboardPage] User data already exists in Redux, skipping API call");
-      return;
-    }
-    
-    // Prevent concurrent duplicate calls
-    if (!forceRefresh && fetchInProgressRef.current) {
-      return;
-    }
-    if (!forceRefresh && lastFetchedUserIdRef.current === user.id) {
-      return;
-    }
+  const refetchUserData = useCallback(
+    async (forceRefresh = false) => {
+      if (!user?.id) return;
 
-    try {
-      const userDetail = localStorage.getItem("userDetail");
-      if (userDetail) {
-        const parsedUserDetail = JSON.parse(userDetail);
-        const accessToken = parsedUserDetail?.auth?.tokens?.accessToken;
-        if (accessToken) {
-          fetchInProgressRef.current = true;
-          await dispatch(fetchUserById({ userId: user.id, token: accessToken })).unwrap();
-          lastFetchedUserIdRef.current = user.id;
-        }
+      // Check if detailed user data already exists in Redux (persists across remounts)
+      if (!forceRefresh && detailedUser?.id === user.id) {
+        return;
       }
-    } catch (error) {
-      console.error("Failed to refetch user data:", error);
-    } finally {
-      fetchInProgressRef.current = false;
-    }
-  }, [user?.id, detailedUser?.id, dispatch]);
+
+      // Prevent concurrent duplicate calls
+      if (!forceRefresh && fetchInProgressRef.current) {
+        return;
+      }
+      if (!forceRefresh && lastFetchedUserIdRef.current === user.id) {
+        return;
+      }
+
+      try {
+        const userDetail = localStorage.getItem("userDetail");
+        if (userDetail) {
+          const parsedUserDetail = JSON.parse(userDetail);
+          const accessToken = parsedUserDetail?.auth?.tokens?.accessToken;
+          if (accessToken) {
+            fetchInProgressRef.current = true;
+            await dispatch(fetchUserById({ userId: user.id, token: accessToken })).unwrap();
+            lastFetchedUserIdRef.current = user.id;
+          }
+        }
+      } catch (error) {
+        console.error("Failed to refetch user data:", error);
+      } finally {
+        fetchInProgressRef.current = false;
+      }
+    },
+    [user?.id, detailedUser?.id, dispatch]
+  );
 
   // Fetch user data only once on mount or when user ID changes
   useEffect(() => {
@@ -274,7 +277,8 @@ export const DashboardPage = () => {
   const [isLoadingModalDismissed, setIsLoadingModalDismissed] = useState(false);
   const allTabsReady = isRecommendationTabReady && isWorkforceTabReady && isIndustryTabReady;
   const isDashboardVisible = assessmentData?.data?.status === "completed" || isConnected;
-  const showLoadingModal = isDashboardVisible && !allTabsReady && !hasExceededProcessingWindow && !isLoadingModalDismissed;
+  const showLoadingModal =
+    isDashboardVisible && !allTabsReady && !hasExceededProcessingWindow && !isLoadingModalDismissed;
 
   if (isLoadingAssessment || isFinchPageLoading) {
     return (
@@ -532,18 +536,35 @@ export const DashboardPage = () => {
               buttonIsDisabled={isFinchLoading}
             />
           )} */}
+          <DashboardCard
+            classes="bg-ws-navy-100 border-ws-border-primary mt-10 shadow-none"
+            toggleAvatar={true}
+            title="Reconnect to Finch"
+            titleClass="text-ws-text-primary"
+            avatarIconSrc={<XhexagonIcon className="text-ws-warning-700" />}
+            avatarClassName="bg-ws-warning-200"
+            description="There was an issue connecting your payroll data. Please reconnect to Finch."
+            descriptionClass="text-ws-text-tertiary"
+            toggleButton={true}
+            buttonLabel="Reconnect"
+            buttonType={"secondary"}
+            buttonClasses="h-9"
+            onClick={connectWithFinch}
+          />
           {emailVerify && isConnected && !isFinchCompleted && (
             <DashboardCard
-              classes="bg-ws-navy-100 border-ws-primary-100 mt-10 shadow-none"
+              classes="bg-ws-navy-100 border-ws-border-primary mt-10 shadow-none"
               toggleAvatar={true}
               title="Complete your assessment"
               titleClass="text-ws-text-primary"
               avatarIconSrc={<AssessmentIcon className="text-ws-primary-900" />}
               avatarClassName="bg-ws-navy-200"
               description="Pick up where you left off and complete your company assessment for results and recommendations."
-              descriptionClass="text-ws-gray-800"
+              descriptionClass="text-ws-text-tertiary"
               toggleButton={true}
               buttonLabel="Continue"
+              buttonType={"secondary"}
+              buttonClasses="h-9"
               onClick={() => navigate("/additional-questions")}
             />
           )}
@@ -607,7 +628,10 @@ export const DashboardPage = () => {
       </div>
 
       {/* Modals */}
-      <DynamicLoadingModal shouldShow={showLoadingModal} onClose={() => setIsLoadingModalDismissed(true)} />
+      <DynamicLoadingModal
+        shouldShow={showLoadingModal}
+        onClose={() => setIsLoadingModalDismissed(true)}
+      />
 
       <BaseModalWithIcon
         isOpen={showResendSuccess}

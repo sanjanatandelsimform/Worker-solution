@@ -27,6 +27,7 @@ const DynamicLoadingModal = ({
 
   return (
     <ProgressLoadingModal
+      size="lg"
       contentTitle={slide.title}
       contentDescription={slide.content}
       title="Loading..."
