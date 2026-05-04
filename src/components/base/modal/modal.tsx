@@ -32,9 +32,16 @@ const sizeClasses = {
   full: "max-w-full mx-4",
 };
 
-export const Modal = ({ children, className, size = "md", ...props }: ModalProps) => {
+export const Modal = ({
+  children,
+  className,
+  size = "md",
+  isDismissable = true,
+  ...props
+}: ModalProps) => {
   return (
     <AriaModalOverlay
+      isDismissable={isDismissable}
       {...props}
       className={cx(
         "fixed inset-0 z-50 flex items-center justify-center bg-black/50 backdrop-blur-sm",
