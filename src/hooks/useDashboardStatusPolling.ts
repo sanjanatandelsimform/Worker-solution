@@ -273,6 +273,11 @@ export const useDashboardStatusPolling = ({
 
   const isAutomatedProvider = useMemo(() => status?.providerType === "automated", [status]);
 
+  const isReauthRequired = useMemo(
+    () => status?.finchConnectionStatus === "reauth_required",
+    [status]
+  );
+
   // 5-minute processing window flag
   const createdAtMs = useMemo(() => {
     if (!status?.createdAt) return null;
@@ -318,5 +323,6 @@ export const useDashboardStatusPolling = ({
     isWorkforceTabStale,
     isIndustryTabStale,
     isAutomatedProvider,
+    isReauthRequired,
   };
 };

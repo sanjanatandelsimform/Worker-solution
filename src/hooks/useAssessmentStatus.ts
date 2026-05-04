@@ -36,53 +36,56 @@ export const useAssessmentStatus = ({
   const fetchInProgressRef = useRef(false);
   const hasFetchedRef = useRef(false);
 
-  const fetchAssessmentStatus = useCallback(async (forceRefresh = false) => {
-    if (!enabled) return;
+  const fetchAssessmentStatus = useCallback(
+    async (forceRefresh = false) => {
+      if (!enabled) return;
 
-    // Prevent duplicate calls unless forced (e.g., explicit refetch)
-    if (!forceRefresh && fetchInProgressRef.current) {
-      return;
-    }
-
-    // Check shared cache first (without forcing refresh)
-    if (!forceRefresh) {
-      const cached = getCachedAssessment();
-      if (cached) {
-        setAssessmentData(cached);
-        setIsFetched(true);
-        hasFetchedRef.current = true;
+      // Prevent duplicate calls unless forced (e.g., explicit refetch)
+      if (!forceRefresh && fetchInProgressRef.current) {
         return;
       }
-    }
 
-    if (!forceRefresh && hasFetchedRef.current) {
-      return;
-    }
-
-    fetchInProgressRef.current = true;
-    setIsLoading(true);
-    setError(null);
-
-    try {
-      const response = await fetchAssessmentWithCache(forceRefresh);
-      hasFetchedRef.current = true;
-
-      if (response.success && response.data) {
-        setAssessmentData(response.data);
-      } else {
-        setAssessmentData(null);
-        setError(null);
+      // Check shared cache first (without forcing refresh)
+      if (!forceRefresh) {
+        const cached = getCachedAssessment();
+        if (cached) {
+          setAssessmentData(cached);
+          setIsFetched(true);
+          hasFetchedRef.current = true;
+          return;
+        }
       }
-    } catch (err) {
-      console.error("[useAssessmentStatus] Failed to fetch assessment:", err);
-      setError(err instanceof Error ? err.message : "Failed to load assessment status");
-      setAssessmentData(null);
-    } finally {
-      setIsLoading(false);
-      setIsFetched(true);
-      fetchInProgressRef.current = false;
-    }
-  }, [enabled]);
+
+      if (!forceRefresh && hasFetchedRef.current) {
+        return;
+      }
+
+      fetchInProgressRef.current = true;
+      setIsLoading(true);
+      setError(null);
+
+      try {
+        const response = await fetchAssessmentWithCache(forceRefresh);
+        hasFetchedRef.current = true;
+
+        if (response.success && response.data) {
+          setAssessmentData(response.data);
+        } else {
+          setAssessmentData(null);
+          setError(null);
+        }
+      } catch (err) {
+        console.error("[useAssessmentStatus] Failed to fetch assessment:", err);
+        setError(err instanceof Error ? err.message : "Failed to load assessment status");
+        setAssessmentData(null);
+      } finally {
+        setIsLoading(false);
+        setIsFetched(true);
+        fetchInProgressRef.current = false;
+      }
+    },
+    [enabled]
+  );
 
   // Refetch function that forces a new API call
   const refetch = useCallback(async () => {

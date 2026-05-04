@@ -56,4 +56,38 @@ TypeScript with React 19+, strict mode enabled: Follow standard conventions
 <!-- MANUAL ADDITIONS START -->
 
 - 012-participation-dynamic-items (2026-04-16): `participation.benefits`, `participation.retirement`, `participation.insurance` in `WorkforceResponse` changed from fixed-key objects to `EnrollmentItem[]` arrays (`{ name: string; enrollment: string }`). Hook `useWorkforceParticipationConfig` now maps arrays instead of accessing property keys. Static mock data in `workforceSlice.ts` updated to array format. Test fixtures in 3 test files updated. No changes to selectors, `WorkforceParticipation.tsx`, or `WorkforcePage.tsx`.
+
+## Active Feature: 031-finch-reauth-status (2026-05-01)
+
+<!-- specify:agent:start -->
+
+**Branch**: `031-finch-reauth-status` | **Spec**: `specs/031-finch-reauth-status/spec.md` | **Plan**: `specs/031-finch-reauth-status/plan.md`
+
+### What this feature does
+
+1. Extends `DashboardStatusResponse` with `finchConnectionStatus?: "connected" | "reauth_required" | "disconnected" | "pending"`.
+2. Exposes `isReauthRequired: boolean` from `useDashboardStatusPolling` — `true` only when `finchConnectionStatus === "reauth_required"`.
+3. Gates the "Reconnect to Finch" `DashboardCard` in `DashboardPage` on `isReauthRequired` (was always rendered).
+4. Adds `reconnectWithFinch()` to `useFinchConnect` — same as `connectWithFinch` but skips the `/additional-questions` redirect post-success (uses an internal `isReconnectRef` ref).
+
+### Files to modify
+
+- `src/types/dashboardStatusTypes.ts` — add `FinchConnectionStatus` type, extend `DashboardStatusResponse`, add `isReauthRequired` to return interface; add `reconnectWithFinch` to `UseFinchConnectReturn`
+- `src/hooks/useDashboardStatusPolling.ts` — add `isReauthRequired` useMemo + return
+- `src/hooks/useFinchConnect.ts` — add `isReconnectRef`, update `onSuccess` to check ref, add `reconnectWithFinch`
+- `src/pages/dashboard/DashboardPage.tsx` — destructure `isReauthRequired` + `reconnectWithFinch`, gate the Reconnect card
+
+### Test files to update
+
+- `tests/hooks/useDashboardStatusPolling.test.ts` — new describe block for `isReauthRequired` (6 cases)
+- `tests/hooks/useFinchConnect.test.tsx` — new describe block for `reconnectWithFinch` (4 cases)
+
+### Key facts
+
+- `isReauthRequired` defaults to `false` when `finchConnectionStatus` is absent or any other value
+- `isReconnectRef` is reset to `false` in both the success and error paths of `onSuccess` to prevent stale state across multiple calls
+- `connectWithFinch` behavior is UNCHANGED — still navigates to `/additional-questions`
+- See full implementation guide: `specs/031-finch-reauth-status/quickstart.md`
+
+<!-- specify:agent:end -->
 <!-- MANUAL ADDITIONS END -->

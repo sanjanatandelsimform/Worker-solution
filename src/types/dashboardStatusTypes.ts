@@ -2,6 +2,8 @@ export type StatusValue = "pending" | "completed" | "not_applicable";
 
 export type ProviderType = "assisted" | "automated" | null;
 
+export type FinchConnectionStatus = "connected" | "reauth_required" | "disconnected" | "pending";
+
 export interface StatusSection {
   status: StatusValue;
   updatedAt: string | null;
@@ -17,6 +19,7 @@ export interface DashboardStatusResponse {
   createdAt: string;
   source: string;
   providerType: ProviderType;
+  finchConnectionStatus?: FinchConnectionStatus;
 }
 
 export interface UseDashboardStatusPollingOptions {
@@ -39,4 +42,5 @@ export interface UseDashboardStatusPollingReturn {
   isWorkforceTabStale: boolean;
   isIndustryTabStale: boolean;
   isAutomatedProvider: boolean;
+  isReauthRequired: boolean;
 }
