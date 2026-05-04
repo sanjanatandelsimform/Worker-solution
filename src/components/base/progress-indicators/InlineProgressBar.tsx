@@ -9,7 +9,7 @@ interface InlineProgressBarProps {
 
 /**
  * A progress bar that renders the percentage label inside the colored fill
- * for values >= 10%, and just outside (after the fill) for smaller values.
+ * for values > 5%, and left-aligned in the grey area for values <= 5%.
  */
 export default function InlineProgressBar({
   percentage,
@@ -18,20 +18,27 @@ export default function InlineProgressBar({
 }: Readonly<InlineProgressBarProps>) {
   return (
     <div className={`w-full bg-ws-light-teal-25 relative flex items-center ${className}`}>
-      <div
-        className={`h-full flex-shrink-0 ${color} transition-all duration-300`}
-        style={{ width: `${percentage}%` }}
-      >
-        {percentage >= 10 && (
-          <span className="text-base font-normal text-ws-base-black drop-shadow-md flex items-center justify-end w-full h-full pr-2">
+      {percentage > 5 ? (
+        // > 5%: Label inside the colored fill, left-aligned. Bar expands to fit text.
+        <div
+          className={`h-full ${color} transition-all duration-300 flex items-center pl-2`}
+          style={{ width: `${percentage}%`, minWidth: 'fit-content' }}
+        >
+          <span className="text-base font-normal text-ws-base-black drop-shadow-md whitespace-nowrap">
             {percentage}%
           </span>
-        )}
-      </div>
-      {percentage < 10 && (
-        <span className="text-base font-normal text-ws-base-black drop-shadow-md pl-2 whitespace-nowrap">
-          {percentage}%
-        </span>
+        </div>
+      ) : (
+        // <= 5%: Fill bar + label left-aligned in the grey (unfilled) area
+        <>
+          <div
+            className={`h-full flex-shrink-0 ${color} transition-all duration-300`}
+            style={{ width: `${percentage}%` }}
+          />
+          <span className="text-base font-normal text-ws-base-black drop-shadow-md whitespace-nowrap pl-2 flex items-center h-full">
+            {percentage}%
+          </span>
+        </>
       )}
     </div>
   );

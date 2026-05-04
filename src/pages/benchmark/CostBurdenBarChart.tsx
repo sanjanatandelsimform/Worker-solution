@@ -135,19 +135,31 @@ export default function CostBurdenBarChart({ data, width, height = 400 }: Canvas
       const value2Label = item.value2 > 0 ? `${item.value2.toFixed(2)}%` : null;
 
       // value1 → always OUTSIDE the bar, just above its top edge
+      // For very small bars, ensure label stays inside chart area (above baseline)
       ctx.font = "500 14px Inter, sans-serif";
       ctx.fillStyle = textColor;
       ctx.textAlign = "center";
       ctx.textBaseline = "bottom";
-      ctx.fillText(value1Label, centerX, bar1TopY - 8);
+      const minLabelY1 = baseY - 20; // Minimum position: at least 20px above baseline
+      const label1Y = Math.min(bar1TopY - 8, minLabelY1);
+      ctx.fillText(value1Label, centerX, label1Y);
 
-      // value2 → always INSIDE the lighter bar, just below its top edge
+      // value2 → inside the bar if tall enough, otherwise just above the baseline
       if (value2Label && bar2TopY !== null) {
         ctx.font = "500 14px Inter, sans-serif";
         ctx.fillStyle = textColor;
         ctx.textAlign = "center";
-        ctx.textBaseline = "top";
-        ctx.fillText(value2Label, centerX, bar2TopY);
+        
+        // If bar is too short (< 20px), place label above the bar top inside chart area
+        if (bar2Height < 20) {
+          ctx.textBaseline = "bottom";
+          const minLabelY2 = baseY - 4; // At minimum, 4px above baseline
+          const label2Y = Math.min(bar2TopY - 4, minLabelY2);
+          ctx.fillText(value2Label, centerX, label2Y);
+        } else {
+          ctx.textBaseline = "top";
+          ctx.fillText(value2Label, centerX, bar2TopY + 4);
+        }
       }
 
       // Draw main label below chart
