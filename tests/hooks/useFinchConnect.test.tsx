@@ -41,9 +41,15 @@ vi.mock("@tryfinch/react-connect", () => ({
 
 const mockGetFinchSessionId = vi.fn();
 const mockExchangeFinchCode = vi.fn();
+const mockGetDashboardStatus = vi.fn();
+
 vi.mock("@/services/api/finchApi", () => ({
   getFinchSessionId: () => mockGetFinchSessionId(),
   exchangeFinchCode: (code: string) => mockExchangeFinchCode(code),
+}));
+
+vi.mock("@/services/api/dashboardApi", () => ({
+  getDashboardStatus: () => mockGetDashboardStatus(),
 }));
 
 // ── Import hook after all mocks ─────────────────────────────────────────────
@@ -73,6 +79,7 @@ describe("useFinchConnect", () => {
       syncJobId: "sync-uuid-456",
       syncJobStatus: "pending",
     });
+    mockGetDashboardStatus.mockResolvedValue({});
   });
 
   // T010 — isLoading starts false

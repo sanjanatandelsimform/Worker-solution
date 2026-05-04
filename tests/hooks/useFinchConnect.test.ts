@@ -10,6 +10,7 @@ import { describe, it, expect, vi, beforeEach } from "vitest";
 import { renderHook, act } from "@testing-library/react";
 import { useFinchConnect } from "@/hooks/useFinchConnect";
 import * as finchApi from "@/services/api/finchApi";
+import * as dashboardApi from "@/services/api/dashboardApi";
 
 // ── Mock navigate ──────────────────────────────────────────────────────────
 const mockNavigate = vi.fn();
@@ -44,6 +45,11 @@ vi.mock("@/services/api/finchApi", () => ({
   exchangeFinchCode: vi.fn(),
 }));
 
+// ── Mock dashboardApi ──────────────────────────────────────────────────────────
+vi.mock("@/services/api/dashboardApi", () => ({
+  getDashboardStatus: vi.fn(),
+}));
+
 // ── Helpers ────────────────────────────────────────────────────────────────
 
 /** Render the hook and return the result reference. */
@@ -59,6 +65,7 @@ describe("useFinchConnect", () => {
     capturedOnSuccess = undefined;
     capturedOnError = undefined;
     capturedOnClose = undefined;
+    vi.mocked(dashboardApi.getDashboardStatus).mockResolvedValue({} as any);
   });
 
   // ── Initial state ──────────────────────────────────────────────────────
