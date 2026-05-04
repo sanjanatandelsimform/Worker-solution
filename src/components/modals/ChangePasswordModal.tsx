@@ -26,6 +26,28 @@ import {
 } from "@/store/selectors/profileSelectors";
 import { validatePassword, isPasswordDifferent } from "@/utils/validation";
 
+/** Extracts the leading digit count from "... N attempt(s) remaining ..." without regex (ReDoS-safe). */
+function parseAttemptsRemainingFromError(error: string): number | undefined {
+  const markers = ["attempts remaining", "attempt remaining"] as const;
+  for (const marker of markers) {
+    const idx = error.indexOf(marker);
+    if (idx === -1) continue;
+    let i = idx - 1;
+    while (i >= 0 && (error[i] === " " || error[i] === "\t" || error[i] === "\n" || error[i] === "\r")) {
+      i--;
+    }
+    const digitEnd = i + 1;
+    while (i >= 0 && error[i] >= "0" && error[i] <= "9") {
+      i--;
+    }
+    const digits = error.slice(i + 1, digitEnd);
+    if (digits.length === 0) continue;
+    const n = Number.parseInt(digits, 10);
+    if (!Number.isNaN(n)) return n;
+  }
+  return undefined;
+}
+
 interface ChangePasswordModalProps {
   isOpen: boolean;
   onClose: () => void;
@@ -144,11 +166,10 @@ export const ChangePasswordModal = ({ isOpen, onClose }: ChangePasswordModalProp
       setShowError(false);
     } catch (error: unknown) {
       setShowError(true);
-      // Parse error for attempts remaining
-      if (typeof error === "string" && error.includes("attempts remaining")) {
-        const match = error.match(/(\d+) attempt(?:s)? remaining/);
-        if (match) {
-          setAttemptsRemaining(parseInt(match[1]));
+      if (typeof error === "string") {
+        const remaining = parseAttemptsRemainingFromError(error);
+        if (remaining !== undefined) {
+          setAttemptsRemaining(remaining);
         }
       }
     }
