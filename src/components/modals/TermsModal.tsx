@@ -40,6 +40,7 @@ export interface BaseModalWithIconProps {
   showCloseButton?: boolean;
   paddingBottom?: string;
   backgroundPattern?: "success" | "unsuccess";
+  onOpenPrivacyNotice?: () => void;
 }
 
 export const TermsModal = ({
@@ -55,6 +56,7 @@ export const TermsModal = ({
   showCloseButton = true,
   paddingBottom = "h-3",
   backgroundPattern = "success",
+  onOpenPrivacyNotice,
 }: BaseModalWithIconProps) => {
   const backgroundClass = backgroundPattern === "success" ? " " : "background-pattern-unsuccess";
 
@@ -318,7 +320,19 @@ export const TermsModal = ({
                 <p className={cls.body}>
                   For a complete description of how we collect, use, and disclose your Personal
                   Information, including User Data that constitutes Personal Information, please
-                  refer to our Privacy Notice at [INSERT PRIVACY NOTICE LINK].
+                  refer to our{" "}
+                  <Button
+                    color="link"
+                    size="sm"
+                    onClick={() => {
+                      onClose();
+                      onOpenPrivacyNotice?.();
+                    }}
+                    className="text-xs text-ws-light-teal-850 underline p-0 m-0 h-auto"
+                  >
+                    Privacy Notice
+                  </Button>
+                  .
                 </p>
               </div>
 
@@ -431,9 +445,20 @@ export const TermsModal = ({
                 <p className={cls.sectionHeading}>10. Privacy</p>
                 <p className={cls.body}>
                   Any information you provide, and that Lafayette Square collects, including via
-                  A2B, is subject to our Privacy Notice at [insert Privacy Notice link] (the
-                  "Privacy Notice"), which is an integral part of these Terms of Use and is hereby
-                  incorporated by reference.{" "}
+                  A2B, is subject to our Privacy Notice at the{" "}
+                  <Button
+                    color="link"
+                    size="sm"
+                    onClick={() => {
+                      onClose();
+                      onOpenPrivacyNotice?.();
+                    }}
+                    className="text-xs text-ws-light-teal-850 underline p-0 m-0 h-auto"
+                  >
+                    Privacy Notice
+                  </Button>
+                  , which is an integral part of these Terms of Use and is hereby incorporated by
+                  reference.{" "}
                   <span className="uppercase">
                     Notice regarding consent to data collection and use: By accessing or using A2B,
                     you hereby expressly consent to Lafayette Square and its representatives

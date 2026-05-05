@@ -2,6 +2,7 @@ import { useState } from "react";
 import { Button } from "../base/buttons/button";
 import TermsModal from "../modals/TermsModal";
 import { useModalConfig } from "@/hooks/useModalConfig";
+import PrivacyModal from "../modals/PrivacyModal";
 
 interface DeclarationsProps {
   readonly className?: string;
@@ -52,9 +53,13 @@ export default function Declarations({ className = "" }: Readonly<DeclarationsPr
       <TermsModal
         isOpen={isTermsModalOpen}
         onClose={() => setIsTermsModalOpen(false)}
+        onOpenPrivacyNotice={() => {
+          setIsTermsModalOpen(false);
+          setIsPrivacyModalOpen(true);
+        }}
         {...updateDeclarationTermsModal}
       />
-      <TermsModal
+      <PrivacyModal
         isOpen={isPrivacyModalOpen}
         onClose={() => setIsPrivacyModalOpen(false)}
         {...updateDeclarationPrivacyModal}
