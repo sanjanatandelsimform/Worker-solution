@@ -12,6 +12,16 @@ export default function Declarations({ className = "" }: Readonly<DeclarationsPr
   const [isTermsModalOpen, setIsTermsModalOpen] = useState(false);
   const [isPrivacyModalOpen, setIsPrivacyModalOpen] = useState(false);
 
+  const handlePrivacyNotice = (scrollToId?: string) => {
+    setIsTermsModalOpen(false);
+    setIsPrivacyModalOpen(true);
+    if (scrollToId) {
+      setTimeout(() => {
+        document.getElementById(scrollToId)?.scrollIntoView({ behavior: "smooth", block: "start" });
+      }, 150);
+    }
+  };
+
   const updateDeclarationTermsModal = useModalConfig("updateDeclarationTerms", {
     isOpen: isTermsModalOpen,
     onClose: () => setIsTermsModalOpen(false),
@@ -53,17 +63,7 @@ export default function Declarations({ className = "" }: Readonly<DeclarationsPr
       <TermsModal
         isOpen={isTermsModalOpen}
         onClose={() => setIsTermsModalOpen(false)}
-        onOpenPrivacyNotice={(scrollToId?: string) => {
-          setIsTermsModalOpen(false);
-          setIsPrivacyModalOpen(true);
-          if (scrollToId) {
-            setTimeout(() => {
-              document
-                .getElementById(scrollToId)
-                ?.scrollIntoView({ behavior: "smooth", block: "start" });
-            }, 150);
-          }
-        }}
+        onOpenPrivacyNotice={handlePrivacyNotice}
         {...updateDeclarationTermsModal}
       />
       <PrivacyModal
