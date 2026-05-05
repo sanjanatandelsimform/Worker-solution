@@ -2,6 +2,7 @@ import { useState } from "react";
 import { cx } from "@/utils/cx";
 import type { NavItemDividerType, NavItemType } from "../config";
 import { NavItemBase } from "./nav-item";
+import { Tooltip } from "@/components/base/tooltip/tooltip";
 
 interface NavListProps {
   /** URL of the currently active item. */
@@ -24,7 +25,7 @@ export const NavList = ({ activeUrl, items, className, isCollapsed = false }: Na
   return (
     <ul
       className={cx(
-        "mt-0 flex flex-col w-full px-0 lg:px-0",
+        "mt-0 flex flex-col w-full px-0 lg:px-0" ,
         isCollapsed ? "items-center" : "items-start",
         className
       )}
@@ -49,9 +50,23 @@ export const NavList = ({ activeUrl, items, className, isCollapsed = false }: Na
                 setCurrentItem(item);
               }}
             >
-              <NavItemBase href={item.href} badge={item.badge} icon={item.icon} type="collapsible">
-                {item.label}
-              </NavItemBase>
+              <Tooltip
+                placement="right"
+                title={item.label}
+                isDisabled={!isCollapsed}
+                delay={200}
+                arrow
+              >
+                <NavItemBase
+                  href={item.href}
+                  badge={item.badge}
+                  icon={item.icon}
+                  type="collapsible"
+                  isCollapsed={isCollapsed}
+                >
+                  {!isCollapsed && item.label}
+                </NavItemBase>
+              </Tooltip>
 
               <dd>
                 <ul className="py-0.5 md:w-full">
@@ -76,20 +91,29 @@ export const NavList = ({ activeUrl, items, className, isCollapsed = false }: Na
         return (
           <li
             key={item.label}
-            className={`py-0.5 first:mt-4 text-ws-gray-200 ${isCollapsed ? "w-auto" : "w-full"}`}
+            className={`py-0.5 first:mt-4 text-ws-gray-200 last:mt-4 lg:last:mt-0 ${isCollapsed ? "w-auto" : "w-full"}`}
           >
-            <NavItemBase
-              type="link"
-              badge={item.badge}
-              icon={item.icon}
-              href={item.href}
-              current={currentItem?.href === item.href}
-              open={open && currentItem?.href === item.href}
-              onClick={item.onClick} // Pass the onClick handler
-              isCollapsed={isCollapsed}
+            <Tooltip
+              placement="right"
+              title={item.label}
+              isDisabled={!isCollapsed}
+              delay={200}
+              arrow
+              arrowRouted="transform rotate-90"
             >
-              {item.label}
-            </NavItemBase>
+              <NavItemBase
+                type="link"
+                badge={item.badge}
+                icon={item.icon}
+                href={item.href}
+                current={currentItem?.href === item.href}
+                open={open && currentItem?.href === item.href}
+                onClick={item.onClick}
+                isCollapsed={isCollapsed}
+              >
+                {!isCollapsed && item.label}
+              </NavItemBase>
+            </Tooltip>
           </li>
         );
       })}

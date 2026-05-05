@@ -66,7 +66,7 @@ describe("ResetPasswordForm", () => {
   it("renders the form with heading and password inputs", () => {
     renderWithProviders(<ResetPasswordForm />);
     expect(screen.getByText("Reset password")).toBeInTheDocument();
-    expect(screen.getByText("Save password")).toBeInTheDocument();
+    expect(screen.getByText("Save Password")).toBeInTheDocument();
     expect(screen.getByText("Sign in")).toBeInTheDocument();
   });
 

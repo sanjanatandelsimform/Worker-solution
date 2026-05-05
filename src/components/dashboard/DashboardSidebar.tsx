@@ -160,7 +160,7 @@ export const DashboardSidebar = ({ activeUrl = "/" }: DashboardSidebarProps) => 
           </div>
         ) : (
           <div className="flex items-center justify-center overflow-hidden flex-1">
-            <img src={tabLogo} alt="Logo" className="w-10" />
+            <img src={tabLogo} alt="Logo" className="w-8" />
           </div>
         )}
 
@@ -187,7 +187,7 @@ export const DashboardSidebar = ({ activeUrl = "/" }: DashboardSidebarProps) => 
         <NavList
           items={settingsItems}
           activeUrl={activeUrl}
-          className="mt-4 border-t border-ws-border-primary"
+          className="md:mt-0 lg:mt-4 md:border-t-0 lg:border-t border-ws-border-primary"
           isCollapsed={shouldBeCollapsed}
         />
       </nav>
@@ -197,7 +197,7 @@ export const DashboardSidebar = ({ activeUrl = "/" }: DashboardSidebarProps) => 
         {isTabletRange && isCollapsed ? (
           // Show initials when collapsed
           <div className="flex items-center justify-center">
-            <div className="flex items-center justify-center w-10 h-10 rounded-full bg-ws-light-teal-900 text-ws-base-white font-semibold text-sm">
+            <div className="flex items-center justify-center w-10 h-10 bg-ws-base-white text-ws-text-primary text-base font-semibold">
               {getUserInitials()}
             </div>
           </div>

@@ -7,6 +7,7 @@ import {
 } from "@/components/base/modal/modal";
 import { Button } from "@/components/base/buttons/button";
 import { X } from "@untitledui/icons";
+import siteLogo from "@/assets/logo-small.svg";
 
 export interface SuccessModalWithLogoButton {
   text: string;
@@ -64,9 +65,7 @@ export const SuccessModalWithLogo = ({
           <div className="pt-18 flex flex-col items-center gap-6">
             {showLogo && (
               <div className="flex items-center justify-center px-2 py-1">
-                <h1 className="font-display text-[48px] font-bold leading-15 text-ws-text-primary">
-                  A2B
-                </h1>
+                <img src={siteLogo} alt="Logo" className="w-full" />
               </div>
             )}
             {/* Large Icon/Image */}
@@ -99,7 +98,7 @@ export const SuccessModalWithLogo = ({
             color={button.color || "primary"}
             size="xl"
             onClick={button.onClick}
-            className="w-auto mb-10 bg-ws-primary-900 text-ws-base-white hover:bg-ws-primary-900-hover focus:bg-ws-primary-900-hover active:bg-ws-primary-900-hover"
+            // className="w-auto mb-10 bg-ws-primary-900 text-ws-base-white hover:bg-ws-primary-900-hover focus:bg-ws-primary-900-hover active:bg-ws-primary-900-hover"
             isDisabled={button.isDisabled}
           >
             {button.text}

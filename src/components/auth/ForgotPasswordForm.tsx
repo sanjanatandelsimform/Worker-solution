@@ -73,7 +73,7 @@ export default function ForgotPasswordForm() {
               <h2 className="w-full text-3xl text-center font-semibold leading-9.5 text-ws-text-primary">
                 Forgot your password?
               </h2>
-              <p className="w-full text-base font-normal leading-6 text-ws-text-tertiary">
+              <p className="w-full text-base font-normal text-center leading-6 text-ws-text-tertiary">
                 Enter the email address associated with your account and we'll send you a link to
                 reset your password.
               </p>

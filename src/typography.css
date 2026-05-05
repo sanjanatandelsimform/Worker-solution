@@ -75,7 +75,7 @@
     margin-top: 2.5rem;
     margin-bottom: 2.5rem;
   }
-  
+
   &:where(blockquote p) {
     margin: 0;
     font-weight: 500;
@@ -83,11 +83,11 @@
     font-size: var(--ws-color-text-xl);
     line-height: var(--ws-color-lh-text-xl);
   }
-  
+
   &:where(blockquote p:first-of-type::before) {
     content: open-quote;
   }
-  
+
   &:where(blockquote p:last-of-type::after) {
     content: close-quote;
   }
@@ -208,13 +208,12 @@
     outline: 2px solid var(--ws-color-border-focus-ring);
     outline-offset: 2px;
   }
-  
+
   &:where(:is(h1, h2, h3) a) {
     color: var(--tw-prose-headings);
     font-weight: inherit;
     text-decoration: none;
   }
-
 
   /* Inline code element */
   &:where(code:not(pre code)) {
@@ -295,7 +294,7 @@
       margin-top: 3rem;
       margin-bottom: 3rem;
     }
-    
+
     &:where(blockquote p) {
       font-size: var(--ws-color-display-xs);
       line-height: var(--ws-color-lh-display-xs);
@@ -308,18 +307,18 @@
       margin-bottom: 1.5rem;
       margin-top: 3rem;
     }
-    
+
     &:where(h2) {
       font-size: var(--ws-color-display-sm);
       line-height: var(--ws-color-lh-display-sm);
       margin-bottom: 1.25rem;
       margin-top: 2.5rem;
     }
-    
+
     &:where(h3) {
       margin-bottom: 1rem;
     }
-    
+
     &:where(h4) {
       font-size: var(--ws-color-text-xl);
       line-height: var(--ws-color-lh-text-xl);
@@ -329,11 +328,11 @@
       margin-top: 3rem;
       margin-bottom: 3rem;
     }
-    
+
     &:where(figure:has(> blockquote)) {
       padding-inline-start: 1.25rem;
     }
-    
+
     &:where(figure > blockquote + figcaption) {
       font-size: var(--ws-color-text-md);
       line-height: var(--ws-color-lh-text-md);

@@ -393,7 +393,7 @@ describe("SuccessModalWithLogo", () => {
         button={{ text: "OK", onClick: vi.fn() }}
       />
     );
-    expect(screen.getByText("A2B")).toBeTruthy();
+    expect(screen.getByAltText("Logo")).toBeTruthy();
   });
 });
 

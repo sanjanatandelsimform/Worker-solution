@@ -56,7 +56,7 @@ describe("ResetPasswordForm", () => {
 
   it("renders submit button", () => {
     render(wrap(<ResetPasswordForm />));
-    expect(screen.getByText("Save password")).toBeInTheDocument();
+    expect(screen.getByText("Save Password")).toBeInTheDocument();
   });
 
   it("renders sign in link", () => {

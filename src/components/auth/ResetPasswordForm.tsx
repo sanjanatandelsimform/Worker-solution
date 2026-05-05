@@ -153,7 +153,7 @@ export default function ResetPasswordForm() {
                   isDisabled={isSubmitting || !resetToken}
                   className="w-full"
                 >
-                  {isSubmitting ? "Resetting..." : "Save password"}
+                  {isSubmitting ? "Resetting..." : "Save Password"}
                 </Button>
               </div>
             </form>
@@ -178,7 +178,7 @@ export default function ResetPasswordForm() {
         }}
         size="xl"
         messageImg={checkmarkIcon}
-        title="Password Reset Successful"
+        title="Password reset successful"
         subtitle="Your password has been updated successfully. You can now sign in using your new password."
         button={{
           text: "Log in",

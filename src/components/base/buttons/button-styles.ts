@@ -76,6 +76,7 @@ export const styles = sortCx({
       root: [
         "bg-ws-navy-800 text-ws-base-white border-2 border-ws-gray-950/18",
         "hover:bg-ws-navy-600 hover:text-ws-base-white hover:border-ws-gray-950/18 transition-all duration-200",
+        "focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-ws-light-teal-850",
         "active:bg-ws-navy-800 active:border-ws-gray-950/18",
         "disabled:bg-ws-gray-100 disabled:border-ws-gray-200 disabled:text-ws-gray-400",
         "*:data-icon:text-ws-base-white hover:*:data-icon:text-ws-base-white transition-all duration-200",
@@ -87,6 +88,7 @@ export const styles = sortCx({
       root: [
         "bg-ws-base-white text-ws-navy-800 border border-ws-navy-800",
         "hover:bg-ws-navy-600 hover:text-ws-base-white hover:border-ws-navy-800 transition-all duration-200",
+        "focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-ws-light-teal-850 focus:text-ws-navy-800",
         "active:bg-ws-base-white active:border-ws-navy-800",
         "disabled:bg-ws-gray-100 disabled:border-ws-gray-200 disabled:text-ws-gray-400",
         "*:data-icon:text-ws-navy-900 hover:*:data-icon:text-ws-base-white transition-all duration-200",
@@ -98,6 +100,7 @@ export const styles = sortCx({
       root: [
         "bg-ws-base-white text-ws-navy-800 border border-ws-gray-200",
         "hover:bg-ws-navy-600 hover:text-ws-base-white hover:border-ws-navy-800 transition-all duration-200",
+        "focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-ws-light-teal-850",
         "active:bg-ws-base-white active:border-ws-gray-200",
         "disabled:bg-ws-gray-100 disabled:border-ws-gray-200 disabled:text-ws-gray-400",
         "*:data-icon:text-ws-navy-800 hover:*:data-icon:text-ws-navy-800 transition-all duration-200",
@@ -109,6 +112,7 @@ export const styles = sortCx({
       root: [
         "bg-transparent border-none text-ws-navy-800 underline",
         "hover:text-ws-navy-600 hover:text-ws-navy-800 hover:no-underline transition-all duration-200",
+        //"focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-ws-light-teal-850",
         "active:text-ws-navy-800",
         "disabled:text-ws-gray-400 disabled:no-underline",
         "*:data-icon:text-ws-navy-800 hover:*:data-icon:text-ws-navy-800 transition-all duration-200",
@@ -118,6 +122,7 @@ export const styles = sortCx({
       root: [
         "bg-ws-error-600 text-ws-base-white border border-ws-error-600",
         "hover:bg-ws-error-200 hover:hover:border-ws-bg-overlay/18 transition-all duration-200 hover:text-ws-error-700",
+        "focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-ws-light-teal-850",
         "active:bg-ws-error-800 active:border-ws-error-800",
         "disabled:bg-ws-gray-100 disabled:border-ws-gray-100 disabled:text-ws-gray-400",
         "*:data-icon:text-ws-base-white hover:*:data-icon:text-ws-base-white transition-all duration-200",
@@ -129,6 +134,7 @@ export const styles = sortCx({
       root: [
         "bg-ws-error-600 text-ws-base-white border border-ws-error-600",
         "hover:bg-ws-error-700 hover:border-ws-bg-overlay/18",
+        "focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-ws-light-teal-850",
         "active:bg-ws-error-800 active:border-ws-error-800",
         "disabled:bg-ws-gray-100 disabled:border-ws-gray-100 disabled:text-ws-gray-400",
         "*:data-icon:text-ws-base-white hover:*:data-icon:text-ws-base-white",
@@ -139,6 +145,7 @@ export const styles = sortCx({
       root: [
         "bg-ws-base-white text-ws-error-600 border border-ws-error-600",
         "hover:bg-ws-error-50 hover:border-ws-error-500",
+        "focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-ws-light-teal-850",
         "active:bg-ws-error-100 active:border-ws-error-600",
         "disabled:bg-ws-gray-50 disabled:border-ws-gray-300 disabled:text-ws-gray-400",
         "*:data-icon:text-ws-error-600 hover:*:data-icon:text-ws-error-700",
