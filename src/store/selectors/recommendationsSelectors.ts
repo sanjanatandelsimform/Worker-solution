@@ -5,6 +5,7 @@
  * Follows patterns from workforceSelectors.ts.
  *
  * Based on: specs/011-recommendations-api/data-model.md
+ * Updated: specs/001-proven-strategy-flags — selectProvenStrategiesFlags returns StrategyFlagStatus
  */
 
 import { createSelector } from "@reduxjs/toolkit";
@@ -14,6 +15,8 @@ import type {
   RecommendationData,
   StrategicRecommendation,
 } from "@/types/recommendationsTypes";
+import type { StrategyFlagStatus } from "@/types/strategyFlagTypes";
+import { normaliseFlag } from "@/utils/strategyFlagUtils";
 
 /** Select the entire recommendations slice state */
 export const selectRecommendationsState = (state: RootState) => state.recommendations;
@@ -54,14 +57,22 @@ export const selectRecommStrategicRecommendations = createSelector(
 );
 
 /**
- * Select the three proven strategy implementation flags.
- * Defaults all flags to false when data is not yet loaded.
+ * Select the three proven strategy implementation flags from the Recommendations API.
+ * Returns StrategyFlagStatus values; unknown/absent/boolean values default to "hidden".
+ * Note: In the Finch flow, healthcareAffordability is overridden by the Workforce API
+ * (done in RecommendationsFinchPage, not in this selector).
  */
 export const selectProvenStrategiesFlags = createSelector(
   [selectRecommendationItem],
-  (item): { nonElectiveMatch: boolean; autoEnroll: boolean; healthcareAffordability: boolean } => ({
-    nonElectiveMatch: item?.nonElectiveMatch ?? false,
-    autoEnroll: item?.autoEnroll ?? false,
-    healthcareAffordability: item?.healthcareAffordability ?? false,
+  (
+    item
+  ): {
+    nonElectiveMatch: StrategyFlagStatus;
+    autoEnroll: StrategyFlagStatus;
+    healthcareAffordability: StrategyFlagStatus;
+  } => ({
+    nonElectiveMatch: normaliseFlag(item?.nonElectiveMatch),
+    autoEnroll: normaliseFlag(item?.autoEnroll),
+    healthcareAffordability: normaliseFlag(item?.healthcareAffordability),
   })
 );
