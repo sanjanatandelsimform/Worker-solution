@@ -1,3 +1,4 @@
+import { formatPercent } from "../../../utils/formatters";
 interface InlineProgressBarProps {
   /** Percentage value (0–100) */
   percentage: number;
@@ -25,7 +26,7 @@ export default function InlineProgressBar({
           style={{ width: `${percentage}%`, minWidth: 'fit-content' }}
         >
           <span className="text-base font-normal text-ws-base-black drop-shadow-md whitespace-nowrap">
-            {percentage}%
+            {formatPercent(percentage)}
           </span>
         </div>
       ) : (
@@ -36,7 +37,7 @@ export default function InlineProgressBar({
             style={{ width: `${percentage}%` }}
           />
           <span className="text-base font-normal text-ws-base-black drop-shadow-md whitespace-nowrap pl-2 flex items-center h-full">
-            {percentage}%
+            {formatPercent(percentage)}
           </span>
         </>
       )}

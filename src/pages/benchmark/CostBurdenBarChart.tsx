@@ -1,4 +1,5 @@
 import { useEffect, useRef, useState } from "react";
+import { formatPercent } from "../../utils/formatters";
 
 interface ChartDataItem {
   label: string;
@@ -131,8 +132,8 @@ export default function CostBurdenBarChart({ data, width, height = 400 }: Canvas
       const bar2TopY = item.value2 > 0 ? baseY - bar2Height : null;
       const centerX = x + barWidth / 2;
 
-      const value1Label = `${item.value1.toFixed(2)}%`;
-      const value2Label = item.value2 > 0 ? `${item.value2.toFixed(2)}%` : null;
+      const value1Label = formatPercent(item.value1);
+      const value2Label = item.value2 > 0 ? formatPercent(item.value2) : null;
 
       // value1 → always OUTSIDE the bar, just above its top edge
       // For very small bars, ensure label stays inside chart area (above baseline)
@@ -278,7 +279,7 @@ export default function CostBurdenBarChart({ data, width, height = 400 }: Canvas
           <div className="flex items-center gap-2">
             <div className="h-3 w-3 shrink-0 rounded" style={{ backgroundColor: tooltip.color }} />
             <div className="text-sm">
-              <div className="font-medium text-ws-text-primary">{tooltip.value.toFixed(2)}%</div>
+              <div className="font-medium text-ws-text-primary">{formatPercent(tooltip.value)}</div>
               <div className="text-xs text-ws-gray-100">{tooltip.label}</div>
             </div>
           </div>

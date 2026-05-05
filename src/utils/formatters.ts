@@ -145,3 +145,9 @@ export const formatToTwoDecimalPlaces = (value: number | null | undefined): stri
   if (value === null || value === undefined) return "N/A";
   return value.toFixed(2);
 };
+
+export const formatPercent = (value: number | null | undefined): string => {
+  if (value === null || value === undefined) return "N/A";
+  const rounded = Math.round(value * 10) / 10;
+  return `${rounded % 1 === 0 ? rounded.toFixed(0) : rounded.toFixed(1)}%`;
+};
