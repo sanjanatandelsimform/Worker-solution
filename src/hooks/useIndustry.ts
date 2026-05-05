@@ -27,7 +27,11 @@ export interface UseIndustryReturn {
   isLoaded: boolean;
 }
 
-export function useIndustry(): UseIndustryReturn {
+export interface UseIndustryOptions {
+  enabled?: boolean;
+}
+
+export function useIndustry({ enabled = true }: UseIndustryOptions = {}): UseIndustryReturn {
   const dispatch = useAppDispatch();
   const data = useAppSelector(selectIndustryFullData);
   const isLoading = useAppSelector(selectIndustryLoading);
@@ -36,6 +40,8 @@ export function useIndustry(): UseIndustryReturn {
   const { isConnected } = useAssessmentStatus();
 
   useEffect(() => {
+    // Guard: skip if fetch is not yet enabled (tab not ready)
+    if (!enabled) return;
     // Guard: skip if already loaded or currently loading
     if (isLoaded || isLoading) return;
 
@@ -49,7 +55,7 @@ export function useIndustry(): UseIndustryReturn {
       // Finch assessment: only fetch once finch is connected
       dispatch(fetchIndustry());
     }
-  }, [isConnected, isLoaded, isLoading, dispatch]);
+  }, [enabled, isConnected, isLoaded, isLoading, dispatch]);
 
   return {
     data,
