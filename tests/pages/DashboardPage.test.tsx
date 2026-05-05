@@ -11,8 +11,8 @@ import { render, screen, waitFor, fireEvent } from "@testing-library/react";
 import { MemoryRouter } from "react-router-dom";
 import { Provider } from "react-redux";
 import { createTestStore } from "../test-utils";
-import * as workforceSliceModule from "@/store/slices/workforceSlice";
-import * as recommendationsSliceModule from "@/store/slices/recommendationsSlice";
+import { getWorkforce } from "@/services/api/workforceApi";
+import { getRecommendations } from "@/services/api/recommendationsApi";
 
 // ─── Hoisted mutable mock factories ──────────────────────────────────────────
 const {
@@ -958,17 +958,6 @@ describe("DashboardPage", () => {
 
   // ── Deferred fetch gating — Workforce (T003) ────────────────────────────────
   describe("deferred fetch gating — workforce", () => {
-    let fetchWorkforceSpy: ReturnType<typeof vi.spyOn>;
-
-    beforeEach(() => {
-      fetchWorkforceSpy = vi
-        .spyOn(workforceSliceModule, "fetchWorkforce")
-        .mockReturnValue({ type: "workforce/fetchWorkforce/pending" } as any);
-      vi.spyOn(recommendationsSliceModule, "fetchRecommendations").mockReturnValue({
-        type: "recommendations/fetchRecommendations/pending",
-      } as any);
-    });
-
     it("does NOT dispatch fetchWorkforce when isWorkforceTabReady=false", async () => {
       mockUseDashboardStatusPolling.mockReturnValue({
         ...DEFAULT_POLLING_STATUS,
@@ -980,7 +969,7 @@ describe("DashboardPage", () => {
       });
       renderDashboard();
       await waitFor(() => {
-        expect(fetchWorkforceSpy).not.toHaveBeenCalled();
+        expect(vi.mocked(getWorkforce)).not.toHaveBeenCalled();
       });
     });
 
@@ -995,25 +984,13 @@ describe("DashboardPage", () => {
       });
       renderDashboard();
       await waitFor(() => {
-        expect(fetchWorkforceSpy).toHaveBeenCalled();
+        expect(vi.mocked(getWorkforce)).toHaveBeenCalled();
       });
     });
   });
 
   // ── Deferred fetch gating — Recommendations (T005) ──────────────────────────
   describe("deferred fetch gating — recommendations", () => {
-    let fetchWorkforceSpy: ReturnType<typeof vi.spyOn>;
-    let fetchRecommendationsSpy: ReturnType<typeof vi.spyOn>;
-
-    beforeEach(() => {
-      fetchWorkforceSpy = vi
-        .spyOn(workforceSliceModule, "fetchWorkforce")
-        .mockReturnValue({ type: "workforce/fetchWorkforce/pending" } as any);
-      fetchRecommendationsSpy = vi
-        .spyOn(recommendationsSliceModule, "fetchRecommendations")
-        .mockReturnValue({ type: "recommendations/fetchRecommendations/pending" } as any);
-    });
-
     it("does NOT dispatch fetchRecommendations when isRecommendationTabReady=false", async () => {
       mockUseDashboardStatusPolling.mockReturnValue({
         ...DEFAULT_POLLING_STATUS,
@@ -1025,7 +1002,7 @@ describe("DashboardPage", () => {
       });
       renderDashboard();
       await waitFor(() => {
-        expect(fetchRecommendationsSpy).not.toHaveBeenCalled();
+        expect(vi.mocked(getRecommendations)).not.toHaveBeenCalled();
       });
     });
 
@@ -1040,7 +1017,7 @@ describe("DashboardPage", () => {
       });
       renderDashboard();
       await waitFor(() => {
-        expect(fetchRecommendationsSpy).toHaveBeenCalled();
+        expect(vi.mocked(getRecommendations)).toHaveBeenCalled();
       });
     });
 
@@ -1058,8 +1035,8 @@ describe("DashboardPage", () => {
       });
       renderDashboard();
       await waitFor(() => {
-        expect(fetchWorkforceSpy).not.toHaveBeenCalled();
-        expect(fetchRecommendationsSpy).not.toHaveBeenCalled();
+        expect(vi.mocked(getWorkforce)).not.toHaveBeenCalled();
+        expect(vi.mocked(getRecommendations)).not.toHaveBeenCalled();
       });
     });
   });
