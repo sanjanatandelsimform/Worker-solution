@@ -8,7 +8,7 @@ const mockUseAppSelector = vi.fn();
 const selectorValues: Record<string, unknown> = {};
 
 vi.mock("@/hooks/useIndustry", () => ({
-  useIndustry: () => mockUseIndustry(),
+  useIndustry: (options?: { enabled?: boolean }) => mockUseIndustry(options),
 }));
 
 vi.mock("@/store/hooks", () => ({
@@ -183,5 +183,17 @@ describe("BenchmarkFinchPage", () => {
     render(<BenchmarkFinchPage isStale={true} />);
     expect(screen.getByText(/up to 2 weeks/i)).toBeInTheDocument();
     expect(screen.queryByText(/24-36 hours/i)).not.toBeInTheDocument();
+  });
+
+  describe("isReady forwarded to useIndustry as enabled", () => {
+    it("calls useIndustry with enabled=false when isReady=false", () => {
+      render(<BenchmarkFinchPage isReady={false} />);
+      expect(mockUseIndustry).toHaveBeenCalledWith({ enabled: false });
+    });
+
+    it("calls useIndustry with enabled=true when isReady=true", () => {
+      render(<BenchmarkFinchPage isReady={true} />);
+      expect(mockUseIndustry).toHaveBeenCalledWith({ enabled: true });
+    });
   });
 });

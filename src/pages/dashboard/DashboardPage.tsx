@@ -190,12 +190,6 @@ export const DashboardPage = () => {
     setIsEmailVerifiedModalOpen(false);
   };
 
-  useEffect(() => {
-    if (isConnected) dispatch(fetchWorkforce());
-    if (isConnected || assessmentData?.data?.status === "completed")
-      dispatch(fetchRecommendations());
-  }, [isConnected, dispatch, assessmentData?.data?.status]);
-
   const handleVerifyEmail = async () => {
     if (emailVerify) return;
 
@@ -275,6 +269,21 @@ export const DashboardPage = () => {
     isAutomatedProvider,
     isReauthRequired,
   } = useDashboardStatusPolling({ enabled: shouldPollDashboardStatus });
+
+  useEffect(() => {
+    const workforceReady = !shouldPollDashboardStatus || isWorkforceTabReady;
+    const recommendReady = !shouldPollDashboardStatus || isRecommendationTabReady;
+    if (isConnected && workforceReady) dispatch(fetchWorkforce());
+    if ((isConnected || assessmentData?.data?.status === "completed") && recommendReady)
+      dispatch(fetchRecommendations());
+  }, [
+    isConnected,
+    dispatch,
+    assessmentData?.data?.status,
+    isWorkforceTabReady,
+    isRecommendationTabReady,
+    shouldPollDashboardStatus,
+  ]);
 
   const [isLoadingModalDismissed, setIsLoadingModalDismissed] = useState(false);
   const allTabsReady = isRecommendationTabReady && isWorkforceTabReady && isIndustryTabReady;

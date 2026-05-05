@@ -181,3 +181,28 @@ describe("useIndustry", () => {
     expect(result.current.error).toBe("Network Error");
   });
 });
+
+describe("useIndustry — enabled option", () => {
+  beforeEach(() => {
+    vi.clearAllMocks();
+    mockDispatch.mockImplementation(action => action);
+    mockStoreState = {
+      industry: { data: null, loading: false, error: null, isLoaded: false },
+      finchStatus: { connection: null, latestSyncJob: null, loading: false, error: null },
+    };
+  });
+
+  it("does NOT dispatch fetchIndustry when enabled=false", () => {
+    renderHook(() => useIndustry({ enabled: false }), { wrapper });
+    expect(mockDispatch).not.toHaveBeenCalled();
+  });
+
+  it("dispatches fetchIndustry when enabled flips from false to true", () => {
+    let enabled = false;
+    const { rerender } = renderHook(() => useIndustry({ enabled }), { wrapper });
+    expect(mockDispatch).not.toHaveBeenCalled();
+    enabled = true;
+    rerender();
+    expect(mockDispatch).toHaveBeenCalled();
+  });
+});

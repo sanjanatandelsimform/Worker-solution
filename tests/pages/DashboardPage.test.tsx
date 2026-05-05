@@ -11,6 +11,8 @@ import { render, screen, waitFor, fireEvent } from "@testing-library/react";
 import { MemoryRouter } from "react-router-dom";
 import { Provider } from "react-redux";
 import { createTestStore } from "../test-utils";
+import { getWorkforce } from "@/services/api/workforceApi";
+import { getRecommendations } from "@/services/api/recommendationsApi";
 
 // ─── Hoisted mutable mock factories ──────────────────────────────────────────
 const {
@@ -19,12 +21,14 @@ const {
   mockUseFinchStatus,
   mockConnectWithFinch,
   mockClearFinchError,
+  mockUseDashboardStatusPolling,
 } = vi.hoisted(() => ({
   mockUseAssessmentStatus: vi.fn(),
   mockUseFinchConnect: vi.fn(),
   mockUseFinchStatus: vi.fn(),
   mockConnectWithFinch: vi.fn(),
   mockClearFinchError: vi.fn(),
+  mockUseDashboardStatusPolling: vi.fn(),
 }));
 
 // ─── Hook mocks ───────────────────────────────────────────────────────────────
@@ -42,6 +46,10 @@ vi.mock("@/hooks/useFinchStatus", () => ({
 
 vi.mock("@/hooks/useModalConfig", () => ({
   useModalConfig: vi.fn(() => ({ title: "", subtitle: "", buttons: [] })),
+}));
+
+vi.mock("@/hooks/useDashboardStatusPolling", () => ({
+  useDashboardStatusPolling: () => mockUseDashboardStatusPolling(),
 }));
 
 // ─── Component mocks ──────────────────────────────────────────────────────────
@@ -228,6 +236,18 @@ const COMPLETED_ASSESSMENT = {
   assessmentType: "manual",
 };
 
+const DEFAULT_POLLING_STATUS = {
+  isRecommendationTabReady: true,
+  isWorkforceTabReady: true,
+  isIndustryTabReady: true,
+  hasExceededProcessingWindow: false,
+  isRecommendationTabStale: false,
+  isWorkforceTabStale: false,
+  isIndustryTabStale: false,
+  isAutomatedProvider: false,
+  isReauthRequired: false,
+};
+
 // ─── Render helper ────────────────────────────────────────────────────────────
 function renderDashboard(userOverrides: Partial<typeof BASE_USER> = {}) {
   const store = createTestStore({
@@ -258,6 +278,7 @@ describe("DashboardPage", () => {
     mockUseAssessmentStatus.mockReturnValue({ ...DEFAULT_ASSESSMENT_STATUS });
     mockUseFinchConnect.mockReturnValue({ ...DEFAULT_FINCH_CONNECT });
     mockUseFinchStatus.mockReturnValue({ ...DEFAULT_FINCH_STATUS });
+    mockUseDashboardStatusPolling.mockReturnValue({ ...DEFAULT_POLLING_STATUS });
   });
 
   // ── Loading States ──────────────────────────────────────────────────────────
@@ -932,6 +953,91 @@ describe("DashboardPage", () => {
       renderDashboard();
       // RecommendationsFinchPage is mocked - just verify it renders
       expect(screen.getByTestId("recommendations-finch-page")).toBeInTheDocument();
+    });
+  });
+
+  // ── Deferred fetch gating — Workforce (T003) ────────────────────────────────
+  describe("deferred fetch gating — workforce", () => {
+    it("does NOT dispatch fetchWorkforce when isWorkforceTabReady=false", async () => {
+      mockUseDashboardStatusPolling.mockReturnValue({
+        ...DEFAULT_POLLING_STATUS,
+        isWorkforceTabReady: false,
+      });
+      mockUseAssessmentStatus.mockReturnValue({
+        ...DEFAULT_ASSESSMENT_STATUS,
+        isConnected: true,
+      });
+      renderDashboard();
+      await waitFor(() => {
+        expect(vi.mocked(getWorkforce)).not.toHaveBeenCalled();
+      });
+    });
+
+    it("dispatches fetchWorkforce when isWorkforceTabReady=true and isConnected=true", async () => {
+      mockUseDashboardStatusPolling.mockReturnValue({
+        ...DEFAULT_POLLING_STATUS,
+        isWorkforceTabReady: true,
+      });
+      mockUseAssessmentStatus.mockReturnValue({
+        ...DEFAULT_ASSESSMENT_STATUS,
+        isConnected: true,
+      });
+      renderDashboard();
+      await waitFor(() => {
+        expect(vi.mocked(getWorkforce)).toHaveBeenCalled();
+      });
+    });
+  });
+
+  // ── Deferred fetch gating — Recommendations (T005) ──────────────────────────
+  describe("deferred fetch gating — recommendations", () => {
+    it("does NOT dispatch fetchRecommendations when isRecommendationTabReady=false", async () => {
+      mockUseDashboardStatusPolling.mockReturnValue({
+        ...DEFAULT_POLLING_STATUS,
+        isRecommendationTabReady: false,
+      });
+      mockUseAssessmentStatus.mockReturnValue({
+        ...DEFAULT_ASSESSMENT_STATUS,
+        assessmentData: { data: { status: "completed" }, assessmentType: "manual" },
+      });
+      renderDashboard();
+      await waitFor(() => {
+        expect(vi.mocked(getRecommendations)).not.toHaveBeenCalled();
+      });
+    });
+
+    it("dispatches fetchRecommendations when isRecommendationTabReady=true and assessment completed", async () => {
+      mockUseDashboardStatusPolling.mockReturnValue({
+        ...DEFAULT_POLLING_STATUS,
+        isRecommendationTabReady: true,
+      });
+      mockUseAssessmentStatus.mockReturnValue({
+        ...DEFAULT_ASSESSMENT_STATUS,
+        assessmentData: { data: { status: "completed" }, assessmentType: "manual" },
+      });
+      renderDashboard();
+      await waitFor(() => {
+        expect(vi.mocked(getRecommendations)).toHaveBeenCalled();
+      });
+    });
+
+    it("does not dispatch fetchWorkforce or fetchRecommendations when polling disabled and isConnected=false", async () => {
+      // shouldPollDashboardStatus = false because isConnected=false and assessmentData=null
+      mockUseDashboardStatusPolling.mockReturnValue({
+        ...DEFAULT_POLLING_STATUS,
+        isWorkforceTabReady: false,
+        isRecommendationTabReady: false,
+      });
+      mockUseAssessmentStatus.mockReturnValue({
+        ...DEFAULT_ASSESSMENT_STATUS,
+        isConnected: false,
+        assessmentData: null,
+      });
+      renderDashboard();
+      await waitFor(() => {
+        expect(vi.mocked(getWorkforce)).not.toHaveBeenCalled();
+        expect(vi.mocked(getRecommendations)).not.toHaveBeenCalled();
+      });
     });
   });
 });

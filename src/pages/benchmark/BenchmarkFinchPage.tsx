@@ -385,7 +385,7 @@ export default function BenchmarkFinchPage({
   const [selectedHousingZipState, setSelectedHousingZipState] = useState<string | null>(null);
 
   // Use industry hook for conditional API fetch and loading state
-  const { isLoading: isLoadingIndustry, error: industryError } = useIndustry();
+  const { isLoading: isLoadingIndustry, error: industryError } = useIndustry({ enabled: isReady });
   const isLoadingCards = !isReady || isLoadingIndustry;
   // Get industry data from Redux store via industry selectors
   const industryOverview = useAppSelector(selectIndustryOverviewData);
