@@ -264,9 +264,9 @@ export const useModalConfig = (
         ],
       },
       updateDeclarationTerms: {
-        size: "md",
-        title: "Terms and Conditions",
-        subtitle: "Last updated: [April 23, 2026]",
+        size: "xl",
+        title: "TERMS OF USE – LAFAYETTE SQUARE A2B",
+        subtitle: "Last updated: [April 30, 2026]",
         //messageImg: checkmarkIcon,
         backgroundPattern: "success",
         buttons: [
