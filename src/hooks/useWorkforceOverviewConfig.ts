@@ -24,14 +24,16 @@ export function useWorkforceOverviewConfig() {
       {
         id: "avg-employee-cost",
         title: "Avg. Employee Cost Per Pay Period",
-        count: workforceSection ? `$${workforceSection.avgEmployeeCost.toLocaleString()}` : "--",
+        count: workforceSection
+          ? `$${Math.round(workforceSection.avgEmployeeCost).toLocaleString()}`
+          : "--",
         getCountClass: (): string => COUNT_CLASS,
       },
       {
         id: "employer-cost",
         title: "Employer Cost Per Employee",
         count: workforceSection
-          ? `$${workforceSection.employerCostPerEmployee.toLocaleString()}/yr`
+          ? `$${Math.round(workforceSection.employerCostPerEmployee).toLocaleString()}/yr`
           : "--",
         getDescriptionText: (): string =>
           "The average amount each employee costs the company across benefits",
