@@ -844,19 +844,7 @@ describe("DashboardPage", () => {
     });
   });
 
-  // ── Event Listeners (visibility / focus) ────────────────────────────────────
-  describe("Event listener cleanup", () => {
-    it("adds and removes visibilitychange and focus listeners", () => {
-      const addSpy = vi.spyOn(document, "addEventListener");
-      const removeSpy = vi.spyOn(document, "removeEventListener");
-      const { unmount } = renderDashboard();
-      expect(addSpy).toHaveBeenCalledWith("visibilitychange", expect.any(Function));
-      unmount();
-      expect(removeSpy).toHaveBeenCalledWith("visibilitychange", expect.any(Function));
-      addSpy.mockRestore();
-      removeSpy.mockRestore();
-    });
-  });
+  // ── Event Listeners (visibility / focus removed to prevent redundant API calls) ──
 
   // ── User with missing firstName ──────────────────────────────────────────────
   describe("User firstName edge cases", () => {

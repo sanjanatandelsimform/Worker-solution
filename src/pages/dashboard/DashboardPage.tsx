@@ -138,28 +138,7 @@ export const DashboardPage = () => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [user?.id]);
 
-  // Handle visibility change and window focus to keep UI in sync
-  useEffect(() => {
-    const handleVisibilityChange = () => {
-      if (document.visibilityState === "visible") {
-        // Force refresh on visibility change
-        refetchUserData(true);
-      }
-    };
 
-    const handleWindowFocus = () => {
-      // Force refresh on window focus
-      refetchUserData(true);
-    };
-
-    document.addEventListener("visibilitychange", handleVisibilityChange);
-    window.addEventListener("focus", handleWindowFocus);
-
-    return () => {
-      document.removeEventListener("visibilitychange", handleVisibilityChange);
-      window.removeEventListener("focus", handleWindowFocus);
-    };
-  }, [refetchUserData]);
 
   // Check sessionStorage once on mount for Goals completion flag.
   useEffect(() => {
