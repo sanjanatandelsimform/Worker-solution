@@ -107,8 +107,6 @@ export const PrivacyModal = ({
         <ModalContent className="border-0 pt-0 px-2">
           <div className="w-full h-120 overflow-y-scroll pl-4 pb-6 pr-4">
             <div className="space-y-4">
-       
-
               {/* Intro paragraphs */}
               <p className={cls.body}>
                 Lafayette Square Foundation, Inc. and its subsidiaries and affiliates (also known as
@@ -785,7 +783,7 @@ export const PrivacyModal = ({
               </div>
 
               {/* Section 9 */}
-              <div className="space-y-2">
+              <div id="privacy-section-9" className="space-y-2">
                 <p className={cls.sectionHeading}>9. Security Measures</p>
                 <p className={cls.body}>
                   The security and confidentiality of the information we collect or receive is

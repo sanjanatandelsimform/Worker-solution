@@ -53,9 +53,16 @@ export default function Declarations({ className = "" }: Readonly<DeclarationsPr
       <TermsModal
         isOpen={isTermsModalOpen}
         onClose={() => setIsTermsModalOpen(false)}
-        onOpenPrivacyNotice={() => {
+        onOpenPrivacyNotice={(scrollToId?: string) => {
           setIsTermsModalOpen(false);
           setIsPrivacyModalOpen(true);
+          if (scrollToId) {
+            setTimeout(() => {
+              document
+                .getElementById(scrollToId)
+                ?.scrollIntoView({ behavior: "smooth", block: "start" });
+            }, 150);
+          }
         }}
         {...updateDeclarationTermsModal}
       />

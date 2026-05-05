@@ -40,7 +40,7 @@ export interface BaseModalWithIconProps {
   showCloseButton?: boolean;
   paddingBottom?: string;
   backgroundPattern?: "success" | "unsuccess";
-  onOpenPrivacyNotice?: () => void;
+  onOpenPrivacyNotice?: (scrollToId?: string) => void;
 }
 
 export const TermsModal = ({
@@ -240,7 +240,19 @@ export const TermsModal = ({
                   account resulting from your failure to safeguard your credentials. For a
                   description of the security measures Lafayette Square has implemented to protect
                   your information, please refer to Section 9 (Security Measures) of the Privacy
-                  Notice, available at [INSERT PRIVACY NOTICE LINK].
+                  Notice, available at{" "}
+                  <Button
+                    color="link"
+                    size="sm"
+                    onClick={() => {
+                      onClose();
+                      onOpenPrivacyNotice?.("privacy-section-9");
+                    }}
+                    className="text-xs text-ws-light-teal-850 underline p-0 m-0 h-auto"
+                  >
+                    Privacy Notice - Security Measures
+                  </Button>
+                  .
                 </p>
               </div>
 
