@@ -17,6 +17,7 @@ const {
   mockConnectWithFinch,
   mockClearFinchError,
   mockOnNavigateToWorkforce,
+  mockUseDashboardStatusPolling,
 } = vi.hoisted(() => ({
   mockUseAssessmentStatus: vi.fn(),
   mockUseFinchConnect: vi.fn(),
@@ -24,6 +25,7 @@ const {
   mockConnectWithFinch: vi.fn(),
   mockClearFinchError: vi.fn(),
   mockOnNavigateToWorkforce: vi.fn(),
+  mockUseDashboardStatusPolling: vi.fn(),
 }));
 
 vi.mock("@/hooks/useAssessmentStatus", () => ({
@@ -43,6 +45,10 @@ vi.mock("@/hooks/useModalConfig", () => ({
     primaryLabel: "Confirm",
     secondaryLabel: "Cancel",
   })),
+}));
+
+vi.mock("@/hooks/useDashboardStatusPolling", () => ({
+  useDashboardStatusPolling: () => mockUseDashboardStatusPolling(),
 }));
 
 vi.mock("@/components/common/LoadingSpinner", () => ({
@@ -219,6 +225,18 @@ const DEFAULT_FINCH_STATUS = {
   error: null,
 };
 
+const DEFAULT_POLLING_STATUS = {
+  isRecommendationTabReady: true,
+  isWorkforceTabReady: true,
+  isIndustryTabReady: true,
+  hasExceededProcessingWindow: false,
+  isRecommendationTabStale: false,
+  isWorkforceTabStale: false,
+  isIndustryTabStale: false,
+  isAutomatedProvider: false,
+  isReauthRequired: false,
+};
+
 function renderDashboard(userOverrides: Partial<typeof BASE_USER> = {}) {
   const store = createTestStore({
     auth: {
@@ -247,6 +265,7 @@ describe("DashboardPage branches", () => {
     mockUseAssessmentStatus.mockReturnValue({ ...DEFAULT_ASSESSMENT_STATUS });
     mockUseFinchConnect.mockReturnValue({ ...DEFAULT_FINCH_CONNECT });
     mockUseFinchStatus.mockReturnValue({ ...DEFAULT_FINCH_STATUS });
+    mockUseDashboardStatusPolling.mockReturnValue({ ...DEFAULT_POLLING_STATUS });
   });
 
   it("onNavigateToWorkforce callback sets activeTab to finchWorkforce", async () => {

@@ -138,28 +138,7 @@ export const DashboardPage = () => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [user?.id]);
 
-  // Handle visibility change and window focus to keep UI in sync
-  useEffect(() => {
-    const handleVisibilityChange = () => {
-      if (document.visibilityState === "visible") {
-        // Force refresh on visibility change
-        refetchUserData(true);
-      }
-    };
 
-    const handleWindowFocus = () => {
-      // Force refresh on window focus
-      refetchUserData(true);
-    };
-
-    document.addEventListener("visibilitychange", handleVisibilityChange);
-    window.addEventListener("focus", handleWindowFocus);
-
-    return () => {
-      document.removeEventListener("visibilitychange", handleVisibilityChange);
-      window.removeEventListener("focus", handleWindowFocus);
-    };
-  }, [refetchUserData]);
 
   // Check sessionStorage once on mount for Goals completion flag.
   useEffect(() => {
@@ -189,12 +168,6 @@ export const DashboardPage = () => {
   const handleCloseEmailVerifiedModal = () => {
     setIsEmailVerifiedModalOpen(false);
   };
-
-  useEffect(() => {
-    if (isConnected) dispatch(fetchWorkforce());
-    if (isConnected || assessmentData?.data?.status === "completed")
-      dispatch(fetchRecommendations());
-  }, [isConnected, dispatch, assessmentData?.data?.status]);
 
   const handleVerifyEmail = async () => {
     if (emailVerify) return;
@@ -275,6 +248,21 @@ export const DashboardPage = () => {
     isAutomatedProvider,
     isReauthRequired,
   } = useDashboardStatusPolling({ enabled: shouldPollDashboardStatus });
+
+  useEffect(() => {
+    const workforceReady = !shouldPollDashboardStatus || isWorkforceTabReady;
+    const recommendReady = !shouldPollDashboardStatus || isRecommendationTabReady;
+    if (isConnected && workforceReady) dispatch(fetchWorkforce());
+    if ((isConnected || assessmentData?.data?.status === "completed") && recommendReady)
+      dispatch(fetchRecommendations());
+  }, [
+    isConnected,
+    dispatch,
+    assessmentData?.data?.status,
+    isWorkforceTabReady,
+    isRecommendationTabReady,
+    shouldPollDashboardStatus,
+  ]);
 
   const [isLoadingModalDismissed, setIsLoadingModalDismissed] = useState(false);
   const allTabsReady = isRecommendationTabReady && isWorkforceTabReady && isIndustryTabReady;

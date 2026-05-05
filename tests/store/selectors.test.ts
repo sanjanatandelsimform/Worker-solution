@@ -580,9 +580,9 @@ describe("workforceSelectors", () => {
 // -------------------------------------------------------------------
 const mockRecommendationsData: any = {
   recommendation: {
-    nonElectiveMatch: true,
-    autoEnroll: false,
-    healthcareAffordability: true,
+    nonElectiveMatch: "green",
+    autoEnroll: "hidden",
+    healthcareAffordability: "green",
     strategicRecommendations: [
       { order: 3, title: "C" },
       { order: 1, title: "A" },
@@ -636,15 +636,15 @@ describe("recommendationsSelectors", () => {
 
   it("selectProvenStrategiesFlags returns flags", () => {
     const flags = selectProvenStrategiesFlags(loadedState);
-    expect(flags.nonElectiveMatch).toBe(true);
-    expect(flags.autoEnroll).toBe(false);
-    expect(flags.healthcareAffordability).toBe(true);
+    expect(flags.nonElectiveMatch).toBe("green");
+    expect(flags.autoEnroll).toBe("hidden");
+    expect(flags.healthcareAffordability).toBe("green");
   });
 
-  it("selectProvenStrategiesFlags defaults to false", () => {
+  it("selectProvenStrategiesFlags defaults to 'hidden'", () => {
     const flags = selectProvenStrategiesFlags(emptyState);
-    expect(flags.nonElectiveMatch).toBe(false);
-    expect(flags.autoEnroll).toBe(false);
+    expect(flags.nonElectiveMatch).toBe("hidden");
+    expect(flags.autoEnroll).toBe("hidden");
   });
 });
 
