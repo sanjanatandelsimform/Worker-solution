@@ -116,9 +116,9 @@ const defaultRecommendationsData: RecommendationsState["data"] = {
   recommendation: {
     dataStatus: "available",
     strategicRecommendations: [],
-    autoEnroll: false,
-    nonElectiveMatch: false,
-    healthcareAffordability: false,
+    autoEnroll: "yellow",
+    nonElectiveMatch: "yellow",
+    healthcareAffordability: "yellow",
   },
 };
 
@@ -421,21 +421,39 @@ describe("RecommendationsFinchPage — benefits overview data mapping", () => {
 // ─── User Story 5: Proven Strategies Count and Percent ─────────────────────
 
 describe("RecommendationsFinchPage — proven strategies count and percent", () => {
-  it("shows count 0/3 when all flags are false", () => {
-    renderPage(); // default: all flags false
+  // Set isConnected=false so all 3 flags come from the recommendations slice
+  // (when isConnected=true, healthcareAffordability comes from the workforce slice
+  // which has no value → "hidden", reducing visibleFlagsTotal to 2)
+  beforeEach(() => {
+    vi.mocked(useAssessmentStatus).mockReturnValue({
+      isFinchAssessmentIncomplete: false,
+      isFinchCompleted: true,
+      isConnected: false,
+      isFetched: true,
+      completionCount: 4,
+      isLoading: false,
+      error: null,
+      assessmentData: null,
+      sectionCompletion: { workforce: true, compensation: true, benefits: true, goals: true },
+      refetch: vi.fn(),
+    } as ReturnType<typeof useAssessmentStatus>);
+  });
+
+  it("shows count 0/3 when all flags are yellow (not implemented)", () => {
+    renderPage(); // default: all flags "yellow" (visible but not implemented)
     expect(screen.getByText(/Strategies Implemented: 0\/3/)).toBeInTheDocument();
   });
 
-  it("shows count 1/3 when nonElectiveMatch is true", () => {
+  it("shows count 1/3 when nonElectiveMatch is green", () => {
     const store = createTestStore({
       recommendations: {
         data: {
           ...defaultRecommendationsData!,
           recommendation: {
             ...defaultRecommendationsData!.recommendation,
-            nonElectiveMatch: true,
-            autoEnroll: false,
-            healthcareAffordability: false,
+            nonElectiveMatch: "green",
+            autoEnroll: "yellow",
+            healthcareAffordability: "yellow",
           },
         },
       },
@@ -444,16 +462,16 @@ describe("RecommendationsFinchPage — proven strategies count and percent", () 
     expect(screen.getByText(/Strategies Implemented: 1\/3/)).toBeInTheDocument();
   });
 
-  it("shows count 2/3 when two flags are true", () => {
+  it("shows count 2/3 when two flags are green", () => {
     const store = createTestStore({
       recommendations: {
         data: {
           ...defaultRecommendationsData!,
           recommendation: {
             ...defaultRecommendationsData!.recommendation,
-            nonElectiveMatch: true,
-            autoEnroll: true,
-            healthcareAffordability: false,
+            nonElectiveMatch: "green",
+            autoEnroll: "green",
+            healthcareAffordability: "yellow",
           },
         },
       },
@@ -462,16 +480,16 @@ describe("RecommendationsFinchPage — proven strategies count and percent", () 
     expect(screen.getByText(/Strategies Implemented: 2\/3/)).toBeInTheDocument();
   });
 
-  it("shows count 3/3 when all flags are true", () => {
+  it("shows count 3/3 when all flags are green", () => {
     const store = createTestStore({
       recommendations: {
         data: {
           ...defaultRecommendationsData!,
           recommendation: {
             ...defaultRecommendationsData!.recommendation,
-            nonElectiveMatch: true,
-            autoEnroll: true,
-            healthcareAffordability: true,
+            nonElectiveMatch: "green",
+            autoEnroll: "green",
+            healthcareAffordability: "green",
           },
         },
       },
