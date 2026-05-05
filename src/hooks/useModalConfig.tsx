@@ -265,7 +265,7 @@ export const useModalConfig = (
       },
       updateDeclarationTerms: {
         size: "xl",
-        title: "TERMS OF USE – LAFAYETTE SQUARE A2B",
+        title: "TERMS OF USE - LAFAYETTE SQUARE A2B",
         subtitle: "Last updated: [April 30, 2026]",
         //messageImg: checkmarkIcon,
         backgroundPattern: "success",
@@ -278,9 +278,9 @@ export const useModalConfig = (
         ],
       },
       updateDeclarationPrivacy: {
-        size: "md",
-        title: "Privacy Policy",
-        subtitle: "Last updated: [April 23, 2026]",
+        size: "xl",
+        title: "PRIVACY NOTICE - LAFAYETTE SQUARE A2B",
+        subtitle: "Last updated: [April 30, 2026]",
         //messageImg: checkmarkIcon,
         backgroundPattern: "success",
         buttons: [
