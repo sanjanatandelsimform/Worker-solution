@@ -302,7 +302,7 @@ export const DashboardPage = () => {
         {/* Main Content */}
         <main
           ref={mainRef}
-          className="flex flex-1 flex-col justify-between overflow-y-auto p-5 xl:p-10 xl:pl-2"
+          className="flex flex-1 flex-col justify-between overflow-y-auto p-5 xl:p-10 xl:pl-2 mt-4 xl:mt-0"
         >
           <div className="space-y-6"></div>
           <div className="w-full">

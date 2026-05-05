@@ -7,7 +7,11 @@ import {
   type SectionType,
 } from "@/services/api/assessmentApi";
 import type { ApiResponse } from "@/services/api/assessmentApi";
-import { fetchAssessmentWithCache, getCachedAssessment, invalidateAssessmentCache } from "./assessmentCache";
+import {
+  fetchAssessmentWithCache,
+  getCachedAssessment,
+  invalidateAssessmentCache,
+} from "./assessmentCache";
 import questionData from "@/data/assessment/questionData.json";
 import type { Question } from "@/types/questionTypes";
 
@@ -136,56 +140,59 @@ export const useAssessment = ({ section }: UseAssessmentOptions): UseAssessmentR
   const lastFetchedSectionRef = useRef<string | null>(null);
 
   // Load progress from API on mount
-  const loadProgress = useCallback(async (forceRefresh = false) => {
-    // Prevent duplicate calls for the same section (unless forced)
-    if (!forceRefresh && fetchInProgressRef.current) {
-      return;
-    }
-
-    // Check shared cache first (without forcing refresh)
-    if (!forceRefresh) {
-      const cached = getCachedAssessment();
-      if (cached?.data?.sections?.[section]) {
-        const sectionAnswers = cached.data.sections[section] as Record<string, unknown>;
-        const normalizedAnswers = normalizeSectionAnswers(section, sectionAnswers);
-        setAnswers(normalizedAnswers);
-        setIsCompleted(true);
-        lastFetchedSectionRef.current = section;
+  const loadProgress = useCallback(
+    async (forceRefresh = false) => {
+      // Prevent duplicate calls for the same section (unless forced)
+      if (!forceRefresh && fetchInProgressRef.current) {
         return;
       }
-    }
 
-    if (!forceRefresh && lastFetchedSectionRef.current === section) {
-      return;
-    }
-
-    fetchInProgressRef.current = true;
-    setIsLoadingGet(true);
-    setApiError(null);
-    try {
-      const response = await fetchAssessmentWithCache(forceRefresh);
-      lastFetchedSectionRef.current = section;
-      if (response.success && response.data?.data?.sections?.[section]) {
-        const sectionAnswers = response.data.data?.sections[section] as Record<string, unknown>;
-        const normalizedAnswers = normalizeSectionAnswers(section, sectionAnswers);
-        setAnswers(normalizedAnswers);
-        // Mark as completed if section exists in API response
-        setIsCompleted(true);
-      } else {
-        // No data for this section yet - leave empty
-        setAnswers({});
-        setIsCompleted(false);
+      // Check shared cache first (without forcing refresh)
+      if (!forceRefresh) {
+        const cached = getCachedAssessment();
+        if (cached?.data?.sections?.[section]) {
+          const sectionAnswers = cached.data.sections[section] as Record<string, unknown>;
+          const normalizedAnswers = normalizeSectionAnswers(section, sectionAnswers);
+          setAnswers(normalizedAnswers);
+          setIsCompleted(true);
+          lastFetchedSectionRef.current = section;
+          return;
+        }
       }
-    } catch (error) {
-      setApiError({
-        type: "get",
-        message: error instanceof Error ? error.message : "Failed to load assessment data",
-      });
-    } finally {
-      setIsLoadingGet(false);
-      fetchInProgressRef.current = false;
-    }
-  }, [section]);
+
+      if (!forceRefresh && lastFetchedSectionRef.current === section) {
+        return;
+      }
+
+      fetchInProgressRef.current = true;
+      setIsLoadingGet(true);
+      setApiError(null);
+      try {
+        const response = await fetchAssessmentWithCache(forceRefresh);
+        lastFetchedSectionRef.current = section;
+        if (response.success && response.data?.data?.sections?.[section]) {
+          const sectionAnswers = response.data.data?.sections[section] as Record<string, unknown>;
+          const normalizedAnswers = normalizeSectionAnswers(section, sectionAnswers);
+          setAnswers(normalizedAnswers);
+          // Mark as completed if section exists in API response
+          setIsCompleted(true);
+        } else {
+          // No data for this section yet - leave empty
+          setAnswers({});
+          setIsCompleted(false);
+        }
+      } catch (error) {
+        setApiError({
+          type: "get",
+          message: error instanceof Error ? error.message : "Failed to load assessment data",
+        });
+      } finally {
+        setIsLoadingGet(false);
+        fetchInProgressRef.current = false;
+      }
+    },
+    [section]
+  );
 
   // Retry function for GET failures (force refresh)
   const retryGetAssessment = useCallback(async () => {

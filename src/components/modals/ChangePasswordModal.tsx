@@ -33,7 +33,10 @@ function parseAttemptsRemainingFromError(error: string): number | undefined {
     const idx = error.indexOf(marker);
     if (idx === -1) continue;
     let i = idx - 1;
-    while (i >= 0 && (error[i] === " " || error[i] === "\t" || error[i] === "\n" || error[i] === "\r")) {
+    while (
+      i >= 0 &&
+      (error[i] === " " || error[i] === "\t" || error[i] === "\n" || error[i] === "\r")
+    ) {
       i--;
     }
     const digitEnd = i + 1;

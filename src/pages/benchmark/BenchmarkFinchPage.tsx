@@ -1004,7 +1004,7 @@ export default function BenchmarkFinchPage({
                 {dynamicSalaryCardsConfig.map(card => (
                   <StaticCard
                     key={card.id}
-                    classess="border-ws-border-secondary"
+                    classess="border-ws-border-secondary flex flex-col justify-between"
                     title={card.title}
                     titleClass="text-ws-text-tertiary text-sm"
                     countIcon={card.icon}

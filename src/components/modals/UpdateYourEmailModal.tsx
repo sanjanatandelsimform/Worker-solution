@@ -251,7 +251,7 @@ export const UpdateYourEmailModal = ({
                 size="xl"
                 className="w-full"
                 // isDisabled={profileLoading || !newEmail.trim() || !!newEmailError}
-                isDisabled={profileLoading  || !newEmail.trim() || !!newEmailError}
+                isDisabled={profileLoading || !newEmail.trim() || !!newEmailError}
               >
                 {profileLoading ? "Updating..." : "Update information"}
               </Button>
