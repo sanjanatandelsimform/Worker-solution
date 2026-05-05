@@ -50,7 +50,7 @@ const SalaryRangeChart: React.FC<SalaryRangeChartProps> = ({ data }) => {
 
       // Compute maxValue dynamically from non-null data fields, rounded up to nearest 100
       const allValues = data.flatMap(item =>
-        [item.min, item.boxStart, item.boxEnd, item.max].filter((v): v is number => v != null)
+        [item.min, item.boxStart, item.boxEnd, item.max].filter((v): v is number => v !== null)
       );
       const dataMax = allValues.length > 0 ? Math.max(...allValues) : 0;
       // Round up to nearest 100, then ensure at least a 70-unit gap above the data max
