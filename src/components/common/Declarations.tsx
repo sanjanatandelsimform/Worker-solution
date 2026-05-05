@@ -2,6 +2,7 @@ import { useState } from "react";
 import { Button } from "../base/buttons/button";
 import TermsModal from "../modals/TermsModal";
 import { useModalConfig } from "@/hooks/useModalConfig";
+import PrivacyModal from "../modals/PrivacyModal";
 
 interface DeclarationsProps {
   readonly className?: string;
@@ -10,6 +11,16 @@ interface DeclarationsProps {
 export default function Declarations({ className = "" }: Readonly<DeclarationsProps>) {
   const [isTermsModalOpen, setIsTermsModalOpen] = useState(false);
   const [isPrivacyModalOpen, setIsPrivacyModalOpen] = useState(false);
+
+  const handlePrivacyNotice = (scrollToId?: string) => {
+    setIsTermsModalOpen(false);
+    setIsPrivacyModalOpen(true);
+    if (scrollToId) {
+      setTimeout(() => {
+        document.getElementById(scrollToId)?.scrollIntoView({ behavior: "smooth", block: "start" });
+      }, 150);
+    }
+  };
 
   const updateDeclarationTermsModal = useModalConfig("updateDeclarationTerms", {
     isOpen: isTermsModalOpen,
@@ -52,9 +63,10 @@ export default function Declarations({ className = "" }: Readonly<DeclarationsPr
       <TermsModal
         isOpen={isTermsModalOpen}
         onClose={() => setIsTermsModalOpen(false)}
+        onOpenPrivacyNotice={handlePrivacyNotice}
         {...updateDeclarationTermsModal}
       />
-      <TermsModal
+      <PrivacyModal
         isOpen={isPrivacyModalOpen}
         onClose={() => setIsPrivacyModalOpen(false)}
         {...updateDeclarationPrivacyModal}

@@ -557,6 +557,10 @@ vi.mock("@/components/base/buttons/button", () => ({
 vi.mock("@/components/modals/TermsModal", () => ({
   default: ({ isOpen }: any) => (isOpen ? <div data-testid="terms-modal">Terms Modal</div> : null),
 }));
+vi.mock("@/components/modals/PrivacyModal", () => ({
+  default: ({ isOpen }: any) =>
+    isOpen ? <div data-testid="privacy-modal">Privacy Modal</div> : null,
+}));
 
 describe("Declarations", () => {
   it("renders declarations text", () => {
@@ -575,9 +579,7 @@ describe("Declarations", () => {
     render(<Declarations />);
     const btn = screen.getByText("Privacy Notice");
     fireEvent.click(btn);
-    // There are 2 TermsModal instances (one for terms, one for privacy)
-    const modals = screen.getAllByTestId("terms-modal");
-    expect(modals.length).toBeGreaterThan(0);
+    expect(screen.getByTestId("privacy-modal")).toBeTruthy();
   });
 });
 

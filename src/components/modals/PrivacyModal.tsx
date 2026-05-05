@@ -9,6 +9,7 @@ import {
 import { Button } from "@/components/base/buttons/button";
 import { X } from "@untitledui/icons";
 import featuredIcon from "@/assets/featured-icon.svg";
+import PrivacyModalContent from "./PrivacyModalContent";
 
 export interface BaseModalWithIconButton {
   text: string;
@@ -97,58 +98,7 @@ export const PrivacyModal = ({
         </ModalHeader>
 
         <ModalContent className="border-0 pt-0 px-2">
-          <div className="w-full h-120 overflow-y-scroll pl-4 pb-6">
-            <div className="prose max-w-none">
-              <p className="text-sm text-ws-base-black">1. Acceptance of Terms</p>
-              <p className="text-sm text-ws-base-black">
-                Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor
-                incididunt ut labore et dolore magna aliqua. By accessing or using this service, you
-                agree to be bound by these Terms and Conditions.
-              </p>
-              <p className="text-sm text-ws-base-black">2. Acceptance of Terms</p>
-              <p className="text-sm text-ws-base-black">
-                Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor
-                incididunt ut labore et dolore magna aliqua. By accessing or using this service, you
-                agree to be bound by these Terms and Conditions.
-              </p>
-              <p className="text-sm text-ws-base-black">3. Acceptance of Terms</p>
-              <p className="text-sm text-ws-base-black">
-                Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor
-                incididunt ut labore et dolore magna aliqua. By accessing or using this service, you
-                agree to be bound by these Terms and Conditions.
-              </p>
-              <p className="text-sm text-ws-base-black">4. Acceptance of Terms</p>
-              <p className="text-sm text-ws-base-black">
-                Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor
-                incididunt ut labore et dolore magna aliqua. By accessing or using this service, you
-                agree to be bound by these Terms and Conditions.
-              </p>
-              <p className="text-sm text-ws-base-black">5. Acceptance of Terms</p>
-              <p className="text-sm text-ws-base-black">
-                Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor
-                incididunt ut labore et dolore magna aliqua. By accessing or using this service, you
-                agree to be bound by these Terms and Conditions.
-              </p>
-              <p className="text-sm text-ws-base-black">6. Acceptance of Terms</p>
-              <p className="text-sm text-ws-base-black">
-                Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor
-                incididunt ut labore et dolore magna aliqua. By accessing or using this service, you
-                agree to be bound by these Terms and Conditions.
-              </p>
-              <p className="text-sm text-ws-base-black">7. Acceptance of Terms</p>
-              <p className="text-sm text-ws-base-black">
-                Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor
-                incididunt ut labore et dolore magna aliqua. By accessing or using this service, you
-                agree to be bound by these Terms and Conditions.
-              </p>
-              <p className="text-sm text-ws-base-black">8. Acceptance of Terms</p>
-              <p className="text-sm text-ws-base-black">
-                Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor
-                incididunt ut labore et dolore magna aliqua. By accessing or using this service, you
-                agree to be bound by these Terms and Conditions.
-              </p>
-            </div>
-          </div>
+          <PrivacyModalContent />
         </ModalContent>
 
         {/* Modal Footer with Buttons */}
