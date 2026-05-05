@@ -3,6 +3,7 @@
 Auto-generated from all feature plans. Last updated: 2026-04-07
 
 ## Active Technologies
+
 - TypeScript 5.x + React 19 + React Router v7, Redux Toolkit (createAsyncThunk, createSlice), Axios (via `apiClient`), Tailwind CSS v4 (009-industry-status-api)
 - Redux store (session-scoped, not persisted to localStorage) (009-industry-status-api)
 
@@ -48,6 +49,7 @@ npm test && npm run lint
 TypeScript with React 19+, strict mode enabled: Follow standard conventions
 
 ## Recent Changes
+
 - 009-industry-status-api: Added TypeScript 5.x + React 19 + React Router v7, Redux Toolkit (createAsyncThunk, createSlice), Axios (via `apiClient`), Tailwind CSS v4
 
 - 007-replace-sonner-toast (2026-04-07): Removed sonner toast library from Finch integration. useFinchConnect hook now exposes `error: string | null` and `clearError: () => void` instead of calling toast.error(). DashboardPage renders `<ErrorMessage />` co-located inside each Finch connect section. App.tsx Toaster mount removed. src/components/ui/sonner.tsx deleted. pnpm remove sonner. Tests updated to assert result.current.error instead of mockToastError.
@@ -57,37 +59,45 @@ TypeScript with React 19+, strict mode enabled: Follow standard conventions
 
 - 012-participation-dynamic-items (2026-04-16): `participation.benefits`, `participation.retirement`, `participation.insurance` in `WorkforceResponse` changed from fixed-key objects to `EnrollmentItem[]` arrays (`{ name: string; enrollment: string }`). Hook `useWorkforceParticipationConfig` now maps arrays instead of accessing property keys. Static mock data in `workforceSlice.ts` updated to array format. Test fixtures in 3 test files updated. No changes to selectors, `WorkforceParticipation.tsx`, or `WorkforcePage.tsx`.
 
-## Active Feature: 031-finch-reauth-status (2026-05-01)
+## Active Feature: 001-proven-strategy-flags (2026-05-05)
 
 <!-- specify:agent:start -->
 
-**Branch**: `031-finch-reauth-status` | **Spec**: `specs/031-finch-reauth-status/spec.md` | **Plan**: `specs/031-finch-reauth-status/plan.md`
+**Branch**: `001-proven-strategy-flags` | **Spec**: `specs/001-proven-strategy-flags/spec.md` | **Plan**: `specs/001-proven-strategy-flags/plan.md`
 
 ### What this feature does
 
-1. Extends `DashboardStatusResponse` with `finchConnectionStatus?: "connected" | "reauth_required" | "disconnected" | "pending"`.
-2. Exposes `isReauthRequired: boolean` from `useDashboardStatusPolling` — `true` only when `finchConnectionStatus === "reauth_required"`.
-3. Gates the "Reconnect to Finch" `DashboardCard` in `DashboardPage` on `isReauthRequired` (was always rendered).
-4. Adds `reconnectWithFinch()` to `useFinchConnect` — same as `connectWithFinch` but skips the `/additional-questions` redirect post-success (uses an internal `isReconnectRef` ref).
+1. Introduces `StrategyFlagStatus = "green" | "yellow" | "hidden"` type (new file `src/types/strategyFlagTypes.ts`).
+2. Changes `RecommendationData.autoEnroll`, `nonElectiveMatch`, `healthcareAffordability` from `boolean` → `StrategyFlagStatus`.
+3. Adds `healthcareAffordability?: StrategyFlagStatus` to `WorkforceEnvelope` — Finch flow only field from backend.
+4. In Finch flow (`isConnected === true`): `autoEnroll` + `nonElectiveMatch` from Recommendations API; `healthcareAffordability` from Workforce API. In manual flow: all three from Recommendations API.
+5. Card rendering: `"green"` → green card + LikeIcon (green); `"yellow"` → yellow card + UserGroupIcon (yellow); `"hidden"` → card not rendered at all.
+6. `provenStrategiesCount` = count of `"green"` flags; denominator (`visibleFlagsTotal`) = count of non-`"hidden"` flags (not hardcoded 3).
+
+### Files to create
+
+- `src/types/strategyFlagTypes.ts` — `StrategyFlagStatus` type
+- `src/utils/strategyFlagUtils.ts` — `normaliseFlag(raw: unknown): StrategyFlagStatus` helper
 
 ### Files to modify
 
-- `src/types/dashboardStatusTypes.ts` — add `FinchConnectionStatus` type, extend `DashboardStatusResponse`, add `isReauthRequired` to return interface; add `reconnectWithFinch` to `UseFinchConnectReturn`
-- `src/hooks/useDashboardStatusPolling.ts` — add `isReauthRequired` useMemo + return
-- `src/hooks/useFinchConnect.ts` — add `isReconnectRef`, update `onSuccess` to check ref, add `reconnectWithFinch`
-- `src/pages/dashboard/DashboardPage.tsx` — destructure `isReauthRequired` + `reconnectWithFinch`, gate the Reconnect card
-
-### Test files to update
-
-- `tests/hooks/useDashboardStatusPolling.test.ts` — new describe block for `isReauthRequired` (6 cases)
-- `tests/hooks/useFinchConnect.test.tsx` — new describe block for `reconnectWithFinch` (4 cases)
+- `src/types/recommendationsTypes.ts` — `boolean` → `StrategyFlagStatus` on three flag fields
+- `src/types/workforceTypes.ts` — add `healthcareAffordability?: StrategyFlagStatus` to `WorkforceEnvelope`
+- `src/store/selectors/recommendationsSelectors.ts` — update `selectProvenStrategiesFlags` to return `StrategyFlagStatus` values + normalise
+- `src/store/selectors/workforceSelectors.ts` — add `selectWorkforceHealthcareAffordabilityFlag`
+- `src/pages/recommendations/RecommendationsFinchPage.tsx` — destructure `isConnected`, compose flags per flow, update count computation, pass `visibleFlagsTotal`
+- `src/pages/recommendations/CoreBenefitsEnhancement.tsx` — update `ProvenStrategyFlags` type, tri-state card rendering, `visibleFlagsTotal` prop
+- `tests/pages/CoreBenefitsEnhancement.test.tsx` — update fixtures; add hidden-card and colour tests
+- `tests/store/selectors/recommendationsSelectors.test.ts` — assert string values; add normalisation test
+- `tests/utils/strategyFlagUtils.test.ts` — NEW — unit tests for `normaliseFlag`
 
 ### Key facts
 
-- `isReauthRequired` defaults to `false` when `finchConnectionStatus` is absent or any other value
-- `isReconnectRef` is reset to `false` in both the success and error paths of `onSuccess` to prevent stale state across multiple calls
-- `connectWithFinch` behavior is UNCHANGED — still navigates to `/additional-questions`
-- See full implementation guide: `specs/031-finch-reauth-status/quickstart.md`
+- `normaliseFlag` is the single coercion point: unknown/absent/boolean → `"hidden"`
+- `ProvenStrategyFlags` interface is exported from `CoreBenefitsEnhancement.tsx`
+- `isConnected` is already returned by the existing `useAssessmentStatus()` call in `RecommendationsFinchPage` — no new hook needed
+- `visibleFlagsTotal > 0` guard prevents division-by-zero when all flags are `"hidden"`
+- See full implementation guide: `specs/001-proven-strategy-flags/quickstart.md`
 
 <!-- specify:agent:end -->
 <!-- MANUAL ADDITIONS END -->

@@ -4,7 +4,9 @@
  * TypeScript interfaces for the GET /dashboard/recommendation API response.
  * Based on: specs/011-recommendations-api/data-model.md
  * Contract: specs/014-fix-workforce-rec-api/contracts/recommendation-get.md
+ * Updated: specs/001-proven-strategy-flags — flag fields changed from boolean to StrategyFlagStatus
  */
+import type { StrategyFlagStatus } from "./strategyFlagTypes";
 
 /**
  * A single strategic recommendation returned by the API.
@@ -39,11 +41,11 @@ export interface RecommendationData {
   /** Sorted list of tailored benefit solutions */
   strategicRecommendations: StrategicRecommendation[];
   /** Whether the employer has auto-enrollment enabled */
-  autoEnroll: boolean;
+  autoEnroll: StrategyFlagStatus;
   /** Whether the employer uses non-elective match contributions */
-  nonElectiveMatch: boolean;
+  nonElectiveMatch: StrategyFlagStatus;
   /** Whether the employer has healthcare affordability measures in place */
-  healthcareAffordability: boolean;
+  healthcareAffordability: StrategyFlagStatus;
   /** Data availability status, e.g. "available" | "pending" */
   dataStatus: string;
 }

@@ -14,6 +14,8 @@ import type {
   Demographics,
   Compensation,
 } from "@/types/workforceTypes";
+import type { StrategyFlagStatus } from "@/types/strategyFlagTypes";
+import { normaliseFlag } from "@/utils/strategyFlagUtils";
 
 /** Select the entire workforce slice state */
 export const selectWorkforceState = (state: RootState) => state.workforce;
@@ -62,3 +64,11 @@ export const selectDemographicsSection = (state: RootState): Demographics | null
  */
 export const selectCompensationSection = (state: RootState): Compensation | null =>
   state.workforce.data?.workforce.compensation ?? null;
+
+/**
+ * Select the healthcare affordability strategy flag from the Workforce API.
+ * Used in the Finch flow to override the Recommendations API value.
+ * Defaults to "hidden" when data is absent or unrecognised.
+ */
+export const selectWorkforceHealthcareAffordabilityFlag = (state: RootState): StrategyFlagStatus =>
+  normaliseFlag(state.workforce.data?.workforce.healthcareAffordability);
