@@ -136,11 +136,12 @@ describe("SalaryRangeChart", () => {
 
     it("renders dollar-sign grid labels via fillText", () => {
       render(<SalaryRangeChart data={sampleData} />);
-      // Grid draws $0, $100, $200, $300, $400, $500; bars also add dollar labels
+      // sampleData max=160 → maxValue=300 (gap 40<70 → bump to next 100)
+      // grid draws $100, $200, $300; bars add 6 more dollar labels (boxEnd + boxStart per item)
       const dollarLabelCalls = mockCtx.fillText.mock.calls.filter(([text]) =>
         /^\$\d+$/.test(String(text))
       );
-      // At minimum the 6 grid labels must be present
+      // 3 grid labels + 6 bar labels = 9 total; at least 6 must be present
       expect(dollarLabelCalls.length).toBeGreaterThanOrEqual(6);
     });
 
@@ -225,6 +226,143 @@ describe("SalaryRangeChart", () => {
 
       rerender(<SalaryRangeChart data={sampleData} />);
       expect(mockCtx.fillRect).toHaveBeenCalledTimes(sampleData.length);
+    });
+  });
+
+  // ── Dynamic scale (US1) ────────────────────────────────────────────────────
+  describe("dynamic scale", () => {
+    it("uses maxValue = 700 when data max is 545 (gap 55 < 70 → bumps to next 100)", () => {
+      const data = [{ label: "A", boxStart: 400, boxEnd: 500, min: 300, max: 545 }];
+      render(<SalaryRangeChart data={data} />);
+      const allTexts = mockCtx.fillText.mock.calls.map(([text]) => String(text));
+      expect(allTexts).toContain("$700");
+      expect(allTexts).not.toContain("$800");
+    });
+
+    it("draws exactly 7 grid lines when data max is 545 (maxValue = 700)", () => {
+      const data = [{ label: "A", boxStart: 400, boxEnd: 500, min: 300, max: 545 }];
+      render(<SalaryRangeChart data={data} />);
+      // Grid fillText is called with x === 30; bar labels use a computed x
+      const gridLabels = mockCtx.fillText.mock.calls.filter(([, x]) => x === 30);
+      expect(gridLabels).toHaveLength(7);
+    });
+
+    it("uses maxValue = 800 when data max is exactly 700 (gap 0 < 70 → bumps to next 100)", () => {
+      const data = [{ label: "A", boxStart: 400, boxEnd: 600, min: 300, max: 700 }];
+      render(<SalaryRangeChart data={data} />);
+      const allTexts = mockCtx.fillText.mock.calls.map(([text]) => String(text));
+      expect(allTexts).toContain("$800");
+      expect(allTexts).not.toContain("$900");
+      const gridLabels = mockCtx.fillText.mock.calls.filter(([, x]) => x === 30);
+      expect(gridLabels).toHaveLength(8);
+    });
+
+    it("falls back to maxValue = 100 and 1 grid line when data is empty", () => {
+      render(<SalaryRangeChart data={[]} />);
+      const allTexts = mockCtx.fillText.mock.calls.map(([text]) => String(text));
+      expect(allTexts).toContain("$100");
+      const gridLabels = mockCtx.fillText.mock.calls.filter(([, x]) => x === 30);
+      expect(gridLabels).toHaveLength(1);
+    });
+
+    it("bumps to next 100 when data max is an exact multiple (gap 0 < 70)", () => {
+      // dataMax=600 → rounded=600, gap=0 < 70 → maxValue=700
+      const data = [{ label: "A", boxStart: 400, boxEnd: 550, min: 300, max: 600 }];
+      render(<SalaryRangeChart data={data} />);
+      const allTexts = mockCtx.fillText.mock.calls.map(([text]) => String(text));
+      expect(allTexts).toContain("$700");
+      expect(allTexts).not.toContain("$800");
+      const gridLabels = mockCtx.fillText.mock.calls.filter(([, x]) => x === 30);
+      expect(gridLabels).toHaveLength(7);
+    });
+
+    it("dataMax = 620 → rounded = 700 → maxValue = 850 → 8 grid lines", () => {
+      // rounded + 150 = 850, rowCount = 8.5 → 8 grid lines ($100–$800)
+      const data = [{ label: "A", boxStart: 400, boxEnd: 580, min: 300, max: 620 }];
+      render(<SalaryRangeChart data={data} />);
+      const allTexts = mockCtx.fillText.mock.calls.map(([text]) => String(text));
+      expect(allTexts).toContain("$800");
+      expect(allTexts).not.toContain("$900");
+      const gridLabels = mockCtx.fillText.mock.calls.filter(([, x]) => x === 30);
+      expect(gridLabels).toHaveLength(8);
+    });
+
+    it("bumps when gap is 69 (just below threshold): dataMax = 631 → maxValue = 800", () => {
+      // dataMax=631 → rounded=700, gap=69 < 70 → maxValue=800
+      const data = [{ label: "A", boxStart: 400, boxEnd: 580, min: 300, max: 631 }];
+      render(<SalaryRangeChart data={data} />);
+      const allTexts = mockCtx.fillText.mock.calls.map(([text]) => String(text));
+      expect(allTexts).toContain("$800");
+      expect(allTexts).not.toContain("$900");
+      const gridLabels = mockCtx.fillText.mock.calls.filter(([, x]) => x === 30);
+      expect(gridLabels).toHaveLength(8);
+    });
+
+    it("key example: dataMax = 660 → maxValue = 800 (gap 40 < 70)", () => {
+      const data = [{ label: "A", boxStart: 400, boxEnd: 600, min: 300, max: 660 }];
+      render(<SalaryRangeChart data={data} />);
+      const allTexts = mockCtx.fillText.mock.calls.map(([text]) => String(text));
+      expect(allTexts).toContain("$800");
+      expect(allTexts).not.toContain("$900");
+      const gridLabels = mockCtx.fillText.mock.calls.filter(([, x]) => x === 30);
+      expect(gridLabels).toHaveLength(8);
+    });
+
+    it("handles data max > 700 correctly (e.g., 1050 → maxValue 1200, gap 50 < 70)", () => {
+      // dataMax=1050 → rounded=1100, gap=50 < 70 → maxValue=1200
+      const data = [{ label: "A", boxStart: 800, boxEnd: 1000, min: 700, max: 1050 }];
+      render(<SalaryRangeChart data={data} />);
+      const allTexts = mockCtx.fillText.mock.calls.map(([text]) => String(text));
+      expect(allTexts).toContain("$1200");
+      const gridLabels = mockCtx.fillText.mock.calls.filter(([, x]) => x === 30);
+      expect(gridLabels).toHaveLength(12);
+    });
+  });
+
+  // ── Null data suppression (US2) ────────────────────────────────────────────
+  describe("null data suppression", () => {
+    it("does not call fillRect for an all-null item", () => {
+      const data = [{ label: "X", boxStart: null, boxEnd: null, max: null, min: null }];
+      render(<SalaryRangeChart data={data} />);
+      expect(mockCtx.fillRect).not.toHaveBeenCalled();
+    });
+
+    it("does not call strokeRect for an all-null item", () => {
+      const data = [{ label: "X", boxStart: null, boxEnd: null, max: null, min: null }];
+      render(<SalaryRangeChart data={data} />);
+      expect(mockCtx.strokeRect).not.toHaveBeenCalled();
+    });
+
+    it("does not render any text containing 'null' for an all-null item", () => {
+      const data = [{ label: "X", boxStart: null, boxEnd: null, max: null, min: null }];
+      render(<SalaryRangeChart data={data} />);
+      const allTexts = mockCtx.fillText.mock.calls.map(([text]) => String(text));
+      allTexts.forEach(text => {
+        expect(text).not.toContain("null");
+      });
+    });
+
+    it("draws only valid items in a mixed dataset (1 null + 2 valid)", () => {
+      const data = [
+        { label: "Null", boxStart: null, boxEnd: null, max: null, min: null },
+        { label: "IT", boxStart: 80, boxEnd: 120, max: 150, min: 60 },
+        { label: "HR", boxStart: 70, boxEnd: 110, max: 140, min: 50 },
+      ];
+      render(<SalaryRangeChart data={data} />);
+      expect(mockCtx.fillRect).toHaveBeenCalledTimes(2);
+      expect(mockCtx.strokeRect).toHaveBeenCalledTimes(2);
+    });
+
+    it("suppresses an item with any single null field (partial null)", () => {
+      const data = [{ label: "Partial", boxStart: 100, boxEnd: 200, max: null, min: 50 }];
+      render(<SalaryRangeChart data={data} />);
+      expect(mockCtx.fillRect).not.toHaveBeenCalled();
+    });
+
+    it("renders all items normally when dataset has no null values", () => {
+      render(<SalaryRangeChart data={sampleData} />);
+      expect(mockCtx.fillRect).toHaveBeenCalledTimes(sampleData.length);
+      expect(mockCtx.strokeRect).toHaveBeenCalledTimes(sampleData.length);
     });
   });
 });
