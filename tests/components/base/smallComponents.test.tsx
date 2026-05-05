@@ -78,6 +78,9 @@ vi.mock("@/components/routes/PublicRoute", () => ({
 vi.mock("@/components/routes/UnrestrictedRoute", () => ({
   UnrestrictedRoute: ({ children }: any) => <>{children}</>,
 }));
+vi.mock("@/components/routes/AuthGuard", () => ({
+  AuthGuard: ({ children }: any) => <>{children}</>,
+}));
 vi.mock("@/hooks/useModalConfig", () => ({
   useModalConfig: () => ({}),
 }));
