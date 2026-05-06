@@ -24,7 +24,7 @@ export const DashboardSidebar = ({ activeUrl = "/" }: DashboardSidebarProps) => 
   const [isLogoutModalOpen, setIsLogoutModalOpen] = useState(false);
   const [isLogoutButtonDisabled, setIsLogoutButtonDisabled] = useState(false);
   const [logoutError, setLogoutError] = useState<string | null>(null);
-  const [isCollapsed] = useState(true); // Default collapsed on tablet
+  const isCollapsed = true; // Default collapsed on tablet
 
   const { user, tokens } = useAppSelector(state => state.auth);
 
