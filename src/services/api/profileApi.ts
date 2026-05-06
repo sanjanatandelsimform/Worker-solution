@@ -53,47 +53,46 @@ const getAccessToken = (): string | null => {
   }
 };
 
-// Auto-retry logic for network failures
-const retryRequest = async <T>(requestFn: () => Promise<T>, maxRetries = 1): Promise<T> => {
+// Exponential backoff helper
+const delay = (ms: number) => new Promise((resolve) => setTimeout(resolve, ms));
+
+// Simple circuit breaker state
+let consecutiveFailures = 0;
+const MAX_CONSECUTIVE_FAILURES = 5;
+const CIRCUIT_RESET_MS = 30_000; // 30 seconds
+let circuitOpenUntil = 0;
+
+const retryRequest = async <T>(
+  requestFn: () => Promise<T>,
+  maxRetries = 1,
+  attempt = 0
+): Promise<T> => {
+  // Circuit breaker: reject immediately if circuit is open
+  if (consecutiveFailures >= MAX_CONSECUTIVE_FAILURES && Date.now() < circuitOpenUntil) {
+    throw new Error("Service temporarily unavailable. Please try again later.");
+  }
+
   try {
-    return await requestFn();
+    const result = await requestFn();
+    consecutiveFailures = 0;
+    return result;
   } catch (error) {
+    consecutiveFailures++;
+    if (consecutiveFailures >= MAX_CONSECUTIVE_FAILURES) {
+      circuitOpenUntil = Date.now() + CIRCUIT_RESET_MS;
+    }
+
     if (maxRetries > 0 && axios.isAxiosError(error)) {
       // Retry on network errors or timeouts
       if (error.code === "ECONNABORTED" || error.code === "ERR_NETWORK" || !error.response) {
-        return retryRequest(requestFn, maxRetries - 1);
+        const backoffMs = Math.min(1000 * 2 ** attempt, 8000);
+        await delay(backoffMs);
+        return retryRequest(requestFn, maxRetries - 1, attempt + 1);
       }
     }
     throw error;
   }
 };
-
-// /**
-//  * Get user profile
-//  * @param userId - The unique identifier of the user
-//  * @returns Promise resolving to User data
-//  */
-// export const getProfile = async (userId: string): Promise<User> => {
-//   const accessToken = getAccessToken();
-//   if (!accessToken) {
-//     throw new Error("Not authenticated");
-//   }
-
-//   return retryRequest(async () => {
-//     try {
-//       const response = await apiClient.get<{ user: User; data: User }>(`/users/${userId}`, {
-//         headers: {
-//           Authorization: `Bearer ${accessToken}`,
-//         },
-//       });
-//       // Handle both response formats
-//       return response.data.user || response.data.data || response.data as unknown as User;
-//     } catch (error) {
-//       const profileError = getErrorMessage(error);
-//       throw new Error(profileError.message);
-//     }
-//   });
-// };
 
 /**
  * Update user profile (first name and last name)
