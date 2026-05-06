@@ -201,16 +201,14 @@ describe("assessmentApi - additional branches", () => {
   });
 
   // ── submitBenefits with specific fields ───────────────────────────────────
-  it("submitBenefits logs lowestHealthPlanPremium value", async () => {
-    const consoleSpy = vi.spyOn(console, "log").mockImplementation(() => {});
-    mockPost.mockResolvedValueOnce({ data: {} });
+  it("submitBenefits submits lowestHealthPlanPremium value successfully", async () => {
+    mockPost.mockResolvedValueOnce({ data: { success: true } });
     const { submitBenefits } = await import("@/services/api/assessmentApi");
-    await submitBenefits({ lowestHealthPlanPremium: 150 });
-    expect(consoleSpy).toHaveBeenCalledWith(
-      expect.stringContaining("lowestHealthPlanPremium"),
-      expect.any(Object)
-    );
-    consoleSpy.mockRestore();
+    const result = await submitBenefits({ lowestHealthPlanPremium: 150 });
+    expect(result.success).toBe(true);
+    expect(mockPost).toHaveBeenCalledWith("/assessment/benefits", {
+      responses: { lowestHealthPlanPremium: 150 },
+    });
   });
 
   // ── submitFinchAssessment ─────────────────────────────────────────────────
