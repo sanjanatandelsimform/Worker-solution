@@ -65,6 +65,7 @@ const {
   deleteAccount,
   resendEmailVerification,
   retakeAssessment,
+  resetCircuitBreaker,
 } = await import("@/services/api/profileApi");
 
 // Mock localStorage helper
@@ -113,6 +114,7 @@ beforeEach(() => {
   mockApiClient.delete.mockReset();
   mockApiClient.get.mockReset();
   vi.clearAllMocks();
+  resetCircuitBreaker();
 });
 
 afterEach(() => {

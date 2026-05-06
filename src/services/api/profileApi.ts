@@ -62,6 +62,12 @@ const MAX_CONSECUTIVE_FAILURES = 5;
 const CIRCUIT_RESET_MS = 30_000; // 30 seconds
 let circuitOpenUntil = 0;
 
+/** Reset circuit breaker state — intended for use in tests only */
+export const resetCircuitBreaker = () => {
+  consecutiveFailures = 0;
+  circuitOpenUntil = 0;
+};
+
 const retryRequest = async <T>(
   requestFn: () => Promise<T>,
   maxRetries = 1,
