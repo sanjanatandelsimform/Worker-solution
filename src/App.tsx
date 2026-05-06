@@ -1,6 +1,7 @@
 import { Routes, Route, Navigate } from "react-router-dom";
 import { LoadingSpinner } from "@/components/common/LoadingSpinner";
 import { AuthErrorBoundary } from "./components/auth/AuthErrorBoundary";
+import { AuthGuard } from "./components/routes/AuthGuard";
 import { ProtectedRoute } from "./components/routes/ProtectedRoute";
 import { PublicRoute } from "./components/routes/PublicRoute";
 import { UnrestrictedRoute } from "./components/routes/UnrestrictedRoute";
@@ -30,7 +31,8 @@ function App() {
   return (
     <AuthErrorBoundary>
       <div className="min-h-screen bg-ws-gray-50">
-        <Routes>
+        <AuthGuard>
+          <Routes>
           {/* Public routes - only accessible when NOT authenticated */}
           <Route
             path="/sign-up"
@@ -157,6 +159,7 @@ function App() {
             }
           />
         </Routes>
+        </AuthGuard>
       </div>
     </AuthErrorBoundary>
   );
