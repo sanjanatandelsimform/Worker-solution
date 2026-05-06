@@ -19,7 +19,16 @@ export default function PrivacyModalContent() {
           collect, use, and disclose personal information in connection with your use of the
           Lafayette Square Access2Benefits platform, a workforce analytics platform, including any
           questionnaires, dashboards, reports, content, functionality, and services offered through
-          the platform ("A2B"), hosted at our website [INSERT A2B TOOL URL] (the "Site").
+          the platform ("A2B"), hosted at our website{" "}
+          <a
+            href="https://access2benefits.org"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="text-ws-light-teal-850 underline"
+          >
+            access2benefits.org
+          </a>
+          .
         </p>
         <p className={cls.body}>
           This Notice provides you with information about how we collect information about you when
@@ -484,7 +493,21 @@ export default function PrivacyModalContent() {
             },
             {
               label: "Right to Opt Out of Marketing Emails",
-              text: "To stop receiving our promotional emails, follow the instructions in any promotional message you get from us. If you object to our use of your information for direct marketing purposes, please email us at [INSERT EMAIL ADDRESS]. Even if you opt out of getting marketing messages, we will still send you transactional messages. These include responses to your questions.",
+              text: (
+                <>
+                  To stop receiving our promotional emails, follow the instructions in any
+                  promotional message you get from us. If you object to our use of your information
+                  for direct marketing purposes, please email us at{" "}
+                  <a
+                    href="mailto:support@access2benefits.org"
+                    className="text-ws-light-teal-850 underline"
+                  >
+                    support@access2benefits.org
+                  </a>
+                  . Even if you opt out of getting marketing messages, we will still send you
+                  transactional messages. These include responses to your questions.
+                </>
+              ),
             },
             {
               label: "Right to Limit Cookies and Tracking Tools",
@@ -542,8 +565,14 @@ export default function PrivacyModalContent() {
             If your state grants the consumer rights referenced above, to the extent applicable, you
             may exercise your privacy rights by submitting a personal information request by
             downloading the Personal Data Request Form by clicking on this link [INSERT LINK],
-            completing the form and emailing the completed form to [INSERT EMAIL ADDRESS] or by
-            calling us at [INSERT TELEPHONE NUMBER].
+            completing the form and emailing the completed form to{" "}
+            <a
+              href="mailto:support@access2benefits.org"
+              className="text-ws-light-teal-850 underline"
+            >
+              support@access2benefits.org
+            </a>{" "}
+            or by calling us at [INSERT TELEPHONE NUMBER].
           </p>
           <p className={cls.body}>
             When you submit a request to us, we may verify your identity where required by law by
@@ -728,7 +757,14 @@ export default function PrivacyModalContent() {
             any personal information we determine to have been collected from a child or user under
             the age of thirteen (13). If you are a parent or guardian of a child under the relevant
             digital age of consent and believe he or she has disclosed personal data to us, please
-            contact us at [INSERT EMAIL ADDRESS] or on [INSERT TELEPHONE NUMBER].
+            contact us at{" "}
+            <a
+              href="mailto:support@access2benefits.org"
+              className="text-ws-light-teal-850 underline"
+            >
+              support@access2benefits.org
+            </a>{" "}
+            or on [INSERT TELEPHONE NUMBER].
           </p>
         </div>
 
@@ -747,14 +783,23 @@ export default function PrivacyModalContent() {
         <div className="space-y-2">
           <p className={cls.sectionHeading}>14. How Can You Contact Us?</p>
           <p className={cls.body}>
-            If you have any questions in relation to this Notice, please contact us at [INSERT EMAIL
-            ADDRESS] or on [INSERT TELEPHONE NUMBER]. If you wish to contact Lafayette Square
-            regarding your Personal Information or this Notice, please submit the information by
-            clicking on this Personal Data Request Form [INSERT LINK].
+            If you have any questions in relation to this Notice, please contact us at{" "}
+            <a
+              href="mailto:support@access2benefits.org"
+              className="text-ws-light-teal-850 underline"
+            >
+              support@access2benefits.org
+            </a>{" "}
+            or on [INSERT TELEPHONE NUMBER]. If you wish to contact Lafayette Square regarding your
+            Personal Information or this Notice, please submit the information by clicking on this
+            Personal Data Request Form [INSERT LINK].
           </p>
           <p className={cls.body}>
-            This Notice is posted at the footer of the Lafayette Square A2B platform at [INSERT A2B
-            URL]. Last Updated: [INSERT DATE].
+            This Notice is posted at the footer of the Lafayette Square A2B platform at{" "}
+            <a href="https://access2benefits.org" className="text-ws-light-teal-850 underline">
+              access2benefits.org
+            </a>
+            . Last Updated: April 30, 2026.
           </p>
         </div>
       </div>
