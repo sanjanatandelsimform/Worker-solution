@@ -380,7 +380,7 @@ export default function BenchmarkFinchPage({
   readonly isAutomatedProvider?: boolean;
 } = {}) {
   const [isGetInTouchModalOpen, setIsGetInTouchModalOpen] = useState(false);
-  const [selectedGraphType, setSelectedGraphType] = useState<"owners" | "renters">("renters");
+  const [selectedGraphType] = useState<"owners" | "renters">("renters");
   const [selectedWageZip, setSelectedWageZip] = useState<string | null>(null);
   const [selectedHousingZipState, setSelectedHousingZipState] = useState<string | null>(null);
 
@@ -400,8 +400,6 @@ export default function BenchmarkFinchPage({
     label: w.zipcode,
     id: w.zipcode,
   }));
-
-  console.log(setSelectedGraphType, "selectedGraphType in finch page");
 
   const activeWageZip = selectedWageZip ?? areaMedianWage?.[0]?.zipcode ?? null;
 
