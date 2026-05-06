@@ -232,12 +232,6 @@ describe("BenchmarkPage", () => {
     expect(document.body).toBeTruthy();
   });
 
-  it("GetInTouchModal onClose callback (calls setIsGetInTouchModalOpen(false))", async () => {
-    renderBenchmark();
-    // GetInTouchModal is closed by default. Just verify the component renders.
-    expect(document.body).toBeTruthy();
-  });
-
   it("onSelectionChange with non-null key updates selectedGraphType (lines 881-882)", async () => {
     capturedOnSelectionChange = null;
     renderBenchmark();

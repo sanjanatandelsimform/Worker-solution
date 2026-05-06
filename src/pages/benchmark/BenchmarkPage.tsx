@@ -3,7 +3,6 @@ import { useState } from "react";
 import StaticCard from "../recommendations/StaticCard";
 import { Select } from "@/components/base/select/select";
 import { IncomeDistributionChart } from "./CostBurdenBarChart";
-import { GetInTouchModal } from "@/components/modals/GetInTouchModal";
 import { useAppSelector } from "@/store/hooks";
 import {
   selectIndustryOverviewData,
@@ -295,7 +294,6 @@ interface CostBurdenCardConfig {
 }
 
 export default function BenchmarkPage() {
-  const [isGetInTouchModalOpen, setIsGetInTouchModalOpen] = useState(false);
   const [selectedGraphType, setSelectedGraphType] = useState<"owners" | "renters">("renters");
   const [selectedWageZip, setSelectedWageZip] = useState<string | null>(null);
   const [selectedHousingZipState, setSelectedHousingZipState] = useState<string | null>(null);
@@ -932,11 +930,6 @@ export default function BenchmarkPage() {
           Community Survey
         </p>
       </div>
-
-      <GetInTouchModal
-        isOpen={isGetInTouchModalOpen}
-        onClose={() => setIsGetInTouchModalOpen(false)}
-      />
     </div>
   );
 }

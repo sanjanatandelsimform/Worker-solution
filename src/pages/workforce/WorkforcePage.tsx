@@ -1,5 +1,4 @@
 import { useState } from "react";
-import { GetInTouchModal } from "@/components/modals/GetInTouchModal";
 import { useAppSelector } from "@/store/hooks";
 import { selectWorkforceLoading, selectWorkforceError } from "@/store/selectors/workforceSelectors";
 import ErrorMessage from "@/components/common/ErrorMessage";
@@ -28,7 +27,6 @@ export default function WorkforcePage({
   readonly isStale?: boolean;
   readonly isAutomatedProvider?: boolean;
 } = {}) {
-  const [isGetInTouchModalOpen, setIsGetInTouchModalOpen] = useState(false);
   const [selectedDepartment, setSelectedDepartment] = useState<string>("all");
   const [selectedWorkforceDept, setSelectedWorkforceDept] = useState<string>("all");
   const [selectedEmploymentType, setSelectedEmploymentType] = useState<
@@ -129,12 +127,6 @@ export default function WorkforcePage({
         columnsOne={columnsOne}
         salary={salary}
         salaryChartData={salaryChartData}
-      />
-
-      {/* Get In Touch Modal */}
-      <GetInTouchModal
-        isOpen={isGetInTouchModalOpen}
-        onClose={() => setIsGetInTouchModalOpen(false)}
       />
     </div>
   );

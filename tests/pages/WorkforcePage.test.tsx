@@ -61,9 +61,6 @@ vi.mock("@/pages/workforce/WorkforceDemographics", () => ({
 vi.mock("@/pages/workforce/WorkforceCompensation", () => ({
   default: () => <div data-testid="workforce-compensation">WorkforceCompensation</div>,
 }));
-vi.mock("@/components/modals/GetInTouchModal", () => ({
-  GetInTouchModal: () => <div>contact-modal</div>,
-}));
 vi.mock("@/components/common/ErrorMessage", () => ({
   default: () => <div>error-message</div>,
 }));
