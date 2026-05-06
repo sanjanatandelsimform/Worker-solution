@@ -95,7 +95,7 @@ const overviewCardsConfigR2: CardConfig<Record<string, string | null>>[] = [
     format: data =>
       data.industryAverageWage == null ? "N/A" : formatCurrency(Number(data.industryAverageWage)),
     infoIcon: false,
-    count: "2,254",
+    count: "",
     tooltipText: "How is this calculated",
     descriptionText: "This is calculated based on LMI.",
     placements: "top",
@@ -107,7 +107,7 @@ const overviewCardsConfigR2: CardConfig<Record<string, string | null>>[] = [
     format: data =>
       data.industryAverageWage == null ? "N/A" : formatCurrency(Number(data.industryAverageWage)),
     infoIcon: false,
-    count: "64%",
+    count: "",
     tooltipText: "How is this calculated",
     descriptionText: "This is calculated based on LMI.",
     placements: "top",
@@ -119,7 +119,7 @@ const overviewCardsConfigR2: CardConfig<Record<string, string | null>>[] = [
     format: data =>
       data.industryAverageWage == null ? "N/A" : formatCurrency(Number(data.industryAverageWage)),
     infoIcon: false,
-    count: "92%",
+    count: "",
     tooltipText: "How is this calculated",
     descriptionText: "This is calculated based on LMI.",
     placements: "top",
