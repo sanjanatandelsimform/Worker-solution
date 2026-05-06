@@ -62,10 +62,9 @@ export const GetInTouchModal = ({ isOpen, onClose }: UpdateYourEmailModalProps) 
     },
   });
 
-  const onSubmit = async (data: ChangePasswordFormData) => {
+  const onSubmit = async () => {
     try {
       // Handle password change logic
-      console.log("Password change submitted:", data);
       // Add your password change API call here
 
       // Success - close modal and reset form
