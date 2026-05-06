@@ -9,7 +9,12 @@ import { DollarIcon } from "@/assets/icons/DollarIcon";
 import { EnrolledIcon } from "@/assets/icons/EnrolledIcon";
 import { SavingIcon } from "@/assets/icons/SavingIcon";
 import { HeartLineIcon } from "@/assets/icons/HeartLineIcon";
-import { formatNumber, formatCurrency, formatCurrencyWithCents } from "@/utils/formatters";
+import {
+  formatNumber,
+  formatCurrency,
+  formatCurrencyWithCents,
+  formatCompactCurrency,
+} from "@/utils/formatters";
 import { useAssessmentStatus } from "@/hooks/useAssessmentStatus";
 import { ArrowRight } from "@untitledui/icons";
 
@@ -61,7 +66,13 @@ const overviewCardsConfig: CardConfig<CompanyGlanceData>[] = [
     id: "average-salary",
     title: "Average Annual Salary",
     icon: BriefcaseIcon,
-    format: () => String("$72k"),
+    format: data => {
+      const salary = data.averageSalary;
+      if (typeof salary === "number") {
+        return formatCompactCurrency(salary);
+      }
+      return "N/A";
+    },
   },
   {
     id: "industry-avg-wage",
@@ -84,7 +95,7 @@ const overviewCardsConfigR2: CardConfig<Record<string, string | null>>[] = [
     format: data =>
       data.industryAverageWage == null ? "N/A" : formatCurrency(Number(data.industryAverageWage)),
     infoIcon: false,
-    count: "2,254",
+    count: "",
     tooltipText: "How is this calculated",
     descriptionText: "This is calculated based on LMI.",
     placements: "top",
@@ -96,7 +107,7 @@ const overviewCardsConfigR2: CardConfig<Record<string, string | null>>[] = [
     format: data =>
       data.industryAverageWage == null ? "N/A" : formatCurrency(Number(data.industryAverageWage)),
     infoIcon: false,
-    count: "64%",
+    count: "",
     tooltipText: "How is this calculated",
     descriptionText: "This is calculated based on LMI.",
     placements: "top",
@@ -108,7 +119,7 @@ const overviewCardsConfigR2: CardConfig<Record<string, string | null>>[] = [
     format: data =>
       data.industryAverageWage == null ? "N/A" : formatCurrency(Number(data.industryAverageWage)),
     infoIcon: false,
-    count: "92%",
+    count: "",
     tooltipText: "How is this calculated",
     descriptionText: "This is calculated based on LMI.",
     placements: "top",
