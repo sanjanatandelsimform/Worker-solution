@@ -39,9 +39,6 @@ vi.mock(
 vi.mock("@/pages/benchmark/CostBurdenBarChart", () => ({
   IncomeDistributionChart: ({ data }: { data: unknown[] }) => <div>{`chart:${data.length}`}</div>,
 }));
-vi.mock("@/components/modals/GetInTouchModal", () => ({
-  GetInTouchModal: () => <div>contact-modal</div>,
-}));
 vi.mock("@/components/common/Declarations", () => ({
   default: () => <div>declarations</div>,
 }));
@@ -123,22 +120,6 @@ describe("BenchmarkFinchPage", () => {
     if (zipButtons.length > 0) {
       fireEvent.click(zipButtons[0]);
     }
-    expect(document.body).toBeTruthy();
-  });
-
-  it("GetInTouchModal onClose closes the modal (covers line 1172)", () => {
-    vi.mock("@/components/modals/GetInTouchModal", () => ({
-      GetInTouchModal: ({ isOpen, onClose }: any) => {
-        if (!isOpen) return null;
-        return (
-          <button data-testid="get-in-touch-close" onClick={onClose}>
-            Close
-          </button>
-        );
-      },
-    }));
-    render(<BenchmarkFinchPage />);
-    // Modal starts closed, just verify render is stable
     expect(document.body).toBeTruthy();
   });
 

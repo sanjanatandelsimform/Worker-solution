@@ -262,14 +262,6 @@ export const submitBenefits = async (responses: Record<string, unknown>): Promis
   try {
     // Log payload before API call to verify types
 
-    if (responses.lowestHealthPlanPremium !== undefined) {
-      console.log("[submitBenefits] lowestHealthPlanPremium:", {
-        value: responses.lowestHealthPlanPremium,
-        type: typeof responses.lowestHealthPlanPremium,
-        isNumber: typeof responses.lowestHealthPlanPremium === "number",
-      });
-    }
-
     const response = await api.post("/assessment/benefits", {
       responses,
     });

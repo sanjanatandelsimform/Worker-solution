@@ -272,9 +272,9 @@ describe("SettingsPage - branches", () => {
   it("handleGetResponse with minimal data (no user.email, no emailVerify) branch", async () => {
     renderSettings();
     fireEvent.click(screen.getByRole("button", { name: /update email/i }));
-    await waitFor(() => expect(screen.getByTestId("update-email-modal")).toBeTruthy());
-
-    fireEvent.click(screen.getByTestId("email-modal-respond-minimal"));
+    // Wait directly for the target button to be present (more robust than two-step waitFor)
+    const minimalBtn = await screen.findByTestId("email-modal-respond-minimal");
+    fireEvent.click(minimalBtn);
     await waitFor(() => {
       expect(screen.queryByTestId("update-email-modal")).toBeNull();
     });

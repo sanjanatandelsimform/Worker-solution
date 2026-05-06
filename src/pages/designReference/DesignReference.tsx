@@ -564,7 +564,6 @@ function DesignReference() {
         <ChangePasswordSuccessModal
           isOpen={isChangePasswordSuccessModalOpen}
           onClose={() => setIsChangePasswordSuccessModalOpen(false)}
-          onBackToSettings={() => console.log("Back to Settings clicked")}
         />
 
         {/* Demo Section for Change Password Failed Modal */}
@@ -591,7 +590,6 @@ function DesignReference() {
         <ChangePasswordFailedModal
           isOpen={isChangePasswordFailedModalOpen}
           onClose={() => setIsChangePasswordFailedModalOpen(false)}
-          onContinue={() => console.log("Continue clicked")}
         />
 
         {/* Demo Section for In Progress Modal */}
@@ -614,7 +612,6 @@ function DesignReference() {
         <InProgressModal
           isOpen={isInProgressModalOpen}
           onClose={() => setIsInProgressModalOpen(false)}
-          onGoToDashboard={() => console.log("Go to Dashboard clicked")}
         />
 
         {/* Demo Section for Did You Know Carousel */}
