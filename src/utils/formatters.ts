@@ -118,6 +118,30 @@ export const formatCompactNumber = (value: number | null | undefined): string =>
 };
 
 /**
+ * Format a number as compact currency (e.g., 72000 → "$72K", 1500000 → "$1.5M")
+ *
+ * @param value - Number to format as compact currency, or null/undefined
+ * @returns Formatted compact currency string or "N/A" for null/undefined
+ *
+ * @example
+ * ```typescript
+ * formatCompactCurrency(72000) // "$72K"
+ * formatCompactCurrency(1500000) // "$1.5M"
+ * formatCompactCurrency(null) // "N/A"
+ * ```
+ */
+export const formatCompactCurrency = (value: number | null | undefined): string => {
+  if (value === null || value === undefined) return "N/A";
+
+  return new Intl.NumberFormat("en-US", {
+    style: "currency",
+    currency: "USD",
+    notation: "compact",
+    maximumFractionDigits: 1,
+  }).format(value);
+};
+
+/**
  * Format an annual employer cost number as a dollar-per-year string.
  *
  * Returns "--" for null, undefined, or negative values (guard against bad API data).
