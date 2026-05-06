@@ -137,18 +137,24 @@ export default function TermsModalContent({
             therewith. You also acknowledge that your account is personal to you and agree not to
             provide any other person or entity with access to A2B or portions of it using your
             username, password, or other security information or credentials. You agree to notify us
-            in writing immediately at [insert contact email] of any unauthorized access to or use of
-            your username or password or any other breach of security. If applicable, you also agree
-            to ensure that you exit from your account at the end of each session. You should use
-            particular caution when accessing A2B and/or your account from a public or shared
-            computer so that others are not able to view or record your password or other personal
-            information. We have the right to disable any username, password, or other identifier,
-            whether chosen by you or provided by us, at any time in our sole discretion, including
-            if, in our opinion, you have violated any provision of these Terms of Use. Lafayette
-            Square is not responsible for unauthorized access to your account resulting from your
-            failure to safeguard your credentials. For a description of the security measures
-            Lafayette Square has implemented to protect your information, please refer to Section 9
-            (Security Measures) of the Privacy Notice, available at{" "}
+            in writing immediately at{" "}
+            <a
+              href="mailto:support@access2benefits.org"
+              className="text-ws-light-teal-850 underline"
+            >
+              support@access2benefits.org
+            </a>{" "}
+            of any unauthorized access to or use of your username or password or any other breach of
+            security. If applicable, you also agree to ensure that you exit from your account at the
+            end of each session. You should use particular caution when accessing A2B and/or your
+            account from a public or shared computer so that others are not able to view or record
+            your password or other personal information. We have the right to disable any username,
+            password, or other identifier, whether chosen by you or provided by us, at any time in
+            our sole discretion, including if, in our opinion, you have violated any provision of
+            these Terms of Use. Lafayette Square is not responsible for unauthorized access to your
+            account resulting from your failure to safeguard your credentials. For a description of
+            the security measures Lafayette Square has implemented to protect your information,
+            please refer to Section 9 (Security Measures) of the Privacy Notice, available at{" "}
             <Button
               color="link"
               size="sm"
@@ -515,10 +521,11 @@ export default function TermsModalContent({
             the dispute to the other party, by certified mail, Federal Express, UPS, or Express Mail
             (signature required). The parties agree to attempt to resolve the dispute informally for
             a period of thirty (30) days from the date of such notice. The notice must be sent to
-            Lafayette Square at [address]. The arbitration shall be conducted by a single arbitrator
-            and shall take place in Miami, Florida, consistent with the Federal Arbitration Act. The
-            arbitrator's award shall be final and binding, and judgment on the award may be entered
-            in any court of competent jurisdiction.
+            Lafayette Square at 1801 Pennsylvania Avenue NW, Washington, DC 20006. The arbitration
+            shall be conducted by a single arbitrator and shall take place in Miami, Florida,
+            consistent with the Federal Arbitration Act. The arbitrator's award shall be final and
+            binding, and judgment on the award may be entered in any court of competent
+            jurisdiction.
           </p>
           <p className={cls.bodyUpper}>
             You waive the right to a trial by jury. You and Lafayette Square agree that any
@@ -532,11 +539,17 @@ export default function TermsModalContent({
           </p>
           <p className={cls.body}>
             You may opt out of this arbitration provision by sending written notice to Lafayette
-            Square at [insert contact email] within thirty (30) days of your first use of A2B. Your
-            opt-out notice must include your name, mailing address, and a clear statement that you
-            wish to opt out of this arbitration provision. If you opt out of this arbitration
-            provision, all other provisions of these Terms of Use shall remain in full force and
-            effect.
+            Square at{" "}
+            <a
+              href="mailto:support@access2benefits.org"
+              className="text-ws-light-teal-850 underline"
+            >
+              support@access2benefits.org
+            </a>{" "}
+            within thirty (30) days of your first use of A2B. Your opt-out notice must include your
+            name, mailing address, and a clear statement that you wish to opt out of this
+            arbitration provision. If you opt out of this arbitration provision, all other
+            provisions of these Terms of Use shall remain in full force and effect.
           </p>
         </div>
 
@@ -588,8 +601,14 @@ export default function TermsModalContent({
         <div className="space-y-2">
           <p className={cls.sectionHeading}>20. Contact Us</p>
           <p className={cls.body}>
-            If you have any questions about these Terms of Use, please contact us at [insert contact
-            details].
+            If you have any questions about these Terms of Use, please contact us at{" "}
+            <a
+              href="mailto:support@access2benefits.org"
+              className="text-ws-light-teal-850 underline"
+            >
+              support@access2benefits.org
+            </a>{" "}
+            .
           </p>
         </div>
       </div>
