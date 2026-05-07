@@ -107,6 +107,38 @@ Do this first when editing code:
 - Open `src/routes/index.tsx` to follow the lazy-load + Suspense pattern (helper: `lazyLoad(Component)`).
 - Use barrel exports (feature `index.ts`) and the `@/` alias for imports (never relative `../..` for src files).
 
+## Active Feature: 034-rename-seasonal-to-other (2026-05-07)
+
+<!-- specify:agent:start -->
+
+**Branch**: `034-rename-seasonal-to-other` | **Spec**: `specs/034-rename-seasonal-to-other/spec.md` | **Plan**: `specs/034-rename-seasonal-to-other/plan.md`
+
+### Context: Previous features (009–033) are complete
+
+Features 028–033 added dashboard tab readiness, tab preparing state, stale provider handling, Finch reauth status, salary chart dynamic data, and deferred tab API loading.
+
+### What this feature does
+
+Renames the third employment type option in the Workforce Demographics feature from `"seasonal"` / `"Seasonal"` to `"other"` / `"Other"` to match the backend API key. Pure rename — no new files or components.
+
+### Files to modify
+
+- `src/types/workforceTypes.ts` — rename `seasonal` field on `EmploymentTypeEntry` and `AgeBreakdownEntry`
+- `src/hooks/useWorkforceDemographicsConfig.ts` — rename param type + third donut chart config entry
+- `src/pages/workforce/WorkforcePage.tsx` — rename `useState` type for `selectedEmploymentType`
+- `src/pages/workforce/WorkforceDemographics.tsx` — rename dropdown item, `EmploymentType` union, and cast
+- `tests/hooks/useWorkforceDemographicsConfig.test.ts` — update all fixtures and assertions
+- `tests/store/workforceSelectors.test.ts` — update one fixture field
+
+### Key facts
+
+- Do NOT touch `assessmentSchemas.ts` (`contractorsSeasonalEmployees` is unrelated)
+- Do NOT touch `WorkforceCompensation*` or `useWorkforceCompensationConfig.ts`
+- After changes: `pnpm run type-check` and `pnpm run test` must pass with 0 errors/failures
+- See full implementation guide: `specs/034-rename-seasonal-to-other/quickstart.md`
+
+<!-- specify:agent:end -->
+
 ## Active Feature: 028-dashboard-tab-readiness (2026-05-01)
 
 <!-- specify:agent:start -->

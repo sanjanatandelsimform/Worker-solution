@@ -7,7 +7,7 @@ const COUNT_CLASS = "mt-2 text-3xl font-semibold text-ws-text-primary";
 
 export function useWorkforceDemographicsConfig(
   selectedDepartment: string,
-  selectedEmploymentType: "fullTime" | "partTime" | "seasonal"
+  selectedEmploymentType: "fullTime" | "partTime" | "other"
 ) {
   const demographicsSection = useAppSelector(selectDemographicsSection);
 
@@ -72,9 +72,9 @@ export function useWorkforceDemographicsConfig(
         backgroundColor: "bg-ws-progress-secondary",
       },
       {
-        id: "seasonal",
-        label: "Seasonal",
-        percentage: parsePercentage(selectedDeptData.seasonal),
+        id: "other",
+        label: "Other",
+        percentage: parsePercentage(selectedDeptData.other),
         progressColor: "color-ws-progress-turnery",
         backgroundColor: "bg-ws-progress-turnery",
       },
