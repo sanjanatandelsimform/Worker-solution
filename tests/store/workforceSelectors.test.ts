@@ -49,7 +49,7 @@ const mockWorkforceData: WorkforceApiResponse = {
       ],
     },
     demographics: {
-      employmentType: [{ department: "all", fullTime: "80%", partTime: "20%", seasonal: "5%" }],
+      employmentType: [{ department: "all", fullTime: "80%", partTime: "20%", other: "5%" }],
       gender: { men: "55%", women: "40%" },
       employmentBreakdownByAge: [],
     },

@@ -30,7 +30,7 @@ export default function WorkforcePage({
   const [selectedDepartment, setSelectedDepartment] = useState<string>("all");
   const [selectedWorkforceDept, setSelectedWorkforceDept] = useState<string>("all");
   const [selectedEmploymentType, setSelectedEmploymentType] = useState<
-    "fullTime" | "partTime" | "seasonal"
+    "fullTime" | "partTime" | "other"
   >("fullTime");
 
   // Redux state

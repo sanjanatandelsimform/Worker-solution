@@ -43,18 +43,18 @@ function buildStoreState(demographics: Demographics | null) {
 
 const sampleDemographics: Demographics = {
   employmentType: [
-    { department: "all", fullTime: "80%", partTime: "15%", seasonal: "5%" },
-    { department: "engineering", fullTime: "90%", partTime: "8%", seasonal: "2%" },
-    { department: "sales", fullTime: "70%", partTime: "25%", seasonal: "5%" },
+    { department: "all", fullTime: "80%", partTime: "15%", other: "5%" },
+    { department: "engineering", fullTime: "90%", partTime: "8%", other: "2%" },
+    { department: "sales", fullTime: "70%", partTime: "25%", other: "5%" },
   ],
   gender: { men: "55%", women: "40%" },
   employmentBreakdownByAge: [
-    { ageGroup: "> 30", fullTime: 100, partTime: 20, seasonal: 5 },
-    { ageGroup: "30 - 40", fullTime: 80, partTime: 15, seasonal: 3 },
-    { ageGroup: "40 - 50", fullTime: 60, partTime: 10, seasonal: 2 },
-    { ageGroup: "50 - 60", fullTime: 40, partTime: 8, seasonal: 1 },
-    { ageGroup: "60+", fullTime: 20, partTime: 4, seasonal: 0 },
-    { ageGroup: "70+", fullTime: 10, partTime: 2, seasonal: 0 }, // > 5 entries to test color cycling
+    { ageGroup: "> 30", fullTime: 100, partTime: 20, other: 5 },
+    { ageGroup: "30 - 40", fullTime: 80, partTime: 15, other: 3 },
+    { ageGroup: "40 - 50", fullTime: 60, partTime: 10, other: 2 },
+    { ageGroup: "50 - 60", fullTime: 40, partTime: 8, other: 1 },
+    { ageGroup: "60+", fullTime: 20, partTime: 4, other: 0 },
+    { ageGroup: "70+", fullTime: 10, partTime: 2, other: 0 }, // > 5 entries to test color cycling
   ],
 };
 
@@ -136,7 +136,7 @@ describe("useWorkforceDemographicsConfig", () => {
 
   // ── donutChartsConfig ──────────────────────────────────────────────────
 
-  it("donutChartsConfig has 3 entries (full-time, part-time, seasonal) for selected dept", () => {
+  it("donutChartsConfig has 3 entries (full-time, part-time, other) for selected dept", () => {
     mockStoreState = buildStoreState(sampleDemographics);
     const { result } = renderHook(() => useWorkforceDemographicsConfig("all", "fullTime"));
     expect(result.current.donutChartsConfig).toHaveLength(3);
@@ -145,13 +145,13 @@ describe("useWorkforceDemographicsConfig", () => {
   it("donutChartsConfig parses percentages for 'all' department", () => {
     mockStoreState = buildStoreState(sampleDemographics);
     const { result } = renderHook(() => useWorkforceDemographicsConfig("all", "fullTime"));
-    const [ft, pt, seasonal] = result.current.donutChartsConfig;
+    const [ft, pt, other] = result.current.donutChartsConfig;
     expect(ft.id).toBe("full-time");
     expect(ft.percentage).toBe(80); // "80%" → 80
     expect(pt.id).toBe("part-time");
     expect(pt.percentage).toBe(15); // "15%" → 15
-    expect(seasonal.id).toBe("seasonal");
-    expect(seasonal.percentage).toBe(5); // "5%" → 5
+    expect(other.id).toBe("other");
+    expect(other.percentage).toBe(5); // "5%" → 5
   });
 
   it("donutChartsConfig selects the matching department by selectedDepartment", () => {
@@ -173,13 +173,13 @@ describe("useWorkforceDemographicsConfig", () => {
   it("donutChartsConfig entries have correct color classes and labels", () => {
     mockStoreState = buildStoreState(sampleDemographics);
     const { result } = renderHook(() => useWorkforceDemographicsConfig("all", "fullTime"));
-    const [ft, pt, seasonal] = result.current.donutChartsConfig;
+    const [ft, pt, other] = result.current.donutChartsConfig;
     expect(ft.label).toBe("Full Time");
     expect(ft.progressColor).toBe("color-ws-progress-primary");
     expect(pt.label).toBe("Part Time");
     expect(pt.progressColor).toBe("color-ws-progress-secondary");
-    expect(seasonal.label).toBe("Seasonal");
-    expect(seasonal.progressColor).toBe("color-ws-progress-turnery");
+    expect(other.label).toBe("Other");
+    expect(other.progressColor).toBe("color-ws-progress-turnery");
   });
 
   // ── ageBreakdownConfig ─────────────────────────────────────────────────
@@ -208,12 +208,12 @@ describe("useWorkforceDemographicsConfig", () => {
     expect(config[1].value).toBe(15); // 30-40 partTime
   });
 
-  it("ageBreakdownConfig uses seasonal values when selectedEmploymentType='seasonal'", () => {
+  it("ageBreakdownConfig uses other values when selectedEmploymentType='other'", () => {
     mockStoreState = buildStoreState(sampleDemographics);
-    const { result } = renderHook(() => useWorkforceDemographicsConfig("all", "seasonal"));
+    const { result } = renderHook(() => useWorkforceDemographicsConfig("all", "other"));
     const config = result.current.ageBreakdownConfig;
-    expect(config[0].value).toBe(5); // > 30 seasonal
-    expect(config[4].value).toBe(0); // 60+ seasonal
+    expect(config[0].value).toBe(5); // > 30 other
+    expect(config[4].value).toBe(0); // 60+ other
   });
 
   it("ageBreakdownConfig assigns AGE_COLORS with modulo cycling for >5 entries", () => {
