@@ -83,7 +83,7 @@ export interface EmploymentTypeEntry {
   /** e.g. "20%" */
   partTime: string;
   /** e.g. "5%" */
-  other: string;
+  others: string;
 }
 
 export interface GenderBreakdown {
@@ -92,7 +92,7 @@ export interface GenderBreakdown {
   /** e.g. "40%" */
   women: string;
   /** e.g. "5%" — individuals who do not identify as man or woman, or choose not to identify */
-  other?: string;
+  others?: string;
 }
 
 export interface AgeBreakdownEntry {
@@ -100,7 +100,7 @@ export interface AgeBreakdownEntry {
   ageGroup: string;
   fullTime: number;
   partTime: number;
-  other: number;
+  others: number;
 }
 
 /**

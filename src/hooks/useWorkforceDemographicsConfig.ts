@@ -7,7 +7,7 @@ const COUNT_CLASS = "mt-2 text-3xl font-semibold text-ws-text-primary";
 
 export function useWorkforceDemographicsConfig(
   selectedDepartment: string,
-  selectedEmploymentType: "fullTime" | "partTime" | "other"
+  selectedEmploymentType: "fullTime" | "partTime" | "others"
 ) {
   const demographicsSection = useAppSelector(selectDemographicsSection);
 
@@ -40,7 +40,7 @@ export function useWorkforceDemographicsConfig(
       {
         id: "other",
         title: "Other",
-        count: demographicsSection?.gender.other ?? "--",
+        count: demographicsSection?.gender.others ?? "--",
         tooltipText:
           "Other includes individuals that choose not to identify or do not identify as man or woman.",
         getCountClass: () => COUNT_CLASS,
@@ -74,7 +74,7 @@ export function useWorkforceDemographicsConfig(
       {
         id: "other",
         label: "Other",
-        percentage: parsePercentage(selectedDeptData.other),
+        percentage: parsePercentage(selectedDeptData.others),
         progressColor: "color-ws-progress-turnery",
         backgroundColor: "bg-ws-progress-turnery",
       },
