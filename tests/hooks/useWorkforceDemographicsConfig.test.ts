@@ -43,18 +43,18 @@ function buildStoreState(demographics: Demographics | null) {
 
 const sampleDemographics: Demographics = {
   employmentType: [
-    { department: "all", fullTime: "80%", partTime: "15%", other: "5%" },
-    { department: "engineering", fullTime: "90%", partTime: "8%", other: "2%" },
-    { department: "sales", fullTime: "70%", partTime: "25%", other: "5%" },
+    { department: "all", fullTime: "80%", partTime: "15%", others: "5%" },
+    { department: "engineering", fullTime: "90%", partTime: "8%", others: "2%" },
+    { department: "sales", fullTime: "70%", partTime: "25%", others: "5%" },
   ],
-  gender: { men: "55%", women: "40%", other: "5%" },
+  gender: { men: "55%", women: "40%", others: "5%" },
   employmentBreakdownByAge: [
-    { ageGroup: "> 30", fullTime: 100, partTime: 20, other: 5 },
-    { ageGroup: "30 - 40", fullTime: 80, partTime: 15, other: 3 },
-    { ageGroup: "40 - 50", fullTime: 60, partTime: 10, other: 2 },
-    { ageGroup: "50 - 60", fullTime: 40, partTime: 8, other: 1 },
-    { ageGroup: "60+", fullTime: 20, partTime: 4, other: 0 },
-    { ageGroup: "70+", fullTime: 10, partTime: 2, other: 0 }, // > 5 entries to test color cycling
+    { ageGroup: "> 30", fullTime: 100, partTime: 20, others: 5 },
+    { ageGroup: "30 - 40", fullTime: 80, partTime: 15, others: 3 },
+    { ageGroup: "40 - 50", fullTime: 60, partTime: 10, others: 2 },
+    { ageGroup: "50 - 60", fullTime: 40, partTime: 8, others: 1 },
+    { ageGroup: "60+", fullTime: 20, partTime: 4, others: 0 },
+    { ageGroup: "70+", fullTime: 10, partTime: 2, others: 0 }, // > 5 entries to test color cycling
   ],
 };
 
@@ -239,12 +239,12 @@ describe("useWorkforceDemographicsConfig", () => {
     expect(config[1].value).toBe(15); // 30-40 partTime
   });
 
-  it("ageBreakdownConfig uses other values when selectedEmploymentType='other'", () => {
+  it("ageBreakdownConfig uses others values when selectedEmploymentType='others'", () => {
     mockStoreState = buildStoreState(sampleDemographics);
-    const { result } = renderHook(() => useWorkforceDemographicsConfig("all", "other"));
+    const { result } = renderHook(() => useWorkforceDemographicsConfig("all", "others"));
     const config = result.current.ageBreakdownConfig;
-    expect(config[0].value).toBe(5); // > 30 other
-    expect(config[4].value).toBe(0); // 60+ other
+    expect(config[0].value).toBe(5); // > 30 others
+    expect(config[4].value).toBe(0); // 60+ others
   });
 
   it("ageBreakdownConfig assigns AGE_COLORS with modulo cycling for >5 entries", () => {
