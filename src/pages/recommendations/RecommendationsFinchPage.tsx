@@ -11,6 +11,7 @@ import {
   selectRecommStrategicRecommendations,
   selectProvenStrategiesFlags,
   selectRecommendationsLoading,
+  selectRecommCompanyOverview,
 } from "@/store/selectors/recommendationsSelectors";
 import { selectWorkforceHealthcareAffordabilityFlag } from "@/store/selectors/workforceSelectors";
 import { useAssessmentStatus } from "@/hooks/useAssessmentStatus";
@@ -48,6 +49,7 @@ export default function RecommendationsFinchPage({
   const recommProvenFlags = useAppSelector(selectProvenStrategiesFlags);
   const recommendationsIsLoading = useAppSelector(selectRecommendationsLoading);
   const workforceHealthcareFlag = useAppSelector(selectWorkforceHealthcareAffordabilityFlag);
+  const recommCompanyOverview = useAppSelector(selectRecommCompanyOverview);
   const { isLoading: isIndustryLoading, data: industryData } = useIndustry();
   const industryAverageWage = industryData?.industryOverview?.industryAverageWage;
 
@@ -61,11 +63,19 @@ export default function RecommendationsFinchPage({
       : recommProvenFlags.healthcareAffordability,
   };
 
-  // Synthetic Company Overview shape (maps workforce fields to existing format fn expectations)
+  // Synthetic Company Overview shape — source depends on connection state:
+  // Finch-connected: workforce API (workforceSection + compensationSection)
+  // Non-connected:   recommendations API (recommendation.companyOverview)
   const companyGlanceData = {
-    totalWorkforce: workforceSection?.totalWorkforce ?? null,
-    averageHourlyWage: compensationSection?.salaryBreakdown?.avgHourlyRate ?? null,
-    averageSalary: compensationSection?.salaryBreakdown?.avgSalary ?? null,
+    totalWorkforce: isConnected
+      ? (workforceSection?.totalWorkforce ?? null)
+      : (recommCompanyOverview?.totalWorkforce ?? null),
+    averageHourlyWage: isConnected
+      ? (compensationSection?.salaryBreakdown?.avgHourlyRate ?? null)
+      : (recommCompanyOverview?.avgHourlyRate ?? null),
+    averageSalary: isConnected
+      ? (compensationSection?.salaryBreakdown?.avgSalary ?? null)
+      : (recommCompanyOverview?.avgSalary ?? null),
     industryAverageWage: industryAverageWage ?? null,
   };
 

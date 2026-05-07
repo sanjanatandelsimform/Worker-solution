@@ -14,9 +14,10 @@ import {
   selectRecommendationItem,
   selectRecommStrategicRecommendations,
   selectProvenStrategiesFlags,
+  selectRecommCompanyOverview,
 } from "@/store/selectors/recommendationsSelectors";
 import type { RootState } from "@/store/store";
-import type { RecommendationsApiResponse } from "@/types/recommendationsTypes";
+import type { RecommendationsApiResponse, CompanyOverview } from "@/types/recommendationsTypes";
 
 const mockRecommendationsData: RecommendationsApiResponse = {
   assessmentType: "finch",
@@ -224,6 +225,48 @@ describe("recommendationsSelectors", () => {
         nonElectiveMatch: "hidden",
         healthcareAffordability: "hidden",
       });
+    });
+  });
+
+  describe("selectRecommCompanyOverview", () => {
+    it("returns null when data is null", () => {
+      expect(selectRecommCompanyOverview(makeState() as RootState)).toBeNull();
+    });
+
+    it("returns null when companyOverview is absent from recommendation", () => {
+      const state = makeState({ data: mockRecommendationsData }) as RootState;
+      // mockRecommendationsData has no companyOverview field
+      expect(selectRecommCompanyOverview(state)).toBeNull();
+    });
+
+    it("returns the companyOverview object when present", () => {
+      const overview: CompanyOverview = {
+        totalWorkforce: 200,
+        avgHourlyRate: 22.5,
+        avgSalary: 60000,
+      };
+      const dataWithOverview: RecommendationsApiResponse = {
+        ...mockRecommendationsData,
+        recommendation: {
+          ...mockRecommendationsData.recommendation,
+          companyOverview: overview,
+        },
+      };
+      const state = makeState({ data: dataWithOverview }) as RootState;
+      expect(selectRecommCompanyOverview(state)).toEqual(overview);
+    });
+
+    it("returns totalWorkforce: 0 without coercing to null (zero-value edge case)", () => {
+      const overview: CompanyOverview = { totalWorkforce: 0, avgHourlyRate: 0, avgSalary: 0 };
+      const dataWithOverview: RecommendationsApiResponse = {
+        ...mockRecommendationsData,
+        recommendation: {
+          ...mockRecommendationsData.recommendation,
+          companyOverview: overview,
+        },
+      };
+      const state = makeState({ data: dataWithOverview }) as RootState;
+      expect(selectRecommCompanyOverview(state)?.totalWorkforce).toBe(0);
     });
   });
 });
