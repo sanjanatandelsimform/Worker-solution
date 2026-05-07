@@ -98,7 +98,7 @@ describe("AccountDeleteModal", () => {
   it("renders when open", () => {
     render(<AccountDeleteModal isOpen={true} onClose={vi.fn()} />);
     expect(screen.getByTestId("base-modal")).toBeTruthy();
-    expect(screen.getByText("Confirm Account Deletion")).toBeTruthy();
+    expect(screen.getByText("Confirm account deletion")).toBeTruthy();
   });
 
   it("does not render when closed", () => {
@@ -146,7 +146,7 @@ describe("RetakeAssessmentModal", () => {
     const onClose = vi.fn();
     const onContinue = vi.fn();
     render(<RetakeAssessmentModal isOpen={true} onClose={onClose} onContinue={onContinue} />);
-    fireEvent.click(screen.getByText("Yes, Retake assessment"));
+    fireEvent.click(screen.getByText("Yes, retake assessment"));
     expect(onContinue).toHaveBeenCalled();
     expect(onClose).toHaveBeenCalled();
   });
@@ -154,7 +154,7 @@ describe("RetakeAssessmentModal", () => {
   it("calls only onClose when no onContinue provided", () => {
     const onClose = vi.fn();
     render(<RetakeAssessmentModal isOpen={true} onClose={onClose} />);
-    fireEvent.click(screen.getByText("Yes, Retake assessment"));
+    fireEvent.click(screen.getByText("Yes, retake assessment"));
     expect(onClose).toHaveBeenCalled();
   });
 
@@ -170,7 +170,7 @@ describe("SessionExpiredModal", () => {
   it("renders when open", () => {
     render(<SessionExpiredModal isOpen={true} onClose={vi.fn()} onLoginAgain={vi.fn()} />);
     expect(screen.getByTestId("base-modal")).toBeTruthy();
-    expect(screen.getByText("Session Expired")).toBeTruthy();
+    expect(screen.getByText("Session expired")).toBeTruthy();
   });
 
   it("does not render when closed", () => {
@@ -181,7 +181,7 @@ describe("SessionExpiredModal", () => {
   it("calls onLoginAgain when Log In Again clicked", () => {
     const onLoginAgain = vi.fn();
     render(<SessionExpiredModal isOpen={true} onClose={vi.fn()} onLoginAgain={onLoginAgain} />);
-    fireEvent.click(screen.getByText("Log In Again"));
+    fireEvent.click(screen.getByText("Log in again"));
     expect(onLoginAgain).toHaveBeenCalled();
   });
 
@@ -197,7 +197,7 @@ describe("UpdateCompletedModal", () => {
   it("renders when open", () => {
     render(<UpdateCompletedModal isOpen={true} onClose={vi.fn()} />);
     expect(screen.getByTestId("base-modal")).toBeTruthy();
-    expect(screen.getByText("Update Complete")).toBeTruthy();
+    expect(screen.getByText("Update complete")).toBeTruthy();
   });
 
   it("does not render when closed", () => {
@@ -211,7 +211,7 @@ describe("UpdateCompletedModal", () => {
     render(
       <UpdateCompletedModal isOpen={true} onClose={onClose} onBackToSettings={onBackToSettings} />
     );
-    fireEvent.click(screen.getByText("Back to Settings"));
+    fireEvent.click(screen.getByText("Back to settings"));
     expect(onBackToSettings).toHaveBeenCalled();
     expect(onClose).toHaveBeenCalled();
   });
@@ -219,7 +219,7 @@ describe("UpdateCompletedModal", () => {
   it("calls only onClose when no onBackToSettings provided", () => {
     const onClose = vi.fn();
     render(<UpdateCompletedModal isOpen={true} onClose={onClose} />);
-    fireEvent.click(screen.getByText("Back to Settings"));
+    fireEvent.click(screen.getByText("Back to settings"));
     expect(onClose).toHaveBeenCalled();
   });
 });

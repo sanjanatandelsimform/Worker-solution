@@ -123,10 +123,10 @@ export const SignInForm = () => {
 
             {/* Title and Description */}
             <div className="flex w-full flex-col items-start gap-3 text-center">
-              <h2 className="w-full text-3xl font-semibold leading-9.5 text-ws-text-primary">
-                Log in to Your Account
+              <h2 className="w-full text-3xl font-semibold leading-9.5 text-ws-text-primary normal-case">
+                Log in to your account
               </h2>
-              <p className="w-full text-base font-normal leading-6 text-ws-text-tertiary">
+              <p className="w-full text-base font-normal leading-6 text-ws-text-tertiary normal-case">
                 Welcome back! Please enter your details.
               </p>
             </div>
@@ -200,12 +200,12 @@ export const SignInForm = () => {
                     isSelected={rememberMe}
                     onChange={selected => setValue("rememberMe", selected)}
                     label="Remember for 30 days"
-                    className="text-ws-text-secondary"
+                    className="text-ws-text-secondary normal-case"
                   />
                 </div>
                 <Link
                   to="/forgot-password"
-                  className="text-sm font-semibold text-ws-navy-800 hover:text-ws-navy-800 hover:underline"
+                  className="text-sm font-semibold text-ws-navy-800 hover:text-ws-navy-800 hover:underline normal-case"
                 >
                   Forgot password?
                 </Link>
@@ -228,10 +228,10 @@ export const SignInForm = () => {
 
           {/* Sign up link */}
           <div className="flex w-full items-baseline justify-center gap-1">
-            <p className="text-sm font-normal leading-5 text-ws-text-tertiary">
+            <p className="text-sm font-normal leading-5 text-ws-text-tertiary normal-case">
               Don't have an account?
             </p>
-            <Link to="/sign-up" className="text-sm font-normal underline text-ws-light-teal-850">
+            <Link to="/sign-up" className="text-sm font-normal underline text-ws-light-teal-850 normal-case">
               Sign up
             </Link>
           </div>

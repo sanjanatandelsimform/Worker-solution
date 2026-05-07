@@ -67,14 +67,14 @@ import { ChangePasswordModal } from "@/components/modals/ChangePasswordModal";
 describe("ChangePasswordModal", () => {
   it("renders when open", () => {
     render(wrap(<ChangePasswordModal isOpen={true} onClose={vi.fn()} />));
-    expect(screen.getByText("Change Your Password")).toBeInTheDocument();
+    expect(screen.getByText("Change your password")).toBeInTheDocument();
   });
 
   it("renders password fields", () => {
     render(wrap(<ChangePasswordModal isOpen={true} onClose={vi.fn()} />));
-    expect(screen.getByText("Current Password")).toBeInTheDocument();
-    expect(screen.getByText("New Password")).toBeInTheDocument();
-    expect(screen.getByText("Confirm New Password")).toBeInTheDocument();
+    expect(screen.getByText("Current password")).toBeInTheDocument();
+    expect(screen.getByText("New password")).toBeInTheDocument();
+    expect(screen.getByText("Confirm new password")).toBeInTheDocument();
   });
 
   it("renders Update button", () => {
@@ -84,7 +84,7 @@ describe("ChangePasswordModal", () => {
 
   it("does not render when closed", () => {
     render(wrap(<ChangePasswordModal isOpen={false} onClose={vi.fn()} />));
-    expect(screen.queryByText("Change Your Password")).toBeNull();
+    expect(screen.queryByText("Change your password")).toBeNull();
   });
 });
 
@@ -94,12 +94,12 @@ import { UpdateYourEmailModal } from "@/components/modals/UpdateYourEmailModal";
 describe("UpdateYourEmailModal", () => {
   it("renders when open", () => {
     render(wrap(<UpdateYourEmailModal isOpen={true} onClose={vi.fn()} getResponse={vi.fn()} />));
-    expect(screen.getByText("Update Your Email")).toBeInTheDocument();
+    expect(screen.getByText("Update your email")).toBeInTheDocument();
   });
 
   it("does not render when closed", () => {
     render(wrap(<UpdateYourEmailModal isOpen={false} onClose={vi.fn()} getResponse={vi.fn()} />));
-    expect(screen.queryByText("Update Your Email")).toBeNull();
+    expect(screen.queryByText("Update your email")).toBeNull();
   });
 });
 
@@ -111,20 +111,20 @@ describe("UpdateYourInformationModal", () => {
     render(
       wrap(<UpdateYourInformationModal isOpen={true} onClose={vi.fn()} onSuccess={vi.fn()} />)
     );
-    expect(screen.getByText("Update Your Information")).toBeInTheDocument();
+    expect(screen.getByText("Update your information")).toBeInTheDocument();
   });
 
   it("renders submit button", () => {
     render(
       wrap(<UpdateYourInformationModal isOpen={true} onClose={vi.fn()} onSuccess={vi.fn()} />)
     );
-    expect(screen.getByText("Update Information")).toBeInTheDocument();
+    expect(screen.getByText("Update information")).toBeInTheDocument();
   });
 
   it("does not render when closed", () => {
     render(
       wrap(<UpdateYourInformationModal isOpen={false} onClose={vi.fn()} onSuccess={vi.fn()} />)
     );
-    expect(screen.queryByText("Update Your Information")).toBeNull();
+    expect(screen.queryByText("Update your information")).toBeNull();
   });
 });

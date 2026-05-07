@@ -18,7 +18,7 @@ export const SessionExpiredModal = ({
       isOpen={isOpen}
       onClose={onClose}
       size="sm"
-      title="Session Expired"
+      title="Session expired"
       subtitle="Your session has expired. Please log in again to continue."
       icon={<AlertTriangle className="size-6" />}
       messageImg={alertIcon}
@@ -30,7 +30,7 @@ export const SessionExpiredModal = ({
           color: "secondary",
         },
         {
-          text: "Log In Again",
+          text: "Log in again",
           onClick: onLoginAgain,
           color: "primary",
         },

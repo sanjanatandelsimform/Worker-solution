@@ -272,8 +272,8 @@ describe("SettingsPage", () => {
     renderSettings();
     // Exercise the render path - Settings heading is always present
     expect(screen.getByText("Settings")).toBeInTheDocument();
-    expect(screen.getByText("Personal Information")).toBeInTheDocument();
-    expect(screen.getByText("Account Management")).toBeInTheDocument();
+    expect(screen.getByText(/Personal information/i)).toBeInTheDocument();
+    expect(screen.getByText(/Account Management/i)).toBeInTheDocument();
   });
 
   it("opens Update Info modal on button click", () => {

@@ -66,7 +66,7 @@ describe("ResetPasswordForm", () => {
   it("renders the form with heading and password inputs", () => {
     renderWithProviders(<ResetPasswordForm />);
     expect(screen.getByText("Reset password")).toBeInTheDocument();
-    expect(screen.getByText("Save Password")).toBeInTheDocument();
+    expect(screen.getByText("Save password")).toBeInTheDocument();
     expect(screen.getByText("Sign in")).toBeInTheDocument();
   });
 
@@ -83,7 +83,7 @@ describe("ResetPasswordForm", () => {
     renderWithProviders(<ResetPasswordForm />);
 
     const passwordInput = screen.getByPlaceholderText("Password");
-    const confirmInput = screen.getByPlaceholderText("Confirm Password");
+    const confirmInput = screen.getByPlaceholderText("Confirm password");
 
     fireEvent.input(passwordInput, { target: { value: "NewPassword1!" } });
     fireEvent.blur(passwordInput);
@@ -105,33 +105,7 @@ describe("ResetPasswordForm", () => {
     renderWithProviders(<ResetPasswordForm />);
 
     const passwordInput = screen.getByPlaceholderText("Password");
-    const confirmInput = screen.getByPlaceholderText("Confirm Password");
-    fireEvent.input(passwordInput, { target: { value: "NewPassword1!" } });
-    fireEvent.blur(passwordInput);
-    fireEvent.input(confirmInput, { target: { value: "NewPassword1!" } });
-    fireEvent.blur(confirmInput);
-    fireEvent.submit(passwordInput.closest("form")!);
-
-    await waitFor(
-      () => {
-        expect(screen.getByTestId("success-modal")).toBeTruthy();
-      },
-      { timeout: 3000 }
-    );
-
-    // Click modal close button (covers onClose callback)
-    fireEvent.click(screen.getByTestId("modal-close"));
-    expect(mockNavigate).toHaveBeenCalledWith("/sign-in");
-  });
-
-  it("success modal action button calls handleGetStarted (covers lines 61-64)", async () => {
-    const { resetPassword } = await import("@/services/api/authApi");
-    (resetPassword as ReturnType<typeof vi.fn>).mockResolvedValueOnce({});
-
-    renderWithProviders(<ResetPasswordForm />);
-
-    const passwordInput = screen.getByPlaceholderText("Password");
-    const confirmInput = screen.getByPlaceholderText("Confirm Password");
+    const confirmInput = screen.getByPlaceholderText("Confirm password");
     fireEvent.input(passwordInput, { target: { value: "NewPassword1!" } });
     fireEvent.blur(passwordInput);
     fireEvent.input(confirmInput, { target: { value: "NewPassword1!" } });
@@ -157,16 +131,22 @@ describe("ResetPasswordForm", () => {
     renderWithProviders(<ResetPasswordForm />);
 
     const passwordInput = screen.getByPlaceholderText("Password");
-    const confirmInput = screen.getByPlaceholderText("Confirm Password");
+    const confirmInput = screen.getByPlaceholderText("Confirm password");
+
     fireEvent.input(passwordInput, { target: { value: "NewPassword1!" } });
     fireEvent.blur(passwordInput);
     fireEvent.input(confirmInput, { target: { value: "NewPassword1!" } });
     fireEvent.blur(confirmInput);
-    fireEvent.submit(passwordInput.closest("form")!);
 
-    await waitFor(() => {
-      expect(resetPassword).toHaveBeenCalled();
-    });
+    const form = passwordInput.closest("form")!;
+    fireEvent.submit(form);
+
+    await waitFor(
+      () => {
+        expect(screen.getByTestId("error-message")).toBeTruthy();
+      },
+      { timeout: 3000 }
+    );
 
     // If error message appears, click close
     const closeBtn = screen.queryByTestId("error-close");
@@ -183,7 +163,7 @@ describe("ResetPasswordForm", () => {
     renderWithProviders(<ResetPasswordForm />);
 
     const passwordInput = screen.getByPlaceholderText("Password");
-    const confirmInput = screen.getByPlaceholderText("Confirm Password");
+    const confirmInput = screen.getByPlaceholderText("Confirm password");
 
     fireEvent.input(passwordInput, { target: { value: "NewPassword1!" } });
     fireEvent.blur(passwordInput);

@@ -6,6 +6,7 @@ import { updateUser, setTokens } from "@/store/slices/authSlice";
 import { LoadingSpinner } from "@/components/common/LoadingSpinner";
 import type { UserAccount } from "@/types/auth";
 import siteLogo from "@/assets/logo.svg";
+import { Button } from "@/components/base/buttons/button";
 
 const STORAGE_KEY = "userDetail";
 
@@ -109,19 +110,20 @@ export const VerifyEmailPage: React.FC = () => {
             </div>
             <div className="flex w-full flex-col items-center gap-6 text-center">
               <h2 className="w-full text-4xl font-semibold leading-9.5 text-ws-text-primary">
-                Verification Failed
+                Verification failed
               </h2>
               <p className="w-full text-medium font-normal leading-6 text-ws-text-tertiary">
                 {errorMessage}
               </p>
             </div>
             <div className="flex w-full flex-col items-center gap-4">
-              <button
+              <Button
+                color="primary"
                 onClick={() => navigate("/sign-in")}
-                className="w-full rounded-lg bg-utility-brand-600 px-4 py-3 text-base font-semibold text-ws-base-white hover:bg-utility-brand-700"
+                //className="w-full rounded-lg bg-utility-brand-600 px-4 py-3 text-base font-semibold text-ws-base-white hover:bg-utility-brand-700"
               >
-                Back to Sign In
-              </button>
+                Back to sign in
+              </Button>
             </div>
           </div>
         </div>

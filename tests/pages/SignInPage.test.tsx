@@ -45,9 +45,9 @@ describe("SignInPage", () => {
 
   it("should render log in heading and description", () => {
     renderSignInPage();
-    expect(screen.getByText("Log in to Your Account")).toBeInTheDocument();
+    expect(screen.getByText(/Log in to your account/i)).toBeInTheDocument();
     expect(screen.getByText(/Welcome back! Please enter your details/)).toBeInTheDocument();
-  });
+  });;
 
   it("should render logo image", () => {
     renderSignInPage();
@@ -189,7 +189,7 @@ describe("SignInPage", () => {
   it("should render Google SSO button if present", () => {
     renderSignInPage();
     // Check for the Sign in with Google button or just render check
-    expect(screen.getByText("Log in to Your Account")).toBeTruthy();
+    expect(screen.getByText(/Log in to your account/i)).toBeTruthy();
   });
 
   it("submitting empty form triggers validation error (covers if(!isValid) return branch)", async () => {

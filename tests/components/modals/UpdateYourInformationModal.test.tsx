@@ -103,8 +103,8 @@ describe("UpdateYourInformationModal", () => {
       <UpdateYourInformationModal isOpen={true} onClose={vi.fn()} onSuccess={vi.fn()} />
     );
 
-    fireEvent.change(screen.getByLabelText("First Name"), { target: { value: "" } });
-    fireEvent.change(screen.getByLabelText("Last Name"), { target: { value: "" } });
+    fireEvent.change(screen.getByLabelText("First name"), { target: { value: "" } });
+    fireEvent.change(screen.getByLabelText("Last name"), { target: { value: "" } });
     fireEvent.submit(container.querySelector("form")!);
 
     expect(screen.getByText("First name invalid")).toBeTruthy();
@@ -122,8 +122,8 @@ describe("UpdateYourInformationModal", () => {
       <UpdateYourInformationModal isOpen={true} onClose={onClose} onSuccess={onSuccess} />
     );
 
-    fireEvent.change(screen.getByLabelText("First Name"), { target: { value: "Janet" } });
-    fireEvent.change(screen.getByLabelText("Last Name"), { target: { value: "Smith" } });
+    fireEvent.change(screen.getByLabelText("First name"), { target: { value: "Janet" } });
+    fireEvent.change(screen.getByLabelText("Last name"), { target: { value: "Smith" } });
     fireEvent.submit(container.querySelector("form")!);
 
     await waitFor(() => {
@@ -143,8 +143,8 @@ describe("UpdateYourInformationModal", () => {
       <UpdateYourInformationModal isOpen={true} onClose={vi.fn()} onSuccess={vi.fn()} />
     );
 
-    fireEvent.change(screen.getByLabelText("First Name"), { target: { value: "Janet" } });
-    fireEvent.change(screen.getByLabelText("Last Name"), { target: { value: "Smith" } });
+    fireEvent.change(screen.getByLabelText("First name"), { target: { value: "Janet" } });
+    fireEvent.change(screen.getByLabelText("Last name"), { target: { value: "Smith" } });
     fireEvent.submit(container.querySelector("form")!);
 
     expect(await screen.findByText("boom")).toBeTruthy();

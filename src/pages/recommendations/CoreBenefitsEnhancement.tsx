@@ -90,7 +90,7 @@ export default function CoreBenefitsEnhancement({
               />
             )}
           </div>
-          <div className="mt-6 grid grid-cols-1 xl:grid-cols-3 gap-6 w-full">
+          <div className="mt-6 grid grid-cols-1 xl:grid-cols-[repeat(auto-fit,minmax(0,1fr))] gap-6 w-full">
             {isLoading ? (
               <>
                 <ProvenStrategiesCardsSkeleton />

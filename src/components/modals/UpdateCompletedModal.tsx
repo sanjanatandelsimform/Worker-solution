@@ -25,14 +25,14 @@ export const UpdateCompletedModal = ({
       isOpen={isOpen}
       onClose={onClose}
       size="sm"
-      title="Update Complete"
+      title="Update complete"
       subtitle="All set! Your changes have been saved."
       icon={<CheckCircle className="size-6 text-ws-success-600" />}
       messageImg={checkmarkIcon}
       backgroundPattern="success"
       buttons={[
         {
-          text: "Back to Settings",
+          text: "Back to settings",
           onClick: handleBackToSettings,
           color: "primary",
         },
