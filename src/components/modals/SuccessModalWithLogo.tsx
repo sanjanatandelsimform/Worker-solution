@@ -7,7 +7,7 @@ import {
 } from "@/components/base/modal/modal";
 import { Button } from "@/components/base/buttons/button";
 import { X } from "@untitledui/icons";
-import siteLogo from "@/assets/logo-small.svg";
+import siteLogo from "@/assets/logo.svg";
 
 export interface SuccessModalWithLogoButton {
   text: string;
