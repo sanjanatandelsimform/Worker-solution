@@ -91,6 +91,8 @@ export interface GenderBreakdown {
   men: string;
   /** e.g. "40%" */
   women: string;
+  /** e.g. "5%" — individuals who do not identify as man or woman, or choose not to identify */
+  other?: string;
 }
 
 export interface AgeBreakdownEntry {

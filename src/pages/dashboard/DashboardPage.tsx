@@ -138,8 +138,6 @@ export const DashboardPage = () => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [user?.id]);
 
-
-
   // Check sessionStorage once on mount for Goals completion flag.
   useEffect(() => {
     if (sessionStorage.getItem("goalsCompletionPending") === "true") {

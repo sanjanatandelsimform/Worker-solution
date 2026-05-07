@@ -37,6 +37,14 @@ export function useWorkforceDemographicsConfig(
         count: demographicsSection?.gender.men ?? "--",
         getCountClass: () => COUNT_CLASS,
       },
+      {
+        id: "other",
+        title: "Other",
+        count: demographicsSection?.gender.other ?? "--",
+        tooltipText:
+          "Other includes individuals that choose not to identify or do not identify as man or woman.",
+        getCountClass: () => COUNT_CLASS,
+      },
     ],
     [demographicsSection]
   );
