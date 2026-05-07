@@ -84,4 +84,4 @@ export const selectProvenStrategiesFlags = createSelector(
  * Used by RecommendationsFinchPage to populate company at a glance for non-connected users.
  */
 export const selectRecommCompanyOverview = (state: RootState): CompanyOverview | null =>
-  state.recommendations.data?.recommendation?.companyOverview ?? null;
+  state.recommendations.data?.companyOverview ?? null;
