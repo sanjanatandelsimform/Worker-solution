@@ -25,7 +25,7 @@ export const NavList = ({ activeUrl, items, className, isCollapsed = false }: Na
   return (
     <ul
       className={cx(
-        "mt-0 flex flex-col w-full px-0 lg:px-0" ,
+        "mt-0 flex flex-col w-full px-0 lg:px-0",
         isCollapsed ? "items-center" : "items-start",
         className
       )}

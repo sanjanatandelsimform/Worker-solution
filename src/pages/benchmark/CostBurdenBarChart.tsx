@@ -150,7 +150,7 @@ export default function CostBurdenBarChart({ data, width, height = 400 }: Canvas
         ctx.font = "500 14px Inter, sans-serif";
         ctx.fillStyle = textColor;
         ctx.textAlign = "center";
-        
+
         // If bar is too short (< 20px), place label above the bar top inside chart area
         if (bar2Height < 20) {
           ctx.textBaseline = "bottom";

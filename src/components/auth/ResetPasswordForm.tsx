@@ -20,11 +20,6 @@ export default function ResetPasswordForm() {
 
   const resetToken = searchParams.get("token");
 
-  // Redirect immediately if no token present in URL
-  if (!resetToken) {
-    return <Navigate to="/sign-in" replace />;
-  }
-
   const {
     handleSubmit,
     formState: { errors, isSubmitting },
@@ -41,6 +36,11 @@ export default function ResetPasswordForm() {
     },
   });
 
+  // Redirect immediately if no token present in URL
+  if (!resetToken) {
+    return <Navigate to="/sign-in" replace />;
+  }
+
   const onSubmit = async (data: ResetPasswordFormData) => {
     try {
       setError(null);
@@ -50,7 +50,8 @@ export default function ResetPasswordForm() {
         state: {
           messageImg: checkmarkIcon,
           title: "Password reset successful",
-          subtitle: "Your password has been updated successfully. You can now sign in using your new password.",
+          subtitle:
+            "Your password has been updated successfully. You can now sign in using your new password.",
           buttonText: "Log in",
           buttonPath: "/sign-in",
           shouldClearUser: true,

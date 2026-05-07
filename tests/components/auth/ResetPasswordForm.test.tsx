@@ -125,13 +125,16 @@ describe("ResetPasswordForm", () => {
 
     await waitFor(
       () => {
-        expect(mockNavigate).toHaveBeenCalledWith("/success", expect.objectContaining({
-          state: expect.objectContaining({
-            title: "Password reset successful",
-            buttonPath: "/sign-in",
-            shouldClearUser: true,
-          }),
-        }));
+        expect(mockNavigate).toHaveBeenCalledWith(
+          "/success",
+          expect.objectContaining({
+            state: expect.objectContaining({
+              title: "Password reset successful",
+              buttonPath: "/sign-in",
+              shouldClearUser: true,
+            }),
+          })
+        );
       },
       { timeout: 3000 }
     );
@@ -153,12 +156,15 @@ describe("ResetPasswordForm", () => {
 
     await waitFor(
       () => {
-        expect(mockNavigate).toHaveBeenCalledWith("/success", expect.objectContaining({
-          state: expect.objectContaining({
-            buttonText: "Log in",
-            buttonPath: "/sign-in",
-          }),
-        }));
+        expect(mockNavigate).toHaveBeenCalledWith(
+          "/success",
+          expect.objectContaining({
+            state: expect.objectContaining({
+              buttonText: "Log in",
+              buttonPath: "/sign-in",
+            }),
+          })
+        );
       },
       { timeout: 3000 }
     );
