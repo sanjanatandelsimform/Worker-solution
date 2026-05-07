@@ -14,6 +14,7 @@ import type {
   RecommendationsApiResponse,
   RecommendationData,
   StrategicRecommendation,
+  CompanyOverview,
 } from "@/types/recommendationsTypes";
 import type { StrategyFlagStatus } from "@/types/strategyFlagTypes";
 import { normaliseFlag } from "@/utils/strategyFlagUtils";
@@ -76,3 +77,11 @@ export const selectProvenStrategiesFlags = createSelector(
     healthcareAffordability: normaliseFlag(item?.healthcareAffordability),
   })
 );
+
+/**
+ * Select the companyOverview object from the recommendations API response.
+ * Returns null when absent (Finch-connected users or older API versions).
+ * Used by RecommendationsFinchPage to populate company at a glance for non-connected users.
+ */
+export const selectRecommCompanyOverview = (state: RootState): CompanyOverview | null =>
+  state.recommendations.data?.recommendation?.companyOverview ?? null;
