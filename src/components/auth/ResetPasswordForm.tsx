@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { Link, useNavigate, useSearchParams } from "react-router-dom";
+import { Link, Navigate, useNavigate, useSearchParams } from "react-router-dom";
 import { Button } from "../base/buttons/button";
 import { Input } from "../base/input/input";
 import { InputGroup } from "../base/input/input-group";
@@ -20,6 +20,11 @@ export default function ResetPasswordForm() {
 
   const resetToken = searchParams.get("token");
 
+  // Redirect immediately if no token present in URL
+  if (!resetToken) {
+    return <Navigate to="/sign-in" replace />;
+  }
+
   const {
     handleSubmit,
     formState: { errors, isSubmitting },
@@ -37,14 +42,6 @@ export default function ResetPasswordForm() {
   });
 
   const onSubmit = async (data: ResetPasswordFormData) => {
-    if (!resetToken) {
-      setError({
-        message: "Invalid or missing reset token. Please request a new password reset link.",
-        type: "warning",
-      });
-      return;
-    }
-
     try {
       setError(null);
       await resetPassword(resetToken, data.newPassword);
@@ -153,7 +150,7 @@ export default function ResetPasswordForm() {
                   type="submit"
                   color="primary"
                   size="lg"
-                  isDisabled={isSubmitting || !resetToken}
+                  isDisabled={isSubmitting}
                   className="w-full"
                 >
                   {isSubmitting ? "Resetting..." : "Save Password"}

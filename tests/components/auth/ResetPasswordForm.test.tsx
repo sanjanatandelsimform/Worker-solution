@@ -4,12 +4,15 @@ import { renderWithProviders } from "../../test-utils";
 import ResetPasswordForm from "@/components/auth/ResetPasswordForm";
 
 const mockNavigate = vi.fn();
+let mockSearchParams = new URLSearchParams("token=test-token");
+
 vi.mock("react-router-dom", async () => {
   const actual = await vi.importActual("react-router-dom");
   return {
     ...actual,
     useNavigate: () => mockNavigate,
-    useSearchParams: () => [new URLSearchParams("token=test-token"), vi.fn()],
+    useSearchParams: () => [mockSearchParams, vi.fn()],
+    Navigate: ({ to }: { to: string }) => <div data-testid="navigate-redirect" data-to={to} />,
   };
 });
 
@@ -61,6 +64,14 @@ vi.mock("@/components/modals/SuccessModalWithLogo", () => ({
 describe("ResetPasswordForm", () => {
   beforeEach(() => {
     vi.clearAllMocks();
+    mockSearchParams = new URLSearchParams("token=test-token");
+  });
+
+  it("redirects to sign-in when no token is present in URL", () => {
+    mockSearchParams = new URLSearchParams("");
+    renderWithProviders(<ResetPasswordForm />);
+    const redirect = screen.getByTestId("navigate-redirect");
+    expect(redirect).toHaveAttribute("data-to", "/sign-in");
   });
 
   it("renders the form with heading and password inputs", () => {
