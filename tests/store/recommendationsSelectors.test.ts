@@ -59,9 +59,9 @@ const mockRecommendationsData: RecommendationsApiResponse = {
         priorityLevelUsed: 1,
       },
     ],
-    autoEnroll: true,
-    nonElectiveMatch: false,
-    healthcareAffordability: true,
+    autoEnroll: "green",
+    nonElectiveMatch: "hidden",
+    healthcareAffordability: "green",
     dataStatus: "available",
   },
 };
@@ -169,38 +169,60 @@ describe("recommendationsSelectors", () => {
   });
 
   describe("selectProvenStrategiesFlags", () => {
-    it("returns all false when data is null", () => {
+    it("returns all 'hidden' when data is null", () => {
       expect(selectProvenStrategiesFlags(makeState() as RootState)).toEqual({
-        nonElectiveMatch: false,
-        autoEnroll: false,
-        healthcareAffordability: false,
+        nonElectiveMatch: "hidden",
+        autoEnroll: "hidden",
+        healthcareAffordability: "hidden",
       });
     });
 
     it("returns correct flag values from loaded data", () => {
-      // mockRecommendationsData has: autoEnroll: true, nonElectiveMatch: false, healthcareAffordability: true
+      // mockRecommendationsData has: autoEnroll: "green", nonElectiveMatch: "hidden", healthcareAffordability: "green"
       const state = makeState({ data: mockRecommendationsData }) as RootState;
       expect(selectProvenStrategiesFlags(state)).toEqual({
-        nonElectiveMatch: false,
-        autoEnroll: true,
-        healthcareAffordability: true,
+        nonElectiveMatch: "hidden",
+        autoEnroll: "green",
+        healthcareAffordability: "green",
       });
     });
 
-    it("returns all true when all flags are true", () => {
-      const allTrueData: RecommendationsApiResponse = {
+    it("returns all 'green' when all flags are 'green'", () => {
+      const allGreenData: RecommendationsApiResponse = {
+        ...mockRecommendationsData,
         recommendation: {
           ...mockRecommendationsData.recommendation,
-          autoEnroll: true,
-          nonElectiveMatch: true,
-          healthcareAffordability: true,
+          autoEnroll: "green",
+          nonElectiveMatch: "green",
+          healthcareAffordability: "green",
         },
       };
-      const state = makeState({ data: allTrueData }) as RootState;
+      const state = makeState({ data: allGreenData }) as RootState;
       expect(selectProvenStrategiesFlags(state)).toEqual({
-        nonElectiveMatch: true,
-        autoEnroll: true,
-        healthcareAffordability: true,
+        nonElectiveMatch: "green",
+        autoEnroll: "green",
+        healthcareAffordability: "green",
+      });
+    });
+
+    it("normalises unrecognised value to 'hidden'", () => {
+      const legacyData: RecommendationsApiResponse = {
+        ...mockRecommendationsData,
+        recommendation: {
+          ...mockRecommendationsData.recommendation,
+          // Cast to simulate a legacy boolean payload arriving from the API
+          autoEnroll: true as unknown as import("@/types/strategyFlagTypes").StrategyFlagStatus,
+          nonElectiveMatch:
+            false as unknown as import("@/types/strategyFlagTypes").StrategyFlagStatus,
+          healthcareAffordability:
+            "active" as unknown as import("@/types/strategyFlagTypes").StrategyFlagStatus,
+        },
+      };
+      const state = makeState({ data: legacyData }) as RootState;
+      expect(selectProvenStrategiesFlags(state)).toEqual({
+        autoEnroll: "hidden",
+        nonElectiveMatch: "hidden",
+        healthcareAffordability: "hidden",
       });
     });
   });

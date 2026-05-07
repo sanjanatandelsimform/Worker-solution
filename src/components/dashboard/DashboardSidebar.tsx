@@ -24,7 +24,7 @@ export const DashboardSidebar = ({ activeUrl = "/" }: DashboardSidebarProps) => 
   const [isLogoutModalOpen, setIsLogoutModalOpen] = useState(false);
   const [isLogoutButtonDisabled, setIsLogoutButtonDisabled] = useState(false);
   const [logoutError, setLogoutError] = useState<string | null>(null);
-  const [isCollapsed, setIsCollapsed] = useState(true); // Default collapsed on tablet
+  const isCollapsed = true; // Default collapsed on tablet
 
   const { user, tokens } = useAppSelector(state => state.auth);
 
@@ -93,9 +93,8 @@ export const DashboardSidebar = ({ activeUrl = "/" }: DashboardSidebarProps) => 
     additionalData: { isDisabled: isLogoutButtonDisabled },
   });
 
-  {
-    /* Dashboard left navigation menu items configuration */
-  }
+  /* Dashboard left navigation menu items configuration */
+
   const navigationItems: NavItemType[] = [
     {
       label: "Dashboard",
@@ -138,11 +137,6 @@ export const DashboardSidebar = ({ activeUrl = "/" }: DashboardSidebarProps) => 
     }
     return "U";
   };
-
-  // const toggleSidebar = () => {
-  //   setIsCollapsed(!isCollapsed);
-  // };
-  console.log(setIsCollapsed);
 
   return (
     <div

@@ -7,6 +7,7 @@ import { LoadingSpinner } from "@/components/common/LoadingSpinner";
 import type { UserAccount } from "@/types/auth";
 import siteLogo from "@/assets/logo.svg";
 import { Button } from "@/components/base/buttons/button";
+import checkmarkIcon from "@/assets/success-check.svg";
 
 const STORAGE_KEY = "userDetail";
 
@@ -18,6 +19,7 @@ export const VerifyEmailPage: React.FC = () => {
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
 
   const token = searchParams.get("token");
+  const emailParam = searchParams.get("emailChange");
 
   useEffect(() => {
     const handleVerification = async () => {
@@ -82,10 +84,26 @@ export const VerifyEmailPage: React.FC = () => {
           }
         }
 
-        navigate("/dashboard", {
-          state: { emailVerified: true },
-          replace: true,
-        });
+        // Navigate based on email parameter
+        if (emailParam === "true") {
+          // New flow: redirect to success page for email verification
+          navigate("/success", {
+            state: {
+              messageImg: checkmarkIcon,
+              title: "Email has been verified!",
+              subtitle: "All set! Your email has been updated.",
+              buttonText: "Log in",
+              buttonPath: "/sign-in",
+              shouldClearUser: true,
+            },
+          });
+        } else {
+          // Existing flow: redirect to dashboard
+          navigate("/dashboard", {
+            state: { emailVerified: true },
+            replace: true,
+          });
+        }
       } catch (error) {
         console.error("Email verification error:", error);
         setErrorMessage(
@@ -98,7 +116,7 @@ export const VerifyEmailPage: React.FC = () => {
     };
 
     handleVerification();
-  }, [token, navigate, dispatch]);
+  }, [token, emailParam, navigate, dispatch]);
 
   if (!isVerifying && errorMessage) {
     return (

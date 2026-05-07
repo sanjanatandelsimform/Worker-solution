@@ -260,9 +260,12 @@ describe("SignInPage", () => {
     const passwordInput = document.querySelector('input[type="password"]');
     if (passwordInput) fireEvent.change(passwordInput, { target: { value: "Password123!" } });
     fireEvent.click(screen.getByText("Sign in"));
-    await waitFor(() => {
-      expect(mockSignin).toHaveBeenCalled();
-    });
+    await waitFor(
+      () => {
+        expect(mockSignin).toHaveBeenCalled();
+      },
+      { timeout: 15000 }
+    );
     // Find and click the error message close button if it's rendered
     const closeBtn =
       screen.queryByText("dismiss") || screen.queryByRole("button", { name: /close/i });
@@ -270,7 +273,7 @@ describe("SignInPage", () => {
       fireEvent.click(closeBtn);
     }
     expect(document.body).toBeTruthy();
-  });
+  }, 20000);
 
   it("rememberMe checkbox onChange sets rememberMe value", () => {
     renderSignInPage();

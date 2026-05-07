@@ -15,6 +15,7 @@ vi.mock("@/services/api/authApi", () => ({
 }));
 
 vi.mock("@/assets/logo.svg", () => ({ default: "logo.svg" }));
+vi.mock("@/assets/success-check.svg", () => ({ default: "success-check.svg" }));
 
 const mockVerifyEmail = vi.mocked(verifyEmail);
 
@@ -98,6 +99,98 @@ describe("VerifyEmailPage", () => {
     await waitFor(() => {
       expect(screen.getByText(/Verification failed/i)).toBeInTheDocument();
       expect(screen.getByText("Token expired")).toBeInTheDocument();
+    });
+  });
+
+  describe("Email parameter flow", () => {
+    it("should navigate to success page when emailChange=true", async () => {
+      mockSearchParams = new URLSearchParams("token=test-token&emailChange=true");
+      mockVerifyEmail.mockResolvedValueOnce({
+        user: {
+          id: "user-1",
+          businessEmail: "test@test.com",
+          emailVerify: true,
+        },
+        tokens: { accessToken: "at", refreshToken: "rt" },
+      });
+
+      renderVerifyEmailPage();
+
+      await waitFor(() => {
+        expect(mockNavigate).toHaveBeenCalledWith("/success", {
+          state: {
+            messageImg: "success-check.svg",
+            title: "Email has been verified!",
+            subtitle: "All set! Your email has been updated.",
+            buttonText: "Log in",
+            buttonPath: "/sign-in",
+            shouldClearUser: true,
+          },
+        });
+      });
+    });
+
+    it("should navigate to dashboard when email parameter is missing", async () => {
+      mockSearchParams = new URLSearchParams("token=test-token");
+      mockVerifyEmail.mockResolvedValueOnce({
+        user: {
+          id: "user-1",
+          businessEmail: "test@test.com",
+          emailVerify: true,
+        },
+        tokens: { accessToken: "at", refreshToken: "rt" },
+      });
+
+      renderVerifyEmailPage();
+
+      await waitFor(() => {
+        expect(mockNavigate).toHaveBeenCalledWith("/dashboard", {
+          state: { emailVerified: true },
+          replace: true,
+        });
+      });
+    });
+
+    it("should navigate to dashboard when email=false", async () => {
+      mockSearchParams = new URLSearchParams("token=test-token&email=false");
+      mockVerifyEmail.mockResolvedValueOnce({
+        user: {
+          id: "user-1",
+          businessEmail: "test@test.com",
+          emailVerify: true,
+        },
+        tokens: { accessToken: "at", refreshToken: "rt" },
+      });
+
+      renderVerifyEmailPage();
+
+      await waitFor(() => {
+        expect(mockNavigate).toHaveBeenCalledWith("/dashboard", {
+          state: { emailVerified: true },
+          replace: true,
+        });
+      });
+    });
+
+    it("should navigate to dashboard when email has invalid value", async () => {
+      mockSearchParams = new URLSearchParams("token=test-token&email=invalid");
+      mockVerifyEmail.mockResolvedValueOnce({
+        user: {
+          id: "user-1",
+          businessEmail: "test@test.com",
+          emailVerify: true,
+        },
+        tokens: { accessToken: "at", refreshToken: "rt" },
+      });
+
+      renderVerifyEmailPage();
+
+      await waitFor(() => {
+        expect(mockNavigate).toHaveBeenCalledWith("/dashboard", {
+          state: { emailVerified: true },
+          replace: true,
+        });
+      });
     });
   });
 });

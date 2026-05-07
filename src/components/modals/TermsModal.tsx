@@ -9,6 +9,7 @@ import {
 import { Button } from "@/components/base/buttons/button";
 import { X } from "@untitledui/icons";
 import featuredIcon from "@/assets/featured-icon.svg";
+import TermsModalContent from "./TermsModalContent";
 
 export interface BaseModalWithIconButton {
   text: string;
@@ -30,6 +31,7 @@ export interface BaseModalWithIconProps {
   showCloseButton?: boolean;
   paddingBottom?: string;
   backgroundPattern?: "success" | "unsuccess";
+  onOpenPrivacyNotice?: (scrollToId?: string) => void;
 }
 
 export const TermsModal = ({
@@ -45,6 +47,7 @@ export const TermsModal = ({
   showCloseButton = true,
   paddingBottom = "h-3",
   backgroundPattern = "success",
+  onOpenPrivacyNotice,
 }: BaseModalWithIconProps) => {
   const backgroundClass = backgroundPattern === "success" ? " " : "background-pattern-unsuccess";
 
@@ -77,17 +80,13 @@ export const TermsModal = ({
 
           {/* Text and Supporting Text */}
           <div className="flex w-full flex-col gap-2">
-            <ModalTitle className="font-display text-2xl font-semibold leading-8 text-ws-text-primary mb-0 mt-4">
+            <ModalTitle className="font-display text-2xl font-semibold leading-8 text-ws-navy-900 mb-0 mt-4 ">
               {title}
             </ModalTitle>
             {subtitle && (
               <>
-                <p className="font-body text-sm font-normal leading-5 text-ws-text-tertiary">
-                  {subtitle}
-                </p>
-                <p className="font-body text-sm font-normal leading-5 text-ws-text-tertiary">
-                  {subtitleOne}
-                </p>
+                <p className="font-body text-sm font-normal leading-5 text-ws">{subtitle}</p>
+                <p className="font-body text-sm font-normal leading-5 text-ws">{subtitleOne}</p>
               </>
             )}
           </div>
@@ -97,58 +96,7 @@ export const TermsModal = ({
         </ModalHeader>
 
         <ModalContent className="border-0 pt-0 px-2">
-          <div className="w-full h-120 overflow-y-scroll pl-4 pb-6">
-            <div className="prose max-w-none">
-              <p className="text-sm text-ws-base-black">1. Acceptance of Terms</p>
-              <p className="text-sm text-ws-base-black">
-                Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor
-                incididunt ut labore et dolore magna aliqua. By accessing or using this service, you
-                agree to be bound by these Terms and Conditions.
-              </p>
-              <p className="text-sm text-ws-base-black">2. Acceptance of Terms</p>
-              <p className="text-sm text-ws-base-black">
-                Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor
-                incididunt ut labore et dolore magna aliqua. By accessing or using this service, you
-                agree to be bound by these Terms and Conditions.
-              </p>
-              <p className="text-sm text-ws-base-black">3. Acceptance of Terms</p>
-              <p className="text-sm text-ws-base-black">
-                Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor
-                incididunt ut labore et dolore magna aliqua. By accessing or using this service, you
-                agree to be bound by these Terms and Conditions.
-              </p>
-              <p className="text-sm text-ws-base-black">4. Acceptance of Terms</p>
-              <p className="text-sm text-ws-base-black">
-                Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor
-                incididunt ut labore et dolore magna aliqua. By accessing or using this service, you
-                agree to be bound by these Terms and Conditions.
-              </p>
-              <p className="text-sm text-ws-base-black">5. Acceptance of Terms</p>
-              <p className="text-sm text-ws-base-black">
-                Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor
-                incididunt ut labore et dolore magna aliqua. By accessing or using this service, you
-                agree to be bound by these Terms and Conditions.
-              </p>
-              <p className="text-sm text-ws-base-black">6. Acceptance of Terms</p>
-              <p className="text-sm text-ws-base-black">
-                Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor
-                incididunt ut labore et dolore magna aliqua. By accessing or using this service, you
-                agree to be bound by these Terms and Conditions.
-              </p>
-              <p className="text-sm text-ws-base-black">7. Acceptance of Terms</p>
-              <p className="text-sm text-ws-base-black">
-                Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor
-                incididunt ut labore et dolore magna aliqua. By accessing or using this service, you
-                agree to be bound by these Terms and Conditions.
-              </p>
-              <p className="text-sm text-ws-base-black">8. Acceptance of Terms</p>
-              <p className="text-sm text-ws-base-black">
-                Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor
-                incididunt ut labore et dolore magna aliqua. By accessing or using this service, you
-                agree to be bound by these Terms and Conditions.
-              </p>
-            </div>
-          </div>
+          <TermsModalContent onClose={onClose} onOpenPrivacyNotice={onOpenPrivacyNotice} />
         </ModalContent>
 
         {/* Modal Footer with Buttons */}

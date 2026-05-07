@@ -182,23 +182,26 @@ export default function BenefitsRetirementSection({
                 </Select>
               </>
             ) : (
-              <Input
-                type="number"
-                size="md"
-                placeholder="Enter amount"
-                value={healthPremiumMonthly}
-                onWheel={event => {
-                  (event.target as HTMLInputElement).blur();
-                }}
-                onChange={value => {
-                  onHealthPremiumMonthlyChange(value);
-                  onClearFieldError(question.id);
-                }}
-                isInvalid={!!fieldErrors[question.id]}
-                hint={fieldErrors[question.id] || "i.e. $300"}
-                className="w-full max-w-xs"
-                inputClassName="[appearance:textfield] [&::-webkit-inner-spin-button]:appearance-none [&::-webkit-outer-spin-button]:appearance-none"
-              />
+              <>
+                <FieldError message={fieldErrors[question.id]} />
+                <Input
+                  type="number"
+                  size="md"
+                  placeholder="Enter amount"
+                  value={healthPremiumMonthly}
+                  onWheel={event => {
+                    (event.target as HTMLInputElement).blur();
+                  }}
+                  onChange={value => {
+                    onHealthPremiumMonthlyChange(value);
+                    onClearFieldError(question.id);
+                  }}
+                  isInvalid={!!fieldErrors[question.id]}
+                  hint={fieldErrors[question.id] ? undefined : "i.e. $300"}
+                  className="w-full max-w-xs"
+                  inputClassName="[appearance:textfield] [&::-webkit-inner-spin-button]:appearance-none [&::-webkit-outer-spin-button]:appearance-none"
+                />
+              </>
             )}
           </div>
         ))}

@@ -6,6 +6,7 @@ import {
   ProvenStrategiesSkeleton,
   ProvenStrategiesCardsSkeleton,
 } from "./RecommendationsSkeletons";
+import type { StrategyFlagStatus } from "@/types/strategyFlagTypes";
 
 interface ProvenCardConfig {
   id: string;
@@ -37,10 +38,10 @@ const provenStrategiesCardsConfig: ProvenCardConfig[] = [
   },
 ];
 
-interface ProvenStrategyFlags {
-  nonElectiveMatch: boolean;
-  autoEnroll: boolean;
-  healthcareAffordability: boolean;
+export interface ProvenStrategyFlags {
+  nonElectiveMatch: StrategyFlagStatus;
+  autoEnroll: StrategyFlagStatus;
+  healthcareAffordability: StrategyFlagStatus;
 }
 
 interface CoreBenefitsEnhancementProps {
@@ -48,6 +49,7 @@ interface CoreBenefitsEnhancementProps {
   readonly provenStrategiesCount: number;
   readonly provenStrategiesPercent: number;
   readonly provenStrategyFlags: ProvenStrategyFlags;
+  readonly visibleFlagsTotal: number;
 }
 
 export default function CoreBenefitsEnhancement({
@@ -55,6 +57,7 @@ export default function CoreBenefitsEnhancement({
   provenStrategiesCount,
   provenStrategiesPercent,
   provenStrategyFlags,
+  visibleFlagsTotal,
 }: CoreBenefitsEnhancementProps) {
   return (
     <div className="bg-ws-light-teal-25 py-8 px-6 border border-ws-border-primary rounded-2xl">
@@ -71,13 +74,13 @@ export default function CoreBenefitsEnhancement({
           <h4 className="text-2xl font-medium text-ws-text-primary my-6">Effective Strategies</h4>
           <div className="bg-ws-navy-25 border border-ws-border-primary rounded-lg p-3.5">
             <h4 className="text-lg font-medium text-ws-text-primary">
-              Strategies Implemented: {provenStrategiesCount}/3
+              Strategies Implemented: {provenStrategiesCount}/{visibleFlagsTotal}
             </h4>
             <p className="my-4 text-base text-ws-text-primary">
-              You're already leveraging {provenStrategiesCount} of 3 benefits best practices linked
-              to stronger outcomes. Adopting the full set has been shown to boost participation,
-              improve retention, and increase employee satisfaction with their benefits
-              package.{" "}
+              You're already leveraging {provenStrategiesCount} of {visibleFlagsTotal} benefits best
+              practices linked to stronger outcomes. Adopting the full set has been shown to boost
+              participation, improve retention, and increase employee satisfaction with their
+              benefits package.{" "}
             </p>
             {isLoading ? (
               <ProvenStrategiesSkeleton />
@@ -92,26 +95,37 @@ export default function CoreBenefitsEnhancement({
           </div>
           <div className="mt-6 grid grid-cols-1 xl:grid-cols-[repeat(auto-fit,minmax(0,1fr))] gap-6 w-full">
             {isLoading ? (
-              <>
-                <ProvenStrategiesCardsSkeleton />
-                <ProvenStrategiesCardsSkeleton />
-                <ProvenStrategiesCardsSkeleton />
-              </>
+              Array.from({ length: visibleFlagsTotal || 3 }).map((_, i) => (
+                <ProvenStrategiesCardsSkeleton key={i} />
+              ))
             ) : (
               <>
                 {provenStrategiesCardsConfig.map(card => {
-                  const flag = provenStrategyFlags[card.id as keyof typeof provenStrategyFlags];
+                  const flag = provenStrategyFlags[card.id as keyof ProvenStrategyFlags];
+                  if (flag === "hidden") return null;
+
+                  const isGreen = flag === "green";
                   return (
                     <ProvenStrategiesCard
                       key={card.id}
                       title={card.title}
-                      titleIcon={flag ? <LikeIcon /> : <UserGroupIcon />}
+                      titleIcon={
+                        isGreen ? (
+                          <span className="text-ws-success-600">
+                            <LikeIcon />
+                          </span>
+                        ) : (
+                          <span className="text-ws-warning-500">
+                            <UserGroupIcon />
+                          </span>
+                        )
+                      }
                       descriptionText={
-                        flag && card.descriptionTextFlagTrue
+                        isGreen && card.descriptionTextFlagTrue
                           ? card.descriptionTextFlagTrue
                           : card.descriptionText
                       }
-                      className={flag ? "bg-ws-success-25" : "bg-ws-warning-50"}
+                      className={isGreen ? "bg-ws-success-25" : "bg-ws-warning-50"}
                     />
                   );
                 })}

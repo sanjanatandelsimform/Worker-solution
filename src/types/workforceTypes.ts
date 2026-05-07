@@ -5,7 +5,9 @@
  * Based on: specs/009-workforce-tab-api/data-model.md
  * Contract: specs/014-fix-workforce-rec-api/contracts/workforce-get.md
  * Updated: specs/014-fix-workforce-rec-api/data-model.md
+ * Updated: specs/001-proven-strategy-flags — added healthcareAffordability flag to WorkforceEnvelope
  */
+import type { StrategyFlagStatus } from "./strategyFlagTypes";
 
 /**
  * The envelope body nested under the `workforce` key in the API response.
@@ -17,6 +19,8 @@ export interface WorkforceEnvelope {
   participation: Participation;
   demographics: Demographics;
   compensation: Compensation;
+  /** Finch flow only: healthcare affordability strategy flag from backend scoring. */
+  healthcareAffordability?: StrategyFlagStatus;
 }
 
 /**

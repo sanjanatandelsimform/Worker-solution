@@ -12,6 +12,7 @@ import {
   selectProvenStrategiesFlags,
   selectRecommendationsLoading,
 } from "@/store/selectors/recommendationsSelectors";
+import { selectWorkforceHealthcareAffordabilityFlag } from "@/store/selectors/workforceSelectors";
 import { useAssessmentStatus } from "@/hooks/useAssessmentStatus";
 import CompanyAtAGlance from "./CompanyAtAGlance";
 import CoreBenefitsEnhancement from "./CoreBenefitsEnhancement";
@@ -34,7 +35,7 @@ export default function RecommendationsFinchPage({
   readonly isStale?: boolean;
   readonly isAutomatedProvider?: boolean;
 }) {
-  const { isFinchAssessmentIncomplete } = useAssessmentStatus();
+  const { isFinchAssessmentIncomplete, isConnected } = useAssessmentStatus();
 
   // Workforce slice — Company Overview & Benefits Overview
   const workforceSection = useAppSelector(selectWorkforceSection);
@@ -44,10 +45,21 @@ export default function RecommendationsFinchPage({
 
   // Recommendations slice — Proven Strategies & Strategic Solutions
   const strategicRecommendations = useAppSelector(selectRecommStrategicRecommendations);
-  const provenStrategyFlags = useAppSelector(selectProvenStrategiesFlags);
+  const recommProvenFlags = useAppSelector(selectProvenStrategiesFlags);
   const recommendationsIsLoading = useAppSelector(selectRecommendationsLoading);
+  const workforceHealthcareFlag = useAppSelector(selectWorkforceHealthcareAffordabilityFlag);
   const { isLoading: isIndustryLoading, data: industryData } = useIndustry();
   const industryAverageWage = industryData?.industryOverview?.industryAverageWage;
+
+  // Compose proven strategy flags based on assessment flow
+  // Finch flow: healthcareAffordability comes from Workforce API; manual flow: all from Recommendations API
+  const provenStrategyFlags = {
+    autoEnroll: recommProvenFlags.autoEnroll,
+    nonElectiveMatch: recommProvenFlags.nonElectiveMatch,
+    healthcareAffordability: isConnected
+      ? workforceHealthcareFlag
+      : recommProvenFlags.healthcareAffordability,
+  };
 
   // Synthetic Company Overview shape (maps workforce fields to existing format fn expectations)
   const companyGlanceData = {
@@ -68,12 +80,11 @@ export default function RecommendationsFinchPage({
   };
 
   // Proven Strategies computed values
-  const provenStrategiesCount = [
-    provenStrategyFlags.nonElectiveMatch,
-    provenStrategyFlags.autoEnroll,
-    provenStrategyFlags.healthcareAffordability,
-  ].filter(Boolean).length;
-  const provenStrategiesPercent = Math.round((provenStrategiesCount / 3) * 100);
+  const flagValues = Object.values(provenStrategyFlags);
+  const provenStrategiesCount = flagValues.filter(f => f === "green").length;
+  const visibleFlagsTotal = flagValues.filter(f => f !== "hidden").length;
+  const provenStrategiesPercent =
+    visibleFlagsTotal > 0 ? Math.round((provenStrategiesCount / visibleFlagsTotal) * 100) : 0;
 
   // Combined loading guard
   const isLoading = !isReady || workforceIsLoading || recommendationsIsLoading || isIndustryLoading;
@@ -106,6 +117,7 @@ export default function RecommendationsFinchPage({
           provenStrategiesCount={provenStrategiesCount}
           provenStrategiesPercent={provenStrategiesPercent}
           provenStrategyFlags={provenStrategyFlags}
+          visibleFlagsTotal={visibleFlagsTotal}
         />
       )}
 

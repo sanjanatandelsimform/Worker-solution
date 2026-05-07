@@ -27,6 +27,7 @@ vi.mock("@/utils/formatters", () => ({
   formatNumber: (n: number) => String(n),
   formatCurrency: (n: number) => `$${n}`,
   formatCurrencyWithCents: (n: number) => `$${n.toFixed(2)}`,
+  formatCompactCurrency: (n: number) => `$${Math.round(n / 1000)}K`,
 }));
 
 import CompanyAtAGlance from "@/pages/recommendations/CompanyAtAGlance";
@@ -106,6 +107,16 @@ describe("CompanyAtAGlance", () => {
 
   it("format functions: industryAverageWage null displays N/A", () => {
     renderCAG({ companyGlanceData: { ...defaultGlanceData, industryAverageWage: null } });
+    expect(screen.getAllByTestId("card-count").some(el => el.textContent === "N/A")).toBe(true);
+  });
+
+  it("format functions: averageSalary number displays compact currency", () => {
+    renderCAG({ companyGlanceData: { ...defaultGlanceData, averageSalary: 72000 } });
+    expect(screen.getByText("$72K")).toBeTruthy();
+  });
+
+  it("format functions: averageSalary null displays N/A", () => {
+    renderCAG({ companyGlanceData: { ...defaultGlanceData, averageSalary: null } });
     expect(screen.getAllByTestId("card-count").some(el => el.textContent === "N/A")).toBe(true);
   });
 

@@ -15,7 +15,6 @@ export const fetchUserById = createAsyncThunk<
   { rejectValue: string }
 >("user/fetchUserById", async ({ userId, token }, { rejectWithValue, dispatch }) => {
   try {
-    console.log("Fetching user by ID:", userId);
     const userData = await getUserById(userId, token);
 
     dispatch(

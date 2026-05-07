@@ -8,7 +8,7 @@ const mockUseAppSelector = vi.fn();
 const selectorValues: Record<string, unknown> = {};
 
 vi.mock("@/hooks/useIndustry", () => ({
-  useIndustry: () => mockUseIndustry(),
+  useIndustry: (options?: { enabled?: boolean }) => mockUseIndustry(options),
 }));
 
 vi.mock("@/store/hooks", () => ({
@@ -38,9 +38,6 @@ vi.mock(
 );
 vi.mock("@/pages/benchmark/CostBurdenBarChart", () => ({
   IncomeDistributionChart: ({ data }: { data: unknown[] }) => <div>{`chart:${data.length}`}</div>,
-}));
-vi.mock("@/components/modals/GetInTouchModal", () => ({
-  GetInTouchModal: () => <div>contact-modal</div>,
 }));
 vi.mock("@/components/common/Declarations", () => ({
   default: () => <div>declarations</div>,
@@ -126,22 +123,6 @@ describe("BenchmarkFinchPage", () => {
     expect(document.body).toBeTruthy();
   });
 
-  it("GetInTouchModal onClose closes the modal (covers line 1172)", () => {
-    vi.mock("@/components/modals/GetInTouchModal", () => ({
-      GetInTouchModal: ({ isOpen, onClose }: any) => {
-        if (!isOpen) return null;
-        return (
-          <button data-testid="get-in-touch-close" onClick={onClose}>
-            Close
-          </button>
-        );
-      },
-    }));
-    render(<BenchmarkFinchPage />);
-    // Modal starts closed, just verify render is stable
-    expect(document.body).toBeTruthy();
-  });
-
   // ─── isStale prop: PreparingDashboard fallback ─────────────────────────────
 
   it("renders PreparingDashboard when isStale is true", () => {
@@ -183,5 +164,17 @@ describe("BenchmarkFinchPage", () => {
     render(<BenchmarkFinchPage isStale={true} />);
     expect(screen.getByText(/up to 2 weeks/i)).toBeInTheDocument();
     expect(screen.queryByText(/24-36 hours/i)).not.toBeInTheDocument();
+  });
+
+  describe("isReady forwarded to useIndustry as enabled", () => {
+    it("calls useIndustry with enabled=false when isReady=false", () => {
+      render(<BenchmarkFinchPage isReady={false} />);
+      expect(mockUseIndustry).toHaveBeenCalledWith({ enabled: false });
+    });
+
+    it("calls useIndustry with enabled=true when isReady=true", () => {
+      render(<BenchmarkFinchPage isReady={true} />);
+      expect(mockUseIndustry).toHaveBeenCalledWith({ enabled: true });
+    });
   });
 });
