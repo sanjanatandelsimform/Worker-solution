@@ -39,7 +39,7 @@ export interface StrategicRecommendation {
  * Present on non-Finch (manual) assessments to supply company overview values
  * that would otherwise only come from the Workforce API.
  *
- * Path: response.recommendation.companyOverview
+ * Path: response.companyOverview
  */
 export interface CompanyOverview {
   /** Total number of employees in the company */
@@ -64,8 +64,6 @@ export interface RecommendationData {
   healthcareAffordability: StrategyFlagStatus;
   /** Data availability status, e.g. "available" | "pending" */
   dataStatus: string;
-  /** Company overview for non-Finch assessments. Absent for Finch-connected users. */
-  companyOverview?: CompanyOverview;
 }
 
 /**
@@ -74,6 +72,8 @@ export interface RecommendationData {
 export interface RecommendationsApiResponse {
   assessmentType: string;
   recommendation: RecommendationData;
+  /** Company overview for non-Finch assessments. Absent for Finch-connected users. */
+  companyOverview?: CompanyOverview;
 }
 
 /**

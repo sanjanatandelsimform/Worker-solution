@@ -125,13 +125,10 @@ const defaultRecommendationsData: RecommendationsState["data"] = {
 // Fixture with companyOverview populated — used for non-connected path tests
 const defaultRecommendationsDataWithOverview: RecommendationsState["data"] = {
   ...defaultRecommendationsData!,
-  recommendation: {
-    ...defaultRecommendationsData!.recommendation,
-    companyOverview: {
-      totalWorkforce: 350,
-      avgHourlyRate: 21.0,
-      avgSalary: 58000,
-    },
+  companyOverview: {
+    totalWorkforce: 350,
+    avgHourlyRate: 21.0,
+    avgSalary: 58000,
   },
 };
 
@@ -745,7 +742,7 @@ describe("RecommendationsFinchPage — company at a glance (non-connected path)"
     } as ReturnType<typeof useAssessmentStatus>);
   });
 
-  it("displays totalWorkforce from recommendation.companyOverview when not connected", () => {
+  it("displays totalWorkforce from companyOverview when not connected", () => {
     const store = createTestStore({
       recommendations: { data: defaultRecommendationsDataWithOverview },
     });
@@ -753,7 +750,7 @@ describe("RecommendationsFinchPage — company at a glance (non-connected path)"
     expect(screen.getByText("350")).toBeInTheDocument();
   });
 
-  it("displays avgHourlyRate from recommendation.companyOverview when not connected", () => {
+  it("displays avgHourlyRate from companyOverview when not connected", () => {
     const store = createTestStore({
       recommendations: { data: defaultRecommendationsDataWithOverview },
     });
@@ -761,7 +758,7 @@ describe("RecommendationsFinchPage — company at a glance (non-connected path)"
     expect(screen.getByText("$21.00")).toBeInTheDocument();
   });
 
-  it("displays avgSalary from recommendation.companyOverview when not connected", () => {
+  it("displays avgSalary from companyOverview when not connected", () => {
     const store = createTestStore({
       recommendations: { data: defaultRecommendationsDataWithOverview },
     });

@@ -65,7 +65,7 @@ export default function RecommendationsFinchPage({
 
   // Synthetic Company Overview shape — source depends on connection state:
   // Finch-connected: workforce API (workforceSection + compensationSection)
-  // Non-connected:   recommendations API (recommendation.companyOverview)
+  // Non-connected:   recommendations API (companyOverview)
   const companyGlanceData = {
     totalWorkforce: isConnected
       ? (workforceSection?.totalWorkforce ?? null)

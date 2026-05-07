@@ -233,7 +233,7 @@ describe("recommendationsSelectors", () => {
       expect(selectRecommCompanyOverview(makeState() as RootState)).toBeNull();
     });
 
-    it("returns null when companyOverview is absent from recommendation", () => {
+    it("returns null when companyOverview is absent from response", () => {
       const state = makeState({ data: mockRecommendationsData }) as RootState;
       // mockRecommendationsData has no companyOverview field
       expect(selectRecommCompanyOverview(state)).toBeNull();
@@ -247,10 +247,7 @@ describe("recommendationsSelectors", () => {
       };
       const dataWithOverview: RecommendationsApiResponse = {
         ...mockRecommendationsData,
-        recommendation: {
-          ...mockRecommendationsData.recommendation,
-          companyOverview: overview,
-        },
+        companyOverview: overview,
       };
       const state = makeState({ data: dataWithOverview }) as RootState;
       expect(selectRecommCompanyOverview(state)).toEqual(overview);
@@ -260,10 +257,7 @@ describe("recommendationsSelectors", () => {
       const overview: CompanyOverview = { totalWorkforce: 0, avgHourlyRate: 0, avgSalary: 0 };
       const dataWithOverview: RecommendationsApiResponse = {
         ...mockRecommendationsData,
-        recommendation: {
-          ...mockRecommendationsData.recommendation,
-          companyOverview: overview,
-        },
+        companyOverview: overview,
       };
       const state = makeState({ data: dataWithOverview }) as RootState;
       expect(selectRecommCompanyOverview(state)?.totalWorkforce).toBe(0);
