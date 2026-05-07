@@ -54,7 +54,7 @@ const getAccessToken = (): string | null => {
 };
 
 // Exponential backoff helper
-const delay = (ms: number) => new Promise((resolve) => setTimeout(resolve, ms));
+const delay = (ms: number) => new Promise(resolve => setTimeout(resolve, ms));
 
 // Simple circuit breaker state
 let consecutiveFailures = 0;
