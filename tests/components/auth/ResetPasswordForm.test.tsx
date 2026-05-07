@@ -98,7 +98,7 @@ describe("ResetPasswordForm", () => {
     });
   });
 
-  it("success modal onClose navigates to sign-in (covers lines 178-180)", async () => {
+  it("success navigates to success page with correct state (covers lines 178-180)", async () => {
     const { resetPassword } = await import("@/services/api/authApi");
     (resetPassword as ReturnType<typeof vi.fn>).mockResolvedValueOnce({});
 
@@ -114,17 +114,19 @@ describe("ResetPasswordForm", () => {
 
     await waitFor(
       () => {
-        expect(screen.getByTestId("success-modal")).toBeTruthy();
+        expect(mockNavigate).toHaveBeenCalledWith("/success", expect.objectContaining({
+          state: expect.objectContaining({
+            title: "Password reset successful",
+            buttonPath: "/sign-in",
+            shouldClearUser: true,
+          }),
+        }));
       },
       { timeout: 3000 }
     );
-
-    // Click modal close button (covers onClose callback)
-    fireEvent.click(screen.getByTestId("modal-close"));
-    expect(mockNavigate).toHaveBeenCalledWith("/sign-in");
   });
 
-  it("success modal action button calls handleGetStarted (covers lines 61-64)", async () => {
+  it("success navigates to success page with buttonText Log in (covers lines 61-64)", async () => {
     const { resetPassword } = await import("@/services/api/authApi");
     (resetPassword as ReturnType<typeof vi.fn>).mockResolvedValueOnce({});
 
@@ -140,14 +142,15 @@ describe("ResetPasswordForm", () => {
 
     await waitFor(
       () => {
-        expect(screen.getByTestId("success-modal")).toBeTruthy();
+        expect(mockNavigate).toHaveBeenCalledWith("/success", expect.objectContaining({
+          state: expect.objectContaining({
+            buttonText: "Log in",
+            buttonPath: "/sign-in",
+          }),
+        }));
       },
       { timeout: 3000 }
     );
-
-    // Click modal "Log in" button (covers handleGetStarted which calls navigate)
-    fireEvent.click(screen.getByTestId("modal-action"));
-    expect(mockNavigate).toHaveBeenCalledWith("/sign-in");
   });
 
   it("error message onClose callback clears error (covers line 143)", async () => {

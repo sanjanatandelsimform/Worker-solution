@@ -10,12 +10,10 @@ import { resetPassword } from "@/services/api/authApi";
 import { resetPasswordSchema, type ResetPasswordFormData } from "@/services/validation/authSchemas";
 import checkmarkIcon from "@/assets/success-check.svg";
 import siteLogo from "@/assets/logo.svg";
-import { SuccessModalWithLogo } from "../modals/SuccessModalWithLogo";
 import ErrorMessage from "../common/ErrorMessage";
 import { getErrorState, type ErrorState } from "@/utils/errorHandler";
 
 export default function ResetPasswordForm() {
-  const [isOpen, setIsOpen] = useState(false);
   const [error, setError] = useState<ErrorState | null>(null);
   const [searchParams] = useSearchParams();
   const navigate = useNavigate();
@@ -50,18 +48,23 @@ export default function ResetPasswordForm() {
     try {
       setError(null);
       await resetPassword(resetToken, data.newPassword);
-      setIsOpen(true);
       reset();
+      navigate("/success", {
+        state: {
+          messageImg: checkmarkIcon,
+          title: "Password reset successful",
+          subtitle: "Your password has been updated successfully. You can now sign in using your new password.",
+          buttonText: "Log in",
+          buttonPath: "/sign-in",
+          shouldClearUser: true,
+        },
+      });
     } catch (err) {
       console.error("Reset password error:", err);
       setError(getErrorState(err));
     }
   };
 
-  const handleGetStarted = () => {
-    setIsOpen(false);
-    navigate("/sign-in");
-  };
   return (
     <div className="flex min-h-screen items-center justify-center bg-ws-light-teal-50">
       <div className="flex w-2xl items-center justify-center rounded-xl border border-ws-border-primary bg-ws-base-white py-22">
@@ -170,22 +173,6 @@ export default function ResetPasswordForm() {
           </div>
         </div>
       </div>
-      <SuccessModalWithLogo
-        isOpen={isOpen}
-        onClose={() => {
-          setIsOpen(false);
-          navigate("/sign-in");
-        }}
-        size="xl"
-        messageImg={checkmarkIcon}
-        title="Password reset successful"
-        subtitle="Your password has been updated successfully. You can now sign in using your new password."
-        button={{
-          text: "Log in",
-          onClick: handleGetStarted,
-          color: "primary",
-        }}
-      />
     </div>
   );
 }

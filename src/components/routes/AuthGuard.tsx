@@ -14,6 +14,7 @@ const PUBLIC_PATHS = [
   "/verify-email",
   "/privacy-policy",
   "/terms-page",
+  "/success",
 ];
 
 /** Check if a valid auth token exists in localStorage */
