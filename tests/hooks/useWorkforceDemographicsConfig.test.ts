@@ -47,7 +47,7 @@ const sampleDemographics: Demographics = {
     { department: "engineering", fullTime: "90%", partTime: "8%", seasonal: "2%" },
     { department: "sales", fullTime: "70%", partTime: "25%", seasonal: "5%" },
   ],
-  gender: { men: "55%", women: "40%" },
+  gender: { men: "55%", women: "40%", other: "5%" },
   employmentBreakdownByAge: [
     { ageGroup: "> 30", fullTime: 100, partTime: 20, seasonal: 5 },
     { ageGroup: "30 - 40", fullTime: 80, partTime: 15, seasonal: 3 },
@@ -71,7 +71,7 @@ describe("useWorkforceDemographicsConfig", () => {
   it("returns empty arrays when demographicsSection is null", () => {
     const { result } = renderHook(() => useWorkforceDemographicsConfig("all", "fullTime"));
     expect(result.current.departmentItems).toEqual([]);
-    expect(result.current.demographicsCardsConfig).toHaveLength(2);
+    expect(result.current.demographicsCardsConfig).toHaveLength(3);
     result.current.demographicsCardsConfig.forEach(card => {
       expect(card.count).toBe("--");
     });
@@ -111,19 +111,50 @@ describe("useWorkforceDemographicsConfig", () => {
   it("demographicsCardsConfig has correct ids and titles", () => {
     mockStoreState = buildStoreState(sampleDemographics);
     const { result } = renderHook(() => useWorkforceDemographicsConfig("all", "fullTime"));
-    const [women, men] = result.current.demographicsCardsConfig;
+    const [women, men, other] = result.current.demographicsCardsConfig;
     expect(women.id).toBe("women");
     expect(women.title).toBe("Women");
     expect(men.id).toBe("men");
     expect(men.title).toBe("Men");
+    expect(other.id).toBe("other");
+    expect(other.title).toBe("Other");
   });
 
   it("demographicsCardsConfig shows gender percentages from data", () => {
     mockStoreState = buildStoreState(sampleDemographics);
     const { result } = renderHook(() => useWorkforceDemographicsConfig("all", "fullTime"));
-    const [women, men] = result.current.demographicsCardsConfig;
+    const [women, men, other] = result.current.demographicsCardsConfig;
     expect(women.count).toBe("40%");
     expect(men.count).toBe("55%");
+    expect(other.count).toBe("5%");
+  });
+
+  it("other card has correct tooltip text", () => {
+    mockStoreState = buildStoreState(sampleDemographics);
+    const { result } = renderHook(() => useWorkforceDemographicsConfig("all", "fullTime"));
+    const [, , other] = result.current.demographicsCardsConfig;
+    expect(other.tooltipText).toBe(
+      "Other includes individuals that choose not to identify or do not identify as man or woman."
+    );
+  });
+
+  it("women and men cards have no tooltipText", () => {
+    mockStoreState = buildStoreState(sampleDemographics);
+    const { result } = renderHook(() => useWorkforceDemographicsConfig("all", "fullTime"));
+    const [women, men] = result.current.demographicsCardsConfig;
+    expect(women.tooltipText).toBeUndefined();
+    expect(men.tooltipText).toBeUndefined();
+  });
+
+  it("other card shows '--' fallback when gender.other is absent", () => {
+    const demographicsWithoutOther: Demographics = {
+      ...sampleDemographics,
+      gender: { men: "55%", women: "40%" },
+    };
+    mockStoreState = buildStoreState(demographicsWithoutOther);
+    const { result } = renderHook(() => useWorkforceDemographicsConfig("all", "fullTime"));
+    const [, , other] = result.current.demographicsCardsConfig;
+    expect(other.count).toBe("--");
   });
 
   it("getCountClass returns the correct CSS class string", () => {
