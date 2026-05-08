@@ -375,6 +375,7 @@ export const DashboardPage = () => {
                 }
                 avatarIconSrc={emailIcon}
                 buttonLabel="Verify"
+                buttonClasses="h-9 min-w-30"
                 buttonType="primary"
                 buttonIsDisabled={emailVerify}
                 onClick={handleVerifyEmail}
@@ -538,8 +539,8 @@ export const DashboardPage = () => {
               descriptionClass="text-ws-text-tertiary"
               toggleButton={true}
               buttonLabel="Reconnect"
-              buttonType={"secondary"}
-              buttonClasses="h-9"
+              buttonType={"primary"}
+              buttonClasses="h-9 min-w-30"
               onClick={reconnectWithFinch}
             />
           )}
@@ -555,8 +556,8 @@ export const DashboardPage = () => {
               descriptionClass="text-ws-text-tertiary"
               toggleButton={true}
               buttonLabel="Continue"
-              buttonType={"secondary"}
-              buttonClasses="h-9"
+              buttonType={"primary"}
+              buttonClasses="h-9 min-w-30"
               onClick={() => navigate("/additional-questions")}
             />
           )}
@@ -564,7 +565,7 @@ export const DashboardPage = () => {
             <div className="mt-10">
               <Tabs selectedKey={activeTab} onSelectionChange={key => setActiveTab(String(key))}>
                 <Tabs.List
-                  className="bg-ws-light-teal-50 pt-0 pl-6 pr-6 rounded-t-lg text-ws-light-teal-900 overflow-auto"
+                  className="bg-ws-light-teal-50 pt-0 pl-6 pr-6 rounded-t-lg text-ws-light-teal-900 overflow-auto shadow-sm"
                   type="underline"
                   items={[
                     ...BASE_TAB_ITEMS,

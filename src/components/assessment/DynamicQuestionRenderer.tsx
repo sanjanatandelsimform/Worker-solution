@@ -1,7 +1,7 @@
 import React, { useEffect, useCallback } from "react";
 import { Input } from "@/components/base/input/input";
 import { Label } from "@/components/base/input/label";
-import { RadioButton, RadioGroup } from "@/components/base/radio-buttons/radio-buttons";
+import { RadioButton, RadioButtonBase, RadioGroup } from "@/components/base/radio-buttons/radio-buttons";
 import { Checkbox } from "@/components/base/checkbox/checkbox";
 import { Select } from "@/components/base/select/select";
 import type { SelectItemType } from "@/components/base/select/select";
@@ -849,7 +849,7 @@ export const DynamicQuestionRenderer = ({
             <div className="flex w-full flex-col gap-4 custom-question-options">
               {question.options?.map(option => (
                 <React.Fragment key={option.value}>
-                  <RadioButton label={option.label} value={option.value} />
+                  <RadioButton label={option.label} value={option.value} className="test91" />
                   {/* Render conditional inline after the matching option */}
                   {question.conditionalQuestion &&
                     String(question.conditionalQuestion.showWhen).toLowerCase() ===

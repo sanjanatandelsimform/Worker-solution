@@ -54,6 +54,7 @@ export interface InputBaseProps extends Omit<AriaInputProps, "size"> {
   /** Keyboard shortcut to display. */
   shortcut?: string | boolean;
   showPasswordToggle?: boolean;
+   isFocused: boolean;
   ref?: Ref<HTMLInputElement>;
   groupRef?: Ref<HTMLDivElement>;
   /** Icon component to display on the left side of the input. */
@@ -78,6 +79,7 @@ export const InputBase = ({
   inputClassName,
   iconClassName,
   showPasswordToggle = true,
+  isFocused,
   type = "text",
   ...inputProps
 }: InputBaseProps) => {
@@ -134,6 +136,8 @@ export const InputBase = ({
           // Invalid state with focus-within styles
           isInvalid && isFocusWithin && "ring-2 ring-ws-error-600",
           isFocusWithin && "group-invalid:ring-2 group-invalid:ring-ws-error-600",
+
+          isFocused && !isDisabled && "ring-2 ring-ws-light-teal-850",
 
           context?.wrapperClassName,
           wrapperClassName

@@ -20,6 +20,7 @@ import { VerifyEmailPage } from "./pages/auth/VerifyEmailPage";
 import GetMore from "./pages/getMore/GetMore";
 import AdditionalQuestions from "./pages/additionalQuestions/AdditionalQuestions";
 import AboutUs from "./pages/aboutUs/AboutUs";
+import "./App.css";
 
 function App() {
   const { isAuthReady } = useAuthInit();

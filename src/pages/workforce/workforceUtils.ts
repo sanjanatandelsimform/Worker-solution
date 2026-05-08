@@ -3,12 +3,16 @@ import type { Department } from "@/types/workforceTypes";
 
 /**
  * Parses a percentage string from the workforce API.
- * Strips "%" and returns a number. Returns 0 for "N/A" or any invalid input.
+ * Strips "%" and returns a number. Returns 0 for "N/A", undefined, or any invalid input.
  *
  * @example parsePercentage("45%") // 45
  * @example parsePercentage("N/A") // 0
+ * @example parsePercentage(undefined) // 0
  */
-export const parsePercentage = (value: string): number => {
+export const parsePercentage = (value: string | undefined): number => {
+  if (!value || typeof value !== "string") {
+    return 0;
+  }
   const num = parseFloat(value.replace("%", ""));
   return isNaN(num) ? 0 : num;
 };

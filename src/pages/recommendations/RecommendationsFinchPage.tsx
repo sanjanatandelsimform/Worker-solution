@@ -100,7 +100,7 @@ export default function RecommendationsFinchPage({
   }
 
   return (
-    <div className="bg-ws-base-white space-y-6 py-10 px-6 shadow-xl rounded-b-xl">
+    <div className="bg-ws-base-white space-y-6 py-10 px-6 shadow-xl rounded-bl-lg rounded-br-lg">
       <CompanyAtAGlance
         isLoading={isLoading}
         companyGlanceData={companyGlanceData}
