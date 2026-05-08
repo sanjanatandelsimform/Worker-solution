@@ -137,8 +137,8 @@ describe("CoreBenefitsEnhancement — hidden flag hides card", () => {
         }}
       />
     );
-    expect(screen.queryByText("Healthcare affordability")).not.toBeInTheDocument();
-    expect(screen.getByText("Non-elective match")).toBeInTheDocument();
+    expect(screen.queryByText("Healthcare Affordability")).not.toBeInTheDocument();
+    expect(screen.getByText("Non-Elective Match")).toBeInTheDocument();
     expect(screen.getByText("Auto Enrollment")).toBeInTheDocument();
   });
 
@@ -154,9 +154,9 @@ describe("CoreBenefitsEnhancement — hidden flag hides card", () => {
         }}
       />
     );
-    expect(screen.queryByText("Non-elective match")).not.toBeInTheDocument();
+    expect(screen.queryByText("Non-Elective Match")).not.toBeInTheDocument();
     expect(screen.getByText("Auto Enrollment")).toBeInTheDocument();
-    expect(screen.getByText("Healthcare affordability")).toBeInTheDocument();
+    expect(screen.getByText("Healthcare Affordability")).toBeInTheDocument();
   });
 
   it("hides all cards when all flags are 'hidden'", () => {
@@ -171,9 +171,9 @@ describe("CoreBenefitsEnhancement — hidden flag hides card", () => {
         }}
       />
     );
-    expect(screen.queryByText("Non-elective match")).not.toBeInTheDocument();
+    expect(screen.queryByText("Non-Elective Match")).not.toBeInTheDocument();
     expect(screen.queryByText("Auto Enrollment")).not.toBeInTheDocument();
-    expect(screen.queryByText("Healthcare affordability")).not.toBeInTheDocument();
+    expect(screen.queryByText("Healthcare Affordability")).not.toBeInTheDocument();
   });
 });
 

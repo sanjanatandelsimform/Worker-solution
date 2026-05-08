@@ -1,7 +1,7 @@
 import React, { useEffect, useCallback } from "react";
 import { Input } from "@/components/base/input/input";
 import { Label } from "@/components/base/input/label";
-import { RadioButton, RadioButtonBase, RadioGroup } from "@/components/base/radio-buttons/radio-buttons";
+import { RadioButton, RadioGroup } from "@/components/base/radio-buttons/radio-buttons";
 import { Checkbox } from "@/components/base/checkbox/checkbox";
 import { Select } from "@/components/base/select/select";
 import type { SelectItemType } from "@/components/base/select/select";

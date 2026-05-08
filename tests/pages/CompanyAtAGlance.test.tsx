@@ -72,7 +72,7 @@ describe("CompanyAtAGlance", () => {
 
   it("renders basic company overview section", () => {
     renderCAG();
-    expect(screen.getByText("Your Company At A Glance")).toBeTruthy();
+    expect(screen.getByText("Your Company at a Glance")).toBeTruthy();
   });
 
   it("shows skeleton loaders when isLoading=true", () => {
