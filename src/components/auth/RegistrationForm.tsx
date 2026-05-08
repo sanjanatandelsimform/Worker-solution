@@ -171,7 +171,7 @@ export function RegistrationForm() {
       navigate("/success", {
         state: {
           messageImg: checkmarkIcon,
-          title: "Account Created Successfully!",
+          title: "Account created successfully!",
           subtitle:
             "Welcome aboard! Start your success journey with A2B by Lafayette Square Institute®",
           buttonText: "Let's get started",
@@ -197,12 +197,12 @@ export function RegistrationForm() {
         <div className="flex w-full flex-col items-center">
           {/* Logo */}
           <div className="flex items-center justify-center px-2 py-1">
-            <h1 className="text-3xl font-semibold leading-15 text-ws-text-primary">Sign Up</h1>
+            <h1 className="text-3xl font-semibold leading-15 text-ws-text-primary normal-case">Sign up</h1>
           </div>
 
           {/* Header */}
           <div className="flex w-full flex-col items-start gap-2">
-            <p className="w-full flex items-center justify-center text-center font-normal text-lg text-ws-text-secondary">
+            <p className="w-full flex items-center justify-center text-center font-normal text-lg text-ws-text-secondary normal-case">
               We’re excited that you’ve decided to try our A2B platform. Before we begin, we’ll need
               to collect some information about your business.
             </p>
@@ -216,11 +216,11 @@ export function RegistrationForm() {
               <InputGroup>
                 <Input
                   name="firstName"
-                  label="First Name"
+                  label="First name"
                   isRequired
                   size="md"
                   hint={errors.firstName?.message}
-                  placeholder="First Name"
+                  placeholder="First name"
                   isInvalid={!!errors.firstName}
                   value={firstName}
                   maxLength={20}
@@ -237,11 +237,11 @@ export function RegistrationForm() {
               <InputGroup>
                 <Input
                   name="lastName"
-                  label="Last Name"
+                  label="Last name"
                   isRequired
                   size="md"
                   hint={errors.lastName?.message}
-                  placeholder="Last Name"
+                  placeholder="Last name"
                   value={lastName}
                   isInvalid={!!errors.lastName}
                   maxLength={20}
@@ -260,11 +260,11 @@ export function RegistrationForm() {
               <InputGroup>
                 <Input
                   name="legalBusinessName"
-                  label="Legal Business Name"
+                  label="Legal business name"
                   isRequired
                   size="md"
                   hint={errors.legalBusinessName?.message}
-                  placeholder="Legal Business Name"
+                  placeholder="Legal business name"
                   isInvalid={!!errors.legalBusinessName}
                   value={legalBusinessName}
                   maxLength={50}
@@ -281,7 +281,7 @@ export function RegistrationForm() {
               <InputGroup>
                 <Input
                   name="businessPhone"
-                  label="Business Phone Number"
+                  label="Business phone number"
                   isRequired
                   placeholder="(000) 000-0000"
                   type="tel"
@@ -338,7 +338,7 @@ export function RegistrationForm() {
               <InputGroup>
                 <Input
                   name="zipCode"
-                  label="Zip Code"
+                  label="Zip code"
                   isRequired
                   size="md"
                   hint={errors.zipCode?.message}
@@ -362,11 +362,11 @@ export function RegistrationForm() {
               </InputGroup>
               <InputGroup isRequired>
                 <Select
-                  label="Select Your Industry"
+                  label="Select your industry"
                   isRequired
                   className="w-full flex items-start text-ws-base-black"
                   size="sm"
-                  placeholder="Select Option"
+                  placeholder="Select option"
                   //supportingTextColor="text-ws-base-black"
                   items={industries.map(i => ({
                     id: i.industry_code, // Changed from i.id.toString()
@@ -408,7 +408,7 @@ export function RegistrationForm() {
               <InputGroup className="col-start-1 w-full block">
                 <Input
                   name="businessEmail"
-                  label="Work Email Address"
+                  label="Work email address"
                   isRequired
                   size="md"
                   hint={errors.businessEmail?.message}
@@ -419,7 +419,7 @@ export function RegistrationForm() {
                   value={businessEmail}
                   className={errors.businessEmail ? "error-ring" : ""}
                   tooltip={errors.businessEmail ? errors.businessEmail.message : undefined}
-                  helperTooltip={"Enter the business email address of the primary account holder"}
+                  helperTooltip={"Enter the work email address of the primary account holder"}
                   onChange={value => {
                     const sanitized = value.replace(/^\s+/, "");
                     setValue("businessEmail", sanitized);
@@ -457,10 +457,10 @@ export function RegistrationForm() {
               <InputGroup className="relative">
                 <Input
                   name="confirmPassword"
-                  label="Confirm Password"
+                  label="Confirm password"
                   isRequired
                   hint={errors.confirmPassword?.message}
-                  placeholder="Confirm Password"
+                  placeholder="Confirm password"
                   size="md"
                   type="password"
                   isInvalid={!!errors.confirmPassword}
@@ -481,8 +481,8 @@ export function RegistrationForm() {
             {/* Agreement Section */}
             <div className="col-span-2 mt-6 flex items-center flex-col justify-center gap-2">
               <div className="flex gap-2 items-start">
-                <p className="text-sm font-normal leading-5 text-ws-text-secondary">
-                  By clicking Create Account, you are confirming that you have read and agree to the
+                <p className="text-sm font-normal leading-5 text-ws-text-secondary normal-case">
+                  By clicking Create account, you are confirming that you have read and agree to the
                   A2B{" "}
                   <Button
                     color="link"
@@ -499,7 +499,7 @@ export function RegistrationForm() {
                     onClick={() => setIsPrivacyModalOpen(true)}
                     className="text-sm font-normal text-ws-light-teal-850 underline p-0 m-0 h-5 hover:text-ws-light-teal-850"
                   >
-                    Privacy Policies
+                    Privacy policies
                   </Button>
                   .
                 </p>

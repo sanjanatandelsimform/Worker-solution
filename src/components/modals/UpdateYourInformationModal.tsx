@@ -146,8 +146,8 @@ export const UpdateYourInformationModal = ({
         <ModalHeader>
           <div className="flex items-center justify-between w-full relative">
             <div className="flex flex-col gap-1">
-              <ModalTitle>Update Your Information</ModalTitle>
-              <ModalDescription>Update your account by entering new information.</ModalDescription>
+              <ModalTitle className="normal-case">Update your information</ModalTitle>
+              <ModalDescription className="normal-case">Update your account by entering new information.</ModalDescription>
             </div>
             <div className="absolute -right-2 -top-2">
               <Button
@@ -178,11 +178,11 @@ export const UpdateYourInformationModal = ({
                 <InputGroup>
                   <div className="flex flex-col gap-1.5 w-full">
                     <Label className="text-sm font-medium text-ws-text-secondary">
-                      First Name <span className="text-ws-error-600">*</span>
+                      First name <span className="text-ws-error-600">*</span>
                     </Label>
                     <Input
                       size="md"
-                      placeholder="First Name"
+                      placeholder="First name"
                       value={firstName}
                       onChange={handleFirstNameChange}
                       isInvalid={!!firstNameError}
@@ -195,11 +195,11 @@ export const UpdateYourInformationModal = ({
                 <InputGroup>
                   <div className="flex flex-col gap-1.5 w-full">
                     <Label className="text-sm font-medium text-ws-text-secondary">
-                      Last Name <span className="text-ws-error-600">*</span>
+                      Last name <span className="text-ws-error-600">*</span>
                     </Label>
                     <Input
                       size="md"
-                      placeholder="Last Name"
+                      placeholder="Last name"
                       value={lastName}
                       onChange={handleLastNameChange}
                       isInvalid={!!lastNameError}
@@ -221,7 +221,7 @@ export const UpdateYourInformationModal = ({
                 profileLoading || !isFormValid || !hasChanges || !!firstNameError || !!lastNameError
               }
             >
-              {profileLoading ? "Updating..." : "Update Information"}
+              {profileLoading ? "Updating..." : "Update information"}
             </Button>
           </ModalFooter>
         </form>

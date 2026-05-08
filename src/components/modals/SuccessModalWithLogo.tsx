@@ -7,7 +7,7 @@ import {
 } from "@/components/base/modal/modal";
 import { Button } from "@/components/base/buttons/button";
 import { X } from "@untitledui/icons";
-import siteLogo from "@/assets/logo-small.svg";
+import siteLogo from "@/assets/logo.svg";
 
 export interface SuccessModalWithLogoButton {
   text: string;
@@ -77,12 +77,12 @@ export const SuccessModalWithLogo = ({
             {(title || subtitle) && (
               <div className="flex w-full flex-col items-center gap-1 px-8 pt-0">
                 {title && (
-                  <ModalTitle className="font-display text-center text-ws-text-primary text-4xl font-medium leading-11">
+                  <ModalTitle className="font-display text-center text-ws-text-primary text-4xl font-medium leading-11 normal-case">
                     {title}
                   </ModalTitle>
                 )}
                 {subtitle && (
-                  <p className="font-display text-center text-subtitle text-2xl font-normal leading-8 px-8">
+                  <p className="font-display text-center text-subtitle text-2xl font-normal leading-8 px-8 normal-case">
                     {subtitle}
                   </p>
                 )}

@@ -235,7 +235,7 @@ describe("RegistrationForm", () => {
 
   it("renders Sign up heading", async () => {
     renderForm();
-    expect(screen.getByText("Sign Up")).toBeTruthy();
+    expect(screen.getByText(/Sign up/i)).toBeTruthy();
   });
 
   it("shows loading state initially", async () => {

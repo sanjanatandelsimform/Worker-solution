@@ -38,7 +38,7 @@ export const RetakeAssessmentModal = ({
           color: "secondary",
         },
         {
-          text: "Yes, Retake assessment",
+          text: "Yes, retake assessment",
           onClick: handleContinue,
           color: "error",
         },

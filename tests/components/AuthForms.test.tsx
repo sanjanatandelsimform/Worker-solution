@@ -28,12 +28,12 @@ describe("ForgotPasswordForm", () => {
 
   it("renders email field", () => {
     render(wrap(<ForgotPasswordForm />));
-    expect(screen.getByText("Business Email Address")).toBeInTheDocument();
+    expect(screen.getByText("Business email address")).toBeInTheDocument();
   });
 
   it("renders submit button", () => {
     render(wrap(<ForgotPasswordForm />));
-    expect(screen.getByText("Reset Password")).toBeInTheDocument();
+    expect(screen.getByText("Reset password")).toBeInTheDocument();
   });
 
   it("renders sign up link", () => {
@@ -51,12 +51,12 @@ describe("ResetPasswordForm", () => {
   it("renders password fields", () => {
     render(wrap(<ResetPasswordForm />));
     expect(screen.getByText("Password")).toBeInTheDocument();
-    expect(screen.getByText("Confirm Password")).toBeInTheDocument();
+    expect(screen.getByText("Confirm password")).toBeInTheDocument();
   });
 
   it("renders submit button", () => {
     render(wrap(<ResetPasswordForm />));
-    expect(screen.getByText("Save Password")).toBeInTheDocument();
+    expect(screen.getByText("Save password")).toBeInTheDocument();
   });
 
   it("renders sign in link", () => {

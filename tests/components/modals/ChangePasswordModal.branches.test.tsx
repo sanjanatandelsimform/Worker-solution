@@ -130,11 +130,11 @@ describe("ChangePasswordModal branches", () => {
 
     const { container } = render(<ChangePasswordModal isOpen={true} onClose={onClose} />);
 
-    fireEvent.change(screen.getByLabelText("Current Password"), {
+    fireEvent.change(screen.getByLabelText("Current password"), {
       target: { value: "CurrentPassword1!" },
     });
-    fireEvent.change(screen.getByLabelText("New Password"), { target: { value: "NewPassword1!" } });
-    fireEvent.change(screen.getByLabelText("Confirm New Password"), {
+    fireEvent.change(screen.getByLabelText("New password"), { target: { value: "NewPassword1!" } });
+    fireEvent.change(screen.getByLabelText("Confirm new password"), {
       target: { value: "NewPassword1!" },
     });
 
@@ -156,11 +156,11 @@ describe("ChangePasswordModal branches", () => {
 
     const { container } = render(<ChangePasswordModal isOpen={true} onClose={vi.fn()} />);
 
-    fireEvent.change(screen.getByLabelText("Current Password"), {
+    fireEvent.change(screen.getByLabelText("Current password"), {
       target: { value: "CurrentPassword1!" },
     });
-    fireEvent.change(screen.getByLabelText("New Password"), { target: { value: "NewPassword1!" } });
-    fireEvent.change(screen.getByLabelText("Confirm New Password"), {
+    fireEvent.change(screen.getByLabelText("New password"), { target: { value: "NewPassword1!" } });
+    fireEvent.change(screen.getByLabelText("Confirm new password"), {
       target: { value: "NewPassword1!" },
     });
 

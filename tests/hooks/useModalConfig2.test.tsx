@@ -21,9 +21,9 @@ describe("useModalConfig (duplicate)", () => {
     const onClose = vi.fn();
     render(<RenderConfig type="updateInfoSuccess" config={{ isOpen: true, onClose }} />);
 
-    expect(screen.getByTestId("title").textContent).toBe("Your Information Has Been Updated.");
+    expect(screen.getByTestId("title").textContent).toBe("Your information has been updated.");
     expect(screen.getByTestId("subtitle").textContent).toBe("All set! Your name has been updated.");
-    expect(screen.getByTestId("buttons").textContent).toContain("Return to Settings");
+    expect(screen.getByTestId("buttons").textContent).toContain("Return to settings");
   });
 
   it("returns retakeAssessment with loading state", () => {

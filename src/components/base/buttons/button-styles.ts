@@ -15,12 +15,12 @@ export const styles = sortCx({
     root: [
       // Base styles
       "group relative inline-flex items-center justify-center whitespace-nowrap cursor-pointer",
-      "rounded-lg font-semibold transition-all duration-100 ease-linear",
+      "rounded-lg font-semibold transition-all duration-100 ease-linear normal-case",
       "outline-none focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ws-border-focus-ring",
       // Icon handling
       "*:data-icon:pointer-events-none *:data-icon:shrink-0 *:data-icon:transition-all-inherit",
       // Disabled state
-      "disabled:cursor-not-allowed disabled:opacity-60",
+      "disabled:cursor-not-allowed disabled:opacity-60 normal-case",
     ].join(" "),
     icon: "pointer-events-none shrink-0 inline-flex",
   },

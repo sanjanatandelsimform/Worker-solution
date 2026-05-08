@@ -174,7 +174,7 @@ export const SettingsPage = () => {
       navigate("/success", {
         state: {
           messageImg: trashIcon,
-          title: "Your Account Was Deleted",
+          title: "Your account was deleted",
           subtitle:
             "Your profile and associated data has been permanently deleted. This action can’t be reversed. Create a new account to begin.",
           buttonText: "Create an account",
@@ -316,7 +316,7 @@ export const SettingsPage = () => {
               <div className="bg-ws-navy-25 flex gap-2 border border-ws-border-secondary rounded-xl py-8 px-6 flex-col">
                 <div className="flex flex-col">
                   <h2 className="text-3xl font-medium text-ws-text-primary">
-                    Personal Information
+                    Personal information
                   </h2>
                   <p className="text-base text-ws-text-tertiary mt-2">
                     Update your name, email, and personal details.
@@ -331,7 +331,7 @@ export const SettingsPage = () => {
                           <InputGroup>
                             <Input
                               id="firstName"
-                              label="First Name"
+                              label="First name"
                               name="firstName"
                               size="md"
                               isRequired={false}
@@ -340,7 +340,7 @@ export const SettingsPage = () => {
                               onChange={handleFirstNameChange}
                               // isDisabled={profileLoading}
                               isDisabled={true}
-                              helperTooltip="Your First Name"
+                              helperTooltip="Your first name"
                             />
                             {firstNameError && (
                               <p className="text-ws-error-600 text-sm mt-1">{firstNameError}</p>
@@ -351,7 +351,7 @@ export const SettingsPage = () => {
                           <InputGroup>
                             <Input
                               id="lastName"
-                              label="Last Name"
+                              label="Last name"
                               name="lastName"
                               size="md"
                               isRequired={false}
@@ -360,7 +360,7 @@ export const SettingsPage = () => {
                               onChange={handleLastNameChange}
                               // isDisabled={profileLoading}
                               isDisabled={true}
-                              helperTooltip="Your Last Name"
+                              helperTooltip="Your last name"
                             />
                             {lastNameError && (
                               <p className="text-ws-error-600 text-sm mt-1">{lastNameError}</p>
@@ -428,11 +428,11 @@ export const SettingsPage = () => {
                       </InputGroup>
                       <Button
                         color="link"
-                        className="text-ws-navy-800 font-semibold shadow-none no-underline mt-2"
+                        className="text-ws-navy-800 font-semibold shadow-none no-underline mt-2 normal-case"
                         onClick={() => setIsChangePasswordModalOpen(true)}
                         isDisabled={profileLoading || !firstName || !lastName}
                       >
-                        Change Password
+                        Change password
                       </Button>
                     </div>
                   </div>

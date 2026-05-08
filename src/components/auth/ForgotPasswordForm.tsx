@@ -43,7 +43,7 @@ export default function ForgotPasswordForm() {
       navigate("/success", {
         state: {
           messageImg: checkmarkIcon,
-          title: "Email Verification!",
+          title: "Email verification!",
           subtitle:
             "A link has been sent to your email. Please check your inbox to reset your password and verify your email",
           buttonText: "Back to login",
@@ -70,10 +70,10 @@ export default function ForgotPasswordForm() {
 
             {/* Title and Description */}
             <div className="flex w-full flex-col items-center gap-3">
-              <h2 className="w-full text-3xl text-center font-semibold leading-9.5 text-ws-text-primary">
+              <h2 className="w-full text-3xl text-center font-semibold leading-9.5 text-ws-text-primary normal-case">
                 Forgot your password?
               </h2>
-              <p className="w-full text-base font-normal text-center leading-6 text-ws-text-tertiary">
+              <p className="w-full text-base font-normal text-center leading-6 text-ws-text-tertiary normal-case">
                 Enter the email address associated with your account and we'll send you a link to
                 reset your password.
               </p>
@@ -90,7 +90,7 @@ export default function ForgotPasswordForm() {
               <InputGroup>
                 <Input
                   name="email"
-                  label="Business Email Address"
+                  label="Business email address"
                   //icon={Mail01}
                   iconClassName="text-ws-gray-400"
                   size="md"
@@ -127,9 +127,9 @@ export default function ForgotPasswordForm() {
                   color="primary"
                   size="lg"
                   isDisabled={isSubmitting}
-                  className="w-full mt-2"
+                  className="w-full mt-2 normal-case"
                 >
-                  {isSubmitting ? "Sending..." : "Reset Password"}
+                  {isSubmitting ? "Sending..." : "Reset password"}
                 </Button>
               </div>
             </form>
