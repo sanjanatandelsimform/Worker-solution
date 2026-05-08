@@ -9,10 +9,8 @@ import type { Department } from "@/types/workforceTypes";
  * @example parsePercentage("N/A") // 0
  * @example parsePercentage(undefined) // 0
  */
-export const parsePercentage = (value: string | undefined): number => {
-  if (!value || typeof value !== "string") {
-    return 0;
-  }
+export const parsePercentage = (value: string | undefined | null): number => {
+  if (value == null) return 0;
   const num = parseFloat(value.replace("%", ""));
   return isNaN(num) ? 0 : num;
 };

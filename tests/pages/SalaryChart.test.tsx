@@ -364,5 +364,25 @@ describe("SalaryRangeChart", () => {
       expect(mockCtx.fillRect).toHaveBeenCalledTimes(sampleData.length);
       expect(mockCtx.strokeRect).toHaveBeenCalledTimes(sampleData.length);
     });
+
+    it("renders the salary band label for an all-null item", () => {
+      const data = [{ label: "X", boxStart: null, boxEnd: null, max: null, min: null }];
+      render(<SalaryRangeChart data={data} />);
+      const allTexts = mockCtx.fillText.mock.calls.map(([text]) => String(text));
+      expect(allTexts).toContain("X");
+    });
+
+    it("renders all labels in a mixed null/valid dataset", () => {
+      const data = [
+        { label: "Null", boxStart: null, boxEnd: null, max: null, min: null },
+        { label: "IT", boxStart: 80, boxEnd: 120, max: 150, min: 60 },
+        { label: "HR", boxStart: 70, boxEnd: 110, max: 140, min: 50 },
+      ];
+      render(<SalaryRangeChart data={data} />);
+      const allTexts = mockCtx.fillText.mock.calls.map(([text]) => String(text));
+      expect(allTexts).toContain("Null");
+      expect(allTexts).toContain("IT");
+      expect(allTexts).toContain("HR");
+    });
   });
 });

@@ -13,7 +13,7 @@ import { ArrowDown } from "@/assets/icons/ArrowDown";
 const employmentTypeItems = [
   { id: "fullTime", label: "Full Time" },
   { id: "partTime", label: "Part Time" },
-  { id: "seasonal", label: "Seasonal" },
+  { id: "others", label: "Other" },
 ];
 
 interface DemographicsCardConfig {
@@ -44,7 +44,7 @@ interface DropdownItem {
   label: string;
 }
 
-type EmploymentType = "fullTime" | "partTime" | "seasonal";
+type EmploymentType = "fullTime" | "partTime" | "others";
 
 interface WorkforceDemographicsProps {
   readonly isLoading: boolean;
@@ -102,7 +102,7 @@ export default function WorkforceDemographics({
         </div>
       </div>
       <div className="w-full">
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 w-full">
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 w-full">
           {isLoading ? (
             <>
               <OverviewCardSkeleton />
@@ -178,7 +178,7 @@ export default function WorkforceDemographics({
               value={selectedEmploymentType}
               onSelectionChange={key => {
                 if (key) {
-                  setSelectedEmploymentType(key as "fullTime" | "partTime" | "seasonal");
+                  setSelectedEmploymentType(key as "fullTime" | "partTime" | "others");
                 }
               }}
             >

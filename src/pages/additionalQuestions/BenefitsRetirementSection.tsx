@@ -218,7 +218,7 @@ export default function BenefitsRetirementSection({
             <div key={question.id} className="space-y-3">
               <QuestionRadioGroup
                 question={question}
-                displayIndex={index + 3}
+                displayIndex={index + 4}
                 value={(answers[question.id] as string) || ""}
                 onChange={onAnswerChange}
                 error={fieldErrors[question.id]}
