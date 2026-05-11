@@ -80,17 +80,22 @@ const SalaryRangeChart: React.FC<SalaryRangeChartProps> = ({ data }) => {
 
       const drawBars = () => {
         data.forEach((item, index) => {
-          // Skip items with any null numeric field — no box, whisker, or label drawn
+          const x = chartLeft + columnSpacing * (index + 0.75);
+
+          // Skip items with any null numeric field — no box, whisker, or value labels drawn
           if (
             item.min == null ||
             item.max == null ||
             item.boxStart == null ||
             item.boxEnd == null
           ) {
+            // Always render the salary band label even when data is null
+            ctx.fillStyle = "#111827";
+            ctx.textAlign = "center";
+            ctx.font = "14px Inter Regular, sans-serif";
+            ctx.fillText(item.label, x, 420);
             return;
           }
-
-          const x = chartLeft + columnSpacing * (index + 0.75);
 
           const minY = scaleY(item.min);
           const boxStart = scaleY(item.boxStart);

@@ -15,12 +15,12 @@ export const styles = sortCx({
     root: [
       // Base styles
       "group relative inline-flex items-center justify-center whitespace-nowrap cursor-pointer",
-      "rounded-lg font-semibold transition-all duration-100 ease-linear",
+      "rounded-lg font-semibold transition-all duration-100 ease-linear normal-case",
       "outline-none focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ws-border-focus-ring",
       // Icon handling
       "*:data-icon:pointer-events-none *:data-icon:shrink-0 *:data-icon:transition-all-inherit",
       // Disabled state
-      "disabled:cursor-not-allowed disabled:opacity-60",
+      "disabled:cursor-not-allowed disabled:opacity-60 normal-case",
     ].join(" "),
     icon: "pointer-events-none shrink-0 inline-flex",
   },
@@ -88,10 +88,10 @@ export const styles = sortCx({
       root: [
         "bg-ws-base-white text-ws-navy-800 border border-ws-navy-800",
         "hover:bg-ws-navy-600 hover:text-ws-base-white hover:border-ws-navy-800 transition-all duration-200",
-        "focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-ws-light-teal-850 focus:text-ws-navy-800",
-        "active:bg-ws-base-white active:border-ws-navy-800",
+        "active:bg-ws-base-white active:border-ws-navy-800 active:text-ws-navy-800",
         "disabled:bg-ws-gray-100 disabled:border-ws-gray-200 disabled:text-ws-gray-400",
         "*:data-icon:text-ws-navy-900 hover:*:data-icon:text-ws-base-white transition-all duration-200",
+        "focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-ws-light-teal-850 focus:text-ws-navy-800 focus:text-ws-ws-light-teal-850 focus:bg-ws-navy-600 focus:text-ws-base-white",
       ].join(" "),
     },
 
@@ -112,7 +112,7 @@ export const styles = sortCx({
       root: [
         "bg-transparent border-none text-ws-navy-800 underline",
         "hover:text-ws-navy-600 hover:text-ws-navy-800 hover:no-underline transition-all duration-200",
-        //"focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-ws-light-teal-850",
+        "focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-ws-light-teal-850",
         "active:text-ws-navy-800",
         "disabled:text-ws-gray-400 disabled:no-underline",
         "*:data-icon:text-ws-navy-800 hover:*:data-icon:text-ws-navy-800 transition-all duration-200",

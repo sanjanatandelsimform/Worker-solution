@@ -35,7 +35,7 @@ describe("ForgotPasswordForm", () => {
   it("renders the form with heading and email input", () => {
     renderWithProviders(<ForgotPasswordForm />);
     expect(screen.getByText("Forgot your password?")).toBeInTheDocument();
-    expect(screen.getByText("Reset Password")).toBeInTheDocument();
+    expect(screen.getByText(/Reset password/i)).toBeInTheDocument();
     expect(screen.getByText("Sign up")).toBeInTheDocument();
   });
 

@@ -122,6 +122,16 @@ const defaultRecommendationsData: RecommendationsState["data"] = {
   },
 };
 
+// Fixture with companyOverview populated — used for non-connected path tests
+const defaultRecommendationsDataWithOverview: RecommendationsState["data"] = {
+  ...defaultRecommendationsData!,
+  companyOverview: {
+    totalWorkforce: 350,
+    avgHourlyRate: 21.0,
+    avgSalary: 58000,
+  },
+};
+
 interface TestStoreOverrides {
   workforce?: Partial<WorkforceState>;
   recommendations?: Partial<RecommendationsState>;
@@ -202,7 +212,7 @@ beforeEach(() => {
 describe("RecommendationsFinchPage — smoke test", () => {
   it("renders without crashing", () => {
     renderPage();
-    expect(screen.getByText("Your Company At A Glance")).toBeInTheDocument();
+    expect(screen.getByText("Your Company at a Glance")).toBeInTheDocument();
   });
 });
 
@@ -246,9 +256,9 @@ describe("RecommendationsFinchPage — loading states", () => {
     expect(screen.queryByText("$45,000")).not.toBeInTheDocument();
   });
 
-  it("renders Company At A Glance heading when all loading flags are false", () => {
+  it("renders Company at a Glance heading when all loading flags are false", () => {
     renderPage();
-    expect(screen.getByText("Your Company At A Glance")).toBeInTheDocument();
+    expect(screen.getByText("Your Company at a Glance")).toBeInTheDocument();
   });
 });
 
@@ -286,10 +296,10 @@ describe("RecommendationsFinchPage — assessment completeness gate", () => {
     expect(screen.getByText("Strategic Solutions")).toBeInTheDocument();
   });
 
-  it("always shows Your Company At A Glance heading regardless of assessment status", () => {
+  it("always shows Your Company at a Glance heading regardless of assessment status", () => {
     vi.mocked(useAssessmentStatus).mockReturnValue(incompleteAssessmentMock);
     renderPage();
-    expect(screen.getByText("Your Company At A Glance")).toBeInTheDocument();
+    expect(screen.getByText("Your Company at a Glance")).toBeInTheDocument();
   });
 });
 
@@ -414,7 +424,7 @@ describe("RecommendationsFinchPage — benefits overview data mapping", () => {
       workforce: { data: null, loading: false, isLoaded: false, error: null, lastFetched: null },
     });
     expect(() => renderPage(store)).not.toThrow();
-    expect(screen.getByText("Your Company At A Glance")).toBeInTheDocument();
+    expect(screen.getByText("Your Company at a Glance")).toBeInTheDocument();
   });
 });
 
@@ -522,12 +532,12 @@ describe("RecommendationsFinchPage — static sections always rendered", () => {
     } as ReturnType<typeof useAssessmentStatus>);
 
     renderPage();
-    expect(screen.getByText("Your Company At A Glance")).toBeInTheDocument();
+    expect(screen.getByText("Your Company at a Glance")).toBeInTheDocument();
   });
 
   it("renders page without crash when assessment is complete", () => {
     renderPage();
-    expect(screen.getByText("Your Company At A Glance")).toBeInTheDocument();
+    expect(screen.getByText("Your Company at a Glance")).toBeInTheDocument();
   });
 });
 
@@ -536,7 +546,7 @@ describe("RecommendationsFinchPage — static sections always rendered", () => {
 describe("RecommendationsFinchPage — onNavigateToWorkforce callback", () => {
   it("renders without error when onNavigateToWorkforce is not provided", () => {
     expect(() => renderPage()).not.toThrow();
-    expect(screen.getByText("Your Company At A Glance")).toBeInTheDocument();
+    expect(screen.getByText("Your Company at a Glance")).toBeInTheDocument();
   });
 });
 
@@ -711,5 +721,57 @@ describe("RecommendationsFinchPage — isStale prop", () => {
     );
     expect(screen.getByText(/up to 2 weeks/i)).toBeInTheDocument();
     expect(screen.queryByText(/24-36 hours/i)).not.toBeInTheDocument();
+  });
+});
+
+// ─── User Story 1: Non-connected company at a glance path ──────────────────
+
+describe("RecommendationsFinchPage — company at a glance (non-connected path)", () => {
+  beforeEach(() => {
+    vi.mocked(useAssessmentStatus).mockReturnValue({
+      isFinchAssessmentIncomplete: false,
+      isFinchCompleted: false,
+      isConnected: false, // non-connected (manual assessment)
+      isFetched: true,
+      completionCount: 4,
+      isLoading: false,
+      error: null,
+      assessmentData: null,
+      sectionCompletion: { workforce: true, compensation: true, benefits: true, goals: true },
+      refetch: vi.fn(),
+    } as ReturnType<typeof useAssessmentStatus>);
+  });
+
+  it("displays totalWorkforce from companyOverview when not connected", () => {
+    const store = createTestStore({
+      recommendations: { data: defaultRecommendationsDataWithOverview },
+    });
+    renderPage(store);
+    expect(screen.getByText("350")).toBeInTheDocument();
+  });
+
+  it("displays avgHourlyRate from companyOverview when not connected", () => {
+    const store = createTestStore({
+      recommendations: { data: defaultRecommendationsDataWithOverview },
+    });
+    renderPage(store);
+    expect(screen.getByText("$21.00")).toBeInTheDocument();
+  });
+
+  it("displays avgSalary from companyOverview when not connected", () => {
+    const store = createTestStore({
+      recommendations: { data: defaultRecommendationsDataWithOverview },
+    });
+    renderPage(store);
+    // formatCompactCurrency(58000) → "$58K" (Intl compact currency, exact output may vary by ICU)
+    expect(screen.getByText(/^\$58/)).toBeInTheDocument();
+  });
+
+  it("shows N/A for company fields when companyOverview is absent and not connected", () => {
+    const store = createTestStore({
+      recommendations: { data: defaultRecommendationsData }, // no companyOverview
+    });
+    renderPage(store);
+    expect(screen.getAllByText("No data available").length).toBeGreaterThan(0);
   });
 });

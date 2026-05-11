@@ -200,8 +200,8 @@ export const ChangePasswordModal = ({ isOpen, onClose }: ChangePasswordModalProp
           <ModalHeader>
             <div className="flex items-center justify-between w-full relative">
               <div className="flex flex-col  gap-1">
-                <ModalTitle>Change Your Password</ModalTitle>
-                <ModalDescription>
+                <ModalTitle className="normal-case">Change your password</ModalTitle>
+                <ModalDescription className="normal-case">
                   To update your password, enter your current password and choose a new one that
                   meets the security requirements.
                 </ModalDescription>
@@ -248,7 +248,7 @@ export const ChangePasswordModal = ({ isOpen, onClose }: ChangePasswordModalProp
                   <Input
                     name="currentPassword"
                     isRequired
-                    label="Current Password"
+                    label="Current password"
                     hint={currentPasswordError}
                     placeholder="Enter current password"
                     size="md"
@@ -279,7 +279,7 @@ export const ChangePasswordModal = ({ isOpen, onClose }: ChangePasswordModalProp
                   <Input
                     name="newPassword"
                     isRequired
-                    label="New Password"
+                    label="New password"
                     hint={newPasswordError}
                     placeholder="Enter new password"
                     size="md"
@@ -319,7 +319,7 @@ export const ChangePasswordModal = ({ isOpen, onClose }: ChangePasswordModalProp
                   <Input
                     name="confirmPassword"
                     isRequired
-                    label="Confirm New Password"
+                    label="Confirm new password"
                     hint={confirmPasswordError}
                     placeholder="Confirm new password"
                     size="md"

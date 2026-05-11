@@ -50,7 +50,7 @@ describe("VerifyEmailPage", () => {
   it("should show error when no token", async () => {
     renderVerifyEmailPage();
     await waitFor(() => {
-      expect(screen.getByText("Verification Failed")).toBeInTheDocument();
+      expect(screen.getByText(/Verification failed/i)).toBeInTheDocument();
       expect(screen.getByText(/Invalid or missing verification token/)).toBeInTheDocument();
     });
   });
@@ -58,7 +58,7 @@ describe("VerifyEmailPage", () => {
   it("should show back to sign in button on error", async () => {
     renderVerifyEmailPage();
     await waitFor(() => {
-      expect(screen.getByText("Back to Sign In")).toBeInTheDocument();
+      expect(screen.getByText(/Back to sign in/i)).toBeInTheDocument();
     });
   });
 
@@ -97,7 +97,7 @@ describe("VerifyEmailPage", () => {
     renderVerifyEmailPage();
 
     await waitFor(() => {
-      expect(screen.getByText("Verification Failed")).toBeInTheDocument();
+      expect(screen.getByText(/Verification failed/i)).toBeInTheDocument();
       expect(screen.getByText("Token expired")).toBeInTheDocument();
     });
   });

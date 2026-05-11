@@ -18,7 +18,7 @@ interface ProvenCardConfig {
 const provenStrategiesCardsConfig: ProvenCardConfig[] = [
   {
     id: "nonElectiveMatch",
-    title: "Non-elective match",
+    title: "Non-Elective Match",
     descriptionText:
       "Employer contributions are often skewed due to high earners's contribution capacity. Separate the employee contribution from employer contribution.",
   },
@@ -30,7 +30,7 @@ const provenStrategiesCardsConfig: ProvenCardConfig[] = [
   },
   {
     id: "healthcareAffordability",
-    title: "Healthcare affordability",
+    title: "Healthcare Affordability",
     descriptionText:
       "Consider adjusting employee premiums to income level. QSEHRA and ICHRA plans can offer more flexibility and savings for employers and employees.",
     descriptionTextFlagTrue:
@@ -93,7 +93,7 @@ export default function CoreBenefitsEnhancement({
               />
             )}
           </div>
-          <div className="mt-6 grid grid-cols-1 xl:grid-cols-3 gap-6 w-full">
+          <div className="mt-6 grid grid-cols-1 xl:grid-cols-[repeat(auto-fit,minmax(0,1fr))] gap-6 w-full">
             {isLoading ? (
               Array.from({ length: visibleFlagsTotal || 3 }).map((_, i) => (
                 <ProvenStrategiesCardsSkeleton key={i} />

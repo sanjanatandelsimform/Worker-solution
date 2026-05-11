@@ -71,7 +71,7 @@ export default function StrategicSolutions({
               className="w-full xl:w-42 rounded-tl-xl rounded-bl-xl h-full object-cover"
             />
           </div>
-          <div className="p-4 overflow-auto">
+          <div className="p-4 overflow-auto flex flex-col justify-center">
             <h4 className="text-base font-semibold mb-2 text-ws-light-teal-950">Did you know?</h4>
             <p className="text-lg text-ws-light-teal-950">
               The cost of replacing an individual employee can range from <strong>1.5-2x</strong>{" "}

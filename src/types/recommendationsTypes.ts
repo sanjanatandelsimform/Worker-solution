@@ -35,6 +35,22 @@ export interface StrategicRecommendation {
 }
 
 /**
+ * Company workforce size and compensation summary returned by the recommendations API.
+ * Present on non-Finch (manual) assessments to supply company overview values
+ * that would otherwise only come from the Workforce API.
+ *
+ * Path: response.companyOverview
+ */
+export interface CompanyOverview {
+  /** Total number of employees in the company */
+  totalWorkforce: number;
+  /** Average hourly wage across the workforce */
+  avgHourlyRate: number;
+  /** Average annual salary across the workforce */
+  avgSalary: number;
+}
+
+/**
  * Core recommendation data: flags, strategic items.
  */
 export interface RecommendationData {
@@ -56,6 +72,8 @@ export interface RecommendationData {
 export interface RecommendationsApiResponse {
   assessmentType: string;
   recommendation: RecommendationData;
+  /** Company overview for non-Finch assessments. Absent for Finch-connected users. */
+  companyOverview?: CompanyOverview;
 }
 
 /**

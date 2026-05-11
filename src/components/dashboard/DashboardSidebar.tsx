@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { useAppSelector } from "@/store/hooks";
 import { Settings01, Home05, LogOut01 } from "@untitledui/icons";
 import { NavList } from "@/components/application/app-navigation/base-components/nav-list";
@@ -141,16 +141,18 @@ export const DashboardSidebar = ({ activeUrl = "/" }: DashboardSidebarProps) => 
   return (
     <div
       className={`flex h-[calc(100vh-40px)] xl:h-[calc(100vh-80px)] flex-col border-0 border-ws-border-primary bg-ws-base-white py-6 lg:py-10 m-5 xl:m-10 rounded-lg inset-shadow-sm shadow-md transition-all duration-300 ease-in-out ${
-        isTabletRange ? (isCollapsed ? "w-20 px-3" : "w-66 px-6") : "w-66 px-6"
+        isTabletRange ? (isCollapsed ? "w-20 px-3" : "w-66 px-4") : "w-66 px-4"
       }`}
     >
       {/* Header with Logo and Toggle Button */}
-      <div className="flex items-center justify-between">
+      <div className="flex items-center justify-between p-2 pt-0">
         {/* Logo - Hidden when collapsed on tablet */}
         {!isTabletRange || !isCollapsed ? (
           <div className="flex items-center justify-start overflow-hidden flex-1">
-            <div className="flex items-center justify-center transition-all duration-300">
-              <img src={siteLogo} alt="Logo" className="w-full" />
+            <div className="flex items-center justify-center transition-all duration-300 m-0.5">
+              <Link to="/dashboard" className="flex items-center justify-center transition-all duration-300">
+                <img src={siteLogo} alt="Logo" className="w-full" />
+              </Link>
             </div>
           </div>
         ) : (
@@ -177,7 +179,7 @@ export const DashboardSidebar = ({ activeUrl = "/" }: DashboardSidebarProps) => 
       </div>
 
       {/* Navigation */}
-      <nav className="flex-1 overflow-y-auto overflow-x-hidden">
+      <nav className="flex-1 overflow-y-auto overflow-x-hidden p-2">
         <NavList items={navigationItems} activeUrl={activeUrl} isCollapsed={shouldBeCollapsed} />
         <NavList
           items={settingsItems}
@@ -188,7 +190,7 @@ export const DashboardSidebar = ({ activeUrl = "/" }: DashboardSidebarProps) => 
       </nav>
 
       {/* User Account Card at Bottom - Dynamic User Info */}
-      <div className="border border-ws-border-secondary rounded-xl p-2 lg:p-3 mt-6 overflow-hidden ">
+      <div className="border border-ws-border-secondary rounded-xl p-2 lg:p-3 mt-6 overflow-hidden m-2">
         {isTabletRange && isCollapsed ? (
           // Show initials when collapsed
           <div className="flex items-center justify-center">

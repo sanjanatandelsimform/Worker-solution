@@ -27,12 +27,12 @@ describe("useModalConfig", () => {
     expect(result.current.title).toBe("Update Complete");
     expect(result.current.backgroundPattern).toBe("success");
     expect(result.current.buttons).toHaveLength(1);
-    expect(result.current.buttons[0].text).toBe("Back to Settings");
+    expect(result.current.buttons[0].text).toBe("Back to settings");
   });
 
   it("returns updateInfoSuccess config", () => {
     const { result } = renderHook(() => useModalConfig("updateInfoSuccess", baseConfig));
-    expect(result.current.title).toBe("Your Information Has Been Updated.");
+    expect(result.current.title).toBe("Your information has been updated.");
     expect(result.current.backgroundPattern).toBe("success");
   });
 
@@ -44,7 +44,7 @@ describe("useModalConfig", () => {
 
   it("returns emailUpdateSuccess config", () => {
     const { result } = renderHook(() => useModalConfig("emailUpdateSuccess", baseConfig));
-    expect(result.current.title).toBe("Your Email Has Been Updated");
+    expect(result.current.title).toBe("Your email has been updated");
     expect(result.current.buttons).toHaveLength(0);
   });
 
@@ -53,7 +53,7 @@ describe("useModalConfig", () => {
     expect(result.current.title).toBe("Are you sure?");
     expect(result.current.backgroundPattern).toBe("unsuccess");
     expect(result.current.buttons).toHaveLength(2);
-    expect(result.current.buttons[1].text).toBe("Yes, Retake assessment");
+    expect(result.current.buttons[1].text).toBe("Yes, retake assessment");
   });
 
   it("returns retakeAssessment with loading state", () => {
@@ -69,7 +69,7 @@ describe("useModalConfig", () => {
 
   it("returns accountDelete config", () => {
     const { result } = renderHook(() => useModalConfig("accountDelete", baseConfig));
-    expect(result.current.title).toBe("Confirm Account Deletion");
+    expect(result.current.title).toBe("Confirm account deletion");
     expect(result.current.backgroundPattern).toBe("unsuccess");
     expect(result.current.buttons[1].text).toBe("Yes, delete my account");
   });

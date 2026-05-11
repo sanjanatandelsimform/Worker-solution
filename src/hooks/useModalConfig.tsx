@@ -49,7 +49,7 @@ export const useModalConfig = (
         backgroundPattern: "success",
         buttons: [
           {
-            text: "Back to Settings",
+            text: "Back to settings",
             onClick: config.onClose,
             color: "primary",
           },
@@ -57,13 +57,13 @@ export const useModalConfig = (
       },
       updateInfoSuccess: {
         size: "sm",
-        title: "Your Information Has Been Updated.",
+        title: "Your information has been updated.",
         subtitle: "All set! Your name has been updated.",
         icon: <CheckCircle className="size-6 text-ws-success-600" />,
         backgroundPattern: "success",
         buttons: [
           {
-            text: "Return to Settings",
+            text: "Return to settings",
             onClick: config.onClose,
             color: "primary",
           },
@@ -79,7 +79,7 @@ export const useModalConfig = (
         backgroundPattern: "success",
         buttons: [
           {
-            text: "Back to Settings",
+            text: "Back to settings",
             onClick: config.onConfirm || config.onClose,
             color: "primary",
           },
@@ -87,7 +87,7 @@ export const useModalConfig = (
       },
       emailUpdateSuccess: {
         size: "sm",
-        title: "Your Email Has Been Updated",
+        title: "Your email has been updated",
         subtitle:
           "We’ve sent a verification link to your new address. To protect your privacy, you will be logged out. Please verify your email to log back in.",
         icon: <CheckCircle className="size-6 text-ws-success-600" />,
@@ -111,7 +111,7 @@ export const useModalConfig = (
             isDisabled: !!config.additionalData?.loading,
           },
           {
-            text: config.additionalData?.loading ? "Retaking..." : "Yes, Retake assessment",
+            text: config.additionalData?.loading ? "Retaking..." : "Yes, retake assessment",
             onClick: config.onConfirm || config.onClose,
             color: "error",
             isDisabled: !!config.additionalData?.loading,
@@ -120,7 +120,7 @@ export const useModalConfig = (
       },
       accountDelete: {
         size: "sm",
-        title: "Confirm Account Deletion",
+        title: "Confirm account deletion",
         subtitle:
           "Deleting your account will permanently erase your profile and all associated data. This action can’t be reversed.",
         subtitleOne: "If you’re certain this is what you want, confirm below to proceed.",
@@ -201,7 +201,7 @@ export const useModalConfig = (
         backgroundPattern: "success",
         buttons: [
           {
-            text: "Go to Dashboard",
+            text: "Go to dashboard",
             onClick: config.onConfirm || config.onClose,
             color: "primary",
           },
@@ -229,7 +229,7 @@ export const useModalConfig = (
       },
       goalsApiError: {
         size: "sm",
-        title: "Submission Failed",
+        title: "Submission failed",
         subtitle:
           (config.additionalData?.errorMessage as string) ||
           "Something went wrong. Please try again.",

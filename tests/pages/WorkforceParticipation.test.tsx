@@ -155,9 +155,9 @@ describe("WorkforceParticipation", () => {
         />
       );
       const progressTitles = screen.getAllByTestId("progress-title").map(el => el.textContent);
-      expect(progressTitles).toContain("Benefits");
-      expect(progressTitles).toContain("Retirement");
-      expect(progressTitles).toContain("Insurance");
+      expect(progressTitles).toContain("Supplemental Benefits");
+      expect(progressTitles).toContain("Retirement and Savings");
+      expect(progressTitles).toContain("Health and Wellness");
     });
 
     it("renders three ProgressCard components", () => {

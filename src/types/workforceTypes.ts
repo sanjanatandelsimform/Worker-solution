@@ -74,7 +74,7 @@ export interface Demographics {
   employmentBreakdownByAge: AgeBreakdownEntry[];
 }
 
-/** Full-time / part-time / seasonal percentages for a given department */
+/** Full-time / part-time / other percentages for a given department */
 export interface EmploymentTypeEntry {
   /** "all" | "engineering" | "sales" | "hr" | etc. */
   department: string;
@@ -83,7 +83,7 @@ export interface EmploymentTypeEntry {
   /** e.g. "20%" */
   partTime: string;
   /** e.g. "5%" */
-  seasonal: string;
+  others: string;
 }
 
 export interface GenderBreakdown {
@@ -91,6 +91,8 @@ export interface GenderBreakdown {
   men: string;
   /** e.g. "40%" */
   women: string;
+  /** e.g. "5%" — individuals who do not identify as man or woman, or choose not to identify */
+  others?: string;
 }
 
 export interface AgeBreakdownEntry {
@@ -98,7 +100,7 @@ export interface AgeBreakdownEntry {
   ageGroup: string;
   fullTime: number;
   partTime: number;
-  seasonal: number;
+  others: number;
 }
 
 /**

@@ -59,45 +59,34 @@ TypeScript with React 19+, strict mode enabled: Follow standard conventions
 
 - 012-participation-dynamic-items (2026-04-16): `participation.benefits`, `participation.retirement`, `participation.insurance` in `WorkforceResponse` changed from fixed-key objects to `EnrollmentItem[]` arrays (`{ name: string; enrollment: string }`). Hook `useWorkforceParticipationConfig` now maps arrays instead of accessing property keys. Static mock data in `workforceSlice.ts` updated to array format. Test fixtures in 3 test files updated. No changes to selectors, `WorkforceParticipation.tsx`, or `WorkforcePage.tsx`.
 
-## Active Feature: 001-proven-strategy-flags (2026-05-05)
+## Active Feature: 034-keep-salary-band-label (2026-05-07)
 
 <!-- specify:agent:start -->
 
-**Branch**: `001-proven-strategy-flags` | **Spec**: `specs/001-proven-strategy-flags/spec.md` | **Plan**: `specs/001-proven-strategy-flags/plan.md`
+**Branch**: `034-keep-salary-band-label` | **Spec**: `specs/034-keep-salary-band-label/spec.md` | **Plan**: `specs/034-keep-salary-band-label/plan.md`
 
 ### What this feature does
 
-1. Introduces `StrategyFlagStatus = "green" | "yellow" | "hidden"` type (new file `src/types/strategyFlagTypes.ts`).
-2. Changes `RecommendationData.autoEnroll`, `nonElectiveMatch`, `healthcareAffordability` from `boolean` → `StrategyFlagStatus`.
-3. Adds `healthcareAffordability?: StrategyFlagStatus` to `WorkforceEnvelope` — Finch flow only field from backend.
-4. In Finch flow (`isConnected === true`): `autoEnroll` + `nonElectiveMatch` from Recommendations API; `healthcareAffordability` from Workforce API. In manual flow: all three from Recommendations API.
-5. Card rendering: `"green"` → green card + LikeIcon (green); `"yellow"` → yellow card + UserGroupIcon (yellow); `"hidden"` → card not rendered at all.
-6. `provenStrategiesCount` = count of `"green"` flags; denominator (`visibleFlagsTotal`) = count of non-`"hidden"` flags (not hardcoded 3).
+1. In `SalaryChart.tsx` (`src/pages/workforce/SalaryChart.tsx`), the `drawBars()` canvas function currently skips an item entirely (including its salary band label) when any numeric field is `null`.
+2. This feature moves `const x = ...` before the null guard and renders `ctx.fillText(item.label, x, 420)` inside the guard before the early `return`, so the salary band label always appears at the bottom of the chart column regardless of data availability.
+3. Two new test cases are added to `tests/pages/SalaryChart.test.tsx` in the `"null data suppression"` describe block.
 
 ### Files to create
 
-- `src/types/strategyFlagTypes.ts` — `StrategyFlagStatus` type
-- `src/utils/strategyFlagUtils.ts` — `normaliseFlag(raw: unknown): StrategyFlagStatus` helper
+- None
 
 ### Files to modify
 
-- `src/types/recommendationsTypes.ts` — `boolean` → `StrategyFlagStatus` on three flag fields
-- `src/types/workforceTypes.ts` — add `healthcareAffordability?: StrategyFlagStatus` to `WorkforceEnvelope`
-- `src/store/selectors/recommendationsSelectors.ts` — update `selectProvenStrategiesFlags` to return `StrategyFlagStatus` values + normalise
-- `src/store/selectors/workforceSelectors.ts` — add `selectWorkforceHealthcareAffordabilityFlag`
-- `src/pages/recommendations/RecommendationsFinchPage.tsx` — destructure `isConnected`, compose flags per flow, update count computation, pass `visibleFlagsTotal`
-- `src/pages/recommendations/CoreBenefitsEnhancement.tsx` — update `ProvenStrategyFlags` type, tri-state card rendering, `visibleFlagsTotal` prop
-- `tests/pages/CoreBenefitsEnhancement.test.tsx` — update fixtures; add hidden-card and colour tests
-- `tests/store/selectors/recommendationsSelectors.test.ts` — assert string values; add normalisation test
-- `tests/utils/strategyFlagUtils.test.ts` — NEW — unit tests for `normaliseFlag`
+- `src/pages/workforce/SalaryChart.tsx` — move `x` before null guard; render label in guard body; update comment
+- `tests/pages/SalaryChart.test.tsx` — add 2 new `it()` blocks in `"null data suppression"` describe
 
 ### Key facts
 
-- `normaliseFlag` is the single coercion point: unknown/absent/boolean → `"hidden"`
-- `ProvenStrategyFlags` interface is exported from `CoreBenefitsEnhancement.tsx`
-- `isConnected` is already returned by the existing `useAssessmentStatus()` call in `RecommendationsFinchPage` — no new hook needed
-- `visibleFlagsTotal > 0` guard prevents division-by-zero when all flags are `"hidden"`
-- See full implementation guide: `specs/001-proven-strategy-flags/quickstart.md`
+- Label position is always `y = 420` (unchanged)
+- Column x-position: `chartLeft + columnSpacing * (index + 0.75)` — moved before the null guard
+- No new imports, no type changes, no new files
+- All existing tests still pass — no existing assertions check that `fillText` is never called for null items
+- See full implementation guide: `specs/034-keep-salary-band-label/quickstart.md`
 
 <!-- specify:agent:end -->
 <!-- MANUAL ADDITIONS END -->

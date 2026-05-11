@@ -76,10 +76,10 @@ export default function ResetPasswordForm() {
 
             {/* Title and Description */}
             <div className="flex w-full flex-col items-center gap-3 text-center">
-              <h2 className="w-full text-3xl font-semibold leading-9.5 text-ws-text-primary">
+              <h2 className="w-full text-3xl font-semibold leading-9.5 text-ws-text-primary normal-case">
                 Reset password
               </h2>
-              <p className="w-full text-base font-normal leading-6 text-ws-text-tertiary">
+              <p className="w-full text-base font-normal leading-6 text-ws-text-tertiary normal-case">
                 Please enter a new password below.
               </p>
             </div>
@@ -117,8 +117,8 @@ export default function ResetPasswordForm() {
               <InputGroup className="relative">
                 <Input
                   name="confirmPassword"
-                  label="Confirm Password"
-                  placeholder="Confirm Password"
+                  label="Confirm password"
+                  placeholder="Confirm password"
                   size="md"
                   type="password"
                   isRequired
@@ -152,9 +152,9 @@ export default function ResetPasswordForm() {
                   color="primary"
                   size="lg"
                   isDisabled={isSubmitting}
-                  className="w-full"
+                  className="w-full normal-case"
                 >
-                  {isSubmitting ? "Resetting..." : "Save Password"}
+                  {isSubmitting ? "Resetting..." : "Save password"}
                 </Button>
               </div>
             </form>

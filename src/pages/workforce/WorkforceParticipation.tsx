@@ -77,7 +77,7 @@ export default function WorkforceParticipation({
             <ProgressCardSkeleton />
           ) : (
             <ProgressCard
-              title="Benefits"
+              title="Supplemental Benefits"
               showInfoIcon={false}
               tooltipText="Households spending 30% or more of gross income on housing costs"
               sections={[{ columnsCount: 1, items: benefitsItems }]}
@@ -89,7 +89,7 @@ export default function WorkforceParticipation({
             <ProgressCardSkeletonOne />
           ) : (
             <ProgressCard
-              title="Retirement"
+              title="Retirement and Savings"
               showInfoIcon={false}
               tooltipText="Households spending 30% or more of gross income on housing costs"
               sections={[{ columnsCount: 1, items: retirementItems }]}
@@ -101,7 +101,7 @@ export default function WorkforceParticipation({
             <ProgressCardSkeletonFour />
           ) : (
             <ProgressCard
-              title="Insurance"
+              title="Health and Wellness"
               showInfoIcon={false}
               tooltipText="Households spending 30% or more of gross income on housing costs"
               sections={[{ columnsCount: 1, items: insuranceItems }]}

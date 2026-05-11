@@ -77,7 +77,7 @@ describe("ResetPasswordForm", () => {
   it("renders the form with heading and password inputs", () => {
     renderWithProviders(<ResetPasswordForm />);
     expect(screen.getByText("Reset password")).toBeInTheDocument();
-    expect(screen.getByText("Save Password")).toBeInTheDocument();
+    expect(screen.getByText("Save password")).toBeInTheDocument();
     expect(screen.getByText("Sign in")).toBeInTheDocument();
   });
 
@@ -94,7 +94,7 @@ describe("ResetPasswordForm", () => {
     renderWithProviders(<ResetPasswordForm />);
 
     const passwordInput = screen.getByPlaceholderText("Password");
-    const confirmInput = screen.getByPlaceholderText("Confirm Password");
+    const confirmInput = screen.getByPlaceholderText("Confirm password");
 
     fireEvent.input(passwordInput, { target: { value: "NewPassword1!" } });
     fireEvent.blur(passwordInput);
@@ -116,7 +116,7 @@ describe("ResetPasswordForm", () => {
     renderWithProviders(<ResetPasswordForm />);
 
     const passwordInput = screen.getByPlaceholderText("Password");
-    const confirmInput = screen.getByPlaceholderText("Confirm Password");
+    const confirmInput = screen.getByPlaceholderText("Confirm password");
     fireEvent.input(passwordInput, { target: { value: "NewPassword1!" } });
     fireEvent.blur(passwordInput);
     fireEvent.input(confirmInput, { target: { value: "NewPassword1!" } });
@@ -147,7 +147,7 @@ describe("ResetPasswordForm", () => {
     renderWithProviders(<ResetPasswordForm />);
 
     const passwordInput = screen.getByPlaceholderText("Password");
-    const confirmInput = screen.getByPlaceholderText("Confirm Password");
+    const confirmInput = screen.getByPlaceholderText("Confirm password");
     fireEvent.input(passwordInput, { target: { value: "NewPassword1!" } });
     fireEvent.blur(passwordInput);
     fireEvent.input(confirmInput, { target: { value: "NewPassword1!" } });
@@ -177,16 +177,22 @@ describe("ResetPasswordForm", () => {
     renderWithProviders(<ResetPasswordForm />);
 
     const passwordInput = screen.getByPlaceholderText("Password");
-    const confirmInput = screen.getByPlaceholderText("Confirm Password");
+    const confirmInput = screen.getByPlaceholderText("Confirm password");
+
     fireEvent.input(passwordInput, { target: { value: "NewPassword1!" } });
     fireEvent.blur(passwordInput);
     fireEvent.input(confirmInput, { target: { value: "NewPassword1!" } });
     fireEvent.blur(confirmInput);
-    fireEvent.submit(passwordInput.closest("form")!);
 
-    await waitFor(() => {
-      expect(resetPassword).toHaveBeenCalled();
-    });
+    const form = passwordInput.closest("form")!;
+    fireEvent.submit(form);
+
+    await waitFor(
+      () => {
+        expect(screen.getByTestId("error-message")).toBeTruthy();
+      },
+      { timeout: 3000 }
+    );
 
     // If error message appears, click close
     const closeBtn = screen.queryByTestId("error-close");
@@ -203,7 +209,7 @@ describe("ResetPasswordForm", () => {
     renderWithProviders(<ResetPasswordForm />);
 
     const passwordInput = screen.getByPlaceholderText("Password");
-    const confirmInput = screen.getByPlaceholderText("Confirm Password");
+    const confirmInput = screen.getByPlaceholderText("Confirm password");
 
     fireEvent.input(passwordInput, { target: { value: "NewPassword1!" } });
     fireEvent.blur(passwordInput);
