@@ -572,7 +572,11 @@ export default function PrivacyModalContent() {
             >
               support@access2benefits.org
             </a>{" "}
-            or by calling us at [INSERT TELEPHONE NUMBER].
+            or by calling us at{" "}
+            <a href="tel:+17865982089" className="text-ws-light-teal-850 underline">
+              +1 786-598-2089
+            </a>
+            .
           </p>
           <p className={cls.body}>
             When you submit a request to us, we may verify your identity where required by law by
@@ -764,7 +768,11 @@ export default function PrivacyModalContent() {
             >
               support@access2benefits.org
             </a>{" "}
-            or on [INSERT TELEPHONE NUMBER].
+            or on{" "}
+            <a href="tel:+17865982089" className="text-ws-light-teal-850 underline">
+              +1 786-598-2089
+            </a>
+            .
           </p>
         </div>
 
@@ -790,9 +798,13 @@ export default function PrivacyModalContent() {
             >
               support@access2benefits.org
             </a>{" "}
-            or on [INSERT TELEPHONE NUMBER]. If you wish to contact Lafayette Square regarding your
-            Personal Information or this Notice, please submit the information by clicking on this
-            Personal Data Request Form [INSERT LINK].
+            or on{" "}
+            <a href="tel:+17865982089" className="text-ws-light-teal-850 underline">
+              +1 786-598-2089
+            </a>
+            . If you wish to contact Lafayette Square regarding your Personal Information or this
+            Notice, please submit the information by clicking on this Personal Data Request Form
+            [INSERT LINK].
           </p>
           <p className={cls.body}>
             This Notice is posted at the footer of the Lafayette Square A2B platform at{" "}
