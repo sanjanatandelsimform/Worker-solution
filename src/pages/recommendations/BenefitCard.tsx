@@ -31,7 +31,7 @@ export default function BenefitCard({
       <p className="mt-2 min-h-auto w-full xl:min-h-18 overflow-hidden text-ws-text-tertiary text-base">
         {descriptionText}
       </p>
-      <div className="text-2xl font-medium mt-4 text-ws-text-primary">{listTitle}</div>
+      <div className="text-base font-medium mt-4 text-ws-text-primary">{listTitle}</div>
       <ul className="flex flex-col mt-4 space-y-2 text-ws-text-tertiary text-base list-disc pl-3">
         <li className="items-center">{listTexts?.[0]}</li>
         <li className="items-center">{listTexts?.[1]}</li>

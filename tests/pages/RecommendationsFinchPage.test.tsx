@@ -212,7 +212,7 @@ beforeEach(() => {
 describe("RecommendationsFinchPage — smoke test", () => {
   it("renders without crashing", () => {
     renderPage();
-    expect(screen.getByText("Your Company At A Glance")).toBeInTheDocument();
+    expect(screen.getByText("Your Company at a Glance")).toBeInTheDocument();
   });
 });
 
@@ -256,9 +256,9 @@ describe("RecommendationsFinchPage — loading states", () => {
     expect(screen.queryByText("$45,000")).not.toBeInTheDocument();
   });
 
-  it("renders Company At A Glance heading when all loading flags are false", () => {
+  it("renders Company at a Glance heading when all loading flags are false", () => {
     renderPage();
-    expect(screen.getByText("Your Company At A Glance")).toBeInTheDocument();
+    expect(screen.getByText("Your Company at a Glance")).toBeInTheDocument();
   });
 });
 
@@ -296,10 +296,10 @@ describe("RecommendationsFinchPage — assessment completeness gate", () => {
     expect(screen.getByText("Strategic Solutions")).toBeInTheDocument();
   });
 
-  it("always shows Your Company At A Glance heading regardless of assessment status", () => {
+  it("always shows Your Company at a Glance heading regardless of assessment status", () => {
     vi.mocked(useAssessmentStatus).mockReturnValue(incompleteAssessmentMock);
     renderPage();
-    expect(screen.getByText("Your Company At A Glance")).toBeInTheDocument();
+    expect(screen.getByText("Your Company at a Glance")).toBeInTheDocument();
   });
 });
 
@@ -424,7 +424,7 @@ describe("RecommendationsFinchPage — benefits overview data mapping", () => {
       workforce: { data: null, loading: false, isLoaded: false, error: null, lastFetched: null },
     });
     expect(() => renderPage(store)).not.toThrow();
-    expect(screen.getByText("Your Company At A Glance")).toBeInTheDocument();
+    expect(screen.getByText("Your Company at a Glance")).toBeInTheDocument();
   });
 });
 
@@ -532,12 +532,12 @@ describe("RecommendationsFinchPage — static sections always rendered", () => {
     } as ReturnType<typeof useAssessmentStatus>);
 
     renderPage();
-    expect(screen.getByText("Your Company At A Glance")).toBeInTheDocument();
+    expect(screen.getByText("Your Company at a Glance")).toBeInTheDocument();
   });
 
   it("renders page without crash when assessment is complete", () => {
     renderPage();
-    expect(screen.getByText("Your Company At A Glance")).toBeInTheDocument();
+    expect(screen.getByText("Your Company at a Glance")).toBeInTheDocument();
   });
 });
 
@@ -546,7 +546,7 @@ describe("RecommendationsFinchPage — static sections always rendered", () => {
 describe("RecommendationsFinchPage — onNavigateToWorkforce callback", () => {
   it("renders without error when onNavigateToWorkforce is not provided", () => {
     expect(() => renderPage()).not.toThrow();
-    expect(screen.getByText("Your Company At A Glance")).toBeInTheDocument();
+    expect(screen.getByText("Your Company at a Glance")).toBeInTheDocument();
   });
 });
 

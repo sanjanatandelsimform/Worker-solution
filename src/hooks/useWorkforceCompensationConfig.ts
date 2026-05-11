@@ -83,7 +83,7 @@ export function useWorkforceCompensationConfig(selectedWorkforceDept: string) {
     () => [
       {
         id: "employee-contribution",
-        title: "Employee Contribution Per Paycheck (All benefits)",
+        title: "Employee Contribution per Paycheck (All Benefits)",
         count: compensationSection
           ? `$${compensationSection.benefitsCost.employeeContribution.toLocaleString("en-US", { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`
           : "--",

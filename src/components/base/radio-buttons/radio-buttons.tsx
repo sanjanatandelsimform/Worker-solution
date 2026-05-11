@@ -23,7 +23,7 @@ export interface RadioButtonBaseProps {
 
 export const RadioButtonBase = ({
   className,
-  isFocusVisible,
+  isFocusVisible = false,
   isSelected,
   isDisabled,
   size = "sm",
@@ -31,14 +31,15 @@ export const RadioButtonBase = ({
   return (
     <div
       className={cx(
-        "flex size-4 shrink-0 cursor-pointer appearance-none items-center justify-center rounded-full bg-ws-base-white ring-1 ring-ws-border-primary ring-inset",
-        size === "md" && "size-5",
+        "relative flex size-3 shrink-0 cursor-pointer appearance-none items-center justify-center rounded-full bg-ws-base-white ring-1 ring-ws-border-primary ring-offset-2 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-ws-light-teal-850",
+        size === "md" && "size-5 rounded-full",
         isSelected && "bg-ws-light-teal-900 ring-ws-light-teal-900",
         isDisabled && "cursor-not-allowed opacity-50",
-        isDisabled && !isSelected && "bg-tertiary",
-        isFocusVisible && "outline-2 outline-offset-2 outline-focus-ring",
+        isDisabled && !isSelected && "bg-ws-tertiary",
+        isFocusVisible && "outline-2 outline-offset-2 outline-focus-ring outline-ws-light-teal-850",
         className
       )}
+      tabIndex={0}
     >
       <div
         className={cx(
@@ -90,7 +91,7 @@ export const RadioButton = ({
       {...ariaRadioProps}
       className={state =>
         cx(
-          "flex items-start",
+          "flex items-center",
           state.isDisabled && "cursor-not-allowed",
           sizes[size].root,
           typeof className === "function" ? className(state) : className
@@ -107,7 +108,7 @@ export const RadioButton = ({
             className={label || hint ? "mt-0.5" : `${className}`}
           />
           {(label || hint) && (
-            <div className={cx(`inline-flex flex-col, ${className}`, sizes[size].textWrapper)}>
+            <div className={cx("inline-flex flex-col", sizes[size].textWrapper)}>
               {label && (
                 <p className={cx("text-secondary select-none", sizes[size].label)}>{label}</p>
               )}

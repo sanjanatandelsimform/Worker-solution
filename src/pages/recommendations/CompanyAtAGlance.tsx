@@ -144,7 +144,7 @@ export default function CompanyAtAGlance({
   return (
     <div className="space-y-6 mb-6">
       <h2 className="text-2xl lg:text-4xl font-medium text-ws-text-primary leading-10">
-        Your Company At A Glance
+        Your Company at a Glance
       </h2>
       <h4 className="text-2xl font-medium text-ws-text-primary">Company Overview</h4>
       <div className="grid grid-cols-2 xl:grid-cols-4 gap-6 w-full">
