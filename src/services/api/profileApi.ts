@@ -7,6 +7,18 @@ import type {
   ProfileApiResponse,
   ProfileError,
 } from "@/types/profileTypes";
+import {
+  isRefreshing as sharedIsRefreshing,
+  setIsRefreshing,
+  setRefreshFailed,
+  isRefreshFailed,
+  failedQueue as sharedFailedQueue,
+  processQueue,
+  doRefreshToken,
+  dispatchLogoutAndRedirect,
+} from "@/services/api/tokenRefresh";
+
+const STORAGE_KEY = "userDetail";
 
 // Create Axios instance with base configuration
 const apiClient = axios.create({
@@ -17,6 +29,156 @@ const apiClient = axios.create({
     "Content-Type": "application/json",
   },
 });
+
+// ── Request interceptor: attach access token automatically ──────────────────
+apiClient.interceptors.request.use(config => {
+  const storedState = localStorage.getItem(STORAGE_KEY);
+  if (storedState) {
+    try {
+      const parsed = JSON.parse(storedState);
+      const token = parsed?.auth?.tokens?.accessToken;
+      if (token) {
+        config.headers.Authorization = `Bearer ${token}`;
+      }
+    } catch {
+      // ignore
+    }
+  }
+  return config;
+});
+
+// ── Response interceptor: 401 → refresh token → retry ───────────────────────
+// Uses the shared lock from tokenRefresh.ts so that concurrent 401s from any
+// API instance only trigger one /auth/refresh-token call.
+apiClient.interceptors.response.use(
+  response => response,
+  async error => {
+    const originalRequest = error.config as typeof error.config & { _retry?: boolean };
+
+    if (error.response?.status !== 401 || originalRequest._retry) {
+      return Promise.reject(error);
+    }
+
+    // Don't retry on auth pages
+    const isAuthPage =
+      window.location.pathname.includes("/sign-in") ||
+      window.location.pathname.includes("/sign-up") ||
+      window.location.pathname.includes("/forgot-password");
+
+    if (isAuthPage) {
+      return Promise.reject(error);
+    }
+
+    // If a previous refresh already failed in this page session, skip straight
+    // to redirect — do NOT attempt another /auth/refresh-token call.
+    if (isRefreshFailed()) {
+      return dispatchLogoutAndRedirect();
+    }
+
+    // If the /auth/refresh-token endpoint itself returned 401, redirect immediately
+    const requestUrl = (originalRequest as { url?: string }).url ?? "";
+    if (requestUrl.includes("/auth/refresh-token")) {
+      setRefreshFailed(true);
+      localStorage.removeItem(STORAGE_KEY);
+      return dispatchLogoutAndRedirect();
+    }
+
+    const storedState = localStorage.getItem(STORAGE_KEY);
+    if (!storedState) {
+      return dispatchLogoutAndRedirect();
+    }
+
+    let parsedState;
+    try {
+      parsedState = JSON.parse(storedState);
+    } catch {
+      localStorage.removeItem(STORAGE_KEY);
+      return dispatchLogoutAndRedirect();
+    }
+
+    const refreshToken = parsedState?.auth?.tokens?.refreshToken;
+
+    if (!refreshToken) {
+      localStorage.removeItem(STORAGE_KEY);
+      return dispatchLogoutAndRedirect();
+    }
+
+    // Queue if another instance is already refreshing
+    if (sharedIsRefreshing) {
+      return new Promise<string>((resolve, reject) => {
+        sharedFailedQueue.push({ resolve, reject });
+      })
+        .then(token => {
+          if (originalRequest.headers) {
+            originalRequest.headers.Authorization = `Bearer ${token}`;
+          }
+          return apiClient(originalRequest);
+        })
+        .catch(() => dispatchLogoutAndRedirect());
+    }
+
+    originalRequest._retry = true;
+    setIsRefreshing(true);
+
+    try {
+      const { accessToken: newAccessToken, refreshToken: newRefreshToken } =
+        await doRefreshToken(refreshToken);
+
+      // Persist new tokens to localStorage
+      try {
+        const rawAfterRefresh = localStorage.getItem(STORAGE_KEY);
+        const parsedAfterRefresh = rawAfterRefresh ? JSON.parse(rawAfterRefresh) : {};
+        const updatedState = {
+          ...parsedAfterRefresh,
+          auth: {
+            ...(parsedAfterRefresh.auth || {}),
+            tokens: {
+              accessToken: newAccessToken,
+              refreshToken: newRefreshToken,
+            },
+            isAuthenticated: true,
+          },
+        };
+        localStorage.setItem(STORAGE_KEY, JSON.stringify(updatedState));
+      } catch (storageError) {
+        console.error("[profileApi] Failed to persist refreshed tokens:", storageError);
+      }
+
+      // Update axios default header
+      apiClient.defaults.headers.common.Authorization = `Bearer ${newAccessToken}`;
+
+      // Update original request header
+      if (originalRequest.headers) {
+        originalRequest.headers.Authorization = `Bearer ${newAccessToken}`;
+      }
+
+      // Sync Redux store if available
+      if (typeof window !== "undefined" && (window as { store?: unknown }).store) {
+        try {
+          const { setTokens } = await import("@/store/slices/authSlice");
+          (window as { store: { dispatch: (action: unknown) => void } }).store.dispatch(
+            setTokens({
+              accessToken: newAccessToken,
+              refreshToken: newRefreshToken,
+            })
+          );
+        } catch (reduxError) {
+          console.error("[profileApi] Failed to sync tokens to Redux:", reduxError);
+        }
+      }
+
+      processQueue(null, newAccessToken);
+      return apiClient(originalRequest);
+    } catch (refreshError) {
+      setRefreshFailed(true);
+      processQueue(refreshError as Error, null);
+      localStorage.removeItem(STORAGE_KEY);
+      return dispatchLogoutAndRedirect();
+    } finally {
+      setIsRefreshing(false);
+    }
+  }
+);
 
 // Helper function to extract error message
 const getErrorMessage = (error: unknown): ProfileError => {

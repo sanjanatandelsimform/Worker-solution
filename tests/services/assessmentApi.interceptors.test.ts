@@ -10,7 +10,7 @@ let requestInterceptorError: ((err: any) => Promise<any>) | null = null;
 let responseInterceptorError: ((error: any) => Promise<any>) | null = null;
 let responseInterceptorSuccess: ((response: any) => any) | null = null;
 
-// The refreshClient (axios.create inside interceptor) will use this mock
+// The refreshClient (axios.create inside doRefreshToken) will use this mock
 const refreshClientPost = vi.fn();
 
 const mockGet = vi.fn();
@@ -50,10 +50,10 @@ vi.mock("axios", async () => {
       create: vi.fn(() => {
         createCallCount.n++;
         if (createCallCount.n === 1) {
-          // First create: the main api instance
+          // First create: the main api instance (in assessmentApi.ts)
           return mockApiInstance;
         }
-        // Subsequent creates: the refresh client inside the interceptor
+        // Subsequent creates: the plain refresh client inside doRefreshToken
         return {
           post: refreshClientPost,
         };
@@ -70,14 +70,29 @@ vi.mock("@/services/api/authApi", () => ({
   },
 }));
 
+// Mock dispatchLogoutAndRedirect: in production it returns a never-resolving
+// promise and navigates away.  In tests we return a rejected promise so that
+// test assertions (`rejects`) still work without hanging.
+// All other tokenRefresh exports (isRefreshing, failedQueue, processQueue, setIsRefreshing,
+// doRefreshToken) are kept as real implementations so the counter trick for axios.create still works.
+vi.mock("@/services/api/tokenRefresh", async importOriginal => {
+  const actual = await importOriginal<typeof import("@/services/api/tokenRefresh")>();
+  return {
+    ...actual,
+    dispatchLogoutAndRedirect: vi.fn(() => Promise.reject(new Error("session_expired_redirect"))),
+  };
+});
+
 // Load the module to register interceptors
 await import("@/services/api/assessmentApi");
+const { setRefreshFailed } = await import("@/services/api/tokenRefresh");
 
 beforeEach(() => {
   vi.clearAllMocks();
   mockGet.mockReset();
   mockPost.mockReset();
   refreshClientPost.mockReset();
+  setRefreshFailed(false);
   vi.stubGlobal("localStorage", {
     getItem: vi.fn((key: string) => {
       if (key === "userDetail") {
@@ -164,6 +179,32 @@ describe("assessmentApi - response interceptor", () => {
       config: { _retry: true },
     };
     await expect(responseInterceptorError?.(error)).rejects.toEqual(error);
+  });
+
+  it("clears session and redirects when /auth/refresh-token itself returns 401 (expired refresh token)", async () => {
+    const error = {
+      response: {
+        status: 401,
+        data: { status: "error", message: "Invalid or expired token" },
+      },
+      config: { _retry: false, url: "/auth/refresh-token", headers: {} },
+    };
+    await expect(responseInterceptorError?.(error)).rejects.toBeDefined();
+    // Must remove session data immediately — no further retry should happen
+    expect(localStorage.removeItem).toHaveBeenCalledWith("userDetail");
+  });
+
+  it("clears session and redirects when full refresh-token URL returns 401", async () => {
+    const error = {
+      response: { status: 401 },
+      config: {
+        _retry: false,
+        url: "https://dev-api.benestats.com/api/v1/auth/refresh-token",
+        headers: {},
+      },
+    };
+    await expect(responseInterceptorError?.(error)).rejects.toBeDefined();
+    expect(localStorage.removeItem).toHaveBeenCalledWith("userDetail");
   });
 
   it("rejects 401 when no localStorage data", async () => {
@@ -291,5 +332,19 @@ describe("assessmentApi - response interceptor", () => {
 
     // Should not throw even if localStorage.setItem fails
     await expect(responseInterceptorError?.(error)).resolves.toBeDefined();
+  });
+
+  it("skips refresh and redirects immediately when refreshFailed flag is set", async () => {
+    // Simulate a previous refresh failure
+    setRefreshFailed(true);
+
+    const error = {
+      response: { status: 401 },
+      config: { _retry: false, headers: {} },
+    };
+
+    // Should redirect immediately without calling POST /auth/refresh-token
+    await expect(responseInterceptorError?.(error)).rejects.toBeDefined();
+    expect(refreshClientPost).not.toHaveBeenCalled();
   });
 });

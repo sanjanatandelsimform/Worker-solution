@@ -3,6 +3,16 @@ import { mapMonthToApiValue } from "@/utils/monthUtils";
 import type { ZipCodeLookupResponse } from "@/types/lookupTypes";
 import apiClient from "@/services/api/authApi";
 import type { FinchAssessmentPayload } from "@/types/finchAssessmentTypes";
+import {
+  isRefreshing as sharedIsRefreshing,
+  setIsRefreshing,
+  setRefreshFailed,
+  isRefreshFailed,
+  failedQueue as sharedFailedQueue,
+  processQueue,
+  doRefreshToken,
+  dispatchLogoutAndRedirect,
+} from "@/services/api/tokenRefresh";
 
 /**
  * Assessment API Service
@@ -424,19 +434,12 @@ export const lookupZipCodes = async (query: string): Promise<ZipCodeLookupRespon
 };
 
 /**
- * Response interceptor: handle 401 -> refresh token -> retry original request
+ * Response interceptor: handle 401 → refresh token → retry original request.
+ *
+ * Uses the shared lock from tokenRefresh.ts so that concurrent 401s from both
+ * the assessmentApi (api) and authApi (apiClient) instances only trigger one
+ * /auth/refresh-token call, with all other failed requests queued.
  */
-let isRefreshing = false;
-let failedQueue: Array<{
-  resolve: (token?: string) => void;
-  reject: (err?: Error) => void;
-}> = [];
-
-const processQueue = (error: Error | null, token: string | null = null) => {
-  failedQueue.forEach(p => (error ? p.reject(error) : p.resolve(token || undefined)));
-  failedQueue = [];
-};
-
 api.interceptors.response.use(
   response => response,
   async (error: AxiosError<{ message?: string }>) => {
@@ -445,55 +448,54 @@ api.interceptors.response.use(
     if (error.response?.status === 401 && !originalRequest._retry) {
       originalRequest._retry = true;
 
-      try {
-        if (isRefreshing) {
-          return new Promise<unknown>((resolve, reject) => {
-            failedQueue.push({ resolve, reject });
-          }).then(token => {
+      // If a previous refresh already failed in this page session, skip straight
+      // to redirect — do NOT attempt another /auth/refresh-token call.
+      if (isRefreshFailed()) {
+        return dispatchLogoutAndRedirect();
+      }
+
+      // If the /auth/refresh-token endpoint itself returned 401, the refresh
+      // token is expired or invalid. Clear session and redirect immediately.
+      const requestUrl = (originalRequest as { url?: string }).url ?? "";
+      if (requestUrl.includes("/auth/refresh-token")) {
+        setRefreshFailed(true);
+        localStorage.removeItem("userDetail");
+        return dispatchLogoutAndRedirect();
+      }
+
+      const stored = localStorage.getItem("userDetail");
+      const parsed: {
+        auth?: { tokens?: { refreshToken?: string; accessToken?: string } };
+      } | null = stored ? (JSON.parse(stored) as typeof parsed) : null;
+      const refreshToken = parsed?.auth?.tokens?.refreshToken;
+
+      if (!refreshToken) {
+        localStorage.removeItem("userDetail");
+        return dispatchLogoutAndRedirect();
+      }
+
+      // ── Queue if the shared lock is already held ─────────────────────
+      if (sharedIsRefreshing) {
+        return new Promise<string>((resolve, reject) => {
+          sharedFailedQueue.push({ resolve, reject });
+        })
+          .then(token => {
             if (originalRequest.headers && typeof token === "string") {
               originalRequest.headers.Authorization = `Bearer ${token}`;
             }
             return api(originalRequest);
-          });
-        }
+          })
+          .catch(() => dispatchLogoutAndRedirect());
+      }
 
-        isRefreshing = true;
+      setIsRefreshing(true);
 
-        const stored = localStorage.getItem("userDetail");
-        const parsed: {
-          auth?: { tokens?: { refreshToken?: string; accessToken?: string } };
-        } | null = stored ? JSON.parse(stored) : null;
-        const refreshToken = parsed?.auth?.tokens?.refreshToken;
+      try {
+        // Use doRefreshToken (plain client, no interceptors) to prevent
+        // recursive interception and deadlocks.
+        const tokens = await doRefreshToken(refreshToken);
 
-        if (!refreshToken) {
-          localStorage.removeItem("userDetail");
-          return Promise.reject(error);
-        }
-
-        const refreshClient = axios.create({
-          baseURL: import.meta.env.VITE_API_BASE_URL || "https://dev-api.benestats.com/api/v1",
-          timeout: API_TIMEOUT,
-          headers: { "Content-Type": "application/json" },
-        });
-
-        const refreshResp = await refreshClient.post<{
-          status: boolean;
-          message: string;
-          data: {
-            tokens: { accessToken: string; refreshToken: string };
-          };
-        }>("/auth/refresh-token", { refreshToken });
-
-        const tokens = refreshResp.data?.data?.tokens;
-
-        if (!tokens?.accessToken || !tokens?.refreshToken) {
-          localStorage.removeItem("userDetail");
-          processQueue(new Error("Invalid refresh response"), null);
-          return Promise.reject(error);
-        }
-
-        // CRITICAL: Re-read localStorage to avoid overwriting concurrent changes,
-        // then write the new tokens
+        // Persist new tokens to localStorage
         try {
           const freshStored = localStorage.getItem("userDetail");
           const freshParsed = freshStored ? JSON.parse(freshStored) : {};
@@ -531,13 +533,17 @@ api.interceptors.response.use(
           }
         }
 
+        // Release the queue
         processQueue(null, tokens.accessToken);
+
         return api(originalRequest);
       } catch (refreshError) {
+        setRefreshFailed(true);
         processQueue(refreshError as Error, null);
-        return Promise.reject(refreshError);
+        localStorage.removeItem("userDetail");
+        return dispatchLogoutAndRedirect();
       } finally {
-        isRefreshing = false;
+        setIsRefreshing(false);
       }
     }
 

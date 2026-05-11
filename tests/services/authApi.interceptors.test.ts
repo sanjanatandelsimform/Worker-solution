@@ -55,13 +55,26 @@ vi.mock("@/services/api/apiUtils", () => ({
   getErrorMessage: vi.fn((e: any) => e?.message || "Unknown error"),
 }));
 
+// Mock dispatchLogoutAndRedirect: in production it returns a never-resolving
+// promise and navigates away.  In tests we return a rejected promise so that
+// test assertions (`rejects`) still work without hanging.
+vi.mock("@/services/api/tokenRefresh", async importOriginal => {
+  const actual = await importOriginal<typeof import("@/services/api/tokenRefresh")>();
+  return {
+    ...actual,
+    dispatchLogoutAndRedirect: vi.fn(() => Promise.reject(new Error("session_expired_redirect"))),
+  };
+});
+
 // Load the module to register interceptors
 await import("@/services/api/authApi");
+const { setRefreshFailed } = await import("@/services/api/tokenRefresh");
 
 beforeEach(() => {
   vi.clearAllMocks();
   mockGet.mockReset();
   mockPost.mockReset();
+  setRefreshFailed(false);
   vi.stubGlobal("localStorage", {
     getItem: vi.fn(() =>
       JSON.stringify({ auth: { tokens: { accessToken: "at", refreshToken: "rt" } } })
@@ -139,6 +152,40 @@ describe("authApi - response interceptor", () => {
     await expect(responseInterceptorError?.(error)).rejects.toEqual(error);
   });
 
+  it("clears session and redirects when /auth/refresh-token itself returns 401 (expired refresh token)", async () => {
+    Object.defineProperty(window, "location", {
+      value: { pathname: "/dashboard" },
+      writable: true,
+    });
+    const error = {
+      response: {
+        status: 401,
+        data: { status: "error", message: "Invalid or expired token" },
+      },
+      config: { _retry: false, url: "/auth/refresh-token", headers: {} },
+    };
+    await expect(responseInterceptorError?.(error)).rejects.toBeDefined();
+    // Must clear session data so the user cannot continue with a stale token
+    expect(localStorage.removeItem).toHaveBeenCalledWith("userDetail");
+  });
+
+  it("clears session and redirects when full refresh-token URL returns 401", async () => {
+    Object.defineProperty(window, "location", {
+      value: { pathname: "/dashboard" },
+      writable: true,
+    });
+    const error = {
+      response: { status: 401 },
+      config: {
+        _retry: false,
+        url: "https://dev-api.benestats.com/api/v1/auth/refresh-token",
+        headers: {},
+      },
+    };
+    await expect(responseInterceptorError?.(error)).rejects.toBeDefined();
+    expect(localStorage.removeItem).toHaveBeenCalledWith("userDetail");
+  });
+
   it("rejects 401 when no stored state in localStorage", async () => {
     (localStorage.getItem as ReturnType<typeof vi.fn>).mockReturnValueOnce(null);
     Object.defineProperty(window, "location", {
@@ -162,7 +209,7 @@ describe("authApi - response interceptor", () => {
       response: { status: 401 },
       config: { _retry: false, headers: {} },
     };
-    await expect(responseInterceptorError?.(error)).rejects.toEqual(error);
+    await expect(responseInterceptorError?.(error)).rejects.toBeDefined();
     expect(localStorage.removeItem).toHaveBeenCalledWith("userDetail");
   });
 
@@ -178,7 +225,7 @@ describe("authApi - response interceptor", () => {
       response: { status: 401 },
       config: { _retry: false, headers: {} },
     };
-    await expect(responseInterceptorError?.(error)).rejects.toEqual(error);
+    await expect(responseInterceptorError?.(error)).rejects.toBeDefined();
     expect(localStorage.removeItem).toHaveBeenCalledWith("userDetail");
   });
 
@@ -317,5 +364,24 @@ describe("authApi - response interceptor", () => {
     const result = responseInterceptorError?.(error);
     await expect(result).rejects.toBeDefined();
     expect(localStorage.removeItem).toHaveBeenCalledWith("userDetail");
+  });
+
+  it("skips refresh and redirects immediately when refreshFailed flag is set", async () => {
+    Object.defineProperty(window, "location", {
+      value: { pathname: "/dashboard" },
+      writable: true,
+    });
+
+    // Simulate a previous refresh failure
+    setRefreshFailed(true);
+
+    const error = {
+      response: { status: 401 },
+      config: { _retry: false, headers: {} },
+    };
+
+    // Should redirect immediately without calling POST /auth/refresh-token
+    await expect(responseInterceptorError?.(error)).rejects.toBeDefined();
+    expect(mockPost).not.toHaveBeenCalled();
   });
 });
