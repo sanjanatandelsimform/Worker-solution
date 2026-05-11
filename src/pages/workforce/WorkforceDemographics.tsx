@@ -9,6 +9,8 @@ import {
   BreakDownCardSkeleton,
 } from "@/pages/workforce/WorkforceSkeletons";
 import { ArrowDown } from "@/assets/icons/ArrowDown";
+import { Tooltip, TooltipTrigger } from "@/components/base/tooltip/tooltip";
+import { InfoCircle } from "@untitledui/icons";
 
 const employmentTypeItems = [
   { id: "fullTime", label: "Full Time" },
@@ -130,7 +132,18 @@ export default function WorkforceDemographics({
         </div>
       </div>
       <div className="bg-ws-base-white p-5 border border-ws-border-primary rounded-xl w-full flex flex-col relative">
-        <h2 className="text-2xl font-medium text-ws-text-primary">Employment Type</h2>
+        <div className="flex items-center">
+          <h2 className="text-2xl font-medium text-ws-text-primary">Employment Type</h2>
+          <Tooltip
+            title="Other includes interns, contractors, seasonal and other non-permanent workers"
+            placement="top"
+            arrow={true}
+          >
+            <TooltipTrigger className="group relative flex cursor-pointer flex-col items-center gap-2 text-fg-quaternary transition duration-100 ease-linear hover:text-fg-quaternary_hover focus:text-fg-quaternary_hover">
+              <InfoCircle className="text-ws-gray-400 size-4 ml-1" />
+            </TooltipTrigger>
+          </Tooltip>
+        </div>
         <div className="grid grid-cols-1 xl:grid-cols-3 gap-6 w-full my-6 space-y-6 xl:space-y-0">
           {isLoading ? (
             <>
