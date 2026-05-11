@@ -23,7 +23,7 @@ export default function InlineProgressBar({
         // > 5%: Label inside the colored fill, left-aligned. Bar expands to fit text.
         <div
           className={`h-full ${color} transition-all duration-300 flex items-center pl-2`}
-          style={{ width: `${percentage}%`, minWidth: 'fit-content' }}
+          style={{ width: `${percentage}%`, minWidth: "fit-content" }}
         >
           <span className="text-base font-normal text-ws-base-black drop-shadow-md whitespace-nowrap">
             {formatPercent(percentage)}

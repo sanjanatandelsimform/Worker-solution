@@ -4,12 +4,15 @@ import { renderWithProviders } from "../../test-utils";
 import ResetPasswordForm from "@/components/auth/ResetPasswordForm";
 
 const mockNavigate = vi.fn();
+let mockSearchParams = new URLSearchParams("token=test-token");
+
 vi.mock("react-router-dom", async () => {
   const actual = await vi.importActual("react-router-dom");
   return {
     ...actual,
     useNavigate: () => mockNavigate,
-    useSearchParams: () => [new URLSearchParams("token=test-token"), vi.fn()],
+    useSearchParams: () => [mockSearchParams, vi.fn()],
+    Navigate: ({ to }: { to: string }) => <div data-testid="navigate-redirect" data-to={to} />,
   };
 });
 
@@ -61,6 +64,14 @@ vi.mock("@/components/modals/SuccessModalWithLogo", () => ({
 describe("ResetPasswordForm", () => {
   beforeEach(() => {
     vi.clearAllMocks();
+    mockSearchParams = new URLSearchParams("token=test-token");
+  });
+
+  it("redirects to sign-in when no token is present in URL", () => {
+    mockSearchParams = new URLSearchParams("");
+    renderWithProviders(<ResetPasswordForm />);
+    const redirect = screen.getByTestId("navigate-redirect");
+    expect(redirect).toHaveAttribute("data-to", "/sign-in");
   });
 
   it("renders the form with heading and password inputs", () => {
@@ -98,7 +109,7 @@ describe("ResetPasswordForm", () => {
     });
   });
 
-  it("success modal onClose navigates to sign-in (covers lines 178-180)", async () => {
+  it("success navigates to success page with correct state (covers lines 178-180)", async () => {
     const { resetPassword } = await import("@/services/api/authApi");
     (resetPassword as ReturnType<typeof vi.fn>).mockResolvedValueOnce({});
 
@@ -114,14 +125,49 @@ describe("ResetPasswordForm", () => {
 
     await waitFor(
       () => {
-        expect(screen.getByTestId("success-modal")).toBeTruthy();
+        expect(mockNavigate).toHaveBeenCalledWith(
+          "/success",
+          expect.objectContaining({
+            state: expect.objectContaining({
+              title: "Password reset successful",
+              buttonPath: "/sign-in",
+              shouldClearUser: true,
+            }),
+          })
+        );
       },
       { timeout: 3000 }
     );
+  });
 
-    // Click modal "Log in" button (covers handleGetStarted which calls navigate)
-    fireEvent.click(screen.getByTestId("modal-action"));
-    expect(mockNavigate).toHaveBeenCalledWith("/sign-in");
+  it("success navigates to success page with buttonText Log in (covers lines 61-64)", async () => {
+    const { resetPassword } = await import("@/services/api/authApi");
+    (resetPassword as ReturnType<typeof vi.fn>).mockResolvedValueOnce({});
+
+    renderWithProviders(<ResetPasswordForm />);
+
+    const passwordInput = screen.getByPlaceholderText("Password");
+    const confirmInput = screen.getByPlaceholderText("Confirm password");
+    fireEvent.input(passwordInput, { target: { value: "NewPassword1!" } });
+    fireEvent.blur(passwordInput);
+    fireEvent.input(confirmInput, { target: { value: "NewPassword1!" } });
+    fireEvent.blur(confirmInput);
+    fireEvent.submit(passwordInput.closest("form")!);
+
+    await waitFor(
+      () => {
+        expect(mockNavigate).toHaveBeenCalledWith(
+          "/success",
+          expect.objectContaining({
+            state: expect.objectContaining({
+              buttonText: "Log in",
+              buttonPath: "/sign-in",
+            }),
+          })
+        );
+      },
+      { timeout: 3000 }
+    );
   });
 
   it("error message onClose callback clears error (covers line 143)", async () => {

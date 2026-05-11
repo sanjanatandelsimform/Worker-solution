@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { Link, useNavigate, useSearchParams } from "react-router-dom";
+import { Link, Navigate, useNavigate, useSearchParams } from "react-router-dom";
 import { Button } from "../base/buttons/button";
 import { Input } from "../base/input/input";
 import { InputGroup } from "../base/input/input-group";
@@ -10,12 +10,10 @@ import { resetPassword } from "@/services/api/authApi";
 import { resetPasswordSchema, type ResetPasswordFormData } from "@/services/validation/authSchemas";
 import checkmarkIcon from "@/assets/success-check.svg";
 import siteLogo from "@/assets/logo.svg";
-import { SuccessModalWithLogo } from "../modals/SuccessModalWithLogo";
 import ErrorMessage from "../common/ErrorMessage";
 import { getErrorState, type ErrorState } from "@/utils/errorHandler";
 
 export default function ResetPasswordForm() {
-  const [isOpen, setIsOpen] = useState(false);
   const [error, setError] = useState<ErrorState | null>(null);
   const [searchParams] = useSearchParams();
   const navigate = useNavigate();
@@ -38,30 +36,33 @@ export default function ResetPasswordForm() {
     },
   });
 
-  const onSubmit = async (data: ResetPasswordFormData) => {
-    if (!resetToken) {
-      setError({
-        message: "Invalid or missing reset token. Please request a new password reset link.",
-        type: "warning",
-      });
-      return;
-    }
+  // Redirect immediately if no token present in URL
+  if (!resetToken) {
+    return <Navigate to="/sign-in" replace />;
+  }
 
+  const onSubmit = async (data: ResetPasswordFormData) => {
     try {
       setError(null);
       await resetPassword(resetToken, data.newPassword);
-      setIsOpen(true);
       reset();
+      navigate("/success", {
+        state: {
+          messageImg: checkmarkIcon,
+          title: "Password reset successful",
+          subtitle:
+            "Your password has been updated successfully. You can now sign in using your new password.",
+          buttonText: "Log in",
+          buttonPath: "/sign-in",
+          shouldClearUser: true,
+        },
+      });
     } catch (err) {
       console.error("Reset password error:", err);
       setError(getErrorState(err));
     }
   };
 
-  const handleGetStarted = () => {
-    setIsOpen(false);
-    navigate("/sign-in");
-  };
   return (
     <div className="flex min-h-screen items-center justify-center bg-ws-light-teal-50">
       <div className="flex w-2xl items-center justify-center rounded-xl border border-ws-border-primary bg-ws-base-white py-22">
@@ -150,7 +151,7 @@ export default function ResetPasswordForm() {
                   type="submit"
                   color="primary"
                   size="lg"
-                  isDisabled={isSubmitting || !resetToken}
+                  isDisabled={isSubmitting}
                   className="w-full normal-case"
                 >
                   {isSubmitting ? "Resetting..." : "Save password"}
@@ -170,22 +171,6 @@ export default function ResetPasswordForm() {
           </div>
         </div>
       </div>
-      <SuccessModalWithLogo
-        isOpen={isOpen}
-        onClose={() => {
-          setIsOpen(false);
-          navigate("/sign-in");
-        }}
-        size="xl"
-        messageImg={checkmarkIcon}
-        title="Password reset successful"
-        subtitle="Your password has been updated successfully. You can now sign in using your new password."
-        button={{
-          text: "Log in",
-          onClick: handleGetStarted,
-          color: "primary",
-        }}
-      />
     </div>
   );
 }
