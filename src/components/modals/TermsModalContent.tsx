@@ -280,16 +280,16 @@ export default function TermsModalContent({
         <div className="space-y-2">
           <p className={cls.sectionHeading}>8. Disclaimer of Warranties</p>
           <p className={cls.bodyUpper}>
-            Your use of A2B is at your sole risk. A2B, all content, and any third-party content,
-            links, and materials on A2B are provided on an "as is," "with all faults," and "as
-            available" basis. Lafayette Square and its licensors make no representation, guaranty,
-            or warranty (whether expressed or implied) as to the reliability, timeliness, quality,
-            suitability, truth, availability, accuracy, or completeness of A2B or any content. To
-            the fullest extent permitted by law, all representations and warranties, whether express
-            or implied, including, without limitation, any implied warranty of merchantability,
-            fitness for a particular purpose, title, non-infringement, and course of performance,
-            are hereby specifically disclaimed. You acknowledge and agree that your use of A2B is at
-            your own risk.
+            YOUR USE OF A2B IS AT YOUR SOLE RISK. A2B, ALL CONTENT, AND ANY THIRD-PARTY CONTENT,
+            LINKS, AND MATERIALS ON A2B ARE PROVIDED ON AN “AS IS,” “WITH ALL FAULTS,” AND “AS
+            AVAILABLE” BASIS. LAFAYETTE SQUARE AND ITS LICENSORS MAKE NO REPRESENTATION, GUARANTY,
+            OR WARRANTY (WHETHER EXPRESSED OR IMPLIED) AS TO THE RELIABILITY, TIMELINESS, QUALITY,
+            SUITABILITY, TRUTH, AVAILABILITY, ACCURACY, OR COMPLETENESS OF A2B OR ANY CONTENT. TO
+            THE FULLEST EXTENT PERMITTED BY LAW, ALL REPRESENTATIONS AND WARRANTIES, WHETHER EXPRESS
+            OR IMPLIED, INCLUDING, WITHOUT LIMITATION, ANY IMPLIED WARRANTY OF MERCHANTABILITY,
+            FITNESS FOR A PARTICULAR PURPOSE, TITLE, NON-INFRINGEMENT, AND COURSE OF PERFORMANCE,
+            ARE HEREBY SPECIFICALLY DISCLAIMED. YOU ACKNOWLEDGE AND AGREE THAT YOUR USE OF A2B IS AT
+            YOUR OWN RISK.
           </p>
           <p className={cls.body}>
             <span className={cls.inlineLabel}>No Reliance; Informational Purposes Only:</span> A2B
@@ -305,6 +305,20 @@ export default function TermsModalContent({
             reliance on any such recommendations or suggestions. Lafayette Square recommends that
             you seek independent professional advice before making any legal, financial, tax,
             actuarial, or benefits-related decisions based on information obtained from A2B.
+            Lafayette Square makes reasonable efforts to ensure that all information (including,
+            without limitation, the Content) provided as part of A2B is correct at the time of
+            inclusion on A2B, but we do not guarantee the accuracy, completeness, or applicability
+            of any such information (including any content, recommendations, and insights provided
+            thereby). We are continually updating our product and service offerings and other
+            information and Content available on A2B. We may experience delays in updating
+            information on A2B and in our advertising on other websites. The Content and materials
+            appearing on A2B could include technical, typographical, or photographic errors or
+            inaccuracies, and may not be complete or current. Lafayette Square reserves the right,
+            in its sole discretion, to make changes to the Content or materials contained on A2B and
+            to correct any errors or omissions on A2B at any time without notice; however, Lafayette
+            Square does not make any commitment to do so. Lafayette Square is not liable for any
+            action you may take as a result of relying on such information, recommendations, or
+            advice or for any loss or damage suffered by you as a result of your taking this action.
           </p>
           <p className={cls.body}>
             <span className={cls.inlineLabel}>Availability:</span> No warranty or representation is
@@ -315,17 +329,19 @@ export default function TermsModalContent({
             <span className={cls.inlineLabel}>Disabling Devices:</span> No warranty or
             representation is made that any Content, service, product or function, including without
             limitation any downloadable files, available on A2B is free of computer viruses, malware
-            or other destructive or harmful programs, software, code or devices. You should
-            routinely scan your system and downloaded files for such disabling devices.
+            or other destructive or harmful programs, software, code or devices that may erase,
+            scramble, lock or disable any computer software, content or equipment or may prevent
+            users from using a site or any other item of hardware or software. You should routinely
+            scan your system and downloaded files for such disabling devices.
           </p>
           <p className={cls.bodyUpper}>
             <span className="font-medium">Data and Information:</span> We reserve the right at all
             times to disclose any information, as we deem necessary to satisfy any applicable law,
-            regulation, legal process or governmental request. Except as expressly provided in these
-            Terms of Use, Lafayette Square has no obligation or liability for any loss, alteration,
-            destruction, corruption, or recovery of your User Data or personal information (as
-            defined in the Privacy Notice). For a description of Lafayette Square's security
-            practices, please refer to Section 9 (Security Measures) of the Privacy Notice.
+            regulation, legal process or governmental request. EXCEPT AS EXPRESSLY PROVIDED IN THESE
+            TERMS OF USE, LAFAYETTE SQUARE HAS NO OBLIGATION OR LIABILITY FOR ANY LOSS, ALTERATION,
+            DESTRUCTION, CORRUPTION, OR RECOVERY OF YOUR USER DATA OR PERSONAL INFORMATION (AS
+            DEFINED IN THE PRIVACY NOTICE). FOR A DESCRIPTION OF LAFAYETTE SQUARE'S SECURITY
+            PRACTICES, PLEASE REFER TO SECTION 9 (SECURITY MEASURES) OF THE PRIVACY NOTICE.
           </p>
         </div>
 
@@ -333,27 +349,33 @@ export default function TermsModalContent({
         <div className="space-y-2">
           <p className={cls.sectionHeading}>9. Limitation of Liability</p>
           <p className={cls.bodyUpper}>
-            To the fullest extent provided by law, in no event will Lafayette Square or any of its
-            affiliates or licensors have any responsibility or liability in connection with A2B for
-            any loss or damages whatsoever, whether based on contract, negligence, tort or other
-            legal basis, including, without limitation, with respect to any direct, indirect,
-            special, punitive, exemplary or consequential damages or other damages (including,
-            without limitation, any damages for harm to business, loss of information or programs or
-            data, loss of profit, loss of savings, loss of revenue, loss of goodwill), arising from
-            or in connection with the use of or access to, or any inconvenience, delay or loss of
-            use of or access to, A2B, any content or any third-party sites. If any part of this
-            limitation of liability is found to be invalid or unenforceable for any reason, then
-            Lafayette Square's aggregate liability under such circumstances shall not exceed one
-            hundred dollars ($100). The foregoing does not affect any liability that cannot be
-            excluded or limited under applicable law.
+            TO THE FULLEST EXTENT PROVIDED BY LAW, IN NO EVENT WILL LAFAYETTE SQUARE OR ANY OF ITS
+            AFFILIATES OR LICENSORS HAVE ANY RESPONSIBILITY OR LIABILITY IN CONNECTION WITH A2B FOR
+            ANY LOSS OR DAMAGES WHATSOEVER, WHETHER BASED ON CONTRACT, NEGLIGENCE, TORT OR OTHER
+            LEGAL BASIS, INCLUDING, WITHOUT LIMITATION, WITH RESPECT TO ANY DIRECT, INDIRECT,
+            SPECIAL, PUNITIVE, EXEMPLARY OR CONSEQUENTIAL DAMAGES OR OTHER DAMAGES (INCLUDING,
+            WITHOUT LIMITATION, ANY DAMAGES FOR HARM TO BUSINESS, LOSS OF INFORMATION OR PROGRAMS OR
+            DATA, LOSS OF PROFIT, LOSS OF SAVINGS, LOSS OF REVENUE, LOSS OF GOODWILL), ARISING FROM
+            OR IN CONNECTION WITH THE USE OF OR ACCESS TO, OR ANY INCONVENIENCE, DELAY OR LOSS OF
+            USE OF OR ACCESS TO, A2B, ANY CONTENT OR ANY THIRD-PARTY SITES, OR FAILURE OF SUCH
+            WEBSITES (INCLUDING WITHOUT LIMITATION ANY DAMAGES SUFFERED AS A RESULT OF OMISSIONS OR
+            INACCURACIES IN SUCH WEBSITES, MATERIALS OR CONTENT, OR THE TRANSMISSION OF CONFIDENTIAL
+            OR SENSITIVE INFORMATION TO OR FROM SUCH WEBSITES) EVEN IF LAFAYETTE SQUARE OR ANY OF
+            ITS AFFILIATES OR LICENSORS HAVE BEEN ADVISED OF THE POSSIBILITY OF SUCH DAMAGE OR LOSS
+            OR IF SUCH DAMAGE OR LOSS WAS FORESEEABLE. IF ANY PART OF THIS LIMITATION OF LIABILITY
+            IS FOUND TO BE INVALID OR UNENFORCEABLE FOR ANY REASON, THEN LAFAYETTE SQUARE'S
+            AGGREGATE LIABILITY UNDER SUCH CIRCUMSTANCES WITH RESPECT TO LIABILITIES THAT OTHERWISE
+            WOULD HAVE BEEN LIMITED SHALL NOT EXCEED ONE HUNDRED DOLLARS ($100). THE FOREGOING DOES
+            NOT AFFECT ANY LIABILITY THAT CANNOT BE EXCLUDED OR LIMITED UNDER APPLICABLE LAW.
           </p>
           <p className={cls.bodyUpper}>
-            Without limiting the generality of the foregoing, Lafayette Square shall have no
-            liability or responsibility whatsoever for any recommendations, suggestions, or insights
-            generated by or through A2B. You acknowledge and agree that you are solely responsible
-            for any and all decisions made, and any actions taken or not taken, based on or in
-            reliance upon any recommendations, suggestions, insights, or other output provided by
-            A2B.
+            WITHOUT LIMITING THE GENERALITY OF THE FOREGOING, LAFAYETTE SQUARE SHALL HAVE NO
+            LIABILITY OR RESPONSIBILITY WHATSOEVER FOR ANY RECOMMENDATIONS, SUGGESTIONS, OR INSIGHTS
+            GENERATED BY OR THROUGH A2B. YOU ACKNOWLEDGE AND AGREE THAT YOU ARE SOLELY RESPONSIBLE
+            FOR ANY AND ALL DECISIONS MADE, AND ANY ACTIONS TAKEN OR NOT TAKEN, BASED ON OR IN
+            RELIANCE UPON ANY RECOMMENDATIONS, SUGGESTIONS, INSIGHTS, OR OTHER OUTPUT PROVIDED BY
+            A2B, AND LAFAYETTE SQUARE EXPRESSLY DISCLAIMS ALL LIABILITY ARISING FROM OR RELATED TO
+            YOUR USE OF OR RELIANCE ON ANY SUCH RECOMMENDATIONS, SUGGESTIONS, OR INSIGHTS.
           </p>
         </div>
 
@@ -396,18 +418,31 @@ export default function TermsModalContent({
           <p className={cls.sectionHeading}>11. Linked Third-Party Websites</p>
           <p className={cls.body}>
             A2B may contain links to websites or services owned or operated by third parties
-            ("Third-Party Sites") or permit a link from a Third-Party Site to A2B. Third-Party Sites
+            (“Third-Party Sites”) or permit a link from a Third-Party Site to A2B. Third-Party Sites
             are not owned or controlled by us. Lafayette Square has not reviewed all of the
             Third-Party Sites linked to A2B and is not responsible for the contents of any such
             linked Third-Party Sites. The inclusion of any link does not imply endorsement by
-            Lafayette Square of the Third-Party Sites. Use of any such linked Third-Party Sites is
-            at your own risk.{" "}
+            Lafayette Square of the Third-Party Sites. You understand that the additional services
+            and/or products available through any Third-Party Sites are offered and made available
+            by a third party, and not by Lafayette Square, and as such, may be used, edited,
+            reproduced and distributed by such third party outside the scope of these Terms of Use
+            and without our knowledge, endorsement, or control. It is your responsibility to decide
+            whether any services and/or products available through any of these Third-Party Sites
+            are suitable for your purposes. Use of any such linked Third-Party Sites is at your own
+            risk. Lafayette Square is not liable for any damages incurred as a result of clicking on
+            a link to any Third-Party Site. The use of Third-Party Sites is subject to the terms and
+            conditions of the third-party owner or operator. Additionally, a Third-Party Site may
+            contain its own privacy statement governing the collection and use of your information,
+            and Lafayette Square is not responsible for viewing and abiding by the privacy
+            statements and terms of use posted at any Third-Party Site.{" "}
             <span className="uppercase">
               Lafayette Square is not responsible or liable to you or any other party for any
               third-party sites' materials or any use thereof by you or any other user (including
               any liability arising out of any claim that the content of any third-party sites
               infringes the intellectual property rights of any third party).
             </span>
+            This limitation of liability is in addition to, and cumulative with, any other
+            limitations of liability terms, whether such appear on A2B or otherwise.
           </p>
         </div>
 
@@ -448,11 +483,20 @@ export default function TermsModalContent({
             a royalty-free, perpetual, non-exclusive, irrevocable, worldwide right and license to
             use, adapt, reproduce, modify, disseminate, publicly display, incorporate into other
             works, or otherwise exploit all content, remarks, suggestions, ideas, graphics, or other
-            ideas and information submitted through the A2B platform ("Submissions"). For the
-            avoidance of doubt, "Submissions" expressly excludes (i) User Data submitted by you in
-            the ordinary course of using A2B's data collection and benchmarking functionality, and
-            (ii) any Personal Information included within such User Data, which is governed
-            exclusively by Section 6 of these Terms of Use and the Privacy Notice.
+            ideas and information submitted through the A2B platform (“Submissions”). For the
+            avoidance of doubt, “Submissions” expressly excludes (i) User Data (as defined in
+            Section 5) submitted by you in the ordinary course of using A2B’ data collection and
+            benchmarking functionality, and (ii) any Personal Information (as defined in the Privacy
+            Notice) included within such User Data, which is governed exclusively by Section 6 of
+            these Terms of Use and the Privacy Notice. Lafayette Square’s use of User Data and
+            Personal Information is limited to the purposes described in Section 6 and the Privacy
+            Notice, notwithstanding the license granted in this Section 13. Lafayette Square may use
+            Submissions for any and all purposes including, but not limited to, advertising,
+            promoting, and publicizing Lafayette Square and its businesses, products, services, or
+            any promotion or offer presented by Lafayette Square in any and all media without
+            incurring liability for royalties or other consideration of any kind. Any Submissions
+            will be treated, unless made upon our request and as otherwise agreed upon in writing by
+            us, upon the understanding that you agreed to the following terms.
           </p>
         </div>
 
@@ -499,7 +543,12 @@ export default function TermsModalContent({
             arbitration shall be instituted exclusively in the state and federal courts located in
             Washington, D.C., although Lafayette Square retains the right to bring any suit, action
             or proceeding against you for breach of these Terms of Use in your state and/or county
-            of residence if Lafayette Square so chooses.
+            of residence if Lafayette Square so chooses. By using A2B, you irrevocably consent to
+            and submit to the exclusive jurisdiction and venue of the state and federal courts
+            located in Miami-Dade County, Florida for any such proceedings. You irrevocably waive
+            any and all defenses based on lack of personal jurisdiction, venue, or inconvenient
+            forum, and any right to remove or transfer any such proceeding to another court or
+            jurisdiction.
           </p>
           <p className={cls.bodyUpper}>
             To the extent permitted by applicable law, any cause of action or claim you may have
@@ -516,26 +565,39 @@ export default function TermsModalContent({
             Any dispute, claim, or controversy arising out of or relating to these Terms of Use or
             A2B, including the determination of the scope or applicability of these Terms of Use to
             arbitrate, shall be resolved by binding arbitration administered by the American
-            Arbitration Association ("AAA") in accordance with its Consumer Arbitration Rules then
-            in effect. A party who intends to seek arbitration must first send a written notice of
-            the dispute to the other party, by certified mail, Federal Express, UPS, or Express Mail
-            (signature required). The parties agree to attempt to resolve the dispute informally for
-            a period of thirty (30) days from the date of such notice. The notice must be sent to
-            Lafayette Square at 1801 Pennsylvania Avenue NW, Washington, DC 20006. The arbitration
-            shall be conducted by a single arbitrator and shall take place in Miami, Florida,
-            consistent with the Federal Arbitration Act. The arbitrator's award shall be final and
-            binding, and judgment on the award may be entered in any court of competent
-            jurisdiction.
+            Arbitration Association (“AAA”) in accordance with its Consumer Arbitration Rules then
+            in effect. The arbitrator shall have the power to rule on any challenge to jurisdiction
+            or to the validity or enforceability of any portion of the Terms to arbitrate. A party
+            who intends to seek arbitration must first send a written notice of the dispute to the
+            other party, by certified mail, Federal Express, UPS, or Express Mail (signature
+            required). The parties agree to attempt to resolve the dispute informally for a period
+            of thirty (30) days from the date of such notice. Such written notice must include: (a)
+            name and contact information; (b) a description of the nature and basis of the dispute;
+            and (c) the specific relief sought. The notice must be sent to Lafayette Square at 1801
+            Pennsylvania Avenue NW, Washington, DC 20006. If the dispute is not resolved within such
+            period, either party may initiate arbitration. The arbitration shall be conducted by a
+            single arbitrator and shall take place in Miami, Florida, consistent with the Federal
+            Arbitration Act. The arbitrator’s award shall be final and binding, and judgment on the
+            award may be entered in any court of competent jurisdiction. Each party shall bear its
+            own costs and attorneys’ fees unless the arbitrator determines that a claim was
+            frivolous, in which case the arbitrator may award reasonable attorneys’ fees to the
+            prevailing party. Notwithstanding the foregoing, either party may seek injunctive or
+            other equitable relief in any court of competent jurisdiction to prevent the actual or
+            threatened infringement, misappropriation, or violation of intellectual property rights
+            or confidentiality obligations. Nothing in this Section 17 shall prevent either party
+            from seeking relief in a small claims court of competent jurisdiction for disputes or
+            claims within the scope of such court's jurisdiction.
           </p>
           <p className={cls.bodyUpper}>
-            You waive the right to a trial by jury. You and Lafayette Square agree that any
-            arbitration shall be conducted on an individual basis and not as a class, consolidated,
-            or representative action. The arbitrator shall have no authority to consolidate claims
-            or preside over any form of class or representative proceeding. If any court or
-            arbitrator of competent jurisdiction determines that the class action waiver set forth
-            in this paragraph is void or unenforceable for any reason, or that an arbitration can
-            proceed on a class basis, then the arbitration provision set forth in this Section 17
-            shall be deemed null and void in its entirety.
+            YOU WAIVE THE RIGHT TO A TRIAL BY JURY. YOU AND LAFAYETTE SQUARE AGREE THAT ANY
+            ARBITRATION SHALL BE CONDUCTED ON AN INDIVIDUAL BASIS AND NOT AS A CLASS, CONSOLIDATED,
+            OR REPRESENTATIVE ACTION. THE ARBITRATOR SHALL HAVE NO AUTHORITY TO CONSOLIDATE CLAIMS
+            OR PRESIDE OVER ANY FORM OF CLASS OR REPRESENTATIVE PROCEEDING. IF ANY COURT OR
+            ARBITRATOR OF COMPETENT JURISDICTION DETERMINES THAT THE CLASS ACTION WAIVER SET FORTH
+            IN THIS PARAGRAPH IS VOID OR UNENFORCEABLE FOR ANY REASON, OR THAT AN ARBITRATION CAN
+            PROCEED ON A CLASS BASIS, THEN THE ARBITRATION PROVISION SET FORTH IN THIS SECTION 17
+            SHALL BE DEEMED NULL AND VOID IN ITS ENTIRETY, AND THE PARTIES SHALL BE DEEMED TO HAVE
+            NOT AGREED TO ARBITRATE DISPUTES.
           </p>
           <p className={cls.body}>
             You may opt out of this arbitration provision by sending written notice to Lafayette
@@ -572,11 +634,21 @@ export default function TermsModalContent({
           <p className={cls.sectionHeading}>19. General Provisions</p>
           <p className={cls.body}>
             No joint venture, partnership, employment, or agency relationship is created by these
-            Terms. If any provision is found unenforceable, the remaining provisions shall remain in
-            effect. Our failure to enforce any right or provision of these Terms of Use will not be
-            considered a waiver of those rights. These Terms of Use constitute the entire agreement
-            between us regarding A2B and supersede and replace any prior agreements we might have
-            had between us regarding A2B.
+            Terms.
+          </p>
+          <p className={cls.body}>
+            If any provision is found unenforceable, the remaining provisions shall remain in
+            effect. These Terms constitute the entire agreement between you and Lafayette Square
+            regarding A2B.
+          </p>
+          <p className={cls.body}>
+            Our failure to enforce any right or provision of these Terms of Use will not be
+            considered a waiver of those rights. If any provision of these Terms of Use is held to
+            be invalid or unenforceable by a court or other tribunal, such provision shall be
+            limited or eliminated to the minimum extent necessary so as to effect the intent of the
+            Terms of Use, and all remaining provisions shall otherwise remain in full force and
+            effect. These Terms of Use constitute the entire agreement between us regarding A2B and
+            supersede and replace any prior agreements we might have had between us regarding A2B.
           </p>
           <p className={cls.body}>
             You acknowledge and agree that A2B possesses a special, unique, and extraordinary
