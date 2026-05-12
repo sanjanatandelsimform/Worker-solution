@@ -102,7 +102,7 @@ describe("CompanyAtAGlance", () => {
 
   it("format functions: industryAverageWage not null displays currency", () => {
     renderCAG({ companyGlanceData: { ...defaultGlanceData, industryAverageWage: 55000 } });
-    expect(screen.getByText("$55000")).toBeTruthy();
+    expect(screen.getByText("$55K")).toBeTruthy();
   });
 
   it("format functions: industryAverageWage null displays N/A", () => {

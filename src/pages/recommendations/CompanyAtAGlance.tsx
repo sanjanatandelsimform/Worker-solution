@@ -79,7 +79,9 @@ const overviewCardsConfig: CardConfig<CompanyGlanceData>[] = [
     title: "National Industry Median Wage",
     icon: DollarIcon,
     format: data =>
-      data.industryAverageWage === null ? "N/A" : formatCurrency(Number(data.industryAverageWage)),
+      data.industryAverageWage === null
+        ? "N/A"
+        : formatCompactCurrency(Number(data.industryAverageWage)),
     infoIcon: false,
     tooltipText: "",
     descriptionText: "",

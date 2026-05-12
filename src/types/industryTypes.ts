@@ -30,7 +30,7 @@ export interface IndustryOverview {
     hire: number;
     seperation: number;
   };
-  industryAverageWage: number;
+  industryAverageWage: SalaryHourly;
 }
 
 export interface IndustryInfo {
