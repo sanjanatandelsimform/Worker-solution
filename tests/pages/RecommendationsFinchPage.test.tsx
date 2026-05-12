@@ -355,7 +355,7 @@ describe("RecommendationsFinchPage — company at a glance data mapping", () => 
       isLoading: false,
       data: {
         industryOverview: {
-          industryAverageWage: 45000,
+          industryAverageWage: { salary: 45000, hourly: 21.63 },
           turnoverRate: { rate: "15%", month: "Jan", year: 2025 },
           avgTurnover: { rate: 15, sinceYear: 2020 },
           industryWideCostOfTurnover: { amount: 50000, formatted: "$50,000", year: 2025 },

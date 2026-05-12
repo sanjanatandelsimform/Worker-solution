@@ -51,7 +51,7 @@ export default function RecommendationsFinchPage({
   const workforceHealthcareFlag = useAppSelector(selectWorkforceHealthcareAffordabilityFlag);
   const recommCompanyOverview = useAppSelector(selectRecommCompanyOverview);
   const { isLoading: isIndustryLoading, data: industryData } = useIndustry();
-  const industryAverageWage = industryData?.industryOverview?.industryAverageWage;
+  const industryAverageWage = industryData?.industryOverview?.industryAverageWage?.salary;
 
   // Compose proven strategy flags based on assessment flow
   // Finch flow: healthcareAffordability comes from Workforce API; manual flow: all from Recommendations API
