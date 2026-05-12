@@ -477,7 +477,7 @@ export default function PrivacyModalContent() {
             },
             {
               label: "Right to Deletion",
-              text: "Subject to certain conditions, you may be entitled to request that we delete personal information about you. Before deleting information, we must be able to verify your identity. We will not delete personal information about you when the information is required to fulfill a legal obligation, is necessary to exercise or defend legal claims, or where we are required or permitted to retain the information by law.",
+              text: "Subject to certain conditions, you may be entitled to request that we delete personal information about you. Before deleting information, we must be able to verify your identity. We will not delete personal information about you when the information is required to fulfill a legal obligation, is necessary to exercise or defend legal claims, or where we are required or permitted to retain the information by law. For example, we cannot delete information about you if your personal information is a necessary element of the contract between us. ",
             },
             {
               label: "Right to Non-Discrimination",
@@ -526,7 +526,10 @@ export default function PrivacyModalContent() {
           <p className={cls.body}>
             Depending on your residency, these rights may not apply to pseudonymous data if the
             information necessary to identify the consumer is kept separately and is subject to
-            controls that prevent access to the information.
+            controls that prevent access to the information. Pseudonymous data is personal data that
+            can no longer be attributed to a specific individual without the use of additional
+            information, if the additional information is kept separately and is subject to measures
+            to ensure that personal data is not attributed to the specific individual.
           </p>
           <p className={cls.body}>
             Data solely retained for data backup or archive purposes is principally excluded from
@@ -546,6 +549,9 @@ export default function PrivacyModalContent() {
             We will maintain all of your Consumer Data Rights requests for at least 2 years. This
             information will not be used for any other purpose except to review compliance
             processes; it will not be shared except as necessary to comply with a legal obligation.
+            For residents of Colorado, to the extent Colorado law applies, sensitive data which we
+            no longer have consent to process will be deleted or rendered permanently anonymized or
+            inaccessible within a reasonable period of time after withdrawal of consent.
           </p>
           <p className={cls.body}>
             You may also be entitled to request in writing a list of the types of personal
@@ -583,7 +589,12 @@ export default function PrivacyModalContent() {
             asking you for the following pieces of information: your relationship with us, first and
             last name, email address, telephone number, postal address, last four digits of your
             social security number, driver&rsquo;s license number, your account PIN, photo
-            identification, or your date of birth.
+            identification, or your date of birth.We cannot respond to your request or provide you
+            with personal information if we cannot verify your identity or authority to make the
+            request and confirm the personal information relates to you. Making a verifiable request
+            does not require you to create an account with us. We will use the personal information
+            you provide to us when submitting a consumer request only to verify the requestor’s
+            identity or authority to make the request.
           </p>
           <p className={cls.body}>
             If we are unable to verify your identity as part of your request, we will not be able to
@@ -594,8 +605,18 @@ export default function PrivacyModalContent() {
           <p className={cls.body}>
             If you would like to appoint an authorized agent to make a request on your behalf, we
             require you to verify your identity with us directly before we provide any requested
-            information to your approved agent. There may be circumstances where we will not be able
-            to honor your request. We will notify you if we are unable to honor your request.
+            information to your approved agent. Alternatively, your authorized agent may provide
+            evidence of having power of attorney or acting as a conservator for you. We may also
+            request that any authorized agents verify their identity and may reach out to you
+            directly to confirm that you have provided the agent with your permission to submit the
+            request on your behalf. There may be circumstances where we will not be able to honor
+            your request. We will notify you if we are unable to honor your request. Based on your
+            residency, you may have the right to appeal our decision with regard to your request by
+            using the “Contact Us” details provided at the end of this Notice.
+          </p>
+          <p className={cls.body}>
+            There may be circumstances where we will not be able to honor your request, in which
+            case, we will notify you.
           </p>
         </div>
 
@@ -644,7 +665,7 @@ export default function PrivacyModalContent() {
               "Web beacons / pixel tags — Tiny graphics or snippets of code that link web pages or emails to our servers (and their cookies). They help us measure the effectiveness of campaigns, understand usage, and deliver content.",
               "Advertising identifiers — Resettable identifiers provided by mobile operating systems (such as Apple's Identifier for Advertisers (IDFA) or Google's Advertising ID (AAID)). These work in a similar way to cookies and are used for advertising and analytics purposes.",
               "Session replay technologies — Tools that may record how you interact with A2B (such as clicks, scrolling, and navigation) to help us diagnose issues, analyze usage, and improve your experience.",
-              "Local storage and similar technologies — Web browsers and apps may also use local storage (including HTML5 local storage and caches) and software development kits ('SDKs') to save information directly on your device.",
+              "Local storage and similar technologies — Web browsers and apps may also use local storage (including HTML5 local storage and caches) and software development kits (“SDKs”) to save information directly on your device. These technologies are often used to remember settings, speed up performance, or support app functionality. SDKs may also recognize you across websites and across your devices, collect data on your interactions with A2B, and we may use SDKs for analytics. ",
               "Device and browser fingerprinting — In some cases, we may use technical information about your browser, device, or network (such as fonts, screen resolution, or plug-ins) to help recognize your device for security, analytics, or advertising purposes.",
             ].map(item => (
               <li key={item.slice(0, 40)} className={cls.body}>
@@ -652,6 +673,12 @@ export default function PrivacyModalContent() {
               </li>
             ))}
           </ul>
+          <p className={cls.body}>
+            These cookies and similar technologies may be deployed by us directly, our business
+            partners, or third-party analytics providers, either on our behalf or for their own
+            purposes. They may be used to deliver information to you or about you and to connect
+            information about you across different sources, websites, devices, and applications.
+          </p>
           <p className="text-sm font-semibold text-ws-text-primary">Types of Cookies We Use</p>
           <p className={cls.body}>
             Third-party cookies belong to and are managed by other parties. These cookies may be
@@ -674,9 +701,15 @@ export default function PrivacyModalContent() {
             your browser settings. Please note that most browsers automatically accept cookies.
             Therefore, if you do not wish cookies to be used, you may need to actively delete or
             block the cookies. If you reject the use of cookies, you will still be able to visit A2B
-            but some of the functions may not work correctly. By using A2B without deleting or
-            rejecting some or all cookies, you agree that we can place those cookies that you have
-            not deleted or rejected on your device.
+            but some of the functions may not work correctly. You may also visit
+            www.allaboutcookies.org for details on how to delete or reject cookies and for further
+            information on cookies generally. By using A2B without deleting or rejecting some or all
+            cookies, you agree that we can place those cookies that you have not deleted or rejected
+            on your device.
+          </p>
+          <p className={cls.body}>
+            You can also learn more and opt-out of tracking by some of our third-party partners by
+            visiting: Google Analytics Opt-Out.
           </p>
         </div>
 
@@ -720,7 +753,8 @@ export default function PrivacyModalContent() {
             not completely secure. Although we strive to use commercially reasonable means to
             protect your personal information, we cannot guarantee the security of your personal
             information transmitted to A2B, via phone, paper forms, or otherwise. Any transmission
-            of personal information is at your own risk.
+            of personal information is at your own risk. We are not responsible for circumvention of
+            any privacy settings or security measures contained on A2B.
           </p>
         </div>
 
