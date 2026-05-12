@@ -473,8 +473,6 @@ api.interceptors.response.use(
         localStorage.removeItem("userDetail");
         return dispatchLogoutAndRedirect();
       }
-
-      // ── Queue if the shared lock is already held ─────────────────────
       if (sharedIsRefreshing) {
         return new Promise<string>((resolve, reject) => {
           sharedFailedQueue.push({ resolve, reject });
