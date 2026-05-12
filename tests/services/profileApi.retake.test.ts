@@ -70,6 +70,18 @@ vi.mock("@/services/api/authApi", () => {
   };
 });
 
+vi.mock("@/services/api/tokenRefresh", () => ({
+  isRefreshing: false,
+  refreshFailed: false,
+  setIsRefreshing: vi.fn(),
+  setRefreshFailed: vi.fn(),
+  isRefreshFailed: vi.fn(() => false),
+  failedQueue: [],
+  processQueue: vi.fn(),
+  doRefreshToken: vi.fn(),
+  dispatchLogoutAndRedirect: vi.fn(),
+}));
+
 // Import after mocks are set up
 const { retakeAssessment } = await import("@/services/api/profileApi");
 

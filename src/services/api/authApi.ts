@@ -9,6 +9,16 @@ import type {
   Industry,
 } from "../../types/auth";
 import { getAuthToken, getErrorMessage } from "@/services/api/apiUtils";
+import {
+  isRefreshing as sharedIsRefreshing,
+  setIsRefreshing,
+  setRefreshFailed,
+  isRefreshFailed,
+  failedQueue as sharedFailedQueue,
+  processQueue,
+  dispatchLogoutAndRedirect,
+  doRefreshToken,
+} from "@/services/api/tokenRefresh";
 
 export { getAuthToken, getErrorMessage };
 
@@ -96,37 +106,10 @@ export const refreshAccessToken = async (
   }
 };
 
-// Flag to prevent multiple refresh attempts
-let isRefreshing = false;
-let failedQueue: Array<{
-  resolve: (token: string) => void;
-  reject: (error: Error) => void;
-}> = [];
-
-const processQueue = (error: Error | null, token: string | null = null) => {
-  failedQueue.forEach(prom => {
-    if (error) {
-      prom.reject(error);
-    } else {
-      prom.resolve(token!);
-    }
-  });
-  failedQueue = [];
-};
-
-const dispatchLogout = () => {
-  if (
-    typeof window !== "undefined" &&
-    (window as { store?: { dispatch: (a: unknown) => void } }).store
-  ) {
-    import("@/store/slices/authSlice").then(({ logout: logoutAction }) => {
-      (window as { store: { dispatch: (a: unknown) => void } }).store.dispatch(logoutAction());
-    });
-    window.location.href = "/sign-in";
-  }
-};
-
-// UPDATED Response interceptor with improved token storage handling
+// ── Response interceptor: 401 → refresh token → retry ───────────────────────
+// Uses the shared lock from tokenRefresh.ts so that concurrent 401s from BOTH
+// the authApi (apiClient) and assessmentApi (api) instances only trigger one
+// /auth/refresh-token call, with the rest queued.
 apiClient.interceptors.response.use(
   response => response,
   async (error: AxiosError) => {
@@ -147,6 +130,22 @@ apiClient.interceptors.response.use(
       return Promise.reject(error);
     }
 
+    // If a previous refresh already failed in this page session, skip straight
+    // to redirect — do NOT attempt another /auth/refresh-token call.
+    if (isRefreshFailed()) {
+      return dispatchLogoutAndRedirect();
+    }
+
+    // If the /auth/refresh-token endpoint itself returned 401, the refresh token
+    // is expired or invalid. Clear the session and redirect immediately — there
+    // is no further token to fall back to, and retrying would cause an infinite loop.
+    const requestUrl = (originalRequest as { url?: string }).url ?? "";
+    if (requestUrl.includes("/auth/refresh-token")) {
+      setRefreshFailed(true);
+      localStorage.removeItem(STORAGE_KEY);
+      return dispatchLogoutAndRedirect();
+    }
+
     const storedState = localStorage.getItem(STORAGE_KEY);
     if (!storedState) {
       return Promise.reject(error);
@@ -157,22 +156,20 @@ apiClient.interceptors.response.use(
       parsedState = JSON.parse(storedState);
     } catch {
       localStorage.removeItem(STORAGE_KEY);
-      dispatchLogout();
-      return Promise.reject(error);
+      return dispatchLogoutAndRedirect();
     }
 
     const refreshToken = parsedState?.auth?.tokens?.refreshToken;
 
     if (!refreshToken) {
       localStorage.removeItem(STORAGE_KEY);
-      dispatchLogout();
-      return Promise.reject(error);
+      return dispatchLogoutAndRedirect();
     }
 
-    // Queue requests while refresh is in progress
-    if (isRefreshing) {
-      return new Promise((resolve, reject) => {
-        failedQueue.push({ resolve, reject });
+    // ── Queue if another instance is already refreshing ──────────────────
+    if (sharedIsRefreshing) {
+      return new Promise<string>((resolve, reject) => {
+        sharedFailedQueue.push({ resolve, reject });
       })
         .then(token => {
           if (originalRequest.headers) {
@@ -180,19 +177,19 @@ apiClient.interceptors.response.use(
           }
           return apiClient(originalRequest);
         })
-        .catch(err => Promise.reject(err));
+        .catch(() => dispatchLogoutAndRedirect());
     }
 
     originalRequest._retry = true;
-    isRefreshing = true;
+    setIsRefreshing(true);
 
     try {
-      // Call refreshAccessToken which handles storage update internally
+      // Use doRefreshToken (plain axios client, no interceptors) to avoid
+      // recursive interception and the deadlock it can cause.
       const { accessToken: newAccessToken, refreshToken: newRefreshToken } =
-        await refreshAccessToken(refreshToken);
+        await doRefreshToken(refreshToken);
 
-      // CRITICAL: Re-read and update localStorage to ensure tokens are persisted
-      // refreshAccessToken already updates, but we do a defensive re-write here
+      // Persist new tokens to localStorage
       try {
         const rawAfterRefresh = localStorage.getItem(STORAGE_KEY);
         const parsedAfterRefresh = rawAfterRefresh ? JSON.parse(rawAfterRefresh) : {};
@@ -212,8 +209,13 @@ apiClient.interceptors.response.use(
         console.error("[authApi] Failed to persist refreshed tokens:", storageError);
       }
 
-      // Update axios default header for all future requests
+      // Update axios default header for all future requests on this instance
       apiClient.defaults.headers.common.Authorization = `Bearer ${newAccessToken}`;
+
+      // Update original request header
+      if (originalRequest.headers) {
+        originalRequest.headers.Authorization = `Bearer ${newAccessToken}`;
+      }
 
       // Sync Redux store if available
       if (typeof window !== "undefined" && (window as { store?: unknown }).store) {
@@ -230,24 +232,18 @@ apiClient.interceptors.response.use(
         }
       }
 
-      // Update original request header
-      if (originalRequest.headers) {
-        originalRequest.headers.Authorization = `Bearer ${newAccessToken}`;
-      }
-
-      // Process queued requests with new token
+      // Release queued requests
       processQueue(null, newAccessToken);
-      isRefreshing = false;
 
       // Retry original request with new token
       return apiClient(originalRequest);
     } catch (refreshError) {
-      // Clear tokens and logout on refresh failure
+      setRefreshFailed(true);
       processQueue(refreshError as Error, null);
-      isRefreshing = false;
       localStorage.removeItem(STORAGE_KEY);
-      dispatchLogout();
-      return Promise.reject(refreshError);
+      return dispatchLogoutAndRedirect();
+    } finally {
+      setIsRefreshing(false);
     }
   }
 );
