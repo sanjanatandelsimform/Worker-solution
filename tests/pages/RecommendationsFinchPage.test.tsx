@@ -366,7 +366,7 @@ describe("RecommendationsFinchPage — company at a glance data mapping", () => 
       isLoaded: true,
     });
     renderPage();
-    expect(screen.getByText("$45,000")).toBeInTheDocument();
+    expect(screen.getByText("$45K")).toBeInTheDocument();
   });
 
   it("shows N/A for industryAverageWage when industry data is null", () => {
