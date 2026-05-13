@@ -9,6 +9,7 @@ export interface DashboardCardProps {
   buttonLabel?: string;
   buttonType?: "primary" | "secondary" | "tertiary";
   buttonIsDisabled?: boolean;
+  buttonIsLoading?: boolean;
   classes?: string;
   titleClass?: string;
   descriptionClass?: string;
@@ -26,6 +27,7 @@ export default function DashboardCard({
   buttonLabel,
   buttonType = "primary",
   buttonIsDisabled = false,
+  buttonIsLoading = false,
   classes = "",
   titleClass = "",
   descriptionClass = "",
@@ -76,6 +78,7 @@ export default function DashboardCard({
             color={buttonType}
             size="sm"
             isDisabled={buttonIsDisabled}
+            isLoading={buttonIsLoading}
             onClick={onClick}
             className={buttonClasses}
           >

@@ -62,6 +62,7 @@ export const DashboardPage = () => {
   const emailVerify = user?.emailVerify || false;
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
   const [showResendSuccess, setShowResendSuccess] = useState(false);
+  const [isResendLoading, setIsResendLoading] = useState(false);
   const [showCooldownModal, setShowCooldownModal] = useState(false);
   const [cooldown, setCooldown] = useState<number>(0);
   const [isEmailVerifiedModalOpen, setIsEmailVerifiedModalOpen] = useState(() => {
@@ -169,12 +170,14 @@ export const DashboardPage = () => {
 
   const handleVerifyEmail = async () => {
     if (emailVerify) return;
+    if (isResendLoading) return;
 
     if (cooldown > 0) {
       setShowCooldownModal(true);
       return;
     }
 
+    setIsResendLoading(true);
     try {
       setErrorMessage(null);
       await dispatch(resendVerificationEmail()).unwrap();
@@ -195,6 +198,8 @@ export const DashboardPage = () => {
       } else {
         setErrorMessage(errorMsg);
       }
+    } finally {
+      setIsResendLoading(false);
     }
   };
 
@@ -375,7 +380,8 @@ export const DashboardPage = () => {
                 buttonLabel="Verify"
                 buttonClasses="h-9 min-w-30"
                 buttonType="primary"
-                buttonIsDisabled={emailVerify}
+                buttonIsDisabled={emailVerify || isResendLoading}
+                buttonIsLoading={isResendLoading}
                 onClick={handleVerifyEmail}
               />
             )}
