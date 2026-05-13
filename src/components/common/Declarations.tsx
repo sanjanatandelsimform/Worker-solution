@@ -45,19 +45,19 @@ export default function Declarations({ className = "" }: Readonly<DeclarationsPr
         <Button
           color="link"
           size="sm"
-          onClick={() => setIsTermsModalOpen(true)}
-          className="text-xs text-ws-light-teal-850 underline p-0 m-0 h-5"
+          onClick={() => setIsPrivacyModalOpen(true)}
+          className="text-xs font-normal text-ws-light-teal-850 underline p-0 m-0 h-5"
         >
-          Terms of Use
+          Privacy Notice
         </Button>{" "}
         and{" "}
         <Button
           color="link"
           size="sm"
-          onClick={() => setIsPrivacyModalOpen(true)}
-          className="text-xs text-ws-light-teal-850 underline p-0 m-0 h-5"
+          onClick={() => setIsTermsModalOpen(true)}
+          className="text-xs font-normal text-ws-light-teal-850 underline p-0 m-0 h-5"
         >
-          Privacy Notice
+          Terms of Use
         </Button>
       </p>
       <TermsModal
