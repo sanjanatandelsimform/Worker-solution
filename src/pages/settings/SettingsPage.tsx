@@ -60,6 +60,7 @@ export const SettingsPage = () => {
   // const [resendVerification, setResendVerification] = useState(false);
   const [resendError, setResendError] = useState<string | null>(null);
   const [retakeError, setRetakeError] = useState<string | null>(null);
+  const [deleteError, setDeleteError] = useState<string | null>(null);
   const [retakeLoading, setRetakeLoading] = useState(false);
   const [isRedirecting, setIsRedirecting] = useState(false);
 
@@ -183,7 +184,7 @@ export const SettingsPage = () => {
         },
       });
     } catch (_error) {
-      console.error("Failed to delete account:", _error);
+      setDeleteError(typeof _error === "string" ? _error : "Failed to delete account");
       setIsAccountDeleteModalOpen(false);
     }
   }
@@ -306,6 +307,18 @@ export const SettingsPage = () => {
                 alertIcon={AlertCircle}
                 errorMessage={retakeError}
                 onClose={() => setRetakeError(null)}
+              />
+            </div>
+          )}
+
+          {deleteError && (
+            <div className="mt-6">
+              <ErrorMessage
+                errorType="danger"
+                textColor="text-ws-error-700"
+                alertIcon={AlertCircle}
+                errorMessage={deleteError}
+                onClose={() => setDeleteError(null)}
               />
             </div>
           )}
