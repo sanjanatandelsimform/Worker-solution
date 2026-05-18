@@ -112,7 +112,7 @@ export const SettingsPage = () => {
 
     // Real-time validation as user types
     if (sanitized) {
-      const validation = validateName("FirstName", sanitized);
+      const validation = validateName("First name", sanitized);
       if (validation.isValid) {
         setFirstNameError("");
       } else {
