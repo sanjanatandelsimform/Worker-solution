@@ -141,29 +141,6 @@ export const SettingsPage = () => {
     }
   };
   // Generic handler — eliminates duplication
-// const handleNameChange = (
-//   value: string,
-//   fieldName: "FirstName" | "LastName",
-//   setValue: (val: string) => void,
-//   setError: (err: string) => void,
-//   emptyErrorMsg: string
-// ) => {
-//   const sanitized = value.replace(/^\s+/, "");
-//   setValue(sanitized);
-//   if (sanitized) {
-//     const validation = validateName(fieldName, sanitized);
-//     setError(validation.isValid ? "" : validation.message || "");
-//   } else {
-//     setError(emptyErrorMsg);
-//   }
-// };
-
-// const handleFirstNameChange = (value: string) =>
-//   handleNameChange(value, "FirstName", setFirstName, setFirstNameError, "First name cannot be empty");
-
-// const handleLastNameChange = (value: string) =>
-//   handleNameChange(value, "LastName", setLastName, setLastNameError, "Last name cannot be empty");
-
   async function handleRetakeAssessment() {
     setRetakeLoading(true);
     setRetakeError(null);
