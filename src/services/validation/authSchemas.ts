@@ -45,6 +45,7 @@ export const registrationSchema = z
     businessEmail: z
       .string()
       .min(1, "Please enter a valid email address")
+      .email("Enter a valid email address")
       .regex(emailRegex, "Enter a valid email address"),
     businessPhone: z
       .string()
