@@ -1,5 +1,8 @@
 import { z } from "zod";
 
+const nameRegex = /^[A-Za-z]+$/;
+const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+
 // Industry enum schema
 export const industrySchema = z.enum([
   "Manufacturing",
@@ -21,11 +24,13 @@ export const registrationSchema = z
       .string()
       .min(1, "First Name is required")
       .min(2, "First Name must be at least 2 characters")
+      .regex(nameRegex, "First Name can only contain letters")
       .max(20, "First Name must not exceed 20 characters"),
     lastName: z
       .string()
       .min(1, "Last Name is required")
       .min(2, "Last Name must be at least 2 characters")
+      .regex(nameRegex, "Last Name can only contain letters")
       .max(20, "Last Name must not exceed 20 characters"),
     legalBusinessName: z
       .string()
@@ -40,7 +45,7 @@ export const registrationSchema = z
     businessEmail: z
       .string()
       .min(1, "Please enter a valid email address")
-      .email("Enter a valid email address"),
+      .regex(emailRegex, "Enter a valid email address"),
     businessPhone: z
       .string()
       .min(1, "Business Phone Number is required")

@@ -44,13 +44,14 @@ export function RegistrationForm() {
 
   const {
     handleSubmit,
-    formState: { errors, isSubmitting },
+    formState: { errors, isSubmitting, isValid },
     control,
     setValue,
     trigger,
   } = useForm<RegistrationFormData>({
     resolver: zodResolver(registrationSchema),
-    mode: "onSubmit",
+    mode: "onChange",
+    reValidateMode: "onChange",
     defaultValues: {
       firstName: savedFormData?.firstName || "",
       lastName: savedFormData?.lastName || "",
@@ -527,7 +528,7 @@ export function RegistrationForm() {
                 color="primary"
                 size="lg"
                 className="w-full"
-                isDisabled={isSubmitting}
+                isDisabled={isSubmitting || !isValid}
               >
                 {isSubmitting ? "Creating account..." : "Create account"}
               </Button>
