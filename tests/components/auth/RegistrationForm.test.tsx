@@ -281,6 +281,39 @@ describe("RegistrationForm", () => {
     expect(screen.getByRole("button", { name: /Create Account/i })).toBeTruthy();
   });
 
+  it("disables the submit button until the form is valid", async () => {
+    renderForm();
+
+    const button = screen.getByRole("button", { name: /Create Account/i });
+    expect(button).toBeDisabled();
+
+    await waitFor(() => {
+      expect(screen.queryByText(/Loading industries/i)).toBeNull();
+    });
+
+    fireEvent.change(screen.getByTestId("input-firstName"), { target: { value: "Jane" } });
+    fireEvent.change(screen.getByTestId("input-lastName"), { target: { value: "Doe" } });
+    fireEvent.change(screen.getByTestId("input-legalBusinessName"), {
+      target: { value: "Acme Corp" },
+    });
+    fireEvent.change(screen.getByTestId("input-businessPhone"), {
+      target: { value: "5551234567" },
+    });
+    fireEvent.change(screen.getByTestId("input-zipCode"), { target: { value: "94102" } });
+    fireEvent.change(screen.getByTestId("input-businessEmail"), {
+      target: { value: "jane@acme.com" },
+    });
+    fireEvent.change(screen.getByTestId("input-password"), { target: { value: "Password123!" } });
+    fireEvent.change(screen.getByTestId("input-confirmPassword"), {
+      target: { value: "Password123!" },
+    });
+    fireEvent.change(screen.getByTestId("select-industry"), { target: { value: "TECH" } });
+
+    await waitFor(() => {
+      expect(button).not.toBeDisabled();
+    });
+  });
+
   it("renders Terms link button", async () => {
     renderForm();
     expect(screen.getByRole("button", { name: /Terms/i })).toBeTruthy();
@@ -364,11 +397,53 @@ describe("RegistrationForm", () => {
     expect(input).toBeTruthy();
   });
 
+  it("shows and clears validation errors for invalid name and email input", async () => {
+    renderForm();
+
+    fireEvent.change(screen.getByTestId("input-firstName"), { target: { value: "J1" } });
+    fireEvent.change(screen.getByTestId("input-businessEmail"), {
+      target: { value: "invalid-email" },
+    });
+
+    await waitFor(() => {
+      expect(screen.getByText("First Name can only contain letters")).toBeTruthy();
+      expect(screen.getByText("Enter a valid email address")).toBeTruthy();
+    });
+
+    fireEvent.change(screen.getByTestId("input-firstName"), { target: { value: "Jane" } });
+    fireEvent.change(screen.getByTestId("input-businessEmail"), {
+      target: { value: "jane@acme.com" },
+    });
+
+    await waitFor(() => {
+      expect(screen.queryByText("First Name can only contain letters")).toBeNull();
+      expect(screen.queryByText("Enter a valid email address")).toBeNull();
+    });
+  });
+
   it("calls onChange on password field", async () => {
     renderForm();
     const input = screen.getByTestId("input-password");
     fireEvent.change(input, { target: { value: "Password1!" } });
     expect(input).toBeTruthy();
+  });
+
+  it("shows and clears the password minimum length error as the user types", async () => {
+    renderForm();
+
+    fireEvent.change(screen.getByTestId("input-password"), { target: { value: "short" } });
+
+    await waitFor(() => {
+      expect(screen.getByText("Password must be at least 8 characters")).toBeTruthy();
+    });
+
+    fireEvent.change(screen.getByTestId("input-password"), {
+      target: { value: "Password123!" },
+    });
+
+    await waitFor(() => {
+      expect(screen.queryByText("Password must be at least 8 characters")).toBeNull();
+    });
   });
 
   it("calls onChange on confirmPassword field", async () => {
@@ -442,7 +517,13 @@ describe("RegistrationForm", () => {
     });
     fireEvent.change(screen.getByTestId("select-industry"), { target: { value: "TECH" } });
 
-    fireEvent.click(screen.getByRole("button", { name: /Create Account/i }));
+    const submitButton = screen.getByRole("button", { name: /Create Account/i });
+
+    await waitFor(() => {
+      expect(submitButton).not.toBeDisabled();
+    });
+
+    fireEvent.click(submitButton);
 
     await waitFor(
       () => {
@@ -478,7 +559,13 @@ describe("RegistrationForm", () => {
     });
     fireEvent.change(screen.getByTestId("select-industry"), { target: { value: "TECH" } });
 
-    fireEvent.click(screen.getByRole("button", { name: /Create Account/i }));
+    const submitButton = screen.getByRole("button", { name: /Create Account/i });
+
+    await waitFor(() => {
+      expect(submitButton).not.toBeDisabled();
+    });
+
+    fireEvent.click(submitButton);
 
     await waitFor(
       () => {
