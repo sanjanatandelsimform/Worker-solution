@@ -44,14 +44,15 @@ export function RegistrationForm() {
 
   const {
     handleSubmit,
-    formState: { errors, isSubmitting, isValid },
+    formState: { errors, isSubmitting },
     control,
     setValue,
     trigger,
+    clearErrors,
   } = useForm<RegistrationFormData>({
     resolver: zodResolver(registrationSchema),
-    mode: "onChange",
-    reValidateMode: "onChange",
+    mode: "onBlur",
+    reValidateMode: "onBlur",
     defaultValues: {
       firstName: savedFormData?.firstName || "",
       lastName: savedFormData?.lastName || "",
@@ -92,6 +93,33 @@ export function RegistrationForm() {
     confirmPassword,
     // agreeToTerms,
   ] = watchedFields;
+
+  const isFormValid =
+    registrationSchema.safeParse({
+      firstName,
+      lastName,
+      legalBusinessName,
+      industry,
+      zipCode,
+      businessEmail,
+      businessPhone: phoneNumber,
+      password,
+      confirmPassword,
+    }).success &&
+    !industryError &&
+    !isLoadingIndustries;
+
+  const handleFieldChange = (field: keyof RegistrationFormData, value: string) => {
+    clearErrors(field);
+    setValue(field, value, {
+      shouldDirty: true,
+      shouldTouch: true,
+    });
+  };
+
+  const handleFieldBlur = async (field: keyof RegistrationFormData) => {
+    await trigger(field);
+  };
 
   // Auto-save form data on change (except passwords)
   useEffect(() => {
@@ -198,7 +226,9 @@ export function RegistrationForm() {
         <div className="flex w-full flex-col items-center">
           {/* Logo */}
           <div className="flex items-center justify-center px-2 py-1">
-            <h1 className="text-3xl font-semibold leading-15 text-ws-text-primary normal-case">Sign up</h1>
+            <h1 className="text-3xl font-semibold leading-15 text-ws-text-primary normal-case">
+              Sign up
+            </h1>
           </div>
 
           {/* Header */}
@@ -226,12 +256,11 @@ export function RegistrationForm() {
                   value={firstName}
                   maxLength={20}
                   className={errors.firstName ? "error-ring" : ""}
-                  tooltip={errors.firstName ? errors.firstName.message : undefined}
                   onChange={value => {
                     const sanitized = value.replace(/^\s+/, "");
-                    setValue("firstName", sanitized);
-                    trigger("firstName");
+                    handleFieldChange("firstName", sanitized);
                   }}
+                  onBlur={() => void handleFieldBlur("firstName")}
                   //helperTooltip={"Enter the first name of the primary account holder"}
                 />
               </InputGroup>
@@ -247,12 +276,11 @@ export function RegistrationForm() {
                   isInvalid={!!errors.lastName}
                   maxLength={20}
                   className={errors.lastName ? "error-ring" : ""}
-                  tooltip={errors.lastName ? errors.lastName.message : undefined}
                   onChange={value => {
                     const sanitized = value.replace(/^\s+/, "");
-                    setValue("lastName", sanitized);
-                    trigger("lastName");
+                    handleFieldChange("lastName", sanitized);
                   }}
+                  onBlur={() => void handleFieldBlur("lastName")}
                   helperTooltip={"Enter the last name of the primary account holder"}
                 />
               </InputGroup>
@@ -270,12 +298,11 @@ export function RegistrationForm() {
                   value={legalBusinessName}
                   maxLength={50}
                   className={errors.legalBusinessName ? "error-ring" : ""}
-                  tooltip={errors.legalBusinessName ? errors.legalBusinessName.message : undefined}
                   onChange={value => {
                     const sanitized = value.replace(/^\s+/, "");
-                    setValue("legalBusinessName", sanitized);
-                    trigger("legalBusinessName");
+                    handleFieldChange("legalBusinessName", sanitized);
                   }}
+                  onBlur={() => void handleFieldBlur("legalBusinessName")}
                   helperTooltip={"Enter the legal business name of the primary account holder"}
                 />
               </InputGroup>
@@ -297,10 +324,13 @@ export function RegistrationForm() {
                     // Only allow numeric input and limit to 10 digits
                     const numericValue = inputValue.replace(/\D/g, "").slice(0, 10);
                     setPhoneNumber(numericValue);
-                    setValue("businessPhone", numericValue);
-                    trigger("businessPhone");
+                    clearErrors("businessPhone");
+                    setValue("businessPhone", numericValue, {
+                      shouldDirty: true,
+                      shouldTouch: true,
+                    });
                   }}
-                  tooltip={errors.businessPhone ? errors.businessPhone.message : undefined}
+                  onBlur={() => void handleFieldBlur("businessPhone")}
                   helperTooltip={"Enter the business phone number of the primary account holder"}
                 />
                 {/* <InputGroup
@@ -351,13 +381,12 @@ export function RegistrationForm() {
                   inputMode="numeric"
                   pattern="[0-9]*"
                   className={errors.zipCode ? "error-ring" : ""}
-                  tooltip={errors.zipCode ? errors.zipCode.message : undefined}
                   onChange={value => {
                     // Only allow numeric input
                     const numericValue = value.replace(/\D/g, "");
-                    setValue("zipCode", numericValue);
-                    trigger("zipCode");
+                    handleFieldChange("zipCode", numericValue);
                   }}
+                  onBlur={() => void handleFieldBlur("zipCode")}
                   helperTooltip={"Enter the zip code of the primary account holder"}
                 />
               </InputGroup>
@@ -376,11 +405,12 @@ export function RegistrationForm() {
                   selectedKey={industry || null}
                   onSelectionChange={key => {
                     const stringKey = key ? String(key) : "";
-                    setValue("industry", stringKey);
-                    // This prevents popover positioning from resetting
-                    // setTimeout(() => {
-                    trigger("industry");
-                    // }, 0);
+                    clearErrors("industry");
+                    setValue("industry", stringKey, {
+                      shouldDirty: true,
+                      shouldTouch: true,
+                    });
+                    void trigger("industry");
                   }}
                   isDisabled={isLoadingIndustries || !!industryError}
                   isInvalid={!!errors.industry || !!industryError}
@@ -419,13 +449,12 @@ export function RegistrationForm() {
                   isInvalid={!!errors.businessEmail}
                   value={businessEmail}
                   className={errors.businessEmail ? "error-ring" : ""}
-                  tooltip={errors.businessEmail ? errors.businessEmail.message : undefined}
                   helperTooltip={"Enter the work email address of the primary account holder"}
                   onChange={value => {
                     const sanitized = value.replace(/^\s+/, "");
-                    setValue("businessEmail", sanitized);
-                    trigger("businessEmail");
+                    handleFieldChange("businessEmail", sanitized);
                   }}
+                  onBlur={() => void handleFieldBlur("businessEmail")}
                 />
               </InputGroup>
             </div>
@@ -441,15 +470,18 @@ export function RegistrationForm() {
                   placeholder="Password"
                   size="md"
                   type="password"
-                  tooltip={errors.password ? errors.password.message : undefined}
                   isInvalid={!!errors.password}
                   value={password}
                   className="relative"
                   onChange={value => {
                     const sanitized = value.replace(/^\s+/, "");
-                    setValue("password", sanitized);
-                    trigger("password");
+                    clearErrors(["password", "confirmPassword"]);
+                    setValue("password", sanitized, {
+                      shouldDirty: true,
+                      shouldTouch: true,
+                    });
                   }}
+                  onBlur={() => void handleFieldBlur("password")}
                   onCopy={(e: React.ClipboardEvent<HTMLInputElement>) => e.preventDefault()}
                   onContextMenu={(e: React.MouseEvent<HTMLInputElement>) => e.preventDefault()}
                 />
@@ -465,14 +497,17 @@ export function RegistrationForm() {
                   size="md"
                   type="password"
                   isInvalid={!!errors.confirmPassword}
-                  tooltip={errors.confirmPassword ? errors.confirmPassword.message : undefined}
                   value={confirmPassword}
                   className="relative"
                   onChange={value => {
                     const sanitized = value.replace(/^\s+/, "");
-                    setValue("confirmPassword", sanitized);
-                    trigger("confirmPassword");
+                    clearErrors(["password", "confirmPassword"]);
+                    setValue("confirmPassword", sanitized, {
+                      shouldDirty: true,
+                      shouldTouch: true,
+                    });
                   }}
+                  onBlur={() => void handleFieldBlur("confirmPassword")}
                   onPaste={(e: React.ClipboardEvent<HTMLInputElement>) => e.preventDefault()}
                   onContextMenu={(e: React.MouseEvent<HTMLInputElement>) => e.preventDefault()}
                 />
@@ -528,7 +563,7 @@ export function RegistrationForm() {
                 color="primary"
                 size="lg"
                 className="w-full"
-                isDisabled={isSubmitting || !isValid}
+                isDisabled={isSubmitting || !isFormValid}
               >
                 {isSubmitting ? "Creating account..." : "Create account"}
               </Button>

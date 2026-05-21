@@ -64,6 +64,7 @@ vi.mock("@/components/base/input/input", () => ({
     label,
     value,
     onChange,
+    onBlur,
     type,
     hint,
   }: {
@@ -71,6 +72,7 @@ vi.mock("@/components/base/input/input", () => ({
     label?: string;
     value?: string;
     onChange?: (v: string | React.ChangeEvent<HTMLInputElement>) => void;
+    onBlur?: () => void;
     type?: string;
     hint?: string;
   }) => (
@@ -83,6 +85,7 @@ vi.mock("@/components/base/input/input", () => ({
         value={value || ""}
         data-testid={`input-${name}`}
         onChange={e => onChange?.(e.target.value)}
+        onBlur={() => onBlur?.()}
         aria-label={label}
       />
       {hint && <span data-testid={`hint-${name}`}>{hint}</span>}
@@ -397,27 +400,48 @@ describe("RegistrationForm", () => {
     expect(input).toBeTruthy();
   });
 
-  it("shows and clears validation errors for invalid name and email input", async () => {
+  it("shows inline validation errors below the input fields", async () => {
     renderForm();
 
     fireEvent.change(screen.getByTestId("input-firstName"), { target: { value: "J1" } });
+    fireEvent.blur(screen.getByTestId("input-firstName"));
     fireEvent.change(screen.getByTestId("input-businessEmail"), {
       target: { value: "invalid-email" },
     });
+    fireEvent.blur(screen.getByTestId("input-businessEmail"));
 
     await waitFor(() => {
-      expect(screen.getByText("First Name can only contain letters")).toBeTruthy();
-      expect(screen.getByText("Enter a valid email address")).toBeTruthy();
+      expect(screen.getByTestId("hint-firstName")).toHaveTextContent(
+        "First Name can only contain letters"
+      );
+      expect(screen.getByTestId("hint-businessEmail")).toHaveTextContent(
+        "Enter a valid email address"
+      );
     });
+  });
 
-    fireEvent.change(screen.getByTestId("input-firstName"), { target: { value: "Jane" } });
-    fireEvent.change(screen.getByTestId("input-businessEmail"), {
-      target: { value: "jane@acme.com" },
-    });
+  it("clears field error messages as soon as the user starts typing", async () => {
+    renderForm();
+
+    const firstNameInput = screen.getByTestId("input-firstName");
+    const emailInput = screen.getByTestId("input-businessEmail");
+
+    fireEvent.blur(firstNameInput);
+    fireEvent.blur(emailInput);
 
     await waitFor(() => {
-      expect(screen.queryByText("First Name can only contain letters")).toBeNull();
-      expect(screen.queryByText("Enter a valid email address")).toBeNull();
+      expect(screen.getByTestId("hint-firstName")).toHaveTextContent("First Name is required");
+      expect(screen.getByTestId("hint-businessEmail")).toHaveTextContent(
+        "Please enter a valid email address"
+      );
+    });
+
+    fireEvent.change(firstNameInput, { target: { value: "J" } });
+    fireEvent.change(emailInput, { target: { value: "i" } });
+
+    await waitFor(() => {
+      expect(screen.queryByTestId("hint-firstName")).toBeNull();
+      expect(screen.queryByTestId("hint-businessEmail")).toBeNull();
     });
   });
 
@@ -432,17 +456,32 @@ describe("RegistrationForm", () => {
     renderForm();
 
     fireEvent.change(screen.getByTestId("input-password"), { target: { value: "short" } });
+    fireEvent.blur(screen.getByTestId("input-password"));
 
     await waitFor(() => {
-      expect(screen.getByText("Password must be at least 8 characters")).toBeTruthy();
+      expect(screen.getByTestId("hint-password")).toHaveTextContent(
+        "Password must be at least 8 characters"
+      );
     });
 
-    fireEvent.change(screen.getByTestId("input-password"), {
-      target: { value: "Password123!" },
-    });
+    fireEvent.change(screen.getByTestId("input-password"), { target: { value: "Password" } });
 
     await waitFor(() => {
-      expect(screen.queryByText("Password must be at least 8 characters")).toBeNull();
+      expect(screen.queryByTestId("hint-password")).toBeNull();
+    });
+  });
+
+  it("shows the 2-character minimum validation for the name field", async () => {
+    renderForm();
+
+    const firstNameInput = screen.getByTestId("input-firstName");
+    fireEvent.change(firstNameInput, { target: { value: "J" } });
+    fireEvent.blur(firstNameInput);
+
+    await waitFor(() => {
+      expect(screen.getByTestId("hint-firstName")).toHaveTextContent(
+        "First Name must be at least 2 characters"
+      );
     });
   });
 
