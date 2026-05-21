@@ -586,7 +586,7 @@ describe("RegistrationForm", () => {
 
     await waitFor(() => {
       expect(submitButton).toBeDisabled();
-      expect(screen.getByTestId("submit-loading-spinner")).toBeTruthy();
+      expect(screen.getByTestId("submit-loading-spinner")).toBeInTheDocument();
     });
 
     deferredSignup.resolve({
@@ -597,6 +597,7 @@ describe("RegistrationForm", () => {
     await waitFor(() => {
       expect(screen.queryByTestId("submit-loading-spinner")).toBeNull();
       expect(submitButton).not.toBeDisabled();
+      expect(mockNavigate).toHaveBeenCalledWith("/success", expect.any(Object));
     });
   });
 
