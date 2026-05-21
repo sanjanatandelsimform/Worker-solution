@@ -17,6 +17,16 @@ const { mockGetIndustries, mockSignup, mockNavigate, mockDispatch } = vi.hoisted
   mockDispatch: vi.fn((action: unknown) => action),
 }));
 
+function createDeferred<T>() {
+  let resolve: (value: T | PromiseLike<T>) => void = () => undefined;
+  let reject: (reason?: unknown) => void = () => undefined;
+  const promise = new Promise<T>((res, rej) => {
+    resolve = res;
+    reject = rej;
+  });
+  return { promise, resolve, reject };
+}
+
 vi.mock("@/services/api/authApi", () => ({
   getIndustries: mockGetIndustries,
   signup: mockSignup,
@@ -130,31 +140,34 @@ if (SelectMock && !(SelectMock as any).Item) {
 vi.mock("@/components/base/buttons/button", () => ({
   Button: ({
     children,
-    type,
-    onClick,
-    isDisabled,
-    color,
-    size,
-    className,
-  }: {
-    children: React.ReactNode;
-    type?: string;
-    onClick?: () => void;
-    isDisabled?: boolean;
-    color?: string;
-    size?: string;
-    className?: string;
-  }) => (
-    <button
+      type,
+      onClick,
+      isDisabled,
+      isLoading,
+      color,
+      size,
+      className,
+    }: {
+      children: React.ReactNode;
+      type?: string;
+      onClick?: () => void;
+      isDisabled?: boolean;
+      isLoading?: boolean;
+      color?: string;
+      size?: string;
+      className?: string;
+    }) => (
+      <button
       type={(type as "button" | "submit" | "reset") || "button"}
       onClick={onClick}
       disabled={isDisabled}
-      data-color={color}
-      className={className}
-    >
-      {children}
-    </button>
-  ),
+        data-color={color}
+        className={className}
+      >
+        {isLoading ? <span data-testid="submit-loading-spinner" /> : null}
+        {children}
+      </button>
+    ),
 }));
 
 vi.mock("@/components/common/ErrorMessage", () => ({
@@ -534,6 +547,60 @@ describe("RegistrationForm", () => {
     );
   });
 
+  it("shows spinner and disables submit button while registration is submitting", async () => {
+    const deferredSignup = createDeferred<{
+      user: { id: string; firstName: string; lastName: string; emailVerify: boolean };
+      tokens: { accessToken: string; refreshToken: string };
+    }>();
+    mockSignup.mockReturnValueOnce(deferredSignup.promise);
+
+    renderForm();
+    await waitFor(() => {
+      expect(screen.queryByText(/Loading industries/i)).toBeNull();
+    });
+
+    fireEvent.change(screen.getByTestId("input-firstName"), { target: { value: "Jane" } });
+    fireEvent.change(screen.getByTestId("input-lastName"), { target: { value: "Doe" } });
+    fireEvent.change(screen.getByTestId("input-legalBusinessName"), {
+      target: { value: "Acme Corp" },
+    });
+    fireEvent.change(screen.getByTestId("input-businessPhone"), {
+      target: { value: "5551234567" },
+    });
+    fireEvent.change(screen.getByTestId("input-zipCode"), { target: { value: "94102" } });
+    fireEvent.change(screen.getByTestId("input-businessEmail"), {
+      target: { value: "jane@acme.com" },
+    });
+    fireEvent.change(screen.getByTestId("input-password"), { target: { value: "Password123!" } });
+    fireEvent.change(screen.getByTestId("input-confirmPassword"), {
+      target: { value: "Password123!" },
+    });
+    fireEvent.change(screen.getByTestId("select-industry"), { target: { value: "TECH" } });
+
+    const submitButton = screen.getByRole("button", { name: /Create Account/i });
+    await waitFor(() => {
+      expect(submitButton).not.toBeDisabled();
+    });
+
+    fireEvent.click(submitButton);
+
+    await waitFor(() => {
+      expect(submitButton).toBeDisabled();
+      expect(screen.getByTestId("submit-loading-spinner")).toBeInTheDocument();
+    });
+
+    deferredSignup.resolve({
+      user: { id: "1", firstName: "Jane", lastName: "Doe", emailVerify: true },
+      tokens: { accessToken: "at", refreshToken: "rt" },
+    });
+
+    await waitFor(() => {
+      expect(screen.queryByTestId("submit-loading-spinner")).toBeNull();
+      expect(submitButton).not.toBeDisabled();
+      expect(mockNavigate).toHaveBeenCalledWith("/success", expect.any(Object));
+    });
+  });
+
   it("handles signup API error and shows error message (covers catch block + setSubmitError)", async () => {
     mockSignup.mockRejectedValueOnce(new Error("Registration failed"));
 
@@ -573,6 +640,11 @@ describe("RegistrationForm", () => {
       },
       { timeout: 5000 }
     );
+
+    await waitFor(() => {
+      expect(screen.queryByTestId("submit-loading-spinner")).toBeNull();
+      expect(submitButton).not.toBeDisabled();
+    });
 
     // Close the error message if it appears (covers line 518)
     const closeBtn = screen.queryByTestId("error-close");

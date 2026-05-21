@@ -529,6 +529,7 @@ export function RegistrationForm() {
                 size="lg"
                 className="w-full"
                 isDisabled={isSubmitting || !isValid}
+                isLoading={isSubmitting}
               >
                 {isSubmitting ? "Creating account..." : "Create account"}
               </Button>
