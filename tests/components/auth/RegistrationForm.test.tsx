@@ -641,6 +641,11 @@ describe("RegistrationForm", () => {
       { timeout: 5000 }
     );
 
+    await waitFor(() => {
+      expect(screen.queryByTestId("submit-loading-spinner")).toBeNull();
+      expect(submitButton).not.toBeDisabled();
+    });
+
     // Close the error message if it appears (covers line 518)
     const closeBtn = screen.queryByTestId("error-close");
     if (closeBtn) {
