@@ -1,0 +1,162 @@
+# =============================================================================
+# GitLab CI/CD Pipeline Configuration
+# =============================================================================
+# This pipeline runs on merge requests targeting 'develop' or 'qa' branches.
+# Pipeline stages:
+#   1. test           - Dependencies, linting, unit tests, build
+#   2. secret-detection - Security scanning for secrets
+#   3. sonarqube      - Code quality analysis
+#
+# Security Templates Documentation:
+# - SAST: https://docs.gitlab.com/ee/user/application_security/sast/#customizing-the-sast-settings
+# - Secret Detection: https://docs.gitlab.com/user/application_security/secret_detection/pipeline/configure
+# - Dependency Scanning: https://docs.gitlab.com/ee/user/application_security/dependency_scanning/#customizing-the-dependency-scanning-settings
+# - Container Scanning: https://docs.gitlab.com/ee/user/application_security/container_scanning/#customizing-the-container-scanning-settings
+# - Variable Precedence: https://docs.gitlab.com/ee/ci/variables/#cicd-variable-precedence
+# =============================================================================
+
+stages:
+  - test # Run tests, linting, and build
+  - secret-detection # Scan for exposed secrets
+  - sonarqube # Code quality analysis
+
+# SAST (Static Application Security Testing) runs in the test stage
+sast:
+  stage: test
+
+# Include GitLab security scanning templates
+include:
+  - template: Security/SAST.gitlab-ci.yml
+  - template: Security/Secret-Detection.gitlab-ci.yml
+
+# =============================================================================
+# Global Variables
+# =============================================================================
+variables:
+  # Enable secret detection in the pipeline
+  SECRET_DETECTION_ENABLED: 'true'
+
+  # NPM cache directory for faster dependency installation
+  NPM_CACHE_FOLDER: '$CI_PROJECT_DIR/.npm'
+  NODE_IMAGE: 'node:24'
+
+# =============================================================================
+# Node.js Build, Test, and Lint Jobs
+# =============================================================================
+
+# Job: Install Dependencies
+# Installs npm packages and generates Prisma client types once for reuse in all downstream jobs
+install_dependencies:
+  stage: test
+  image: node:24
+  cache:
+    key: 'npm-$CI_COMMIT_REF_SLUG'
+    paths:
+      - .npm/ # NPM cache for faster installs
+      - node_modules/ # Installed dependencies
+  script:
+    # Configure NPM to use local cache directory
+    - npm config set cache $NPM_CACHE_FOLDER --global
+    - npm ci || npm install
+  artifacts:
+    paths:
+      - node_modules/ # Share node_modules with downstream jobs
+    expire_in: 1h
+  rules:
+    - if: $CI_MERGE_REQUEST_TARGET_BRANCH_NAME == "develop1" || $CI_MERGE_REQUEST_TARGET_BRANCH_NAME == "qa"
+      when: always
+
+# Job: Lint
+# Runs ESLint to check code quality and style compliance
+lint:
+  stage: test
+  image: node:24
+  needs: ['install_dependencies']
+  dependencies:
+    - install_dependencies
+  script:
+    - npm run lint
+  rules:
+    - if: $CI_MERGE_REQUEST_TARGET_BRANCH_NAME == "develop1" || $CI_MERGE_REQUEST_TARGET_BRANCH_NAME == "qa"
+      when: always
+
+# Job: Unit Tests
+# Runs Jest unit tests with mocked dependencies (no database connection required)
+# Note: Tests use mocked DAL layer - DATABASE_URL is only needed for Prisma type generation
+npm-test:
+  stage: test
+  image: node:24
+  needs: ['install_dependencies']
+  dependencies:
+    - install_dependencies
+  script:
+    - npm test # Runs 'jest' with coverage (configured in jest.config.ts)
+  artifacts:
+    paths:
+      - coverage/ # Save coverage reports for SonarQube
+    reports:
+      coverage_report:
+        coverage_format: cobertura
+        path: coverage/cobertura-coverage.xml
+    expire_in: 1 week
+  rules:
+    - if: $CI_MERGE_REQUEST_TARGET_BRANCH_NAME == "develop1" || $CI_MERGE_REQUEST_TARGET_BRANCH_NAME == "qa"
+      when: always
+
+# Job: Build
+# Compiles TypeScript to JavaScript for production deployment
+build:
+  stage: test
+  image: node:24
+  needs: ['install_dependencies']
+  dependencies:
+    - install_dependencies
+  script:
+    - npm run build # Runs TypeScript compiler (tsc)
+  artifacts:
+    paths:
+      - dist/ # Compiled JavaScript output
+    expire_in: 1 week
+  rules:
+    - if: $CI_MERGE_REQUEST_TARGET_BRANCH_NAME == "develop1" || $CI_MERGE_REQUEST_TARGET_BRANCH_NAME == "qa"
+      when: always
+
+# =============================================================================
+# Security: Secret Detection
+# =============================================================================
+# Scans code for exposed secrets (API keys, passwords, tokens)
+secret_detection:
+  stage: secret-detection
+
+# =============================================================================
+# Code Quality: SonarQube Analysis
+# =============================================================================
+
+# Job: SonarQube Analysis
+# Performs static code analysis for code quality, bugs, and security vulnerabilities
+# Requires: SONAR_HOST_URL, SONAR_TOKEN environment variables
+sonarqube:
+  stage: sonarqube
+  image: maven:3.9.9-eclipse-temurin-17 # Java-based image for SonarScanner CLI
+  needs: ['lint', 'build', 'npm-test']
+  dependencies:
+    - npm-test # Get coverage reports from test job
+  allow_failure: true # Allow pipeline to succeed even if SonarQube fails
+  script:
+    # Install unzip utility (not present in Maven base image)
+    - apt-get update && apt-get install -y unzip
+    # Download and configure SonarScanner CLI
+    - |
+      curl -sSLo sonar-scanner.zip \
+        https://binaries.sonarsource.com/Distribution/sonar-scanner-cli/sonar-scanner-cli-5.0.1.3006-linux.zip
+      unzip sonar-scanner.zip
+      export PATH="$PWD/sonar-scanner-5.0.1.3006-linux/bin:$PATH"
+      # Run SonarQube analysis
+      sonar-scanner \
+        -Dsonar.host.url="$SONAR_HOST_URL" \
+        -Dsonar.login="$SONAR_TOKEN" \
+        -Dsonar.sources=./src \
+        -Dsonar.javascript.lcov.reportPaths=coverage/lcov.info
+  rules:
+    - if: $CI_MERGE_REQUEST_TARGET_BRANCH_NAME == "develop1" || $CI_MERGE_REQUEST_TARGET_BRANCH_NAME == "qa"
+      when: always

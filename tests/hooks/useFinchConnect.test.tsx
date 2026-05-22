@@ -1,0 +1,440 @@
+/**
+ * Tests for useFinchConnect hook
+ *
+ * TDD: Written BEFORE implementation (T009–T016).
+ * Tests cover: happy path, loading states, error paths, onError, onClose, concurrent guard.
+ */
+
+import { renderHook, act, waitFor } from "@testing-library/react";
+import { describe, it, expect, vi, beforeEach } from "vitest";
+import { MemoryRouter } from "react-router-dom";
+import React from "react";
+
+// ── Mocks (set up before any imports of the module under test) ──────────────
+
+const mockNavigate = vi.fn();
+vi.mock("react-router-dom", async importOriginal => {
+  const actual = await importOriginal<typeof import("react-router-dom")>();
+  return {
+    ...actual,
+    useNavigate: () => mockNavigate,
+  };
+});
+
+const mockOpen = vi.fn();
+type OnSuccessFn = (e: { code: string; state?: string }) => void;
+type OnErrorFn = (e: { errorMessage: string; errorType?: string }) => void;
+type OnCloseFn = () => void;
+
+let capturedOnSuccess: OnSuccessFn | null = null;
+let capturedOnError: OnErrorFn | null = null;
+let capturedOnClose: OnCloseFn | null = null;
+
+vi.mock("@tryfinch/react-connect", () => ({
+  useFinchConnect: (args: { onSuccess: OnSuccessFn; onError: OnErrorFn; onClose: OnCloseFn }) => {
+    capturedOnSuccess = args.onSuccess;
+    capturedOnError = args.onError;
+    capturedOnClose = args.onClose;
+    return { open: mockOpen };
+  },
+}));
+
+const mockGetFinchSessionId = vi.fn();
+const mockExchangeFinchCode = vi.fn();
+const mockGetDashboardStatus = vi.fn();
+
+vi.mock("@/services/api/finchApi", () => ({
+  getFinchSessionId: () => mockGetFinchSessionId(),
+  exchangeFinchCode: (code: string) => mockExchangeFinchCode(code),
+}));
+
+vi.mock("@/services/api/dashboardApi", () => ({
+  getDashboardStatus: () => mockGetDashboardStatus(),
+}));
+
+// ── Import hook after all mocks ─────────────────────────────────────────────
+const { useFinchConnect } = await import("@/hooks/useFinchConnect");
+
+// ── Wrapper (provides Router context for useNavigate) ──────────────────────
+const wrapper = ({ children }: { children: React.ReactNode }) => (
+  <MemoryRouter>{children}</MemoryRouter>
+);
+
+// ── Tests ──────────────────────────────────────────────────────────────────
+
+describe("useFinchConnect", () => {
+  beforeEach(() => {
+    vi.clearAllMocks();
+    capturedOnSuccess = null;
+    capturedOnError = null;
+    capturedOnClose = null;
+    mockGetFinchSessionId.mockResolvedValue({
+      sessionId: "sess_abc123",
+      connectUrl: "https://connect.tryfinch.com/authorize/sess_abc123",
+    });
+    mockExchangeFinchCode.mockResolvedValue({
+      connectionId: "conn-uuid-123",
+      connectionStatus: "connected",
+      providerId: "gusto",
+      syncJobId: "sync-uuid-456",
+      syncJobStatus: "pending",
+    });
+    mockGetDashboardStatus.mockResolvedValue({});
+  });
+
+  // T010 — isLoading starts false
+  it("isLoading is false on initial render", () => {
+    const { result } = renderHook(() => useFinchConnect(), { wrapper });
+    expect(result.current.isLoading).toBe(false);
+  });
+
+  // T010 — isLoading becomes true during fetching-session
+  it("isLoading is true immediately after connectWithFinch is called", async () => {
+    // Never resolve to hold the loading state open
+    mockGetFinchSessionId.mockReturnValue(new Promise(() => {}));
+    const { result } = renderHook(() => useFinchConnect(), { wrapper });
+
+    act(() => {
+      void result.current.connectWithFinch();
+    });
+
+    expect(result.current.isLoading).toBe(true);
+  });
+
+  // T009 — happy path
+  it("happy path: calls getFinchSessionId, opens SDK, exchanges code, navigates", async () => {
+    const { result } = renderHook(() => useFinchConnect(), { wrapper });
+
+    await act(async () => {
+      await result.current.connectWithFinch();
+    });
+
+    expect(mockGetFinchSessionId).toHaveBeenCalledTimes(1);
+    expect(mockOpen).toHaveBeenCalledWith({ sessionId: "sess_abc123" });
+
+    // Simulate SDK onSuccess callback
+    await act(async () => {
+      capturedOnSuccess!({ code: "test-auth-code" });
+    });
+
+    await waitFor(() => {
+      expect(mockExchangeFinchCode).toHaveBeenCalledWith("test-auth-code");
+      expect(mockNavigate).toHaveBeenCalledWith("/additional-questions");
+    });
+  });
+
+  // T011 — session ID fetch failure
+  it("session ID fetch failure: sets error and resets to idle", async () => {
+    mockGetFinchSessionId.mockRejectedValue(new Error("Network error"));
+    const { result } = renderHook(() => useFinchConnect(), { wrapper });
+
+    await act(async () => {
+      await result.current.connectWithFinch();
+    });
+
+    await waitFor(() => {
+      expect(result.current.error).toBe("Network error");
+      expect(result.current.isLoading).toBe(false);
+    });
+    expect(mockNavigate).not.toHaveBeenCalled();
+  });
+
+  // T012 — Finch onError callback
+  it("onError callback: sets error and resets to idle", async () => {
+    const { result } = renderHook(() => useFinchConnect(), { wrapper });
+
+    await act(async () => {
+      await result.current.connectWithFinch();
+    });
+
+    act(() => {
+      capturedOnError!({
+        errorMessage: "employer_connection_error",
+        errorType: "employer_connection_error",
+      });
+    });
+
+    await waitFor(() => {
+      expect(result.current.error).toBe("employer_connection_error");
+      expect(result.current.isLoading).toBe(false);
+    });
+    expect(mockNavigate).not.toHaveBeenCalled();
+  });
+
+  // T013 — Finch onClose callback
+  it("onClose callback: resets to idle without setting error", async () => {
+    const { result } = renderHook(() => useFinchConnect(), { wrapper });
+
+    await act(async () => {
+      await result.current.connectWithFinch();
+    });
+
+    act(() => {
+      capturedOnClose!();
+    });
+
+    await waitFor(() => {
+      expect(result.current.isLoading).toBe(false);
+    });
+    expect(result.current.error).toBeNull();
+    expect(mockNavigate).not.toHaveBeenCalled();
+  });
+
+  // T014 — code exchange failure
+  it("code exchange failure: sets error and resets to idle without navigating", async () => {
+    mockExchangeFinchCode.mockRejectedValue(new Error("Exchange failed"));
+    const { result } = renderHook(() => useFinchConnect(), { wrapper });
+
+    await act(async () => {
+      await result.current.connectWithFinch();
+    });
+
+    await act(async () => {
+      capturedOnSuccess!({ code: "test-code" });
+    });
+
+    await waitFor(() => {
+      expect(result.current.error).toBe("Exchange failed");
+      expect(result.current.isLoading).toBe(false);
+    });
+    expect(mockNavigate).not.toHaveBeenCalled();
+  });
+
+  // T015 — empty code in onSuccess
+  it("empty code in onSuccess: sets error, does not call exchangeFinchCode", async () => {
+    const { result } = renderHook(() => useFinchConnect(), { wrapper });
+
+    await act(async () => {
+      await result.current.connectWithFinch();
+    });
+
+    await act(async () => {
+      capturedOnSuccess!({ code: "" });
+    });
+
+    await waitFor(() => {
+      expect(result.current.error).toBe("Failed to complete Finch connection. Please try again.");
+      expect(result.current.isLoading).toBe(false);
+    });
+    expect(mockExchangeFinchCode).not.toHaveBeenCalled();
+    expect(mockNavigate).not.toHaveBeenCalled();
+  });
+
+  // T016 — concurrent call guard
+  it("calling connectWithFinch while loading is a no-op", async () => {
+    mockGetFinchSessionId.mockReturnValue(new Promise(() => {})); // never resolves
+    const { result } = renderHook(() => useFinchConnect(), { wrapper });
+
+    act(() => {
+      void result.current.connectWithFinch();
+    });
+
+    expect(result.current.isLoading).toBe(true);
+
+    // Second call should be ignored
+    await act(async () => {
+      await result.current.connectWithFinch();
+    });
+
+    expect(mockGetFinchSessionId).toHaveBeenCalledTimes(1);
+  });
+
+  // clearError — resets error to null
+  it("clearError() resets error to null", async () => {
+    mockGetFinchSessionId.mockRejectedValue(new Error("Some error"));
+    const { result } = renderHook(() => useFinchConnect(), { wrapper });
+
+    await act(async () => {
+      await result.current.connectWithFinch();
+    });
+    await waitFor(() => expect(result.current.error).toBe("Some error"));
+
+    act(() => {
+      result.current.clearError();
+    });
+    expect(result.current.error).toBeNull();
+  });
+
+  // auto-clear — error is cleared when a new connectWithFinch call begins
+  it("error is cleared when a new connectWithFinch call begins", async () => {
+    mockGetFinchSessionId.mockRejectedValueOnce(new Error("First failure"));
+    const { result } = renderHook(() => useFinchConnect(), { wrapper });
+
+    // First attempt sets error
+    await act(async () => {
+      await result.current.connectWithFinch();
+    });
+    await waitFor(() => expect(result.current.error).toBe("First failure"));
+
+    // Second attempt clears error immediately
+    mockGetFinchSessionId.mockReturnValue(new Promise(() => {})); // hold open
+    act(() => {
+      void result.current.connectWithFinch();
+    });
+    expect(result.current.error).toBeNull();
+  });
+
+  // ── isPageLoading tests (T017a–T017d) — Feature 022 ───────────────────
+
+  // T017a — isPageLoading starts false
+  it("isPageLoading is false on initial render", () => {
+    const { result } = renderHook(() => useFinchConnect(), { wrapper });
+    expect(result.current.isPageLoading).toBe(false);
+  });
+
+  // T017b — isPageLoading is true during fetching-session
+  it("isPageLoading is true immediately after connectWithFinch is called (fetching-session)", async () => {
+    mockGetFinchSessionId.mockReturnValue(new Promise(() => {})); // never resolves
+    const { result } = renderHook(() => useFinchConnect(), { wrapper });
+
+    act(() => {
+      void result.current.connectWithFinch();
+    });
+
+    expect(result.current.isPageLoading).toBe(true);
+  });
+
+  // T017c — isPageLoading is false during connecting (modal open) but isLoading remains true
+  it("isPageLoading is false while Finch modal is open (connecting phase)", async () => {
+    const { result } = renderHook(() => useFinchConnect(), { wrapper });
+
+    // connectWithFinch resolves getFinchSessionId → status transitions to "connecting"
+    await act(async () => {
+      await result.current.connectWithFinch();
+    });
+
+    // Modal is now open: isPageLoading must be false, isLoading must still be true
+    expect(result.current.isPageLoading).toBe(false);
+    expect(result.current.isLoading).toBe(true);
+  });
+
+  // T017d — isPageLoading is true during exchanging-code
+  it("isPageLoading is true during exchanging-code phase", async () => {
+    let resolveExchange!: () => void;
+    mockExchangeFinchCode.mockReturnValue(
+      new Promise<void>(res => {
+        resolveExchange = res;
+      })
+    );
+
+    const { result } = renderHook(() => useFinchConnect(), { wrapper });
+
+    await act(async () => {
+      await result.current.connectWithFinch();
+    });
+
+    // Trigger onSuccess to transition to "exchanging-code"
+    act(() => {
+      capturedOnSuccess!({ code: "auth-code-xyz" });
+    });
+
+    await waitFor(() => {
+      expect(result.current.isPageLoading).toBe(true);
+    });
+
+    // Clean up — resolve the pending exchange
+    act(() => resolveExchange());
+  });
+  // ── reconnectWithFinch ──────────────────────────────────────────────────
+
+  describe("reconnectWithFinch", () => {
+    beforeEach(() => {
+      mockGetFinchSessionId.mockResolvedValue({ sessionId: "sess_reauth" });
+      mockExchangeFinchCode.mockResolvedValue({});
+    });
+
+    // T-reconnect-01 — skips navigation
+    it("exchanges code but does NOT navigate to /additional-questions", async () => {
+      const { result } = renderHook(() => useFinchConnect(), { wrapper });
+
+      await act(async () => {
+        await result.current.reconnectWithFinch();
+      });
+
+      expect(mockOpen).toHaveBeenCalledWith({ sessionId: "sess_reauth" });
+
+      await act(async () => {
+        capturedOnSuccess!({ code: "reauth-code" });
+      });
+
+      await waitFor(() => {
+        expect(mockExchangeFinchCode).toHaveBeenCalledWith("reauth-code");
+        expect(mockNavigate).not.toHaveBeenCalled();
+      });
+    });
+
+    // T-reconnect-02 — connectWithFinch still navigates (no regression)
+    it("connectWithFinch still navigates to /additional-questions after reconnectWithFinch is available", async () => {
+      const { result } = renderHook(() => useFinchConnect(), { wrapper });
+
+      await act(async () => {
+        await result.current.connectWithFinch();
+      });
+
+      await act(async () => {
+        capturedOnSuccess!({ code: "new-code" });
+      });
+
+      await waitFor(() => {
+        expect(mockNavigate).toHaveBeenCalledWith("/additional-questions");
+      });
+    });
+
+    // T-reconnect-03 — subsequent connectWithFinch after reconnect still navigates (ref reset)
+    it("connectWithFinch navigates correctly after a previous reconnectWithFinch call", async () => {
+      const { result } = renderHook(() => useFinchConnect(), { wrapper });
+
+      // First: reconnect (no navigate)
+      await act(async () => {
+        await result.current.reconnectWithFinch();
+      });
+      await act(async () => {
+        capturedOnSuccess!({ code: "code-a" });
+      });
+      await waitFor(() => expect(mockExchangeFinchCode).toHaveBeenCalledWith("code-a"));
+      expect(mockNavigate).not.toHaveBeenCalled();
+
+      // Second: regular connect (should navigate)
+      await act(async () => {
+        await result.current.connectWithFinch();
+      });
+      await act(async () => {
+        capturedOnSuccess!({ code: "code-b" });
+      });
+      await waitFor(() => {
+        expect(mockNavigate).toHaveBeenCalledWith("/additional-questions");
+      });
+    });
+
+    // T-reconnect-04 — error during reconnect resets ref
+    it("resets isReconnect ref on exchange error so next connectWithFinch still navigates", async () => {
+      mockExchangeFinchCode.mockRejectedValueOnce(new Error("exchange failed"));
+
+      const { result } = renderHook(() => useFinchConnect(), { wrapper });
+
+      // First: reconnect fails during exchange
+      await act(async () => {
+        await result.current.reconnectWithFinch();
+      });
+      await act(async () => {
+        capturedOnSuccess!({ code: "err-code" });
+      });
+      await waitFor(() => expect(result.current.error).toBeTruthy());
+
+      // Reset error state
+      act(() => result.current.clearError());
+
+      // Second: regular connect succeeds and navigates
+      mockExchangeFinchCode.mockResolvedValueOnce({});
+      await act(async () => {
+        await result.current.connectWithFinch();
+      });
+      await act(async () => {
+        capturedOnSuccess!({ code: "ok-code" });
+      });
+      await waitFor(() => {
+        expect(mockNavigate).toHaveBeenCalledWith("/additional-questions");
+      });
+    });
+  });
+});

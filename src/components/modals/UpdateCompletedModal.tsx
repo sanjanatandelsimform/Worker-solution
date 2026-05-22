@@ -1,0 +1,44 @@
+import { CheckCircle } from "@untitledui/icons";
+import { BaseModalWithIcon } from "./BaseModalWithIcon";
+import checkmarkIcon from "@/assets/success-check.svg";
+
+interface UpdateCompletedModalProps {
+  isOpen: boolean;
+  onClose: () => void;
+  onBackToSettings?: () => void;
+}
+
+export const UpdateCompletedModal = ({
+  isOpen,
+  onClose,
+  onBackToSettings,
+}: UpdateCompletedModalProps) => {
+  const handleBackToSettings = () => {
+    if (onBackToSettings) {
+      onBackToSettings();
+    }
+    onClose();
+  };
+
+  return (
+    <BaseModalWithIcon
+      isOpen={isOpen}
+      onClose={onClose}
+      size="sm"
+      title="Update complete"
+      subtitle="All set! Your changes have been saved."
+      icon={<CheckCircle className="size-6 text-ws-success-600" />}
+      messageImg={checkmarkIcon}
+      backgroundPattern="success"
+      buttons={[
+        {
+          text: "Back to settings",
+          onClick: handleBackToSettings,
+          color: "primary",
+        },
+      ]}
+    />
+  );
+};
+
+export default UpdateCompletedModal;

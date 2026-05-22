@@ -1,0 +1,135 @@
+openapi: 3.0.3
+info:
+  title: WorkQuality Platform - Dashboard Status API
+  description: Contract for dashboard status polling endpoint
+  version: 1.0.0
+
+servers:
+  - url: https://api.workquality.platform
+    description: Production
+  - url: https://staging-api.workquality.platform
+    description: Staging
+  - url: http://localhost:3000
+    description: Local
+
+paths:
+  /api/v1/dashboard/status:
+    get:
+      summary: Get dashboard processing status
+      description: |
+        Returns current processing status and recommended next poll delay.
+        Client should continue polling until allSettled is true.
+      operationId: getDashboardStatus
+      tags:
+        - Dashboard
+      security:
+        - BearerAuth: []
+      responses:
+        "200":
+          description: Current dashboard status
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/DashboardStatusResponse"
+              examples:
+                inProgress:
+                  value:
+                    recommendation:
+                      status: completed
+                      updatedAt: "2026-04-27T10:52:52.098Z"
+                    workforce:
+                      status: not_applicable
+                      updatedAt: null
+                    industry:
+                      status: pending
+                      updatedAt: "2026-04-28T04:06:52.487Z"
+                    allSettled: false
+                    suggestPollMs: 3000
+                    updatedAt: "2026-04-28T04:06:52.487Z"
+                    source: stored_state
+                    createdAt: "2026-04-27T10:52:52.098Z"
+                    providerType: automated
+                settled:
+                  value:
+                    recommendation:
+                      status: completed
+                      updatedAt: "2026-04-27T10:52:52.098Z"
+                    workforce:
+                      status: completed
+                      updatedAt: "2026-04-27T11:12:00.000Z"
+                    industry:
+                      status: completed
+                      updatedAt: "2026-04-27T11:20:00.000Z"
+                    allSettled: true
+                    suggestPollMs: 3600000
+                    updatedAt: "2026-04-27T11:20:00.000Z"
+                    source: stored_state
+                    createdAt: "2026-04-27T10:52:52.098Z"
+                    providerType: assisted
+        "401":
+          description: Unauthorized
+        "429":
+          description: Too many requests
+        "500":
+          description: Internal server error
+
+components:
+  securitySchemes:
+    BearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+
+  schemas:
+    StatusSection:
+      type: object
+      required:
+        - status
+        - updatedAt
+      properties:
+        status:
+          type: string
+          enum: [pending, completed, not_applicable]
+        updatedAt:
+          type: string
+          format: date-time
+          nullable: true
+
+    DashboardStatusResponse:
+      type: object
+      required:
+        - recommendation
+        - workforce
+        - industry
+        - allSettled
+        - suggestPollMs
+        - updatedAt
+        - source
+        - createdAt
+        - providerType
+      properties:
+        recommendation:
+          $ref: "#/components/schemas/StatusSection"
+        workforce:
+          $ref: "#/components/schemas/StatusSection"
+        industry:
+          $ref: "#/components/schemas/StatusSection"
+        allSettled:
+          type: boolean
+        suggestPollMs:
+          type: integer
+          format: int64
+          description: Recommended next poll delay in milliseconds; may be large (including hour-level values)
+          minimum: 0
+        updatedAt:
+          type: string
+          format: date-time
+        source:
+          type: string
+        createdAt:
+          type: string
+          format: date-time
+        providerType:
+          type: string
+          nullable: true
+          enum: [assisted, automated, null]
