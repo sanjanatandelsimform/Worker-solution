@@ -1,169 +1,95 @@
-import { Routes, Route, Navigate } from "react-router-dom";
-import { LoadingSpinner } from "@/components/common/LoadingSpinner";
-import { AuthErrorBoundary } from "./components/auth/AuthErrorBoundary";
-import { AuthGuard } from "./components/routes/AuthGuard";
-import { ProtectedRoute } from "./components/routes/ProtectedRoute";
-import { PublicRoute } from "./components/routes/PublicRoute";
-import { UnrestrictedRoute } from "./components/routes/UnrestrictedRoute";
-import { useAuthInit } from "./hooks/useAuthInit";
-import { RegisterPage } from "./pages/auth/RegisterPage";
-import { SignInPage } from "./pages/auth/SignInPage";
-import { DashboardPage } from "./pages/dashboard/DashboardPage";
-import { SettingsPage } from "./pages/settings/SettingsPage";
-import { SuccessPage } from "./pages/successPage/SuccessPage";
-import PrivacyPage from "./pages/termsPolicy/PrivacyPage";
-import TermsPage from "./pages/termsPolicy/TermsPage";
-import ForgotPasswordForm from "./components/auth/ForgotPasswordForm";
-import ResetPasswordForm from "./components/auth/ResetPasswordForm";
-import AssessmentWorkforcePage from "./pages/assessmentWorkforce/AssessmentWorkforce";
-import { VerifyEmailPage } from "./pages/auth/VerifyEmailPage";
-import GetMore from "./pages/getMore/GetMore";
-import AdditionalQuestions from "./pages/additionalQuestions/AdditionalQuestions";
-import AboutUs from "./pages/aboutUs/AboutUs";
-import "./App.css";
+import React, { useState } from 'react';
+import Header from './components/Header/Header';
+import Card from './components/Card/Card';
+import Button from './components/Button/Button';
+import './App.css';
 
-function App() {
-  const { isAuthReady } = useAuthInit();
+const NAV_ITEMS = [
+  { label: 'Home', href: '#' },
+  { label: 'About', href: '#about' },
+  { label: 'Contact', href: '#contact' },
+];
 
-  if (!isAuthReady) {
-    return <LoadingSpinner />;
-  }
+const CARDS = [
+  {
+    id: 1,
+    title: 'Global Copilot Rules',
+    description:
+      'The .github/copilot-instructions.md file defines 5 global rules: TypeScript strict mode, naming conventions, error handling, no direct DOM manipulation, and security best practices.',
+  },
+  {
+    id: 2,
+    title: 'Scoped Frontend Rules',
+    description:
+      'The .github/instructions/frontend.instructions.md targets src/components/**/*.tsx with React-specific rules: functional components, hook patterns, CSS Modules, accessibility, and performance.',
+  },
+  {
+    id: 3,
+    title: 'Instruction Verification',
+    description:
+      'These components follow the scoped frontend rules: explicit prop interfaces, CSS Modules, semantic HTML, aria-labels, and no class components. Global rules apply codebase-wide.',
+  },
+];
+
+const App: React.FC = () => {
+  const [clickedId, setClickedId] = useState<number | null>(null);
+
+  const handleCardAction = (id: number): void => {
+    setClickedId(id);
+  };
+
+  const handleReset = (): void => {
+    setClickedId(null);
+  };
 
   return (
-    <AuthErrorBoundary>
-      <div className="min-h-screen bg-ws-gray-50">
-        <AuthGuard>
-          <Routes>
-            {/* Public routes - only accessible when NOT authenticated */}
-            <Route
-              path="/sign-up"
-              element={
-                <PublicRoute>
-                  <RegisterPage />
-                </PublicRoute>
-              }
-            />
-            <Route
-              path="/sign-in"
-              element={
-                <PublicRoute>
-                  <SignInPage />
-                </PublicRoute>
-              }
-            />
-            <Route
-              path="/forgot-password"
-              element={
-                <PublicRoute>
-                  <ForgotPasswordForm />
-                </PublicRoute>
-              }
-            />
-            <Route
-              path="/reset-password"
-              element={
-                <PublicRoute>
-                  <ResetPasswordForm />
-                </PublicRoute>
-              }
-            />
+    <div className="app">
+      <Header appName="Copilot Demo" navItems={NAV_ITEMS} />
+      <main className="main">
+        <section className="hero-section" aria-labelledby="hero-title">
+          <h1 id="hero-title">GitHub Copilot Instructions Demo</h1>
+          <p className="subtitle">
+            A React + TypeScript app demonstrating global and scoped Copilot instruction files.
+          </p>
+          {clickedId !== null && (
+            <div className="status" role="status" aria-live="polite">
+              Card #{clickedId} action triggered!{' '}
+              <Button label="Reset" onClick={handleReset} variant="secondary" />
+            </div>
+          )}
+        </section>
 
-            {/* Unrestricted routes - accessible to everyone */}
-            <Route
-              path="/success"
-              element={
-                <UnrestrictedRoute>
-                  <SuccessPage />
-                </UnrestrictedRoute>
-              }
+        <section className="cards" aria-label="Feature cards">
+          {CARDS.map((card) => (
+            <Card
+              key={card.id}
+              title={card.title}
+              description={card.description}
+              actionLabel="Learn More"
+              onAction={() => handleCardAction(card.id)}
             />
-            <Route
-              path="/verify-email"
-              element={
-                <UnrestrictedRoute>
-                  <VerifyEmailPage />
-                </UnrestrictedRoute>
-              }
-            />
-            <Route
-              path="/privacy-policy"
-              element={
-                <UnrestrictedRoute>
-                  <PrivacyPage />
-                </UnrestrictedRoute>
-              }
-            />
-            <Route
-              path="/terms-page"
-              element={
-                <UnrestrictedRoute>
-                  <TermsPage />
-                </UnrestrictedRoute>
-              }
-            />
+          ))}
+        </section>
 
-            {/* Protected routes - only accessible when authenticated */}
-            <Route
-              path="/"
-              element={
-                <ProtectedRoute>
-                  <Navigate to="/dashboard" replace />
-                </ProtectedRoute>
-              }
+        <section className="demo-buttons" aria-label="Button variants demo">
+          <h2>Button Variants</h2>
+          <div className="button-row">
+            <Button label="Primary Button" onClick={() => alert('Primary clicked!')} />
+            <Button
+              label="Secondary Button"
+              onClick={() => alert('Secondary clicked!')}
+              variant="secondary"
             />
-            <Route
-              path="/dashboard"
-              element={
-                <ProtectedRoute>
-                  <DashboardPage />
-                </ProtectedRoute>
-              }
-            />
-            <Route
-              path="/settings"
-              element={
-                <ProtectedRoute>
-                  <SettingsPage />
-                </ProtectedRoute>
-              }
-            />
-            <Route
-              path="/assessment"
-              element={
-                <ProtectedRoute>
-                  <AssessmentWorkforcePage />
-                </ProtectedRoute>
-              }
-            />
-            <Route
-              path="/get-more"
-              element={
-                <ProtectedRoute>
-                  <GetMore />
-                </ProtectedRoute>
-              }
-            />
-            <Route
-              path="/additional-questions"
-              element={
-                <ProtectedRoute>
-                  <AdditionalQuestions />
-                </ProtectedRoute>
-              }
-            />
-            <Route
-              path="/about-us"
-              element={
-                <ProtectedRoute>
-                  <AboutUs />
-                </ProtectedRoute>
-              }
-            />
-          </Routes>
-        </AuthGuard>
-      </div>
-    </AuthErrorBoundary>
-  );
+            <Button label="Disabled Button" onClick={() => {}} disabled />
+          </div>
+        </section>
+      </main>
+
+      <footer className="app-footer">
+        <p>Built with React + TypeScript + Vite &mdash; following GitHub Copilot instruction rules.</p>
+      </footer>
+    </div>
+  )
 }
 
-export default App;
+export default App

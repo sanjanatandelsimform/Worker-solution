@@ -1,497 +1,111 @@
-@import "tailwindcss";
-@plugin "@tailwindcss/typography";
-@import "./typography.css";
-
-@theme inline {
-  /* Worker Solutions Design Variables */
-  /* =========================
-     BRAND COLORS
-  ========================= */
-  --color-ws-cyan: var(--ws-color-cyan);
-  --color-ws-green: var(--ws-color-green);
-  /* =========================
-    BASE COLORS
-  ========================= */
-  --color-ws-base-white: var(--ws-color-base-white);
-  --color-ws-base-black: var(--ws-color-base-black);
-  --color-ws-bg-overlay: var(--ws-color-bg-overlay);
-  --color-ws-base-transparent: var(--ws-color-base-transparent);
-  /* =========================
-     LIGHT TEAL
-  ========================= */
-  --color-ws-light-teal-25: var(--ws-color-light-teal-25);
-  --color-ws-light-teal-50: var(--ws-color-light-teal-50);
-  --color-ws-light-teal-100: var(--ws-color-light-teal-100);
-  --color-ws-light-teal-200: var(--ws-color-light-teal-200);
-  --color-ws-light-teal-300: var(--ws-color-light-teal-300);
-  --color-ws-light-teal-400: var(--ws-color-light-teal-400);
-  --color-ws-light-teal-500: var(--ws-color-light-teal-500);
-  --color-ws-light-teal-600: var(--ws-color-light-teal-600);
-  --color-ws-light-teal-700: var(--ws-color-light-teal-700);
-  --color-ws-light-teal-800: var(--ws-color-light-teal-800);
-  --color-ws-light-teal-850: var(--ws-color-light-teal-850);
-  --color-ws-light-teal-900: var(--ws-color-light-teal-900);
-  --color-ws-light-teal-950: var(--ws-color-light-teal-950);
-  /* =========================
-     MUTED TEAL
-  ========================= */
-  --color-ws-muted-teal-25: var(--ws-color-muted-teal-25);
-  --color-ws-muted-teal-50: var(--ws-color-muted-teal-50);
-  --color-ws-muted-teal-100: var(--ws-color-muted-teal-100);
-  --color-ws-muted-teal-200: var(--ws-color-muted-teal-200);
-  --color-ws-muted-teal-300: var(--ws-color-muted-teal-300);
-  --color-ws-muted-teal-400: var(--ws-color-muted-teal-400);
-  --color-ws-muted-teal-500: var(--ws-color-muted-teal-500);
-  --color-ws-muted-teal-600: var(--ws-color-muted-teal-600);
-  --color-ws-muted-teal-700: var(--ws-color-muted-teal-700);
-  --color-ws-muted-teal-800: var(--ws-color-muted-teal-800);
-  --color-ws-muted-teal-850: var(--ws-color-muted-teal-850);
-  --color-ws-muted-teal-900: var(--ws-color-muted-teal-900);
-  --color-ws-muted-teal-950: var(--ws-color-muted-teal-950);
-  /* =========================
-     NAVY
-  ========================= */
-  --color-ws-navy-25: var(--ws-color-navy-25);
-  --color-ws-navy-100: var(--ws-color-navy-100);
-  --color-ws-navy-200: var(--ws-color-navy-200);
-  --color-ws-navy-300: var(--ws-color-navy-300);
-  --color-ws-navy-400: var(--ws-color-navy-400);
-  --color-ws-navy-500: var(--ws-color-navy-500);
-  --color-ws-navy-600: var(--ws-color-navy-600);
-  --color-ws-navy-700: var(--ws-color-navy-700);
-  --color-ws-navy-800: var(--ws-color-navy-800);
-  --color-ws-navy-900: var(--ws-color-navy-900);
-  --color-ws-navy-950: var(--ws-color-navy-950);
-  /* =========================
-    ERROR
-  ========================= */
-  --color-ws-error-25: var(--ws-color-error-25);
-  --color-ws-error-50: var(--ws-color-error-50);
-  --color-ws-error-100: var(--ws-color-error-100);
-  --color-ws-error-200: var(--ws-color-error-200);
-  --color-ws-error-300: var(--ws-color-error-300);
-  --color-ws-error-400: var(--ws-color-error-400);
-  --color-ws-error-500: var(--ws-color-error-500);
-  --color-ws-error-600: var(--ws-color-error-600);
-  --color-ws-error-700: var(--ws-color-error-700);
-  --color-ws-error-800: var(--ws-color-error-800);
-  --color-ws-error-900: var(--ws-color-error-900);
-  --color-ws-error-950: var(--ws-color-error-950);
-  /* =========================
-    SUCCESS
-  ========================= */
-  --color-ws-success-25: var(--ws-color-success-25);
-  --color-ws-success-50: var(--ws-color-success-50);
-  --color-ws-success-100: var(--ws-color-success-100);
-  --color-ws-success-200: var(--ws-color-success-200);
-  --color-ws-success-300: var(--ws-color-success-300);
-  --color-ws-success-400: var(--ws-color-success-400);
-  --color-ws-success-500: var(--ws-color-success-500);
-  --color-ws-success-600: var(--ws-color-success-600);
-  --color-ws-success-700: var(--ws-color-success-700);
-  /* =========================
-    WARNING
-  ========================= */
-  --color-ws-warning-50: var(--ws-color-warning-50);
-  --color-ws-warning-100: var(--ws-color-warning-100);
-  --color-ws-warning-200: var(--ws-color-warning-200);
-  --color-ws-warning-300: var(--ws-color-warning-300);
-  --color-ws-warning-400: var(--ws-color-warning-400);
-  --color-ws-warning-500: var(--ws-color-warning-500);
-  --color-ws-warning-600: var(--ws-color-warning-600);
-  --color-ws-warning-700: var(--ws-color-warning-700);
-  /* =========================
-     GRAY
-  ========================= */
-  --color-ws-gray-25: var(--ws-color-gray-25);
-  --color-ws-gray-50: var(--ws-color-gray-50);
-  --color-ws-gray-100: var(--ws-color-gray-100);
-  --color-ws-gray-200: var(--ws-color-gray-200);
-  --color-ws-gray-300: var(--ws-color-gray-300);
-  --color-ws-gray-400: var(--ws-color-gray-400);
-  --color-ws-gray-500: var(--ws-color-gray-500);
-  --color-ws-gray-600: var(--ws-color-gray-600);
-  --color-ws-gray-700: var(--ws-color-gray-700);
-  --color-ws-gray-800: var(--ws-color-gray-800);
-  --color-ws-gray-900: var(--ws-color-gray-900);
-  --color-ws-gray-950: var(--ws-color-gray-950);
-  /* =========================
-     TEXT COLORS
-  ========================= */
-  --color-ws-text-primary: var(--ws-color-text-primary);
-  --color-ws-text-secondary: var(--ws-color-text-secondary);
-  --color-ws-text-secondary-hover: var(--ws-color-text-secondary-hover);
-  --color-ws-text-tertiary: var(--ws-color-text-tertiary);
-  --color-ws-text-tertiary-hover: var(--ws-color-text-tertiary-hover);
-  --color-ws-text-quaternary: var(--ws-color-text-quaternary);
-  --color-ws-text-white: var(--ws-color-text-white);
-  --color-ws-text-disabled: var(--ws-color-text-disabled);
-  --color-ws-text-placeholder: var(--ws-color-text-placeholder);
-  --color-ws-text-placeholder-subtle: var(--ws-color-text-placeholder-subtle);
-  --color-ws-text-error-primary: var(--ws-color-text-error-primary);
-  --color-ws-text-error-primary-hover: var(--ws-color-text-error-primary-hover);
-  --color-ws-text-warning-primary: var(--ws-color-text-warning-primary);
-  /* =========================
-     BORDER COLORS
-  ========================= */
-  --color-ws-border-primary: var(--ws-color-border-primary);
-  --color-ws-border-secondary: var(--ws-color-border-secondary);
-  --color-ws-border-tertiary: var(--ws-color-border-tertiary);
-  --color-ws-border-disabled: var(--ws-color-border-disabled);
-  --color-ws-border-disabled-subtle: var(--ws-color-border-disabled-subtle);
-  --color-ws-border-error: var(--ws-color-border-error);
-  --color-ws-border-error-subtle: var(--ws-color-border-error-subtle);
-  --color-ws-border-focus-ring: var(--ws-color-border-focus-ring);
-  --color-ws-border-focus-ring-error: var(--ws-color-border-focus-ring-error);
-  /* =========================
-     SHADOW COLORS
-  ========================= */
-  --color-ws-shadow-xs: var(--ws-color-shadow-xs);
-  --color-ws-shadow-sm: var(--ws-color-shadow-sm);
-  --color-ws-shadow-md: var(--ws-color-shadow-md);
-  --color-ws-shadow-lg: var(--ws-color-shadow-lg);
-  --color-ws-shadow-xl: var(--ws-color-shadow-xl);
-  --color-ws-shadow-2xl: var(--ws-color-shadow-2xl);
-  --color-ws-shadow-3xl: var(--ws-color-shadow-3xl);
-  --color-ws-shadow-inner: var(--ws-color-shadow-inner);
-  /* =========================
-    POSITIVE/NEGATIVE INDICATOR
-  ========================= */
-  --color-ws-bg-positive: var(--ws-color-bg-positive);
-  --color-ws-text-positive: var(--ws-color-text-positive);
-  --color-ws-bg-negative: var(--ws-color-bg-negative);
-  --color-ws-text-negative: var(--ws-color-text-negative);
-  /* =========================
-    FONT SIZES
-  ========================= */
-  --color-ws-text-xs: var(--ws-color-text-xs);
-  --color-ws-text-sm: var(--ws-color-text-sm);
-  --color-ws-text-md: var(--ws-color-text-md);
-  --color-ws-text-lg: var(--ws-color-text-lg);
-  --color-ws-text-xl: var(--ws-color-text-xl);
-  --color-ws-display-xs: var(--ws-color-display-xs);
-  --color-ws-display-sm: var(--ws-color-display-sm);
-  --color-ws-display-md: var(--ws-color-display-md);
-  --color-ws-display-lg: var(--ws-color-display-lg);
-  --color-ws-display-xl: var(--ws-color-display-xl);
-  --color-ws-display-2xl: var(--ws-color-display-2xl);
-  /* =========================
-    LINE HEIGHTS
-  ========================= */
-  --color-ws-lh-text-xs: var(--ws-color-lh-text-xs);
-  --color-ws-lh-text-sm: var(--ws-color-lh-text-sm);
-  --color-ws-lh-text-md: var(--ws-color-lh-text-md);
-  --color-ws-lh-text-lg: var(--ws-color-lh-text-lg);
-  --color-ws-lh-text-xl: var(--ws-color-lh-text-xl);
-  --color-ws-lh-display-xs: var(--ws-color-lh-display-xs);
-  --color-ws-lh-display-sm: var(--ws-color-lh-display-sm);
-  --color-ws-lh-display-md: var(--ws-color-lh-display-md);
-  --color-ws-lh-display-lg: var(--ws-color-lh-display-lg);
-  --color-ws-lh-display-xl: var(--ws-color-lh-display-xl);
-  --color-ws-lh-display-2xl: var(--ws-color-lh-display-2xl);
-}
-
 :root {
-  /* =========================
-    TYPOGRAPHY
-  ========================= */
-  font-family: "Inter", sans-serif;
-  font-weight: 400;
+  --text: #6b6375;
+  --text-h: #08060d;
+  --bg: #fff;
+  --border: #e5e4e7;
+  --code-bg: #f4f3ec;
+  --accent: #aa3bff;
+  --accent-bg: rgba(170, 59, 255, 0.1);
+  --accent-border: rgba(170, 59, 255, 0.5);
+  --social-bg: rgba(244, 243, 236, 0.5);
+  --shadow:
+    rgba(0, 0, 0, 0.1) 0 10px 15px -3px, rgba(0, 0, 0, 0.05) 0 4px 6px -2px;
+
+  --sans: system-ui, 'Segoe UI', Roboto, sans-serif;
+  --heading: system-ui, 'Segoe UI', Roboto, sans-serif;
+  --mono: ui-monospace, Consolas, monospace;
+
+  font: 18px/145% var(--sans);
+  letter-spacing: 0.18px;
+  color-scheme: light dark;
+  color: var(--text);
+  background: var(--bg);
   font-synthesis: none;
   text-rendering: optimizeLegibility;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 
-  /* Worker Solutions Design Tokens */
-  /* =========================
-     BRAND COLORS
-  ========================= */
-  --ws-color-cyan: #06aed4;
-  --ws-color-green: #00ea4a;
-  /* =========================
-     BASE COLORS
-  ========================= */
-  --ws-color-base-white: #ffffff;
-  --ws-color-base-black: #000000;
-  --ws-color-bg-overlay: #0a0d12;
-  /* =========================
-     LIGHT TEAL
-  ========================= */
-  --ws-color-light-teal-25: #f5f5f5;
-  --ws-color-light-teal-50: #e6eded;
-  --ws-color-light-teal-100: #d2f1ef;
-  --ws-color-light-teal-200: #cde5e3;
-  --ws-color-light-teal-300: #b6d3d0;
-  --ws-color-light-teal-400: #89d4cc;
-  --ws-color-light-teal-500: #73a09b;
-  --ws-color-light-teal-600: #62938e;
-  --ws-color-light-teal-700: #55a19e;
-  --ws-color-light-teal-800: #3b8383;
-  --ws-color-light-teal-850: #007d7e;
-  --ws-color-light-teal-900: #006c68;
-  --ws-color-light-teal-950: #2e5450;
-  /* =========================
-     MUTED TEAL
-  ========================= */
-  --ws-color-muted-teal-25: #fbfbfb;
-  --ws-color-muted-teal-50: #f7fbfb;
-  --ws-color-muted-teal-100: #f3faf9;
-  --ws-color-muted-teal-200: #eff8f7;
-  --ws-color-muted-teal-300: #e7f4f3;
-  --ws-color-muted-teal-400: #dff1ef;
-  --ws-color-muted-teal-500: #d7edeb;
-  --ws-color-muted-teal-600: #b6d3d0;
-  --ws-color-muted-teal-700: #94b9b6;
-  --ws-color-muted-teal-800: #73a09b;
-  --ws-color-muted-teal-850: #367b7b;
-  --ws-color-muted-teal-900: #62938e;
-  --ws-color-muted-teal-950: #518681;
-  /* =========================
-    NAVY
-  ========================= */
-  --ws-color-navy-25: #fdfdfd;
-  --ws-color-navy-50: #f2f9fc;
-  --ws-color-navy-100: #eef7fc;
-  --ws-color-navy-200: #cbdfe8;
-  --ws-color-navy-300: #94cee9;
-  --ws-color-navy-400: #79c2e4;
-  --ws-color-navy-500: #63a2bf;
-  --ws-color-navy-600: #5792ad;
-  --ws-color-navy-700: #4c829a;
-  --ws-color-navy-800: #366176;
-  --ws-color-navy-900: #1f4151;
-  --ws-color-navy-950: #0e2936;
-
-  /* =========================
-     ERROR
-  ========================= */
-  --ws-color-error-25: #fffbfa;
-  --ws-color-error-50: #fef3f2;
-  --ws-color-error-100: #fee4e2;
-  --ws-color-error-200: #fecdca;
-  --ws-color-error-300: #fda29b;
-  --ws-color-error-400: #f97066;
-  --ws-color-error-500: #f04438;
-  --ws-color-error-600: #d92d20;
-  --ws-color-error-700: #b42318;
-  --ws-color-error-800: #912018;
-  --ws-color-error-900: #7a271a;
-  --ws-color-error-950: #55160c;
-
-  /* =========================
-     SUCCESS
-  ========================= */
-  --ws-color-success-25: #f6fef9;
-  --ws-color-success-50: #ecfdf3;
-  --ws-color-success-100: #dcfae6;
-  --ws-color-success-200: #abefc6;
-  --ws-color-success-300: #75e0a7;
-  --ws-color-success-400: #47cd89;
-  --ws-color-success-500: #17b26a;
-  --ws-color-success-600: #079455;
-  --ws-color-success-700: #067647;
-
-  /* =========================
-    WARNING
-  ========================= */
-  --ws-color-warning-50: #fffaeb;
-  --ws-color-warning-100: #fef0c7;
-  --ws-color-warning-200: #fedf89;
-  --ws-color-warning-300: #fec84b;
-  --ws-color-warning-400: #fdb022;
-  --ws-color-warning-500: #f79009;
-  --ws-color-warning-600: #dc6803;
-  --ws-color-warning-700: #b54708;
-
-  /* =========================
-    GRAY
-  ========================= */
-  --ws-color-gray-25: #fdfdfd;
-  --ws-color-gray-50: #fafafa;
-  --ws-color-gray-100: #f5f5f5;
-  --ws-color-gray-200: #e9eaeb;
-  --ws-color-gray-300: #d5d7da;
-  --ws-color-gray-400: #a4a7ae;
-  --ws-color-gray-500: #717680;
-  --ws-color-gray-600: #535862;
-  --ws-color-gray-700: #414651;
-  --ws-color-gray-800: #252b37;
-  --ws-color-gray-900: #181d27;
-  --ws-color-gray-950: #0a0d12;
-
-  /* =========================
-    TEXT COLORS
-  ========================= */
-  --ws-color-text-primary: #181d27;
-  --ws-color-text-secondary: #414651;
-  --ws-color-text-secondary-hover: #252b37;
-  --ws-color-text-tertiary: #535862;
-  --ws-color-text-tertiary-hover: #414651;
-  --ws-color-text-quaternary: #717680;
-  --ws-color-text-white: #ffffff;
-  --ws-color-text-disabled: #717680;
-  --ws-color-text-placeholder: #717680;
-  --ws-color-text-placeholder-subtle: #d5d7da;
-  --ws-color-text-error-primary: #d92d20;
-  --ws-color-text-error-primary-hover: #b42318;
-  --ws-color-text-warning-primary: #dc6803;
-
-  /* =========================
-    BORDER COLORS
-  ========================= */
-  --ws-color-border-primary: #d5d7da;
-  --ws-color-border-secondary: #e9eaeb;
-  --ws-color-border-tertiary: #f5f5f5;
-  --ws-color-border-disabled: #d5d7da;
-  --ws-color-border-disabled-subtle: #e9eaeb;
-  --ws-color-border-error: #f04438;
-  --ws-color-border-error-subtle: #fda29b;
-  --ws-color-border-focus-ring: #007d7e;
-  --ws-color-border-focus-ring-error: #f04438;
-
-  /* =========================
-    SHADOW COLORS
-  ========================= */
-  --ws-color-shadow-xs: 0px 1px 2px 0px rgba(10, 13, 18, 0.05);
-  --ws-color-shadow-sm:
-    0px 1px 3px 0px rgba(10, 13, 18, 0.1), 0px 1px 2px -1px rgba(10, 13, 18, 0.1);
-  --ws-color-shadow-md:
-    0px 4px 6px -1px rgba(10, 13, 18, 0.1), 0px 2px 4px -2px rgba(10, 13, 18, 0.1);
-  --ws-color-shadow-lg:
-    0px 10px 15px -3px rgba(10, 13, 18, 0.08), 0px 4px 6px -4px rgba(10, 13, 18, 0.08);
-  --ws-color-shadow-xl:
-    0px 20px 25px -5px rgba(10, 13, 18, 0.08), 0px 8px 10px -6px rgba(10, 13, 18, 0.08);
-  --ws-color-shadow-2xl: 0px 25px 50px -12px rgba(10, 13, 18, 0.18);
-  --ws-color-shadow-3xl: 0px 35px 60px -15px rgba(10, 13, 18, 0.14);
-  --ws-color-shadow-inner: inset 0px 2px 4px 0px rgba(10, 13, 18, 0.05);
-
-  /* =========================
-    POSITIVE/NEGATIVE INDICATOR
-  ========================= */
-  --ws-color-bg-positive: #ecfdf3;
-  --ws-color-text-positive: #079455;
-  --ws-color-bg-negative: #fef3f2;
-  --ws-color-text-negative: #d92d20;
-
-  /* =========================
-    FONT SIZES
-  ========================= */
-  --ws-color-text-xs: 12px;
-  --ws-color-text-sm: 14px;
-  --ws-color-text-md: 16px;
-  --ws-color-text-lg: 18px;
-  --ws-color-text-xl: 20px;
-  --ws-color-display-xs: 24px;
-  --ws-color-display-sm: 30px;
-  --ws-color-display-md: 36px;
-  --ws-color-display-lg: 48px;
-  --ws-color-display-xl: 60px;
-  --ws-color-display-2xl: 72px;
-  /* =========================
-    LINE HEIGHTS
-  ========================= */
-  --ws-color-lh-text-xs: 18px;
-  --ws-color-lh-text-sm: 20px;
-  --ws-color-lh-text-md: 24px;
-  --ws-color-lh-text-lg: 28px;
-  --ws-color-lh-text-xl: 30px;
-  --ws-color-lh-display-xs: 32px;
-  --ws-color-lh-display-sm: 38px;
-  --ws-color-lh-display-md: 44px;
-  --ws-color-lh-display-lg: 60px;
-  --ws-color-lh-display-xl: 72px;
-  --ws-color-lh-display-2xl: 90px;
+  @media (max-width: 1024px) {
+    font-size: 16px;
+  }
 }
 
-.h-110 {
-  height: 450px;
-}
-.shadow-md {
-  box-shadow: 0px 2px 10px 0px #0000001a;
-}
-.warning {
-  border-radius: 12px;
-  background-color: var(--ws-color-warning-200);
-  border: 1px solid var(--ws-color-warning-500);
-  color: var(--ws-color-warning-500);
-  padding: 8px 16px;
-  position: absolute;
-  top: 8px;
-  right: 20px;
-  width: 100%;
-  max-width: 445px;
-}
-.warning .closeIconColor {
-  color: var(--ws-color-warning-500);
-  fill: var(--ws-color-warning-200);
-  stroke: var(--ws-color-warning-500);
-  cursor: pointer;
-}
-.danger {
-  border-radius: 12px;
-  background-color: var(--ws-color-error-200);
-  border: 1px solid var(--ws-color-error-500);
-  color: var(--ws-color-error-500);
-  padding: 8px 16px;
-  position: absolute;
-  top: 8px;
-  right: 20px;
-  width: 100%;
-  max-width: 445px;
-}
-.danger .closeIconColor {
-  color: var(--ws-color-error-500);
-  fill: var(--ws-color-error-50);
-  stroke: var(--ws-color-error-500);
-  cursor: pointer;
-}
-.success {
-  border-radius: 12px;
-  background-color: var(--ws-color-success-200);
-  border: 1px solid var(--ws-color-success-500);
-  color: var(--ws-color-success-500);
-  padding: 8px 16px;
-  position: absolute;
-  top: 8px;
-  right: 20px;
-  width: 100%;
-  max-width: 445px;
-}
-.success .closeIconColor {
-  color: var(--ws-color-success-500);
-  fill: var(--ws-color-success-50);
-  stroke: var(--ws-color-success-500);
-  cursor: pointer;
-}
-.custom-label {
-  color: var(--ws-color-text-primary);
-  font-size: 16px;
-  font-weight: 400;
-}
-.custom-input .question-text {
-  color: var(--ws-color-text-primary);
-  font-size: 16px;
-  font-weight: 400;
-}
-.custom-question-options .question-text {
-  color: var(--ws-color-text-secondary);
-  font-size: 16px;
-  font-weight: 400;
+@media (prefers-color-scheme: dark) {
+  :root {
+    --text: #9ca3af;
+    --text-h: #f3f4f6;
+    --bg: #16171d;
+    --border: #2e303a;
+    --code-bg: #1f2028;
+    --accent: #c084fc;
+    --accent-bg: rgba(192, 132, 252, 0.15);
+    --accent-border: rgba(192, 132, 252, 0.5);
+    --social-bg: rgba(47, 48, 58, 0.5);
+    --shadow:
+      rgba(0, 0, 0, 0.4) 0 10px 15px -3px, rgba(0, 0, 0, 0.25) 0 4px 6px -2px;
+  }
+
+  #social .button-icon {
+    filter: invert(1) brightness(2);
+  }
 }
 
-/* Positive/Negative Indicator Classes */
-.ws-bg-positive {
-  background-color: var(--ws-color-bg-positive);
+#root {
+  width: 1126px;
+  max-width: 100%;
+  margin: 0 auto;
+  text-align: center;
+  border-inline: 1px solid var(--border);
+  min-height: 100svh;
+  display: flex;
+  flex-direction: column;
+  box-sizing: border-box;
 }
 
-.ws-text-positive {
-  color: var(--ws-color-text-positive);
+body {
+  margin: 0;
 }
 
-.ws-bg-negative {
-  background-color: var(--ws-color-bg-negative);
+h1,
+h2 {
+  font-family: var(--heading);
+  font-weight: 500;
+  color: var(--text-h);
 }
 
-.ws-text-negative {
-  color: var(--ws-color-text-negative);
+h1 {
+  font-size: 56px;
+  letter-spacing: -1.68px;
+  margin: 32px 0;
+  @media (max-width: 1024px) {
+    font-size: 36px;
+    margin: 20px 0;
+  }
+}
+h2 {
+  font-size: 24px;
+  line-height: 118%;
+  letter-spacing: -0.24px;
+  margin: 0 0 8px;
+  @media (max-width: 1024px) {
+    font-size: 20px;
+  }
+}
+p {
+  margin: 0;
+}
+
+code,
+.counter {
+  font-family: var(--mono);
+  display: inline-flex;
+  border-radius: 4px;
+  color: var(--text-h);
+}
+
+code {
+  font-size: 15px;
+  line-height: 135%;
+  padding: 4px 8px;
+  background: var(--code-bg);
 }

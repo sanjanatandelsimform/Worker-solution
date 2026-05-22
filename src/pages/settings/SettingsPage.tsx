@@ -105,65 +105,42 @@ export const SettingsPage = () => {
     onConfirm: handleDeleteAccount,
   });
 
-  // // Real-time validation for first name
-  // const handleFirstNameChange = (value: string) => {
-  //   const sanitized = value.replace(/^\s+/, "");
-  //   setFirstName(sanitized);
+  // Real-time validation for first name
+  const handleFirstNameChange = (value: string) => {
+    const sanitized = value.replace(/^\s+/, "");
+    setFirstName(sanitized);
 
-  //   // Real-time validation as user types
-  //   if (sanitized) {
-  //     const validation = validateName("FirstName", sanitized);
-  //     if (validation.isValid) {
-  //       setFirstNameError("");
-  //     } else {
-  //       setFirstNameError(validation.message || "");
-  //     }
-  //   } else {
-  //     setFirstNameError("First name cannot be empty");
-  //   }
-  // };
+    // Real-time validation as user types
+    if (sanitized) {
+      const validation = validateName("First name", sanitized);
+      if (validation.isValid) {
+        setFirstNameError("");
+      } else {
+        setFirstNameError(validation.message || "");
+      }
+    } else {
+      setFirstNameError("First name cannot be empty");
+    }
+  };
 
-  // // Real-time validation for last name
-  // const handleLastNameChange = (value: string) => {
-  //   const sanitized = value.replace(/^\s+/, "");
-  //   setLastName(sanitized);
+  // Real-time validation for last name
+  const handleLastNameChange = (value: string) => {
+    const sanitized = value.replace(/^\s+/, "");
+    setLastName(sanitized);
 
-  //   // Real-time validation as user types
-  //   if (sanitized) {
-  //     const validation = validateName("LastName", sanitized);
-  //     if (validation.isValid) {
-  //       setLastNameError("");
-  //     } else {
-  //       setLastNameError(validation.message || "");
-  //     }
-  //   } else {
-  //     setLastNameError("Last name cannot be empty");
-  //   }
-  // };
+    // Real-time validation as user types
+    if (sanitized) {
+      const validation = validateName("LastName", sanitized);
+      if (validation.isValid) {
+        setLastNameError("");
+      } else {
+        setLastNameError(validation.message || "");
+      }
+    } else {
+      setLastNameError("Last name cannot be empty");
+    }
+  };
   // Generic handler — eliminates duplication
-const handleNameChange = (
-  value: string,
-  fieldName: "FirstName" | "LastName",
-  setValue: (val: string) => void,
-  setError: (err: string) => void,
-  emptyErrorMsg: string
-) => {
-  const sanitized = value.replace(/^\s+/, "");
-  setValue(sanitized);
-  if (sanitized) {
-    const validation = validateName(fieldName, sanitized);
-    setError(validation.isValid ? "" : validation.message || "");
-  } else {
-    setError(emptyErrorMsg);
-  }
-};
-
-const handleFirstNameChange = (value: string) =>
-  handleNameChange(value, "FirstName", setFirstName, setFirstNameError, "First name cannot be empty");
-
-const handleLastNameChange = (value: string) =>
-  handleNameChange(value, "LastName", setLastName, setLastNameError, "Last name cannot be empty");
-
   async function handleRetakeAssessment() {
     setRetakeLoading(true);
     setRetakeError(null);

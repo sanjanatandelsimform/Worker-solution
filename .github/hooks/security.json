@@ -1,0 +1,29 @@
+{
+  "hooks": {
+    "preToolUse": {
+      "enabled": true,
+      "script": "bash",
+      "command": [
+        "bash",
+        "-c",
+        "echo \"[$(date '+%Y-%m-%d %H:%M:%S')] TOOL EXECUTED: $TOOL_NAME | INPUT: $TOOL_INPUT\" >> .github/hooks/tool-execution.log"
+      ],
+      "description": "Logs all tool executions with timestamp and input details"
+    },
+    "sessionStart": {
+      "enabled": true,
+      "script": "bash",
+      "command": [
+        "bash",
+        "-c",
+        "echo \"[$(date '+%Y-%m-%d %H:%M:%S')] SESSION STARTED | Agent: $AGENT_NAME | Task: $TASK_DESCRIPTION\" >> .github/hooks/session.log"
+      ],
+      "description": "Records when agent sessions begin"
+    }
+  },
+  "logging": {
+    "toolExecutionLog": ".github/hooks/tool-execution.log",
+    "sessionLog": ".github/hooks/session.log",
+    "logLevel": "info"
+  }
+}
